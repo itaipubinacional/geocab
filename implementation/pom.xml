@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>br.com.geocab</groupId>
+	<artifactId>geocab-multimodule</artifactId>
+	<name>Geocab</name>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	
+	<!-- Properties -->
+	<properties>
+		<!-- Maven -->
+		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
+		<!-- Java -->
+		<java.version>1.8</java.version>
+		
+		<!-- SpringFramework -->
+		<springframework.version>4.0.6.RELEASE</springframework.version>
+		<springsecurity.version>3.2.4.RELEASE</springsecurity.version>
+		<springdata.version>1.6.2.RELEASE</springdata.version>
+		<!-- Hibernate -->
+		<hibernate.version>4.3.5.Final</hibernate.version>
+		<hibernatevalidator.version>5.1.1.Final</hibernatevalidator.version>
+		<!-- Testing -->
+		<junit.version>4.11</junit.version>
+		<dbunit.version>2.5.0</dbunit.version>
+		<!-- Others -->
+		<bonecp.version>0.8.0.RELEASE</bonecp.version>
+		<aspectj.version>1.8.1</aspectj.version>
+		<dwr.version>3.0.0-rc3-SNAPSHOT</dwr.version>
+
+		<!-- Default Environment -->
+		<environment>development</environment>
+	</properties>
+	
+	<!-- Repositories -->
+	<repositories>
+		<repository>
+			<id>jboss-repository</id>
+			<url>https://repository.jboss.org/nexus/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>eits-repository</id>
+			<url>http://maven.eits.com.br/content/repositories/releases</url>
+		</repository>
+	</repositories>
+		
+	<!-- Modules -->
+	<modules>
+		<module>solution</module>
+	</modules>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<dependencyManagement>
+		<dependencies>
+			<!-- SpringFramework -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			 <dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+	    	<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+		
+			<!-- Spring Security -->
+			<dependency>
+        		<groupId>org.springframework.security</groupId>
+        		<artifactId>spring-security-web</artifactId>
+        		<version>${springsecurity.version}</version>
+    		</dependency>
+    		<dependency>
+        		<groupId>org.springframework.security</groupId>
+        		<artifactId>spring-security-config</artifactId>
+        		<version>${springsecurity.version}</version>
+    		</dependency>
+			<dependency>
+       			<groupId>org.springframework.security</groupId>
+       			<artifactId>spring-security-taglibs</artifactId>
+       			<version>${springsecurity.version}</version>
+   			</dependency>
+    		<dependency>
+        		<groupId>org.springframework.security</groupId>
+        		<artifactId>spring-security-acl</artifactId>
+        		<version>${springsecurity.version}</version>
+    		</dependency>
+    		
+    		<!-- Spring Data -->
+    		<dependency>
+        		<groupId>org.springframework.data</groupId>
+        		<artifactId>spring-data-jpa</artifactId>
+        		<version>${springdata.version}</version>
+    		</dependency>
+    		
+    		<!-- Spring Social -->
+			<dependency>
+	  			<groupId>org.springframework.social</groupId>
+	  			<artifactId>spring-social-web</artifactId>
+	  			<version>${springsocial.version}</version>
+			</dependency>
+	    	<dependency>
+	  			<groupId>org.springframework.social</groupId>
+	  			<artifactId>spring-social-google</artifactId>
+	  			<version>${springsocialgoogle.version}</version>
+			</dependency>
+    		
+    		<!-- AspectJ -->
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjweaver</artifactId>
+				<version>${aspectj.version}</version>
+			</dependency>
+			
+			<!-- Hibernate -->
+			<dependency>
+	    		<groupId>org.hibernate</groupId>
+	    		<artifactId>hibernate-entitymanager</artifactId>
+	    		<version>${hibernate.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.hibernate</groupId>
+			    <artifactId>hibernate-envers</artifactId>
+			    <version>${hibernate.version}</version>
+			</dependency>
+			
+		</dependencies>
+	</dependencyManagement>
+	
+	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+			
+		<!-- Javax Validation -->
+		<dependency>
+    		<groupId>org.hibernate</groupId>
+    		<artifactId>hibernate-validator</artifactId>
+    		<version>${hibernatevalidator.version}</version>
+		</dependency>
+		<dependency>
+   			<groupId>javax.el</groupId>
+   			<artifactId>javax.el-api</artifactId>
+   			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>javax.el</artifactId>
+			<version>2.2.6</version>
+		</dependency>
+            
+		<!-- Logs -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.6</version>
+		</dependency>
+		
+		<!-- DWR -->
+		<dependency>
+    		<groupId>org.directwebremoting</groupId>
+    		<artifactId>dwr</artifactId>
+    		<version>3.0.0-rc3-SNAPSHOT</version>
+  		</dependency>
+		
+		<!-- Testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${springframework.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.springtestdbunit</groupId>
+			<artifactId>spring-test-dbunit</artifactId>
+			<version>1.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.dbunit</groupId>
+			<artifactId>dbunit</artifactId>
+			<version>${dbunit.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+</project>

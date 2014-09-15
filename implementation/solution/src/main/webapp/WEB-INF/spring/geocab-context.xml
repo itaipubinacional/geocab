@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/data/repository http://www.springframework.org/schema/data/repository/spring-repository.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr/spring-dwr-3.0.xsd"
+	default-autowire="byName">
+	
+	<!-- ============================ APPLICATION ================================= -->
+	<!-- 
+		MISCELLANEOUS 
+	-->
+	<!-- Configuration files -->
+	<context:property-placeholder ignore-unresolvable="false"
+		location="classpath:geocab.properties, classpath:geocab-persistence.properties" />
+		
+	<!-- I18N -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames" value="classpath:i18n/admin, classpath:i18n/map, classpath:i18n/exceptions"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="useCodeAsDefaultMessage" value="false"/>
+    </bean>
+		
+	<!-- 
+		TRANSACTION 
+	-->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+	<!--
+		ASPECTS 
+	-->
+	<aop:aspectj-autoproxy/>
+	
+	<!-- Exception Handler --> 
+	<bean id="exceptionHandlerAspect" 
+		class="br.com.geocab.application.aspect.ExceptionHandlerAspect"/>
+		
+    <!-- 
+		SECURITY  
+	-->
+	<!-- Global Security -->
+	<security:global-method-security pre-post-annotations="enabled"/>
+	
+	<!-- Password Encoder -->
+	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" />
+	<bean id="saltSource" class="org.springframework.security.authentication.dao.SystemWideSaltSource">
+		<property name="systemWideSalt" value="${security.blowfish}"/>
+	</bean>
+	
+	<!-- Authentication Manager --> 
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider user-service-ref="IUserRepository">
+			<security:password-encoder ref="passwordEncoder">
+				<security:salt-source ref="saltSource"/>
+			</security:password-encoder>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+	<!-- 
+		DWR
+	-->
+	<!-- DWR will scan all Spring managed beans containing @RemoteProxy or @RemoteMethod annotations and register Creator proxies for them.
+  		This will NOT scan any classes not managed by Spring.-->
+	<dwr:annotation-config/>
+	
+	<!-- DWR will scan the classpath and search classes containing @RemoteProxy or @RemoteMethod annotations. 
+		This will register the beans and Creator proxies for these classes.-->
+ 	<dwr:annotation-scan base-package="br.com.geocab.domain.entity"
+ 		scanDataTransferObject="true" scanRemoteProxy="false"/>
+
+ 	<!-- DWR - This is required if you want to configure any beans not managed by Spring.-->
+	<dwr:configuration>
+		<dwr:convert type="exception" class="java.lang.Exception"/>
+		<dwr:convert type="object" class="java.lang.StackTraceElement"/>
+		<dwr:convert type="enum" class="org.springframework.data.domain.Direction"/>
+		<dwr:convert type="bean" class="org.springframework.data.domain.Order"/>
+		<dwr:convert type="bean" class="org.springframework.data.domain.Sort" javascript="Sort"/>
+		<dwr:convert type="bean" class="org.springframework.data.domain.PageImpl" javascript="PageImpl"/>
+		<dwr:convert type="bean" class="org.springframework.data.domain.PageRequest" javascript="PageRequest"/>
+	</dwr:configuration>
+
+	<!--
+		OTHERS 
+	 -->
+	 <!-- Validation -->
+	 <bean id="validator"
+    	class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    	
+	<!-- =============================== DOMAIN =================================== -->
+	<!-- 
+		SERVICES 
+	-->
+	<context:component-scan 
+		base-package="br.com.geocab.domain.service"/>
+	
+	<!--
+		REPOSITORIES 
+	-->
+	<jpa:repositories base-package="br.com.geocab.domain.repository"
+		factory-class="br.com.geocab.infrastructure.jpa2.springdata.JpaRepositoryFactoryBean"/>
+	 
+	<!-- ============================ INFRASTRUCTURE ============================= -->
+	<!--  
+		DATA SOURCE
+		Global DataSource Configuration with a Proxy for a target DataSource,
+		fetching actual JDBC Connections lazily 
+	-->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+		<property name="targetDataSource">
+			<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+			    <property name="driverClass" value="${jdbc.driverClassName}"/>
+			    <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+			    <property name="username" value="${jdbc.username}"/>
+			    <property name="password" value="${jdbc.password}"/>
+			    <property name="connectionTestStatement" value="SELECT NOW()"/>
+			    <property name="idleConnectionTestPeriodInMinutes" value="60"/>
+			    <property name="idleMaxAgeInMinutes" value="240"/>
+			    <property name="maxConnectionsPerPartition" value="30"/>
+			    <property name="minConnectionsPerPartition" value="10"/>
+			    <property name="partitionCount" value="3"/>
+			    <property name="acquireIncrement" value="10"/>
+			    <property name="statementsCacheSize" value="50"/>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- 
+		JAVA PERSISTENCE API 
+	-->
+	<!-- EntityManager Factory -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	<property name="persistenceUnitName" value="br.com.geocab"/>
+    	<property name="packagesToScan" value="br.com.geocab.domain.entity"/>
+    	<property name="persistenceProviderClass" value="org.hibernate.jpa.HibernatePersistenceProvider"/>
+    	<property name="jpaVendorAdapter">
+    		<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+    	</property>
+        <property name="jpaProperties">
+        	<util:map>
+		   		<!-- General -->
+		   		<entry key="hibernate.hbm2ddl.auto" value="${hibernate.hbm2ddl}"/>
+		   		<entry key="hibernate.format_sql" value="${hibernate.formatSql}"/>
+		   		<entry key="hibernate.show_sql" value="${hibernate.showSql}"/>
+		   		<entry key="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
+		   		<entry key="hibernate.default_schema" value="${hibernate.default_schema}"/> 
+		   		<entry key="hibernate.ejb.naming_strategy" value="br.com.geocab.infrastructure.jpa2.hibernate.NamingStrategy"/>
+		   		 
+		   		<!-- Cache 
+		   		<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
+		   		<entry key="hibernate.cache.use_second_level_cache" value="true"/>
+		   		<entry key="hibernate.cache.use_query_cache" value="true"/>
+		   		--> 
+		   		
+		   		<!-- Envers (Auditing) -->
+		   		<entry key="org.hibernate.envers.audit_table_suffix" value="_audited"/>
+		   		<entry key="org.hibernate.envers.revision_field_name" value="revision"/>
+		   		<entry key="org.hibernate.envers.revision_type_field_name" value="revision_type"/>
+		   		<entry key="org.hibernate.envers.default_schema" value="${hibernate.envers.default_schema}"/>
+			</util:map>
+        </property>
+    </bean>
+    
+    <!-- Shared Entity Manager -->
+	<bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+</beans>
