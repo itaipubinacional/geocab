@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<!-- Fonte de Dados - Detail -->
+<div>
+    <form>
+        <div class="content-tab">
+            <div class="form-item">
+                <b class="detail-label">Tipo</b>
+                <br>
+                <span class="detail-value">{{currentEntity.tipoFonteDados}}</span>
+            </div>   
+            <br>
+                
+            <div class="form-item" style="width: 500px;">
+                <b class="detail-label">Nome</b>
+                <br>
+                <span class="detail-value">{{currentEntity.nome}}</span>
+            </div>
+            <br>
+            
+            <div class="form-item">
+                <b class="detail-label">Endereço</b>
+                <br>
+                <span class="detail-value">{{currentEntity.endereco}}</span>
+            </div>
+            <br>
+
+            <div class="form-item" ng-if="currentEntity.nomeUsuario">
+                <b class="detail-label">Usuário</b>
+                <br>
+                <span class="detail-value">{{currentEntity.nomeUsuario}}</span>
+            </div>
+            <br>
+            
+            <div class="form-item" ng-if="currentEntity.senha">
+                <b class="detail-label">Senha</b>
+                <br>
+                <span class="detail-value">******</span>
+            </div>
+        </div>
+    </form>
+</div>
+</html>

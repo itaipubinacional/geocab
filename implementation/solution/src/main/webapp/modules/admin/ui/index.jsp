@@ -27,14 +27,26 @@
 	</head>
 	
 	<body>
-		<header>
-			<h1>ADMIN Header</h1>
-		</header>
-   		<ui-view id="mainPanel">
-   			Loading... MAIN PANEL
-   		</ui-view>
-   		<footer>
-   			<h5>Footer</h5>
-   		</footer>
+	
+	<!-- container -->
+	<div class="container-fluid">
+
+		<!-- header -->
+		<jsp:include page="../../common/header.jsp"/>
+		<!-- /header -->
+		
+
+		<!-- content -->
+		<div ui-view class="content"></div>
+		<!-- /content -->
+
+	</div>
+	
+		<!--
+		Controllers 
+		-->
+		<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
+   		<script type="text/javascript" src="modules/admin/controller/data-source-controller.js"></script>
+   		
 	</body>
 </html>

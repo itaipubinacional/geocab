@@ -29,6 +29,77 @@
 				console.log( $importService("accountService") );
 			}
         });
+        
+      //Data source
+		$stateProvider.state('data-source', {
+			url : "/data-source",
+			templateUrl : "modules/admin/ui/data-source/data-source-view.html",
+			controller : DataSourceController
+		})
+		.state('data-source.detail', {
+			url: "/defail/:id",
+			menu: "data-source"
+		})
+		.state('data-source.list', {
+			url: "/list",
+			menu: "data-source"
+		})
+		.state('data-source.create', {
+			url : "/create",
+			menu: "data-source"
+		})
+		.state('data-source.update', {
+			url : "/update/:id",
+			menu: "data-source"
+		});
+		
+		//Layer group
+		$stateProvider.state('layer-group', {
+			url : "/layer-group",
+			templateUrl : "modules/admin/ui/layer-group/layer-group-view.html",
+			controller : DataSourceController
+		})
+		.state('layer-group.detail', {
+			url: "/defail/:id",
+			menu: "data-source"
+		})
+		.state('layer-group.list', {
+			url: "/list",
+			menu: "data-source"
+		})
+		.state('layer-group.create', {
+			url : "/create",
+			menu: "data-source"
+		})
+		.state('layer-group.update', {
+			url : "/update/:id",
+			menu: "data-source"
+		});
+		
+		//Layers
+		$stateProvider.state('layers', {
+			url : "/layers",
+			templateUrl : "modules/admin/ui/layers/dlayers-view.html",
+			controller : DataSourceController
+		})
+		.state('layers.detail', {
+			url: "/defail/:id",
+			menu: "data-source"
+		})
+		.state('layers.list', {
+			url: "/list",
+			menu: "data-source"
+		})
+		.state('layers.create', {
+			url : "/create",
+			menu: "data-source"
+		})
+		.state('layers.update', {
+			url : "/update/:id",
+			menu: "data-source"
+		});
+
+		
 	});
 	
 	projectModule.run( function( $rootScope, $state, $stateParams ) {

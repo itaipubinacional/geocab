@@ -12,4 +12,6 @@
 
 <!-- AngularJS -->
 <link rel="stylesheet" href="<c:url value="/webjars/ng-grid/2.0.11/ng-grid.min.css"/>">
-<link href="<c:url value="/static/styles/theme/theme.css"/>" type="text/css" rel="stylesheet" />
+<link href="<c:url value="/static/style/theme/theme.css"/>" type="text/css" rel="stylesheet" />
+<link href="<c:url value="/static/style/sprites.css"/>" type="text/css" rel="stylesheet" />
+<link href="<c:url value="/static/style/global.css"/>" type="text/css" rel="stylesheet" />
