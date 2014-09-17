@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<!-- Data source - Main View -->
+<div>
+	<div class="navbar">
+
+        <!--Message -->
+        <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>
+
+    	<!-- Barra de Controle -->
+        <div class="navbar-inner navbar-container">
+            <div ng-switch on="currentState" class="navbar-title">
+                <span ng-switch-when="data-source.list">LIST OF GEOGRAPHIC DATA SOURCE</span>
+                <span ng-switch-when="data-source.detail">DETAIL OF GEOGRAPHIC DATA SOURCE</span>
+                <span ng-switch-when="data-source.create">NEW GEOGRAPHIC DATA SOURCE</span>
+                <span ng-switch-when="data-source.update">UPDATE GEOGRAPHIC DATA SOURCE</span>
+                <span ng-switch-default>GEOGRAPHIC DATA SOURCE - Loading...</span>
+            </div>
+
+            <!-- State List -->
+            <button ng-show="currentState == LIST_STATE" style="float: right;"
+                class="btn btn-primary"
+                ui-sref="data-source.create">New Data source
+            </button>
+
+            <!-- State Detail -->
+			<button ng-show="currentState == DETAIL_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
+				class="btn btn-default"
+				ui-sref="data-source.list"><span class="icon itaipu-icon-arrow-left"></span>
+            </button>
+            <button ng-show="currentState == DETAIL_STATE" style="float: right;"
+                class="btn btn-danger"
+                ng-click="changeToRemove(currentEntity)">Remove
+            </button>
+            <button ng-show="currentState == DETAIL_STATE" style="float: right;"
+                class="btn btn-primary"
+                ui-sref="data-source.update( {id:currentEntity.id} )">Update
+            </button>
+
+            <!-- State Criar | Editar -->
+            <button ng-show="currentState == INSERT_STATE || currentState == UPDATE_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
+                class="btn btn-default"
+                ui-sref="data-source.list"><span class="icon itaipu-icon-arrow-left"></span>
+            </button>
+			<button ng-show="currentState == INSERT_STATE || currentState == UPDATE_STATE" style="float: right;"
+				class="btn btn-warning"
+				ng-click="testaConexaoFonteDados(currentEntity)">Connection test
+            </button>
+            <!-- State Criar -->
+            <button ng-show="currentState == INSERT_STATE" style="float: right;"
+                class="btn btn-success"
+                id="buttonInsert"
+                ng-click="insertFonteDados(currentEntity)">Save
+            </button>
+            <!-- State Editar -->
+            <button ng-show="currentState == UPDATE_STATE" style="float: right;"
+                class="btn btn-success"
+                id="buttonUpdate"
+                ng-click="updateFonteDados(currentEntity)">Save
+            </button>
+        </div>
+    </div>
+    
+    <!-- Partial views dos states -->
+	<div ng-switch on="currentState">
+        <div ng-switch-when="data-source.list">
+        	<div ng-include="'modules/admin/ui/data-source/data-source-list.html'"></div>
+        </div>
+        <div ng-switch-when="data-source.detail">
+        	<div ng-include="'modules/admin/ui/data-source/data-source-detail.html'"></div>
+        </div>
+        <div ng-switch-when="data-source.create">
+        	<div ng-include="'modules/admin/ui/data-source/data-source-form.html'"></div>	
+        </div> 
+        <div ng-switch-when="data-source.update">
+        	<div ng-include="'modules/admin/ui/data-source/data-source-form.html'"></div>
+        </div>
+        <div ng-switch-default>
+        	<div ng-include="'modules/loading.html'"></div>
+        </div>
+    </div>
+</div>
+</html>
