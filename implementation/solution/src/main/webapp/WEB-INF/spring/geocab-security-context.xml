@@ -16,11 +16,12 @@
 	<security:http pattern="/util.js" security="none"/>
 	
 	<!-- Default Security -->
-	<security:http auto-config="false" use-expressions="true" disable-url-rewriting="true">
+	<!--  <security:http auto-config="false" use-expressions="true" disable-url-rewriting="true">
 		<security:intercept-url pattern="/authentication/**" access="permitAll" />
 		<security:intercept-url pattern="/**" access="isAuthenticated()" />
 		<security:form-login login-page="/authentication" always-use-default-target="true" 
 			password-parameter="password" username-parameter="email"/>
 		<security:logout/>
 	</security:http>
+	-->
 </beans>

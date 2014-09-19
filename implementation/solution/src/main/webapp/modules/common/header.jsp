@@ -1,3 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 
@@ -10,7 +16,7 @@
 			<div class="left-side">
 				<div style="float: left; margin-top: 23px">
 					<span style="font-size: 17px"><b style="font-size: 17px">GEOCAB</b>
-						- Cultivando ¡gua Boa</span>
+						- Cultivando √Ågua Boa</span>
 				</div>
 			</div>
 
@@ -35,11 +41,16 @@
 
 			<div class="nav-collapse collapse">
 				<ul class="nav navbar-nav">
-
+											
 					<li class="position-relative"><a href="./"
 						style="width: 50px;" ng-class="{active: menuActive == null}"><span
 							class="icon-mapa-interativo"></span></a></li>
 
+					<li class="position-relative"><a
+						href="admin#/users"
+						ng-class="{active: menuActive == 'users'}"
+						style="width: 150px;"><spring:message code="admin.users.Users"/></a></li>
+						
 					<li class="position-relative"><a
 						href="admin#/data-source"
 						ng-class="{active: menuActive == 'data-source'}"
