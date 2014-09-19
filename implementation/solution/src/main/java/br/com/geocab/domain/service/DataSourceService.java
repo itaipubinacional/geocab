@@ -23,7 +23,7 @@ import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 import br.com.geocab.domain.repository.datasource.IDataSourceRepository;
 
 /**
- * Classe pertinente ao controle das a��es da {@link FonteDados}}
+ * Classe pertinente ao controle das a��es daaaa {@link FonteDados}}
  * 
  * @author Marcos
  * @since 27/05/2014
@@ -55,7 +55,7 @@ public class DataSourceService
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * m�todo para inserir uma {@link DataSource}
+	 * Method to insert an {@link DataSource}
 	 * 
 	 * @param fonteDados
 	 * @return fonteDados
