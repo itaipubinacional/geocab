@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<!-- header -->
+<div id="header-page">
+
+	<!-- navbar 1 -->
+	<div class="navbar navbar-1" style="z-index: 1002;">
+		<a class="logo" href="./">&nbsp;</a>
+		<div class="nav-collapse collapse">
+			<div class="left-side">
+				<div style="float: left; margin-top: 23px">
+					<span style="font-size: 17px"><b style="font-size: 17px">PMI</b>
+						- PORTAL DE MAPAS ITAIPU</span>
+				</div>
+			</div>
+
+			<ul class="nav navbar-nav pull-right right-side">
+				<li><a href="#" class="active box-separator"
+					style="border: none; margin-top: 7px;"> <span
+						style="color: #000000" ng-bind="usuarioAutenticado.nomeCompleto"></span>
+				</a></li>
+				<li class="box-separator"></li>
+				<li>
+					<div class="user-logout">
+						<a onclick="autenticacaoService.deslogar();" href="./autenticacao">Sair</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- navbar 2 -->
+	<div class="navbar navbar-2" style="z-index: 1001;"
+		ng-if="usuarioAutenticado.papelUsuario == 'ADMINISTRADOR'">
+		<div class="navbar-inner border-radius-0">
+
+			<div class="nav-collapse collapse">
+				<ul class="nav navbar-nav">
+
+					<li class="position-relative"><a href="./"
+						style="width: 50px;" ng-class="{active: menuActive == null}"><span
+							class="icon-mapa-interativo"></span></a></li>
+
+					<li class="position-relative"><a
+						href="administrativo#/fonte-dados"
+						ng-class="{active: menuActive == 'fonte-dados'}"
+						style="width: 150px;">Fonte de dados</a></li>
+
+					<li class="position-relative"><a
+						href="administrativo#/grupo-camadas"
+						ng-class="{active: menuActive == 'grupo-camadas'}"
+						style="width: 150px;">Grupo de camadas</a></li>
+
+                    <li class="position-relative"><a
+                            href="administrativo#/configuracao-camadas"
+                            ng-class="{active: menuActive == 'configuracao-camadas'}"
+                            style="width: 150px;">Camadas</a></li>
+
+                    <li class="position-relative"><a
+                            href="administrativo#/pesquisa-personalizada"
+                            ng-class="{active: menuActive == 'pesquisa-personalizada'}"
+                            style="width: 150px;">Pesquisa</a></li>
+
+                    <li class="position-relative"><a
+                            href="administrativo#/grupo-acesso"
+                            ng-class="{active: menuActive == 'grupo-acesso'}"
+                            style="width: 150px;">Grupo de acesso</a></li>
+
+                    <!--<li class="position-relative"><a href="#"
+                        style="width: 150px;">Grupo de acesso</a></li> -->
+
+					<!--<li class="position-relative"><a href="#"-->
+					<!--style="width: 150px;">Filtros</a></li>-->
+
+					<!--<li class="position-relative"><a href="#"-->
+					<!--style="width: 150px;">Ordenacao</a></li>-->
+                </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="assets/libs/activity-dialog.js"></script>
+
+</html>
