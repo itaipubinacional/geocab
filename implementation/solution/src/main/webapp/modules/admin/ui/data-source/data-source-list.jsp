@@ -25,7 +25,7 @@
                    max-size="currentPage.totalPages"
                    ng-change="changeToPage(data.filter, currentPage.pageable.pageNumber)"
                    ng-model="currentPage.pageable.pageNumber" boundary-links="true"
-                   previous-text="â€¹" next-text="â€º" first-text="Â«" last-text="Â»">
+                   previous-text="‹" next-text="›" first-text="«" last-text="»">
        </pagination>
     </div>
 
