@@ -30,6 +30,25 @@
 			}
         });
         
+      //Users
+		$stateProvider.state('users', {
+			url : "/users",
+			templateUrl : "modules/admin/ui/users/users-view.jsp",
+			controller : UsersController
+		}).state('users.list', {
+			url: "/list",
+			menu: "users"
+		}).state('users.create', {
+			url : "/create",
+			menu: "users"
+		}).state('users.detail', {
+			url: "/defail/:id",
+			menu: "users"
+		}).state('users.update', {
+			url : "/update/:id",
+			menu: "users"
+		});
+
       //Data source
 		$stateProvider.state('data-source', {
 			url : "/data-source",
