@@ -35,9 +35,9 @@ function AbstractCRUDController( $scope, $log, $state, $rootScope, $timeout ) {
         $scope.checkAccess();
         $rootScope.menuActive = $state.current.menu;
     	$scope.initialize(toState, toParams, fromState, fromParams);
-        if (toState.url != '/detalhe/:id' && toState.url != "/listar") {
+        if (toState.url != '/defail/:id' && toState.url != "/list") {
             $scope.msg = null;
-        }else if( $scope.msg != null && toState.url == "/listar" && $scope.msg.type == 'danger'){
+        }else if( $scope.msg != null && toState.url == "/list" && $scope.msg.type == 'danger'){
             $scope.msg = null;
         };
         

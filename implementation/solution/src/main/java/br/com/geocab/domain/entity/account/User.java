@@ -42,7 +42,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	//----
 	// Usuários padrões
 	//----
-	public static final User ADMINISTRATOR = new User(1L, "admin@geocab.com.br", "admin");
+	public static final User ADMINISTRATOR = new User(1L, "Administrator", "admin@geocab.com.br"  , true , UserRole.ADMINISTRATOR , "admin");
 	
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
@@ -107,12 +107,44 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 * 
 	 * @param id
 	 */
-	public User( Long id, String email, String password )
+	public User( Long id, String name, String email , boolean enabled )
 	{
 		super( id );
 		this.email = email;
-		this.password = password;
+		this.name = name;
+		this.enabled = enabled;
 	}
+	
+	/**
+	 * 
+	 * @param id
+	 */
+	public User( Long id, String name, String email , boolean enabled , UserRole role )
+	{
+		super( id );
+		this.email = email;
+		this.name = name;
+		this.enabled = enabled;
+		this.role = role;
+	}
+
+
+	
+	/**
+	 * 
+	 * @param id
+	 */
+	public User( Long id, String name, String email,  boolean enabled ,  UserRole role , String password  )
+	{
+		super( id );
+		this.email = email;
+		this.name = name;
+		this.enabled = enabled;
+		this.password = password;
+		this.role = role;
+	}
+	
+	
 
 	/*-------------------------------------------------------------------
 	 *							BEHAVIORS
@@ -222,7 +254,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	{
 		return name;
 	}
-
+	
 	/**
 	 * @param name the name to set
 	 */

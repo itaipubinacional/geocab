@@ -15,6 +15,7 @@ public class JpaRepositoryFactoryBean<R extends JpaRepository<Entity, I>, Entity
 	/**
 	 * 
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	protected RepositoryFactorySupport createRepositoryFactory( EntityManager entityManager)
 	{
@@ -42,6 +43,7 @@ public class JpaRepositoryFactoryBean<R extends JpaRepository<Entity, I>, Entity
 		/**
 		 * 
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		protected Object getTargetRepository(RepositoryMetadata metadata)
 		{
@@ -51,6 +53,7 @@ public class JpaRepositoryFactoryBean<R extends JpaRepository<Entity, I>, Entity
 		/**
 		 * 
 		 */
+		@Override
 		protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata)
 		{
 			// The RepositoryMetadata can be safely ignored, it is used by the

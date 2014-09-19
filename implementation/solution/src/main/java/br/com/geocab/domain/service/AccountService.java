@@ -2,6 +2,8 @@ package br.com.geocab.domain.service;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class AccountService
 	@Autowired
 	private ShaPasswordEncoder passwordEncoder;
 	/**
-	 * Gerardor Hash para criptografia
+	 * Gerador Hash para criptografia
 	 */
 	@Autowired
 	private SaltSource saltSource;
@@ -48,22 +50,49 @@ public class AccountService
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	
 	/**
 	 * 
 	 * @param user
 	 * @return
 	 */
-	public User insertUser( User user )
+	public User insertUser( User user )//TODO: only admin
+	{
+		Assert.notNull( user );
+		
+		user.setEnabled(true);
+		
+		//encrypt password
+		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); 
+		user.setPassword( encodedPassword );
+		
+		return this.userRepository.save( user );
+	}
+	
+	public User createUser( User user )
 	{
 		Assert.notNull( user );
 		
 		user.setEnabled(true);
 		user.setRole(UserRole.USER);
-		
-		//Criptografa a senha
+				
+		//encrypt password
 		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); 
 		user.setPassword( encodedPassword );
 		
 		return this.userRepository.save( user );
+	}
+	
+	/**
+	 * Método para listar as fontes de dados paginadas com opção do filtro
+	 *
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public Page<User> listUsersByFilters( String filter, PageRequest pageable )
+	{
+		return this.userRepository.listByFilters(filter, pageable);
 	}
 }
