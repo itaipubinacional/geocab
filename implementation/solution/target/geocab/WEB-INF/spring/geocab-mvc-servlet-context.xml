@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr/spring-dwr-3.0.xsd"
+	default-autowire="byName">
+	
+	<!-- ============================ USER INTERFACE ================================= -->
+	
+	<!--
+		STATIC RESOURCES
+	-->
+	<!-- JS Classes mappings --> 
+ 	<mvc:resources location="/modules/**.js" mapping="/modules/**"/>
+ 	<!-- Static resources mappings --> 
+ 	<mvc:resources location="/static/" mapping="/static/**"/>
+ 	<!-- Webjars resources mappings -->
+ 	<mvc:resources location="classpath:META-INF/resources/webjars/" mapping="/webjars/**"/>
+ 	
+ 	<!--
+		DYNAMIC VIEWS
+	-->
+	<!-- This View Resolver maps JSP files, from jars "META-INF/resources" folder -->
+   	<bean name="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+   		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<!-- ============================ APPLICATION ================================= -->
+	<!-- 
+		DWR 
+	-->
+ 	<!-- DWR will map util.js and engine.js files to the dwrController. 
+  		You can then include this files as external Javascript references from your JSP  -->
+	<dwr:url-mapping />
+
+	<!-- DWR - Defines the dwrController. During production, set the debug property to false -->
+	<dwr:controller debug="false">
+		<dwr:config-param name="scriptCompressed" value="true"/>
+		<dwr:config-param name="jsonpEnabled" value="true"/>
+    	<dwr:config-param name="activeReverseAjaxEnabled" value="false"/> 
+	</dwr:controller>
+	
+	<!--
+		CONTROLLERS
+	-->
+	<mvc:annotation-driven />
+	
+	<!-- The controllers are autodetected POJOs labeled with the @Controller annotation. --> 
+	<context:component-scan  
+		base-package="br.com.geocab.application.controller"/>
+		
+	<!-- Interceptors -->
+	<mvc:interceptors>
+		<!-- To change the Locale, via URL. E.g.: /myURL?locale=en_US -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+    		<property name="paramName" value="locale"/>
+		</bean>
+		<bean class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor"/>
+	</mvc:interceptors>
+
+	<!-- I18N -->
+	<bean id="localeResolver"
+        class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="pt_BR"/>
+        <property name="cookieMaxAge" value="604800"/> <!-- 1 month -->
+	</bean>
+    
+</beans>
