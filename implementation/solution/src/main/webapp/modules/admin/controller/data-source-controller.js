@@ -69,6 +69,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * o estado para a edição de registros.
 	 */
 	$scope.UPDATE_STATE = "data-source.edit";
+	
 	/**
 	 * Variável que armazena o estado corrente da tela.
 	 * Esta variável deve SEMPRE estar de acordo com a URL 

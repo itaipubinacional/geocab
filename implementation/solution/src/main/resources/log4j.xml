@@ -21,7 +21,7 @@
 	</logger>
 	
 	<logger name="org.directwebremoting">
-		<level value="WARN" />
+		<level value="DEBUG" />
 	</logger>
 	
 	<logger name="org.hibernate">
