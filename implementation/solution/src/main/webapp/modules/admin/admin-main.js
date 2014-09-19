@@ -2,13 +2,18 @@
 	"use strict";
 			
 	//Start the AngularJS
-	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker"]);
+	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate"]);
 	
-	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider ) {
+	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider, $translateProvider ) {
 		//-------
 		//Broker configuration
 		//-------
 		$importServiceProvider.setBrokerURL("broker/interface");
+		
+		//-------
+		//Translate configuration
+		//-------
+		$translateProvider.useURL('./bundles');
 		
 		//-------
 		//URL Router
@@ -121,7 +126,10 @@
 		
 	});
 	
-	projectModule.run( function( $rootScope, $state, $stateParams ) {
+	projectModule.run( function( $rootScope, $state, $stateParams, $translate ) {
+		
+		console.log( $translate("admin.datasource.Name-or-address") );
+		
 		$rootScope.$state = $state;
 	    $rootScope.$stateParams = $stateParams;
 	});

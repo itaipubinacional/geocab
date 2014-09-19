@@ -1,11 +1,16 @@
 package br.com.geocab.application.controller;
 
 import java.util.Locale;
+import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import br.com.geocab.application.ResourceBundleMessageSource;
 
 /**
  * 
@@ -20,7 +25,12 @@ public class NavigationController
 	/*-------------------------------------------------------------------
 	 * 		 				 		ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	
+	/**
+	 * 
+	 */
+	@Autowired
+	private ResourceBundleMessageSource messageSource;
+
 	/*-------------------------------------------------------------------
 	 * 		 				 		BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -50,4 +60,16 @@ public class NavigationController
 	{
 		return "modules/authentication/ui/index";
 	}
+	
+	/**
+	 * 
+	 * @param lang
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/bundles", method = RequestMethod.GET)
+    public Properties listMessageBundles( Locale locale ) 
+	{
+        return this.messageSource.getProperties( locale );
+    }
 }

@@ -35,7 +35,7 @@
 		location="classpath:geocab.properties, classpath:geocab-persistence.properties" />
 		
 	<!-- I18N -->
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    <bean id="messageSource" class="br.com.geocab.application.ResourceBundleMessageSource">
         <property name="basenames" value="classpath:i18n/admin, classpath:i18n/map, classpath:i18n/exceptions"/>
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="useCodeAsDefaultMessage" value="false"/>

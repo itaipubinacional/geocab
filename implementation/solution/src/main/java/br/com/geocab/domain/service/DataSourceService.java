@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
-import br.com.geocab.application.Messages;
 import br.com.geocab.domain.repository.datasource.IDataSourceRepository;
 
 /**
@@ -70,16 +69,16 @@ public class DataSourceService
 		{
 			LOG.info( e.getMessage() );
 			final String error = e.getCause().getCause().getMessage();
-			
-			// Captura e retorna a exce��o de dados �nicos
-			if(error.contains("uk_fonte_dados_nome"))
-			{
-				throw new IllegalArgumentException( Messages.getException( "fontedados.nome_existe" ) );
-			}
-			else if(error.contains("uk_fonte_dados_endereco"))
-			{
-				throw new IllegalArgumentException( Messages.getException( "fontedados.endereco_existe" ) );
-			}
+//			
+//			// Captura e retorna a exce��o de dados �nicos
+//			if(error.contains("uk_fonte_dados_nome"))
+//			{
+//				throw new IllegalArgumentException( Messages.getException( "fontedados.nome_existe" ) );
+//			}
+//			else if(error.contains("uk_fonte_dados_endereco"))
+//			{
+//				throw new IllegalArgumentException( Messages.getException( "fontedados.endereco_existe" ) );
+//			}
 		}
 		return dataSource; 
 	}
@@ -100,15 +99,15 @@ public class DataSourceService
 			LOG.info( e.getMessage() );
 			final String error = e.getCause().getCause().getMessage();
 			
-			// Captura e retorna a exce��o de dados �nicos
-			if(error.contains("uk_fonte_dados_nome"))
-			{
-				throw new IllegalArgumentException( Messages.getException( "fontedados.nome_existe" ) );
-			}
-			else if(error.contains("uk_fonte_dados_endereco"))
-			{
-				throw new IllegalArgumentException( Messages.getException( "fontedados.endereco_existe" ) );
-			}
+//			// Captura e retorna a exce��o de dados �nicos
+//			if(error.contains("uk_fonte_dados_nome"))
+//			{
+//				throw new IllegalArgumentException( Messages.getException( "fontedados.nome_existe" ) );
+//			}
+//			else if(error.contains("uk_fonte_dados_endereco"))
+//			{
+//				throw new IllegalArgumentException( Messages.getException( "fontedados.endereco_existe" ) );
+//			}
 		}
 		return dataSource;
 	}
