@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<!-- Grupo de camadas - Main View -->
+<div>
+     <div class="navbar">
+
+         <!--Mensagens-->
+         <div ng-include="'assets/libs/eits-directives/alert/alert.html'" style="margin-bottom: 15px"></div>
+
+         <div class="navbar-inner navbar-container">
+			<div ng-switch on="currentState" class="navbar-title" style="float: left; width: 180px;">
+			    <span ng-switch-when="grupo-camadas.listar">GRUPO DE CAMADAS</span>
+			    <span ng-switch-default>GRUPO DE CAMADAS - Carregando...</span>
+			</div>
+			
+			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="publishGrupoCamadas()"
+			        class="btn btn-warning">Publicar
+			</button>
+			
+			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="saveGrupoCamadas()"
+			        class="btn btn-success">Salvar ordenação
+			</button>
+             
+			<button ng-show="currentState == LIST_STATE" style="float: left; margin-bottom: 15px; width: 122px;" ng-click="newGrupoCamadas()"
+				class="btn btn-default"><div class="icon itaipu-icon-folder" style="float: left;margin-top: 2px;margin-right: 4px;"></div>Novo grupo
+			</button>
+
+         </div>
+     </div>
+    
+    <!-- Partial views dos states -->
+	<div ng-switch on="currentState">
+        <div ng-switch-when="grupo-camadas.listar">
+        	<div ng-include="'modules/administrativo/ui/grupo-camadas/grupo-camadas-list.html'"></div>
+        </div>
+    </div>
+</div>
+</html>
