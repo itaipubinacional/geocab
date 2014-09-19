@@ -310,7 +310,7 @@ public class PageImpl<T> implements Page<T>, Serializable
 	{
 		String contentType = "UNKNOWN";
 
-		if ( !content.isEmpty() )
+		if ( content.size() > 0 )
 		{
 			contentType = content.get(0).getClass().getName();
 		}

@@ -33,11 +33,11 @@
       //Data source
 		$stateProvider.state('data-source', {
 			url : "/data-source",
-			templateUrl : "modules/admin/ui/data-source/data-source-view.html",
+			templateUrl : "modules/admin/ui/data-source/data-source-view.jsp",
 			controller : DataSourceController
 		})
 		.state('data-source.detail', {
-			url: "/defail/:id",
+			url: "/detail/:id",
 			menu: "data-source"
 		})
 		.state('data-source.list', {

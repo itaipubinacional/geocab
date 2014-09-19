@@ -96,7 +96,7 @@
 		<dwr:convert type="exception" class="java.lang.Exception"/>
 		<dwr:convert type="object" class="java.lang.StackTraceElement"/>
 		<dwr:convert type="enum" class="org.springframework.data.domain.Direction"/>
-		<dwr:convert type="bean" class="org.springframework.data.domain.Order"/>
+		<dwr:convert type="bean" class="org.springframework.data.domain.Order" javascript="Order"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.Sort" javascript="Sort"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageImpl" javascript="PageImpl"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageRequest" javascript="PageRequest"/>

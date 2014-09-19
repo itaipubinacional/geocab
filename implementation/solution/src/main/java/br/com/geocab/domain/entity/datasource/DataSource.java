@@ -61,6 +61,11 @@ public class DataSource extends AbstractEntity implements Serializable
 	@Column(nullable=true, length=144)
 	private String password;
 	
+	/**
+	 * Flag to see if it is internal or external {@link DataSource}
+	 */
+	private Boolean internal;
+
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -80,6 +85,37 @@ public class DataSource extends AbstractEntity implements Serializable
 	public DataSource( Long id )
 	{
 		this.setId(id);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param url
+	 * @param login
+	 * @param password
+	 */
+	public DataSource( Long id, String name, String url, String login, String password)
+	{
+		this.setId(id);
+		this.setName(name);
+		this.setUrl(url);
+		this.setLogin(login);
+		this.setPassword(password);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param url
+	 */
+	public DataSource( Long id, String name, String url)
+	{
+		this.setId(id);
+		this.setName(name);
+		this.setUrl(url);
+
 	}
 
 	/*-------------------------------------------------------------------
@@ -201,5 +237,21 @@ public class DataSource extends AbstractEntity implements Serializable
 	public void setPassword(String password)
 	{
 		this.password = password;
+	}
+	
+	/**
+	 * @return the internal
+	 */
+	public Boolean getInternal()
+	{
+		return internal;
+	}
+
+	/**
+	 * @param internal the internal to set
+	 */
+	public void setInternal(Boolean internal)
+	{
+		this.internal = internal;
 	}
 }

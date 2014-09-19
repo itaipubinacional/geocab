@@ -100,6 +100,7 @@
 		<dwr:convert type="bean" class="org.springframework.data.domain.Sort" javascript="Sort"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageImpl" javascript="PageImpl"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageRequest" javascript="PageRequest"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.datasource.DataSource" javascript="DataSource"/>
 	</dwr:configuration>
 
 	<!--
