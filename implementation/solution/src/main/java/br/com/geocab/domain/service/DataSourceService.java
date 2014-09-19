@@ -157,11 +157,12 @@ public class DataSourceService
 	{
 		return this.dataSourceRepository.listByFilters(filter, pageable);
 	}
+//	
+//	@Transactional(readOnly=true)
+//	public boolean testaConexao(String url)
+//	{
+//		GeoserverConnection geoserverConnection = new GeoserverConnection();
+//		return geoserverConnection.testaConexao(url);
+//	}
 	
-	@Transactional(readOnly=true)
-	public boolean testaConexao(String url)
-	{
-		GeoserverConnection geoserverConnection = new GeoserverConnection();
-		return geoserverConnection.testaConexao(url);
-	}	
 }
