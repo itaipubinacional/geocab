@@ -23,7 +23,7 @@ import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 import br.com.geocab.domain.repository.datasource.IDataSourceRepository;
 
 /**
- * Classe pertinente ao controle das a��es daaaa {@link FonteDados}}
+ * Class to manage of entities {@link FonteDados}
  * 
  * @author Marcos
  * @since 27/05/2014
@@ -46,7 +46,7 @@ public class DataSourceService
 	 */
 	private static final Logger LOG = Logger.getLogger( DataSourceService.class.getName() );
 	/**
-	 * Reposit�rio de uma {@link DataSource}
+	 * Repository of {@link DataSource}
 	 */
 	@Autowired
 	private IDataSourceRepository dataSourceRepository;
@@ -57,8 +57,8 @@ public class DataSourceService
 	/**
 	 * Method to insert an {@link DataSource}
 	 * 
-	 * @param fonteDados
-	 * @return fonteDados
+	 * @param DataSource
+	 * @return DataSource
 	 */
 	public DataSource insertDataSource( DataSource dataSource )
 	{
@@ -84,10 +84,10 @@ public class DataSourceService
 	}
 	
 	/**
-	 * m�todo para atualizar uma {@link FonteDados}
+	 * Method to update an {@link DataSource}
 	 * 
-	 * @param fonteDados
-	 * @return fonteDados
+	 * @param dataSource
+	 * @return dataSource
 	 */
 	public DataSource updateDataSource( DataSource dataSource )
 	{			
@@ -113,7 +113,7 @@ public class DataSourceService
 	}
 	
 	/**
-	 * m�todo para remover uma {@link FonteDados}
+	 * Method to remove an {@link FonteDados}
 	 * 
 	 * @param id
 	 */
@@ -123,10 +123,10 @@ public class DataSourceService
 	}
 	
 	/**
-	 * m�todo para encontrar uma {@link FonteDados} pelo id
+	 * Method to find an {@link FonteDados} by id
 	 * 
 	 * @param id
-	 * @return fonteDados
+	 * @return dataSource
 	 * @throws JAXBException 
 	 */
 	@Transactional(readOnly = true)
@@ -146,7 +146,7 @@ public class DataSourceService
 	}
 	
 	/**
-	 * M�todo para listar as fontes de dados paginadas com op��o do filtro
+	 * Method to list data source pageable with filter options
 	 *
 	 * @param filter
 	 * @param pageable
@@ -163,6 +163,5 @@ public class DataSourceService
 	{
 		GeoserverConnection geoserverConnection = new GeoserverConnection();
 		return geoserverConnection.testaConexao(url);
-	}
-	
+	}	
 }
