@@ -140,6 +140,24 @@
 			<artifactId>bootstrap</artifactId>
 			<version>3.2.0</version>
 		</dependency>
+		
+		<!-- OGC SCHEMAS -->
+		<dependency>
+			<groupId>org.jvnet.ogc</groupId>
+			<artifactId>wfs-v_1_1_0-schema</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jvnet.ogc</groupId>
+			<artifactId>wms-v_1_3_0-schema</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+		
 	</dependencies>
-
+	
 </project>
