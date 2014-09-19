@@ -69,7 +69,7 @@ function AbstractCRUDController( $scope, $log, $state, $rootScope, $timeout ) {
      * Caso houver incluimos evento de clique em toda a tela para que
      * a mensagem seja fechada clicando em qualquer lugar da tela.
      */
-    $scope.$watch('msg', function( newValue, oldValue ){
+    /*$scope.$watch('msg', function( newValue, oldValue ){
     	$timeout(function(){
 	    	if( newValue && newValue.text && newValue.text.length > 0 ){
 	    		angular.element( $('.htmlMain') ).bind('click', function(){
@@ -79,7 +79,7 @@ function AbstractCRUDController( $scope, $log, $state, $rootScope, $timeout ) {
 	    		});
 	    	}
     	});
-    });
+    });*/
     
     /**
      *

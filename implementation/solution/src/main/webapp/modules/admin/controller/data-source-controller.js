@@ -14,8 +14,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 */
 	$injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 	
-	
-	console.log($importService("PageRequest"));
+	console.log($importService("dataSourceService"));
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
@@ -41,7 +40,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 			$scope.currentPage.pageable.sort = new Sort();
 			$scope.currentPage.pageable.sort.orders = [ order ];
 
-			$scope.listFontesDadosByFilters( $scope.data.filter, $scope.currentPage.pageable );
+			$scope.listDataSourceByFilters( $scope.data.filter, $scope.currentPage.pageable );
 		}
 	});
 
@@ -68,7 +67,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * Variável estática que representa
 	 * o estado para a edição de registros.
 	 */
-	$scope.UPDATE_STATE = "data-source.edit";
+	$scope.UPDATE_STATE = "data-source.update";
 	/**
 	 * Variável que armazena o estado corrente da tela.
 	 * Esta variável deve SEMPRE estar de acordo com a URL 
@@ -83,8 +82,8 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
 	 */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
-	'<a ui-sref="fonte-dados.editar({id:row.entity.id})" title="Editar" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>'+
-	'<a ng-click="changeToRemove(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
+	'<a ui-sref="data-source.update({id:row.entity.id})" title="Update" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>'+
+	'<a ng-click="changeToRemove(row.entity)" title="Remove" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
 	'</div>';
 
 	/**
@@ -104,8 +103,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 			},
 			columnDefs: [
 			             {displayName:'Name', field:'name'},
-			             {displayName:'Type', field:'typeDataSource', width:'8%'},
-			             {displayName:'Address', field:'address',  width:'55%'},
+			             {displayName:'Address', field:'url',  width:'55%'},
 			             {displayName:'Action', sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}
 			             ]
 	};
@@ -146,7 +144,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		var state = $state.current.name;
-		
+	
 		/**
 		 * É necessario remover o atributo sortInfo pois o retorno de uma edição estava duplicando o valor do mesmo com o atributo Sort
 		 * impossibilitando as ordenações nas colunas da grid.
@@ -190,13 +188,14 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 */
 	$scope.changeToList = function() {
 		$log.info("changeToList");
-
-		$scope.currentState = $scope.LIST_STATE;
-		/*var pageRequest = new PageRequest();
+		
+		var pageRequest = new PageRequest();
 		pageRequest.size = 6;
 		$scope.pageRequest = pageRequest;
 
-		$scope.listFontesDadosByFilters( null, pageRequest );*/
+		$scope.listDataSourceByFilters( null, pageRequest );
+		
+		$scope.currentState = $scope.LIST_STATE;
 	};
 
 	/**
@@ -211,6 +210,8 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	$scope.changeToInsert = function() {
 		$log.info("changeToInsert");
 
+		$scope.currentEntity = new DataSource();
+		$scope.currentEntity.typeDataSource = "WMS";
 		/*
 		$scope.currentEntity = new FonteDados();
 		
@@ -233,7 +234,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	$scope.changeToUpdate = function( id ) {
 		$log.info("changeToUpdate", id);
 
-		fonteDadosService.findFonteDadosById( $state.params.id, {
+		dataSourceService.findDataSourceById( $state.params.id, {
 			callback : function(result) {
 				$scope.currentEntity = result;
 				$scope.currentState = $scope.UPDATE_STATE;
@@ -267,7 +268,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 			return;
 		}
 
-		fonteDadosService.findFonteDadosById( id, {
+		dataSourceService.findDataSourceById( id, {
 			callback : function(result) {
 				$scope.currentEntity = result;
 				$scope.currentState = $scope.DETAIL_STATE;
@@ -289,33 +290,33 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * e só então o registro é excluido.
 	 * Após excluído, atualizamos a grid com estado de filtro, paginação e sorting. 
 	 */
-	$scope.changeToRemove = function( fonteDados ) {
-		$log.info("changeToRemove", fonteDados);
+	$scope.changeToRemove = function( dataSource ) {
+		$log.info("changeToRemove", dataSource);
 
 		var dialog = $modal.open( {
-			templateUrl: "assets/libs/eits-directives/dialog/dialog-template.html",
+			templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
 			controller: DialogController,
 			windowClass: 'dialog-delete',
 			resolve: {
 				title: function(){return "Exclusão de fonte de dados";},
-				message: function(){return 'Tem certeza que deseja excluir a fonte de dados "'+fonteDados.nome+'"? <br/>Esta operação não poderá mais ser desfeita.';},
+				message: function(){return 'Tem certeza que deseja excluir a fonte de dados "'+dataSource.name+'"? <br/>Esta operação não poderá mais ser desfeita.';},
 				buttons: function(){return [ {label:'Excluir', css:'btn btn-danger'}, {label:'Cancelar', css:'btn btn-default', dismiss:true} ];}
 			}
 		});
 
         dialog.result.then( function(result) {
 
-			fonteDadosService.removeFonteDados( fonteDados.id, {
+			dataSourceService.removeDataSource( dataSource.id, {
 				callback : function(result) {
 					//caso o currentPage esteja null, configura o pager default
 					if ( $scope.currentPage == null ) {
 						$scope.changeToList();
 						//caso não, usa o mesmo estado para carregar a listagem
 					} else {
-						$scope.listFontesDadosByFilters($scope.data.filter, $scope.currentPage.pageable);
+						$scope.listDataSourceByFilters($scope.data.filter, $scope.currentPage.pageable);
 					}
 
-					$scope.msg = {type: "success", text: 'O registro "'+fonteDados.nome+'" foi excluído com sucesso.', dismiss:true};
+					$scope.msg = {type: "success", text: 'O registro "'+dataSource.name+'" foi excluído com sucesso.', dismiss:true};
 				},
 				errorHandler : function(message, exception) {
 					$scope.msg = {type:"danger", text: message, dismiss:true};
@@ -334,7 +335,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 */
 	$scope.changeToPage = function( filter, pageNumber ) {
 		$scope.currentPage.pageable.page = pageNumber-1;
-		$scope.listFontesDadosByFilters( filter, $scope.currentPage.pageable );
+		$scope.listDataSourceByFilters( filter, $scope.currentPage.pageable );
 	};
 
 	/*-------------------------------------------------------------------
@@ -348,9 +349,9 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * @see data.filter
 	 * @see currentPage
 	 */
-	$scope.listFontesDadosByFilters = function( filter, pageRequest ) {
+	$scope.listDataSourceByFilters = function( filter, pageRequest ) {
 
-		fonteDadosService.listFonteDadosByFilters( filter, pageRequest, {
+		dataSourceService.listDataSourceByFilters( filter, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
@@ -366,17 +367,17 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	};
 
 	/**
-	 * Realiza a inserção de um novo registro
-	 * e no suscesso, modifica o estado da tela para o detail.
+	 * Insert a new Data Source
+	 * If success, change to detail state.
 	 */
-	$scope.insertFonteDados = function( fonteDados ) {
+	$scope.insertDataSource = function() {
 
 		if ( !$scope.form().$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
 			return;
 		}
 
-		fonteDadosService.insertFonteDados( fonteDados, {
+		dataSourceService.insertDataSource( $scope.currentEntity, {
 			callback : function() {
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
@@ -394,14 +395,14 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * Realiza a atualiza de um registro
 	 * e no sucesso modifica o estado da tela para o estado de detalhe
 	 */
-	$scope.updateFonteDados = function( fonteDados ) {
+	$scope.updateDataSource = function() {
 
 		if ( !$scope.form().$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
 			return;
 		}
 
-		fonteDadosService.updateFonteDados( fonteDados, {
+		dataSourceService.updateDataSource( $scope.currentEntity , {
 			callback : function() {
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);

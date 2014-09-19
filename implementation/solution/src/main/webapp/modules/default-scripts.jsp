@@ -19,6 +19,7 @@
 <script type="text/javascript" src="<c:url value="/webjars/angular-ui-router/0.2.10/angular-ui-router.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/webjars/ng-grid/2.0.11/ng-grid.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/webjars/angular-ui-bootstrap/0.11.0/ui-bootstrap-tpls.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/webjars/angular-sanitize/1.3.0-beta.18/angular-sanitize.min.js"/>"></script>
 
 <!-- Bootstrap -->
 <script type="text/javascript" src="<c:url value="/webjars/bootstrap/3.2.0/js/bootstrap.min.js"/>"></script>
@@ -27,5 +28,11 @@
 <script type="text/javascript" src="<c:url value="/broker/engine.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/broker/util.js"/>"></script>
 
-
 <script type="text/javascript" src="<c:url value="/static/js/eits/broker/eits-broker.js"/>"></script>
+
+<!-- Timeout Dialog -->
+<script type="text/javascript" src="<c:url value="/static/libs/timeout-dialog/timeout-dialog.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/static/libs/eits-directives/dialog/dialog-controller.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/static/libs/activity-dialog.js"/>"></script>  
+<!-- <script type="text/javascript" src="/static/libs/activity-dialog.js"></script> -->
