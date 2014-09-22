@@ -9,7 +9,7 @@
 <!-- Grupo de camadas - List -->
 
 <head>
-    <link rel="stylesheet" href="style/tree/tree-theme.css">
+    <link href="<c:url value="/static/style/tree/tree-theme.css"/>" type="text/css" rel="stylesheet" />
 </head>
 
 
@@ -24,9 +24,9 @@
 					<span ng-if="node.nodes && node.nodes.length == 0" class="glyphicon glyphicon-chevron-right glyphicon-without-nodes"></span>
 					<span ng-if="node.nodes != null" ng-class="'icon-child-node-tree'"></span>
 
-                    <a href="http://google.com"><img src="{{node.legenda}}" ng-if="node.nodes == null" style="margin-right: 5px; width: 20px; height: 20px; border: solid 1px #c9c9c9;"/></a>
+                    <a href="http://google.com"><img src="{{node.legend}}" ng-if="node.nodes == null" style="margin-right: 5px; width: 20px; height: 20px; border: solid 1px #c9c9c9;"/></a>
 
-                    {{node.nodes ? node.nome : node.titulo}}
+                    {{node.nodes ? node.name : node.title}}
                     <a ng-show="hover" data-nodrag class="icon itaipu-icon-edit tree-itaipu-icon" ng-if="node.nodes != null" data-nodrag ng-click="editItem(this)" style="position: absolute;margin-left: 18px;"></a>
                     <a ng-show="hover" data-nodrag class="icon itaipu-icon-delete tree-itaipu-icon"  ng-if="node.nodes != null" data-nodrag ng-click="removeItem(this)" style="position: absolute;margin-left: 48px;"></a>
                 </div>

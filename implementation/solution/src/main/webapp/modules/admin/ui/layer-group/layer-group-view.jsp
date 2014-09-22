@@ -15,19 +15,19 @@
 
          <div class="navbar-inner navbar-container">
 			<div ng-switch on="currentState" class="navbar-title" style="float: left; width: 180px;">
-			    <span ng-switch-when="grupo-camadas.listar">GRUPO DE CAMADAS</span>
+			    <span ng-switch-when="layer-group.list">GRUPO DE CAMADAS</span>
 			    <span ng-switch-default>GRUPO DE CAMADAS - Carregando...</span>
 			</div>
 			
-			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="publishGrupoCamadas()"
+			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="publishLayerGroup()"
 			        class="btn btn-warning">Publicar
 			</button>
 			
-			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="saveGrupoCamadas()"
-			        class="btn btn-success">Salvar ordenaÃ§Ã£o
+			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="saveLayerGroup()"
+			        class="btn btn-success">Salvar ordenação
 			</button>
              
-			<button ng-show="currentState == LIST_STATE" style="float: left; margin-bottom: 15px; width: 122px;" ng-click="newGrupoCamadas()"
+			<button ng-show="currentState == LIST_STATE" style="float: left; margin-bottom: 15px; width: 122px;" ng-click="newLayerGroup()"
 				class="btn btn-default"><div class="icon itaipu-icon-folder" style="float: left;margin-top: 2px;margin-right: 4px;"></div>Novo grupo
 			</button>
 

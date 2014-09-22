@@ -101,6 +101,7 @@
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageImpl" javascript="PageImpl"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageRequest" javascript="PageRequest"/>
 		<dwr:convert type="bean" class="br.com.geocab.domain.entity.datasource.DataSource" javascript="DataSource"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.LayerGroup" javascript="LayerGroup"/>
 	</dwr:configuration>
 
 	<!--
