@@ -6,12 +6,14 @@
  * @param $log
  * @param $location
  */
-function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal, $location ) {
+function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService ) {
     /**
      * Injeta os métodos, atributos e seus estados herdados de AbstractCRUDController.
      * @see AbstractCRUDController
      */
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
+    
+    $importService("layerGroupService");
 
     /*-------------------------------------------------------------------
      * 		 				 	EVENT HANDLERS
@@ -75,7 +77,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     	$scope.currentState = $scope.LIST_STATE;
         $state.go( $scope.LIST_STATE );
         
-        //$scope.changeToList();
+        $scope.changeToList();
 
     };
 
@@ -106,7 +108,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.listLayerGroup = function() {
 
-        grupoCamadasService.listSuperiores( {
+        layerGroupService.listLayersGroupUpper( {
             callback : function(result) {
                 $scope.currentPage = result;
                 $scope.currentState = $scope.LIST_STATE;
@@ -124,9 +126,9 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      * Save all nodes
      *
      */
-    $scope.saveGrupoCamadas = function( ) {
+    $scope.saveLayerGroup = function( ) {
 
-        grupoCamadasService.saveAllGrupoCamadas( getRootNodesScope().$nodesScope.$modelValue, {
+    	layerGroupService.saveAllLayersGroup( getRootNodesScope().$nodesScope.$modelValue, {
             callback : function() {
                 $scope.listLayerGroup();
                 isNeedSave = false;
@@ -141,9 +143,9 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         });
     };
 
-    $scope.publishGrupoCamadas = function() 
+    $scope.publishLayerGroup = function() 
     {
-        grupoCamadasService.publicarGrupoCamadas( getRootNodesScope().$nodesScope.$modelValue, {
+    	layerGroupService.publishLayerGroup( getRootNodesScope().$nodesScope.$modelValue, {
             callback : function() {
                 $scope.listLayerGroup();
                 isNeedSave = false;
@@ -187,19 +189,19 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         else
         {
             var dialog = $modal.open( {
-                templateUrl: "assets/libs/eits-directives/dialog/dialog-template.html",
+                templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
                 controller: DialogController,
                 windowClass: 'dialog-delete',
                 resolve: {
                     title: function(){return "Exclusão de grupo de camadas";},
-                    message: function(){return 'Tem certeza que deseja excluir o grupo de camadas "<b>'+scope.$modelValue.nome+'</b>"? <br/>Esta operação não poderá mais ser desfeita.';},
+                    message: function(){return 'Tem certeza que deseja excluir o grupo de camadas "<b>'+scope.$modelValue.name+'</b>"? <br/>Esta operação não poderá mais ser desfeita.';},
                     buttons: function(){return [ {label:'Excluir', css:'btn btn-danger'}, {label:'Cancelar', css:'btn btn-default', dismiss:true} ];}
                 }
             });
 
             dialog.result.then( function(result) {
 
-                grupoCamadasService.removeGrupoCamadas( scope.$modelValue.id, {
+            	layerGroupService.removeLayerGroup( scope.$modelValue.id, {
                     callback : function(result) {
                         scope.remove();
                         $scope.$apply();
@@ -219,7 +221,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     /**
      * Adiciona um novo grupo de camadas
      */
-    $scope.newGrupoCamadas = function () {
+    $scope.newLayerGroup = function () {
 
         /**
          * Se houver alguma mensagem sendo exibida,
@@ -235,11 +237,11 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
         var dialog = $modal.open( {
             keyboard: false,
-            templateUrl: 'modules/administrativo/ui/grupo-camadas/popup/grupo-camadas-popup.html',
-            controller: GrupoCamadasPopUpController,
+            templateUrl: 'modules/admin/ui/layer-group/popup/layer-group-popup.html',
+            controller: LayerGroupPopUpController,
             scope: $scope,
             resolve: {
-                grupos: function(){return getRootNodesScope().$nodesScope.$modelValue;},
+            	layerGroups: function(){return getRootNodesScope().$nodesScope.$modelValue;},
                 item: function(){return null;}
             }
         });
@@ -251,13 +253,13 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                 return;
             }
             
-            grupoCamadasService.insertGrupoCamadas( result, {
+            layerGroupService.insertLayerGroup( result, {
                 callback : function(result) {
                     result.nodes = [];
                     
                     getRootNodesScope().$nodesScope.$modelValue.unshift(result);
                     
-                    grupoCamadasService.saveAllParentGrupoCamadas( getRootNodesScope().$nodesScope.$modelValue, {
+                    layerGroupService.saveAllParentLayerGroup( getRootNodesScope().$nodesScope.$modelValue, {
                         callback : function() {
                             $scope.$apply();
                         },
@@ -287,11 +289,11 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
         var dialog = $modal.open({
             keyboard: false,
-            templateUrl: 'modules/administrativo/ui/grupo-camadas/popup/grupo-camadas-popup.html',
-            controller: GrupoCamadasPopUpController,
+            templateUrl: 'modules/admin/ui/layer-group/popup/layer-group-popup.html',
+            controller: LayerGroupPopUpController,
             scope: $scope,
             resolve: {
-                grupos: function(){return scope.$parentNodesScope.$modelValue;},
+            	layerGroups: function(){return scope.$parentNodesScope.$modelValue;},
                 item: function(){return scope.$modelValue;},
                 isNeedSave: function(){return isNeedSave;}
             }
@@ -306,13 +308,13 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                 return;
             }
 
-            scope.$modelValue.nome = result.nome;
+            scope.$modelValue.name = result.name;
 
-            grupoCamadasService.updateGrupoCamadas( scope.$modelValue, {
+            layerGroupService.updateLayerGroup( scope.$modelValue, {
                 callback : function(result) {
                     result.nodes = [];
 
-                    grupoCamadasService.saveAllParentGrupoCamadas( getRootNodesScope().$nodesScope.$modelValue, {
+                    layerGroupService.saveAllParentLayerGroup( getRootNodesScope().$nodesScope.$modelValue, {
                         callback : function() {
                             $scope.$apply();
                         },
@@ -377,7 +379,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
             for( var i= 0; i < destNodes.$modelValue.length; i++)
             {
-                if( destNodes.$modelValue[i].nodes && destNodes.$modelValue[i].nome == sourceNode.$modelValue.nome && destNodes.$modelValue[i].id != sourceNode.$modelValue.id )
+                if( destNodes.$modelValue[i].nodes && destNodes.$modelValue[i].name == sourceNode.$modelValue.name && destNodes.$modelValue[i].id != sourceNode.$modelValue.id )
                 {
                     $scope.msg = {type:"danger", text: "Já existe um grupo com este nome no mesmo nível", dismiss:true};
                     event.source.nodeScope.$$apply = false;
@@ -393,61 +395,61 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
             if( destNodes.$nodeScope == null )
             {
-                sourceNode.$modelValue.grupoCamadasSuperior = null;
+                sourceNode.$modelValue.layerGroupUpper = null;
             }
             else
             {
                 if( destNodes.$nodeScope )
                 {
-                    sourceNode.$modelValue.grupoCamadasSuperior = destNodes.$nodeScope.$modelValue;
+                    sourceNode.$modelValue.layerGroupUpper = destNodes.$nodeScope.$modelValue;
                 }
 
                 if( sourceNode.$modelValue.nodes == null )
                 {
-                    if ( destNodes.$nodeScope.$modelValue.camadas == null )
+                    if ( destNodes.$nodeScope.$modelValue.layers == null )
                     {
-                        destNodes.$nodeScope.$modelValue.camadas = new Array();
+                        destNodes.$nodeScope.$modelValue.layers = new Array();
                     }
 
-                    if( destNodes.$nodeScope.$modelValue.camadas.length == 0 )
+                    if( destNodes.$nodeScope.$modelValue.layers.length == 0 )
                     {
-                        destNodes.$nodeScope.$modelValue.camadas.push( sourceNode.$modelValue );
-                        destNodes.$nodeScope.$modelValue.gruposCamadas = null;
+                        destNodes.$nodeScope.$modelValue.layers.push( sourceNode.$modelValue );
+                        destNodes.$nodeScope.$modelValue.layersGroup = null;
                     }
-                    else if( destNodes.$nodeScope.$modelValue.camadas.length > 0 )
+                    else if( destNodes.$nodeScope.$modelValue.layers.length > 0 )
                     {
-                        for ( var i = 0; i < destNodes.$nodeScope.$modelValue.camadas.length; i++ )
+                        for ( var i = 0; i < destNodes.$nodeScope.$modelValue.layers.length; i++ )
                         {
-                            if( destNodes.$nodeScope.$modelValue.camadas[i].id == sourceNode.$modelValue.id )
+                            if( destNodes.$nodeScope.$modelValue.layers[i].id == sourceNode.$modelValue.id )
                             {
                                 return;
                             }
                         }
-                        destNodes.$nodeScope.$modelValue.camadas.push( sourceNode.$modelValue );
+                        destNodes.$nodeScope.$modelValue.layers.push( sourceNode.$modelValue );
                     }
                 }
                 else
                 {
-                    if ( destNodes.$nodeScope.$modelValue.gruposCamadas == null )
+                    if ( destNodes.$nodeScope.$modelValue.layersGroup == null )
                     {
-                        destNodes.$nodeScope.$modelValue.gruposCamadas = new Array();
+                        destNodes.$nodeScope.$modelValue.layersGroup = new Array();
                     }
 
-                    if( destNodes.$nodeScope.$modelValue.gruposCamadas.length == 0 )
+                    if( destNodes.$nodeScope.$modelValue.layersGroup.length == 0 )
                     {
-                        destNodes.$nodeScope.$modelValue.gruposCamadas.push( sourceNode.$modelValue );
-                        destNodes.$nodeScope.$modelValue.camadas = null;
+                        destNodes.$nodeScope.$modelValue.layersGroup.push( sourceNode.$modelValue );
+                        destNodes.$nodeScope.$modelValue.layers = null;
                     }
-                    else if( destNodes.$nodeScope.$modelValue.gruposCamadas.length > 0 )
+                    else if( destNodes.$nodeScope.$modelValue.layersGroup.length > 0 )
                     {
-                        for ( var i = 0; i < destNodes.$nodeScope.$modelValue.gruposCamadas.length; i++ )
+                        for ( var i = 0; i < destNodes.$nodeScope.$modelValue.layersGroup.length; i++ )
                         {
-                            if( destNodes.$nodeScope.$modelValue.gruposCamadas[i].id == sourceNode.$modelValue.id )
+                            if( destNodes.$nodeScope.$modelValue.layersGroup[i].id == sourceNode.$modelValue.id )
                             {
                                 return;
                             }
                         }
-                        destNodes.$nodeScope.$modelValue.gruposCamadas.push( sourceNode.$modelValue );
+                        destNodes.$nodeScope.$modelValue.layersGroup.push( sourceNode.$modelValue );
                     }
                 }
             }
