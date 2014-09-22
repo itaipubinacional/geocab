@@ -62,7 +62,7 @@
 						style="width: 150px;">Layer group</a></li>
 
                     <li class="position-relative"><a
-                            href="admin#/layers"
+                            href="admin#/layer-config"
                             ng-class="{active: menuActive == 'layers'}"
                             style="width: 150px;">Layers</a></li>
                 </ul>

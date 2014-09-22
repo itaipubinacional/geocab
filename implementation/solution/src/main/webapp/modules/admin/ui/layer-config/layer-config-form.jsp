@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<!-- Configuração de camada - Form -->
+<!-- Configuração de camada - Forms --> 
 <div>
 
     <form novalidate name="form"

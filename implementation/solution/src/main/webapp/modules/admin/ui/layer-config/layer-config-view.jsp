@@ -10,23 +10,23 @@
         <!-- Barra de Controle -->
         <div class="navbar-inner navbar-container">
             <div ng-switch on="currentState" class="navbar-title">
-                <span ng-switch-when="configuracao-camadas.listar">LISTA DE CAMADAS</span>
-                <span ng-switch-when="configuracao-camadas.detalhe">DETALHE DE CAMADA</span>
-                <span ng-switch-when="configuracao-camadas.criar">NOVA CAMADA</span>
-                <span ng-switch-when="configuracao-camadas.editar">ALTERAÇÃO DE CAMADA</span>
+                <span ng-switch-when="layer-config.list">LISTA DE CAMADAS</span>
+                <span ng-switch-when="layer-config.detail">DETALHE DE CAMADA</span>
+                <span ng-switch-when="layer-config.create">NOVA CAMADA</span>
+                <span ng-switch-when="layer-config.update">ALTERAÇÃO DE CAMADA</span>
                 <span ng-switch-default>LISTA DE CAMADAS - Carregando...</span>
             </div>
 
             <!-- State Listar -->
             <button ng-show="currentState == LIST_STATE" style="float: right;"
                     class="btn btn-primary"
-                    ui-sref="configuracao-camadas.criar">Nova camada
+                    ui-sref="layer-config.create">Nova camada
             </button>
 
             <!-- State Detalhe -->
             <button ng-show="currentState == DETAIL_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
                     class="btn btn-default"
-                    ui-sref="configuracao-camadas.listar"><span class="icon itaipu-icon-arrow-left"></span>
+                    ui-sref="layer-config.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button> 
             
             <button ng-show="currentState == DETAIL_STATE" style="float: right;"
@@ -35,14 +35,14 @@
             </button>
             <button ng-show="currentState == DETAIL_STATE" style="float: right;"
                     class="btn btn-primary"
-                    ui-sref="configuracao-camadas.editar( {id:currentEntity.id} )">Alterar
+                    ui-sref="layer-config.update( {id:currentEntity.id} )">Alterar
             </button>
 
             <!-- State Criar | Editar -->
             <button ng-show="currentState == INSERT_STATE || currentState == UPDATE_STATE"
                     style="float: left; margin-right: 15px; min-width: 40px;"
                     class="btn btn-default"
-                    ui-sref="configuracao-camadas.listar"><span class="icon itaipu-icon-arrow-left"></span>
+                    ui-sref="layer-config.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button>
 
             <!-- State Criar -->
@@ -62,20 +62,20 @@
 
     <!-- Partial views dos states -->
     <div ng-switch on="currentState">
-        <div ng-switch-when="configuracao-camadas.listar">
-            <div ng-include="'modules/administrativo/ui/configuracao-camadas/configuracao-camadas-list.html'"></div>
+        <div ng-switch-when="layer-config.list">
+            <div ng-include="'modules/admin/ui/layer-config/layer-config-list.jsp'"></div>
         </div>
-        <div ng-switch-when="configuracao-camadas.detalhe">
-            <div ng-include="'modules/administrativo/ui/configuracao-camadas/configuracao-camadas-detail.html'"></div>
+        <div ng-switch-when="layer-config.detail">
+            <div ng-include="'modules/admin/ui/layer-config/layer-config-detail.jsp'"></div>
         </div>
-        <div ng-switch-when="configuracao-camadas.criar">
-            <div ng-include="'modules/administrativo/ui/configuracao-camadas/configuracao-camadas-form.html'"></div>
+        <div ng-switch-when="layer-config.create">
+            <div ng-include="'modules/admin/ui/layer-config/layer-config-form.jsp'"></div>
         </div>
-        <div ng-switch-when="configuracao-camadas.editar">
-            <div ng-include="'modules/administrativo/ui/configuracao-camadas/configuracao-camadas-form.html'"></div>
+        <div ng-switch-when="layer-config.update">
+            <div ng-include="'modules/admin/ui/layer-config/layer-config-form.jsp'"></div>
         </div>
         <div ng-switch-default>
-            <div ng-include="'modules/loading.html'"></div>
+            <div ng-include="'modules/common/loading.jsp'"></div>
         </div>
     </div>
 </div>

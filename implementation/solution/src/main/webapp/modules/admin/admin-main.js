@@ -88,27 +88,27 @@
 			menu: "data-source"
 		});
 		
-		//Layers
-		$stateProvider.state('layers', {
-			url : "/layers",
-			templateUrl : "modules/admin/ui/layers/dlayers-view.html",
-			controller : DataSourceController
+		//Layer config
+		$stateProvider.state('layer-config', {
+			url : "/layer-config",
+			templateUrl : "modules/admin/ui/layer-config/layer-config-view.jsp",
+			controller : LayerConfigController
 		})
-		.state('layers.detail', {
+		.state('layer-config.detail', {
 			url: "/defail/:id",
-			menu: "data-source"
+			menu: "layer-config"
 		})
-		.state('layers.list', {
+		.state('layer-config.list', {
 			url: "/list",
-			menu: "data-source"
+			menu: "layer-config"
 		})
-		.state('layers.create', {
+		.state('layer-config.create', {
 			url : "/create",
-			menu: "data-source"
+			menu: "layer-config"
 		})
-		.state('layers.update', {
+		.state('layer-config.update', {
 			url : "/update/:id",
-			menu: "data-source"
+			menu: "layer-config"
 		});
 
 		
