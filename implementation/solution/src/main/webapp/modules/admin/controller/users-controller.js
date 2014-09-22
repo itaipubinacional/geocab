@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService ) {
+function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService , $translate) {
 	
 	/**
 	 * Inject methods, attributes and states inherited of the AbstractCRUDController 
@@ -73,7 +73,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 	 * Static variable
 	 * View edit a User
 	 */
-	$scope.UPDATE_STATE = "users.edit";
+	$scope.UPDATE_STATE = "users.update";
 	
 	/**
 	 * This variable store the current view state
@@ -88,13 +88,20 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 	 * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
 	 */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
-	'<a ui-sref="fonte-dados.editar({id:row.entity.id})" title="Editar" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>'+
-	'<a ng-click="changeToRemove(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
+	'<a ui-sref="users.update({id:row.entity.id})" title="'+$translate("admin.users.Edit")+'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>'+
+	'<a ng-click="changeToDisable(row.entity)" title="'+$translate("admin.users.Disable")+'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
 	'</div>';
    
     //TODO:Tranlate Ativo/Inativo
     var GRID_STATUS_FORMATER = ' <div class="ngCellText " ng-class="col.colIndex()"><span class="ng-binding" ng-cell-text="">'+
-    						   '{{row.entity.enabled == true && "Active" || "Inactive"}}</span></div>';
+    						   '{{row.entity.enabled == true && "'+$translate("admin.users.Active")+'" || "'+$translate("admin.users.Inactive")+'"}}</span></div>';
+    
+    //TODO:Tranlate Ativo/Inativo
+    var GRID_STATUS_FORMATER2 = ' <div class="ngCellText " ng-class="col.colIndex()"><span class="ng-binding" ng-cell-text="">'+
+    						   '{{row.entity.role == "ADMINISTRATOR" && "'+$translate("admin.users.Administrator")+'" || "" }}'+
+    						   '{{row.entity.role == "USER" && "'+$translate("admin.users.User")+'" || ""}}'+
+    						   '{{row.entity.role == "MODERATOR" && "'+$translate("admin.users.Moderator")+'" || ""}}'+
+    						   '</span></div>';
     
 	/**
 	 * ng-grid configurations. 
@@ -112,11 +119,11 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
 			},
 			columnDefs: [
-			             {displayName:'Name', field:'name'},
-			             {displayName:'E-mail', field:'email'},
-			             {displayName:'Type', field:'role' , width: '200px'},
-			             {displayName:'Status', field:'enabled' , width: '100px' , cellTemplate: GRID_STATUS_FORMATER },
-			             {displayName:'Action', sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}
+			             {displayName:$translate("admin.users.Name"), field:'name'},
+			             {displayName:$translate("admin.users.E-mail"), field:'email'},
+			             {displayName:$translate("admin.users.Access-profile"), field:'role' , width: '200px', cellTemplate: GRID_STATUS_FORMATER2},
+			             {displayName:$translate("admin.users.Status"), field:'enabled' , width: '100px' , cellTemplate: GRID_STATUS_FORMATER },
+			             {displayName:$translate("admin.users.Actions"), sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}
 			             ]
 	};
 
@@ -235,19 +242,138 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 			return;
 		}
 		
+		accountService.findUserById( id, {
+			callback : function(result) {
+				$scope.currentEntity = result;
+				$log.info("view user: ", result);
+				$scope.currentState = $scope.DETAIL_STATE;
+				$state.go($scope.DETAIL_STATE, {id:id});
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.$apply();
+			}
+		});
+	};
+	
+	
+	
+	/**
+	 * Realiza os procedimentos iniciais (prepara o estado) 
+	 * para a tela de exclusão. 
+	 * 
+	 * Antes de excluir, o usuário notificado para confirmação 
+	 * e só então o registro é excluido.
+	 * Após excluído, atualizamos a grid com estado de filtro, paginação e sorting. 
+	 */
+	$scope.changeToDisable = function( user ) {
+		$log.info("changeToDisable", user);
 
-//		fonteDadosService.findFonteDadosById( id, {
-//			callback : function(result) {
-//				$scope.currentEntity = result;
-//				$scope.currentState = $scope.DETAIL_STATE;
-//				$state.go($scope.DETAIL_STATE, {id:id});
-//				$scope.$apply();
-//			},
-//			errorHandler : function(message, exception) {
-//				$scope.msg = {type:"danger", text: message, dismiss:true};
-//				$scope.$apply();
-//			}
-//		});
+		var dialog = $modal.open( {
+			templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+			controller: DialogController,
+			windowClass: 'dialog-disable',
+			resolve: {
+				title: function(){return $translate("admin.users.Disable-user");},
+				message: function(){return $translate("admin.users.Are-you-sure-you-want-to-disable-the-user") + ' "'+user.name+'"? ';},
+				buttons: function(){return [ {label: $translate("admin.users.Disable") , css:'btn btn-warning'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
+			}
+		});
+
+        dialog.result.then( function(result) {
+
+        	accountService.disableUser( user.id, {
+				callback : function(result) {
+					//caso o currentPage esteja null, configura o pager default
+					if ( $scope.currentPage == null ) {
+						$scope.changeToList();
+						//caso não, usa o mesmo estado para carregar a listagem
+					} else {
+						$scope.listUsersByFilters($scope.data.filter, $scope.currentPage.pageable);
+					}
+
+					$scope.msg = {type: "success", text: $translate('admin.users.The-record-was-successfully-inactivated')+'.', dismiss:true};
+				},
+				errorHandler : function(message, exception) {
+					$scope.msg = {type:"danger", text: message, dismiss:true};
+					$scope.$apply();
+				}
+			});
+		});
+	};
+	
+	/**
+	 * Realiza os procedimentos iniciais (prepara o estado) 
+	 * para a tela de exclusão. 
+	 * 
+	 * Antes de excluir, o usuário notificado para confirmação 
+	 * e só então o registro é excluido.
+	 * Após excluído, atualizamos a grid com estado de filtro, paginação e sorting. 
+	 */
+	$scope.changeToEnable = function( user ) {
+		$log.info("changeToEnable", user);
+
+		var dialog = $modal.open( {
+			templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+			controller: DialogController,
+			windowClass: 'dialog-enable',
+			resolve: {
+				title: function(){return $translate('admin.users.Enable-user');},
+				message: function(){return $translate('admin.users.Are-you-sure-you-want-to-enable-the-user') + ' "'+user.name+'"? ';},
+				buttons: function(){return [ {label:$translate("admin.users.Enable"), css:'btn btn-primary'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
+			}
+		});
+
+        dialog.result.then( function(result) {
+
+        	accountService.enableUser( user.id, {
+				callback : function(result) {
+					//caso o currentPage esteja null, configura o pager default
+					if ( $scope.currentPage == null ) {
+						$scope.changeToList();
+						//caso não, usa o mesmo estado para carregar a listagem
+					} else {
+						$scope.listUsersByFilters($scope.data.filter, $scope.currentPage.pageable);
+					}
+
+					$scope.msg = {type: "success", text: $translate('admin.users.The-record-was-successfully-enabled') + '.', dismiss:true};
+				},
+				errorHandler : function(message, exception) {
+					$scope.msg = {type:"danger", text: message, dismiss:true};
+					$scope.$apply();
+				}
+			});
+		});
+	};
+	
+	/**
+	 * Realiza os procedimentos iniciais (prepara o estado) 
+	 * para a tela de edição e após isso, muda o estado para update. 
+	 * @see UPDATE_STATE
+	 * @see $stateChangeSuccess
+	 * 
+	 * Para mudar para este estado, deve-se primeiro obter via id
+	 * o registro pelo serviço de consulta e só então mudar o estado da tela.
+	 */
+	$scope.changeToUpdate = function( id ) {
+		$log.info("changeToUpdate", id);
+
+		accountService.findUserById( $state.params.id, {
+			callback : function(result) {
+				
+				$scope.currentEntity = result;
+				$scope.currentEntity.password = ''; //clear password. if not set, not update.
+				
+				$scope.currentState = $scope.UPDATE_STATE;
+				$state.go($scope.UPDATE_STATE);
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.$apply();
+			}
+		}); 
 	};
 
 	/*-------------------------------------------------------------------
@@ -269,7 +395,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 			callback : function() {
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
-				$scope.msg = {type:"success", text: "Usuario inserido com sucesso!", dismiss:true};
+				$scope.msg = {type:"success", text: $translate('admin.users.User-successfully-inserted') + '!', dismiss:true};
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
@@ -308,6 +434,31 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 				$state.go( $scope.LIST_STATE );
 				$scope.$apply();
 			
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.$apply();
+			}
+		});
+	};
+	
+	/**
+	 * Realiza a atualização de um registro
+	 * e no sucesso modifica o estado da tela para o estado de detalhe
+	 */
+	$scope.updateUser = function() {
+
+		if ( !$scope.form().$valid ) {
+			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
+			return;
+		}
+
+		accountService.updateUser( $scope.currentEntity , {
+			callback : function() {
+				$scope.currentState = $scope.LIST_STATE;
+				$state.go($scope.LIST_STATE);
+				$scope.msg = {type:"success", text: $translate('admin.users.User-updated-successfully')+ '!', dismiss:true};
+				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};

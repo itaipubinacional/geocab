@@ -774,6 +774,32 @@ input:-moz-placeholder {
 .dialog-delete .modal-body b{
      overflow-wrap: break-word;
  }
+ 
+.dialog-enable .modal-header{
+    background-color: #DA4F49;
+    background-image: linear-gradient(to bottom, #EE5F5B, #BD362F);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.dialog-enable .modal-body b{
+     overflow-wrap: break-word;
+ }
+ 
+.dialog-disable .modal-header{
+    background-color: #DA4F49;
+    background-image: linear-gradient(to bottom, #EE5F5B, #BD362F);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.dialog-disable .modal-body b{
+     overflow-wrap: break-word;
+ }
 
 /* MAPA INTERATIVO */
 .mapa-interativo {

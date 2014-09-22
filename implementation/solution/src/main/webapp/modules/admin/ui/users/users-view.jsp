@@ -34,15 +34,15 @@
 				class="btn btn-default"
 				ui-sref="users.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button>
-              <button ng-show="currentState == DETAIL_STATE" style="float: right;"
+              <button ng-show="currentState == DETAIL_STATE && currentEntity.enabled " style="float: right;"
                 class="btn btn-danger"
-                ng-click="changeToRemove(currentEntity)"><spring:message code="admin.users.Disable"/>
+                ng-click="changeToDisable(currentEntity)"><spring:message code="admin.users.Disable"/>
             </button>
-            <button ng-show="currentState == DETAIL_STATE" style="float: right;"
+            <button ng-show="currentState == DETAIL_STATE && !currentEntity.enabled " style="float: right;"
                 class="btn btn-default"
-                ng-click="changeToRemove(currentEntity)"><spring:message code="admin.users.Enable"/>
+                ng-click="changeToEnable(currentEntity)"><spring:message code="admin.users.Enable"/>
             </button>
-            <button ng-show="currentState == DETAIL_STATE" style="float: right;"
+            <button ng-show="currentState == DETAIL_STATE " style="float: right;"
                 class="btn btn-primary"
                 ui-sref="users.update( {id:currentEntity.id} )"><spring:message code="admin.users.Update"/>
             </button>
@@ -62,7 +62,7 @@
             <button ng-show="currentState == UPDATE_STATE" style="float: right;"
                 class="btn btn-success"
                 id="buttonUpdate"
-                ng-click="updateFonteDados(currentEntity)"><spring:message code="admin.users.Save"/>
+                ng-click="updateUser()"><spring:message code="admin.users.Save"/>
             </button>
         </div>
     </div>
