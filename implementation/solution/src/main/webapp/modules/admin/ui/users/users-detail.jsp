@@ -13,27 +13,27 @@
             <div class="form-item">
                 <b class="detail-label"><spring:message code="admin.users.Name"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.fonteDados.nome}}</span>
+                <span class="detail-value">{{currentEntity.name}}</span>
             </div>
             <br>
 
             <div class="form-item">
                 <b class="detail-label"><spring:message code="admin.users.E-mail"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.nome}}</span>
+                <span class="detail-value">{{currentEntity.email}}</span>
             </div>
             <br>
 
             <div class="form-item">
                 <b class="detail-label"><spring:message code="admin.users.Access-profile"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.titulo}}</span>
+                <span class="detail-value">{{currentEntity.role}}</span>
             </div>
             <br>
              <div class="form-item">
                 <b class="detail-label"><spring:message code="admin.users.Status"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.titulo}}</span>
+                <span class="detail-value">{{currentEntity.enabled}}</span>
             </div>
     </form>
 </div>

@@ -115,9 +115,7 @@
 	});
 	
 	projectModule.run( function( $rootScope, $state, $stateParams, $translate ) {
-		
-		console.log( $translate("admin.datasource.Name-or-address") );
-		
+				
 		$rootScope.$state = $state;
 	    $rootScope.$stateParams = $stateParams;
 	});
