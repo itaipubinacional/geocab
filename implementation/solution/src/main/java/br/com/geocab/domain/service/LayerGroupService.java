@@ -79,7 +79,7 @@ public class LayerGroupService
 	 * @param layerGroup
 	 * @return layerGroup
 	 */
-	public LayerGroup insertGrupoCamadas( LayerGroup layerGroup )
+	public LayerGroup insertLayerGroup( LayerGroup layerGroup )
 	{
 		layerGroup.setPublished(false);
 		return this.layerGroupRepository.save( layerGroup );
@@ -92,7 +92,7 @@ public class LayerGroupService
 	 * @param layerGroup
 	 * @return layerGroup
 	 */
-	public LayerGroup updateGrupoCamadas( LayerGroup layerGroup )
+	public LayerGroup updateLayerGroup( LayerGroup layerGroup )
 	{
 		return this.layerGroupRepository.save( layerGroup );
 		
@@ -280,14 +280,14 @@ public class LayerGroupService
 				// se já possui a camada publicada apenas altera a existente senão cria a camada publicada
 				if (layerOriginal.getPublishedLayer() != null)
 				{
-					layerOriginal.setId(layerOriginal.getPublishedLayer().getId());
-					layerOriginal = this.layerRepository.save(layerOriginal);
+					layerPublished.setId(layerOriginal.getPublishedLayer().getId());
 				} 
 				else
 				{
-					layerOriginal.setId(null);
-					layerOriginal = this.layerRepository.save(layerOriginal);
+					layerPublished.setId(null);
 				}
+				
+				layerPublished = this.layerRepository.save(layerPublished);
 				
 				layerGroupPublished.getLayers().add(layerPublished);
 				layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
@@ -390,11 +390,11 @@ public class LayerGroupService
 	@Transactional(readOnly=true)
 	public List<LayerGroup> listLayersGroupUpper()
 	{
-		List<LayerGroup> gruposCamadas = this.layerGroupRepository.listLayersGroupUpper();
+		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupUpper();
 		
-		setLegendsLayers(gruposCamadas);
+		setLegendsLayers(layersGroup);
 		
-		return gruposCamadas;
+		return layersGroup;
 		
 	}
 	
