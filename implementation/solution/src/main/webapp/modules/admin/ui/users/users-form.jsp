@@ -40,7 +40,16 @@
                       class="tooltip-validation"><spring:message code="admin.users.E-mail"/> <spring:message code="admin.users.required"/></span>
             </div>
   			<br>
-            <div class="form-item position-relative" style="width: 200px;">
+            <div ng-if="currentState == UPDATE_STATE" class="form-item position-relative" style="width: 200px;">
+                <label class="detail-label"><spring:message code="admin.users.Password"/></label>
+                <input name="password" type="password" class="form-control"
+                       placeholder="<spring:message code="admin.users.Password"/>"
+                       ng-model="currentEntity.password"
+                       maxlength="144"
+                       ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted || form.password.$dirty) }"
+                       ng-hover>
+            </div>
+            <div ng-if="currentState == INSERT_STATE" class="form-item position-relative" style="width: 200px;">
                 <label class="detail-label" required><spring:message code="admin.users.Password"/></label>
                 <input name="password" type="password" class="form-control"
                        placeholder="<spring:message code="admin.users.Password"/>"
@@ -48,7 +57,7 @@
                        required maxlength="144"
                        ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted || form.password.$dirty) }"
                        ng-hover>
-				<span ng-show="form.password.$error.required && (form.$submitted || form.password.$dirty)"
+              	<span ng-show="form.password.$error.required && (form.$submitted || form.password.$dirty)"
                       class="tooltip-validation"><spring:message code="admin.users.Password"/> <spring:message code="admin.users.required"/></span>
             </div>
             <br />
