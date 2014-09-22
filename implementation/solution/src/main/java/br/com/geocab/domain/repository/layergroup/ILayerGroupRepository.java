@@ -33,10 +33,10 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 */
 	@Query(value="FROM LayerGroup layerGroup " 
 			+ "WHERE ( layerGroup.layerGroupUpper = NULL "
-			+	"AND grupoCamadas.draft = null "
-			+	"AND grupoCamadas.published = false ) "
+			+	"AND layerGroup.draft = null "
+			+	"AND layerGroup.published = false ) "
 			+ "ORDER BY orderLayerGroup" )
-	public List<LayerGroup> listLayerGroupUpper();
+	public List<LayerGroup> listLayersGroupUpper();
 	
 	/**
 	 * 
@@ -46,7 +46,7 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 			+ "WHERE ( layerGroup.layerGroupUpper = NULL "
 			+	"AND layerGroup.published = true ) "
 			+ "ORDER BY orderLayerGroup" )
-	public List<LayerGroup> listLayerGroupUpperPublished();
+	public List<LayerGroup> listLayersGroupUpperPublished();
 	
 	
 	/**
@@ -56,7 +56,7 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	@Query(value="FROM LayerGroup layerGroup " 
 			+ "WHERE ( layerGroup.published = true ) "
 			+ "ORDER BY orderLayerGroup" )
-	public List<LayerGroup> listAllGruposCamadasPublicados();
+	public List<LayerGroup> listAllLayersGroupPublished();
 	
 	/**
 	 * 
@@ -64,9 +64,9 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 */
 	@Query(value="FROM LayerGroup layerGroup " 
 			+ "WHERE ( layerGroup.layerGroupUpper.id = :layerGroupUpperId "
-			+	"AND grupoCamadas.published = true ) "
+			+	"AND layerGroup.published = true ) "
 			+ "ORDER BY orderLayerGroup" )
-	public List<LayerGroup> listGruposCamadasPublicadosFilhos( @Param("layerGroupUpperId") Long layerGroupUpperId );
+	public List<LayerGroup> listLayersGroupPublishedChildren( @Param("layerGroupUpperId") Long layerGroupUpperId );
 	
 	/**
 	 * 
@@ -74,8 +74,8 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 */
 	@Query(value="FROM LayerGroup layerGroup " 
 			+ "WHERE ( layerGroup.layerGroupUpper = NULL "
-			+   "AND grupoCamadas.draft = null "
-			+	"AND grupoCamadas.published = false ) "
+			+   "AND layerGroup.draft = null "
+			+	"AND layerGroup.published = false ) "
 			+ "ORDER BY ID DESC" )
 	public List<LayerGroup> listAllParentLayerGroup();
 
