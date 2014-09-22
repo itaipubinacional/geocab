@@ -1,7 +1,6 @@
 package br.com.geocab.domain.service;
 
 import java.util.logging.Logger;
-
 import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
@@ -15,15 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import br.com.geocab.application.ResourceBundleMessageSource;
 import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.account.UserRole;
-import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.repository.account.IUserRepository;
 
 /**
  * 
- * @author Rodrigo P. Fraga 
+ * @author Cristiano Correa 
  * @since 22/04/2014
  * @version 1.0
  * @category Service
@@ -37,25 +33,28 @@ public class AccountService
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
+	
 	/**
-	 * Encripitador de senha 
+	 * Password encoder
 	 */
 	@Autowired
 	private ShaPasswordEncoder passwordEncoder;
+	
 	/**
-	 * Gerador Hash para criptografia
+	 * Hash generator for encryption
 	 */
 	@Autowired
 	private SaltSource saltSource;
 	
-	//Repositories
 	/**
-	 * 
+	 * User Repository
 	 */
 	@Autowired
 	private IUserRepository userRepository;
 	
-	
+	/**
+	 * Logger
+	 */
 	private static final Logger LOG = Logger.getLogger( AccountService.class.getName() );
 
 	
@@ -64,6 +63,7 @@ public class AccountService
 	 *-------------------------------------------------------------------*/
 	
 	/**
+	 * Insert a new User
 	 * 
 	 * @param user
 	 * @return
@@ -80,23 +80,9 @@ public class AccountService
 		
 		return this.userRepository.save( user );
 	}
-	
-//	public User createUser( User user )
-//	{
-//		Assert.notNull( user );
-//		
-//		user.setEnabled(true);
-//		user.setRole(UserRole.USER);
-//				
-//		//encrypt password
-//		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); 
-//		user.setPassword( encodedPassword );
-//		
-//		return this.userRepository.save( user );
-//	}
-	
+		
 	/**
-	 * Método para listar as fontes de dados paginadas com opção do filtro
+	 * List Users with pagination and filters
 	 *
 	 * @param filter
 	 * @param pageable
@@ -109,10 +95,10 @@ public class AccountService
 	}
 	
 	/**
+	 * Find User by id
 	 * 
 	 * @param id
 	 * @return User
-	 * @throws JAXBException 
 	 */
 	@Transactional(readOnly = true)
 	public User findUserById( Long id )
@@ -121,10 +107,10 @@ public class AccountService
 	}
 	
 	/**
+	 * Disable User
 	 * 
 	 * @param id
-	 * @return boolean
-	 * @throws JAXBException 
+	 * @return boolean 
 	 */
 	public Boolean disableUser( Long id )
 	{
@@ -136,10 +122,10 @@ public class AccountService
 	}
 	
 	/**
+	 * Enable User
 	 * 
 	 * @param id
 	 * @return boolean
-	 * @throws JAXBException 
 	 */
 	public Boolean enableUser( Long id )
 	{	
@@ -151,6 +137,7 @@ public class AccountService
 	}
 	
 	/**
+	 * Update User
 	 * 
 	 * @param User
 	 * @return User
@@ -160,6 +147,7 @@ public class AccountService
 		try{
 			User dbUser = this.userRepository.findOne(user.getId());
 			
+			//Update database user
 			dbUser.setEmail(user.getEmail());
 			dbUser.setName(user.getName());
 			dbUser.setRole(user.getRole());
@@ -169,14 +157,13 @@ public class AccountService
 				dbUser.setPassword( encodedPassword );
 			}
 						
-			user = this.userRepository.save( dbUser );
+			user = this.userRepository.save( dbUser );//sava data in database
 			
 		}
 		catch ( DataIntegrityViolationException e )
 		{
 			LOG.info( e.getMessage() );
 			final String error = e.getCause().getCause().getMessage();
-			//TODO: Tratar error.
 		}
 		
 		return user;
