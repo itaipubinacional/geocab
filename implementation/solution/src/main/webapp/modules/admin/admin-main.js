@@ -80,23 +80,11 @@
 		//Layer group
 		$stateProvider.state('layer-group', {
 			url : "/layer-group",
-			templateUrl : "modules/admin/ui/layer-group/layer-group-view.html",
-			controller : DataSourceController
-		})
-		.state('layer-group.detail', {
-			url: "/defail/:id",
-			menu: "data-source"
+			templateUrl : "modules/admin/ui/layer-group/layer-group-view.jsp",
+			controller : LayerGroupController
 		})
 		.state('layer-group.list', {
 			url: "/list",
-			menu: "data-source"
-		})
-		.state('layer-group.create', {
-			url : "/create",
-			menu: "data-source"
-		})
-		.state('layer-group.update', {
-			url : "/update/:id",
 			menu: "data-source"
 		});
 		
