@@ -20,6 +20,10 @@
 		<!-- Scripts -->
 		<jsp:include page="../../default-scripts.jsp"/> <!-- FIXME Deixar caminhos relativos.. -->
 		
+		<link href="<c:url value="/static/libs/angular-ui-tree/css/angular-ui-tree.min.css"/>" type="text/css" rel="stylesheet" />
+		
+		<script type="text/javascript" src="<c:url value="/static/libs/angular-ui-tree/js/angular-ui-tree.min.js"/>"></script>
+		
 		<!-- Controllers -->
 		
 		<!-- Main -->
@@ -49,6 +53,7 @@
    		<script type="text/javascript" src="modules/admin/controller/data-source-controller.js"></script>
    		<script type="text/javascript" src="modules/admin/controller/layer-group-controller.js"></script>
    		<script type="text/javascript" src="modules/admin/controller/layer-config-controller.js"></script>
+   		<script type="text/javascript" src="modules/admin/controller/popup/layer-group-popup-controller.js"></script>
    		<script type="text/javascript" src="modules/admin/controller/users-controller.js"></script>
    		
 	</body>

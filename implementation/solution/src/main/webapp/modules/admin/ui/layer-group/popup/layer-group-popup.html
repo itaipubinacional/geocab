@@ -9,7 +9,7 @@
 
             <form novalidate name="form" default-button="{{buttonInsert}}" style="margin-bottom: 10px; margin-top: 10px;">
                 <div class="form-group">
-                    <input type="text" ng-model="currentEntity.nome" name="nome" style="width: 300px;" placeholder="Informe o nome" class="form-control"
+                    <input type="text" ng-model="currentEntity.name" name="nome" style="width: 300px;" placeholder="Informe o nome" class="form-control"
                            required="true"
                            maxlength="144"
                            ng-class="{ ngInvalid: form.nome.$error.required && (form.$submitted || form.nome.$dirty) }"/>
@@ -19,10 +19,10 @@
         </div>
 
         <div class="modal-footer">
-            <button id="buttonInsert" ng-show="currentState == NORMAL_STATE" class="btn btn-primary" ng-click="fechaPopup()">Salvar</button>
+            <button id="buttonInsert" ng-show="currentState == NORMAL_STATE" class="btn btn-primary" ng-click="closePopup()">Salvar</button>
             <button id="buttonClose" ng-show="currentState == NORMAL_STATE" class="btn btn-default" ng-click="close()">Fechar</button>
 
-            <button id="buttonConfirmInsert" ng-show="currentState == CONFIRM_STATE" class="btn btn-primary" ng-click="fechaPopupConfirm()">Sim</button>
+            <button id="buttonConfirmInsert" ng-show="currentState == CONFIRM_STATE" class="btn btn-primary" ng-click="closePopupConfirm()">Sim</button>
             <button id="buttonConfirmClose" ng-show="currentState == CONFIRM_STATE" class="btn btn-default" ng-click="closeConfirm(0)">Não</button>
         </div>
     </div>
