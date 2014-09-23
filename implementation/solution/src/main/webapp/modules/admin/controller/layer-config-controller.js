@@ -44,7 +44,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
-            $scope.listCamadasByFilters($scope.data.filter, $scope.currentPage.pageable);
+            $scope.listLayersByFilters($scope.data.filter, $scope.currentPage.pageable);
         }
     });
 
@@ -83,25 +83,25 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @type {Array}
      */
-    $scope.removerGrupos = [];
+    $scope.removeGroups = [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.adicionarGrupos = [];
+    $scope.addGroups = [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.gruposSelecionados = [];
+    $scope.selectedGroups = [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.gruposOriginais = [];
+    $scope.originalGroups = [];
 
     //DATA GRID
     /**
@@ -114,8 +114,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         '<a ng-click="changeToRemove(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
     
-    var IMAGE_LEGENDA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legenda}}"/>' +
+    var IMAGE_LEGEND = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
 	'</div>';
 
     /**
@@ -134,11 +134,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $state.go($scope.DETAIL_STATE, {id: row.entity.id});
         },
         columnDefs: [
-            {displayName: 'Simbologia', field:'legenda', sortable:false, width: '120px', cellTemplate: IMAGE_LEGENDA},
-            {displayName: 'Título', field: 'titulo'},
-            {displayName: 'Camada', field: 'nome'},
-            {displayName: 'Fonte de dados', field: 'fonteDados.nome'},
-            {displayName: 'Grupo de camadas', field: 'grupoCamadas.nome', width: '15%'},
+            {displayName: 'Simbologia', field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
+            {displayName: 'Título', field: 'title'},
+            {displayName: 'Camada', field: 'name'},
+            {displayName: 'Fonte de dados', field: 'dataSource.name'},
+            {displayName: 'Grupo de camadas', field: 'layersGroup.name', width: '15%'},
             {displayName: 'Ações', sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
         ]
     };
@@ -152,7 +152,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
     $scope.gridAcessoOptions = {
-        data: 'gruposSelecionados',
+        data: 'selectedGroups',
         useExternalSorting: false,
         multiSelect: false,
         headerRowHeight: 45,
@@ -162,8 +162,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             return false;
         },
         columnDefs: [
-            {displayName: 'Nome', field: 'nome'},
-            {displayName: 'Descrição', field: 'descricao'},
+            {displayName: 'Nome', field: 'name'},
+            {displayName: 'Descrição', field: 'description'},
             {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ACESSO_BUTTONS, width: '100px'}
         ]
     };
@@ -270,7 +270,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
-        $scope.listCamadasByFilters(null, pageRequest);*/
+        $scope.listLayersByFilters(null, pageRequest);*/
     };
 
     /**
@@ -287,10 +287,10 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         $scope.escalas = {};
 
-        $scope.gruposOriginais = [];
-        $scope.gruposSelecionados = [];
-        $scope.adicionarGrupos = [];
-        $scope.removerGrupos = [];
+        $scope.originalGroups = [];
+        $scope.selectedGroups = [];
+        $scope.addGroups = [];
+        $scope.removeGroups = [];
 
         $scope.currentEntity = new Object();
 
@@ -446,9 +446,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @see data.filter
      * @see currentPage
      */
-    $scope.listCamadasByFilters = function (filter, pageRequest) {
+    $scope.listLayersByFilters = function (filter, pageRequest) {
 
-        grupoCamadasService.listCamadasByFilters(filter, pageRequest, {
+        layerGroupService.listLayersByFilters(filter, pageRequest, {
             callback: function (result) {
                 $scope.currentPage = result;
                 $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
@@ -467,24 +467,24 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * Realiza a inserção de um novo registro
      * e no suscesso, modifica o estado da tela para o detail.
      */
-    $scope.insertCamada = function (camada) {
+    $scope.insertLayer = function (layer) {
 
-        camada.escalaMinimaMapa = 'UM'+$scope.escalas.values[0].substring(2);
-        camada.escalaMaximaMapa = 'UM'+$scope.escalas.values[1].substring(2);
+    	layer.escalaMinimaMapa = 'UM'+$scope.escalas.values[0].substring(2);
+    	layer.escalaMaximaMapa = 'UM'+$scope.escalas.values[1].substring(2);
         
         if (!$scope.form().$valid) {
             $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
             return;
         }
 
-        grupoCamadasService.insertCamada(camada, {
+        layerGroupService.insertLayer(layer, {
             callback: function (result) {
 				$scope.currentState = $scope.LIST_STATE;
                 $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
                 $scope.msg = {type: "success", text: "Camada inserida com sucesso!", dismiss: true};
                 $scope.$apply();
-                $scope.salvarGrupos();
+                $scope.saveGroups();
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -510,7 +510,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         grupoCamadasService.updateCamada(camada, {
             callback: function () {
 				$scope.currentState = $scope.LIST_STATE;
-                $scope.salvarGrupos();
+                $scope.saveGroups();
 				$state.go($scope.LIST_STATE);
                 $scope.msg = {type: "success", text: "Camada atualizada com sucesso!", dismiss: true};
                 $scope.$apply();
@@ -627,8 +627,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             templateUrl: "modules/administrativo/ui/configuracao-camadas/popup/grupo-acesso-popup.html",
             controller: SelectGrupoAcessoPopUpController,
             resolve: {
-                gruposSelecionados : function () {
-                    return $scope.gruposSelecionados;
+            	selectedGroups : function () {
+                    return $scope.selectedGroups;
                 }
             }
         });
@@ -637,43 +637,43 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
             if (result) {
                 for (var i = 0; i < result.length; i++) {
-                    var index = $scope.findByIdInArray($scope.gruposSelecionados, result[i]);
-                    var index2 = $scope.findByIdInArray($scope.gruposOriginais, result[i]);
-                    var index3 = $scope.findByIdInArray($scope.removerGrupos, result[i]);
+                    var index = $scope.findByIdInArray($scope.selectedGroups, result[i]);
+                    var index2 = $scope.findByIdInArray($scope.originalGroups, result[i]);
+                    var index3 = $scope.findByIdInArray($scope.removeGroups, result[i]);
 
                     //Identifica se marcou novos registros
                     if (index == -1 && index2 == -1) {
-                        var indexAdd = $scope.findByIdInArray($scope.adicionarGrupos, result[i]);
+                        var indexAdd = $scope.findByIdInArray($scope.addGroups, result[i]);
                         if (indexAdd == -1)
-                            $scope.adicionarGrupos.push(result[i]);
+                            $scope.addGroups.push(result[i]);
                     }
 
                     if (index3 > -1) {
-                        $scope.removerGrupos.splice(index3, 1);
+                        $scope.removeGroups.splice(index3, 1);
                     }
 
                 }
-                for (var i = 0; i < $scope.gruposSelecionados.length; i++) {
+                for (var i = 0; i < $scope.selectedGroups.length; i++) {
 
-                    var index = $scope.findByIdInArray(result, $scope.gruposSelecionados[i]);
+                    var index = $scope.findByIdInArray(result, $scope.selectedGroups[i]);
 
                     if (index == -1) {
-                        var index2 = $scope.findByIdInArray($scope.adicionarGrupos, $scope.gruposSelecionados[i]);
-                        var index3 = $scope.findByIdInArray($scope.removerGrupos, $scope.gruposSelecionados[i]);
-                        var index4 = $scope.findByIdInArray($scope.gruposOriginais, $scope.gruposSelecionados[i]);
+                        var index2 = $scope.findByIdInArray($scope.addGroups, $scope.selectedGroups[i]);
+                        var index3 = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+                        var index4 = $scope.findByIdInArray($scope.originalGroups, $scope.selectedGroups[i]);
 
                         if (index2 > -1){
-                            var indexAdd = $scope.findByIdInArray($scope.removerGrupos, $scope.gruposSelecionados[i]);
+                            var indexAdd = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
                             if (indexAdd > -1)
-                                $scope.adicionarGrupos.splice(indexAdd, 1);
+                                $scope.addGroups.splice(indexAdd, 1);
                         }
                         if (index3 == -1 && index4 > -1) {
-                            $scope.removerGrupos.push($scope.gruposSelecionados[i]);
+                            $scope.removeGroups.push($scope.selectedGroups[i]);
                         }
 
                     }
                 }
-                $scope.gruposSelecionados = result;
+                $scope.selectedGroups = result;
             }
 
         });
@@ -701,28 +701,28 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @param entity
      */
     $scope.removeGrupoAcesso = function (entity) {
-        var index = $scope.findByIdInArray($scope.gruposSelecionados, entity);
-        var index2 = $scope.findByIdInArray($scope.adicionarGrupos, entity);
-        var index3 = $scope.findByIdInArray($scope.gruposOriginais, entity);
+        var index = $scope.findByIdInArray($scope.selectedGroups, entity);
+        var index2 = $scope.findByIdInArray($scope.addGroups, entity);
+        var index3 = $scope.findByIdInArray($scope.originalGroups, entity);
         if (index > -1) {
-            $scope.gruposSelecionados.splice(index, 1);
+            $scope.selectedGroups.splice(index, 1);
         }
         if (index2 > -1) {
-            $scope.adicionarGrupos.splice(index2, 1);
+            $scope.addGroups.splice(index2, 1);
         }
         if (index3 > -1) {
-            $scope.removerGrupos.push(entity);
+            $scope.removeGroups.push(entity);
         }
     };
 
     /**
      *
      */
-    $scope.salvarGrupos = function() {
-        if ($scope.adicionarGrupos.length > 0) {
+    $scope.saveGroups = function() {
+        if ($scope.addGroups.length > 0) {
             $scope.linkGrupos();
         }
-        if ($scope.removerGrupos.length > 0) {
+        if ($scope.removeGroups.length > 0) {
             $scope.unlinkGrupos();
         }
     }
@@ -731,9 +731,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      *
      */
     $scope.linkGrupos = function() {
-        grupoCamadasService.linkGrupoAcesso($scope.adicionarGrupos, $scope.currentEntity.id, {
+        grupoCamadasService.linkGrupoAcesso($scope.addGroups, $scope.currentEntity.id, {
             callback: function(){
-                $scope.adicionarGrupos = [];
+                $scope.addGroups = [];
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -748,9 +748,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     * @param grupoAcesso
     */
     $scope.unlinkGrupos = function() {
-        grupoCamadasService.unlinkGrupoAcesso($scope.removerGrupos, $scope.currentEntity.id, {
+        grupoCamadasService.unlinkGrupoAcesso($scope.removeGroups, $scope.currentEntity.id, {
             callback: function(){
-                $scope.removerGrupos = [];
+                $scope.removeGroups = [];
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -766,8 +766,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     $scope.loadGruposAcesso = function(camadaId) {
         grupoCamadasService.listGrupoAcessoByCamadaId(camadaId, {
             callback: function(result) {
-                $scope.gruposSelecionados = result;
-                $scope.gruposOriginais = result.slice(0);
+                $scope.selectedGroups = result;
+                $scope.originalGroups = result.slice(0);
 
                 $scope.$apply();
             },
