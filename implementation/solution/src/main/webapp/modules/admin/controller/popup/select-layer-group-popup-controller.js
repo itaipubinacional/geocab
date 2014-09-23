@@ -43,7 +43,7 @@ function SelectLayerGroupPopUpController($scope, layerGroups,currentLayerGroup, 
 	/**
 	 * 
 	 */
-	$scope.grupos = [];
+	$scope.groups = [];
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS
@@ -126,17 +126,17 @@ function SelectLayerGroupPopUpController($scope, layerGroups,currentLayerGroup, 
 			if( layerGroupUpper == null )
 			{
 				data.id = layerGroups[i].id;
-				data.label = layerGroups[i].nome;
-				$scope.grupos.push(data);
+				data.label = layerGroups[i].name;
+				$scope.groups.push(data);
 			}
 			else
 			{
 				data.id = layerGroups[i].id;
-				data.label = layerGroups[i].nome;
+				data.label = layerGroups[i].name;
 				layerGroupUpper.children.push(data);
 			}
 
-			$scope.listLayerGroups(layerGroups[i].layerGroups, data);
+			$scope.listLayerGroups(layerGroups[i].layersGroup, data);
 		}
 	};
 
