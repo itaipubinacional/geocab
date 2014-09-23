@@ -1,5 +1,4 @@
 eclipse.preferences.version=1
-encoding//src/main/java=ISO-8859-1
 encoding//src/main/resources=ISO-8859-1
 encoding//src/main/resources/i18n=UTF-8
 encoding//src/main/resources/i18n/map_en.properties=UTF-8
@@ -10,3 +9,4 @@ encoding//src/main/webapp/modules/admin/ui/layer-config/layer-config-list.jsp=UT
 encoding//src/main/webapp/modules/admin/ui/layer-config/layer-config-view.jsp=UTF-8
 encoding//src/test/java=ISO-8859-1
 encoding/<project>=UTF-8
+encoding/java=ISO-8859-1
