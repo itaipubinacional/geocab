@@ -6,14 +6,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
-<!-- Fonte de dados - List -->
+<!-- Layer config - List -->
 <div>
-	<!-- Barra de filtro -->
+	<!-- Filter bar -->
 	<div class="search-div">
 		<form>
-			<input type="text" ng-model="data.filter" class="form-control" placeholder="Título, nome, fonte de dados ou grupo de camadas" style="float:left; width:450px"/>
-			<input type="submit" value="Filtrar" class="btn btn-default" ng-disabled="currentPage == null"
-			       ng-click="listCamadasByFilters(data.filter, currentPage.pageable)"/>
+			<input type="text" ng-model="data.filter" class="form-control" placeholder="<spring:message code="admin.layer-config.Title,-name,-data-source-or-layer-group"/>" style="float:left; width:450px"/>
+			<input type="submit" value="<spring:message code="Filter"/>" class="btn btn-default" ng-disabled="currentPage == null"
+			       ng-click="listLayerByFilters(data.filter, currentPage.pageable)"/>
 	    </form>
 	</div>
 
@@ -29,7 +29,7 @@
        </pagination>
     </div>
     <div class="grid-elements-count">
-        {{currentPage.numberOfElements}} de {{currentPage.totalElements}} itens
+        {{currentPage.numberOfElements}} <spring:message code="of"/> {{currentPage.totalElements}} <spring:message code="items"/>
     </div>
 
 </div>
