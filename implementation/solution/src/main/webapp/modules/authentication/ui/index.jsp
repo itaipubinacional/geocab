@@ -121,7 +121,7 @@
 							<td><input class="form-control" name="confirmPassword" type="password" required></td>
 						</tr>
 						<tr>
-							<td><input type="submit" value='<spring:message code="authentication.Create-an-account"></spring:message>' id="createAccount" class="btn-enter" /></td>
+							<td><input type="submit" value='<spring:message code="authentication.Create-account"></spring:message>' id="createAccount" class="btn-enter" /></td>
 						</tr>
 					</table>				
 				</form>
