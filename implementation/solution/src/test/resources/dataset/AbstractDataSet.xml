@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <dataset>
-	<geocab.data_source></geocab.data_source>		
+	<geocab.data_source></geocab.data_source>	
+	<geocab.layer_group></geocab.layer_group>	
 </dataset>
