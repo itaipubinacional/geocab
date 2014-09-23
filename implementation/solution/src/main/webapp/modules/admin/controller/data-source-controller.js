@@ -14,7 +14,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 */
 	$injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 	
-	console.log($importService("dataSourceService"));
+	$importService("dataSourceService");
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS

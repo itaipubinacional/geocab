@@ -11,7 +11,7 @@
     <div class="navbar">
 
         <!--Message-->
-        <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>
+        <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
 
         <!-- Bar controller -->
         <div class="navbar-inner navbar-container">

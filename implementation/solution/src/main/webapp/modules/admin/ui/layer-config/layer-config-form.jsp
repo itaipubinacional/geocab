@@ -6,7 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
-<!-- Configuração de camada - Forms --> 
+<!-- ConfiguraÃ§Ã£o de camada - Form -->
 <div>
 
     <form novalidate name="form"
@@ -18,61 +18,59 @@
                 <label class="detail-label" required>Fonte Dados</label>
                 <div class="input-group position-relative">
                     <input name="fonteDados" type="text" disabled class="form-control"
-                           ng-model="currentEntity.fonteDados.nome"
+                           ng-model="currentEntity.dataSource.name"
                            placeholder="Informe a fonte de dados" maxlength="144"
                            ng-minlength="1"
                            ng-hover
                            required>
                     <span class="input-group-btn">
-                        <button ng-click="selectFonteDados()" class="btn btn-default"
+                        <button ng-click="selectDataSource()" class="btn btn-default"
                                 type="button" ng-disabled="currentEntity.id != null">
                             <i class="icon-plus-sign icon-large"></i>
                         </button>
                     </span>
                 </div>
 
-                <span ng-show="form.fonteDados.$error.required && (form.$submitted || form.fonteDados.$dirty)" class="tooltip-validation">Fonte de dados obrigatório</span>
+                <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation">Fonte de dados obrigatÃ³rio</span>
             </div>
 
             <br/>
 
-            <div class="form-item position-relative" style="width: 350px;">
+            <div class="position-relative" style="width: 350px;">
                 <label class="detail-label" required>Camada</label>
                 <div class="input-group">
                     <input name="camada" type="text" disabled class="form-control"
-                           ng-model="currentEntity.nome"
+                           ng-model="currentEntity.name"
                            placeholder="Informe a camada"
                            maxlength="144" ng-minlength="1"
                            ng-hover
                            required>
                 <span
                         class="input-group-btn">
-                    <button ng-click="selectCamada()"
-                            ng-disabled="currentEntity.fonteDados == null || currentEntity.id != null"
+                    <button ng-click="selectLayer()"
+                            ng-disabled="currentEntity.dataSource == null || currentEntity.id != null"
                             class="btn btn-default" type="button">
                         <i class="icon-plus-sign icon-large"></i>
                     </button>
                 </span>
                 </div>
 
-                <span ng-show="form.camada.$error.required && (form.$submitted || form.camada.$dirty)" class="tooltip-validation">Camada obrigatória</span>
+                <span ng-show="form.layer.$error.required && (form.$submitted || form.layer.$dirty)" class="tooltip-validation">Camada obrigatória</span>
             </div>
 
-            <div ng-if="currentEntity.nome">
-
-                <br/>
+            <div class="form-item position-relative" ng-if="currentEntity.name" style="margin: 20px 0;">
 
                 <label class="detail-label">Título</label>
 
                 <div class="position-relative input-group" style="width: 350px;">
                     <input name="titulo" type="text" class="form-control"
-                           ng-model="currentEntity.titulo"
+                           ng-model="currentEntity.title"
                            placeholder="Informe o título"
                            maxlength="144" ng-minlength="1"
                            ng-hover
                            required>
                 </div>
-                <span ng-show="form.titulo.$error.required && (form.$submitted || form.titulo.$dirty)" class="tooltip-validation">Título obrigatório</span>
+                <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty)" class="tooltip-validation">Título obrigatório</span>
 
                 <br/>
 
@@ -89,21 +87,21 @@
             <div class="form-item position-relative" style="width: 350px;">
                 <label class="detail-label" required>Grupo de camadas</label>
                 <div class="input-group">
-                    <input name="grupoCamadas" type="text" disabled class="form-control"
-                           ng-model="currentEntity.grupoCamadas.nome"
+                    <input name="layerGroup" type="text" disabled class="form-control"
+                           ng-model="currentEntity.layerGroup.name"
                            placeholder="Informe o grupo de camada"
                            maxlength="144" ng-minlength="1"
                            ng-hover
                            required>
                     <span class="input-group-btn">
-                        <button ng-click="selectGrupoCamada()" class="btn btn-default"
+                        <button ng-click="selectLayerGroup()" class="btn btn-default"
                                 type="button">
                             <i class="icon-plus-sign icon-large"></i>
                         </button>
                     </span>
                 </div>
 
-                <span ng-show="form.grupoCamadas.$error.required && (form.$submitted || form.grupoCamadas.$dirty)" class="tooltip-validation">Grupo de camada obrigatório</span>
+                <span ng-show="form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation">Grupo de camada obrigatório</span>
             </div>
 
             <br/>
@@ -136,33 +134,15 @@
             <hr style="border-color: #d9d9d9"/>
 
             <label class="detail-label">Acesso</label>
-            <br/>
-            <div class="form-item position-relative radio" style="width: 300px; margin-bottom: 25px">
-                <br/>
-                <input type="radio" id="publico"
-                    ng-model="data.tipoAcesso" style="width: 20px;"
-                    ng-disabled="currentState == DETAIL_STATE" value="PUBLICO">
-                <label class="radio-label" style="position: relative; top: -2px;"
-                       for="publico">Publico </label> <br/> <input type="radio"
-                                                                   id="grupos" style="width: 20px;"
-                                                                   ng-model="data.tipoAcesso"
-                                                                   ng-disabled="currentState == DETAIL_STATE"
-                                                                   value="GRUPOS"> <label
-                    style="position: relative; top: -2px;" for="grupos"
-                    class="radio-label"> Grupos </label>
-            </div>
-
-            <button ng-if="data.tipoAcesso == 'GRUPOS'" ng-click="selectGrupoAcesso()" type="button"
-                    style="float: right; margin-top: 40px;" class="btn btn-primary">Associar grupo
-            </button>
 
             <br/>
 
-            <div class="form-item position-relative"
-                 ng-if="data.tipoAcesso == 'GRUPOS'" style="width: 100%;">
-                <div ng-grid="gridAcessoOptions"
-                     style="height: 250px; border: 1px solid rgb(212, 212, 212);"></div>
+            <button ng-click="selectGroupAccess()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary">Associar grupo</button>
 
+            <br/>
+
+            <div class="form-item position-relative"  style="width: 100%;">
+                <div ng-grid="gridAcessoOptions" style="height: 300px; width:100%; border: 1px solid rgb(212, 212, 212);"></div>
             </div>
 
        </div>
