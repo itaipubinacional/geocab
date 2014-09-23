@@ -1,12 +1,13 @@
-package br.com.eits.prize.common.tests.service;
+package br.com.geocab.tests.service;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.com.eits.prize.common.tests.AbstractIntegrationTest;
 import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.service.AccountService;
+import br.com.geocab.tests.common.AbstractIntegrationTest;
 
 /**
  *
@@ -39,10 +40,12 @@ public class AccountServiceTest extends AbstractIntegrationTest
 		user.setEmail("test@geocab.com.br");
 		user.setName("Testing User");
 		user.setPassword("admin");
+		user.setRole(UserRole.ADMINISTRATOR);
 		this.accountService.insertUser( user );
 		
 		Assert.assertNotNull( user );
 		Assert.assertNotNull( user.getId() );
 		Assert.assertNotNull( user.getCreated() );
+		
 	}
 }
