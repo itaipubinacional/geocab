@@ -13,7 +13,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 
-    console.log($importService("PageRequest"));
+    $importService("layerGroupService");
     
     /*-------------------------------------------------------------------
      * 		 				 	EVENT HANDLERS
@@ -263,13 +263,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.changeToList = function () {
         $log.info("changeToList");
-
+        
         $scope.currentState = $scope.LIST_STATE;
+
         /*var pageRequest = new PageRequest();
-        pageRequest.size = 6;
+        pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
-        $scope.listLayerByFilters(null, pageRequest);*/
+        $scope.listCamadasByFilters(null, pageRequest);*/
     };
 
     /**
@@ -285,9 +286,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $log.info("changeToInsert");
 
         $scope.escalas = {};
-        $scope.currentEntity = new Object();
 
-        $scope.data.tipoAcesso = 'PUBLICO';
+        $scope.gruposOriginais = [];
+        $scope.gruposSelecionados = [];
+        $scope.adicionarGrupos = [];
+        $scope.removerGrupos = [];
+
+        $scope.currentEntity = new Object();
 
         $scope.currentState = $scope.INSERT_STATE;
 
@@ -441,9 +446,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @see data.filter
      * @see currentPage
      */
-    $scope.listLayerByFilters = function (filter, pageRequest) {
+    $scope.listCamadasByFilters = function (filter, pageRequest) {
 
-        /*grupoCamadasService.listCamadasByFilters(filter, pageRequest, {
+        grupoCamadasService.listCamadasByFilters(filter, pageRequest, {
             callback: function (result) {
                 $scope.currentPage = result;
                 $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
@@ -455,7 +460,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.msg = {type: "danger", text: message, dismiss: true};
                 $scope.$apply();
             }
-        });*/
+        });
     };
 
     /**
@@ -473,12 +478,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         }
 
         grupoCamadasService.insertCamada(camada, {
-            callback: function () {
+            callback: function (result) {
 				$scope.currentState = $scope.LIST_STATE;
-                $scope.salvarGrupos();
+                $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
                 $scope.msg = {type: "success", text: "Camada inserida com sucesso!", dismiss: true};
                 $scope.$apply();
+                $scope.salvarGrupos();
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -519,21 +525,21 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     /**
      * 
      */
-    $scope.selectGrupoCamada = function () {
+    $scope.selectLayerGroup = function () {
 
-        grupoCamadasService.listSuperiores({
+        layerGroupService.listLayersGroupUpper({
             callback: function (result) {
 
                 var dialog = $modal.open({
-                    templateUrl: "modules/administrativo/ui/configuracao-camadas/popup/grupo-camadas-popup.html",
-                    controller: SelectGrupoCamadasPopUpController,
+                    templateUrl: "modules/admin/ui/layer-config/popup/layer-group-popup.jsp",
+                    controller: SelectLayerGroupPopUpController,
                     windowClass: 'xx-dialog grupo-camada-dialog',
                     resolve: {
-                        gruposCamadas: function () {
+                    	layerGroups: function () {
                             return result;
                         },
-                        currentGrupoCamada: function () {
-                            return $scope.currentEntity.grupoCamadas;
+                        currentLayerGroup: function () {
+                            return $scope.currentEntity.layerGroups;
                         }
                     }
                 });
@@ -541,8 +547,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 dialog.result.then(function (result) {
 
                     if (result) {
-                        $scope.currentEntity.grupoCamadas = result;
-                        $scope.currentEntity.grupoCamadas.nome = result.label;
+                        $scope.currentEntity.layerGroups = result;
+                        $scope.currentEntity.layerGroups.name = result.label;
                     }
 
                 });
@@ -558,13 +564,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     /**
      *
      */
-    $scope.selectFonteDados = function () {
+    $scope.selectDataSource = function () {
         var dialog = $modal.open({
-            templateUrl: "modules/administrativo/ui/configuracao-camadas/popup/fonte-dados-popup.html",
-            controller: SelectFonteDadosPopUpController,
+            templateUrl: "modules/admin/ui/layer-config/popup/data-source-popup.jsp",
+            controller: SelectDataSourcePopUpController,
             resolve: {
-                fonteDadoSelecionado: function () {
-                    return $scope.currentEntity.fonteDados;
+                dataSourceSelected: function () {
+                    return $scope.currentEntity.dataSource;
                 }
             }
         });
@@ -573,15 +579,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
             // atribui os dados selecionados
 
-            if( $scope.currentEntity.fonteDados && $scope.currentEntity.fonteDados.id != result.id )
+            if( $scope.currentEntity.dataSource && $scope.currentEntity.dataSource.id != result.id )
             {
-                $scope.currentEntity.fonteDados = result;
-                $scope.currentEntity.titulo = null;
-                $scope.currentEntity.nome = null;
+                $scope.currentEntity.dataSource = result;
+                $scope.currentEntity.title = null;
+                $scope.currentEntity.name = null;
             }
             else
             {
-                $scope.currentEntity.fonteDados = result;
+                $scope.currentEntity.dataSource = result;
             }
 
         });
@@ -629,18 +635,45 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         dialog.result.then(function (result) {
 
-            if (result != null && result.length > 0) {
-                $scope.gruposSelecionados = $scope.gruposSelecionados.concat(result);
+            if (result) {
                 for (var i = 0; i < result.length; i++) {
-                    var index = $scope.findByIdInArray($scope.gruposOriginais, result[i]);
-                    if (index == -1) {
-                        $scope.adicionarGrupos.push(result[i]);
+                    var index = $scope.findByIdInArray($scope.gruposSelecionados, result[i]);
+                    var index2 = $scope.findByIdInArray($scope.gruposOriginais, result[i]);
+                    var index3 = $scope.findByIdInArray($scope.removerGrupos, result[i]);
+
+                    //Identifica se marcou novos registros
+                    if (index == -1 && index2 == -1) {
+                        var indexAdd = $scope.findByIdInArray($scope.adicionarGrupos, result[i]);
+                        if (indexAdd == -1)
+                            $scope.adicionarGrupos.push(result[i]);
                     }
-                    var index2 = $scope.findByIdInArray($scope.removerGrupos, result[i]);
-                    if (index2 > -1) {
-                        $scope.removerGrupos.splice(index2, 1);
+
+                    if (index3 > -1) {
+                        $scope.removerGrupos.splice(index3, 1);
+                    }
+
+                }
+                for (var i = 0; i < $scope.gruposSelecionados.length; i++) {
+
+                    var index = $scope.findByIdInArray(result, $scope.gruposSelecionados[i]);
+
+                    if (index == -1) {
+                        var index2 = $scope.findByIdInArray($scope.adicionarGrupos, $scope.gruposSelecionados[i]);
+                        var index3 = $scope.findByIdInArray($scope.removerGrupos, $scope.gruposSelecionados[i]);
+                        var index4 = $scope.findByIdInArray($scope.gruposOriginais, $scope.gruposSelecionados[i]);
+
+                        if (index2 > -1){
+                            var indexAdd = $scope.findByIdInArray($scope.removerGrupos, $scope.gruposSelecionados[i]);
+                            if (indexAdd > -1)
+                                $scope.adicionarGrupos.splice(indexAdd, 1);
+                        }
+                        if (index3 == -1 && index4 > -1) {
+                            $scope.removerGrupos.push($scope.gruposSelecionados[i]);
+                        }
+
                     }
                 }
+                $scope.gruposSelecionados = result;
             }
 
         });
@@ -668,9 +701,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @param entity
      */
     $scope.removeGrupoAcesso = function (entity) {
-        var index = $scope.gruposSelecionados.indexOf(entity);
-        var index2 = $scope.adicionarGrupos.indexOf(entity);
-        var index3 = $scope.gruposOriginais.indexOf(entity);
+        var index = $scope.findByIdInArray($scope.gruposSelecionados, entity);
+        var index2 = $scope.findByIdInArray($scope.adicionarGrupos, entity);
+        var index3 = $scope.findByIdInArray($scope.gruposOriginais, entity);
         if (index > -1) {
             $scope.gruposSelecionados.splice(index, 1);
         }
@@ -698,9 +731,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      *
      */
     $scope.linkGrupos = function() {
-        var camada = {};
-        camada.id = $scope.currentEntity.id;
-        grupoCamadasService.linkGrupoAcesso($scope.adicionarGrupos, camada, {
+        grupoCamadasService.linkGrupoAcesso($scope.adicionarGrupos, $scope.currentEntity.id, {
             callback: function(){
                 $scope.adicionarGrupos = [];
                 $scope.$apply();
@@ -717,9 +748,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     * @param grupoAcesso
     */
     $scope.unlinkGrupos = function() {
-        var camada = {};
-        camada.id = $scope.currentEntity.id;
-        grupoCamadasService.unlinkGrupoAcesso($scope.removerGrupos, camada, {
+        grupoCamadasService.unlinkGrupoAcesso($scope.removerGrupos, $scope.currentEntity.id, {
             callback: function(){
                 $scope.removerGrupos = [];
                 $scope.$apply();
@@ -739,7 +768,6 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             callback: function(result) {
                 $scope.gruposSelecionados = result;
                 $scope.gruposOriginais = result.slice(0);
-                $scope.data.tipoAcesso = result.length > 0 ? 'GRUPOS' : 'PUBLICO';
 
                 $scope.$apply();
             },
