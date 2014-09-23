@@ -63,8 +63,8 @@
 
                     <li class="position-relative"><a
                             href="admin#/layer-config"
-                            ng-class="{active: menuActive == 'layers'}"
-                            style="width: 150px;">Layers</a></li>
+                            ng-class="{active: menuActive == 'layer-config'}"
+                            style="width: 150px;"><spring:message code="admin.layer-config.Layers"/></a></li>
                 </ul>
 			</div>
 		</div>
