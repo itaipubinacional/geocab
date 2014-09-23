@@ -1,4 +1,4 @@
-package br.com.eits.prize.common.tests;
+package br.com.geocab.tests.common;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.IDatabaseConnection;
