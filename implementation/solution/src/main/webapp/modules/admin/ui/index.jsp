@@ -51,6 +51,8 @@
 		<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/select-layer-group-popup-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/select-access-group-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/select-layers-popup-controller.js"></script>
    		<script type="text/javascript" src="modules/admin/controller/data-source-controller.js"></script>
    		<script type="text/javascript" src="modules/admin/controller/layer-group-controller.js"></script>
    		<script type="text/javascript" src="modules/admin/controller/layer-config-controller.js"></script>

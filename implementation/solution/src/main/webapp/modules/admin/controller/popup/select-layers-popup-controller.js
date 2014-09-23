@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function SelectCamadasPopUpController($scope, $modalInstance, currentEntity, $log, $location) {
+function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log, $location) {
 
 
 	$scope.msg = null;

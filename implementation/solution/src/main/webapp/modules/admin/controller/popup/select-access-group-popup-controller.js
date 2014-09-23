@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function SelectGrupoAcessoPopUpController($scope, $modalInstance, $log, gruposSelecionados) {
+function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSelecionados) {
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
