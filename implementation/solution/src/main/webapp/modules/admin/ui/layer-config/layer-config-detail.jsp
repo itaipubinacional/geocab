@@ -11,42 +11,42 @@
     <form>
         <div class="content-tab">
             <div class="form-item">
-                <b class="detail-label">Fonte de dados geográficos</b>
+                <b class="detail-label"><spring:message code="admin.layer-config.Geographic-Data-Source"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.fonteDados.nome}}</span>
+                <span class="detail-value">{{currentEntity.dataSource.name}}</span>
             </div>
             <br>
 
             <div class="form-item">
-                <b class="detail-label">Camada</b>
+                <b class="detail-label"><spring:message code="Layer"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.nome}}</span>
+                <span class="detail-value">{{currentEntity.name}}</span>
             </div>
             <br>
 
             <div class="form-item">
-                <b class="detail-label">Título</b>
+                <b class="detail-label"><spring:message code="Title"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.titulo}}</span>
+                <span class="detail-value">{{currentEntity.title}}</span>
             </div>
             <br>
 
 			<div class="form-item">
-                <b class="detail-label">Simbologia</b>
+                <b class="detail-label"><spring:message code="admin.layer-config.Symbology"/></b>
                 <br>
                 <img style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.legenda}}"/>
             </div>
             <br>
             
 			<div class="form-item"  ng-if="currentEntity.grupoCamadas != null" style="width: 500px;">
-                <b class="detail-label">Grupo de Camada</b>
+                <b class="detail-label"><spring:message code="admin.layer-config.Layer-Group"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.grupoCamadas.nome}}</span>
+                <span class="detail-value">{{currentEntity.layerGroup.name}}</span>
             </div>
             <br>
 
             <div class="form-item">
-                <b class="detail-label" style="margin-bottom: 10px; display: inline-block;">Escala de visualização</b>
+                <b class="detail-label" style="margin-bottom: 10px; display: inline-block;"><spring:message code="admin.layer-config.Viewing-scale"/></b>
                 <br>
                 <div class="position-relative" scale-slider slider-disabled="true" ng-model="escalas" style="width: 350px;">
                 </div>
@@ -61,7 +61,7 @@
                  ng-if="currentState">
                 <input type="checkbox" style="width: 20px;"
                        ng-model="currentEntity.habilitada"
-                       ng-disabled="true"> <label>Inicia habilitada no mapa</label>
+                       ng-disabled="true"> <label><spring:message code="admin.layer-config.Start-allowed-in-map"/></label>
             </div>
 
             <br />
@@ -70,23 +70,23 @@
                  ng-if="currentState">
                 <input type="checkbox" id="grupo" style="width: 20px;"
                        ng-model="currentEntity.sistema"
-                       ng-disabled="currentState == DETAIL_STATE"> <label>Disponível no menu de camadas</label>
+                       ng-disabled="currentState == DETAIL_STATE"> <label><spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
 
             </div>
 
             <hr>
 
-            <h5 style="font-weight: bold">Grupo de Acesso</h5>
+            <h5 style="font-weight: bold"><spring:message code="admin.layer-config.Access-Group"/></h5>
             <div class="form-item position-relative radio" style="width: 300px;">
                 <input type="radio" id="publico"
                                                     ng-model="data.tipoAcesso" style="width: 20px;"
                                                     ng-disabled="currentState == DETAIL_STATE" value="PUBLICO">
                 <label class="radio-label" style="position: relative; top: -2px;"
-                       for="publico">Publico </label> <br /> <input type="radio"
+                       for="publico"><spring:message code="Public"/> </label> <br /> <input type="radio"
                                                                     id="grupos" style="width: 20px;" ng-model="data.tipoAcesso"
                                                                     ng-disabled="currentState == DETAIL_STATE" value="GRUPOS"> <label
                     style="position: relative; top: -2px;" for="grupos"
-                    class="radio-label"> Grupos </label>
+                    class="radio-label"> <spring:message code="Groups"/> </label>
             </div>
 
             <div class="form-item position-relative"
