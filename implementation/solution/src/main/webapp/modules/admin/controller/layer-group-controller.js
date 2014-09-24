@@ -237,7 +237,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
         var dialog = $modal.open( {
             keyboard: false,
-            templateUrl: 'modules/admin/ui/layer-group/popup/layer-group-popup.html',
+            templateUrl: 'modules/admin/ui/layer-group/popup/layer-group-popup.jsp',
             controller: LayerGroupPopUpController,
             scope: $scope,
             resolve: {
@@ -289,7 +289,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
         var dialog = $modal.open({
             keyboard: false,
-            templateUrl: 'modules/admin/ui/layer-group/popup/layer-group-popup.html',
+            templateUrl: 'modules/admin/ui/layer-group/popup/layer-group-popup.jsp',
             controller: LayerGroupPopUpController,
             scope: $scope,
             resolve: {
