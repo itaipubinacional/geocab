@@ -8,7 +8,7 @@
  */
 function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate) {
     /**
-     * Injeta os métodos, atributos e seus estados herdados de AbstractCRUDController.
+     * Inject the methods, attributes and its states inherited from AbstractCRUDController.
      * @see AbstractCRUDController
      */
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
@@ -20,9 +20,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      *-------------------------------------------------------------------*/
 
     /**
-     *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
-     *  Quando o evento é disparado, configuramos o pager do spring-data
-     *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
+     * Handler that listen every time that an user do the sorting at ng-grid.
+     * When the event is displayed, it is set the pager of spring-data.
+     * And so it call the query again, considering too the filter state (@see $scope.data.filter)
      */
     $scope.$on('ngGridEventSorted', function (event, sort) {
 
@@ -31,16 +31,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             return;
         }
 
-        // compara os objetos para garantir que o evento seja executado somente uma vez q não entre em loop
         if (!angular.equals(sort, $scope.gridOptions.sortInfo)) {
             $scope.gridOptions.sortInfo = angular.copy(sort);
 
-            //Order do spring-data
             var order = new Order();
             order.direction = sort.directions[0].toUpperCase();
             order.property = sort.fields[0];
 
-            //Sort do spring-data
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
@@ -134,12 +131,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $state.go($scope.DETAIL_STATE, {id: row.entity.id});
         },
         columnDefs: [
-            {displayName: 'Simbologia', field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
-            {displayName: 'Título', field: 'title'},
-            {displayName: 'Camada', field: 'name'},
-            {displayName: 'Fonte de dados', field: 'dataSource.name'},
-            {displayName: 'Grupo de camadas', field: 'layerGroup.name', width: '15%'},
-            {displayName: 'Ações', sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
+            {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
+            {displayName: $translate('Title'), field: 'title'},
+            {displayName: $translate('Layer'), field: 'name'},
+            {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name'},
+            {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '15%'},
+            {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
         ]
     };
 
@@ -163,8 +160,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
         },
         columnDefs: [
-            {displayName: 'Nome', field: 'name'},
-            {displayName: 'Descrição', field: 'description'},
+            {displayName: $translate('Name'), field: 'name'},
+            {displayName: $translate('Description'), field: 'description'},
             {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ACESSO_BUTTONS, width: '100px'}
         ]
     };
@@ -386,7 +383,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                     return "Exclusão de camada";
                 },
                 message: function () {
-                    return 'Tem certeza que deseja excluir a camada "' + layer.name + '"? <br/>Esta operação não poderá mais ser desfeita.';
+                    return $translate('admin.layer-config.Are-you-sure-you-want-to-delete-the-layer')+' "' + layer.name + '"? <br/>'+$translate('admin.datasource.This-operation-can-not-be-undone')+'.';
                 },
                 buttons: function () {
                     return [
@@ -410,7 +407,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                         $scope.listLayersByFilters($scope.data.filter, $scope.currentPage.pageable);
                     }
 
-                    $scope.msg = {type: "success", text: 'O registro "' + layer.nome + '" foi excluído com sucesso.', dismiss: true};
+                    $scope.msg = {type: "success", text: $translate('admin.datasource.The-register')+' "'+ layer.nome + '" '+$translate('admin.datasource.was-successfully-deleted')+'.', dismiss: true};
                 },
                 errorHandler: function (message, exception) {
                     $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -479,7 +476,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 				$scope.currentState = $scope.LIST_STATE;
                 $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
-                $scope.msg = {type: "success", text: "Camada inserida com sucesso!", dismiss: true};
+                $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
                 $scope.$apply();
                 $scope.saveGroups();
             },
@@ -509,7 +506,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 				$scope.currentState = $scope.LIST_STATE;
                 $scope.saveGroups();
 				$state.go($scope.LIST_STATE);
-                $scope.msg = {type: "success", text: "Camada atualizada com sucesso!", dismiss: true};
+                $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-updated-successfully")+"!", dismiss: true};
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {

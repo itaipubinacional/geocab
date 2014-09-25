@@ -102,9 +102,9 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
 			},
 			columnDefs: [
-			             {displayName:'Name', field:'name'},
-			             {displayName:'Address', field:'url',  width:'55%'},
-			             {displayName:'Action', sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}
+			             {displayName: $translate('Name'), field:'name'},
+			             {displayName: $translate('Address'), field:'url',  width:'55%'},
+			             {displayName: $translate('Actions'), sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}
 			             ]
 	};
 
