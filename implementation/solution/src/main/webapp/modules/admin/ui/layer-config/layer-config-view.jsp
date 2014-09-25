@@ -51,17 +51,17 @@
                     ui-sref="layer-config.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button>
 
-            <!-- State Criar -->
+            <!-- State Create -->
             <button ng-show="currentState == INSERT_STATE" style="float: right;"
                     class="btn btn-success"
                     id="buttonInsert"
-                    ng-click="insertCamada(currentEntity)"><spring:message code="Save"/>
+                    ng-click="insertLayer(currentEntity)"><spring:message code="Save"/>
             </button>
-            <!-- State Editar -->
+            <!-- State Update -->
             <button ng-show="currentState == UPDATE_STATE" style="float: right;"
                     class="btn btn-success"
                     id="buttonUpdate"
-                    ng-click="updateCamada(currentEntity)"><spring:message code="Save"/>
+                    ng-click="updateLayer(currentEntity)"><spring:message code="Save"/>
             </button>
         </div>
     </div>
