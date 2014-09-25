@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups, item, $state) {
+function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups, item, $state, $translate) {
 
 
 	$scope.msg = null;
@@ -118,7 +118,7 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
 	{
 		if ( !$scope.form().$valid ) 
 		{
-			$scope.msg = {type:"danger", text: "Por favor digite um nome para o grupo", dismiss:true};
+			$scope.msg = {type:"danger", text: $translate("layer-group-popup.Please-enter-a-name-for-the-group") , dismiss:true};
 			return;
 		}
 		
@@ -131,14 +131,14 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
 			{
 				if( layerGroups[i].name.toUpperCase() == $scope.currentEntity.name.toUpperCase() && layerGroups[i].id != $scope.currentEntity.id )
 				{
-					$scope.msg = {type:"danger", text: "Já possui um grupo com este nome no mesmo nível", dismiss:true};
+					$scope.msg = {type:"danger", text:  $translate("layer-group-popup.Already-have-a-group-with-this-name-at-the-same-level") , dismiss:true};
 					return;
 				}
 			}
 			
 			if( isEqual == true )
 			{
-				$scope.msg = {type:"warning", text: "Já existe um grupo com este nome em outro nível. Deseja salvar mesmo assim?", dismiss:true};
+				$scope.msg = {type:"warning", text: $translate("layer-group-popup.Already-exists-a-group-with-this-name-on-another-level-Want-to-save-anyway-?"), dismiss:true};
                 $scope.currentState = $scope.CONFIRM_STATE;
 				isEqual = false;
 				return;
@@ -153,7 +153,7 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
     $scope.closePopupConfirm = function ()
     {
         if (!$scope.form().$valid) {
-            $scope.msg = {type: "danger", text: "Por favor digite um nome para o grupo", dismiss: true};
+            $scope.msg = {type: "danger", text: $translate("layer-group-popup.Please-enter-a-name-for-the-group"), dismiss: true};
             return;
         }
 

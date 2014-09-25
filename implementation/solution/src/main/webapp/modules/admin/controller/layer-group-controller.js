@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService ) {
+function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate ) {
     /**
      * Injeta os métodos, atributos e seus estados herdados de AbstractCRUDController.
      * @see AbstractCRUDController
@@ -132,7 +132,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             callback : function() {
                 $scope.listLayerGroup();
                 isNeedSave = false;
-                $scope.msg = {type:"success", text: "Ordenação do rascunho de grupo de camadas foi salva com sucesso!", dismiss:true};
+                $scope.msg = {type:"success", text: $translate("layer-group-view.Ordering-the-draft-layer-group-has-been-saved-successfully"), dismiss:true};
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {
@@ -149,7 +149,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             callback : function() {
                 $scope.listLayerGroup();
                 isNeedSave = false;
-                $scope.msg = {type:"success", text: "Grupo de camadas publicado com sucesso!", dismiss:true};
+                $scope.msg = {type:"success", text: $translate("layer-group-view.Layer-group-succesfully-published"), dismiss:true};
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {
@@ -177,12 +177,12 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
         if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 && scope.$modelValue.camadas && scope.$modelValue.camadas.length > 0)
         {
-            $scope.msg = {type:"danger", text: "Não é possivel remover grupos de camadas que possuem camadas!", dismiss:true};
+            $scope.msg = {type:"danger", text: $translate("layer-group-view.Is-not-possible-to-remove-layers-groups-that-have-layers"), dismiss:true};
             return;
         } else
         if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 )
         {
-            $scope.msg = {type:"danger", text: "Não é possivel remover grupos de camadas que possuem filhos!", dismiss:true};
+            $scope.msg = {type:"danger", text: $translate("layer-group-view.Is-not-possible-to-remove-layers-groups-that-have-children"), dismiss:true};
             return;
         }
 
@@ -193,9 +193,9 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                 controller: DialogController,
                 windowClass: 'dialog-delete',
                 resolve: {
-                    title: function(){return "Exclusão de grupo de camadas";},
-                    message: function(){return 'Tem certeza que deseja excluir o grupo de camadas "<b>'+scope.$modelValue.name+'</b>"? <br/>Esta operação não poderá mais ser desfeita.';},
-                    buttons: function(){return [ {label:'Excluir', css:'btn btn-danger'}, {label:'Cancelar', css:'btn btn-default', dismiss:true} ];}
+                    title: function(){return $translate("layer-group-popup.Layer-group-exclusion");},
+                    message: function(){return $translate("layer-group-popup.Are-you-sure-you-want-to-delete-the-layer-group") +' "<b>'+scope.$modelValue.name+'</b>"? <br/>' + $translate("layer-group-popup.This-operation-can-not-be-undone");},
+                    buttons: function(){return [ {label: $translate("layer-group-popup.Delete") , css:'btn btn-danger'}, {label: $translate("layer-group-popup.Cancel") , css:'btn btn-default', dismiss:true} ];}
                 }
             });
 
@@ -231,7 +231,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         if( isNeedSave )
         {
             $scope.msg = null;
-            $scope.msg = {type:"danger", text: "Por favor, salve a ordenação antes de criar ou editar um grupo", dismiss:true};
+            $scope.msg = {type:"danger", text: $translate("layer-group-view.Please-save-the-ordination-before-creating-or-editing-a-group"), dismiss:true};
             return;
         }
 
@@ -381,7 +381,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             {
                 if( destNodes.$modelValue[i].nodes && destNodes.$modelValue[i].name == sourceNode.$modelValue.name && destNodes.$modelValue[i].id != sourceNode.$modelValue.id )
                 {
-                    $scope.msg = {type:"danger", text: "Já existe um grupo com este nome no mesmo nível", dismiss:true};
+                    $scope.msg = {type:"danger", text: $translate("layer-group-popup.Already-have-a-group-with-this-name-at-the-same-level"), dismiss:true};
                     event.source.nodeScope.$$apply = false;
                 }
             }
