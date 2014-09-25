@@ -470,7 +470,7 @@ public class LayerGroupService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public Page<LayerGroup> listGruposCamadas(String filter, PageRequest pageable)
+	public Page<LayerGroup> listLayerGroups(String filter, PageRequest pageable)
 	{
 		return this.layerGroupRepository.listByFilter(filter, pageable);
 	}
@@ -482,7 +482,7 @@ public class LayerGroupService
 	 * @throws JAXBException
 	 */
 	@Transactional(readOnly=true)
-	public List<ExternalLayer> listCamadasExternasByFilters( DataSource dataSource )
+	public List<ExternalLayer> listExternalLayersByFilters( DataSource dataSource )
 	{
 		GeoserverConnection geoserverConnection = new GeoserverConnection();
 		return geoserverConnection.listExternalLayersByFilters(dataSource);
