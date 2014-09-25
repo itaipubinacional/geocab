@@ -39,7 +39,7 @@
             <br>
             
 			<div class="form-item"  ng-if="currentEntity.grupoCamadas != null" style="width: 500px;">
-                <b class="detail-label"><spring:message code="admin.layer-config.Layer-Group"/></b>
+                <b class="detail-label"><spring:message code="admin.layer-config.Layer-group"/></b>
                 <br>
                 <span class="detail-value">{{currentEntity.layerGroup.name}}</span>
             </div>
