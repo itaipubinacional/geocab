@@ -85,7 +85,7 @@
 		})
 		.state('layer-group.list', {
 			url: "/list",
-			menu: "data-source"
+			menu: "layer-group"
 		});
 		
 		//Layer config
