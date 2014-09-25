@@ -13,7 +13,6 @@
 	</div>
 	<div class="modal-body" ng-init="initialize();"
 		style="overflow: visible">
-		
 		<table>
 			<tr>
 				<td style="vertical-align: top">
@@ -23,9 +22,11 @@
 								<div
 									style="width: 719px;">
 									<span ng-if="doing_async">...loading...</span>
-									<abn-tree tree-data="grupos" tree-control="my_tree"
-										on-select="my_tree_handler(branch)" expand-level="{{currentGrupo.level}}"
-										initial-selection="{{currentGrupo.label}}"></abn-tree>
+									
+									<abn-tree tree-data="groups" tree-control="my_tree"
+										on-select="my_tree_handler(branch)" expand-level="{{currentGroup.level}}"
+										initial-selection="{{currentGroup.label}}"></abn-tree>
+										
 								</div>
 							</td>
 						</tr>

@@ -60,7 +60,7 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
             nome:currentEntity.nome,
             titulo:currentEntity.titulo
         }]
-		$scope.listCamadasExternasByFilters(currentEntity.fonteDados);
+		$scope.listExternalLayerByFilters(currentEntity.dataSource);
 	};
 
 	/*-------------------------------------------------------------------
@@ -74,19 +74,20 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
      * @see data.filter
      * @see currentPage
      */
-    $scope.listCamadasExternasByFilters = function( fonteDados ) {
-        grupoCamadasService.listCamadasExternasByFilters( fonteDados, {
+    $scope.listExternalLayerByFilters = function( dataSource ) {
+    	
+        layerGroupService.listExternalLayersByFilters( dataSource, {
             callback : function(result) {
-            	$scope.camadas = result;
-                $scope.numeroDeRegistros = result.length;
+            	$scope.layers = result;
+                $scope.numberOfRegisters = result.length;
                 $scope.showLoading = false;
                 $scope.$apply();
 
                 //Função responsável por marcar os registros que já estavam marcados antes da abertura da pop-up
 
-                if (currentEntity.nome) {
-                    angular.forEach( $scope.camadas, function(data, index) {
-                        if ( data.nome == currentEntity.nome ){
+                if (currentEntity.name) {
+                    angular.forEach( $scope.layers, function(data, index) {
+                        if ( data.name == currentEntity.name ){
                             $scope.gridOptions.selectRow(index, true);
                         }
 
@@ -125,7 +126,7 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
 
     
     var IMAGE_LEGENDA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legenda}}"/>' +
+	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
 	'</div>';
 
 	/**
@@ -139,7 +140,7 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
     };
 
     $scope.gridOptions = {
-        data: 'camadas',
+        data: 'layers',
         multiSelect: false,
         headerRowHeight: 45,
         filterOptions: $scope.filterOptions,
@@ -149,9 +150,9 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
             $scope.toogleSelection(row, event);
         },
         columnDefs: [
-            {displayName:'Simbologia', field:'legenda', sortable:false, width: '100px', cellTemplate: IMAGE_LEGENDA},       
-            {displayName:'Título', field: 'titulo', width:'280px'},
-            {displayName:'Nome', field:'nome'}
+            {displayName:'Simbologia', field:'legend', sortable:false, width: '100px', cellTemplate: IMAGE_LEGENDA},       
+            {displayName:'Título', field: 'title', width:'280px'},
+            {displayName:'Nome', field:'name'}
         ]
     };
 
