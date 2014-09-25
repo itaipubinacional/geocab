@@ -27,7 +27,7 @@
         <div class="grid-align" ng-grid="gridOptions" style="height: 335px; border: 1px solid rgb(212,212,212); margin-top: 10px;"></div>
     </div>
 
-    <div class="grid-elements-count" style="margin: -14px 20px 0 0;">{{numeroDeRegistros}} registro(s)</div>
+    <div class="grid-elements-count" style="margin: -14px 20px 0 0;">{{numberOfRegisters}} registro(s)</div>
 
     <div class="modal-footer">
         <button id="buttonClose" ng-disabled="selectedEntity == null" class="btn btn-primary" ng-click="close(false)">Selecionar</button>
