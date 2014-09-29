@@ -36,7 +36,6 @@
 <script type="text/javascript" src="<c:url value="/broker/util.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/static/js/eits/broker/eits-broker.js"/>"></script>
 
-
 <script type="text/javascript" src="<c:url value="/static/libs/timeout-dialog/timeout-dialog.js"/>"></script>
 
 <script type="text/javascript" src="<c:url value="/static/libs/eits-directives/dialog/dialog-controller.js"/>"></script>
