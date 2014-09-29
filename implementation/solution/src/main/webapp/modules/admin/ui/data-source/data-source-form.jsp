@@ -28,15 +28,15 @@
 
             <div class="form-item position-relative" style="width: 500px;">
                 <label class="detail-label" required><spring:message code="Address"/></label>
-                <input name="address" type="text" class="form-control"
+                <input name="url" type="text" class="form-control"
                        ng-model="currentEntity.url"
                        numbers-only
                        maxlength="255"
                        placeholder="http://"
                        required ng-minlength="1"
-                       ng-class="{ ngInvalid: form.address.$error.required && (form.$submitted || form.address.$dirty) }"
+                       ng-class="{ ngInvalid: form.url.$error.required && (form.$submitted || form.url.$dirty) }"
                        ng-hover>
-                <span ng-show="form.address.$error.required && (form.$submitted || form.address.$dirty)"
+                <span ng-show="form.url.$error.required && (form.$submitted || form.url.$dirty)"
                       class="tooltip-validation"><spring:message code="Address"/> <spring:message code="required"/></span>
             </div>
             <br>
