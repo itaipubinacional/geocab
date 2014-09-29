@@ -157,7 +157,7 @@ public class AccountService
 				dbUser.setPassword( encodedPassword );
 			}
 						
-			user = this.userRepository.save( dbUser );//sava data in database
+			user = this.userRepository.save( dbUser );//save data in database
 			
 		}
 		catch ( DataIntegrityViolationException e )

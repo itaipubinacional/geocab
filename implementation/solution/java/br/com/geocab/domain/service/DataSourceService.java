@@ -10,6 +10,7 @@ import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,11 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.repository.datasource.IDataSourceRepository;
+import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 
 /**
- * Class to manage of entities {@link FonteDados}
+ * Class to manage of entities {@link DataSource}
  * 
- * @author Marcos
+ * @author Cristiano Correa
  * @since 27/05/2014
  * @version 1.0
  * @category Service
@@ -39,9 +41,16 @@ public class DataSourceService
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
 	/**
-	 * 
+	 * Log
 	 */
 	private static final Logger LOG = Logger.getLogger( DataSourceService.class.getName() );
+	
+	/**
+	 * I18n 
+	 */
+	@Autowired
+	private MessageSource messages;
+	
 	/**
 	 * Repository of {@link DataSource}
 	 */
@@ -66,16 +75,8 @@ public class DataSourceService
 		{
 			LOG.info( e.getMessage() );
 			final String error = e.getCause().getCause().getMessage();
-//			
-//			// Captura e retorna a exce��o de dados �nicos
-//			if(error.contains("uk_fonte_dados_nome"))
-//			{
-//				throw new IllegalArgumentException( Messages.getException( "fontedados.nome_existe" ) );
-//			}
-//			else if(error.contains("uk_fonte_dados_endereco"))
-//			{
-//				throw new IllegalArgumentException( Messages.getException( "fontedados.endereco_existe" ) );
-//			}
+			
+			this.dataIntegrityViolationException(error);			
 		}
 		return dataSource; 
 	}
@@ -96,15 +97,7 @@ public class DataSourceService
 			LOG.info( e.getMessage() );
 			final String error = e.getCause().getCause().getMessage();
 			
-//			// Captura e retorna a exce��o de dados �nicos
-//			if(error.contains("uk_fonte_dados_nome"))
-//			{
-//				throw new IllegalArgumentException( Messages.getException( "fontedados.nome_existe" ) );
-//			}
-//			else if(error.contains("uk_fonte_dados_endereco"))
-//			{
-//				throw new IllegalArgumentException( Messages.getException( "fontedados.endereco_existe" ) );
-//			}
+			this.dataIntegrityViolationException(error);
 		}
 		return dataSource;
 	}
@@ -133,8 +126,11 @@ public class DataSourceService
 	}
 	
 	/**
+	 * Method to list all {@link FonteDados}
 	 * 
-	 * @return
+	 * @param id
+	 * @return dataSource
+	 * @throws JAXBException 
 	 */
 	@Transactional(readOnly=true)
 	public List<DataSource> listAllDataSource()
@@ -143,7 +139,7 @@ public class DataSourceService
 	}
 	
 	/**
-	 * Method to list data source pageable with filter options
+	 * Method to list {@link FonteDados} pageable with filter options
 	 *
 	 * @param filter
 	 * @param pageable
@@ -154,12 +150,43 @@ public class DataSourceService
 	{
 		return this.dataSourceRepository.listByFilters(filter, pageable);
 	}
-//	
-//	@Transactional(readOnly=true)
-//	public boolean testaConexao(String url)
-//	{
-//		GeoserverConnection geoserverConnection = new GeoserverConnection();
-//		return geoserverConnection.testaConexao(url);
-//	}
+	
+	/**
+	 * Method to test Data source connection
+	 * 
+	 * @param url 
+	 * @return boolean
+	 */
+	@Transactional(readOnly=true)
+	public boolean testConnection(String url)
+	{
+		GeoserverConnection geoserverConnection = new GeoserverConnection();		
+		return geoserverConnection.testConnection(url);
+	}
+	
+	/**
+	 * Method to verify DataIntegrityViolations and throw IllegalArgumentException with the field name
+	 *
+	 * @param error
+	 * @throws IllegalArgumentException 
+	 * @return void
+	 */
+	private void dataIntegrityViolationException( String error )
+	{	
+		String fieldError = "";
+		
+		if(error.contains("uk_data_source_name"))
+		{
+			fieldError = this.messages.getMessage("Name", new Object [] {}, null );
+		}
+		else if(error.contains("uk_data_source_url"))
+		{
+			fieldError = this.messages.getMessage("Address", new Object [] {}, null );
+		}
+		
+		if(!fieldError.isEmpty()){
+			throw new IllegalArgumentException( this.messages.getMessage("The-field-entered-already-exists,-change-and-try-again", new Object [] {fieldError}, null) );
+		}
+	}
 	
 }

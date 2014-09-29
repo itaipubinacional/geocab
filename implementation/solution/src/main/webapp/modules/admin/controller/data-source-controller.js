@@ -421,14 +421,15 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	/**
 	 * Test the connection
 	 */
-	$scope.connectionTestDataSource = function() {
-
-		if ( !$scope.form().endereco.$valid ) {
+	$scope.testDataSourceConnection = function() {
+		
+		
+		if ( $scope.currentState != $scope.DETAIL_STATE && !$scope.form().url.$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
 			return;
 		}
 
-		dataSourceService.connectionTest( $scope.currentEntity.address, {
+		dataSourceService.testConnection( $scope.currentEntity.url, {
 			callback : function(result) {
 				if(result){
 					$scope.msg = {type:"success", text: $translate("admin.datasource.Connection-successfully-established"), dismiss:true};					
