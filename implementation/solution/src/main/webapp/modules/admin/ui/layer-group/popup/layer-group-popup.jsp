@@ -29,7 +29,7 @@
             <button id="buttonClose" ng-show="currentState == NORMAL_STATE" class="btn btn-default" ng-click="close()"><spring:message code="layer-group-popup.Close" /></button>
 
             <button id="buttonConfirmInsert" ng-show="currentState == CONFIRM_STATE" class="btn btn-primary" ng-click="closePopupConfirm()"><spring:message code="layer-group-popup.Yes"/></button>
-            <button id="buttonConfirmClose" ng-show="currentState == CONFIRM_STATE" class="btn btn-default" ng-click="closeConfirm()">Não</button>
+            <button id="buttonConfirmClose" ng-show="currentState == CONFIRM_STATE" class="btn btn-default" ng-click="closeConfirm()"><spring:message code="layer-group-popup.No"/></button>
         </div>
     </div>
 

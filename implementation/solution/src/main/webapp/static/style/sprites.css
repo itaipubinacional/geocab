@@ -1,11 +1,12 @@
 .logo {
     background: url(../images/logo-login.png) 17px 17px no-repeat;
-    background-size: 74px;
+    background-size: 105px;
     width: 120px;
     height: 60px;
     display: block;
     float: left;
     margin-left: 34px;
+    margin-right: 15px;
 }
 
 .logo:hover {

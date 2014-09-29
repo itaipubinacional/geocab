@@ -24,3 +24,6 @@
 <link href="<c:url value="/static/style/icon-itaipu/styles.css"/>" type="text/css" rel="stylesheet" />
 <link href="<c:url value="/static/libs/font-awesome/css/font-awesome.css"/>" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="<c:url value="/static/libs/angular-rangeslider/css/angular.rangeSlider.css"/>">
+
+<!-- Timeout Dialog -->
+<link href="<c:url value="/static/libs/timeout-dialog/css/timeout-dialog.css"/>" type="text/css" rel="stylesheet"/>
