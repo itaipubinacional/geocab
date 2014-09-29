@@ -91,7 +91,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * Order of {@link Layer}
 	 */
 	@Column
-	private int orderLayer;
+	private Integer orderLayer;
 	/**
 	 * {@link MapScale} minimum of {@link Layer}
 	 */
@@ -395,7 +395,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	/**
 	 * @return the order
 	 */
-	public int getOrderLayer()
+	public Integer getOrderLayer()
 	{
 		return orderLayer;
 	}
@@ -403,7 +403,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	/**
 	 * @param order the order to set
 	 */
-	public void setOrderLayer(int orderLayer)
+	public void setOrderLayer(Integer orderLayer)
 	{
 		this.orderLayer = orderLayer;
 	}
