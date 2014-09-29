@@ -50,7 +50,7 @@
             </button>
 			<button ng-show="currentState == INSERT_STATE || currentState == UPDATE_STATE" style="float: right;"
 				class="btn btn-warning"
-				ng-click="testaConexaoFonteDados(currentEntity)"><spring:message code="admin.datasource.Connection-test"/>
+				ng-click="testDataSourceConnection(currentEntity)"><spring:message code="admin.datasource.Connection-test"/>
             </button>
             <!-- State Create -->
             <button ng-show="currentState == INSERT_STATE" style="float: right;"
