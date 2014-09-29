@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+		<geocab.data_source 
+			id="1"
+			created="2014-09-22 00:00:00"
+			name="Data Source"
+			login="user" 
+			password="password123"
+			url="http://172.17.6.112:80/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=v_ag_demandantes"
+			internal="true"
+		 />
+		 
+	 	<geocab.layer_group 
+			id="1"
+			created="2014-09-23 00:00:00"
+			name="Abastecedouros" 
+			order_layer_group="0"
+		/>
+
+		<geocab.layer
+			id="2"
+			data_source_id="1"
+			created="2014-09-23 00:00:00"
+			start_enabled="false"
+			start_visible="false"
+			layer_group_id="1"
+			maximum_scale_map="15"
+			minimum_scale_map="0"
+			name="bdgeo:v_ag_demandantes"
+			title="Demandantes"
+		/>
+	
+</dataset>
