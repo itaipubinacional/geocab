@@ -7,6 +7,7 @@
 
 <!-- FIXME Tirar as versoes -->
 <!-- Boostrap -->
+<link href="<c:url value="/static/libs/font-awesome/css/font-awesome.css"/>" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.2.0/css/bootstrap.min.css"/>">
 <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>">
 
@@ -22,7 +23,7 @@
 <!-- Itaipu Icons -->
 
 <link href="<c:url value="/static/style/icon-itaipu/styles.css"/>" type="text/css" rel="stylesheet" />
-<link href="<c:url value="/static/libs/font-awesome/css/font-awesome.css"/>" type="text/css" rel="stylesheet" />
+
 <link rel="stylesheet" href="<c:url value="/static/libs/angular-rangeslider/css/angular.rangeSlider.css"/>">
 
 <!-- Timeout Dialog -->
