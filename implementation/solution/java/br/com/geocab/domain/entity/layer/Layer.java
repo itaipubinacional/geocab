@@ -91,7 +91,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * Order of {@link Layer}
 	 */
 	@Column
-	private Integer orderLayer;
+	private int orderLayer;
 	/**
 	 * {@link MapScale} minimum of {@link Layer}
 	 */
@@ -153,7 +153,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param name
 	 * @param order
 	 */
-	public Layer( Long id, String name, Integer orderLayer )
+	public Layer( Long id, String name, int orderLayer )
 	{
 		this.setId(id);
 		this.setName(name);
@@ -173,7 +173,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, String title, Boolean startEnabled, Boolean startVisible, Integer orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource,
+	public Layer( Long id, String name, String title, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource,
 			LayerGroup layerGroup )
 	{
 		this.setId(id);
@@ -200,7 +200,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, Boolean startEnabled, Boolean startVisible, Integer orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource, LayerGroup layerGroup )
+	public Layer( Long id, String name, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource, LayerGroup layerGroup )
 	{
 		this.setId(id);
 		this.setName(name);
@@ -395,7 +395,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	/**
 	 * @return the order
 	 */
-	public Integer getOrderLayer()
+	public int getOrderLayer()
 	{
 		return orderLayer;
 	}
@@ -403,7 +403,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	/**
 	 * @param order the order to set
 	 */
-	public void setOrderLayer(Integer orderLayer)
+	public void setOrderLayer(int orderLayer)
 	{
 		this.orderLayer = orderLayer;
 	}
