@@ -435,4 +435,5 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 			}
 		});
 	};
+	
 };
