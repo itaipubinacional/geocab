@@ -19,7 +19,7 @@ import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.repository.account.IUserRepository;
 
 /**
- * @author Thiago Rossetto
+ * @author Thiago Rossetto Afonso
  * @since 29/09/2014
  * @version 1.0
  */
