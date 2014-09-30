@@ -104,6 +104,10 @@ body {
     background-position: -5px -4px;
 }
 
+.btn-facebook:hover{
+	background-position: -5px -4px;
+}
+
 .btn-google {
 	color: #FFFFFF;
 	font: bold 12px Arial;
@@ -119,7 +123,9 @@ body {
     margin-bottom: 15px;
 }
 
-
+.btn-google:hover{
+	background-position: 0 0px;
+}
 
 
 .dont-have-account{
