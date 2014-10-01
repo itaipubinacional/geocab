@@ -18,23 +18,56 @@
 		<jsp:include page="../../default-styles.jsp"/>
 		
 		<!-- Scripts -->
-		<jsp:include page="../../default-scripts.jsp"/> <!-- FIXME Deixar caminhos relativos.. -->
+		<jsp:include page="../../default-scripts.jsp"/>
 		
-		<!-- Controllers -->
+		<!-- OpenLayers 3  -->
+	    <link rel="stylesheet" href="static/libs/openlayers/ol.css" type="text/css">
+	
+	    <!-- Treeview -->
+	    <link rel="stylesheet" href="static/libs/angular-treeview/ivh-treeview.min.css" type="text/css">
+	
+	    <!-- CSS do mapa -->
+	    <link href="static/style/map/style.css" type="text/css" rel="stylesheet">
 		
+		<!-- Controllers -->		
 		<!-- Main -->
 		<script type="text/javascript" src="modules/map/map-main.js"></script>
-	</head>
+   		<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
+		<script type="text/javascript" src="modules/map/controller/map-controller.js"></script>
+		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
+   		
+   		<!-- Treeview -->
+		<script type="text/javascript"
+		        src="static/libs/angular-treeview/ivh-treeview.min.js"></script>
+		
+		<script src="static/libs/angular-treeview/ivh-treeview.extend.js" type="text/javascript"></script>
+		
+		<!-- OpenLayers 3 -->
+		<script src="static/libs/openlayers/ol.js" type="text/javascript"></script>
+		
+		<!-- Google Maps -->
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?client=gme-itaipubinacional&sensor=false"></script>
+
+	 	<style>
+	        .popup{
+	            background:white;
+	            width:250px;
+	            height:200px;
+	            border-radius:5px;
+	        }
+	    </style>
+	</head> 
 	
-	<body>
+	<body class="overflow-hidden">
+	<div class="container-fluid" style="height: 100%;"> 
 		<header>
-			<h1>MAP Header</h1>
+				<jsp:include page="../../common/header.jsp"/>
 		</header>
-   		<ui-view id="mainPanel">
-   			Loading... MAIN PANEL
-   		</ui-view>
-   		<footer>
-   			<h5>Footer</h5>
-   		</footer>
+
+    <!-- content -->
+    <div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
+    <!-- /content -->
+	<footer></footer>
+</div>
 	</body>
 </html>

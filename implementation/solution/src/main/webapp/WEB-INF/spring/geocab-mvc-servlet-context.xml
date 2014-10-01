@@ -58,6 +58,9 @@
 	<context:component-scan  
 		base-package="br.com.geocab.application.controller"/>
 		
+	<!-- Social -->
+	<bean class="org.springframework.social.connect.web.ProviderSignInController"/>
+		
 	<!-- Interceptors -->
 	<mvc:interceptors>
 		<!-- To change the Locale, via URL. E.g.: /myURL?locale=en_US -->

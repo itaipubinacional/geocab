@@ -21,20 +21,7 @@
 		
 		//HOME
         $urlRouterProvider.otherwise("/");
-        
-        //------
-        //Scheduler
-        //------    
-        //Resource Sheet
-        //------
-        $stateProvider.state('home', {
-        	url : "/",
-			template: '<h2>Body</h2>',
-			controller : function ( $state, $importService ){
-				console.log( $importService("accountService") );
-			}
-        });
-        
+                
       //Users
 		$stateProvider.state('users', {
 			url : "/users",
