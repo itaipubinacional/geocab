@@ -1,0 +1,6 @@
+#include "Pods-google-plus-ios-sdk.xcconfig"
+FRAMEWORK_SEARCH_PATHS = ${PODS_GOOGLE_PLUS_IOS_SDK_FRAMEWORK_SEARCH_PATHS}
+GCC_PREPROCESSOR_DEFINITIONS = COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/google-plus-ios-sdk" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/AFNetworking" "${PODS_ROOT}/Headers/Bolts" "${PODS_ROOT}/Headers/Facebook-iOS-SDK" "${PODS_ROOT}/Headers/Facebook-iOS-SDK/FacebookSDK" "${PODS_ROOT}/Headers/ISO8601DateFormatterValueTransformer" "${PODS_ROOT}/Headers/MFSideMenu" "${PODS_ROOT}/Headers/ODSAccordionView" "${PODS_ROOT}/Headers/QDImageCropper" "${PODS_ROOT}/Headers/RKValueTransformers" "${PODS_ROOT}/Headers/RestKit" "${PODS_ROOT}/Headers/RestKit/CoreData" "${PODS_ROOT}/Headers/RestKit/Network" "${PODS_ROOT}/Headers/RestKit/ObjectMapping" "${PODS_ROOT}/Headers/RestKit/Support" "${PODS_ROOT}/Headers/SOCKit" "${PODS_ROOT}/Headers/TransitionKit" "${PODS_ROOT}/Headers/Vendor/LibComponentLogging/Core" "${PODS_ROOT}/Headers/Vendor/LibComponentLogging/NSLog" "${PODS_ROOT}/Headers/google-plus-ios-sdk"
+OTHER_LDFLAGS = -ObjC ${PODS_GOOGLE_PLUS_IOS_SDK_OTHER_LDFLAGS}
+PODS_ROOT = ${SRCROOT}
