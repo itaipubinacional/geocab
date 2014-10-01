@@ -4,6 +4,10 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
 	border-color: #e32102;
 }
 
+.overflow-hidden {
+    overflow: hidden;
+}
+
 .styled-select.ngInvalid{
     border-color: #e32102;
 }

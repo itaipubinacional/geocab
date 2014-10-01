@@ -2,13 +2,18 @@
 	"use strict";
 			
 	//Start the AngularJS
-	var projectModule = angular.module("map", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker"]);
+	var projectModule = angular.module("map", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker" , "eits-angular-translate" , "ivh.treeview", "ivh.treeview-extend"])
 	
-	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider ) {
+	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider ,$translateProvider) {
 		//-------
 		//Broker configuration
 		//-------
 		$importServiceProvider.setBrokerURL("broker/interface");
+		
+		//-------
+		//Translate configuration
+		//-------
+		$translateProvider.useURL('./bundles');
 		
 		//-------
 		//URL Router
@@ -22,13 +27,11 @@
         //------    
         //Resource Sheet
         //------
-        $stateProvider.state('home', {
-        	url : "/",
-			template: '<h2>Body</h2>',
-			controller : function ( $state, $importService ){
-				console.log( $importService("accountService") );
-			}
-        });
+        $stateProvider.state('users', {
+			url : "/",
+			templateUrl : "modules/map/ui/interactive-map-view.jsp",
+			controller : MapController
+		})
 	});
 	
 	projectModule.run( function( $rootScope, $state, $stateParams ) {
