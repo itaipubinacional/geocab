@@ -59,7 +59,6 @@
 		base-package="br.com.geocab.application.controller"/>
 		
 	<!-- Social -->
-	<bean class="org.springframework.social.connect.web.ConnectController"/>
 	<bean class="org.springframework.social.connect.web.ProviderSignInController"/>
 		
 	<!-- Interceptors -->
