@@ -30,7 +30,7 @@ import br.com.geocab.domain.repository.marker.IMarkerRepository;
 @Service
 @Transactional
 //@PreAuthorize("hasRole('"+UserRole.ADMINISTRADOR_VALUE+"')")
-@RemoteProxy(name="loginService")
+@RemoteProxy(name="markerService")
 public class MarkerService
 {
 	/*-------------------------------------------------------------------
@@ -146,7 +146,8 @@ public class MarkerService
 	@Transactional(readOnly=true)
 	public Page<Marker> listMarkerByFilters( String filter, PageRequest pageable )
 	{
-		return this.markerRepository.listByFilters(filter, pageable);
+		//return this.markerRepository.listByFilters(filter, pageable);
+		return this.markerRepository.listByFilters(pageable);
 	}
 	
 	/**
