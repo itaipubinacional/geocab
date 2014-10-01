@@ -24,7 +24,7 @@
 			</button>
 			
 			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="saveLayerGroup()"
-			        class="btn btn-success"><spring:message code="layer-group-view.Save-ordering"/>
+			        class="btn  btn-success"><spring:message code="layer-group-view.Save-ordering"/>
 			</button>
              
 			<button ng-show="currentState == LIST_STATE" style="float: left; margin-bottom: 15px; width: 122px;" ng-click="newLayerGroup()"

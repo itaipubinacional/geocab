@@ -645,7 +645,7 @@ public class LayerGroupService
 	@Transactional(readOnly = true)
 	public Layer findLayerById( Long id )
 	{
-		Layer layer = this.layerRepository.findOne(id);
+		final Layer layer = this.layerRepository.findOne(id);
 		
 		// traz a legenda da camada do GeoServer
 		layer.setLegend(getLegendLayerFromGeoServer(layer));
