@@ -1,0 +1,1 @@
+../../QDImageCropper/Classes/QDIgnoringTouchesView.h
