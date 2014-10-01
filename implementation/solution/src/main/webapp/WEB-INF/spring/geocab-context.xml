@@ -9,6 +9,8 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:facebook="http://www.springframework.org/schema/social/facebook"
+	xmlns:google="http://www.springframework.org/schema/social/google"
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:repository="http://www.springframework.org/schema/data/repository"
 	xmlns:util="http://www.springframework.org/schema/util"
@@ -23,6 +25,8 @@
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/social/facebook http://www.springframework.org/schema/social/spring-social-facebook.xsd
+		http://www.springframework.org/schema/social/google http://www.springframework.org/schema/social/spring-social-google.xsd
 		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr/spring-dwr-3.0.xsd"
 	default-autowire="byName">
 	
@@ -78,6 +82,28 @@
 			</security:password-encoder>
 		</security:authentication-provider>
 	</security:authentication-manager>
+	
+	<!-- Social -->
+	<facebook:config app-id="${social.facebook.app-id}" 
+		app-secret="${social.facebook.app-secret}"/>
+	<google:config app-id="${social.google.app-id}" 
+		app-secret="${social.google.app-secret}" />
+		
+	<bean id="usersConnectionRepository" 
+		class="br.com.geocab.infrastructure.social.PersistentUsersConnectionRepository">
+		<property name="connectionSignUp">
+			<bean id="connectionSignUp" class="br.com.geocab.infrastructure.social.ConnectionSignUp"/>
+		</property>
+	</bean>
+	<bean id="connectionRepository" factory-method="createConnectionRepository" 
+		factory-bean="usersConnectionRepository" scope="request">
+    	<constructor-arg value="#{request.userPrincipal.name}" />
+    	<aop:scoped-proxy proxy-target-class="false" />
+	</bean>
+	<bean id="userIdSource"
+		class="org.springframework.social.security.AuthenticationNameUserIdSource" />
+	<bean id="signInAdapter" 
+		class="br.com.geocab.infrastructure.social.SpringSecuritySignInAdapter"/>
 	
 	<!-- 
 		DWR
