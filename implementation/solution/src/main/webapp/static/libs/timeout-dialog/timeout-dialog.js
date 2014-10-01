@@ -41,6 +41,8 @@ String.prototype.format = function() {
   return s;
 };
 
+//TODO: Traduzir
+
 !function($) {
   $.timeoutDialog = function(options) {
 
