@@ -40,6 +40,43 @@ public class Marker extends AbstractEntity implements Serializable
 	private String longitude;
 	private StatusMarker status;
 	
+	/*-------------------------------------------------------------------
+	 * 		 					CONSTRUCTORS
+	 *-------------------------------------------------------------------*/
+	/**
+	 * 
+	 */
+	public Marker()
+	{
+		
+	}
+	
+	/**
+	 * 
+	 *
+	 * @param id
+	 */
+	public Marker( Long id )
+	{
+		this.setId(id);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param url
+	 * @param login
+	 * @param password
+	 */
+	public Marker( Long id, String latitude, String longitude, StatusMarker status )
+	{
+		this.setId(id);
+		this.setLatitude(latitude);
+		this.setLongitude(longitude);
+		this.setStatus(status);
+	}
+	
 	/**
 	 * @return the latitude
 	 */

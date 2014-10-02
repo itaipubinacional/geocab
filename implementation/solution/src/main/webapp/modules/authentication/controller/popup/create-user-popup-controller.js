@@ -6,7 +6,7 @@
  * @param $modalInstance
  * @constructor
  */
-function CreateUserPopUpController( $scope, $modalInstance, $state, $importService ) {
+function CreateUserPopUpController( $scope, $modalInstance, $state, $importService, $translate ) {
 
 
 	$importService("loginService");
@@ -49,12 +49,46 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
 
     $scope.createAccount = function(){
     	
+    	if($scope.currentEntity.name === null){
+    		$scope.msg = {type:"danger", text: $translate("admin.users.Field-name-is-required") + '!', dismiss:true};
+    		$scope.apply();   
+    		return;
+    	} 
+    	
+    	if($scope.currentEntity.email === null){
+    		$scope.msg = {type:"danger", text:  $translate("admin.users.Field-email-is-required") + '!', dismiss:true};
+    		$scope.apply(); 
+    		return;
+    	}
     	
     	
-    	if ( !$scope.form().$valid ) {
-			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
-			return;
-		}
+    	if($scope.currentEntity.password === null){
+    		$scope.msg = {type:"danger", text: $translate("admin.users.Field-password-is-required") + '!', dismiss:true};
+    		$scope.apply();   
+    		return;
+    	} 
+    	
+    	if($scope.currentEntity.confirmPassword === null){
+    		$scope.msg = {type:"danger", text: $translate("admin.users.Field-confirm-password-is-required") + '!', dismiss:true};
+    		$scope.apply();
+    		return;
+    	} 
+    	
+    	
+//    	if($scope.currentEntity.password !== $scope.currentEntity.confirmPassword){
+//    		$scope.msg = {type:"danger", text: "As senhas precisam ser iguais" + '!', dismiss:true};
+//    		$scope.apply();
+//    		return;
+//    	} 
+    	
+    	
+//    	if ( !$scope.form.$valid ) {    		
+//			$scope.msg = {type:"danger", text: "hu3hu3uh" , dismiss:true};
+//			$scope.$apply();
+//			return;
+//		}
+    	
+    	console.log($scope.currentEntity.confirmPassword);
 
     	loginService.insertUser( $scope.currentEntity, {
 			callback : function() {
@@ -76,17 +110,17 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
         $modalInstance.close($scope.currentEntity);
     };
 
-    $scope.form = function( formName )
-    {
-
-        if ( !formName )
-        {
-            formName = "form";
-        }
-
-        return $("form[name="+formName+"]").scope()[formName];
-    };
-
+//    $scope.form = function( formName )
+//    {
+//
+//        if ( !formName )
+//        {
+//            formName = "form";
+//        }
+//
+//        return $("form[name="+formName+"]").scope()[formName];
+//    };
+    
     /**
      *
      */

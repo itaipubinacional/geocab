@@ -29,10 +29,8 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	 * @return
 	 */
 	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status ) " +
-				"FROM Marker marker " +
-				"WHERE  ( ( LOWER(marker.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " +
-				"OR ( LOWER(marker.url) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ))" )
-	public Page<Marker> listByFilters( @Param("filter") String filter, Pageable pageable );
+				"FROM Marker marker ")
+	public Page<Marker> listByFilters(  Pageable pageable );
 	
 	/**
 	 * 
