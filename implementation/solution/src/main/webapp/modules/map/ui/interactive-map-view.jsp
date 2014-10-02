@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<div id="marker-point" style="display: none;"></div>
+<span id="marker-point" class="glyphicon glyphicon-map-marker sidebar-icon" style="display: none;"></span>
 
 <section id="main-content" style="height: 100%">
     <div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
@@ -32,7 +32,7 @@
                 <!-- Verificar... -->
                 <li ng-click="initializeMarker()" ng-class="{ferramenta_active : menu.fcMarker}">
                     <a href="#tabs-1">
-                        <div class="icon itaipu-icon-square sidebar-icon"></div>
+                        <span class="glyphicon glyphicon-map-marker sidebar-icon"></span>
                     </a>
                 </li>
 
@@ -45,26 +45,41 @@
         </div>
 
 		  <div id="sidebar-marker" class="sidebar-style">
+		  	<form name="sidebarMarker">
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
-	               <span ng-click="toggleSidebarMarker(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
+	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
 	
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
-	                   <h3>Nova postagem</h3>
-                       <hr>
+	                   <div class="sidebar-content-header">Nova postagem</div>
+	                   <!-- <h3>Nova postagem</h3>
+                        -->
+                        <br style="clear: both;">
+                        <br>
                        <label>Camada</label>
-                       <select class="form-control">
-                       		<option>1</option>
-                       </select>
+                       <select chosen class="form-control">                       	
+						  <optgroup label="Swedish Cars">
+						    <option value="volvo">Volvo</option>
+						    <option value="saab">Saab</option>
+						  </optgroup>
+						  <optgroup label="German Cars">
+						    <option value="mercedes">Mercedes</option>
+						    <option value="audi">Audi</option>
+						  </optgroup>
+						</select>
+                       <br>
                        <label>Nome</label> <input type="text" class="form-control" ng-model="currentEntity.name">
-                       <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo">
-                       <label>Descrição</label> <textarea class="form-control"></textarea>
+                       <br>
+                       <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
+                       <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea>
 
     					<br>
-                       <button class="btn btn-default">Cancelar</button>
-                       <button class="btn btn-default">Salvar</button>
+    					<hr>
+                       <button class="btn btn-default" ng-click="clearFcMaker()" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
+                       <button class="btn btn-primary" style="float: right">Enviar</button>
 	                </div>
                 </div>
+           	 </form>
            </div>
 
         <div id="sidebar-tabs" style="float: left;">
