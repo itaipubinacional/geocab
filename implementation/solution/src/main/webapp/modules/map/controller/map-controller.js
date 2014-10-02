@@ -910,7 +910,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.initializeDistanceCalc = function () {
 
-
+    	if($scope.menu.fcMarker){
+    		$scope.clearFcMaker();
+    	}
+    	
         // verifica se alguma funcionalidade ja está ativa
         if ($scope.menu.fcDistancia || $scope.menu.fcArea){
 
@@ -953,6 +956,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     $scope.initializeMarker = function () {
+    	
+    	 $scope.map.removeInteraction(draw);
+         source.clear();
+         $scope.map.removeLayer(vector);
+         $('#popup').css("display","none");
+         sketch = null;
+         
+         
     	if ($scope.menu.fcMarker){
 
             $scope.menu.fcMarker = false;
@@ -964,6 +975,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         } else {
 
+        	$scope.currentEntity = new Marker();
+        	
             // ativa funcionalidade e desativa as outras para só ter uma ativa por vez
             $scope.menu = {
                 fcDistancia : false,
@@ -971,6 +984,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 fcKml :  false,
                 fcMarker: true
             };
+         
         }
     }
     
@@ -979,6 +993,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.initializeAreaCalc = function () {
 
+    	if($scope.menu.fcMarker){
+    		$scope.clearFcMaker();
+    	}
 
         // verifica se alguma funcionalidade ja está ativa
         if ($scope.menu.fcArea || $scope.menu.fcDistancia || $scope.menu.fcMarker){
@@ -1300,6 +1317,19 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.exitLegendDetail = function (){
         $scope.LAYER_MENU_STATE = 'list';
+    }
+    
+    $scope.clearFcMaker = function() {
+    	$scope.currentEntity = new Marker();
+    	
+    	$scope.menu.fcMarker = false;
+    	
+    	if($scope.screenMarkerOpenned)
+    		$scope.toggleSidebarMarker(300, 'closeButton');
+
+    	$scope.map.removeOverlay($scope.marker);
+        $("body").prepend('<span id="marker-point" class="glyphicon glyphicon-map-marker sidebar-icon" style="display: none;"></span>');
+        $scope.screenMarkerOpenned = false;
     }
 };
 

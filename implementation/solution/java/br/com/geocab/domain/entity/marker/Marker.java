@@ -14,12 +14,13 @@ import org.hibernate.envers.Audited;
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.datasource.DataSource;
+import br.com.geocab.domain.entity.layer.Layer;
 
 /**
  * 
- *  {@link DataSource}
+ *  {@link Marker}
  * 
- * @author Cristiano Correa
+ * @author Thiago Rossetto Afonso
  * @since 22/05/2014
  * @version 1.0
  * @category Entity
@@ -39,6 +40,7 @@ public class Marker extends AbstractEntity implements Serializable
 	private String latitude;
 	private String longitude;
 	private StatusMarker status;
+	private Layer layer;
 	
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -120,4 +122,21 @@ public class Marker extends AbstractEntity implements Serializable
 		this.status = status;
 	}
 
+	/**
+	 * @return the layer
+	 */
+	public Layer getLayer()
+	{
+		return layer;
+	}
+
+	/**
+	 * @param layer the layer to set
+	 */
+	public void setLayer(Layer layer)
+	{
+		this.layer = layer;
+	}
+
+	
 }
