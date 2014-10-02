@@ -1,4 +1,4 @@
-/* BOTÕES TIPOS DE MAPQUEST */
+/* BOTÃ•ES TIPOS DE MAPQUEST */
 #typeMapQuest button:hover{
     background-color: #fff;
     height: 22px;
@@ -61,7 +61,7 @@
     content: normal;
 }
 
-/* POPUP DE MEDIÇÃO DE DISTÂNCIA E ÁREA */
+/* POPUP DE MEDIÃ‡ÃƒO DE DISTÃ‚NCIA E Ã�REA */
 .ol-popup {
     z-index: 1;
     display: none;
@@ -189,12 +189,8 @@
 }
 
 #marker-point {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #088;
-    border-radius: 10px;
-    background-color: #0FF;
-    opacity: 0.5;
+   	color: #0077bf;
+   	font-size: 30px;
 }
 
 #menu-sidebar-2{
