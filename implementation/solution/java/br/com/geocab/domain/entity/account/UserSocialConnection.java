@@ -1,8 +1,15 @@
+/**
+ * 
+ */
 package br.com.geocab.domain.entity.account;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -15,29 +22,13 @@ import br.com.geocab.domain.entity.IEntity;
  * @author rodrigo
  */
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"userId", "providerId", "rank"}))
-public class UserSocialConnection extends ConnectionData implements IEntity<String>
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"user_id", "providerId", "rank"}))
+public class UserSocialConnection extends ConnectionData implements IEntity<Long>
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2308415825457233373L;
-	
-	/**
-	 * @param providerId
-	 * @param providerUserId
-	 * @param displayName
-	 * @param profileUrl
-	 * @param imageUrl
-	 * @param accessToken
-	 * @param secret
-	 * @param refreshToken
-	 * @param expireTime
-	 */
-	public UserSocialConnection()
-	{
-		super(null, null, null, null, null, null, null, null, null);
-	}
 	
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
@@ -46,7 +37,8 @@ public class UserSocialConnection extends ConnectionData implements IEntity<Stri
 	 * 
 	 */
 	@Id
-	private String userId;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
 	/**
 	 * 
 	 */
@@ -99,6 +91,28 @@ public class UserSocialConnection extends ConnectionData implements IEntity<Stri
 	 * 
 	 */
 	private Long expireTime;
+	/**
+	 * 
+	 */
+	@NotNull
+	@ManyToOne(fetch=FetchType.EAGER, optional=false)
+	private User user;
+	
+	/**
+	 * @param providerId
+	 * @param providerUserId
+	 * @param displayName
+	 * @param profileUrl
+	 * @param imageUrl
+	 * @param accessToken
+	 * @param secret
+	 * @param refreshToken
+	 * @param expireTime
+	 */
+	public UserSocialConnection()
+	{
+		super(null, null, null, null, null, null, null, null, null);
+	}
 	
 	/*-------------------------------------------------------------------
 	 *				 		   GETTERS AND SETTERS
@@ -107,18 +121,19 @@ public class UserSocialConnection extends ConnectionData implements IEntity<Stri
 	 * @see br.com.eits.prize.global.domain.entity.IEntity#getId()
 	 */
 	@Override
-	public String getId()
+	public Long getId()
 	{
-		return this.getUserId();
+		return this.id;
 	}
 	/* (non-Javadoc)
 	 * @see br.com.eits.prize.global.domain.entity.IEntity#setId(java.io.Serializable)
 	 */
 	@Override
-	public void setId(String id)
+	public void setId(Long id)
 	{
-		this.setUserId(id);
+		this.id = id;
 	}
+	
 	/**
 	 * @return the providerId
 	 */
@@ -133,6 +148,7 @@ public class UserSocialConnection extends ConnectionData implements IEntity<Stri
 	{
 		this.providerId = providerId;
 	}
+	
 	/**
 	 * @return the providerUserId
 	 */
@@ -147,6 +163,7 @@ public class UserSocialConnection extends ConnectionData implements IEntity<Stri
 	{
 		this.providerUserId = providerUserId;
 	}
+	
 	/**
 	 * @return the rank
 	 */
@@ -161,6 +178,7 @@ public class UserSocialConnection extends ConnectionData implements IEntity<Stri
 	{
 		this.rank = rank;
 	}
+	
 	/**
 	 * @return the displayName
 	 */
@@ -175,6 +193,7 @@ public class UserSocialConnection extends ConnectionData implements IEntity<Stri
 	{
 		this.displayName = displayName;
 	}
+	
 	/**
 	 * @return the profileUrl
 	 */
@@ -189,6 +208,7 @@ public class UserSocialConnection extends ConnectionData implements IEntity<Stri
 	{
 		this.profileUrl = profileUrl;
 	}
+	
 	/**
 	 * @return the imageUrl
 	 */
@@ -259,18 +279,19 @@ public class UserSocialConnection extends ConnectionData implements IEntity<Stri
 	{
 		this.expireTime = expireTime;
 	}
+
 	/**
-	 * @return the userId
+	 * @return the user
 	 */
-	public String getUserId()
+	public User getUser()
 	{
-		return userId;
+		return user;
 	}
 	/**
-	 * @param userId the userId to set
+	 * @param user the user to set
 	 */
-	public void setUserId(String userId)
+	public void setUser(User user)
 	{
-		this.userId = userId;
+		this.user = user;
 	}
 }

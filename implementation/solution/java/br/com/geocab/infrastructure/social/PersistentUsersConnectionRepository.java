@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionKey;
@@ -13,22 +12,33 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UsersConnectionRepository;
 
+import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.repository.account.IUserRepository;
 import br.com.geocab.domain.repository.account.IUserSocialConnectionRepository;
 
 /**
- * 
+ * A data access interface for managing a global store of users connections to service providers.
+ * Provides data access operations that apply across multiple user records.
+ * Also acts as a factory for a user-specific {@link ConnectionRepository}.
  * @author rodrigo
+ * @see ConnectionRepository
  */
 public class PersistentUsersConnectionRepository implements UsersConnectionRepository
 {
-	private TextEncryptor textEncryptor;
+	/**
+	 * 
+	 */
 	private ConnectionSignUp connectionSignUp;
-	
 	/**
 	 * 
 	 */
 	@Autowired
-	private IUserSocialConnectionRepository socialConnectionRepository;
+	private IUserSocialConnectionRepository userSocialConnectionRepository;
+	/**
+	 * 
+	 */
+	@Autowired
+	private IUserRepository userRepository;
 	/**
 	 * 
 	 */
@@ -42,7 +52,6 @@ public class PersistentUsersConnectionRepository implements UsersConnectionRepos
 	 */
 	public PersistentUsersConnectionRepository()
 	{
-		//this.textEncryptor = textEncryptor;
 	}
 
 	/**
@@ -64,9 +73,9 @@ public class PersistentUsersConnectionRepository implements UsersConnectionRepos
 	 */
 	public List<String> findUserIdsWithConnection(Connection<?> connection)
 	{
-		ConnectionKey key = connection.getKey();
+		final ConnectionKey key = connection.getKey();
 		
-		final List<String> localUserIds = this.socialConnectionRepository.findUserIdByProviderIdAndProviderUserId(key.getProviderId(), key.getProviderUserId());
+		final List<String> localUserIds = this.userSocialConnectionRepository.listUserEmailsByProviderIdAndProviderUserId(key.getProviderId(), key.getProviderUserId());
 		
 		if ( localUserIds.size() == 0 && connectionSignUp != null )
 		{
@@ -85,19 +94,21 @@ public class PersistentUsersConnectionRepository implements UsersConnectionRepos
 	 */
 	public Set<String> findUserIdsConnectedTo( String providerId, Set<String> providerUserIds )
 	{
-		return this.socialConnectionRepository.findUserIdByProviderIdAndProviderUserIdIn( providerId, providerUserIds);
+		return this.userSocialConnectionRepository.listUserEmailsByProviderIdAndProviderUserIds( providerId, providerUserIds);
 	}
 
 	/**
 	 * 
 	 */
-	public ConnectionRepository createConnectionRepository( String userId )
+	public ConnectionRepository createConnectionRepository( String email )
 	{
-		if ( userId == null )
+		final User user = this.userRepository.findByEmail(email);
+		
+		if ( email == null )
 		{
-			throw new IllegalArgumentException("userId cannot be null");
+			throw new IllegalArgumentException("email cannot be null");
 		}
 		
-		return new PersistentConnectionRepository( userId, socialConnectionRepository, connectionFactoryLocator, textEncryptor );
+		return new PersistentConnectionRepository( user, userSocialConnectionRepository, connectionFactoryLocator );
 	}
 }
