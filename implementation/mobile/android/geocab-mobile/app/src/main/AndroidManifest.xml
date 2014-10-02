@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.com.geocab" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="br.com.geocab.controller.activity.AuthenticationActivity"
+            android:label="@string/app_name"
+            android:launchMode="standard" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="Facebook" >
+        </activity>
+        <activity
+            android:name="br.com.geocab.controller.activity.MapActivity"
+            android:label="@string/title_activity_map" >
+        </activity>
+        <activity
+            android:name="br.com.geocab.controller.activity.MarkActivity"
+            android:label="@string/title_activity_mark" >
+        </activity>
+    </application>
+
+</manifest>
