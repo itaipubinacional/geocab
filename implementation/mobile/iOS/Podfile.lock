@@ -3,9 +3,11 @@ PODS:
   - Bolts (1.1.2)
   - Facebook-iOS-SDK (3.18.0):
     - Bolts
+  - FDTake (0.2.2)
   - google-plus-ios-sdk (1.7.1)
   - ISO8601DateFormatterValueTransformer (0.6.0):
     - RKValueTransformers (~> 1.1.0)
+  - KOTree (0.0.1)
   - MFSideMenu (0.5.5)
   - ODSAccordionView (0.4.4)
   - QDImageCropper (0.0.3)
@@ -34,7 +36,9 @@ PODS:
 
 DEPENDENCIES:
   - Facebook-iOS-SDK (~> 3.18.0)
+  - FDTake (~> 0.2.2)
   - google-plus-ios-sdk (~> 1.7)
+  - KOTree (~> 0.0)
   - MFSideMenu (~> 0.5)
   - ODSAccordionView (~> 0.4)
   - QDImageCropper (~> 0.0.3)
@@ -44,8 +48,10 @@ SPEC CHECKSUMS:
   AFNetworking: 80c4e0652b08eb34e25b9c0ff3c82556fe5967b4
   Bolts: 2635e8698a630774689441047f3465d78c48d485
   Facebook-iOS-SDK: fa12c51cc57bfb6f92e47793c9d4d2c65bc92741
+  FDTake: 8d7c4f2ac64298017d5b57da023704c6d0afbe35
   google-plus-ios-sdk: bb7b918c2ee0d5f5e389c4fddc06d71995481f67
   ISO8601DateFormatterValueTransformer: a705384ea6531255258e25b6480ba1180db703a0
+  KOTree: b704c2e62e0ecb91f7cf35fd341e0e0595a43ee3
   MFSideMenu: 0493b0f57385dd036cc5443407a31fda6dee81ac
   ODSAccordionView: e12fd6dc5ba7e5e2f0077a6e4e2b65f362ca9004
   QDImageCropper: c4963425057ef574674867640dcd192fe5504282
