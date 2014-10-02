@@ -51,11 +51,24 @@
 					<td class="line"><hr></hr></td>
 				</tr>
 				<tr>
-					<td><button type="button" id="enter-facebook"
-							class="btn-facebook"><spring:message code="authentication.Login-with-Facebook" /></button></td>
+					<td>
+				    	<form id="facebookSignin" action="<c:url value="/signin/facebook"/>" method="POST">
+				    		<input type="hidden" name="scope" value="email,public_profile"/>
+	  						<button id="enter-facebook" type="submit" class="btn-facebook">
+	  							<spring:message code="authentication.Login-with-Facebook" />
+	  						</button>
+						</form>
+					</td>
 				</tr>
 				<tr>
-					<td><button type="button" id="enter-google" class="btn-google"><spring:message code="authentication.Login-with-Google-+" /></button></td>
+					<td>
+						<form id="googleSignin" action="<c:url value="/signin/google"/>" method="POST">
+	  						<input type="hidden" name="scope" value="profile email"/>
+							<button id="enter-google" type="submit" class="btn-google">
+								<spring:message code="authentication.Login-with-Google-+" />
+							</button>
+						</form>
+					</td>
 				</tr>
 				<tr>
 					<td><a class="dont-have-account" id="register"  ng-click="changeToInsert()"><spring:message code="authentication.Dont-have-an-account" /></a><td>
@@ -64,4 +77,12 @@
 		</div>
 	</div>
 
+
+   	
+   	<form id="facebookSignin" action="<c:url value="/signin/facebook"/>" method="POST">
+   		<input type="hidden" name="scope" value="email,public_profile"/>
+				<button type="submit" class="facebook-btn">
+					<i data-icon="m" class="icon"></i>
+				</button>
+	</form>
 </html>

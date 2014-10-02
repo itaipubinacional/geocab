@@ -35,22 +35,48 @@
 							 ></td>
 						</tr>
 						<tr>
-							<td><label><spring:message code="authentication.Email" /></label></td>
+							<td><label required><spring:message code="authentication.Email" /></label></td>
 						</tr>
 						<tr>
-							<td><input class="form-control" ng-model="currentEntity.email" name="email" type="email" required></td>
+							<td><input 
+							class="form-control" 
+							ng-model="currentEntity.email" 
+							name="email" 
+							ng-class="{ ngInvalid: form.email.$error.required && (form.$submitted || form.email.$dirty) }"
+							type="email" 
+							required
+							ng-hover
+							>
+							</td>
 						</tr>
 						<tr>
-							<td><label><spring:message code="authentication.Password" /></label></td>
+							<td><label required><spring:message code="authentication.Password" /></label></td>
 						</tr>
 						<tr>
-							<td><input class="form-control" ng-model="currentEntity.password" name="password" type="password" required></td>
+							<td><input 
+							class="form-control" 
+							ng-model="currentEntity.password" 
+							name="password" 
+							ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted || form.password.$dirty) }"
+							type="password" 
+							required
+							ng-hover
+							>
+							</td>
 						</tr>
 						<tr>
 							<td><label><spring:message code="authentication.Confirm-password" /></label></td>
 						</tr>
 						<tr>
-							<td><input class="form-control" ng-model="rePassword" name="confirmPassword" type="password" required></td>
+							<td><input 
+							class="form-control" 
+							ng-model="currentEntity.confirmPassword" 
+							name="confirmPassword" 
+							ng-class="{ ngInvalid: form.confirmPassword.$error.required && (form.$submitted || form.confirmPassword.$dirty) }"
+							type="password" 
+							required
+							ng-hover
+							></td>
 						</tr>
 						<tr>
 							<td><input type="button" id="buttonInsert" ng-click="createAccount()" value='<spring:message code="authentication.Create-an-account"></spring:message>' id="createAccount" class="btn-enter" /></td>

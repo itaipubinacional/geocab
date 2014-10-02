@@ -14,6 +14,8 @@
 	<security:http pattern="/favicon.ico*" security="none"/>
 	<security:http pattern="/engine.js" security="none"/>
 	<security:http pattern="/util.js" security="none"/>
+	<security:http pattern="/signin/**" security="none"/>
+	<security:http pattern="/signup/**" security="none"/>
 	
 	<!-- Default Security -->
 	<!--  <security:http auto-config="false" use-expressions="true" disable-url-rewriting="true">
