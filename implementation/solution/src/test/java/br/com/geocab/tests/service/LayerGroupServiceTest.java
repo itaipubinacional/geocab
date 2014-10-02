@@ -115,7 +115,7 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 	})
 	public void listLayerGroup() throws Exception
 	{
-		List<LayerGroup> layerGroups = this.layerGroupService.listGruposCamadas(null, null).getContent();
+		List<LayerGroup> layerGroups = this.layerGroupService.listLayerGroups(null, null).getContent();
 		Assert.assertNotNull(layerGroups);
 		Assert.assertTrue(layerGroups.size() > 0);
 	}

@@ -4,6 +4,10 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
 	border-color: #e32102;
 }
 
+.overflow-hidden {
+    overflow: hidden;
+}
+
 .styled-select.ngInvalid{
     border-color: #e32102;
 }
@@ -898,7 +902,7 @@ input:-moz-placeholder {
 }
 
 .btn-primary:hover, .btn-primary:focus, .open .dropdown-toggle.btn-primary {
-    background-color: #0283d0;
+    background-color: ;
     border-color: #0283d0;
     border-bottom-width: 3px;
     border-bottom-color: #0165a2;
@@ -920,7 +924,7 @@ input:-moz-placeholder {
 }
 
 .btn-success:hover, .btn-success:focus, .open .dropdown-toggle.btn-success {
-    background-color: #00b34a;
+    background-color: ;  /*MUDEI AQUI*/
     border-color: #00b34a;
     border-bottom-width: 3px;
     border-bottom-color: #017933;
@@ -941,7 +945,7 @@ input:-moz-placeholder {
     border-color: #e32102;
 }
 .btn-danger:hover, .btn-danger:focus, .open .dropdown-toggle.btn-danger {
-    background-color: #ee4e34;
+    background-color: ;
     border-color: #ee4e34;
     border-bottom-width: 3px;
     border-bottom-color: #b71d04;
@@ -962,7 +966,7 @@ input:-moz-placeholder {
 }
 
 .btn-default:hover, .btn-default:focus, .open .dropdown-toggle.btn-default {
-    background-color: #fff;
+    background-color: ;
     border-bottom-width: 3px;
     height: 34px;
 }
@@ -976,7 +980,7 @@ input:-moz-placeholder {
 }
 
 .btn-warning:hover, .btn-warning:focus, .open .dropdown-toggle.btn-warning {
-    background-color: #fee08d;
+    background-color: #EB9418; /*MUDEI AQUi*/
     border-color: #fee08d;
     border-bottom-width: 3px;
     border-bottom-color: #cb9f25;
@@ -2182,7 +2186,7 @@ input:-moz-placeholder {
 }
 
 .btn-default:hover, .btn-default:focus, .open .dropdown-toggle.btn-default {
-    background-color: #fff;
+    background-color: ; /*Mudei aqui*/
     border-bottom-width: 3px;
     height: 34px;
 }

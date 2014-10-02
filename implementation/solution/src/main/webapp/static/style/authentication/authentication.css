@@ -1,3 +1,5 @@
+
+
 body {
 	padding-top: 8%;
 	overflow-x: hidden;
@@ -31,9 +33,9 @@ body {
 
 .login-logo {
 	margin: 0 auto;
-	width: 140px;
+	width: 230px;
 	height: 69px;
-	background-image: url("logo-login.png");
+	background-image: url("../../images/logo-login.png");
 }
 
 .login-wrapper {
@@ -101,7 +103,11 @@ body {
     border-radius: 3px;
     background-image: url("facebook_logo.png");
     background-repeat: no-repeat;
-    
+    background-position: -5px -4px;
+}
+
+.btn-facebook:hover{
+	background-position: -5px -4px;
 }
 
 .btn-google {
@@ -119,7 +125,9 @@ body {
     margin-bottom: 15px;
 }
 
-
+.btn-google:hover{
+	background-position: 0 0px;
+}
 
 
 .dont-have-account{

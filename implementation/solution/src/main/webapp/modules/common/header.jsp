@@ -59,7 +59,7 @@
 					<li class="position-relative"><a
 						href="admin#/layer-group"
 						ng-class="{active: menuActive == 'layer-group'}"
-						style="width: 150px;">Layer group</a></li>
+						style="width: 150px;"><spring:message code="admin.layer-group.Layer-group" /></a></li>
 
                     <li class="position-relative"><a
                             href="admin#/layer-config"

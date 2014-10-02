@@ -7,8 +7,12 @@
 
 <!-- FIXME Tirar as versoes -->
 <!-- Boostrap -->
+<link href="<c:url value="/static/libs/font-awesome/css/font-awesome.css"/>" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.2.0/css/bootstrap.min.css"/>">
 <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>">
+
+<!-- JQuery UI -->
+<link href="<c:url value="/static/libs/jquery-ui/jquery-ui-1.10.3.custom.css"/>" type="text/css" rel="stylesheet" />
 
 <!-- AngularJS -->
 <link rel="stylesheet" href="<c:url value="/webjars/ng-grid/2.0.11/ng-grid.min.css"/>">
@@ -19,3 +23,8 @@
 <!-- Itaipu Icons -->
 
 <link href="<c:url value="/static/style/icon-itaipu/styles.css"/>" type="text/css" rel="stylesheet" />
+
+<link rel="stylesheet" href="<c:url value="/static/libs/angular-rangeslider/css/angular.rangeSlider.css"/>">
+
+<!-- Timeout Dialog -->
+<link href="<c:url value="/static/libs/timeout-dialog/css/timeout-dialog.css"/>" type="text/css" rel="stylesheet"/>
