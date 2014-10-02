@@ -15,20 +15,21 @@
 
          <div class="navbar-inner navbar-container">
 			<div ng-switch on="currentState" class="navbar-title" style="float: left; width: 180px;">
-			    <span ng-switch-when="layer-group.list">GRUPO DE CAMADAS</span>
-			    <span ng-switch-default>GRUPO DE CAMADAS - Carregando...</span>
+			    <span ng-switch-when="layer-group.list"><spring:message code="layer-group-view.LAYER-GROUP" /></span>
+			    <span ng-switch-default><spring:message code="layer-group-view.LAYER-GROUP-Loading" /></span>
 			</div>
 			
 			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="publishLayerGroup()"
-			        class="btn btn-warning">Publicar
+			        class="btn btn-warning"><spring:message code="layer-group-view.Post" />
 			</button>
 			
 			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="saveLayerGroup()"
-			        class="btn btn-success">Salvar ordenação
+			        class="btn  btn-success"><spring:message code="layer-group-view.Save-ordering"/>
 			</button>
              
 			<button ng-show="currentState == LIST_STATE" style="float: left; margin-bottom: 15px; width: 122px;" ng-click="newLayerGroup()"
-				class="btn btn-default"><div class="icon itaipu-icon-folder" style="float: left;margin-top: 2px;margin-right: 4px;"></div>Novo grupo
+				class="btn btn-default"><div class="icon itaipu-icon-folder" style="float: left;margin-top: 2px;margin-right: 4px;"></div>
+				<spring:message code="layer-group-view.New-group"/>
 			</button>
 
          </div>

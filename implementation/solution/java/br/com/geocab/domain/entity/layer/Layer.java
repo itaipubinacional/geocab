@@ -153,7 +153,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param name
 	 * @param order
 	 */
-	public Layer( Long id, String name, Integer orderLayer )
+	public Layer( Long id, String name, int orderLayer )
 	{
 		this.setId(id);
 		this.setName(name);
@@ -173,7 +173,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, String title, Boolean startEnabled, Boolean startVisible, Integer orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource,
+	public Layer( Long id, String name, String title, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource,
 			LayerGroup layerGroup )
 	{
 		this.setId(id);
@@ -200,7 +200,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, Boolean startEnabled, Boolean startVisible, Integer orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource, LayerGroup layerGroup )
+	public Layer( Long id, String name, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource, LayerGroup layerGroup )
 	{
 		this.setId(id);
 		this.setName(name);

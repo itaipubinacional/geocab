@@ -3,14 +3,30 @@ package br.com.geocab.application.controller;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.UserProfile;
+import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.geocab.application.ResourceBundleMessageSource;
+import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.account.UserRole;
+import br.com.geocab.infrastructure.social.SpringSecuritySignInAdapter;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.com.geocab.domain.service.AccountService;
 
 /**
  * 
@@ -30,7 +46,21 @@ public class NavigationController
 	 */
 	@Autowired
 	private ResourceBundleMessageSource messageSource;
-
+	/**
+	 * 
+	 */
+	@Autowired
+	private SpringSecuritySignInAdapter signInAdapter;
+	
+	@Autowired
+	private AccountService accountService;
+	
+	/**
+	 * 
+	 */
+	private ObjectMapper objectMapper = new ObjectMapper();
+	
+	
 	/*-------------------------------------------------------------------
 	 * 		 				 		BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -60,7 +90,8 @@ public class NavigationController
 	{
 		return "modules/authentication/ui/index";
 	}
-	
+
+
 	/**
 	 * 
 	 * @param lang

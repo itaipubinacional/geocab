@@ -22,6 +22,8 @@
 		<springframework.version>4.0.6.RELEASE</springframework.version>
 		<springsecurity.version>3.2.4.RELEASE</springsecurity.version>
 		<springdata.version>1.6.2.RELEASE</springdata.version>
+		<springsocial.version>1.1.0.RELEASE</springsocial.version>
+		<springsocialgoogle.version>1.0.0.RELEASE</springsocialgoogle.version>
 		<!-- Hibernate -->
 		<hibernate.version>4.3.5.Final</hibernate.version>
 		<hibernatevalidator.version>5.1.1.Final</hibernatevalidator.version>
@@ -121,11 +123,21 @@
     		</dependency>
     		
     		<!-- Spring Social -->
-			<dependency>
-	  			<groupId>org.springframework.social</groupId>
-	  			<artifactId>spring-social-web</artifactId>
-	  			<version>${springsocial.version}</version>
+	    	<dependency>
+	        	<groupId>org.springframework.social</groupId>
+	        	<artifactId>spring-social-config</artifactId>
+	        	<version>${springsocial.version}</version>
+	    	</dependency>
+	    	<dependency>     
+    			<groupId>org.springframework.social</groupId>
+    			<artifactId>spring-social-security</artifactId>
+    			<version>${springsocial.version}</version>
 			</dependency>
+			<dependency>
+		        <groupId>org.springframework.social</groupId>
+		        <artifactId>spring-social-facebook</artifactId>
+		        <version>${springsocial.version}</version>
+		    </dependency>
 	    	<dependency>
 	  			<groupId>org.springframework.social</groupId>
 	  			<artifactId>spring-social-google</artifactId>

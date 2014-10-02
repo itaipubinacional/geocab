@@ -54,11 +54,13 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
+	
 	/**
 	 * 
 	 */
 	@Autowired
 	private ILayerGroupRepository layerGroupRepository;
+	
 	/**
 	 * 
 	 */
@@ -73,8 +75,9 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	
 	/**
-	 * Método para inserir um {@link LayerGroup}
+	 * Method to insert an {@link LayerGroup}
 	 * 
 	 * @param layerGroup
 	 * @return layerGroup
@@ -87,7 +90,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Método para atualizar um {@link LayerGroup}
+	 * Method to update an {@link LayerGroup}
 	 * 
 	 * @param layerGroup
 	 * @return layerGroup
@@ -99,18 +102,20 @@ public class LayerGroupService
 	}
 	
 	/**
+	 * Method to save a list of {@link LayerGroup}
 	 * 
-	 * @param layerGroup
+	 * @param List<layerGroup>
 	 * @return
 	 */
 	public void saveAllLayersGroup( List<LayerGroup> layerGroup )
 	{
-		prioritizeLayersGroup( layerGroup, null );
+		this.prioritizeLayersGroup( layerGroup, null );
 		
-		prioritizeLayers( layerGroup);
+		this.prioritizeLayers( layerGroup);
 	}
 	
 	/**
+	 * Find {@link LayerGroup} by id
 	 * 
 	 * @param id
 	 * @return
@@ -123,7 +128,7 @@ public class LayerGroupService
 	
 	/**
 	 * 
-	 * @param layerGroup
+	 * @param List<layerGroup>
 	 */
 	public void saveAllParentLayerGroup(List<LayerGroup> layerGroup)
 	{
@@ -139,35 +144,28 @@ public class LayerGroupService
 	
 	/**
 	 * 
-	 * @param layerGroup
+	 * @param List<layerGroup>
 	 */
 	public void publishLayerGroup(List<LayerGroup> layersGroup)
 	{
-		// salva os grupos de camadas
-		this.saveAllLayersGroup(layersGroup);
+		this.saveAllLayersGroup(layersGroup); // save layersGroup
 		
-		// lista os grupos superiores
-		final List<LayerGroup> layerGroupOriginals = this.listLayersGroupUpper();
+		final List<LayerGroup> layerGroupOriginals = this.listLayersGroupUpper();//list parent groups
 		
-		// ajustar grupos de camadas
 		for ( LayerGroup layerGroupOriginal : layerGroupOriginals )
 		{
-			// recursï¿½o para inserir ou atualizar os grupos de camadas publicados
-			this.recursive(layerGroupOriginal, null);
-			
+			this.recursive(layerGroupOriginal, null);//recursion to insert or update a layers group published	
 		}
-		
-		//fazer a exclusão dos grupos publicados
-		// setar os grupos filhos publicados corretamente nos grupos pais publicados
+
+		//exclude published groups
+		//set children groups in correct parent group
 		this.populateChildrenInLayerGroupPublished();
 		
-		// lista os grupos superiores publicados
 		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listLayersGroupUpperPublished();
 		
 		
 		if ( layersGroupPublished != null )
 		{
-			// seleciona os grupos de camadas publicados superiores para remover seus filhos 
 			for ( LayerGroup layerGroupPublished : layersGroupPublished )
 			{
 				this.removeLayerGroupPublished(layerGroupPublished);
@@ -230,10 +228,10 @@ public class LayerGroupService
 	{
 		final Long layerGroupOriginalId = layerGroupOriginal.getId();
 		
-		// verifica se já possui o grupo publicado
+		// verifica se jï¿½ possui o grupo publicado
 		final LayerGroup layerGroupPublishedExistent = this.layerGroupRepository.findByDraftId(layerGroupOriginalId);
 		
-		// efetua a cópia do grupo de camadas original
+		// efetua a cï¿½pia do grupo de camadas original
 		LayerGroup layerGroupPublished = new LayerGroup();
 		BeanUtils.copyProperties(layerGroupOriginal, layerGroupPublished);
 		
@@ -244,7 +242,7 @@ public class LayerGroupService
 		layerGroupPublished.setLayersGroup(new ArrayList<LayerGroup>());
 		layerGroupPublished.setLayers(new ArrayList<Layer>());
 		
-		// se j´s possui o grupo criado apenas altera o existente senão cria o grupo publicado
+		// se jï¿½s possui o grupo criado apenas altera o existente senï¿½o cria o grupo publicado
 		if (layerGroupPublishedExistent != null)
 		{
 			layerGroupPublished.setId(layerGroupPublishedExistent.getId());
@@ -256,19 +254,19 @@ public class LayerGroupService
 			layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
 		}
 		
-		// criação/atualização de camadas para camadas publicadas
+		// criaï¿½ï¿½o/atualizaï¿½ï¿½o de camadas para camadas publicadas
 		if ( layerGroupOriginal.getLayers() != null )
 		{
 			for ( Layer layerOriginal : layerGroupOriginal.getLayers() )
 			{
 				//final Camada camadaPublicadaExistente = this.camadaRepository.findByRascunhoId(camadaOriginal.getId());
 				
-				// criação da camada publicada que irá conter a ordem publicada e os grupos
+				// criaï¿½ï¿½o da camada publicada que irï¿½ conter a ordem publicada e os grupos
 				Layer layerPublished = new Layer();
 //				BeanUtils.copyProperties(camadaOriginal, camadaPublicada);
 				
 				
-				// criação/update na camada publicada
+				// criaï¿½ï¿½o/update na camada publicada
 				layerPublished.setName(layerOriginal.getName());
 				layerPublished.setTitle(layerOriginal.getTitle());
 				layerPublished.setMinimumScaleMap(layerOriginal.getMinimumScaleMap());
@@ -277,7 +275,7 @@ public class LayerGroupService
 				layerPublished.setLayerGroup(layerGroupPublished);
 				layerPublished.setPublished(true);
 				
-				// se já possui a camada publicada apenas altera a existente senão cria a camada publicada
+				// se jï¿½ possui a camada publicada apenas altera a existente senï¿½o cria a camada publicada
 				if (layerOriginal.getPublishedLayer() != null)
 				{
 					layerPublished.setId(layerOriginal.getPublishedLayer().getId());
@@ -298,7 +296,7 @@ public class LayerGroupService
 			}
 		}
 		
-		// faz a recursão para atualizar todos os filhos
+		// faz a recursï¿½o para atualizar todos os filhos
 		if ( layerGroupPublished.getLayersGroup() != null)
 		{
 			for ( LayerGroup layerGroupOriginalChild : layerGroupOriginal.getLayersGroup() )
@@ -369,7 +367,7 @@ public class LayerGroupService
 		
 		LayerGroup layerGroupPublished = this.layerGroupRepository.findByDraftId(id);
 		
-		// verifica se existe o grupo já publicado
+		// verifica se existe o grupo jï¿½ publicado
 		if (layerGroupPublished != null)
 		{
 			// seta null no campo rascunho do grupo de camada publicado para permitir excluir o grupo original
@@ -399,7 +397,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Método que retorna a estrutura completa dos grupos de camadas publicados
+	 * Mï¿½todo que retorna a estrutura completa dos grupos de camadas publicados
 	 * @param filter
 	 * @param idExcluso
 	 * @param pageable
@@ -417,7 +415,7 @@ public class LayerGroupService
 			{
 				layerGroupPublished.setLayers(this.layerRepository.listLayersByLayerGroupPublished(layerGroupPublished.getId()));
 				
-				if (layerGroupPublished.getLayerGroupUpper() == null)
+				if (layerGroupPublished.getLayerGroupUpper() == null )
 				{
 					layersGroupUpperPublished.add(layerGroupPublished);
 				}
@@ -470,7 +468,7 @@ public class LayerGroupService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public Page<LayerGroup> listGruposCamadas(String filter, PageRequest pageable)
+	public Page<LayerGroup> listLayerGroups(String filter, PageRequest pageable)
 	{
 		return this.layerGroupRepository.listByFilter(filter, pageable);
 	}
@@ -482,7 +480,7 @@ public class LayerGroupService
 	 * @throws JAXBException
 	 */
 	@Transactional(readOnly=true)
-	public List<ExternalLayer> listCamadasExternasByFilters( DataSource dataSource )
+	public List<ExternalLayer> listExternalLayersByFilters( DataSource dataSource )
 	{
 		GeoserverConnection geoserverConnection = new GeoserverConnection();
 		return geoserverConnection.listExternalLayersByFilters(dataSource);
@@ -574,7 +572,7 @@ public class LayerGroupService
 
 	
 	/**
-	 * Método responsï¿½vel para listar as camadas
+	 * Mï¿½todo responsï¿½vel para listar as camadas
 	 *
 	 * @param filter
 	 * @param idExcluso
@@ -597,7 +595,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Método para inserir uma {@link Layer}
+	 * Method to inserir uma {@link Layer}
 	 * @param layer
 	 * @return
 	 */
@@ -619,8 +617,8 @@ public class LayerGroupService
 		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setLayerGroup(layer.getLayerGroup());
 		
-		/* Na atualização não é permitido modificar a fonte de dados, camada e título, dessa forma, 
-		Os valores originais são mantidos. */
+		/* Na atualizaï¿½ï¿½o nï¿½o ï¿½ permitido modificar a fonte de dados, camada e tï¿½tulo, dessa forma, 
+		Os valores originais sï¿½o mantidos. */
 		layer.setDataSource(layerDatabase.getDataSource());
 		layer.setName(layerDatabase.getName());
 		
@@ -647,7 +645,7 @@ public class LayerGroupService
 	@Transactional(readOnly = true)
 	public Layer findLayerById( Long id )
 	{
-		Layer layer = this.layerRepository.findOne(id);
+		final Layer layer = this.layerRepository.findOne(id);
 		
 		// traz a legenda da camada do GeoServer
 		layer.setLegend(getLegendLayerFromGeoServer(layer));

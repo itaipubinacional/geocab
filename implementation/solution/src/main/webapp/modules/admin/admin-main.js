@@ -2,7 +2,7 @@
 	"use strict";
 			
 	//Start the AngularJS
-	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", "ui.tree"]);
+	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", "ui.tree",'angularBootstrapNavTree', 'ui-scaleSlider']);
 	
 	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider, $translateProvider ) {
 		//-------
@@ -21,20 +21,7 @@
 		
 		//HOME
         $urlRouterProvider.otherwise("/");
-        
-        //------
-        //Scheduler
-        //------    
-        //Resource Sheet
-        //------
-        $stateProvider.state('home', {
-        	url : "/",
-			template: '<h2>Body</h2>',
-			controller : function ( $state, $importService ){
-				console.log( $importService("accountService") );
-			}
-        });
-        
+                
       //Users
 		$stateProvider.state('users', {
 			url : "/users",
@@ -85,7 +72,7 @@
 		})
 		.state('layer-group.list', {
 			url: "/list",
-			menu: "data-source"
+			menu: "layer-group"
 		});
 		
 		//Layer config
@@ -95,7 +82,7 @@
 			controller : LayerConfigController
 		})
 		.state('layer-config.detail', {
-			url: "/defail/:id",
+			url: "/detail/:id",
 			menu: "layer-config"
 		})
 		.state('layer-config.list', {

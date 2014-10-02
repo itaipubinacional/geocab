@@ -8,7 +8,7 @@
  */
 function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate) {
     /**
-     * Injeta os métodos, atributos e seus estados herdados de AbstractCRUDController.
+     * Inject the methods, attributes and its states inherited from AbstractCRUDController.
      * @see AbstractCRUDController
      */
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
@@ -20,9 +20,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      *-------------------------------------------------------------------*/
 
     /**
-     *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
-     *  Quando o evento é disparado, configuramos o pager do spring-data
-     *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
+     * Handler that listen every time that an user do the sorting at ng-grid.
+     * When the event is displayed, it is set the pager of spring-data.
+     * And so it call the query again, considering too the filter state (@see $scope.data.filter)
      */
     $scope.$on('ngGridEventSorted', function (event, sort) {
 
@@ -31,16 +31,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             return;
         }
 
-        // compara os objetos para garantir que o evento seja executado somente uma vez q não entre em loop
         if (!angular.equals(sort, $scope.gridOptions.sortInfo)) {
             $scope.gridOptions.sortInfo = angular.copy(sort);
 
-            //Order do spring-data
             var order = new Order();
             order.direction = sort.directions[0].toUpperCase();
             order.property = sort.fields[0];
 
-            //Sort do spring-data
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
@@ -110,7 +107,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
-        '<a ui-sref="configuracao-camadas.editar({id:row.entity.id})" title="Editar" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ui-sref="layer-config.update({id:row.entity.id})" title="Editar" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '<a ng-click="changeToRemove(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
     
@@ -134,12 +131,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $state.go($scope.DETAIL_STATE, {id: row.entity.id});
         },
         columnDefs: [
-            {displayName: 'Simbologia', field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
-            {displayName: 'Título', field: 'title'},
-            {displayName: 'Camada', field: 'name'},
-            {displayName: 'Fonte de dados', field: 'dataSource.name'},
-            {displayName: 'Grupo de camadas', field: 'layersGroup.name', width: '15%'},
-            {displayName: 'Ações', sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
+            {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
+            {displayName: $translate('Title'), field: 'title'},
+            {displayName: $translate('Layer'), field: 'name'},
+            {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name'},
+            {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '15%'},
+            {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
         ]
     };
 
@@ -159,11 +156,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         rowHeight: 45,
         beforeSelectionChange: function (row, event) {
             //evita chamar a selecao, quando clicado em um action button.
-            return false;
+        	if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
+				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
         },
         columnDefs: [
-            {displayName: 'Nome', field: 'name'},
-            {displayName: 'Descrição', field: 'description'},
+            {displayName: $translate('Name'), field: 'name'},
+            {displayName: $translate('Description'), field: 'description'},
             {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ACESSO_BUTTONS, width: '100px'}
         ]
     };
@@ -180,7 +178,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     /**
      *
      */
-    $scope.escalas = {};
+    $scope.layers = {};
 
     //FORM
     /**
@@ -266,11 +264,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         
         $scope.currentState = $scope.LIST_STATE;
 
-        /*var pageRequest = new PageRequest();
+        var pageRequest = new PageRequest();
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
-        $scope.listLayersByFilters(null, pageRequest);*/
+        $scope.listLayersByFilters(null, pageRequest);
     };
 
     /**
@@ -285,7 +283,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     $scope.changeToInsert = function () {
         $log.info("changeToInsert");
 
-        $scope.escalas = {};
+        $scope.layers = {};
 
         $scope.originalGroups = [];
         $scope.selectedGroups = [];
@@ -311,17 +309,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         $log.info("changeToUpdate", id);
 
-        grupoCamadasService.findCamadaById(id, {
+        layerGroupService.findLayerById(id, {
             callback: function (result) {
                 $scope.currentEntity = result;
-                $scope.escalas.values = {};
-                $scope.escalas.values[0] = '1:'+$scope.currentEntity.escalaMinimaMapa.substring(2);
-                $scope.escalas.values[1] = '1:'+$scope.currentEntity.escalaMaximaMapa.substring(2);
+                $scope.layers.values = {};
+                $scope.layers.values[0] = '1:'+$scope.currentEntity.minimumScaleMap.substring(2);
+                $scope.layers.values[1] = '1:'+$scope.currentEntity.maximumScaleMap.substring(2);
                 $scope.currentState = $scope.UPDATE_STATE;
                 $state.go($scope.UPDATE_STATE);
                 $scope.$apply();
-
-                $scope.loadGruposAcesso(result.id);
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -353,14 +349,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         layerGroupService.findLayerById(id, {
             callback: function (result) {
                 $scope.currentEntity = result;
-                $scope.escalas.values = {};
-                $scope.escalas.values[0] = '1:'+$scope.currentEntity.escalaMinimaMapa.substring(2);
-                $scope.escalas.values[1] = '1:'+$scope.currentEntity.escalaMaximaMapa.substring(2);
+                $scope.layers.values = {};
+                $scope.layers.values[0] = '1:'+$scope.currentEntity.minimumScaleMap.substring(2);
+                $scope.layers.values[1] = '1:'+$scope.currentEntity.maximumScaleMap.substring(2);
                 $scope.currentState = $scope.DETAIL_STATE;
                 $state.go($scope.DETAIL_STATE, {id: id});
                 $scope.$apply();
-
-                $scope.loadGruposAcesso(result.id);
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -377,8 +371,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * e só então o registro é excluido.
      * Após excluído, atualizamos a grid com estado de filtro, paginação e sorting.
      */
-    $scope.changeToRemove = function (camada) {
-        $log.info("changeToRemove", camada);
+    $scope.changeToRemove = function (layer) {
+        $log.info("changeToRemove", layer);
 
         var dialog = $modal.open({
             templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
@@ -389,7 +383,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                     return "Exclusão de camada";
                 },
                 message: function () {
-                    return 'Tem certeza que deseja excluir a camada "' + camada.nome + '"? <br/>Esta operação não poderá mais ser desfeita.';
+                    return $translate('admin.layer-config.Are-you-sure-you-want-to-delete-the-layer')+' "' + layer.name + '"? <br/>'+$translate('admin.datasource.This-operation-can-not-be-undone')+'.';
                 },
                 buttons: function () {
                     return [
@@ -403,17 +397,17 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         dialog.result.then(function (result) {
 
-            grupoCamadasService.removeCamada(camada.id, {
+        	layerGroupService.removeLayer(layer.id, {
                 callback: function (result) {
                     //caso o currentPage esteja null, configura o pager default
                     if ($scope.currentPage == null) {
                         $scope.changeToList();
                         //caso não, usa o mesmo estado para carregar a listagem
                     } else {
-                        $scope.listCamadasByFilters($scope.data.filter, $scope.currentPage.pageable);
+                        $scope.listLayersByFilters($scope.data.filter, $scope.currentPage.pageable);
                     }
 
-                    $scope.msg = {type: "success", text: 'O registro "' + camada.nome + '" foi excluído com sucesso.', dismiss: true};
+                    $scope.msg = {type: "success", text: $translate('admin.datasource.The-register')+' "'+ layer.nome + '" '+$translate('admin.datasource.was-successfully-deleted')+'.', dismiss: true};
                 },
                 errorHandler: function (message, exception) {
                     $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -432,7 +426,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.changeToPage = function (filter, pageNumber) {
         $scope.currentPage.pageable.page = pageNumber - 1;
-        $scope.listCamadasByFilters(filter, $scope.currentPage.pageable);
+        $scope.listLayersByFilters(filter, $scope.currentPage.pageable);
     };
 
     /*-------------------------------------------------------------------
@@ -469,8 +463,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.insertLayer = function (layer) {
 
-    	layer.escalaMinimaMapa = 'UM'+$scope.escalas.values[0].substring(2);
-    	layer.escalaMaximaMapa = 'UM'+$scope.escalas.values[1].substring(2);
+    	layer.minimumScaleMap = 'UM'+$scope.layers.values[0].substring(2);
+    	layer.maximumScaleMap = 'UM'+$scope.layers.values[1].substring(2);
         
         if (!$scope.form().$valid) {
             $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
@@ -482,7 +476,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 				$scope.currentState = $scope.LIST_STATE;
                 $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
-                $scope.msg = {type: "success", text: "Camada inserida com sucesso!", dismiss: true};
+                $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
                 $scope.$apply();
                 $scope.saveGroups();
             },
@@ -497,10 +491,10 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * Realiza a atualiza de um registro
      * e no suscesso, modifica o estado da tela para o detail.
      */
-    $scope.updateCamada = function (layer) {
+    $scope.updateLayer = function (layer) {
 
-    	layer.escalaMinimaMapa = 'UM'+$scope.escalas.values[0].substring(2);
-    	layer.escalaMaximaMapa = 'UM'+$scope.escalas.values[1].substring(2);
+    	layer.minimumScaleMap = 'UM'+$scope.layers.values[0].substring(2);
+    	layer.maximumScaleMap = 'UM'+$scope.layers.values[1].substring(2);
 
         if (!$scope.form().$valid) {
             $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
@@ -512,7 +506,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 				$scope.currentState = $scope.LIST_STATE;
                 $scope.saveGroups();
 				$state.go($scope.LIST_STATE);
-                $scope.msg = {type: "success", text: "Camada atualizada com sucesso!", dismiss: true};
+                $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-updated-successfully")+"!", dismiss: true};
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
@@ -539,7 +533,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                             return result;
                         },
                         currentLayerGroup: function () {
-                            return $scope.currentEntity.layerGroups;
+                            return $scope.currentEntity.layerGroup;
                         }
                     }
                 });
@@ -547,8 +541,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 dialog.result.then(function (result) {
 
                     if (result) {
-                        $scope.currentEntity.layerGroups = result;
-                        $scope.currentEntity.layerGroups.name = result.label;
+                        $scope.currentEntity.layerGroup = result;
+                        $scope.currentEntity.layerGroup.name = result.label;
                     }
 
                 });
@@ -622,66 +616,6 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     /**
      *
      */
-    $scope.selectGrupoAcesso = function() {
-        var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/layer-config/popup/group-access-popup.jsp",
-            controller: SelectAccessGroupPopUpController,
-            resolve: {
-            	selectedGroups : function () {
-                    return $scope.selectedGroups;
-                }
-            }
-        });
-
-        dialog.result.then(function (result) {
-
-            if (result) {
-                for (var i = 0; i < result.length; i++) {
-                    var index = $scope.findByIdInArray($scope.selectedGroups, result[i]);
-                    var index2 = $scope.findByIdInArray($scope.originalGroups, result[i]);
-                    var index3 = $scope.findByIdInArray($scope.removeGroups, result[i]);
-
-                    //Identifica se marcou novos registros
-                    if (index == -1 && index2 == -1) {
-                        var indexAdd = $scope.findByIdInArray($scope.addGroups, result[i]);
-                        if (indexAdd == -1)
-                            $scope.addGroups.push(result[i]);
-                    }
-
-                    if (index3 > -1) {
-                        $scope.removeGroups.splice(index3, 1);
-                    }
-
-                }
-                for (var i = 0; i < $scope.selectedGroups.length; i++) {
-
-                    var index = $scope.findByIdInArray(result, $scope.selectedGroups[i]);
-
-                    if (index == -1) {
-                        var index2 = $scope.findByIdInArray($scope.addGroups, $scope.selectedGroups[i]);
-                        var index3 = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
-                        var index4 = $scope.findByIdInArray($scope.originalGroups, $scope.selectedGroups[i]);
-
-                        if (index2 > -1){
-                            var indexAdd = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
-                            if (indexAdd > -1)
-                                $scope.addGroups.splice(indexAdd, 1);
-                        }
-                        if (index3 == -1 && index4 > -1) {
-                            $scope.removeGroups.push($scope.selectedGroups[i]);
-                        }
-
-                    }
-                }
-                $scope.selectedGroups = result;
-            }
-
-        });
-    };
-
-    /**
-     *
-     */
     $scope.clearFields = function () {
         if (!$scope.data.showFields) {
             $scope.currentEntity.nameUser = "";
@@ -698,32 +632,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
     /**
      *
-     * @param entity
-     */
-    $scope.removeGroupAcesso = function (entity) {
-        var index = $scope.findByIdInArray($scope.selectedGroups, entity);
-        var index2 = $scope.findByIdInArray($scope.addGroups, entity);
-        var index3 = $scope.findByIdInArray($scope.originalGroups, entity);
-        if (index > -1) {
-            $scope.selectedGroups.splice(index, 1);
-        }
-        if (index2 > -1) {
-            $scope.addGroups.splice(index2, 1);
-        }
-        if (index3 > -1) {
-            $scope.removeGroups.push(entity);
-        }
-    };
-
-    /**
-     *
      */
     $scope.saveGroups = function() {
         if ($scope.addGroups.length > 0) {
             $scope.linkGrupos();
         }
         if ($scope.removeGroups.length > 0) {
-            $scope.unlinkGrupos();
+            $scope.unlinkGroups();
         }
     }
 
@@ -745,7 +660,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     /**
     *
     */
-    $scope.unlinkGrupos = function() {
+    $scope.unlinkGroups = function() {
         layerGroupService.unlinkGrupoAcesso($scope.removeGroups, $scope.currentEntity.id, {
             callback: function(){
                 $scope.removeGroups = [];
@@ -755,23 +670,5 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $log.error(error);
             }
         });
-    };
-
-    /**
-     *
-     * @param layerId
-     */
-    $scope.loadGruposAcesso = function(layerId) {
-    	layerGroupService.listAccessGroupByLayerId(layerId, {
-            callback: function(result) {
-                $scope.selectedGroups = result;
-                $scope.originalGroups = result.slice(0);
-
-                $scope.$apply();
-            },
-            errorHandler: function(error) {
-                $log.error(error);
-            }
-        })
     };
 };
