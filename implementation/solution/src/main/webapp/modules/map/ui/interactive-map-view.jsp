@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 
+<div id="marker-point" style="display: none;"></div>
+
 <section id="main-content" style="height: 100%">
     <div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
 
-        <div >
+        <div>
             <ul class="map-menu-items tool-items" id="menu-sidebar">
                 <li ng-click="aumentarZoom()">
                     <a href="#tabs-2">
@@ -26,6 +28,14 @@
                         <div class="icon itaipu-icon-square sidebar-icon"></div>
                     </a>
                 </li>
+
+                <!-- Verificar... -->
+                <li ng-click="initializeMarker()" ng-class="{ferramenta_active : menu.fcMarker}">
+                    <a href="#tabs-1">
+                        <div class="icon itaipu-icon-square sidebar-icon"></div>
+                    </a>
+                </li>
+
                 <li ng-if="hasPermissionKML" ng-click="">
                     <a>
                         <div class="icon itaipu-icon-kml sidebar-icon"></div>
@@ -33,6 +43,29 @@
                 </li>
             </ul>
         </div>
+
+		  <div id="sidebar-marker" class="sidebar-style">
+		  		<div>
+	               <div class="sidebar-coloredbar"></div>
+	               <span ng-click="toggleSidebarMarker(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
+	
+					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
+	                   <h3>Nova postagem</h3>
+                       <hr>
+                       <label>Camada</label>
+                       <select class="form-control">
+                       		<option>1</option>
+                       </select>
+                       <label>Nome</label> <input type="text" class="form-control" ng-model="currentEntity.name">
+                       <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo">
+                       <label>Descrição</label> <textarea class="form-control"></textarea>
+
+    					<br>
+                       <button class="btn btn-default">Cancelar</button>
+                       <button class="btn btn-default">Salvar</button>
+	                </div>
+                </div>
+           </div>
 
         <div id="sidebar-tabs" style="float: left;">
             <ul class="map-menu-items tab-flag" id="menu-sidebar-2">
@@ -43,7 +76,7 @@
                 </li>
             </ul>
 
-            <div id="sidebar">
+            <div id="sidebar" class="sidebar-style">
                 <div class="sidebar-coloredbar"></div>
                 <span ng-click="toggleSidebar(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
 
@@ -119,11 +152,9 @@
                     </div>
 
                 </div>
-                
             </div>
         </div>
     </div>
-
     <!-- Google Maps -->
     <div id="gmap" style="width: 0; height: 0"></div>
 
