@@ -128,7 +128,8 @@
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
-        [_locationManager startUpdatingLocation];
+        //[_locationManager startUpdatingLocation];
+        [self performSegueWithIdentifier:@"addNewPointSegue" sender:self];
     }
 }
 
