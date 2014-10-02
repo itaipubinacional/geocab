@@ -27,7 +27,18 @@
 		5D960BAF19CA1EC600B8DEFF /* geocabTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D960BAE19CA1EC600B8DEFF /* geocabTests.m */; };
 		5D960BBB19CA1F5B00B8DEFF /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D960BBA19CA1F5B00B8DEFF /* LoginViewController.m */; };
 		5D960BBE19CA310C00B8DEFF /* logo-login.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D960BBD19CA310C00B8DEFF /* logo-login.png */; };
+		5D9D136F19DC7D2900BA3570 /* copymove-cell-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136819DC7D2900BA3570 /* copymove-cell-bg.png */; };
+		5D9D137019DC7D2900BA3570 /* item-counter.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136919DC7D2900BA3570 /* item-counter.png */; };
+		5D9D137119DC7D2900BA3570 /* item-counter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136A19DC7D2900BA3570 /* item-counter@2x.png */; };
+		5D9D137219DC7D2900BA3570 /* item-icon-folder-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136B19DC7D2900BA3570 /* item-icon-folder-selected.png */; };
+		5D9D137319DC7D2900BA3570 /* item-icon-folder-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136C19DC7D2900BA3570 /* item-icon-folder-selected@2x.png */; };
+		5D9D137419DC7D2900BA3570 /* item-icon-folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136D19DC7D2900BA3570 /* item-icon-folder.png */; };
+		5D9D137519DC7D2900BA3570 /* item-icon-folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136E19DC7D2900BA3570 /* item-icon-folder@2x.png */; };
+		5DA3EE7B19DD6AB300E8E579 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA3EE7A19DD6AB300E8E579 /* User.m */; };
 		5DA511CF19D9A8E500CE5110 /* map.js in Sources */ = {isa = PBXBuildFile; fileRef = 5DA511CD19D9A6D300CE5110 /* map.js */; };
+		5DA8A64819DC88AA00D47C76 /* LayerTreeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8A64719DC88AA00D47C76 /* LayerTreeTableViewCell.m */; };
+		5DA8A64B19DC89E200D47C76 /* LayerTreeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8A64A19DC89E200D47C76 /* LayerTreeItem.m */; };
+		5DA8A64F19DC90D600D47C76 /* Layer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8A64E19DC90D600D47C76 /* Layer.m */; };
 		5DAD66F719DADD0600DEC6EA /* AddNewPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DAD66F619DADD0600DEC6EA /* AddNewPointViewController.m */; };
 		5DF9701119D9DCF9007BB033 /* SelectLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF9701019D9DCF9007BB033 /* SelectLayerViewController.m */; };
 		9FD6946CE8E04FC4AD01C1E3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EFF5388C94F44559DD2F763 /* libPods.a */; };
@@ -70,7 +81,22 @@
 		5D960BB919CA1F5B00B8DEFF /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		5D960BBA19CA1F5B00B8DEFF /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		5D960BBD19CA310C00B8DEFF /* logo-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-login.png"; sourceTree = "<group>"; };
+		5D9D136819DC7D2900BA3570 /* copymove-cell-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "copymove-cell-bg.png"; sourceTree = "<group>"; };
+		5D9D136919DC7D2900BA3570 /* item-counter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-counter.png"; sourceTree = "<group>"; };
+		5D9D136A19DC7D2900BA3570 /* item-counter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-counter@2x.png"; sourceTree = "<group>"; };
+		5D9D136B19DC7D2900BA3570 /* item-icon-folder-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-icon-folder-selected.png"; sourceTree = "<group>"; };
+		5D9D136C19DC7D2900BA3570 /* item-icon-folder-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-icon-folder-selected@2x.png"; sourceTree = "<group>"; };
+		5D9D136D19DC7D2900BA3570 /* item-icon-folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-icon-folder.png"; sourceTree = "<group>"; };
+		5D9D136E19DC7D2900BA3570 /* item-icon-folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-icon-folder@2x.png"; sourceTree = "<group>"; };
+		5DA3EE7919DD6AB300E8E579 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		5DA3EE7A19DD6AB300E8E579 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		5DA511CD19D9A6D300CE5110 /* map.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = map.js; sourceTree = "<group>"; };
+		5DA8A64619DC887B00D47C76 /* LayerTreeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerTreeTableViewCell.h; sourceTree = "<group>"; };
+		5DA8A64719DC88AA00D47C76 /* LayerTreeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerTreeTableViewCell.m; sourceTree = "<group>"; };
+		5DA8A64919DC89D100D47C76 /* LayerTreeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerTreeItem.h; sourceTree = "<group>"; };
+		5DA8A64A19DC89E200D47C76 /* LayerTreeItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerTreeItem.m; sourceTree = "<group>"; };
+		5DA8A64D19DC906200D47C76 /* Layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Layer.h; sourceTree = "<group>"; };
+		5DA8A64E19DC90D600D47C76 /* Layer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Layer.m; sourceTree = "<group>"; };
 		5DAD66F519DADCBC00DEC6EA /* AddNewPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddNewPointViewController.h; sourceTree = "<group>"; };
 		5DAD66F619DADD0600DEC6EA /* AddNewPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddNewPointViewController.m; sourceTree = "<group>"; };
 		5DF9700F19D9DCA8007BB033 /* SelectLayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectLayerViewController.h; sourceTree = "<group>"; };
@@ -162,6 +188,7 @@
 		5D960B8A19CA1EC600B8DEFF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5D9D136719DC7D1900BA3570 /* KOTree */,
 				5D3F0C4219CB077500D52313 /* index.html */,
 				5D3F0C4319CB077500D52313 /* ol.css */,
 				5D3F0C4419CB077500D52313 /* ol.js */,
@@ -213,6 +240,7 @@
 		5D99505B19CB78720045844F /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				5D9D135D19DC7C5A00BA3570 /* KOTree */,
 				5DF9700719D9DB99007BB033 /* point */,
 				5D960BB819CA1F3600B8DEFF /* login */,
 				5D3F0C4819CB105000D52313 /* map */,
@@ -230,8 +258,53 @@
 		5D99505D19CB788A0045844F /* model */ = {
 			isa = PBXGroup;
 			children = (
+				5DA8A64C19DC904500D47C76 /* Entity */,
+				5D9D135C19DC7C4E00BA3570 /* KOTree */,
 			);
 			name = model;
+			sourceTree = "<group>";
+		};
+		5D9D135C19DC7C4E00BA3570 /* KOTree */ = {
+			isa = PBXGroup;
+			children = (
+				5DA8A64619DC887B00D47C76 /* LayerTreeTableViewCell.h */,
+				5DA8A64719DC88AA00D47C76 /* LayerTreeTableViewCell.m */,
+				5DA8A64919DC89D100D47C76 /* LayerTreeItem.h */,
+				5DA8A64A19DC89E200D47C76 /* LayerTreeItem.m */,
+			);
+			name = KOTree;
+			sourceTree = "<group>";
+		};
+		5D9D135D19DC7C5A00BA3570 /* KOTree */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = KOTree;
+			sourceTree = "<group>";
+		};
+		5D9D136719DC7D1900BA3570 /* KOTree */ = {
+			isa = PBXGroup;
+			children = (
+				5D9D136819DC7D2900BA3570 /* copymove-cell-bg.png */,
+				5D9D136919DC7D2900BA3570 /* item-counter.png */,
+				5D9D136A19DC7D2900BA3570 /* item-counter@2x.png */,
+				5D9D136B19DC7D2900BA3570 /* item-icon-folder-selected.png */,
+				5D9D136C19DC7D2900BA3570 /* item-icon-folder-selected@2x.png */,
+				5D9D136D19DC7D2900BA3570 /* item-icon-folder.png */,
+				5D9D136E19DC7D2900BA3570 /* item-icon-folder@2x.png */,
+			);
+			name = KOTree;
+			sourceTree = "<group>";
+		};
+		5DA8A64C19DC904500D47C76 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				5DA8A64D19DC906200D47C76 /* Layer.h */,
+				5DA8A64E19DC90D600D47C76 /* Layer.m */,
+				5DA3EE7919DD6AB300E8E579 /* User.h */,
+				5DA3EE7A19DD6AB300E8E579 /* User.m */,
+			);
+			name = Entity;
 			sourceTree = "<group>";
 		};
 		5DF9700719D9DB99007BB033 /* point */ = {
@@ -323,14 +396,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D9D137219DC7D2900BA3570 /* item-icon-folder-selected.png in Resources */,
 				5D86534919D44798007CB053 /* ol.js in Resources */,
 				5D3F0C4519CB077500D52313 /* index.html in Resources */,
 				5D7D8DAB19D9CE2D00363F7D /* map.js in Resources */,
+				5D9D137519DC7D2900BA3570 /* item-icon-folder@2x.png in Resources */,
+				5D9D137019DC7D2900BA3570 /* item-counter.png in Resources */,
+				5D9D137419DC7D2900BA3570 /* item-icon-folder.png in Resources */,
 				5D960BBE19CA310C00B8DEFF /* logo-login.png in Resources */,
 				5D960B9C19CA1EC600B8DEFF /* Images.xcassets in Resources */,
 				5D960B8E19CA1EC600B8DEFF /* InfoPlist.strings in Resources */,
 				5D3F0C4619CB077500D52313 /* ol.css in Resources */,
+				5D9D137119DC7D2900BA3570 /* item-counter@2x.png in Resources */,
 				5D960B9719CA1EC600B8DEFF /* Main.storyboard in Resources */,
+				5D9D136F19DC7D2900BA3570 /* copymove-cell-bg.png in Resources */,
+				5D9D137319DC7D2900BA3570 /* item-icon-folder-selected@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,8 +463,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DF9701119D9DCF9007BB033 /* SelectLayerViewController.m in Sources */,
+				5DA8A64F19DC90D600D47C76 /* Layer.m in Sources */,
 				5DA511CF19D9A8E500CE5110 /* map.js in Sources */,
 				5D960B9419CA1EC600B8DEFF /* AppDelegate.m in Sources */,
+				5DA8A64B19DC89E200D47C76 /* LayerTreeItem.m in Sources */,
+				5DA8A64819DC88AA00D47C76 /* LayerTreeTableViewCell.m in Sources */,
+				5DA3EE7B19DD6AB300E8E579 /* User.m in Sources */,
 				5DAD66F719DADD0600DEC6EA /* AddNewPointViewController.m in Sources */,
 				5D960B9019CA1EC600B8DEFF /* main.m in Sources */,
 				5D3F0C4B19CB106400D52313 /* MapViewController.m in Sources */,

@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FDTakeController.h"
 
-@interface AddNewPointViewController: UIViewController
+@interface AddNewPointViewController: UIViewController <UITableViewDelegate, UITableViewDataSource, FDTakeDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *pointName;
 @property (weak, nonatomic) IBOutlet UITextView *pointDescription;

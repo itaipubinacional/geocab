@@ -1,8 +1,8 @@
 //
-//  KOSelectingViewController.h
-//  Kodiak
+//  KOSelectingItem.m
+//  KOSelection
 //
-//  Created by Adam Horacek on 18.04.12.
+//  Created by Adam Horacek on 07.08.12.
 //  Copyright (c) 2012 Adam Horacek, Kuba Brecka
 //
 //  Website: http://www.becomekodiak.com/
@@ -32,13 +32,35 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "LayerTreeTableViewCell.h"
+#import "LayerTreeItem.h"
 
-@interface SelectLayerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, LayerTreeTableViewCellDelegate>
+@implementation LayerTreeItem
 
-@property (nonatomic, strong) LayerTreeItem *item0, *item1, *item1_1, *item1_2, *item1_2_1, *item2, *item3;
-@property (nonatomic, strong) UITableView *treeTableView;
-@property (nonatomic, strong) NSMutableArray *treeItems;
-@property (nonatomic, strong) NSMutableArray *selectedTreeItems;
+@synthesize base, path;
+@synthesize numberOfSubitems;
+@synthesize parentSelectingItem;
+@synthesize ancestorSelectingItems;
+@synthesize submersionLevel;
+
+- (BOOL)isEqual:(id)other {
+    if (other == self)
+        return YES;
+    if (!other || ![other isKindOfClass:[self class]])
+        return NO;
+    return [self isEqualToSelectingItem:other];
+}
+
+- (BOOL)isEqualToSelectingItem:(LayerTreeItem *)selectingItem {
+    if (self == selectingItem)
+        return YES;
+    
+    if ([base isEqualToString:selectingItem.base])
+        if ([path isEqualToString:selectingItem.path])
+            if (numberOfSubitems == selectingItem.numberOfSubitems)
+                return YES;
+    
+    return NO;
+}
+
 
 @end
