@@ -496,21 +496,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     item.label =  !!node.nodes ? node.name : node.title;
                     item.name =  !!node.nodes ? '' : node.name;
                     item.legenda =  !!node.nodes ? '' : node.legend;
-                    item.selected =  !!node.nodes ? '' : node.enabled;
+                    item.selected =  !!node.nodes ? '' : node.startEnabled;
                     item.fonteDadosEndereco =  !!node.nodes ? '' : node.dataSource.url;
                     item.value = node.id;
                     item.type = !!node.nodes ? 'grupo' : 'camada';
 
-                    if( item.selected )
-                    {
+                    if( item.selected ){
                         $scope.getSelectedNode(item);
                     }
 
                     item.children = [];
 
                     if(  !!node.nodes ) {
-                        for(var i =0; i < node.nodes.length ; ++i) {
-                            item.children.push(parseNode(node.nodes[i]));
+                        for(var i =0; i < node.nodes.length; ++i) {
+                            if( true === node.nodes[i].startVisible ) {
+                                item.children.push(parseNode(node.nodes[i]));
+                            }
                         }
                     }
                     return item;

@@ -1,1 +1,0 @@
-../../QDImageCropper/Classes/QDImageCropper.h

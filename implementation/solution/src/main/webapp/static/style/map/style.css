@@ -300,14 +300,16 @@ input[type=checkbox].css-checkbox:checked + label:before {
     font-weight: normal;
     white-space: nowrap;
     margin-left: 10px;
+    cursor: pointer;
 }
 
 .label-image {
     border: 1px solid #c9c9c9;
     margin: -1px -40px 4px 37px;
-    max-height: 22px;
-    max-width: 22px;
+    height: 22px;
+    width: 22px;
     border-radius: 3px;
+    cursor: pointer;
 }
 
 .ivh-treeview-node {
@@ -341,7 +343,11 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 
 .legend-image-container {
     overflow: auto;
-    height: 72%;
+    position: absolute;
+    top: 111px;
+    bottom: 0;
+    right: 0;
+    left: 4px;
 }
 
 #camada-legend-detail, #tabs-1, #tabs-2 {

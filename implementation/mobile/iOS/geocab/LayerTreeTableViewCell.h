@@ -1,5 +1,5 @@
 //
-//  KOSelectingViewController.h
+//  LayerSelectingTableViewCell.h
 //  Kodiak
 //
 //  Created by Adam Horacek on 18.04.12.
@@ -32,13 +32,27 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "LayerTreeTableViewCell.h"
+#import <UIKit/UIKit.h>
 
-@interface SelectLayerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, LayerTreeTableViewCellDelegate>
+@class LayerTreeTableViewCell;
+@class LayerTreeItem;
 
-@property (nonatomic, strong) LayerTreeItem *item0, *item1, *item1_1, *item1_2, *item1_2_1, *item2, *item3;
-@property (nonatomic, strong) UITableView *treeTableView;
-@property (nonatomic, strong) NSMutableArray *treeItems;
-@property (nonatomic, strong) NSMutableArray *selectedTreeItems;
+@protocol LayerTreeTableViewCellDelegate  <NSObject>
+
+- (void)treeTableViewCell:(LayerTreeTableViewCell *)cell didTapIconWithTreeItem:(LayerTreeItem *)treeItem;
 
 @end
+
+@interface LayerTreeTableViewCell : UITableViewCell
+
+@property (nonatomic, strong) UIImageView *backgroundImageView;
+@property (nonatomic, strong) UIButton *iconButton;
+@property (nonatomic, strong) UITextField *titleTextField;
+@property (nonatomic, strong) UILabel *countLabel;
+@property (nonatomic, assign) id <LayerTreeTableViewCellDelegate> delegate;
+@property (nonatomic, strong) LayerTreeItem *treeItem;
+
+- (void)setLevel:(NSInteger)pixels;
+
+@end
+

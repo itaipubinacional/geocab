@@ -1,8 +1,8 @@
 //
-//  KOSelectingViewController.h
-//  Kodiak
+//  KOSelectingItem.h
+//  KOSelection
 //
-//  Created by Adam Horacek on 18.04.12.
+//  Created by Adam Horacek on 07.08.12.
 //  Copyright (c) 2012 Adam Horacek, Kuba Brecka
 //
 //  Website: http://www.becomekodiak.com/
@@ -32,13 +32,16 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "LayerTreeTableViewCell.h"
+#import <Foundation/Foundation.h>
 
-@interface SelectLayerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, LayerTreeTableViewCellDelegate>
+@interface LayerTreeItem : NSObject
 
-@property (nonatomic, strong) LayerTreeItem *item0, *item1, *item1_1, *item1_2, *item1_2_1, *item2, *item3;
-@property (nonatomic, strong) UITableView *treeTableView;
-@property (nonatomic, strong) NSMutableArray *treeItems;
-@property (nonatomic, strong) NSMutableArray *selectedTreeItems;
+@property (nonatomic, strong) NSString *base, *path;
+@property (nonatomic) NSInteger numberOfSubitems;
+@property (nonatomic, strong) LayerTreeItem *parentSelectingItem;
+@property (nonatomic, strong) NSMutableArray *ancestorSelectingItems;
+@property (nonatomic) NSInteger submersionLevel;
+
+- (BOOL)isEqualToSelectingItem:(LayerTreeItem *)selectingItem;
 
 @end
