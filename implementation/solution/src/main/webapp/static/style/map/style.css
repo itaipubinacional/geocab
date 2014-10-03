@@ -1,4 +1,4 @@
-/* BOTÕES TIPOS DE MAPQUEST */
+/* BOTÃ•ES TIPOS DE MAPQUEST */
 #typeMapQuest button:hover{
     background-color: #fff;
     height: 22px;
@@ -61,7 +61,7 @@
     content: normal;
 }
 
-/* POPUP DE MEDIÇÃO DE DISTÂNCIA E ÁREA */
+/* POPUP DE MEDIÃ‡ÃƒO DE DISTÃ‚NCIA E Ã�REA */
 .ol-popup {
     z-index: 1;
     display: none;
@@ -169,6 +169,28 @@
     display: none;
     top: 117px;
     bottom : 0;
+}
+.sidebar-style {
+    width: 20%;
+    position: fixed;
+    background: white;
+    right: 0px;
+    z-index: 2;
+    display: none;
+    top: 117px;
+    bottom : 0;
+}
+
+.sidebar-style .container {
+    width: 300px;
+}
+.sidebar-style .container label{
+    display: block;
+}
+
+#marker-point {
+   	color: #0077bf;
+   	font-size: 30px;
 }
 
 #menu-sidebar-2{
@@ -324,7 +346,7 @@ ul.ivh-treeview li .ivh-treeview-toggle {
     left: 4px;
 }
 
-#camada-legend-detail, #tabs-1 {
+#camada-legend-detail, #tabs-1, #tabs-2 {
     height: 100%;
 }
 
