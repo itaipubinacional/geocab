@@ -1,7 +1,6 @@
 package br.com.geocab.domain.service;
 
 import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
