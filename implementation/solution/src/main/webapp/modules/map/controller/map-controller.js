@@ -403,6 +403,20 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     stopEvent: false
                 });
                 $scope.map.addOverlay($scope.marker);
+                
+                layerGroupService.listAllLayerGroups({
+            		callback : function(result) {
+                        $scope.layersGroups = result;
+                        $scope.currentState = $scope.LIST_STATE;
+                        $state.go( $scope.LIST_STATE );
+                        $scope.$apply();
+                    },
+                    errorHandler : function(message, exception) {
+                        $scope.message = {type:"error", text: message};
+                        $scope.$apply();
+                    }
+            	});
+                
             }
 
 
@@ -1330,6 +1344,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	$scope.map.removeOverlay($scope.marker);
         $("body").prepend('<span id="marker-point" class="glyphicon glyphicon-map-marker sidebar-icon" style="display: none;"></span>');
         $scope.screenMarkerOpenned = false;
+    }
+    
+    $scope.insertMarker = function(){
+    	
+    	
     }
 };
 

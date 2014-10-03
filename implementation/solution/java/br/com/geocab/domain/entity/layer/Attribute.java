@@ -3,13 +3,32 @@
  */
 package br.com.geocab.domain.entity.layer;
 
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.directwebremoting.annotations.DataTransferObject;
+import org.hibernate.envers.Audited;
+
+import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.IEntity;
+
 /**
  * @author Thiago Rossetto Afonso
  * @since 02/10/2014
  * @version 1.0
  */
-public class Attribute
+@Entity
+@Audited
+@DataTransferObject
+@Table(schema=IEntity.SCHEMA)
+public class Attribute extends AbstractEntity implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 754889878712215160L;
 	private String name;
 	private AttributeType type;
 	private Layer layer;
