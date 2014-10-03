@@ -250,7 +250,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 	 */
 	$scope.changeToDisable = function( user ) {
 		$log.info("changeToDisable", user);
-
+	
 		var dialog = $modal.open( {
 			templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
 			controller: DialogController,
@@ -435,5 +435,33 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 			}
 		});
 	};
+	
+	/*
+	 * return the translated state of the user
+	 */
+	$scope.stateTranslated= function(){
+		if ($scope.currentEntity.enabled){
+			return $translate("admin.users.Active");
+		} else {
+			return $translate("admin.users.Inactive");
+		}
+	}
+	
+	/*
+	 * return the translated role of the user
+	 */
+	$scope.roleTranslated= function(){
+		if($scope.currentEntity.role == "ADMINISTRATOR"){
+			return $translate("admin.users.Administrator") ;
+		}
+		
+		if($scope.currentEntity.role == "MODERATOR"){
+			return $translate("admin.users.Moderator");
+		}
+		
+		if($scope.currentEntity.role == "USER"){
+			return $translate("admin.users.User")
+		}
+	}
 	
 };
