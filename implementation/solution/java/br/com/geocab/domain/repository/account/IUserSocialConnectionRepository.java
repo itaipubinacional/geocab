@@ -17,36 +17,44 @@ import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
  * @version 1.0
  * @category Repository
  */
-public interface IUserSocialConnectionRepository extends IDataRepository<UserSocialConnection, String>
+public interface IUserSocialConnectionRepository extends IDataRepository<UserSocialConnection, Long>
 {
 	/**
 	 * 
 	 * @return
 	 */
-	public List<String> findUserIdByProviderIdAndProviderUserId( String providerId, String providerUserId );
+	@Query(value="SELECT user.email "
+			 	 + "FROM UserSocialConnection  "
+			 	+ "WHERE providerId = :providerId "
+			 		+ "AND providerUserId = :providerUserId")
+	public List<String> listUserEmailsByProviderIdAndProviderUserId( @Param(value="providerId") String providerId, @Param(value="providerUserId") String providerUserId );
 	/**
 	 * 
 	 * @return
 	 */
-	public Set<String> findUserIdByProviderIdAndProviderUserIdIn( String providerId, Collection<String> providerUserIds );
+	@Query(value="SELECT user.email "
+			  	 + "FROM UserSocialConnection "
+			  	+ "WHERE providerId = :providerId "
+			  		+ "AND providerUserId IN (:providerUserIds) ")
+	public Set<String> listUserEmailsByProviderIdAndProviderUserIds( @Param(value="providerId") String providerId, @Param(value="providerUserIds") Collection<String> providerUserIds );
 	/**
 	 * 
 	 * @return
 	 */
-	public List<UserSocialConnection> findByUserIdOrderByRankDesc( String userId );
+	public List<UserSocialConnection> findByUserIdOrderByRankDesc( Long userId );
 	/**
 	 * @param userId
 	 * @param providerId
 	 * @return
 	 */
-	public List<UserSocialConnection> findByUserIdAndProviderIdOrderByRankDesc( String userId, String providerId );
+	public List<UserSocialConnection> findByUserIdAndProviderIdOrderByRankDesc( Long userId, String providerId );
 	/**
 	 * @param userId
 	 * @param providerId
 	 * @param providerUserId
 	 * @return
 	 */
-	public UserSocialConnection findByUserIdAndProviderIdAndProviderUserId( String userId, String providerId, String providerUserId );
+	public UserSocialConnection findByUserIdAndProviderIdAndProviderUserId( Long userId, String providerId, String providerUserId );
 	/**
 	 * @param userId
 	 * @param providerId
@@ -54,7 +62,7 @@ public interface IUserSocialConnectionRepository extends IDataRepository<UserSoc
 	 */
 	@Query(value="SELECT COALESCE(MAX(rank) + 1, 1) AS rank "
 				 + "FROM UserSocialConnection "
-				+ "WHERE userId = :userId "
+				+ "WHERE user.id = :userId "
 					+ "AND providerId = :providerId")
-	public int findNewRankByUserIdAndProviderId( @Param(value="userId") String userId, @Param(value="providerId") String providerId );
+	public int findNewRankByUserIdAndProviderId( @Param(value="userId") Long userId, @Param(value="providerId") String providerId );
 }

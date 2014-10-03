@@ -1,0 +1,11 @@
+<resources>
+
+    <color name="black_overlay">#66000000</color>
+
+    <!-- Nav drawer colors -->
+    <color name="list_item_title">#fff</color>
+    <color name="list_background">#303030</color>
+    <color name="list_background_pressed">#ff77a7c6</color>
+    <color name="list_divider">#272727</color>
+
+</resources>

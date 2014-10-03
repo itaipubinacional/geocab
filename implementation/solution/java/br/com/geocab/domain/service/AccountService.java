@@ -1,7 +1,6 @@
 package br.com.geocab.domain.service;
 
 import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +72,6 @@ public class AccountService
 		Assert.notNull( user );
 		
 		user.setEnabled(true);
-		
 		//encrypt password
 		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); 
 		user.setPassword( encodedPassword );
@@ -104,6 +102,18 @@ public class AccountService
 	public User findUserById( Long id )
 	{
 		return this.userRepository.findOne( id );
+	}
+	
+	/**
+	 * Find User by userName
+	 * 
+	 * @param userName
+	 * @return User
+	 */
+	@Transactional(readOnly = true)
+	public User findUserByEmail( String userName )
+	{
+		return this.userRepository.findByEmail( userName );
 	}
 	
 	/**
