@@ -2,7 +2,7 @@
 	"use strict";
 			
 	//Start the AngularJS
-	var projectModule = angular.module("authentication", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate",'angularBootstrapNavTree', 'ui-scaleSlider']);
+	var projectModule = angular.module("authentication", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate",'angularBootstrapNavTree', 'ui-scaleSlider','eits-default-button']);
 	
 	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider, $translateProvider ) {
 		//-------
