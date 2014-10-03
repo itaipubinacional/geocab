@@ -3,14 +3,33 @@
  */
 package br.com.geocab.domain.entity.marker;
 
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.directwebremoting.annotations.DataTransferObject;
+import org.hibernate.envers.Audited;
+
+import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.layer.Attribute;;
 /**
  * @author Thiago Rossetto Afonso
  * @since 02/10/2014
  * @version 1.0
  */
-public class MarkerAttribute
+@Entity
+@Audited
+@DataTransferObject
+@Table(schema=IEntity.SCHEMA)
+public class MarkerAttribute  extends AbstractEntity implements Serializable
 {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7579901947534822117L;
 	private String value;
 	private Marker marker;
 	private Attribute attribute;

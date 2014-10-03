@@ -58,13 +58,8 @@
                         <br>
                        <label>Camada</label>
                        <select chosen class="form-control">                       	
-						  <optgroup label="Swedish Cars">
-						    <option value="volvo">Volvo</option>
-						    <option value="saab">Saab</option>
-						  </optgroup>
-						  <optgroup label="German Cars">
-						    <option value="mercedes">Mercedes</option>
-						    <option value="audi">Audi</option>
+						  <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
+						    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
 						  </optgroup>
 						</select>
                        <br>
@@ -76,7 +71,7 @@
     					<br>
     					<hr>
                        <button class="btn btn-default" ng-click="clearFcMaker()" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
-                       <button class="btn btn-primary" style="float: right">Enviar</button>
+                       <button class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
 	                </div>
                 </div>
            	 </form>

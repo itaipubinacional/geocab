@@ -57,4 +57,6 @@ function MapInfoPopUpController($scope, $modalInstance, $log, features) {
         $scope.msg = null;
         $modalInstance.close(null);
     };
+    
+    
 };
