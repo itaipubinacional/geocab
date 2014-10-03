@@ -4,9 +4,7 @@
 package br.com.geocab.tests.service;
 
 import org.junit.Assert;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.geocab.domain.entity.datasource.DataSource;

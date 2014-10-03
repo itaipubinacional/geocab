@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.connect.ConnectionFactory;
@@ -17,41 +16,47 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.DuplicateConnectionException;
 import org.springframework.social.connect.NoSuchConnectionException;
 import org.springframework.social.connect.NotConnectedException;
+import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserSocialConnection;
 import br.com.geocab.domain.repository.account.IUserSocialConnectionRepository;
 
+/**
+ * Data access interface for saving and restoring Connection objects from a persistent store.
+ * The view is relative to a specific local user--it's not possible using this interface to access or update connections for multiple local users.
+ * If you need that capability, see {@link UsersConnectionRepository}.
+ * @author rodrigo
+ * @see UsersConnectionRepository
+ */
 class PersistentConnectionRepository implements ConnectionRepository
 {
-	private final String userId;
+	/**
+	 * 
+	 */
+	private final User user;
+	/**
+	 * 
+	 */
 	private final ConnectionFactoryLocator connectionFactoryLocator;
-	//private final TextEncryptor textEncryptor;
-	private IUserSocialConnectionRepository socialConnectionRepository;
-
+	/**
+	 * 
+	 */
+	private IUserSocialConnectionRepository userSocialConnectionRepository;
 	/**
 	 * 
 	 * @param userId
 	 * @param connectionFactoryLocator
 	 * @param textEncryptor
 	 */
-	public PersistentConnectionRepository( String userId, IUserSocialConnectionRepository socialConnectionRepository, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor )
+	public PersistentConnectionRepository( User user, IUserSocialConnectionRepository userSocialConnectionRepository, ConnectionFactoryLocator connectionFactoryLocator )
 	{
-		this.userId = userId;
+		this.user = user;
 		this.connectionFactoryLocator = connectionFactoryLocator;
-		//this.textEncryptor = textEncryptor;
-		this.socialConnectionRepository = socialConnectionRepository;
-		
-//		private String decrypt(String encryptedText)
-//		{
-//			return encryptedText != null ? textEncryptor.decrypt(encryptedText) : encryptedText;
-//		}
-//		private String encrypt(String text)
-//		{
-//			return text != null ? textEncryptor.encrypt(text) : text;
-//		}
+		this.userSocialConnectionRepository = userSocialConnectionRepository;
 	}
 
 	/**
@@ -66,7 +71,7 @@ class PersistentConnectionRepository implements ConnectionRepository
 			connections.put( registeredProviderId, Collections.<Connection<?>> emptyList() );
 		}
 		
-		final List<UserSocialConnection> userSocialConnections = this.socialConnectionRepository.findByUserIdOrderByRankDesc(userId);
+		final List<UserSocialConnection> userSocialConnections = this.userSocialConnectionRepository.findByUserIdOrderByRankDesc( user.getId() );
 		
 		for ( UserSocialConnection userSocialConnection : userSocialConnections )
 		{
@@ -89,7 +94,7 @@ class PersistentConnectionRepository implements ConnectionRepository
 	 */
 	public List<Connection<?>> findConnections( String providerId )
 	{
-		final List<UserSocialConnection> userSocialConnections = this.socialConnectionRepository.findByUserIdAndProviderIdOrderByRankDesc(userId, providerId);
+		final List<UserSocialConnection> userSocialConnections = this.userSocialConnectionRepository.findByUserIdAndProviderIdOrderByRankDesc(user.getId(), providerId);
 		
 		final List<Connection<?>> connections = new ArrayList<Connection<?>>();
 		for ( UserSocialConnection userSocialConnection : userSocialConnections )
@@ -174,7 +179,7 @@ class PersistentConnectionRepository implements ConnectionRepository
 	 */
 	public Connection<?> getConnection(ConnectionKey connectionKey)
 	{
-		final UserSocialConnection userSocialConnection = this.socialConnectionRepository.findByUserIdAndProviderIdAndProviderUserId( userId, connectionKey.getProviderId(), connectionKey.getProviderUserId() );
+		final UserSocialConnection userSocialConnection = this.userSocialConnectionRepository.findByUserIdAndProviderIdAndProviderUserId( user.getId(), connectionKey.getProviderId(), connectionKey.getProviderUserId() );
 		if ( userSocialConnection == null ) 
 		{
 			throw new NoSuchConnectionException(connectionKey);	
@@ -227,12 +232,12 @@ class PersistentConnectionRepository implements ConnectionRepository
 	{
 		final ConnectionData data = connection.createData();
 		
-		int rank = this.socialConnectionRepository.findNewRankByUserIdAndProviderId( userId, data.getProviderId() ); 
+		int rank = this.userSocialConnectionRepository.findNewRankByUserIdAndProviderId( user.getId(), data.getProviderId() ); 
 		
 		try
 		{
 			final UserSocialConnection userSocialConnection = new UserSocialConnection();
-			userSocialConnection.setUserId(userId);
+			userSocialConnection.setUser( new User(user.getId()) );
 			userSocialConnection.setProviderId( data.getProviderId() );
 			userSocialConnection.setProviderUserId( data.getProviderUserId() );
 			userSocialConnection.setRank( rank );
@@ -246,7 +251,7 @@ class PersistentConnectionRepository implements ConnectionRepository
 			userSocialConnection.setSecret( data.getSecret() );
 			userSocialConnection.setRefreshToken( data.getRefreshToken() );
 		
-			this.socialConnectionRepository.save( userSocialConnection );
+			this.userSocialConnectionRepository.save( userSocialConnection );
 		}
 		catch (DuplicateKeyException e)
 		{
@@ -262,7 +267,7 @@ class PersistentConnectionRepository implements ConnectionRepository
 	{
 		final ConnectionData data = connection.createData();
 		
-		final UserSocialConnection userSocialConnection = this.socialConnectionRepository.findByUserIdAndProviderIdAndProviderUserId(userId, data.getProviderId(), data.getProviderUserId());
+		final UserSocialConnection userSocialConnection = this.userSocialConnectionRepository.findByUserIdAndProviderIdAndProviderUserId(user.getId(), data.getProviderId(), data.getProviderUserId());
 		userSocialConnection.setDisplayName( data.getDisplayName() );
 		userSocialConnection.setProfileUrl( data.getProfileUrl() );
 		userSocialConnection.setImageUrl( data.getImageUrl() );
@@ -273,7 +278,7 @@ class PersistentConnectionRepository implements ConnectionRepository
 		userSocialConnection.setSecret( data.getSecret() );
 		userSocialConnection.setRefreshToken( data.getRefreshToken() );
 
-		this.socialConnectionRepository.save( userSocialConnection );
+		this.userSocialConnectionRepository.save( userSocialConnection );
 	}
 
 	/**
@@ -282,8 +287,8 @@ class PersistentConnectionRepository implements ConnectionRepository
 	@Transactional
 	public void removeConnections( String providerId )
 	{
-		final List<UserSocialConnection> userSocialConnections = this.socialConnectionRepository.findByUserIdAndProviderIdOrderByRankDesc(userId, providerId);
-		this.socialConnectionRepository.delete(userSocialConnections);
+		final List<UserSocialConnection> userSocialConnections = this.userSocialConnectionRepository.findByUserIdAndProviderIdOrderByRankDesc(user.getId(), providerId);
+		this.userSocialConnectionRepository.delete(userSocialConnections);
 	}
 
 	/**
@@ -292,8 +297,8 @@ class PersistentConnectionRepository implements ConnectionRepository
 	@Transactional
 	public void removeConnection( ConnectionKey connectionKey )
 	{
-		final UserSocialConnection userSocialConnection = this.socialConnectionRepository.findByUserIdAndProviderIdAndProviderUserId(userId, connectionKey.getProviderId(), connectionKey.getProviderUserId());
-		this.socialConnectionRepository.delete( userSocialConnection );
+		final UserSocialConnection userSocialConnection = this.userSocialConnectionRepository.findByUserIdAndProviderIdAndProviderUserId(user.getId(), connectionKey.getProviderId(), connectionKey.getProviderUserId());
+		this.userSocialConnectionRepository.delete( userSocialConnection );
 	}
 
 	/**
@@ -303,7 +308,7 @@ class PersistentConnectionRepository implements ConnectionRepository
 	 */
 	private Connection<?> findPrimaryConnection(String providerId)
 	{
-		final List<UserSocialConnection> userSocialConnections = this.socialConnectionRepository.findByUserIdAndProviderIdOrderByRankDesc(userId, providerId);
+		final List<UserSocialConnection> userSocialConnections = this.userSocialConnectionRepository.findByUserIdAndProviderIdOrderByRankDesc(user.getId(), providerId);
 		
 		if ( userSocialConnections.size() > 0 )
 		{
