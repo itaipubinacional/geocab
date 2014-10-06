@@ -120,6 +120,28 @@ public class AccountServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals(encodedPassword , user.getPassword());
 	}
 	
+	
+	@Test
+	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
+			"/dataset/AccountDataSet.xml"
+	})
+	public void findUserByEmail()
+	{
+		User user = this.accountService.findUserByEmail("user@geocab.com.br");
+		
+		Assert.assertNotNull( user );
+		Assert.assertNotNull( user.getId() );
+		Assert.assertEquals("user@geocab.com.br", user.getEmail());
+		Assert.assertEquals("Testing User", user.getName());
+		Assert.assertEquals(UserRole.ADMINISTRATOR, user.getRole());
+		
+		Assert.assertTrue(user.isEnabled());
+		
+		final String encodedPassword = this.passwordEncoder.encodePassword( "123", saltSource.getSalt( user ) ); 
+		Assert.assertEquals(encodedPassword , user.getPassword());
+	}
+	
+	
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
 			"/dataset/AccountDataSet.xml"

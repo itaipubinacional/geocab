@@ -67,6 +67,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.LAYER_MENU_LEGEND_DETAIL = 'legend_detail';
 
+    /*
+    *
+    * */
+    $scope.screenMarkerOpenned = false;
+    
+    $scope.marker;
 
     /**
      * Variável que armazena o tipo do mapa selecionado pelo usuário - GMAP ou OSM
@@ -100,7 +106,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.menu = {
         fcDistancia : false,
         fcArea : false,
-        fcKml :  false
+        fcKml :  false,
+        fcMarker: false
     };
 
     /**
@@ -381,6 +388,38 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
                 listAllFeatures(listUrls);
             }
+
+
+            if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
+            	$scope.screenMarkerOpenned = true;
+                $scope.toggleSidebarMarker(300, '#menu-item-1');
+
+                $("#marker-point").css('display','inherit');
+                
+                $scope.marker = new ol.Overlay({
+                    position: evt.coordinate,
+                    positioning: 'center-center',
+                    element: document.getElementById('marker-point'),
+                    stopEvent: false
+                });
+                $scope.map.addOverlay($scope.marker);
+                
+                layerGroupService.listAllLayerGroups({
+            		callback : function(result) {
+                        $scope.layersGroups = result;
+                        $scope.currentState = $scope.LIST_STATE;
+                        $state.go( $scope.LIST_STATE );
+                        $scope.$apply();
+                    },
+                    errorHandler : function(message, exception) {
+                        $scope.message = {type:"error", text: message};
+                        $scope.$apply();
+                    }
+            	});
+                
+            }
+
+
 
         });
 
@@ -885,7 +924,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.initializeDistanceCalc = function () {
 
-
+    	if($scope.menu.fcMarker){
+    		$scope.clearFcMaker();
+    	}
+    	
         // verifica se alguma funcionalidade ja está ativa
         if ($scope.menu.fcDistancia || $scope.menu.fcArea){
 
@@ -911,7 +953,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.menu = {
                 fcDistancia : true,
                 fcArea : false,
-                fcKml :  false
+                fcKml :  false,
+                fcMarker: false
             };
 
             // adiciona a camada de medição no mapa
@@ -926,15 +969,50 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
 
 
+    $scope.initializeMarker = function () {
+    	
+    	 $scope.map.removeInteraction(draw);
+         source.clear();
+         $scope.map.removeLayer(vector);
+         $('#popup').css("display","none");
+         sketch = null;
+         
+         
+    	if ($scope.menu.fcMarker){
 
+            $scope.menu.fcMarker = false;
+            $scope.toggleSidebarMarker(300, 'closeButton');
+            $scope.map.removeOverlay($scope.marker);
+            $("body").prepend('<div id="marker-point" style="display: none;"></div>');
+            $scope.screenMarkerOpenned = false;
+            return;
+
+        } else {
+
+        	$scope.currentEntity = new Marker();
+        	
+            // ativa funcionalidade e desativa as outras para só ter uma ativa por vez
+            $scope.menu = {
+                fcDistancia : false,
+                fcArea : false,
+                fcKml :  false,
+                fcMarker: true
+            };
+         
+        }
+    }
+    
     /**
      * Método que calcula a área de pontos no mapa interativo
      */
     $scope.initializeAreaCalc = function () {
 
+    	if($scope.menu.fcMarker){
+    		$scope.clearFcMaker();
+    	}
 
         // verifica se alguma funcionalidade ja está ativa
-        if ($scope.menu.fcArea || $scope.menu.fcDistancia){
+        if ($scope.menu.fcArea || $scope.menu.fcDistancia || $scope.menu.fcMarker){
 
             // se funcionalidade esta ativa é necessário sair da funcionalidade
             $scope.map.removeInteraction(draw);
@@ -957,7 +1035,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.menu = {
                 fcDistancia : false,
                 fcArea : true,
-                fcKml :  false
+                fcKml :  false,
+                fcMarker: false
             };
 
             // adiciona a camada de medição no mapa
@@ -1170,6 +1249,42 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     };
 
 
+    /**
+     * Função que gerencia a Sidebar
+     * @param time Tempo execução da animação.
+     * @param element Nome do elemento que está chamando a função.
+     */
+    $scope.toggleSidebarMarker = function (time, element){
+        time = time != null ? 300 : time;
+
+        //Verifica se a animação é para abrir ou fechar a sidebar pela posição atual dela.
+        var opening = $('.menu-sidebar-container').css('right') == '3px';
+
+        if(element == "closeButton") {
+            $scope.screenMarkerOpenned = false;
+        }
+
+        //Verifica se o usuário clicou num botão que está ativo e a barra está amostra, se é para abrir ou se o clique partiu do botão de fechar.
+        if ((element == $scope.lastActive && !opening) || (opening) || (element == "closeButton")) {
+
+            //Gerencia a classe 'bg-inactive' que ativa e desativa os botões.
+            if (opening) {
+                if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+            } else {
+                $(".menu-item").addClass("bg-inactive");
+            }
+            //Executa a animação.
+            $('#sidebar-marker').toggle('slide', { direction: 'right' }, time);
+            $('.menu-sidebar-container').animate({
+                'right' : opening ? '20%' : '3px'
+            }, time);
+        } else {
+            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+        }
+        $scope.lastActive = element;
+
+    };
+
     /*-------------------------------------------------------------------
      * 		 			MENU LATERAL DO MAPA
      *-------------------------------------------------------------------*/
@@ -1216,6 +1331,24 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.exitLegendDetail = function (){
         $scope.LAYER_MENU_STATE = 'list';
+    }
+    
+    $scope.clearFcMaker = function() {
+    	$scope.currentEntity = new Marker();
+    	
+    	$scope.menu.fcMarker = false;
+    	
+    	if($scope.screenMarkerOpenned)
+    		$scope.toggleSidebarMarker(300, 'closeButton');
+
+    	$scope.map.removeOverlay($scope.marker);
+        $("body").prepend('<span id="marker-point" class="glyphicon glyphicon-map-marker sidebar-icon" style="display: none;"></span>');
+        $scope.screenMarkerOpenned = false;
+    }
+    
+    $scope.insertMarker = function(){
+    	
+    	
     }
 };
 

@@ -1,8 +1,13 @@
 package br.com.geocab.infrastructure.social;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -31,11 +36,16 @@ public class SpringSecuritySignInAdapter implements SignInAdapter
 	 * @return the URL that ProviderSignInController should redirect to after sign in. May be null, indicating that ProviderSignInController
 	 * should redirect to its postSignInUrl.
 	 */
-	public String signIn( String userId, Connection<?> connection, NativeWebRequest request )
+	public String signIn( String userId, Connection<?> connection, NativeWebRequest nativeWebRequest )
 	{
-		System.out.println( userId );
 		final User user = this.userRepository.findByEmail(userId);
-		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()));
+		
+		final SecurityContext securityContext = SecurityContextHolder.getContext();
+		securityContext.setAuthentication( new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()) );
+		
+		final HttpServletRequest request = (HttpServletRequest) nativeWebRequest.getNativeRequest();
+		final HttpSession session = request.getSession(true);
+		session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
 		
 		return null;//redirects to /
 	}

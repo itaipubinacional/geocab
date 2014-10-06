@@ -475,6 +475,18 @@ public class LayerGroupService
 	
 	/**
 	 * 
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public List<LayerGroup> listAllLayerGroups()
+	{
+		return this.layerGroupRepository.findAll();
+	}
+	
+	/**
+	 * 
 	 * @param url
 	 * @return
 	 * @throws JAXBException
@@ -592,7 +604,6 @@ public class LayerGroupService
 		
 		return layers;
 	}
-	
 	
 	/**
 	 * Method to inserir uma {@link Layer}
