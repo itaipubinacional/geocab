@@ -101,7 +101,7 @@
     [item3 setAncestorSelectingItems:[NSMutableArray array]];
     [item3 setNumberOfSubitems:0];
     
-    NSLog(@"%@", path);
+    NSLog(@"path: %@", path);
     if ([path isEqualToString:@"/"]) {
         return [NSMutableArray arrayWithObject:item0];
     } else if ([path isEqualToString:@"/Item 0"]) {

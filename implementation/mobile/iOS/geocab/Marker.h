@@ -7,7 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Layer.h"
+#import "StatusMarker.h"
+#import <CoreLocation/CoreLocation.h>
 
 @interface Marker : NSObject
+
+@property (nonatomic) CLLocationDegrees *latitude;
+@property (nonatomic) CLLocationDegrees *longitude;
+@property (weak, nonatomic) Layer *layer;
+@property (nonatomic) enum StatusMarker statusMarker;
 
 @end

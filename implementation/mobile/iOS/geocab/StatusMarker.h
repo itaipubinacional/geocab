@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Itaipu. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
-@interface StatusMarker : NSObject
-
-@end
+enum StatusMarker {
+    ACCEPTED,
+    REFUSED,
+    PENDING
+};
