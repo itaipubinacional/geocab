@@ -7,6 +7,10 @@
 //
 
 #import "MapViewController.h"
+#import "AppDelegate.h"
+#import "AddNewPointViewController.h"
+
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @interface MapViewController ()
 
@@ -16,6 +20,8 @@
 @property (nonatomic, strong) NSTimer *timer;
 
 @property (retain, nonatomic) UIActionSheet *actionSheet;
+
+@property (weak, nonatomic) MFSideMenuContainerViewController *sideMenu;
 
 @end
 
@@ -56,6 +62,11 @@
     //[_actionSheet setBackgroundColor:[UIColor whiteColor]];
     [_actionSheet setTintColor:[UIColor blackColor]];
     
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    _sideMenu = delegate.container;
+    
+    [self.navigationController.navigationItem.leftBarButtonItem setImage:[UIImage imageNamed:@"inc_menu_20.png"]];
+    
     
 }
 
@@ -86,10 +97,8 @@
     [_actionSheet showInView:self.view];
 }
 
-- (IBAction)callJavascript:(id)sender {
-    
-    [_webView stringByEvaluatingJavaScriptFromString:@"caralegal()"];
-    
+- (IBAction)toggleMenu:(id)sender {
+    [_sideMenu toggleLeftSideMenuCompletion:^{}];
 }
 
 -(IBAction)addNewPoint:(id)sender {
@@ -115,7 +124,10 @@
     NSDate *eventDate = location.timestamp;
     NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
     if (abs(howRecent) < 15.0) {
-
+//        NSString *functionCall = [NSString stringWithFormat:@"addPoint(%.5f, %.5f)", location.coordinate.latitude, location.coordinate.longitude];
+//        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        
+        [_locationManager stopUpdatingLocation];
         [self performSegueWithIdentifier:@"addNewPointSegue" sender:self];
     }
 }
@@ -123,14 +135,28 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"addNewPointSegue"]) {
         
+        NSLog(@"%.5f  %.5f", _locationManager.location.coordinate.latitude, _locationManager.location.coordinate.longitude);
+        
+//        AddNewPointViewController *addNewPointViewController = (AddNewPointViewController*) segue.destinationViewController;
+//        addNewPointViewController.latitude = _location.x;
     }
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
-        //[_locationManager startUpdatingLocation];
-        [self performSegueWithIdentifier:@"addNewPointSegue" sender:self];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
+            [_locationManager requestWhenInUseAuthorization];
+        }
+        [_locationManager startUpdatingLocation];
     }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    NSLog(@"didFailWithError: %@", error);
+    
+    UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Erro de GPS" message:@"Houve um erro ao tentar obter sua localização" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    
+    [errorAlert show];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -139,6 +165,8 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:NO];
+    
+    _sideMenu.panMode = MFSideMenuPanModeDefault;
 }
 
 @end
