@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 
+<span id="marker-point" class="glyphicon glyphicon-map-marker sidebar-icon" style="display: none;"></span>
+
 <section id="main-content" style="height: 100%">
     <div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
 
-        <div >
+        <div>
             <ul class="map-menu-items tool-items" id="menu-sidebar">
                 <li ng-click="aumentarZoom()">
                     <a href="#tabs-2">
@@ -26,6 +28,14 @@
                         <div class="icon itaipu-icon-square sidebar-icon"></div>
                     </a>
                 </li>
+
+                <!-- Verificar... -->
+                <li ng-click="initializeMarker()" ng-class="{ferramenta_active : menu.fcMarker}">
+                    <a href="#tabs-1">
+                        <span class="glyphicon glyphicon-map-marker sidebar-icon"></span>
+                    </a>
+                </li>
+
                 <li ng-if="hasPermissionKML" ng-click="">
                     <a>
                         <div class="icon itaipu-icon-kml sidebar-icon"></div>
@@ -33,6 +43,39 @@
                 </li>
             </ul>
         </div>
+
+		  <div id="sidebar-marker" class="sidebar-style">
+		  	<form name="sidebarMarker">
+		  		<div>
+	               <div class="sidebar-coloredbar"></div>
+	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
+	
+					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
+	                   <div class="sidebar-content-header">Nova postagem</div>
+	                   <!-- <h3>Nova postagem</h3>
+                        -->
+                        <br style="clear: both;">
+                        <br>
+                       <label>Camada</label>
+                       <select chosen class="form-control">                       	
+						  <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
+						    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
+						  </optgroup>
+						</select>
+                       <br>
+                       <label>Nome</label> <input type="text" class="form-control" ng-model="currentEntity.name">
+                       <br>
+                       <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
+                       <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea>
+
+    					<br>
+    					<hr>
+                       <button class="btn btn-default" ng-click="clearFcMaker()" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
+                       <button class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
+	                </div>
+                </div>
+           	 </form>
+           </div>
 
         <div id="sidebar-tabs" style="float: left;">
             <ul class="map-menu-items tab-flag" id="menu-sidebar-2">
@@ -43,7 +86,7 @@
                 </li>
             </ul>
 
-            <div id="sidebar">
+            <div id="sidebar" class="sidebar-style">
                 <div class="sidebar-coloredbar"></div>
                 <span ng-click="toggleSidebar(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
 
@@ -116,7 +159,6 @@
     </div>
         </div>
     </div>
-
     <!-- Google Maps -->
     <div id="gmap" style="width: 0; height: 0"></div>
 

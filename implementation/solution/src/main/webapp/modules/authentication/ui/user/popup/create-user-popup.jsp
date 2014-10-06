@@ -6,6 +6,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
+<head>
+	<style>
+		input.ng-invalid.ng-dirty{
+	border:1px solid red;
+}
+	</style>
+</head>
 <div class="modal-content">
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
    			
@@ -18,66 +25,97 @@
         <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
         
         
-        <form name="form" method="post" action="./j_spring_security_check"  default-button="buttonInsert">
-					<table>
+        <form name="form_create_account" method="post" action="./j_spring_security_check"  default-button="buttonInsert" novalidate>
+					<table>					
 						<tr>
-							<td><label required><spring:message code="authentication.Name" /></label></td>
+							<td><label required><spring:message code="authentication.Name" /></label>
+						</td>				
 						</tr>
 						<tr>
-							<td><input 
+							<td><span ng-show="form_create_account.name.$error.required &&  form_create_account.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span>
+						</tr>
+						<tr>
+							<td>
+							<input 
 							 class="form-control" 
 							 ng-model="currentEntity.name" 
 							 name="name" 
-							 ng-class="{ ngInvalid: form.name.$error.required && (form.$submitted || form.name.$dirty) }"
+							 ng-class="{ ngInvalid: form_create_account.$submitted && form_create_account.name.$error.required }"
 							 type="text" 
 							 required
-							  ng-hover
-							 ></td>
+							 ></td>																	
+						</tr>					
+						
+						<tr>							
+							<td>
+								<label required><spring:message code="authentication.Email" /></label>								
+							</td>
 						</tr>
 						<tr>
-							<td><label required><spring:message code="authentication.Email" /></label></td>
+							<td><span ng-show="form_create_account.email.$error.required && form_create_account.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>							
 						</tr>
 						<tr>
+							<td><span ng-show="form_create_account.email.$error.email" class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
+						</tr>
+						<tr>												
 							<td><input 
-							class="form-control" 
+							class="form-control ng-invalid" 
 							ng-model="currentEntity.email" 
-							name="email" 
-							ng-class="{ ngInvalid: form.email.$error.required && (form.$submitted || form.email.$dirty) }"
+							name="email" 							
+							ng-class="{ ngInvalid: form_create_account.email.$error.required && (form_create_account.$error.email || form_create_account.email.$dirty || form_create_account.$submitted ) }"
 							type="email" 
 							required
 							ng-hover
 							>
 							</td>
+						</tr>						
+						<tr>
+							<td>
+								<label required><spring:message code="authentication.Password" /></label>							
+							</td>
 						</tr>
 						<tr>
-							<td><label required><spring:message code="authentication.Password" /></label></td>
+							<td><span ng-show="form_create_account.password.$error.required && form_create_account.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>
 						</tr>
 						<tr>
 							<td><input 
 							class="form-control" 
 							ng-model="currentEntity.password" 
 							name="password" 
-							ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted || form.password.$dirty) }"
+							ng-class="{ ngInvalid:form_create_account.password.$error.required && (form_create_account.$submitted || form_create_account.password.$dirty) }"
 							type="password" 
 							required
 							ng-hover
 							>
 							</td>
-						</tr>
+						</tr>	
 						<tr>
 							<td><label><spring:message code="authentication.Confirm-password" /></label></td>
 						</tr>
 						<tr>
+							<td><span ng-show="(form_create_account.confirmPassword.$error.required && form_create_account.$submitted) 
+													&& !((form_create_account.confirmPassword.$dirty || form_create_account.password.$dirty ) 
+													&& (currentEntity.password != confirmPassword))" 
+													class="tooltip-validation create"><spring:message code="admin.users.Field-required" 
+													/></span></td>
+						</tr>
+						<tr>
+							<td><span ng-show="(form_create_account.confirmPassword.$dirty || form_create_account.password.$dirty ) 
+													&& (currentEntity.password != confirmPassword)" 
+												class="tooltip-validation create"><spring:message code="admin.user.The-password-fields-must-be-equal" 
+												/></span><td>
+						</tr>
+						<tr>
 							<td><input 
 							class="form-control" 
-							ng-model="currentEntity.confirmPassword" 
+							ng-model="confirmPassword" 
 							name="confirmPassword" 
-							ng-class="{ ngInvalid: form.confirmPassword.$error.required && (form.$submitted || form.confirmPassword.$dirty) }"
+							ng-class="{ngInvalid: (form_create_account.confirmPassword.$error.required && ( form_create_account.$submitted || form_create_account.password.$dirty)) || (currentEntity.password != confirmPassword)  }"
 							type="password" 
 							required
 							ng-hover
-							></td>
-						</tr>
+							></td>						
+						</tr>			
 						<tr>
 							<td><input type="button" id="buttonInsert" ng-click="createAccount()" value='<spring:message code="authentication.Create-an-account"></spring:message>' id="createAccount" class="btn-enter" /></td>
 						</tr>
