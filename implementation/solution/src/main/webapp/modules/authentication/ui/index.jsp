@@ -24,6 +24,12 @@
 		  width: 330px;
 		  top: 150;
 		}
+		
+		.forget-password-modal .modal-dialog {
+		  width: 330px;
+		  top: 150;
+		}
+		
 		</style>
 	</head>
 <body>
@@ -43,6 +49,7 @@
 	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
 	<script type="text/javascript" src="modules/authentication/controller/user-controller.js"></script>
 	<script type="text/javascript" src="modules/authentication/controller/popup/create-user-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/authentication/controller/popup/forget-password-popup-controller.js"></script>
 	
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
 	
