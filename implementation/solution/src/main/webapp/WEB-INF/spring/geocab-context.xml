@@ -128,7 +128,11 @@
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageRequest" javascript="PageRequest"/>
 		<dwr:convert type="bean" class="br.com.geocab.domain.entity.datasource.DataSource" javascript="DataSource"/>
 		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.LayerGroup" javascript="LayerGroup"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.Layer" javascript="Layer"/>
 		<dwr:convert type="bean" class="br.com.geocab.domain.entity.account.User" javascript="User"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.marker.Marker" javascript="Marker"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.marker.MarkerAttribute" javascript="MarkerAttribute"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.Attribute" javascript="Attribute"/>
 	</dwr:configuration>
 
 	<!--

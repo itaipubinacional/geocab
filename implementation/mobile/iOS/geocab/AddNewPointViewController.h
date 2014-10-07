@@ -8,10 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "FDTakeController.h"
+#import <CoreLocation/CoreLocation.h>
 
 @interface AddNewPointViewController: UIViewController <UITableViewDelegate, UITableViewDataSource, FDTakeDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *pointName;
 @property (weak, nonatomic) IBOutlet UITextView *pointDescription;
+
+@property (nonatomic) CLLocationDegrees latitude;
+@property (nonatomic) CLLocationDegrees longitude;
 
 @end

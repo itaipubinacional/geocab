@@ -11,7 +11,8 @@
 @interface User : NSObject
 
 @property (retain, nonatomic) NSNumber *id;
-@property (retain, nonatomic) NSString *nome;
-@property (retain, nonatomic) NSString *titulo;
+@property (retain, nonatomic) NSString *name;
+@property (retain, nonatomic) NSString *email;
+@property (retain, nonatomic) NSString *password;
 
 @end

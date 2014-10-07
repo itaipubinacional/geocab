@@ -18,6 +18,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 * Include services
 	 */
 	$importService("layerGroupService");
+	$importService("markerService");
 	
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
@@ -301,6 +302,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             view: $scope.view
         });
 
+        
+        
         // adiciona layer do OSM
         $scope.map.addLayer($scope.rasterOSM);
         $scope.rasterOSM.setVisible(false);
@@ -312,6 +315,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         // adiciona layer do MapQuest OSM
         $scope.map.addLayer($scope.rasterMapQuestSAT);
         $scope.rasterMapQuestSAT.setVisible(false);
+        
+        // Registra as postagens no mapa
+        $scope.loadMarkers();
 
         /**
          * Configuração do mapa GMAP
@@ -403,6 +409,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     stopEvent: false
                 });
                 $scope.map.addOverlay($scope.marker);
+                
+                $scope.currentEntity.latitude = evt.coordinate[0];
+                $scope.currentEntity.longitude = evt.coordinate[1];
                 
                 layerGroupService.listAllLayerGroups({
             		callback : function(result) {
@@ -983,12 +992,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.menu.fcMarker = false;
             $scope.toggleSidebarMarker(300, 'closeButton');
             $scope.map.removeOverlay($scope.marker);
-            $("body").prepend('<div id="marker-point" style="display: none;"></div>');
+            $("body").prepend('<div id="marker-point" class="marker-point" style="display: none;"></div>');
             $scope.screenMarkerOpenned = false;
             return;
 
         } else {
 
+        	$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
         	$scope.currentEntity = new Marker();
         	
             // ativa funcionalidade e desativa as outras para só ter uma ativa por vez
@@ -1342,13 +1352,92 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		$scope.toggleSidebarMarker(300, 'closeButton');
 
     	$scope.map.removeOverlay($scope.marker);
-        $("body").prepend('<span id="marker-point" class="glyphicon glyphicon-map-marker sidebar-icon" style="display: none;"></span>');
+        
         $scope.screenMarkerOpenned = false;
     }
     
     $scope.insertMarker = function(){
+    	/*
+    	 * TODO: Verificar se todo o formário foi preenchido.
+    	 * */
     	
+    	var layer = new Layer();
+    	layer.id = $scope.currentEntity.layer;
+    	$scope.currentEntity.layer = layer;
     	
+    	$scope.currentEntity.markerAttribute = [];
+    	angular.forEach($scope.attributesByLayer, function(val,ind){
+    		
+    		var attribute = new Attribute();
+    		attribute.id = val.id;
+
+    		var markerAttribute = new MarkerAttribute();
+    		markerAttribute.value = val.value;
+    		markerAttribute.attribute = attribute
+    		markerAttribute.marker = $scope.currentEntity;
+    		$scope.currentEntity.markerAttribute.push(markerAttribute);
+    		
+    	});
+    	
+    	//$scope.currentEntity.markerAttribute = $scope.attributesByLayer;
+    	
+    	markerService.insertMarker($scope.currentEntity,{
+      		callback : function(result) {
+      			  $scope.clearFcMaker();
+                  $scope.$apply();
+              },
+              errorHandler : function(message, exception) {
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
+              }
+      	});
+
+    }
+    
+    $scope.listAttributesByLayer = function( layerId ){
+    	  layerGroupService.listAttributesByLayer(layerId,{
+      		callback : function(result) {
+                  $scope.attributesByLayer = result;
+                  $scope.$apply();
+              },
+              errorHandler : function(message, exception) {
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
+              }
+      	});
+    }
+    
+    $scope.loadMarkers = function(){
+    	markerService.listAll({
+      		callback : function(result) {
+      			
+      			angular.forEach(result, function(val, ind){
+      				$("body").append('<span id="marker-point-'+ind+'" class="marker-point glyphicon glyphicon-map-marker"></span>');
+      			
+    	  			var marker = new ol.Overlay({
+    	                position: [val.latitude, val.longitude],
+    	                positioning: 'center-center',
+    	                element: document.getElementById('marker-point-'+ind),
+    	                stopEvent: false
+    	            });
+    	  			
+    	            $scope.map.addOverlay(marker);
+    	            
+    	            $("#marker-point-"+ind).dblclick(function(event){
+    	            	event.stopPropagation();
+    	  				alert(1);
+    	  			})
+    	  			
+    	            
+    	            $scope.$apply();
+      			})
+      			
+              },
+              errorHandler : function(message, exception) {
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
+              }
+      	});
     }
 };
 

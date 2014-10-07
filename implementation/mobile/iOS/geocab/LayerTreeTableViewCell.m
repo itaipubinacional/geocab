@@ -56,10 +56,10 @@
     if (self) {
         // Initialization code
         
-        backgroundImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"copymove-cell-bg"]];
-        [backgroundImageView setContentMode:UIViewContentModeTopRight];
+        //backgroundImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"copymove-cell-bg"]];
+        //[backgroundImageView setContentMode:UIViewContentModeTopRight];
         
-        [self setBackgroundView:backgroundImageView];
+        //[self setBackgroundView:backgroundImageView];
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         
         iconButton = [UIButton buttonWithType:UIButtonTypeCustom];
