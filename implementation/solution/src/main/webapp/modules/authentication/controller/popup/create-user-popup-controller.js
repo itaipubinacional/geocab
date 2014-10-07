@@ -50,33 +50,22 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
 
     $scope.createAccount = function(){
     
-    	
-    	
     	if ( !$scope.form('form_create_account').$valid ) 
     	{    		    		    	
 			$scope.msg = {type:"danger", text: $translate('admin.users.The-highlighted-fields-are-required') , dismiss:true};
-			$scope.$apply();
 			return;
 		} 
-    	else if($scope.currentEntity.password != this.confirmPassword) 
-    	{
-			$scope.msg = {type:"danger", text: $translate('admin.user.The-password-fields-must-be-equal') , dismiss:true};
-			$scope.$apply();
-			return;
-		}
+    	
     	
 
     	loginService.insertUser( $scope.currentEntity, 
     		{
 			callback : function() {
 				$scope.msg = {type:"success", text: $translate('admin.users.User-successfully-inserted') + '!', dismiss:true};
-				$scope.$apply();
+				$scope.closePopUp();
 			},
 			errorHandler : function(message, exception) 
-			{
-				if(message == 'The field email must be set.'){
-					message = $translate('admin.users.the-email-is-not-valid')+".";
-				}
+			{				
 				$scope.msg = {type:"danger", text: message, dismiss:true};
 				$scope.$apply();
 			}
@@ -93,7 +82,7 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
 
     $scope.form = function( formName )
     {
-    	console.log(formName);
+    	
         if ( !formName )
         {
             formName = "form";
@@ -108,8 +97,7 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
     $scope.close = function( fechar )
     {
 
-    	$state.go("authentication");
-    	$modalInstance.close();
+    	$scope.msg = null;
         /*if (fechar)
         {
             $modalInstance.close();
@@ -137,6 +125,10 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
 
     };
    
+    $scope.closePopUp = function(){
+    	$state.go("authentication");
+    	$modalInstance.close()
+    }
     
     
 };
