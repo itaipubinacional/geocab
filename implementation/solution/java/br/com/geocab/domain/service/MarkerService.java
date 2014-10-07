@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.StatusMarker;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
 
@@ -67,6 +68,7 @@ public class MarkerService
 	public Marker insertMarker( Marker marker )
 	{
 		try{
+			marker.setStatus(StatusMarker.PENDING);
 			marker = this.markerRepository.save( marker );
 		}
 		catch ( DataIntegrityViolationException e )
@@ -131,7 +133,7 @@ public class MarkerService
 	 * @throws JAXBException 
 	 */
 	@Transactional(readOnly=true)
-	public List<Marker> listAllMarker()
+	public List<Marker> listAll()
 	{
 		return this.markerRepository.listAll();
 	}

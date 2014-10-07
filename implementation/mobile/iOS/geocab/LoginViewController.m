@@ -9,6 +9,23 @@
 #import "LoginViewController.h"
 #import "GTLPlusConstants.h"
 #import <GooglePlus/GooglePlus.h>
+#import <GoogleOpenSource/GoogleOpenSource.h>
+#import "MFSideMenu.h"
+#import "AppDelegate.h"
+#import "User.h"
+
+
+@interface LoginViewController ()
+
+@property (retain, nonatomic) MFSideMenuContainerViewController *menuContainerViewController;
+@property (weak, nonatomic) IBOutlet UITextField *username;
+@property (weak, nonatomic) IBOutlet UITextField *password;
+@property (copy) GPPSignIn *signIn;
+
+extern NSUserDefaults *defaults;
+extern User *loggedUser;
+
+@end
 
 @implementation LoginViewController
 
@@ -17,15 +34,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    GPPSignIn *signIn = [GPPSignIn sharedInstance];
+    self.menuContainerViewController.panMode = MFSideMenuPanModeNone;
     
-    signIn.clientID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"kClientId"];
-    signIn.scopes = [NSArray arrayWithObjects:kGTLAuthScopePlusLogin,
+    _signIn = [GPPSignIn sharedInstance];
+    
+    _signIn.clientID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"kClientId"];
+    _signIn.scopes = [NSArray arrayWithObjects:kGTLAuthScopePlusLogin,
                      nil];
-    signIn.shouldFetchGooglePlusUser = YES;
-    signIn.shouldFetchGoogleUserEmail = YES;
-    signIn.shouldFetchGoogleUserID = YES;
-    signIn.delegate = self;
+    _signIn.shouldFetchGooglePlusUser = YES;
+    _signIn.shouldFetchGoogleUserEmail = YES;
+    _signIn.shouldFetchGoogleUserID = YES;
+    _signIn.delegate = self;
     
     self.fbLoginView.delegate = self;
     self.fbLoginView.readPermissions = @[@"public_profile", @"email", @"user_friends"];
@@ -36,39 +55,76 @@
     [self.view endEditing:YES];
 }
 
+- (IBAction)login:(id)sender {
+    if (self.isFormValid) {
+        User *loggedUser = [[User alloc] init];
+        loggedUser.name = _username.text;
+        loggedUser.email = _password.text;
+        [self authenticateUser:loggedUser];
+    }
+}
 
-- (IBAction)btLoginGoogle:(id)sender {
+- (void) authenticateUser:(User*) user {
+    [defaults setObject:user.email forKey:@"email"];
+    [defaults setObject:user.name forKey:@"name"];
+    //[defaults setObject:[[[result array] objectAtIndex:0] id] forKey:@"userId"];
+    loggedUser = user;
+    [defaults synchronize];
+    [self performSegueWithIdentifier:@"loginToMainSegue" sender:self];
+}
+
+- (BOOL)isFormValid {
+    if ([_username.text isEqual:@""] || [_password.text isEqual:@""]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Erro"
+                                                        message:@"Verifique se os campos estão preenchidos corretamente."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return NO;
+    }
     
+    return YES;
 }
 
-- (IBAction)btLoginFacebook:(id)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Teste"
-                                                    message:@"Teste facebook"
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
-
-}
-
+//Google plus login callback
 - (void)finishedWithAuth:(GTMOAuth2Authentication *)auth error:(NSError *)error {
-    //NSLog(@"Received error %@ and auth object %@", error, auth);
     if (error) {
-        NSLog(@"Error %@", error);
+        NSLog(@"Received error %@ and auth object %@", error, auth);
     } else {
-        NSLog(@"auth: %@", auth);
-        NSLog(@"user email: %@", [[GPPSignIn sharedInstance] userEmail]);
-        NSLog(@"google user: %@", [[GPPSignIn sharedInstance] googlePlusUser]);
+        
+        [[[GPPSignIn sharedInstance] plusService] executeQuery:[GTLQueryPlus queryForPeopleGetWithUserId:_signIn.userID] completionHandler:^(GTLServiceTicket *ticket, GTLPlusPerson *person, NSError *error)
+         {
+             //Prints null in both
+             User *loggedUser = [[User alloc] init];
+             loggedUser.email = [[GPPSignIn sharedInstance] userEmail];
+             loggedUser.name = person.displayName;
+             
+             [self authenticateUser:loggedUser];
+         }];
     }
     
 }
 
+//Facebook login callback
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user {
-    NSLog(@"FB - user name: %@", user.name);
+    User *loggedUser = [[User alloc] init];
+    loggedUser.name = user.name;
+    loggedUser.email = [user objectForKey:@"email"];
+    
+    [self authenticateUser:loggedUser];
 }
 
 - (void)presentSignInViewController: (UIViewController *)viewController {
     [[self navigationController] pushViewController:viewController animated:YES];
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    delegate.container.panMode = MFSideMenuPanModeNone;
+    
+    self.navigationItem.hidesBackButton = YES;
+    self.navigationItem.leftBarButtonItem = nil;
 }
 
 @end

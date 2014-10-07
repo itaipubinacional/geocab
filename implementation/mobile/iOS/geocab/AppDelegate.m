@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import <GooglePlus/GooglePlus.h>
 #import <FacebookSDK/FacebookSDK.h>
-#import "MFSideMenu.h"
 
 @implementation AppDelegate
 
@@ -20,13 +19,13 @@
   
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     
-    MFSideMenuContainerViewController *container = (MFSideMenuContainerViewController *) self.window.rootViewController;
+    self.container = (MFSideMenuContainerViewController *) self.window.rootViewController;
     
     UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"navigationController"];
     UIViewController *leftSideMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"leftSideMenuViewController"];
     
-    [container setLeftMenuViewController:leftSideMenuViewController];
-    [container setCenterViewController:navigationController];
+    [_container setLeftMenuViewController:leftSideMenuViewController];
+    [_container setCenterViewController:navigationController];
     
     return YES;
 }

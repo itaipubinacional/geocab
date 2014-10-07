@@ -34,7 +34,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status ) " +
-				"FROM Marker marker " )
+	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status) " +
+				"FROM Marker marker ")
 	public List<Marker> listAll();
 }

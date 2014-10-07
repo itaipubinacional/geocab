@@ -10,4 +10,6 @@
 
 @implementation User
 
+@synthesize id, name, email, password;
+
 @end
