@@ -44,7 +44,36 @@
             </ul>
         </div>
 
-		  <div id="sidebar-marker" class="sidebar-style">
+		<div id="sidebar-marker-detail" class="sidebar-style">
+		  	<form name="sidebarMarker">
+		  		<div>
+	               <div class="sidebar-coloredbar"></div>
+	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
+	
+					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
+	                    <span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">Desmatamento</span>
+                        <br style="clear: both;">
+                        <br>
+                        <span style="float: left">Área de desmatamento</span> <span style="float: right">16/06/2014</span>
+                        <hr>
+                       
+                       <button style="float: right;" class="btn btn-default"><i class="itaipu-icon-delete"></i></button>
+                       <button style="float: right; margin-right: 5px" class="btn btn-default"><i class="itaipu-icon-edit"></i></button>
+                       <br>
+                       <img src="" style="width: 100%; height: 200px; margin-top: 12px;">
+                       <br><br>
+                      	
+                       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet urna eu nulla lacinia convallis. Morbi at gravida ligula, at sagittis quam</p>
+                      	
+                       <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
+                       <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
+
+	                </div>
+                </div>
+           	 </form>
+           </div>
+
+		  <div id="sidebar-marker-create" class="sidebar-style">
 		  	<form name="sidebarMarker">
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
@@ -90,16 +119,16 @@
 
         <div id="sidebar-tabs" style="float: left;">
             <ul class="map-menu-items tab-flag" id="menu-sidebar-2">
-                <li id="menu-item-1" ng-click="toggleSidebar(300, '#menu-item-1');" class="menu-item bg-inactive">
+                <li id="menu-item-1" ng-click="toggleSidebarLayers(300, '#menu-item-1');" class="menu-item bg-inactive">
                     <a href="#tabs-1">
                         <div class="icon itaipu-icon-layers sidebar-icon"></div>
                     </a>
                 </li>
             </ul>
 
-            <div id="sidebar" class="sidebar-style">
+            <div id="sidebar-layers" class="sidebar-style">
                 <div class="sidebar-coloredbar"></div>
-                <span ng-click="toggleSidebar(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
+                <span ng-click="toggleSidebarLayers(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
 
                 <div id="tabs-1" ng-switch="LAYER_MENU_STATE">
                     <div ng-switch-when="list">
