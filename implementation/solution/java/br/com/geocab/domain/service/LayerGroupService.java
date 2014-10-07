@@ -28,10 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.geocab.domain.entity.datasource.DataSource;
+import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.ExternalLayer;
 import br.com.geocab.domain.entity.layer.FieldLayer;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
+import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
@@ -66,6 +68,12 @@ public class LayerGroupService
 	 */
 	@Autowired
 	private ILayerRepository layerRepository;
+
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAttributeRepository attributeRepository;
 	
 	/**
 	 * 
@@ -742,5 +750,10 @@ public class LayerGroupService
 			layerGroup.getLayersGroup().removeAll(layersGroupExclusion);
 		}
 		
+	}
+	
+	public List<Attribute> listAttributesByLayer(Long layerId){
+		
+		return this.attributeRepository.listAttributeByLayer(layerId);
 	}
 }
