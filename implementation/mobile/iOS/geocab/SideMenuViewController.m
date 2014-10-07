@@ -32,11 +32,11 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "SelectLayerViewController.h"
+#import "SideMenuViewController.h"
 #import "LayerTreeTableViewCell.h"
 #import "LayerTreeItem.h"
 
-@implementation SelectLayerViewController
+@implementation SideMenuViewController
 
 @synthesize treeTableView;
 @synthesize treeItems;
@@ -124,9 +124,10 @@
     
     self.treeItems = [self listItemsAtPath:@"/"];
     
-    treeTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    CGRect frame = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y + 70, self.view.bounds.size.width, self.view.bounds.size.height);
+    
+    treeTableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
     [treeTableView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    [treeTableView setBackgroundColor:[UIColor colorWithRed:1 green:0.976 blue:0.957 alpha:1] /*#fff9f4*/];
     [treeTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [treeTableView setRowHeight:65.0f];
     [treeTableView setDelegate:(id<UITableViewDelegate>)self];
@@ -266,7 +267,7 @@
 
 - (void)iconButtonAction:(LayerTreeTableViewCell *)cell treeItem:(LayerTreeItem *)tmpTreeItem {
     if ([self.selectedTreeItems containsObject:cell.treeItem]) {
-        [cell.iconButton setSelected:NO];		
+        [cell.iconButton setSelected:NO];
         [self.selectedTreeItems removeObject:cell.treeItem];
     } else {
         [cell.iconButton setSelected:YES];

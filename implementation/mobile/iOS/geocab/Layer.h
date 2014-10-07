@@ -11,7 +11,8 @@
 @interface Layer: NSObject
 
 @property (retain, nonatomic) NSNumber *id;
-@property (retain, nonatomic) NSString *nome;
-@property (retain, nonatomic) NSString *titulo;
+@property (retain, nonatomic) NSString *name;
+@property (retain, nonatomic) NSString *title;
+@property (retain, nonatomic) NSString *legend;
 
 @end

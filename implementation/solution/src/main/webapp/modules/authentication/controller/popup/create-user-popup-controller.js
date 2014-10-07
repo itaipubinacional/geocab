@@ -21,9 +21,9 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
      *
      */
     $scope.currentEntity;
-
     
-
+    $scope.confirmPassword;
+    
 
     /*-------------------------------------------------------------------
      * 		 				 	  NAVIGATIONS
@@ -41,6 +41,7 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
     $scope.initialize = function()
     {
     	$scope.currentEntity = new User();
+    	$scope.confirmPassword=null;
     };
 
     /*-------------------------------------------------------------------
@@ -48,54 +49,34 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
      *-------------------------------------------------------------------*/
 
     $scope.createAccount = function(){
-    	
-    	if($scope.currentEntity.name === null){
-    		$scope.msg = {type:"danger", text: $translate("admin.users.Field-name-is-required") + '!', dismiss:true};
-    		$scope.apply();   
-    		return;
-    	} 
-    	
-    	if($scope.currentEntity.email === null){
-    		$scope.msg = {type:"danger", text:  $translate("admin.users.Field-email-is-required") + '!', dismiss:true};
-    		$scope.apply(); 
-    		return;
-    	}
+    
     	
     	
-    	if($scope.currentEntity.password === null){
-    		$scope.msg = {type:"danger", text: $translate("admin.users.Field-password-is-required") + '!', dismiss:true};
-    		$scope.apply();   
-    		return;
-    	} 
+    	if ( !$scope.form('form_create_account').$valid ) 
+    	{    		    		    	
+			$scope.msg = {type:"danger", text: $translate('admin.users.The-highlighted-fields-are-required') , dismiss:true};
+			$scope.$apply();
+			return;
+		} 
+    	else if($scope.currentEntity.password != this.confirmPassword) 
+    	{
+			$scope.msg = {type:"danger", text: $translate('admin.user.The-password-fields-must-be-equal') , dismiss:true};
+			$scope.$apply();
+			return;
+		}
     	
-    	if($scope.currentEntity.confirmPassword === null){
-    		$scope.msg = {type:"danger", text: $translate("admin.users.Field-confirm-password-is-required") + '!', dismiss:true};
-    		$scope.apply();
-    		return;
-    	} 
-    	
-    	
-//    	if($scope.currentEntity.password !== $scope.currentEntity.confirmPassword){
-//    		$scope.msg = {type:"danger", text: "As senhas precisam ser iguais" + '!', dismiss:true};
-//    		$scope.apply();
-//    		return;
-//    	} 
-    	
-    	
-//    	if ( !$scope.form.$valid ) {    		
-//			$scope.msg = {type:"danger", text: "hu3hu3uh" , dismiss:true};
-//			$scope.$apply();
-//			return;
-//		}
-    	
-    	console.log($scope.currentEntity.confirmPassword);
 
-    	loginService.insertUser( $scope.currentEntity, {
+    	loginService.insertUser( $scope.currentEntity, 
+    		{
 			callback : function() {
 				$scope.msg = {type:"success", text: $translate('admin.users.User-successfully-inserted') + '!', dismiss:true};
 				$scope.$apply();
 			},
-			errorHandler : function(message, exception) {
+			errorHandler : function(message, exception) 
+			{
+				if(message == 'The field email must be set.'){
+					message = $translate('admin.users.the-email-is-not-valid')+".";
+				}
 				$scope.msg = {type:"danger", text: message, dismiss:true};
 				$scope.$apply();
 			}
@@ -110,16 +91,16 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
         $modalInstance.close($scope.currentEntity);
     };
 
-//    $scope.form = function( formName )
-//    {
-//
-//        if ( !formName )
-//        {
-//            formName = "form";
-//        }
-//
-//        return $("form[name="+formName+"]").scope()[formName];
-//    };
+    $scope.form = function( formName )
+    {
+    	console.log(formName);
+        if ( !formName )
+        {
+            formName = "form";
+        }
+
+       return $("form[name="+formName+"]").scope()[formName];
+    };
     
     /**
      *
@@ -155,4 +136,7 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
         }*/
 
     };
+   
+    
+    
 };

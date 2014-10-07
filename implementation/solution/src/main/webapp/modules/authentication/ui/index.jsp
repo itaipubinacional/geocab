@@ -44,6 +44,8 @@
 	<script type="text/javascript" src="modules/authentication/controller/user-controller.js"></script>
 	<script type="text/javascript" src="modules/authentication/controller/popup/create-user-popup-controller.js"></script>
 	
+	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
+	
 </body>
 </html>
 
