@@ -398,7 +398,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
             if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
             	$scope.screenMarkerOpenned = true;
-                $scope.toggleSidebarMarker(300, '#menu-item-1');
+                $scope.toggleSidebarMarkerCreate(300, '#menu-item-1');
 
                 $("#marker-point").css('display','inherit');
                 
@@ -990,7 +990,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	if ($scope.menu.fcMarker){
 
             $scope.menu.fcMarker = false;
-            $scope.toggleSidebarMarker(300, 'closeButton');
+            $scope.toggleSidebarMarkerCreate(300, 'closeButton');
             $scope.map.removeOverlay($scope.marker);
             $("body").prepend('<div id="marker-point" class="marker-point" style="display: none;"></div>');
             $scope.screenMarkerOpenned = false;
@@ -1231,31 +1231,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param time Tempo execução da animação.
      * @param element Nome do elemento que está chamando a função.
      */
-    $scope.toggleSidebar = function (time, element){
-        time = time != null ? 300 : time;
-
-        //Verifica se a animação é para abrir ou fechar a sidebar pela posição atual dela.
-        var opening = $('.menu-sidebar-container').css('right') == '3px';
-
-        //Verifica se o usuário clicou num botão que está ativo e a barra está amostra, se é para abrir ou se o clique partiu do botão de fechar.
-        if ((element == $scope.lastActive && !opening) || (opening) || (element == "closeButton")) {
-
-            //Gerencia a classe 'bg-inactive' que ativa e desativa os botões.
-            if (opening) {
-                if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-            } else {
-                $(".menu-item").addClass("bg-inactive");
-            }
-            //Executa a animação.
-            $('#sidebar').toggle('slide', { direction: 'right' }, time);
-            $('.menu-sidebar-container').animate({
-                'right' : opening ? '20%' : '3px'
-            }, time);
-        } else {
-            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-        }
-        $scope.lastActive = element;
-
+    $scope.toggleSidebarLayers = function (time, element){
+    	
+    	$scope.toggleSidebar(time, element, '#sidebar-layers');
+    	
     };
 
 
@@ -1264,36 +1243,52 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param time Tempo execução da animação.
      * @param element Nome do elemento que está chamando a função.
      */
-    $scope.toggleSidebarMarker = function (time, element){
-        time = time != null ? 300 : time;
-
-        //Verifica se a animação é para abrir ou fechar a sidebar pela posição atual dela.
-        var opening = $('.menu-sidebar-container').css('right') == '3px';
-
-        if(element == "closeButton") {
+    $scope.toggleSidebarMarkerCreate = function (time, element){
+    	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
         }
-
-        //Verifica se o usuário clicou num botão que está ativo e a barra está amostra, se é para abrir ou se o clique partiu do botão de fechar.
-        if ((element == $scope.lastActive && !opening) || (opening) || (element == "closeButton")) {
-
-            //Gerencia a classe 'bg-inactive' que ativa e desativa os botões.
-            if (opening) {
-                if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-            } else {
-                $(".menu-item").addClass("bg-inactive");
-            }
-            //Executa a animação.
-            $('#sidebar-marker').toggle('slide', { direction: 'right' }, time);
-            $('.menu-sidebar-container').animate({
-                'right' : opening ? '20%' : '3px'
-            }, time);
-        } else {
-            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-        }
-        $scope.lastActive = element;
-
+    	
+    	$scope.toggleSidebar(time, element, '#sidebar-marker-create');
     };
+    
+    $scope.toggleSidebarMarkerDetail = function (time, element){
+    	if(element == "closeButton") {
+            $scope.screenMarkerOpenned = false;
+        }
+    	
+    	if( $('.menu-sidebar-container').css('right') != '3px') {
+    		$scope.toggleSidebar(0, 'closeButton');
+    	}
+    	
+    	
+    	$scope.toggleSidebar(time, element, '#sidebar-marker-detail');
+    };
+    
+    $scope.toggleSidebar = function (time, element, slide){
+	    time = time != null ? 300 : time;
+	
+	    //Verifica se a animação é para abrir ou fechar a sidebar pela posição atual dela.
+	    var opening = $('.menu-sidebar-container').css('right') == '3px';
+	
+	    //Verifica se o usuário clicou num botão que está ativo e a barra está amostra, se é para abrir ou se o clique partiu do botão de fechar.
+	    if ((element == $scope.lastActive && !opening) || (opening) || (element == "closeButton")) {
+	
+	        //Gerencia a classe 'bg-inactive' que ativa e desativa os botões.
+	        if (opening) {
+	            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+	        } else {
+	            $(".menu-item").addClass("bg-inactive");
+	        }
+	        //Executa a animação.
+	        $(slide).toggle('slide', { direction: 'right' }, time);
+	        $('.menu-sidebar-container').animate({
+	            'right' : opening ? '20%' : '3px'
+	        }, time);
+	    } else {
+	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+	    }
+	    $scope.lastActive = element;
+    }
 
     /*-------------------------------------------------------------------
      * 		 			MENU LATERAL DO MAPA
@@ -1349,7 +1344,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	$scope.menu.fcMarker = false;
     	
     	if($scope.screenMarkerOpenned)
-    		$scope.toggleSidebarMarker(300, 'closeButton');
+    		$scope.toggleSidebarMarkerCreate(300, 'closeButton');
 
     	$scope.map.removeOverlay($scope.marker);
         
@@ -1424,8 +1419,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	            $scope.map.addOverlay(marker);
     	            
     	            $("#marker-point-"+ind).dblclick(function(event){
+    	            	$(".marker-point").css("color","#0077bf");
     	            	event.stopPropagation();
-    	  				alert(1);
+    	            	$scope.toggleSidebarMarkerDetail(300, '#menu-item-1');
+    	            	$(this).css("color","#FF0000");
     	  			})
     	  			
     	            
