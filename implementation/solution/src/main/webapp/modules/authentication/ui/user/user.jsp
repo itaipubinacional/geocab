@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
+
 <html>
 
 	<div class="login-wrapper">
@@ -16,33 +17,55 @@
 			<div class="border-right">
 				<div class="border-yellow"></div>
 				<div class="border-green"></div>
-			</div>
+			</div>		
 		</div>
 		<div class="container-login">
 			<div class="login-logo"></div>
-			<div class="title-short-login"><spring:message code="authentication.Geocab" /></div>
-			<div class="title-login"></div>
-			<form method="post" action="./j_spring_security_check" name="form">
+			<div class="title-short-login"></div>
+			<div class="title-login">
+				<!--Message -->
+        		<div ng-include="'static/libs/eits-directives/alert/alert.html'" class="msg"></div>
+			</div>
+			<form method="post" action="./j_spring_security_check" name="form_login" default-button="enter" novalidate>
 				<table>
 					<tr>
 						<td><label><spring:message code="authentication.Email" /></label></td>
 					</tr>
+					<tr>
+						<td><span ng-show="form_login.email.$error.required && form_login.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>							
+					</tr>
+					<tr>
+						<td><span ng-show="form_login.email.$error.email" class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
+					</tr>
 					<tr>	
-						<td><input class="form-control" name="email" type="email"
-							value="admin@geocab.com.br" required/></td>
+						<td><input class="form-control" 
+								   ng-model="currentEntity.email"
+								   name="email" 
+								   type="email"
+								   ng-class="{ ngInvalid: form_login.email.$error.required && (form_login.$error.email || form_login.email.$dirty || form_login.$submitted) }"
+								   required
+								   /></td>
 					</tr>
 					<tr>
 						<td>
 							<label><spring:message code="authentication.Password" /></label>
-							<a class="forget-password"><spring:message code="authentication.Forget-password" /></a>
+							<a class="forget-password" ng-click="changeToUpdate()"><spring:message code="authentication.Forget-password" /></a>
 						</td>
 					</tr>
 					<tr>
-						<td><input class="form-control" name="password" type="password" 
-							value="admin" required/></td>
+						<td><span ng-show="form_login.password.$error.required && form_login.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>
 					</tr>
 					<tr>
-						<td><input type="submit" value="Entrar" id="enter" class="btn-enter" /></td>
+						<td><input class="form-control" 
+								   ng-model="currentEntity.password"
+								   name="password" 
+								   type="password" 
+								   required
+								   ng-class="{ ngInvalid: form_login.password.$error.required && (form_login.$submitted || form_login.password.$dirty) }"
+								   /></td>
+					</tr>
+					<tr>
+						<td><input type="button" ng-click="login()" value='<spring:message code="authentication.Enter" />' id="enter" class="btn-enter" /></td>
 					</tr>
 				</table>
 			</form>

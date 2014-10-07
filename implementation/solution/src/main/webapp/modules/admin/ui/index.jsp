@@ -58,6 +58,7 @@
 	<script type="text/javascript" src="modules/admin/controller/layer-config-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/layer-group-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/users-controller.js"></script>
+	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
    		
 	</body>
 </html>
