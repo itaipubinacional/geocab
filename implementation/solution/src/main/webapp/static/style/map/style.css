@@ -188,7 +188,7 @@
     display: block;
 }
 
-#marker-point {
+.marker-point {
    	color: #0077bf;
    	font-size: 30px;
 }

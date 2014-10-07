@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
@@ -38,7 +39,6 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 				"AND ( layer.dataSource.id = :dataSourceId OR :dataSourceId = NULL ) " +
 				"AND ( layer.published = false )")
 	public Page<Layer> listByFilters( @Param("filter") String filter, @Param("dataSourceId") Long dataSourceId, Pageable pageable );
-	
 	
 	/**
 	 * 

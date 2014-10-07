@@ -52,21 +52,32 @@
 	
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 	                   <div class="sidebar-content-header">Nova postagem</div>
-	                   <!-- <h3>Nova postagem</h3>
-                        -->
                         <br style="clear: both;">
                         <br>
                        <label>Camada</label>
-                       <select chosen class="form-control">                       	
+                       <select ng-model="currentEntity.layer" chosen class="form-control" ng-change="listAttributesByLayer(currentEntity.layer)">                       	
 						  <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
 						    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
 						  </optgroup>
 						</select>
                        <br>
-                       <label>Nome</label> <input type="text" class="form-control" ng-model="currentEntity.name">
-                       <br>
+                       <div ng-repeat="attribute in attributesByLayer">
+                       		 <label>{{ attribute.name }}</label> 
+                       		
+                       		 <input type="number" ng-show="attribute.type == 'NUMBER'" class="form-control" ng-model="attribute.value">
+                       		 <input type="date" ng-show="attribute.type == 'DATE'" class="form-control" ng-model="attribute.value">
+                       		 
+                       		 <div ng-show="attribute.type == 'BOOLEAN'">
+                       		 		
+                       		  		<input type="radio" name="boolean" ng-model="attribute.value" value="Yes">
+                       		  		<input type="radio" name="boolean" ng-model="attribute.value" value="No">
+                       		 </div>
+                       		
+                       		 <input type="text" ng-show="attribute.type == 'TEXT'" class="form-control" ng-model="attribute.value">
+                       </div>
+                      
                        <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
-                       <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea>
+                       <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
     					<br>
     					<hr>
