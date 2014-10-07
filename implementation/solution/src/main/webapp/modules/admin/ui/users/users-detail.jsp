@@ -27,13 +27,13 @@
             <div class="form-item">
                 <b class="detail-label"><spring:message code="admin.users.Access-profile"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.role}}</span>
+                <span class="detail-value">{{roleTranslated()}}</span>
             </div>
             <br>
              <div class="form-item">
                 <b class="detail-label"><spring:message code="admin.users.Status"/></b>
                 <br>
-                <span class="detail-value">{{currentEntity.enabled}}</span>
+                <span class="detail-value">{{ stateTranslated() }}</span>
             </div>
     </form>
 </div>
