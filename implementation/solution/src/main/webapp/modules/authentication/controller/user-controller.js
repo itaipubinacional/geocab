@@ -109,27 +109,48 @@
 		};
 
 		
+		
 		/**
 		 * Boot the state users.update 
 		 */
-		$scope.changeToUpdate = function( id ) {
-			$log.info("changeToUpdate", id);
+		$scope.changeToUpdate = function(  ) {
+//			$log.info("changeToUpdate", id);
+//
+//			accountService.findUserById( $state.params.id, {
+//				callback : function(result) {
+//					
+//					$scope.currentEntity = result;
+//					$scope.currentEntity.password = ''; //clear password. if not set, not update.
+//					
+//					$scope.currentState = $scope.UPDATE_STATE;
+//					$state.go($scope.UPDATE_STATE);
+//					$scope.$apply();
+//				},
+//				errorHandler : function(message, exception) {
+//					$scope.msg = {type:"danger", text: message, dismiss:true};
+//					$scope.$apply();
+//				}
+//			}); 
+			
+			
+				$log.info("changeToUpdate");
+				
+				var dialog = $modal.open({
+	                templateUrl: "modules/authentication/ui/user/popup/forget-password-popup.jsp",
+	                controller:  ForgetPasswordPopUpController,
+	                windowClass: 'forget-password-modal',
+	                resolve: {
+	                }
+	            });
 
-			accountService.findUserById( $state.params.id, {
-				callback : function(result) {
-					
-					$scope.currentEntity = result;
-					$scope.currentEntity.password = ''; //clear password. if not set, not update.
-					
-					$scope.currentState = $scope.UPDATE_STATE;
-					$state.go($scope.UPDATE_STATE);
-					$scope.$apply();
-				},
-				errorHandler : function(message, exception) {
-					$scope.msg = {type:"danger", text: message, dismiss:true};
-					$scope.$apply();
-				}
-			}); 
+	            dialog.result.then(function (result) {
+	            	$state.go("authentication");
+	            });
+	            
+				
+				$scope.currentState = $scope.UPDATE_STATE;
+			
+			
 		};
 
 		/*-------------------------------------------------------------------
@@ -137,9 +158,7 @@
 		 *-------------------------------------------------------------------*/
 		
 		$scope.createAccount = function( user ) {
-			
-			
-            
+			 
 			if ( !$scope.form().$valid ) {
 				$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
 				return;
@@ -158,5 +177,33 @@
 				}
 			});
 		}
+		
+		
+//		$scope.form = function( formName )
+//	    {
+//	    	console.log(formName);
+//	        if ( !formName )
+//	        {
+//	            formName = "form";
+//	        }
+//
+//	       return $("form[name="+formName+"]").scope()[formName];
+//	    };
+		
+
+		
+		$scope.login = function(){
+			if ( !$scope.form('form_login').$valid ) {
+				$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
+				return;
+			}
+			
+			$("form[name='form_login']").submit();
+			
+		}
+		
+		
+		
+		 		
 		
 	};

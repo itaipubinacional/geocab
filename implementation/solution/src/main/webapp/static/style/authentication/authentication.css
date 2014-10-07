@@ -19,7 +19,11 @@ body {
 	top: 0px;
 }
 
-
+	
+input.ng-invalid.ng-dirty{
+	border:1px solid red;
+}
+	
 
 
 .title-short-login {
@@ -39,6 +43,10 @@ body {
 	width: 283px;
 	text-align: center;
     margin-bottom: 52px;
+}
+
+.msg{
+	margin-top:26px;
 }
 
 .login-logo {

@@ -7,23 +7,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<style>
-		input.ng-invalid.ng-dirty{
-	border:1px solid red;
-}
-	</style>
+
 </head>
 <div class="modal-content">
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
    			
   		<div class="alreadyHaveAccount"><spring:message code="authentication.Already-have-an-account"/>
-			<a class="enter" ng-click="close()"><spring:message code="authentication.Enter"/></a>
+			<a class="enter" ng-click="closePopUp()"><spring:message code="authentication.Enter"/></a>
 		</div>
 		<div class="line" ><hr></hr></div>
 		
 		<!--Message -->
         <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
-        
         
         <form name="form_create_account" method="post" action="./j_spring_security_check"  default-button="buttonInsert" novalidate>
 					<table>					
@@ -40,7 +35,7 @@
 							 class="form-control" 
 							 ng-model="currentEntity.name" 
 							 name="name" 
-							 ng-class="{ ngInvalid: form_create_account.$submitted && form_create_account.name.$error.required }"
+							 ng-class="{ ngInvalid: form_create_account.$submitted && form_create_account.name.$error.required}"
 							 type="text" 
 							 required
 							 ></td>																	
