@@ -5,7 +5,7 @@
  * @param $scope
  * @param $modalInstance
  */
-function DialogController($scope, $modalInstance, title, message, buttons) {
+function DialogController($scope, $modalInstance, $sce, title, message, buttons) {
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	ATTRIBUTES
@@ -13,11 +13,11 @@ function DialogController($scope, $modalInstance, title, message, buttons) {
 	/**
 	 * 
 	 */
-	$scope.title = title;
+	$scope.title = $sce.trustAsHtml(title);
 	/**
 	 * 
 	 */
-	$scope.message = message;
+	$scope.message = $sce.trustAsHtml(message);
 
 	/**
 	 * 
