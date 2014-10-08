@@ -7,7 +7,7 @@
 <html>
 	<head>
 		
-		<title>Authentication</title>
+		<title><spring:message code="authentication.Authentication" /></title>
 		
 		<!-- Styles -->
 		<link rel="stylesheet" type="text/css" href="<c:url value="/static/style/authentication/authentication.css"/>" />
@@ -16,69 +16,58 @@
 		<!-- Scripts -->
 		<jsp:include page="../../default-scripts.jsp"/> <!-- FIXME Deixar caminhos relativos.. -->
 		
+		<!-- Main -->
+		<script type="text/javascript" src="modules/authentication/authentication-main.js"></script>
+		
+		<style>
+		.create-account .modal-dialog {
+		  width: 330px;
+		  top: 150;
+		}
+		
+		.forget-password-modal .modal-dialog {
+		  width: 330px;
+		  top: 150;
+		}
+		
+		</style>
 	</head>
 <body>
-	<div class="login-wrapper">
-		<div class="border-login">
-			<div class="border-left">
-				<div class="border-red"></div>
-				<div class="border-blue"></div>
-			</div>
-			<div class="border-right">
-				<div class="border-yellow"></div>
-				<div class="border-green"></div>
-			</div>
-		</div>
-		<div class="container-login">
-			<div class="login-logo"></div>
-			<div class="title-short-login">MAPA SOCIAL</div>
-			<div class="title-login"></div>
-			<form method="post" action="./j_spring_security_check" name="form">
-				<table>
-					<tr>
-						<td><label><spring:message code="authentication.email" /></label></td>
-					</tr>
-					<tr>	
-						<td><input class="form-control" name="email" type="email"
-							value="admin@geocab.com.br" required/></td>
-					</tr>
-					<tr>
-						<td>
-							<label><spring:message code="authentication.password" /></label>
-							<a class="forget-password">Esqueci minha senha</a>
-						</td>
-					</tr>
-					<tr>
-						<td><input class="form-control" name="password" type="password" 
-							value="admin" required/></td>
-					</tr>
-					<tr>
-						<td><input type="submit" value="Entrar" id="enter" class="btn-enter" /></td>
-					</tr>
-				</table>
-			</form>
-			<table>
-				<tr>
-					<td class="line"><hr></hr></td>
-				</tr>
-				<tr>
-					<td><button type="button" id="enter-facebook"
-							class="btn-facebook">Efetuar login com facebook</button></td>
-				</tr>
-				<tr>
-					<td><button type="button" id="enter-google" class="btn-google">Efetuar
-							login com Google +</div></button></td>
-				</tr>
-				<tr>
-					<td><a class="dont-have-account">Nao possui uma conta?</a><td>
-				</tr>
-			</table>
-		</div>
+	
+	
+	<div class="container-fluid">
+
+		<!-- content -->
+		<div ui-view class="content"></div>
+		<!-- /content -->
+
 	</div>
 	
+	<!--
+		Controllers 
+	-->
+	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
+	<script type="text/javascript" src="modules/authentication/controller/user-controller.js"></script>
+	<script type="text/javascript" src="modules/authentication/controller/popup/create-user-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/authentication/controller/popup/forget-password-popup-controller.js"></script>
 	
-	
-	
+	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
 	
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

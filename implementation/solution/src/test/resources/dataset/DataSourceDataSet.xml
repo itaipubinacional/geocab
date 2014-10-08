@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+		<geocab.data_source 
+		id="100"
+		created="2014-09-22 00:00:00"
+		name="Data Source"
+		login="user" 
+		password="password123"
+		url="url1"
+		internal="true"
+		 />
+	
+</dataset>

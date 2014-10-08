@@ -2,13 +2,18 @@
 	"use strict";
 			
 	//Start the AngularJS
-	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker"]);
+	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", "ui.tree",'angularBootstrapNavTree', 'ui-scaleSlider']);
 	
-	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider ) {
+	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider, $translateProvider ) {
 		//-------
 		//Broker configuration
 		//-------
 		$importServiceProvider.setBrokerURL("broker/interface");
+		
+		//-------
+		//Translate configuration
+		//-------
+		$translateProvider.useURL('./bundles');
 		
 		//-------
 		//URL Router
@@ -16,28 +21,34 @@
 		
 		//HOME
         $urlRouterProvider.otherwise("/");
-        
-        //------
-        //Scheduler
-        //------    
-        //Resource Sheet
-        //------
-        $stateProvider.state('home', {
-        	url : "/",
-			template: '<h2>Body</h2>',
-			controller : function ( $state, $importService ){
-				console.log( $importService("accountService") );
-			}
-        });
-        
+                
+      //Users
+		$stateProvider.state('users', {
+			url : "/users",
+			templateUrl : "modules/admin/ui/users/users-view.jsp",
+			controller : UsersController
+		}).state('users.list', {
+			url: "/list",
+			menu: "users"
+		}).state('users.create', {
+			url : "/create",
+			menu: "users"
+		}).state('users.detail', {
+			url: "/defail/:id",
+			menu: "users"
+		}).state('users.update', {
+			url : "/update/:id",
+			menu: "users"
+		});
+
       //Data source
 		$stateProvider.state('data-source', {
 			url : "/data-source",
-			templateUrl : "modules/admin/ui/data-source/data-source-view.html",
+			templateUrl : "modules/admin/ui/data-source/data-source-view.jsp",
 			controller : DataSourceController
 		})
 		.state('data-source.detail', {
-			url: "/defail/:id",
+			url: "/detail/:id",
 			menu: "data-source"
 		})
 		.state('data-source.list', {
@@ -56,53 +67,42 @@
 		//Layer group
 		$stateProvider.state('layer-group', {
 			url : "/layer-group",
-			templateUrl : "modules/admin/ui/layer-group/layer-group-view.html",
-			controller : DataSourceController
-		})
-		.state('layer-group.detail', {
-			url: "/defail/:id",
-			menu: "data-source"
+			templateUrl : "modules/admin/ui/layer-group/layer-group-view.jsp",
+			controller : LayerGroupController
 		})
 		.state('layer-group.list', {
 			url: "/list",
-			menu: "data-source"
-		})
-		.state('layer-group.create', {
-			url : "/create",
-			menu: "data-source"
-		})
-		.state('layer-group.update', {
-			url : "/update/:id",
-			menu: "data-source"
+			menu: "layer-group"
 		});
 		
-		//Layers
-		$stateProvider.state('layers', {
-			url : "/layers",
-			templateUrl : "modules/admin/ui/layers/dlayers-view.html",
-			controller : DataSourceController
+		//Layer config
+		$stateProvider.state('layer-config', {
+			url : "/layer-config",
+			templateUrl : "modules/admin/ui/layer-config/layer-config-view.jsp",
+			controller : LayerConfigController
 		})
-		.state('layers.detail', {
-			url: "/defail/:id",
-			menu: "data-source"
+		.state('layer-config.detail', {
+			url: "/detail/:id",
+			menu: "layer-config"
 		})
-		.state('layers.list', {
+		.state('layer-config.list', {
 			url: "/list",
-			menu: "data-source"
+			menu: "layer-config"
 		})
-		.state('layers.create', {
+		.state('layer-config.create', {
 			url : "/create",
-			menu: "data-source"
+			menu: "layer-config"
 		})
-		.state('layers.update', {
+		.state('layer-config.update', {
 			url : "/update/:id",
-			menu: "data-source"
+			menu: "layer-config"
 		});
 
 		
 	});
 	
-	projectModule.run( function( $rootScope, $state, $stateParams ) {
+	projectModule.run( function( $rootScope, $state, $stateParams, $translate ) {
+				
 		$rootScope.$state = $state;
 	    $rootScope.$stateParams = $stateParams;
 	});

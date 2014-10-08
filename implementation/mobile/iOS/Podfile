@@ -1,0 +1,8 @@
+platform :ios, '7.0'
+    pod 'RestKit', '~> 0.23.3'
+    pod 'QDImageCropper', '~> 0.0.3'
+    pod 'Facebook-iOS-SDK', '~> 3.18.0'
+    pod 'google-plus-ios-sdk', '~> 1.7'
+    pod 'MFSideMenu', '~> 0.5'
+    pod 'FDTake', '~> 0.2.2'
+    pod 'KOTree', '~> 0.0'

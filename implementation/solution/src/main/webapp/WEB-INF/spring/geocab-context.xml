@@ -9,6 +9,8 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:facebook="http://www.springframework.org/schema/social/facebook"
+	xmlns:google="http://www.springframework.org/schema/social/google"
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:repository="http://www.springframework.org/schema/data/repository"
 	xmlns:util="http://www.springframework.org/schema/util"
@@ -23,6 +25,8 @@
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/social/facebook http://www.springframework.org/schema/social/spring-social-facebook.xsd
+		http://www.springframework.org/schema/social/google http://www.springframework.org/schema/social/spring-social-google.xsd
 		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr/spring-dwr-3.0.xsd"
 	default-autowire="byName">
 	
@@ -35,7 +39,7 @@
 		location="classpath:geocab.properties, classpath:geocab-persistence.properties" />
 		
 	<!-- I18N -->
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    <bean id="messageSource" class="br.com.geocab.application.ResourceBundleMessageSource">
         <property name="basenames" value="classpath:i18n/admin, classpath:i18n/map, classpath:i18n/exceptions"/>
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="useCodeAsDefaultMessage" value="false"/>
@@ -79,6 +83,28 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 	
+	<!-- Social -->
+	<facebook:config app-id="${social.facebook.app-id}" 
+		app-secret="${social.facebook.app-secret}"/>
+	<google:config app-id="${social.google.app-id}" 
+		app-secret="${social.google.app-secret}" />
+		
+	<bean id="usersConnectionRepository" 
+		class="br.com.geocab.infrastructure.social.PersistentUsersConnectionRepository">
+		<property name="connectionSignUp">
+			<bean id="connectionSignUp" class="br.com.geocab.infrastructure.social.ConnectionSignUp"/>
+		</property>
+	</bean>
+	<bean id="connectionRepository" factory-method="createConnectionRepository" 
+		factory-bean="usersConnectionRepository" scope="request">
+    	<constructor-arg value="#{request.userPrincipal.name}" />
+    	<aop:scoped-proxy proxy-target-class="false" />
+	</bean>
+	<bean id="userIdSource"
+		class="org.springframework.social.security.AuthenticationNameUserIdSource" />
+	<bean id="signInAdapter" 
+		class="br.com.geocab.infrastructure.social.SpringSecuritySignInAdapter"/>
+	
 	<!-- 
 		DWR
 	-->
@@ -95,11 +121,18 @@
 	<dwr:configuration>
 		<dwr:convert type="exception" class="java.lang.Exception"/>
 		<dwr:convert type="object" class="java.lang.StackTraceElement"/>
-		<dwr:convert type="enum" class="org.springframework.data.domain.Direction"/>
-		<dwr:convert type="bean" class="org.springframework.data.domain.Order"/>
+		<dwr:convert type="enum" class="org.springframework.data.domain.Direction" javascript="Direction"/>
+		<dwr:convert type="bean" class="org.springframework.data.domain.Sort$Order" javascript="Order"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.Sort" javascript="Sort"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageImpl" javascript="PageImpl"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageRequest" javascript="PageRequest"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.datasource.DataSource" javascript="DataSource"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.LayerGroup" javascript="LayerGroup"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.Layer" javascript="Layer"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.account.User" javascript="User"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.marker.Marker" javascript="Marker"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.marker.MarkerAttribute" javascript="MarkerAttribute"/>
+		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.Attribute" javascript="Attribute"/>
 	</dwr:configuration>
 
 	<!--
