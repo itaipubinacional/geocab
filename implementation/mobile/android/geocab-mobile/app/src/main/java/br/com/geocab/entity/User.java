@@ -3,12 +3,12 @@ package br.com.geocab.entity;
 /**
  * Created by Vinicius on 24/09/2014.
  */
-public class Usuario {
+public class User {
 
     private String key;
     private String otherkey;
 
-    public Usuario(String key, String otherkey) {
+    public User(String key, String otherkey) {
         this.key = key;
         this.otherkey = otherkey;
     }

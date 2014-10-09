@@ -13,17 +13,69 @@
             android:id="@+id/web_view_map"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
-
     </RelativeLayout>
 
-    <!-- Listview to display slider menu -->
-    <ListView
-        android:id="@+id/list_slidermenu"
-        android:layout_width="300dp"
-        android:padding="10dp"
+    <LinearLayout
+        android:id="@+id/left_drawer"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:listSelector="@drawable/list_selector"
-        android:background="@color/list_background"/>
+        android:layout_width="match_parent"
+        android:layout_marginRight="10dp"
+        android:background="@color/list_background"
+        android:orientation="vertical"
+        android:layout_gravity="start" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/button_refresh_layers"
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:alpha="0.7"
+                    android:background="@android:color/transparent"
+                    android:drawableLeft="@drawable/refresh_button"/>
+
+                <EditText
+                    android:id="@+id/edit_text_search_layer"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:padding="10dp"
+                    android:layout_margin="10dp"
+                    android:layout_toRightOf="@+id/button_refresh_layers"
+                    android:background="@drawable/rect_round_edit_text"
+                    android:hint="Search.."
+                    android:inputType="textVisiblePassword"/>
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/button_clear_edit_text"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/custom_btn_clear_edit_text"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="right|center_vertical"
+                />
+
+        </FrameLayout>
+
+        <!-- Listview to display slider menu -->
+        <ListView
+            android:id="@+id/list_slidermenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:background="@android:color/transparent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:listSelector="@drawable/list_selector"/>
+    </LinearLayout>
+
 </android.support.v4.widget.DrawerLayout>

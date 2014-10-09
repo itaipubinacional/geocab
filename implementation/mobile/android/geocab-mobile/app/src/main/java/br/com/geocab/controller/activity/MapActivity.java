@@ -1,29 +1,40 @@
 package br.com.geocab.controller.activity;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Objects;
 
 import br.com.geocab.R;
-import br.com.geocab.controller.activity.adapter.NavDrawerListAdapter;
+import br.com.geocab.controller.adapter.NavDrawerListAdapter;
+import br.com.geocab.controller.delegate.LayerDelegate;
 import br.com.geocab.entity.Layer;
 import br.com.geocab.util.GPSTracker;
 
@@ -55,18 +66,6 @@ public class MapActivity extends Activity
      */
     private CharSequence mTitle;
     /**
-     * slide menu items
-     */
-    private String[] layersMenuTitle;
-    /**
-     * nav drawer icons
-     */
-    private TypedArray navMenuIcons;
-    /**
-     * list items listviwer nav drawer
-     */
-    private ArrayList<Layer> navDrawerItems;
-    /**
      * nav drawer adapter listview nav drawer
      */
     private NavDrawerListAdapter adapter;
@@ -78,6 +77,30 @@ public class MapActivity extends Activity
      * location to get position user
      */
     private GPSTracker gpsTracker;
+    /**
+     * search layer edit text
+     */
+    private EditText searchLayerEditText;
+    /**
+     *
+     */
+    private Button buttonClearSearchLayerEditText;
+    /**
+     *
+     */
+    private Button buttonRefreshLayers;
+    /**
+     * the layout side menu list
+     */
+    private LinearLayout linearLayoutLayer;
+    /**
+     *
+     */
+    private LayerDelegate layerDelegate;
+    /**
+     *
+     */
+    private AnimationDrawable animationLoadLayer;
 
     /*-------------------------------------------------------------------
 	 *				 		     HANDLERS
@@ -97,42 +120,110 @@ public class MapActivity extends Activity
 
         webViewMap = (WebView) findViewById(R.id.web_view_map);
         webViewMap.getSettings().setJavaScriptEnabled(true);
+        webViewMap.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         webViewMap.setWebViewClient(new WebViewClient());
         webViewMap.loadUrl("file:///android_asset/map.html");
+
+        //String html = "<!DOCTYPE html><html lang=en><head><link rel=stylesheet href=ol.css type=text/css><style>.map{height:100%;width:100%}</style><body style=margin:0><script src=ol.js type=text/javascript></script><script src=jquery.min.js type=text/javascript></script><div id=map class=map></div><script type=text/javascript>function showLayer(e,o,r){if(r){var a=new ol.source.TileWMS({url:e,params:{LAYERS:o}}),l=new ol.layer.Tile({source:a});map.addLayer(l)}}map=new ol.Map({target:\"map\",layers:[new ol.layer.Tile({source:new ol.source.OSM})],view:new ol.View({center:ol.proj.transform([-54.1394,-24.7568],\"EPSG:4326\",\"EPSG:3857\"),zoom:7})});</script>";
+        //webViewMap.loadDataWithBaseURL("file:///android_asset/blank.html",  html, "text/html", "utf-8", null);
+
+        try{
+            InputStream is = getAssets().open("aaa.html");
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+
+            String str = new String(buffer);
+
+            webViewMap.loadData(str, "text/html", null);
+        }
+        catch (Exception e)
+        {
+
+        }
+
+
+        searchLayerEditText = (EditText) findViewById(R.id.edit_text_search_layer);
+
+        buttonRefreshLayers = (Button) findViewById(R.id.button_refresh_layers);
+
+        this.animationLoadLayer =  (AnimationDrawable) buttonRefreshLayers.getCompoundDrawables()[0];
+
+        buttonRefreshLayers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+
+                MapActivity.this.animationLoadLayer.start();
+
+                MapActivity.this.layerDelegate.listLayersPublished(MapActivity.this.animationLoadLayer);
+            }
+        });
+
+        buttonClearSearchLayerEditText = (Button) findViewById(R.id.button_clear_edit_text);
+        buttonClearSearchLayerEditText.setVisibility(RelativeLayout.INVISIBLE);
+        buttonClearSearchLayerEditText.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                searchLayerEditText.setText("");
+            }
+        });
+
+
+        searchLayerEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3)
+            {
+                if( cs.length() > 0 )
+                {
+                    buttonClearSearchLayerEditText.setVisibility(RelativeLayout.VISIBLE);
+                }
+                else
+                {
+                    buttonClearSearchLayerEditText.setVisibility(RelativeLayout.INVISIBLE);
+                }
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0)
+            {
+                String text = searchLayerEditText.getText().toString().toLowerCase(Locale.getDefault());
+                MapActivity.this.adapter.filter(text);
+            }
+        });
+
+        linearLayoutLayer = (LinearLayout) findViewById(R.id.left_drawer);
 
         //NAV DRAWER
 
         // nav drawer title
         mTitle = mDrawerTitle = getTitle();
 
-        // load slide menu items
-        layersMenuTitle = getResources().getStringArray(R.array.nav_drawer_items);
-
-        // nav drawer icons from resources
-        navMenuIcons = getResources()
-                .obtainTypedArray(R.array.nav_drawer_icons);
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
-        navDrawerItems = new ArrayList<Layer>();
-
-        // adding nav drawer items to array
-        // Test only static
-        navDrawerItems.add(new Layer("layer.test1", layersMenuTitle[0], navMenuIcons.getResourceId(0, -1)));
-        navDrawerItems.add(new Layer("layer.test2", layersMenuTitle[1], navMenuIcons.getResourceId(0, -1)));
-        navDrawerItems.add(new Layer("layer.test2", layersMenuTitle[2], navMenuIcons.getResourceId(0, -1)));
-
-
-        // Recycle the typed array
-        navMenuIcons.recycle();
-
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setTextFilterEnabled(true);
 
         // setting the nav drawer list adapter
-        adapter = new NavDrawerListAdapter(getApplicationContext(),
-                navDrawerItems);
+        Object[] objects = new Object[1];
+        objects[0] = this.webViewMap;
+        adapter = new NavDrawerListAdapter(getApplicationContext(), 0, objects);
         mDrawerList.setAdapter(adapter);
+
+        this.layerDelegate = new LayerDelegate(MapActivity.this, adapter);
+        this.layerDelegate.listLayersPublished(MapActivity.this.animationLoadLayer);
 
         // enabling action bar app icon and behaving it as toggle button
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -146,6 +237,20 @@ public class MapActivity extends Activity
             public void onDrawerClosed(View view)
             {
                 getActionBar().setTitle(mTitle);
+
+                hideSoftKeyboard(MapActivity.this);
+
+//                for(Layer layer : MapActivity.this.adapter.getListLayers() )
+//                {
+//                    int index = layer.getName().indexOf(":");
+//                    int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
+//                    String typeLayer = layer.getName().substring(0,index);
+//                    String nameLayer = layer.getName().substring(index+1,layer.getName().length());
+//                    String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"wms";
+//
+//                    webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\",\""+layer.getIsChecked()+"\")");
+//                }
+
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
@@ -154,6 +259,9 @@ public class MapActivity extends Activity
             {
                 getActionBar().setTitle(mDrawerTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
+
+                hideSoftKeyboard(MapActivity.this);
+
                 invalidateOptionsMenu();
             }
         };
@@ -164,6 +272,18 @@ public class MapActivity extends Activity
             // on first time display view for first nav item
             //selectItem(0);
         }
+    }
+
+    /**
+     *
+     * Close keyboard
+     *
+     * @param activity
+     */
+    public static void hideSoftKeyboard(Activity activity)
+    {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     /**
@@ -191,7 +311,7 @@ public class MapActivity extends Activity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(this.linearLayoutLayer);
         menu.findItem(R.id.action_localization).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -233,36 +353,13 @@ public class MapActivity extends Activity
                     gpsTracker.showSettingsAlert();
                 }
                 return true;
+            case R.id.action_other_localization:
+                Intent intent = new Intent(MapActivity.this, MarkActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * The click listner for ListView in the navigation drawer
-     */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener
-    {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-    /**
-     *
-     * selected item in the navigation drawer
-     *
-     * @param position
-     */
-    private void selectItem(int position)
-    {
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(layersMenuTitle[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
-
-        Toast.makeText(this, "CAMADA SELECIONADA" + layersMenuTitle[position], Toast.LENGTH_SHORT).show();
     }
 
     /**
