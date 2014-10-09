@@ -7,9 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D1D25C619E30E520084AA31 /* Marker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D1D25C519E30E520084AA31 /* Marker.m */; };
+		5D1F6E1119DED73D0049A889 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D1F6E1019DED73D0049A889 /* MainViewController.m */; };
+		5D295EDC19E42B12004DC379 /* ControllerUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D295EDB19E42B12004DC379 /* ControllerUtil.m */; };
+		5D2B2A1319DDD2C000E354E2 /* icn_menu_20.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D2B2A1219DDD2C000E354E2 /* icn_menu_20.png */; };
+		5D35C5A919E5848500C71918 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D35C5A819E5848500C71918 /* ImageIO.framework */; };
 		5D3F0C4519CB077500D52313 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 5D3F0C4219CB077500D52313 /* index.html */; };
 		5D3F0C4619CB077500D52313 /* ol.css in Resources */ = {isa = PBXBuildFile; fileRef = 5D3F0C4319CB077500D52313 /* ol.css */; };
 		5D3F0C4B19CB106400D52313 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D3F0C4A19CB106400D52313 /* MapViewController.m */; };
+		5D69E6CB19E325A000C91A6F /* AbstractDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D69E6CA19E325A000C91A6F /* AbstractDelegate.m */; };
+		5D69E6CE19E325B100C91A6F /* LayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D69E6CD19E325B100C91A6F /* LayerDelegate.m */; };
 		5D7D8DAB19D9CE2D00363F7D /* map.js in Resources */ = {isa = PBXBuildFile; fileRef = 5DA511CD19D9A6D300CE5110 /* map.js */; };
 		5D86534919D44798007CB053 /* ol.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D3F0C4419CB077500D52313 /* ol.js */; };
 		5D960B8419CA1EC600B8DEFF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D960B8319CA1EC600B8DEFF /* Foundation.framework */; };
@@ -27,6 +34,7 @@
 		5D960BAF19CA1EC600B8DEFF /* geocabTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D960BAE19CA1EC600B8DEFF /* geocabTests.m */; };
 		5D960BBB19CA1F5B00B8DEFF /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D960BBA19CA1F5B00B8DEFF /* LoginViewController.m */; };
 		5D960BBE19CA310C00B8DEFF /* logo-login.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D960BBD19CA310C00B8DEFF /* logo-login.png */; };
+		5D97923A19E32E3A0017234C /* SideMenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D97923919E32E3A0017234C /* SideMenuTableViewController.m */; };
 		5D9D136F19DC7D2900BA3570 /* copymove-cell-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136819DC7D2900BA3570 /* copymove-cell-bg.png */; };
 		5D9D137019DC7D2900BA3570 /* item-counter.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136919DC7D2900BA3570 /* item-counter.png */; };
 		5D9D137119DC7D2900BA3570 /* item-counter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136A19DC7D2900BA3570 /* item-counter@2x.png */; };
@@ -36,8 +44,7 @@
 		5D9D137519DC7D2900BA3570 /* item-icon-folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D136E19DC7D2900BA3570 /* item-icon-folder@2x.png */; };
 		5DA3EE7B19DD6AB300E8E579 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA3EE7A19DD6AB300E8E579 /* User.m */; };
 		5DA511CF19D9A8E500CE5110 /* map.js in Sources */ = {isa = PBXBuildFile; fileRef = 5DA511CD19D9A6D300CE5110 /* map.js */; };
-		5DA8A64819DC88AA00D47C76 /* LayerTreeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8A64719DC88AA00D47C76 /* LayerTreeTableViewCell.m */; };
-		5DA8A64B19DC89E200D47C76 /* LayerTreeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8A64A19DC89E200D47C76 /* LayerTreeItem.m */; };
+		5DA7351119E424810015236D /* cultivando-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DA7351019E424810015236D /* cultivando-logo.png */; };
 		5DA8A64F19DC90D600D47C76 /* Layer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8A64E19DC90D600D47C76 /* Layer.m */; };
 		5DAD66F719DADD0600DEC6EA /* AddNewPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DAD66F619DADD0600DEC6EA /* AddNewPointViewController.m */; };
 		5DF9701119D9DCF9007BB033 /* SelectLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF9701019D9DCF9007BB033 /* SelectLayerViewController.m */; };
@@ -56,11 +63,24 @@
 
 /* Begin PBXFileReference section */
 		1EFF5388C94F44559DD2F763 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D1D25C419E30E520084AA31 /* Marker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Marker.h; sourceTree = "<group>"; };
+		5D1D25C519E30E520084AA31 /* Marker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Marker.m; sourceTree = "<group>"; };
+		5D1D25C719E311950084AA31 /* StatusMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusMarker.h; sourceTree = "<group>"; };
+		5D1F6E0F19DED73D0049A889 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		5D1F6E1019DED73D0049A889 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		5D295EDA19E42B12004DC379 /* ControllerUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControllerUtil.h; sourceTree = "<group>"; };
+		5D295EDB19E42B12004DC379 /* ControllerUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControllerUtil.m; sourceTree = "<group>"; };
+		5D2B2A1219DDD2C000E354E2 /* icn_menu_20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icn_menu_20.png; sourceTree = "<group>"; };
+		5D35C5A819E5848500C71918 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		5D3F0C4219CB077500D52313 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		5D3F0C4319CB077500D52313 /* ol.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = ol.css; sourceTree = "<group>"; };
 		5D3F0C4419CB077500D52313 /* ol.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ol.js; sourceTree = "<group>"; };
 		5D3F0C4919CB106400D52313 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		5D3F0C4A19CB106400D52313 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		5D69E6C919E325A000C91A6F /* AbstractDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractDelegate.h; sourceTree = "<group>"; };
+		5D69E6CA19E325A000C91A6F /* AbstractDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractDelegate.m; sourceTree = "<group>"; };
+		5D69E6CC19E325B100C91A6F /* LayerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerDelegate.h; sourceTree = "<group>"; };
+		5D69E6CD19E325B100C91A6F /* LayerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerDelegate.m; sourceTree = "<group>"; };
 		5D960B8019CA1EC600B8DEFF /* geocab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geocab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D960B8319CA1EC600B8DEFF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5D960B8519CA1EC600B8DEFF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -81,6 +101,8 @@
 		5D960BB919CA1F5B00B8DEFF /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		5D960BBA19CA1F5B00B8DEFF /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		5D960BBD19CA310C00B8DEFF /* logo-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-login.png"; sourceTree = "<group>"; };
+		5D97923819E32E3A0017234C /* SideMenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideMenuTableViewController.h; sourceTree = "<group>"; };
+		5D97923919E32E3A0017234C /* SideMenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideMenuTableViewController.m; sourceTree = "<group>"; };
 		5D9D136819DC7D2900BA3570 /* copymove-cell-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "copymove-cell-bg.png"; sourceTree = "<group>"; };
 		5D9D136919DC7D2900BA3570 /* item-counter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-counter.png"; sourceTree = "<group>"; };
 		5D9D136A19DC7D2900BA3570 /* item-counter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "item-counter@2x.png"; sourceTree = "<group>"; };
@@ -91,17 +113,15 @@
 		5DA3EE7919DD6AB300E8E579 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		5DA3EE7A19DD6AB300E8E579 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		5DA511CD19D9A6D300CE5110 /* map.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = map.js; sourceTree = "<group>"; };
-		5DA8A64619DC887B00D47C76 /* LayerTreeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerTreeTableViewCell.h; sourceTree = "<group>"; };
-		5DA8A64719DC88AA00D47C76 /* LayerTreeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerTreeTableViewCell.m; sourceTree = "<group>"; };
-		5DA8A64919DC89D100D47C76 /* LayerTreeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerTreeItem.h; sourceTree = "<group>"; };
-		5DA8A64A19DC89E200D47C76 /* LayerTreeItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerTreeItem.m; sourceTree = "<group>"; };
+		5DA7351019E424810015236D /* cultivando-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cultivando-logo.png"; sourceTree = "<group>"; };
 		5DA8A64D19DC906200D47C76 /* Layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Layer.h; sourceTree = "<group>"; };
 		5DA8A64E19DC90D600D47C76 /* Layer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Layer.m; sourceTree = "<group>"; };
 		5DAD66F519DADCBC00DEC6EA /* AddNewPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddNewPointViewController.h; sourceTree = "<group>"; };
 		5DAD66F619DADD0600DEC6EA /* AddNewPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddNewPointViewController.m; sourceTree = "<group>"; };
 		5DF9700F19D9DCA8007BB033 /* SelectLayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectLayerViewController.h; sourceTree = "<group>"; };
 		5DF9701019D9DCF9007BB033 /* SelectLayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectLayerViewController.m; sourceTree = "<group>"; };
-		6CC82356BF12487F948AD695 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		7EF9CA285E1626D7EE94FA46 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		AE1F3C798BCA459F8BF789F4 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D35C5A919E5848500C71918 /* ImageIO.framework in Frameworks */,
 				5D960B8619CA1EC600B8DEFF /* CoreGraphics.framework in Frameworks */,
 				5D960B8819CA1EC600B8DEFF /* UIKit.framework in Frameworks */,
 				5D960B8419CA1EC600B8DEFF /* Foundation.framework in Frameworks */,
@@ -129,6 +150,42 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		55DAEA740139948C50B5F41C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7EF9CA285E1626D7EE94FA46 /* Pods.debug.xcconfig */,
+				AE1F3C798BCA459F8BF789F4 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		5D1F6E0E19DED7270049A889 /* main */ = {
+			isa = PBXGroup;
+			children = (
+				5D1F6E0F19DED73D0049A889 /* MainViewController.h */,
+				5D1F6E1019DED73D0049A889 /* MainViewController.m */,
+			);
+			name = main;
+			sourceTree = "<group>";
+		};
+		5D295ED919E42AEB004DC379 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				5D295EDA19E42B12004DC379 /* ControllerUtil.h */,
+				5D295EDB19E42B12004DC379 /* ControllerUtil.m */,
+			);
+			name = util;
+			sourceTree = "<group>";
+		};
+		5D2B2A0D19DDCFC100E354E2 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				5DA7351019E424810015236D /* cultivando-logo.png */,
+				5D2B2A1219DDD2C000E354E2 /* icn_menu_20.png */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
 		5D3F0C4819CB105000D52313 /* map */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,7 +202,7 @@
 				5D960BA819CA1EC600B8DEFF /* geocabTests */,
 				5D960B8219CA1EC600B8DEFF /* Frameworks */,
 				5D960B8119CA1EC600B8DEFF /* Products */,
-				6CC82356BF12487F948AD695 /* Pods.xcconfig */,
+				55DAEA740139948C50B5F41C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -161,6 +218,7 @@
 		5D960B8219CA1EC600B8DEFF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5D35C5A819E5848500C71918 /* ImageIO.framework */,
 				5D960B8319CA1EC600B8DEFF /* Foundation.framework */,
 				5D960B8519CA1EC600B8DEFF /* CoreGraphics.framework */,
 				5D960B8719CA1EC600B8DEFF /* UIKit.framework */,
@@ -188,12 +246,13 @@
 		5D960B8A19CA1EC600B8DEFF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5D2B2A0D19DDCFC100E354E2 /* Assets */,
 				5D9D136719DC7D1900BA3570 /* KOTree */,
 				5D3F0C4219CB077500D52313 /* index.html */,
 				5D3F0C4319CB077500D52313 /* ol.css */,
 				5D3F0C4419CB077500D52313 /* ol.js */,
 				5DA511CD19D9A6D300CE5110 /* map.js */,
-				5D960BBC19CA308600B8DEFF /* login */,
+				5D960BBC19CA308600B8DEFF /* Login */,
 				5D960B8B19CA1EC600B8DEFF /* geocab-Info.plist */,
 				5D960B8C19CA1EC600B8DEFF /* InfoPlist.strings */,
 				5D960B8F19CA1EC600B8DEFF /* main.m */,
@@ -229,18 +288,20 @@
 			name = login;
 			sourceTree = "<group>";
 		};
-		5D960BBC19CA308600B8DEFF /* login */ = {
+		5D960BBC19CA308600B8DEFF /* Login */ = {
 			isa = PBXGroup;
 			children = (
 				5D960BBD19CA310C00B8DEFF /* logo-login.png */,
 			);
-			name = login;
+			name = Login;
 			sourceTree = "<group>";
 		};
 		5D99505B19CB78720045844F /* controller */ = {
 			isa = PBXGroup;
 			children = (
-				5D9D135D19DC7C5A00BA3570 /* KOTree */,
+				5D295ED919E42AEB004DC379 /* util */,
+				5D1F6E0E19DED7270049A889 /* main */,
+				5D9D135D19DC7C5A00BA3570 /* sideMenu */,
 				5DF9700719D9DB99007BB033 /* point */,
 				5D960BB819CA1F3600B8DEFF /* login */,
 				5D3F0C4819CB105000D52313 /* map */,
@@ -251,6 +312,10 @@
 		5D99505C19CB78830045844F /* delegate */ = {
 			isa = PBXGroup;
 			children = (
+				5D69E6C919E325A000C91A6F /* AbstractDelegate.h */,
+				5D69E6CA19E325A000C91A6F /* AbstractDelegate.m */,
+				5D69E6CC19E325B100C91A6F /* LayerDelegate.h */,
+				5D69E6CD19E325B100C91A6F /* LayerDelegate.m */,
 			);
 			name = delegate;
 			sourceTree = "<group>";
@@ -259,27 +324,17 @@
 			isa = PBXGroup;
 			children = (
 				5DA8A64C19DC904500D47C76 /* Entity */,
-				5D9D135C19DC7C4E00BA3570 /* KOTree */,
 			);
 			name = model;
 			sourceTree = "<group>";
 		};
-		5D9D135C19DC7C4E00BA3570 /* KOTree */ = {
+		5D9D135D19DC7C5A00BA3570 /* sideMenu */ = {
 			isa = PBXGroup;
 			children = (
-				5DA8A64619DC887B00D47C76 /* LayerTreeTableViewCell.h */,
-				5DA8A64719DC88AA00D47C76 /* LayerTreeTableViewCell.m */,
-				5DA8A64919DC89D100D47C76 /* LayerTreeItem.h */,
-				5DA8A64A19DC89E200D47C76 /* LayerTreeItem.m */,
+				5D97923819E32E3A0017234C /* SideMenuTableViewController.h */,
+				5D97923919E32E3A0017234C /* SideMenuTableViewController.m */,
 			);
-			name = KOTree;
-			sourceTree = "<group>";
-		};
-		5D9D135D19DC7C5A00BA3570 /* KOTree */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = KOTree;
+			name = sideMenu;
 			sourceTree = "<group>";
 		};
 		5D9D136719DC7D1900BA3570 /* KOTree */ = {
@@ -303,6 +358,9 @@
 				5DA8A64E19DC90D600D47C76 /* Layer.m */,
 				5DA3EE7919DD6AB300E8E579 /* User.h */,
 				5DA3EE7A19DD6AB300E8E579 /* User.m */,
+				5D1D25C419E30E520084AA31 /* Marker.h */,
+				5D1D25C519E30E520084AA31 /* Marker.m */,
+				5D1D25C719E311950084AA31 /* StatusMarker.h */,
 			);
 			name = Entity;
 			sourceTree = "<group>";
@@ -398,6 +456,8 @@
 			files = (
 				5D9D137219DC7D2900BA3570 /* item-icon-folder-selected.png in Resources */,
 				5D86534919D44798007CB053 /* ol.js in Resources */,
+				5D2B2A1319DDD2C000E354E2 /* icn_menu_20.png in Resources */,
+				5DA7351119E424810015236D /* cultivando-logo.png in Resources */,
 				5D3F0C4519CB077500D52313 /* index.html in Resources */,
 				5D7D8DAB19D9CE2D00363F7D /* map.js in Resources */,
 				5D9D137519DC7D2900BA3570 /* item-icon-folder@2x.png in Resources */,
@@ -437,7 +497,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		AB3132406D0641ABB956E8DB /* Check Pods Manifest.lock */ = {
@@ -463,16 +523,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DF9701119D9DCF9007BB033 /* SelectLayerViewController.m in Sources */,
+				5D69E6CE19E325B100C91A6F /* LayerDelegate.m in Sources */,
 				5DA8A64F19DC90D600D47C76 /* Layer.m in Sources */,
 				5DA511CF19D9A8E500CE5110 /* map.js in Sources */,
+				5D69E6CB19E325A000C91A6F /* AbstractDelegate.m in Sources */,
+				5D97923A19E32E3A0017234C /* SideMenuTableViewController.m in Sources */,
+				5D1F6E1119DED73D0049A889 /* MainViewController.m in Sources */,
 				5D960B9419CA1EC600B8DEFF /* AppDelegate.m in Sources */,
-				5DA8A64B19DC89E200D47C76 /* LayerTreeItem.m in Sources */,
-				5DA8A64819DC88AA00D47C76 /* LayerTreeTableViewCell.m in Sources */,
 				5DA3EE7B19DD6AB300E8E579 /* User.m in Sources */,
 				5DAD66F719DADD0600DEC6EA /* AddNewPointViewController.m in Sources */,
 				5D960B9019CA1EC600B8DEFF /* main.m in Sources */,
 				5D3F0C4B19CB106400D52313 /* MapViewController.m in Sources */,
+				5D295EDC19E42B12004DC379 /* ControllerUtil.m in Sources */,
 				5D960BBB19CA1F5B00B8DEFF /* LoginViewController.m in Sources */,
+				5D1D25C619E30E520084AA31 /* Marker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,7 +658,7 @@
 		};
 		5D960BB319CA1EC600B8DEFF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CC82356BF12487F948AD695 /* Pods.xcconfig */;
+			baseConfigurationReference = 7EF9CA285E1626D7EE94FA46 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -608,7 +672,7 @@
 		};
 		5D960BB419CA1EC600B8DEFF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CC82356BF12487F948AD695 /* Pods.xcconfig */;
+			baseConfigurationReference = AE1F3C798BCA459F8BF789F4 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;

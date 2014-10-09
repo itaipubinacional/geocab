@@ -18,6 +18,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 * Include services
 	 */
 	$importService("layerGroupService");
+	$importService("markerService");
 	
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
@@ -301,6 +302,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             view: $scope.view
         });
 
+        
+        
         // adiciona layer do OSM
         $scope.map.addLayer($scope.rasterOSM);
         $scope.rasterOSM.setVisible(false);
@@ -312,6 +315,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         // adiciona layer do MapQuest OSM
         $scope.map.addLayer($scope.rasterMapQuestSAT);
         $scope.rasterMapQuestSAT.setVisible(false);
+        
+        // Registra as postagens no mapa
+        $scope.loadMarkers();
 
         /**
          * Configuração do mapa GMAP
@@ -392,7 +398,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
             if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
             	$scope.screenMarkerOpenned = true;
-                $scope.toggleSidebarMarker(300, '#menu-item-1');
+                $scope.toggleSidebarMarkerCreate(300, '#menu-item-1');
 
                 $("#marker-point").css('display','inherit');
                 
@@ -403,6 +409,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     stopEvent: false
                 });
                 $scope.map.addOverlay($scope.marker);
+                
+                $scope.currentEntity.latitude = evt.coordinate[0];
+                $scope.currentEntity.longitude = evt.coordinate[1];
                 
                 layerGroupService.listAllLayerGroups({
             		callback : function(result) {
@@ -971,6 +980,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     $scope.initializeMarker = function () {
     	
+    	if($("#sidebar-marker-detail").css("display") == 'block') {
+    		$scope.clearDetailMarker();
+    	}
+    	
     	 $scope.map.removeInteraction(draw);
          source.clear();
          $scope.map.removeLayer(vector);
@@ -981,14 +994,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	if ($scope.menu.fcMarker){
 
             $scope.menu.fcMarker = false;
-            $scope.toggleSidebarMarker(300, 'closeButton');
+            $scope.toggleSidebarMarkerCreate(300, 'closeButton');
             $scope.map.removeOverlay($scope.marker);
-            $("body").prepend('<div id="marker-point" style="display: none;"></div>');
+            $("body").prepend('<div id="marker-point" class="marker-point" style="display: none;"></div>');
             $scope.screenMarkerOpenned = false;
             return;
 
         } else {
 
+        	
+        	
+        	$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
         	$scope.currentEntity = new Marker();
         	
             // ativa funcionalidade e desativa as outras para só ter uma ativa por vez
@@ -1221,31 +1237,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param time Tempo execução da animação.
      * @param element Nome do elemento que está chamando a função.
      */
-    $scope.toggleSidebar = function (time, element){
-        time = time != null ? 300 : time;
-
-        //Verifica se a animação é para abrir ou fechar a sidebar pela posição atual dela.
-        var opening = $('.menu-sidebar-container').css('right') == '3px';
-
-        //Verifica se o usuário clicou num botão que está ativo e a barra está amostra, se é para abrir ou se o clique partiu do botão de fechar.
-        if ((element == $scope.lastActive && !opening) || (opening) || (element == "closeButton")) {
-
-            //Gerencia a classe 'bg-inactive' que ativa e desativa os botões.
-            if (opening) {
-                if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-            } else {
-                $(".menu-item").addClass("bg-inactive");
-            }
-            //Executa a animação.
-            $('#sidebar').toggle('slide', { direction: 'right' }, time);
-            $('.menu-sidebar-container').animate({
-                'right' : opening ? '20%' : '3px'
-            }, time);
-        } else {
-            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-        }
-        $scope.lastActive = element;
-
+    $scope.toggleSidebarLayers = function (time, element){
+    	
+    	$scope.toggleSidebar(time, element, '#sidebar-layers');
+    	
     };
 
 
@@ -1254,36 +1249,89 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param time Tempo execução da animação.
      * @param element Nome do elemento que está chamando a função.
      */
-    $scope.toggleSidebarMarker = function (time, element){
-        time = time != null ? 300 : time;
-
-        //Verifica se a animação é para abrir ou fechar a sidebar pela posição atual dela.
-        var opening = $('.menu-sidebar-container').css('right') == '3px';
-
-        if(element == "closeButton") {
+    $scope.toggleSidebarMarkerCreate = function (time, element){
+    	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
         }
-
-        //Verifica se o usuário clicou num botão que está ativo e a barra está amostra, se é para abrir ou se o clique partiu do botão de fechar.
-        if ((element == $scope.lastActive && !opening) || (opening) || (element == "closeButton")) {
-
-            //Gerencia a classe 'bg-inactive' que ativa e desativa os botões.
-            if (opening) {
-                if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-            } else {
-                $(".menu-item").addClass("bg-inactive");
-            }
-            //Executa a animação.
-            $('#sidebar-marker').toggle('slide', { direction: 'right' }, time);
-            $('.menu-sidebar-container').animate({
-                'right' : opening ? '20%' : '3px'
-            }, time);
-        } else {
-            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-        }
-        $scope.lastActive = element;
-
+    	
+    	$scope.toggleSidebar(time, element, '#sidebar-marker-create');
     };
+    
+    $scope.toggleSidebarMarkerDetail = function (time, element, marker){
+    	
+    	markerService.findAttributeByMarker($scope.markerDetail.data.id, {
+		  callback : function(result) {
+			  $scope.markerResultDetail = result;
+			  $scope.markerResultDetail.header = {};
+			  angular.forEach(result, function(val, ind){
+				  
+				  if(val.attribute.type == "TEXT" && val.attribute.name == "Title") {
+					  $scope.markerResultDetail.header.title = val.value;
+					  var date = new Date(val.marker.created);
+					  $scope.markerResultDetail.header.date = (date.getDate() < 10 ? "0" : "") + date.getDate() + "/" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "/" + date.getFullYear();
+					  $scope.markerResultDetail.header.layer = val.attribute.layer.name;
+				  }
+				  
+				  
+				  
+			  })
+			  $scope.$apply();
+			 
+          },
+          errorHandler : function(message, exception) {
+              $scope.message = {type:"error", text: message};
+              $scope.$apply();
+          }
+    	});
+    	
+    	if(element == "closeButton") {
+            $scope.screenMarkerOpenned = false;
+            $(".marker-point").css("color","#0077bf");
+            $scope.toggleSidebar(time, element, '#sidebar-marker-detail');
+        }
+    	
+    	if( $('.menu-sidebar-container').css('right') != '3px') {
+    		//$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail');
+    		/*
+    		 * TODO: Colocar um loading...
+    		 * */
+    		$scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
+    	}
+    	
+    	$scope.toggleSidebar(time, element, '#sidebar-marker-detail');
+    	
+    };
+    
+    $scope.clearDetailMarker = function() {
+    	$(".marker-point").css("color","#0077bf");
+    	$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail');
+    }
+    
+    $scope.toggleSidebar = function (time, element, slide){
+	    time = time != null ? 300 : time;
+	
+	    //Verifica se a animação é para abrir ou fechar a sidebar pela posição atual dela.
+	    var opening = $('.menu-sidebar-container').css('right') == '3px';
+	
+	    //Verifica se o usuário clicou num botão que está ativo e a barra está amostra, se é para abrir ou se o clique partiu do botão de fechar.
+	    if ((element == $scope.lastActive && !opening) || (opening) || (element == "closeButton")) {
+	
+	        //Gerencia a classe 'bg-inactive' que ativa e desativa os botões.
+	        if (opening) {
+	            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+	        } else {
+	            $(".menu-item").addClass("bg-inactive");
+	        }
+	        //Executa a animação.
+	        $(slide).toggle('slide', { direction: 'right' }, time);
+	        $('.menu-sidebar-container').animate({
+	            'right' : opening ? '20%' : '3px'
+	        }, time);
+	    } else {
+	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+	    }
+	    $scope.lastActive = element;
+    }
 
     /*-------------------------------------------------------------------
      * 		 			MENU LATERAL DO MAPA
@@ -1339,16 +1387,116 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	$scope.menu.fcMarker = false;
     	
     	if($scope.screenMarkerOpenned)
-    		$scope.toggleSidebarMarker(300, 'closeButton');
+    		$scope.toggleSidebarMarkerCreate(300, 'closeButton');
 
     	$scope.map.removeOverlay($scope.marker);
-        $("body").prepend('<span id="marker-point" class="glyphicon glyphicon-map-marker sidebar-icon" style="display: none;"></span>');
+        
         $scope.screenMarkerOpenned = false;
     }
     
     $scope.insertMarker = function(){
+    	/*
+    	 * TODO: Verificar se todo o formário foi preenchido.
+    	 * */
     	
+    	if (!$scope.form('sidebarMarker').$valid){
+    		 $scope.msg = {type: "danger", text: "preencha", dismiss: true};
+    		return;
+    	}
     	
+    	var layer = new Layer();
+    	layer.id = $scope.currentEntity.layer;
+    	$scope.currentEntity.layer = layer;
+    	
+    	$scope.currentEntity.markerAttribute = [];
+    	angular.forEach($scope.attributesByLayer, function(val,ind){
+    		
+    		var attribute = new Attribute();
+    		attribute.id = val.id;
+
+    		var markerAttribute = new MarkerAttribute();
+    		markerAttribute.value = val.value;
+    		markerAttribute.attribute = attribute
+    		markerAttribute.marker = $scope.currentEntity;
+    		$scope.currentEntity.markerAttribute.push(markerAttribute);
+    		
+    	});
+    	
+    	//$scope.currentEntity.markerAttribute = $scope.attributesByLayer;
+    	
+    	markerService.insertMarker($scope.currentEntity,{
+      		callback : function(result) {
+      			  $scope.clearFcMaker();
+      			  $scope.msg = {type: "success", text: "Ponto adicionado", dismiss: true};
+                  $scope.$apply();
+              },
+              errorHandler : function(message, exception) {
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
+              }
+      	});
+
+    }
+    
+    $scope.listAttributesByLayer = function( layerId ){
+    	  layerGroupService.listAttributesByLayer(layerId,{
+      		callback : function(result) {
+                  $scope.attributesByLayer = result;
+                  $scope.$apply();
+              },
+              errorHandler : function(message, exception) {
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
+              }
+      	});
+    }
+    
+    $scope.loadMarkers = function(){
+    	markerService.listAll({
+      		callback : function(result) {
+      			
+      			angular.forEach(result, function(val, ind){
+      				$("body").append('<span id="marker-point-'+ind+'" class="marker-point glyphicon glyphicon-map-marker"></span>');
+      			
+    	  			var marker = new ol.Overlay({
+    	                position: [val.latitude, val.longitude],
+    	                positioning: 'center-center',
+    	                element: document.getElementById('marker-point-'+ind),
+    	                stopEvent: false
+    	            });
+    	  			
+    	            $scope.map.addOverlay(marker);
+    	            
+    	            $("#marker-point-"+ind).dblclick(function(event){
+    	            	$(".marker-point").css("color","#0077bf");
+    	            	event.stopPropagation();
+    	            	$scope.markerDetail = {data: val, overlay: marker};
+    	            	$scope.toggleSidebarMarkerDetail(300, '#menu-item-1');
+    	            	$(this).css("color","#FF0000");
+    	  			})
+    	  			
+    	            
+    	            $scope.$apply();
+      			})
+      			
+              },
+              errorHandler : function(message, exception) {
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
+              }
+      	});
+    }
+    
+    $scope.removeMarker = function(){
+    	markerService.removeMarker($scope.markerDetail.data.id, {
+      		  callback : function(result) {
+      			$scope.map.removeOverlay($scope.markerDetail.overlay);
+	          },
+	          errorHandler : function(message, exception) {
+	              $scope.message = {type:"error", text: message};
+	              $scope.$apply();
+	          }
+      	});
     }
 };
 

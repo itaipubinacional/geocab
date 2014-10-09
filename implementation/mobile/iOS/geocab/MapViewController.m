@@ -7,6 +7,12 @@
 //
 
 #import "MapViewController.h"
+#import "AppDelegate.h"
+#import "AddNewPointViewController.h"
+#import "LayerDelegate.h"
+#import "Layer.h"
+
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @interface MapViewController ()
 
@@ -14,8 +20,15 @@
 
 @property (nonatomic) CGPoint location;
 @property (nonatomic, strong) NSTimer *timer;
+@property (retain, nonatomic) NSArray *layers;
 
 @property (retain, nonatomic) UIActionSheet *actionSheet;
+
+@property (weak, nonatomic) MFSideMenuContainerViewController *sideMenu;
+@property (strong, nonatomic) KNMultiItemSelector *layerSelector;
+@property (strong, nonatomic) UINavigationController *layerSelectorNavigator;
+@property (strong, nonatomic) NSMutableArray *items;
+@property (strong, nonatomic) NSArray *selectedItems;
 
 @end
 
@@ -56,7 +69,50 @@
     //[_actionSheet setBackgroundColor:[UIColor whiteColor]];
     [_actionSheet setTintColor:[UIColor blackColor]];
     
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    _sideMenu = delegate.container;
     
+    [self.navigationController.navigationItem.leftBarButtonItem setImage:[UIImage imageNamed:@"inc_menu_20.png"]];
+    
+    _selectedItems = [NSMutableArray array];
+    
+    LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
+    [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        
+        _layers = [result array];
+        
+        _items = [NSMutableArray array];
+        
+        for (Layer *layer in _layers) {
+            [_items addObject:[[KNSelectorItem alloc] initWithDisplayValue:layer.title selectValue:layer.name imageUrl:layer.legend]];
+        }
+        
+        _layerSelector = [[KNMultiItemSelector alloc] initWithItems:_items
+                                                   preselectedItems:_selectedItems
+                                                              title:@"Select a layer"
+                                                    placeholderText:@"Search for the layer title"
+                                                           delegate:self];
+
+    } userName:@"admin@geocab.com.br" password:@"admin"];
+    
+}
+
+- (void) selectorDidFinishSelectionWithItems:(NSArray *)selectedItems {
+    [_layerSelectorNavigator dismissViewControllerAnimated:YES completion:^{
+        for (KNSelectorItem *item in selectedItems) {
+            [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"alert('item: ', %@);", item.selectValue]];
+        }
+    }];
+    
+    _selectedItems = selectedItems;
+    
+    
+}
+
+- (void) selectorDidCancelSelection {
+    [_layerSelectorNavigator dismissViewControllerAnimated:YES completion:^{
+
+    }];
 }
 
 - (void)didReceiveMemoryWarning
@@ -65,31 +121,20 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)handleGesture:(UIGestureRecognizer *) gesture {
-    
-    self.location = [gesture locationInView:self.webView];
-    
-    if (gesture.state == UIGestureRecognizerStateBegan) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(createPoint:) userInfo:nil repeats:YES];
-    } else if (gesture.state == UIGestureRecognizerStateCancelled ||
-               gesture.state == UIGestureRecognizerStateFailed ||
-               gesture.state == UIGestureRecognizerStateEnded ||
-               gesture.state == UIGestureRecognizerStateChanged) {
-        [self.timer invalidate];
-        self.timer = nil;
-    }
-    
-    //[self someMethod:self.location];
-}
-
 - (void)createPoint:(NSTimer *)timer {
     [_actionSheet showInView:self.view];
 }
 
-- (IBAction)callJavascript:(id)sender {
+- (IBAction)toggleMenu:(id)sender {
     
-    [_webView stringByEvaluatingJavaScriptFromString:@"caralegal()"];
+    _layerSelectorNavigator = [[UINavigationController alloc] initWithRootViewController:_layerSelector];
+    _layerSelectorNavigator.modalTransitionStyle = UIModalPresentationNone;
     
+    [self presentViewController:_layerSelectorNavigator animated:YES completion:^{
+
+    }];
+    
+    //[_sideMenu toggleLeftSideMenuCompletion:^{}];
 }
 
 -(IBAction)addNewPoint:(id)sender {
@@ -115,7 +160,10 @@
     NSDate *eventDate = location.timestamp;
     NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
     if (abs(howRecent) < 15.0) {
-
+//        NSString *functionCall = [NSString stringWithFormat:@"addPoint(%.5f, %.5f)", location.coordinate.latitude, location.coordinate.longitude];
+//        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        
+        [_locationManager stopUpdatingLocation];
         [self performSegueWithIdentifier:@"addNewPointSegue" sender:self];
     }
 }
@@ -123,14 +171,28 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"addNewPointSegue"]) {
         
+        NSLog(@"%.5f  %.5f", _locationManager.location.coordinate.latitude, _locationManager.location.coordinate.longitude);
+        
+//        AddNewPointViewController *addNewPointViewController = (AddNewPointViewController*) segue.destinationViewController;
+//        addNewPointViewController.latitude = _location.x;
     }
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
-        //[_locationManager startUpdatingLocation];
-        [self performSegueWithIdentifier:@"addNewPointSegue" sender:self];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
+            [_locationManager requestWhenInUseAuthorization];
+        }
+        [_locationManager startUpdatingLocation];
     }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    NSLog(@"didFailWithError: %@", error);
+    
+    UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Erro de GPS" message:@"Houve um erro ao tentar obter sua localização" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    
+    [errorAlert show];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -139,6 +201,8 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:NO];
+    
+    //_sideMenu.panMode = MFSideMenuPanModeDefault;
 }
 
 @end
