@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SideMenuTableViewController : UITableViewController
+@interface SideMenuTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
 
 @end

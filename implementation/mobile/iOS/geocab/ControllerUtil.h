@@ -10,4 +10,6 @@
 
 @interface ControllerUtil : NSObject
 
++(UIColor*)colorWithHexString:(NSString*)hex;
+
 @end
