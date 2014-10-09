@@ -48,16 +48,15 @@
 		  	<form name="sidebarMarker">
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
-	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
-	
+	               <span ng-click="toggleSidebarMarkerDetail(300, 'closeButton');" class="icon itaipu-icon-close sidebar-close"></span>
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
-	                    <span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">Desmatamento</span>
+	                    <span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{ markerResultDetail.header.title }}</span>
                         <br style="clear: both;">
                         <br>
-                        <span style="float: left">Área de desmatamento</span> <span style="float: right">16/06/2014</span>
+                        <span style="float: left">{{ markerResultDetail.header.layer }}</span> <span style="float: right">{{ markerResultDetail.header.date }}</span>
                         <hr>
                        
-                       <button style="float: right;" class="btn btn-default"><i class="itaipu-icon-delete"></i></button>
+                       <button style="float: right;" class="btn btn-default" ng-click="removeMarker()"><i class="itaipu-icon-delete"></i></button>
                        <button style="float: right; margin-right: 5px" class="btn btn-default"><i class="itaipu-icon-edit"></i></button>
                        <br>
                        <img src="" style="width: 100%; height: 200px; margin-top: 12px;">
