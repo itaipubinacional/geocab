@@ -1356,6 +1356,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	 * TODO: Verificar se todo o formário foi preenchido.
     	 * */
     	
+    	if (!$scope.form('sidebarMarker').$valid){
+    		 $scope.msg = {type: "danger", text: "preencha", dismiss: true};
+    		return;
+    	}
+    	
     	var layer = new Layer();
     	layer.id = $scope.currentEntity.layer;
     	$scope.currentEntity.layer = layer;
@@ -1379,6 +1384,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	markerService.insertMarker($scope.currentEntity,{
       		callback : function(result) {
       			  $scope.clearFcMaker();
+      			  $scope.msg = {type: "success", text: "Ponto adicionado", dismiss: true};
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
