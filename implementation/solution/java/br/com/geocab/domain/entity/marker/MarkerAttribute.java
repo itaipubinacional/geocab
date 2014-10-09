@@ -55,8 +55,9 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 		super(id);
 	}
 	
-	public MarkerAttribute(Long id, Marker marker, Attribute attribute){
+	public MarkerAttribute(Long id, String value, Marker marker, Attribute attribute){
 		super(id);
+		this.setValue(value);
 		this.setMarker(marker);
 		this.setAttribute(attribute);
 	}
