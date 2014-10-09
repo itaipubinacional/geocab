@@ -17,6 +17,7 @@
     // Override point for customization after application launch.
     [FBLoginView class];
   
+    //MenuSideBar configuration
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     
     self.container = (MFSideMenuContainerViewController *) self.window.rootViewController;
