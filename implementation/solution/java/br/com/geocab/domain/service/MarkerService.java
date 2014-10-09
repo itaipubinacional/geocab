@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.StatusMarker;
+import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
 
@@ -47,6 +49,9 @@ public class MarkerService
 	 */
 	@Autowired
 	private IMarkerRepository markerRepository;
+	
+	@Autowired
+	private IMarkerAttributeRepository markerAttributeRepository;
 	
 	/**
 	 * I18n 
@@ -136,6 +141,15 @@ public class MarkerService
 	public List<Marker> listAll()
 	{
 		return this.markerRepository.listAll();
+	}
+	
+	/**
+	 * Method to find attribute by marker 
+	 * 
+	 * @param id 
+	 */
+	public List<MarkerAttribute> findAttributeByMarker(Long id){
+		return this.markerAttributeRepository.findAttributeByMarker(id);
 	}
 	
 	/**
