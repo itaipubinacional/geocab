@@ -4,6 +4,9 @@
 <span id="marker-point" class="glyphicon glyphicon-map-marker sidebar-icon" style="display: none;"></span>
 
 <section id="main-content" style="height: 100%">
+	<!--Message -->
+    <div class="msgMap" ng-include="'static/libs/eits-directives/alert/alert.html'" ></div>
+    
     <div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
 
         <div>
@@ -44,34 +47,114 @@
             </ul>
         </div>
 
-		  <div id="sidebar-marker" class="sidebar-style">
-		  	<form name="sidebarMarker">
+		<div id="sidebar-marker-detail" class="sidebar-style">
+		  	<form name="sidebarMarker1">
+		  		<div>
+	               <div class="sidebar-coloredbar"></div>
+	               <span ng-click="toggleSidebarMarkerDetail(300, 'closeButton');" class="icon itaipu-icon-close sidebar-close"></span>
+					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
+	                    <span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{ markerResultDetail.header.title }}</span>
+                        <br style="clear: both;">
+                        <br>
+                        <span style="float: left">{{ markerResultDetail.header.layer }}</span> <span style="float: right">{{ markerResultDetail.header.date }}</span>
+                        <hr>
+                       
+                       <button style="float: right;" class="btn btn-default" ng-click="removeMarker()"><i class="itaipu-icon-delete"></i></button>
+                       <button style="float: right; margin-right: 5px" class="btn btn-default"><i class="itaipu-icon-edit"></i></button>
+                       <br>
+                       <img src="" style="width: 100%; height: 200px; margin-top: 12px;">
+                       <br><br>
+                      	
+                       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet urna eu nulla lacinia convallis. Morbi at gravida ligula, at sagittis quam</p>
+                      	
+                       <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
+                       <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
+
+	                </div>
+                </div>
+           	 </form>
+           </div>
+
+		  <div id="sidebar-marker-create" class="sidebar-style">
+		  	<form name="sidebarMarker"  method="post"  default-button="buttonInsert" novalidate>
+		  					
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
 	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
 	
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 	                   <div class="sidebar-content-header">Nova postagem</div>
-	                   <!-- <h3>Nova postagem</h3>
-                        -->
                         <br style="clear: both;">
                         <br>
-                       <label>Camada</label>
-                       <select chosen class="form-control">                       	
+                       <label>Camada</label>                     
+                       <select name="camada" ng-model="currentEntity.layer" chosen class="form-control" ng-change="listAttributesByLayer(currentEntity.layer)" ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" required>                       	
 						  <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
 						    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
 						  </optgroup>
 						</select>
                        <br>
-                       <label>Nome</label> <input type="text" class="form-control" ng-model="currentEntity.name">
-                       <br>
+                       
+                       <div ng-repeat="attribute in attributesByLayer" style="position: relative">
+                       		 <ng-form name="ngSideMarker" default-button="buttonInsert">
+                       		 <label >{{ attribute.name }}</label> 
+                       		 
+                       		 <input type="number" 
+                       		 		name="number1"
+                       		 		ng-if="attribute.type == 'NUMBER'" 
+                       		 		class="form-control" 
+                       		 		ng-model="attribute.value"
+                       		 		ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+									required
+                       		 		>
+                       		 
+                       		 <input type="date" 
+                       		 		name="date1"
+                       		 		ng-if="attribute.type == 'DATE'" 
+                       		 		class="form-control" 
+                       		 		ng-model="attribute.value"
+                       		 		ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+                       		 		required
+                       		 		>
+                       		 		
+                       		 <div ng-if="attribute.type == 'BOOLEAN'" >
+                       		 		
+                       		  		<input type="radio" name="boolean" ng-model="attribute.value" value="Yes">
+                       		  		<input type="radio" name="boolean" ng-model="attribute.value" value="No">
+                       		 </div>
+
+                       		 <input type="text" 
+                       		 		ng-if="attribute.type == 'TEXT'" 
+                       		 		name="texto"
+                       		 		class="form-control" 
+                       		 		ng-model="attribute.value"
+                       		 		ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+                       		 		required
+                       		 		>
+							
+							 <span class="tooltip-validation" ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"  
+                       		 		style="top: 3px">Campo Obrigatório</span>
+                       		 
+                       		 <span class="tooltip-validation" ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"  
+                       		 		style="top: 3px">Campo Obrigatório</span>
+                       		 		
+                       		 <span class="tooltip-validation" ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"  
+                       		 		style="top: 3px">Campo Obrigatório</span>
+                       		 
+                       		 <span class="tooltip-validation" ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"  
+                       		 		style="top: 3px">Campo Obrigatório</span>
+                       		 		
+							 <ng-form>
+                       </div>
+
+                      
                        <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
-                       <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea>
+                       <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
     					<br>
     					<hr>
                        <button class="btn btn-default" ng-click="clearFcMaker()" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
-                       <button class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
+                       <button id="buttonInsert" class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
+                       
 	                </div>
                 </div>
            	 </form>
@@ -79,16 +162,16 @@
 
         <div id="sidebar-tabs" style="float: left;">
             <ul class="map-menu-items tab-flag" id="menu-sidebar-2">
-                <li id="menu-item-1" ng-click="toggleSidebar(300, '#menu-item-1');" class="menu-item bg-inactive">
+                <li id="menu-item-1" ng-click="toggleSidebarLayers(300, '#menu-item-1');" class="menu-item bg-inactive">
                     <a href="#tabs-1">
                         <div class="icon itaipu-icon-layers sidebar-icon"></div>
                     </a>
                 </li>
             </ul>
 
-            <div id="sidebar" class="sidebar-style">
+            <div id="sidebar-layers" class="sidebar-style">
                 <div class="sidebar-coloredbar"></div>
-                <span ng-click="toggleSidebar(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
+                <span ng-click="toggleSidebarLayers(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
 
                 <div id="tabs-1" ng-switch="LAYER_MENU_STATE">
                     <div ng-switch-when="list">

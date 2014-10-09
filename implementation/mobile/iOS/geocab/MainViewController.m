@@ -7,8 +7,12 @@
 //
 
 #import "MainViewController.h"
+#import "User.h"
 
 @interface MainViewController ()
+
+extern NSUserDefaults *defaults;
+extern User *loggedUser;
 
 @end
 
@@ -17,6 +21,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    if ( [defaults objectForKey:@"name"] != NULL
+        && [defaults objectForKey:@"email"] != NULL )
+    {
+        NSLog(@"%@", [defaults objectForKey:@"name"]);
+        NSLog(@"%@", [defaults objectForKey:@"name"]);
+        [self performSegueWithIdentifier:@"mainSegue" sender:nil];
+    }
+    else
+    {
+        [self performSegueWithIdentifier:@"loginSegue" sender:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
