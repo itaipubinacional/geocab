@@ -10,4 +10,6 @@
 
 @interface LayerDelegate : AbstractDelegate
 
+- (void) list: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password;
+
 @end

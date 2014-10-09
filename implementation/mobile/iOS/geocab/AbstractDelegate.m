@@ -10,4 +10,21 @@
 
 @implementation AbstractDelegate
 
+- (id)initWithUrl:(NSString *)url
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.baseUrl = [@"http://192.168.20.122:8080/geocab/" mutableCopy];
+        [self.baseUrl appendString:url];
+        
+        RKObjectManager *objectManager = [RKObjectManager managerWithBaseURL:[NSURL URLWithString:self.baseUrl]];
+        [RKObjectManager setSharedManager:objectManager];
+        
+    }
+    
+    return self;
+}
+
 @end
