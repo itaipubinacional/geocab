@@ -4,26 +4,33 @@
     android:layout_height="48dp"
     android:background="@drawable/list_selector">
 
-    <ImageView
-        android:id="@+id/image_view_icon_layer"
-        android:layout_width="25dp"
-        android:layout_height="wrap_content"
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/network_image_view_legend"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:contentDescription="@string/desc_list_item_icon"
-        android:src="@drawable/icon_layer"
-        android:layout_centerVertical="true" />
+        />
 
     <TextView
         android:id="@+id/text_view_title_layer"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/image_view_icon_layer"
+        android:textSize="12dp"
+        android:layout_toRightOf="@id/network_image_view_legend"
+        android:layout_toLeftOf="@+id/checkbox_layer"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="@color/list_item_title"
-        android:gravity="center_vertical"
-        android:paddingRight="40dp"/>
-    
+        android:gravity="center_vertical"/>
+
+    <CheckBox
+        android:id="@+id/checkbox_layer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+
+
 </RelativeLayout>

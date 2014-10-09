@@ -11,6 +11,10 @@ public class Layer
 	 *-------------------------------------------------------------------*/
 
     /**
+     * Id {@link Layer}
+     */
+    private Long id;
+    /**
      * Name {@link Layer}
      */
     private String name;
@@ -47,30 +51,24 @@ public class Layer
      */
     private DataSource dataSource;
     /**
-     * {@link LayerGroup} of {@link Layer}
-     */
-    private LayerGroup layerGroup;
-    /**
-     * Draft {@link Layer} that originated the published {@link Layer}
-     */
-    private Layer publishedLayer;
-
-    /**
      * Field that informs if the {@link Layer} is published
      */
     private Boolean published;
 
     /**
-     * Icon of {@link Layer}
+     * Field that informs if the {@link Layer} is checked
      */
-    private int icon;
+    private Boolean isChecked = false;
+
+
 
     /*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
 
-    public Layer(String name, String title, String legend, boolean startEnabled, boolean startVisible, int orderLayer, MapScale minimumScaleMap, MapScale maximumScaleMap,
-                 DataSource dataSource, LayerGroup layerGroup, Layer publishedLayer, Boolean published, int icon) {
+    public Layer(Long id, String name, String title, String legend, boolean startEnabled, boolean startVisible, int orderLayer, MapScale minimumScaleMap, MapScale maximumScaleMap,
+                 DataSource dataSource, Boolean published) {
+        this.id = id;
         this.name = name;
         this.title = title;
         this.legend = legend;
@@ -80,22 +78,26 @@ public class Layer
         this.minimumScaleMap = minimumScaleMap;
         this.maximumScaleMap = maximumScaleMap;
         this.dataSource = dataSource;
-        this.layerGroup = layerGroup;
-        this.publishedLayer = publishedLayer;
         this.published = published;
-        this.icon = icon;
     }
 
-    public Layer(String name, String title, int icon)
+    public Layer(String name, String title)
     {
         this.name = name;
         this.title = title;
-        this.icon = icon;
     }
 
     /*-------------------------------------------------------------------
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() { return name; }
 
@@ -167,22 +169,6 @@ public class Layer
         this.dataSource = dataSource;
     }
 
-    public LayerGroup getLayerGroup() {
-        return layerGroup;
-    }
-
-    public void setLayerGroup(LayerGroup layerGroup) {
-        this.layerGroup = layerGroup;
-    }
-
-    public Layer getPublishedLayer() {
-        return publishedLayer;
-    }
-
-    public void setPublishedLayer(Layer publishedLayer) {
-        this.publishedLayer = publishedLayer;
-    }
-
     public Boolean getPublished() {
         return published;
     }
@@ -191,11 +177,11 @@ public class Layer
         this.published = published;
     }
 
-    public int getIcon() {
-        return icon;
+    public Boolean getIsChecked() {
+        return isChecked;
     }
 
-    public void setIcon(int icon) {
-        this.icon = icon;
+    public void setIsChecked(Boolean isChecked) {
+        this.isChecked = isChecked;
     }
 }

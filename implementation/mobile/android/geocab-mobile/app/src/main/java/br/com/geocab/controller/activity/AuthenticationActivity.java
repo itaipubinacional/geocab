@@ -17,8 +17,15 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.FacebookDialog;
+import com.facebook.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
@@ -78,6 +85,12 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 	 *				 		     ATTRIBUTES FACEBOOK
 	 *-------------------------------------------------------------------*/
 
+    private GraphUser user;
+
+    private LoginButton loginButton;
+
+    private UiLifecycleHelper uiHelper;
+
     /*-------------------------------------------------------------------
 	 *				 		     HANDLERS
 	 *-------------------------------------------------------------------*/
@@ -91,6 +104,8 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 	protected void onCreate(Bundle savedInstanceState)
     {
 		super.onCreate(savedInstanceState);
+        uiHelper = new UiLifecycleHelper(this, callback);
+        uiHelper.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -98,9 +113,21 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 
 		setContentView(R.layout.activity_main);
 
+        loginButton = (LoginButton) findViewById(R.id.btn_sign_in_facebook);
+        loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
+            @Override
+            public void onUserInfoFetched(GraphUser user) {
+                AuthenticationActivity.this.user = user;
+                if( user != null)
+                Toast.makeText(AuthenticationActivity.this, "LOGADO PELO FACEBOOK COM: " + user.getName(), Toast.LENGTH_LONG).show();
+            }
+        });
+
         // Getting the button from view
         btnSignInGoogle = (SignInButton) findViewById(R.id.btn_sign_in_google);
         btnSignIn = (Button) findViewById(R.id.btn_sign_in);
+
+        setGooglePlusButtonText(btnSignInGoogle, "Google");
 
         showHashKey(this);
 
@@ -114,6 +141,18 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 				.addOnConnectionFailedListener(this).addApi(Plus.API, PlusOptions.builder().build())
 				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
 	}
+
+    protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(buttonText);
+                return;
+            }
+        }
+    }
 
     /**
      *
@@ -182,6 +221,29 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
         }
     }
 
+    /*-------------------------------------------------------------------
+	 *				 		   FACEBOOk HANDLERS
+	 *-------------------------------------------------------------------*/
+
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            Log.d("TEste", String.format("Error: %s", "TESTE"));
+        }
+    };
+
+    private FacebookDialog.Callback dialogCallback = new FacebookDialog.Callback() {
+        @Override
+        public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+            Log.d("HelloFacebook", String.format("Error: %s", error.toString()));
+        }
+
+        @Override
+        public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+            Log.d("HelloFacebook", "Success!");
+        }
+    };
+
     /**
      * It's possible start another activity and receive a result back and this event treat the result from activityControl if you already signed in on google
      *
@@ -196,6 +258,10 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
         {
             Intent mapIntent = new Intent(this, MapActivity.class);
             startActivity(mapIntent);
+        }
+        else
+        {
+            uiHelper.onActivityResult(requestCode, responseCode, intent, dialogCallback);
         }
     }
 
@@ -212,8 +278,6 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     @Override
     public void onConnected(Bundle arg0)
     {
-        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
-
         // Get user's information
         getProfileInformation();
     }
@@ -277,6 +341,8 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 				String personPhotoUrl = currentPerson.getImage().getUrl();
 				String personGooglePlusProfile = currentPerson.getUrl();
 				String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+
+                Toast.makeText(AuthenticationActivity.this, "LOGADO PELO GOOGLE COM: " + personName, Toast.LENGTH_LONG).show();
 
 				Log.e(TAG, "Name: " + personName + ", plusProfile: "
 						+ personGooglePlusProfile + ", email: " + email
