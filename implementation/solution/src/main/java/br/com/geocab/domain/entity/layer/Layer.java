@@ -23,6 +23,8 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.datasource.DataSource;
@@ -112,11 +114,13 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	/**
 	 * {@link LayerGroup} of {@link Layer}
 	 */
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER, optional=true)
 	private LayerGroup layerGroup;
 	/**
 	 * Draft {@link Layer} that originated the published {@link Layer}
 	 */
+	@JsonIgnore
 	@OneToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.REMOVE})
 	private Layer publishedLayer;
 	
