@@ -613,6 +613,17 @@ public class LayerGroupService
 		return layers;
 	}
 	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public List<Layer> listLayersPublished()
+	{
+		return this.layerRepository.listLayersPublished();
+	}
+	
 	/**
 	 * Method to inserir uma {@link Layer}
 	 * @param layer

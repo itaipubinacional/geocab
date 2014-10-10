@@ -50,4 +50,15 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 			"WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " +
 			"ORDER BY layer.publishedLayer.orderLayer")
 	public List<Layer> listLayersByLayerGroupPublished( @Param("idLayer") Long idLayer);
+	
+	/**
+	 * 
+	 * @param idLayer
+	 * @return
+	 */
+	@Query(value="SELECT layer " +
+			"FROM Layer layer " +
+			"WHERE ( layer.publishedLayer != NULL "
+			+ "AND layer.published = false ) ")
+	public List<Layer> listLayersPublished();
 }
