@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.service.LayerGroupService;
 
@@ -42,11 +43,20 @@ public class LayerGroupRESTful
 	 * @return
 	 */
 	@RequestMapping(value="layers", method = RequestMethod.GET)
-	public @ResponseBody List<LayerGroup> listLayerGroups()
+	public @ResponseBody List<Layer> listLayerGroups()
 	{
-		List<LayerGroup> layerGroups = this.layerGroupService.listLayerGroupUpperPublished();
+		List<Layer> layers = this.layerGroupService.listLayersPublished();
 		
-		return layerGroups;
+		for ( Layer layer : layers )
+		{
+			
+			int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
+			String urlGeoserver = layer.getDataSource().getUrl().substring(0, position+10);
+			
+			layer.setLegend( urlGeoserver + Layer.LEGEND_GRAPHIC_URL + layer.getName() + Layer.LEGEND_GRAPHIC_FORMAT );
+		}
+		
+		return layers;
 	}
 	
 }
