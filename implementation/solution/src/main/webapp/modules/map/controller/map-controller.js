@@ -980,6 +980,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     $scope.initializeMarker = function () {
     	
+    	if($("#sidebar-marker-detail").css("display") == 'block') {
+    		$scope.clearDetailMarker();
+    	}
+    	
     	 $scope.map.removeInteraction(draw);
          source.clear();
          $scope.map.removeLayer(vector);
@@ -998,6 +1002,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         } else {
 
+        	
+        	
         	$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
         	$scope.currentEntity = new Marker();
         	
@@ -1251,18 +1257,55 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	$scope.toggleSidebar(time, element, '#sidebar-marker-create');
     };
     
-    $scope.toggleSidebarMarkerDetail = function (time, element){
+    $scope.toggleSidebarMarkerDetail = function (time, element, marker){
+    	
+    	markerService.findAttributeByMarker($scope.markerDetail.data.id, {
+		  callback : function(result) {
+			  $scope.markerResultDetail = result;
+			  $scope.markerResultDetail.header = {};
+			  angular.forEach(result, function(val, ind){
+				  
+				  if(val.attribute.type == "TEXT" && val.attribute.name == "Title") {
+					  $scope.markerResultDetail.header.title = val.value;
+					  var date = new Date(val.marker.created);
+					  $scope.markerResultDetail.header.date = (date.getDate() < 10 ? "0" : "") + date.getDate() + "/" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "/" + date.getFullYear();
+					  $scope.markerResultDetail.header.layer = val.attribute.layer.name;
+				  }
+				  
+				  
+				  
+			  })
+			  $scope.$apply();
+			 
+          },
+          errorHandler : function(message, exception) {
+              $scope.message = {type:"error", text: message};
+              $scope.$apply();
+          }
+    	});
+    	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
+            $(".marker-point").css("color","#0077bf");
+            $scope.toggleSidebar(time, element, '#sidebar-marker-detail');
         }
     	
     	if( $('.menu-sidebar-container').css('right') != '3px') {
-    		$scope.toggleSidebar(0, 'closeButton');
+    		//$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail');
+    		/*
+    		 * TODO: Colocar um loading...
+    		 * */
+    		$scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
     	}
     	
-    	
     	$scope.toggleSidebar(time, element, '#sidebar-marker-detail');
+    	
     };
+    
+    $scope.clearDetailMarker = function() {
+    	$(".marker-point").css("color","#0077bf");
+    	$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail');
+    }
     
     $scope.toggleSidebar = function (time, element, slide){
 	    time = time != null ? 300 : time;
@@ -1356,6 +1399,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	 * TODO: Verificar se todo o formário foi preenchido.
     	 * */
     	
+    	if (!$scope.form('sidebarMarker').$valid){
+    		 $scope.msg = {type: "danger", text: "preencha", dismiss: true};
+    		return;
+    	}
+    	
     	var layer = new Layer();
     	layer.id = $scope.currentEntity.layer;
     	$scope.currentEntity.layer = layer;
@@ -1379,6 +1427,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	markerService.insertMarker($scope.currentEntity,{
       		callback : function(result) {
       			  $scope.clearFcMaker();
+      			  $scope.msg = {type: "success", text: "Ponto adicionado", dismiss: true};
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
@@ -1421,6 +1470,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	            $("#marker-point-"+ind).dblclick(function(event){
     	            	$(".marker-point").css("color","#0077bf");
     	            	event.stopPropagation();
+    	            	$scope.markerDetail = {data: val, overlay: marker};
     	            	$scope.toggleSidebarMarkerDetail(300, '#menu-item-1');
     	            	$(this).css("color","#FF0000");
     	  			})
@@ -1434,6 +1484,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.message = {type:"error", text: message};
                   $scope.$apply();
               }
+      	});
+    }
+    
+    $scope.removeMarker = function(){
+    	markerService.removeMarker($scope.markerDetail.data.id, {
+      		  callback : function(result) {
+      			$scope.map.removeOverlay($scope.markerDetail.overlay);
+	          },
+	          errorHandler : function(message, exception) {
+	              $scope.message = {type:"error", text: message};
+	              $scope.$apply();
+	          }
       	});
     }
 };
