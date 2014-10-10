@@ -15,7 +15,7 @@
 
 @property (nonatomic) CLLocationDegrees *latitude;
 @property (nonatomic) CLLocationDegrees *longitude;
-@property (weak, nonatomic) Layer *layer;
+@property (strong, nonatomic) Layer *layer;
 @property (nonatomic) enum StatusMarker statusMarker;
 
 @end
