@@ -1,289 +1,258 @@
 //
-//  KOSelectingViewController.m
-//  Kodiak
+//  SideMenuTableViewController.m
+//  geocab
 //
-//  Created by Adam Horacek on 18.04.12.
-//  Copyright (c) 2012 Adam Horacek, Kuba Brecka
-//
-//  Website: http://www.becomekodiak.com/
-//  github: http://github.com/adamhoracek/KOTree
-//	Twitter: http://twitter.com/becomekodiak
-//  Mail: adam@becomekodiak.com, kuba@becomekodiak.com
-//
-//  Permission is hereby granted, free of charge, to any person
-//  obtaining a copy of this software and associated documentation
-//  files (the "Software"), to deal in the Software without
-//  restriction, including without limitation the rights to use,
-//  copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following
-//  conditions:
-//
-//  The above copyright notice and this permission notice shall be
-//  included in all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-//  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-//  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-//  OTHER DEALINGS IN THE SOFTWARE.
+//  Created by Henrique Lobato on 06/10/14.
+//  Copyright (c) 2014 Itaipu. All rights reserved.
 //
 
 #import "SelectLayerViewController.h"
-#import "LayerTreeTableViewCell.h"
-#import "LayerTreeItem.h"
+#import "LayerDelegate.h"
+#import "Layer.h"
+#import "LayerTableViewCell.h"
+#import "ControllerUtil.h"
+
+@interface SelectLayerViewController ()
+
+@property (retain, nonatomic) NSArray *layers;
+@property (nonatomic, retain) NSMutableDictionary *sections;
+
+@end
 
 @implementation SelectLayerViewController
 
-@synthesize treeTableView;
-@synthesize treeItems;
-@synthesize selectedTreeItems;
-@synthesize item0, item1, item1_1, item1_2, item1_2_1, item2, item3;
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.clearsSelectionOnViewWillAppear = NO;
+    
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
+    self.navigationItem.title = NSLocalizedString(@"Layers", @"");
+    
+    UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
+    [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
+    [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
+    [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
+    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
+    self.navigationItem.rightBarButtonItem = button;
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancel)];
+    
+    LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
+    [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        
+        _layers = [[result array] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
+        [self arrangeArrayInSections:_layers];
+        [self.tableView reloadData];
+        
+    } userName:@"admin@geocab.com.br" password:@"admin"];
+}
 
-- (NSMutableArray *)listItemsAtPath:(NSString *)path {
+-(void)arrangeArrayInSections:(NSArray*) array {
     
-    item0 = [[LayerTreeItem alloc] init];
-    [item0 setBase:@"Item 0"];
-    [item0 setPath:@"/"];
-    [item0 setSubmersionLevel:0];
-    [item0 setParentSelectingItem:nil];
-    [item0 setAncestorSelectingItems:[NSMutableArray arrayWithObjects:item1, item2, item3, nil]];
-    [item0 setNumberOfSubitems:3];
-    
-    item1 = [[LayerTreeItem alloc] init];
-    [item1 setBase:@"Item 1"];
-    [item1 setPath:@"/Item 0"];
-    [item1 setSubmersionLevel:1];
-    [item1 setParentSelectingItem:item0];
-    [item1 setAncestorSelectingItems:[NSMutableArray arrayWithObjects:item1_1, item1_2, nil]];
-    [item1 setNumberOfSubitems:2];
-    
-    item1_1 = [[LayerTreeItem alloc] init];
-    [item1_1 setBase:@"Item 1 1"];
-    [item1_1 setPath:@"/Item 0/Item 1"];
-    [item1_1 setSubmersionLevel:2];
-    [item1_1 setParentSelectingItem:item1];
-    [item1_1 setAncestorSelectingItems:[NSMutableArray array]];
-    [item1_1 setNumberOfSubitems:0];
-    
-    item1_2 = [[LayerTreeItem alloc] init];
-    [item1_2 setBase:@"Item 1 2"];
-    [item1_2 setPath:@"/Item 0/Item 1"];
-    [item1_2 setSubmersionLevel:2];
-    [item1_2 setParentSelectingItem:item1];
-    [item1_2 setAncestorSelectingItems:[NSMutableArray arrayWithObjects:item1_2_1, nil]];
-    [item1_2 setNumberOfSubitems:1];
-    
-    item1_2_1 = [[LayerTreeItem alloc] init];
-    [item1_2_1 setBase:@"Item 1 2 1"];
-    [item1_2_1 setPath:@"/Item 0/Item 1/Item 1 2"];
-    [item1_2_1 setSubmersionLevel:3];
-    [item1_2_1 setParentSelectingItem:item1_2];
-    [item1_2_1 setAncestorSelectingItems:[NSMutableArray array]];
-    [item1_2_1 setNumberOfSubitems:0];
-    
-    item2 = [[LayerTreeItem alloc] init];
-    [item2 setBase:@"Item 2"];
-    [item2 setPath:@"/Item 0"];
-    [item2 setSubmersionLevel:1];
-    [item2 setParentSelectingItem:item0];
-    [item2 setAncestorSelectingItems:[NSMutableArray array]];
-    [item2 setNumberOfSubitems:0];
-    
-    item3 = [[LayerTreeItem alloc] init];
-    [item3 setBase:@"Item 3"];
-    [item3 setPath:@"/Item 0"];
-    [item3 setSubmersionLevel:1];
-    [item3 setParentSelectingItem:item0];
-    [item3 setAncestorSelectingItems:[NSMutableArray array]];
-    [item3 setNumberOfSubitems:0];
-    
-    NSLog(@"path: %@", path);
-    if ([path isEqualToString:@"/"]) {
-        return [NSMutableArray arrayWithObject:item0];
-    } else if ([path isEqualToString:@"/Item 0"]) {
-        return [NSMutableArray arrayWithObjects:item1, item2, item3, nil];
-    } else if ([path isEqualToString:@"/Item 0/Item 1"]) {
-        return [NSMutableArray arrayWithObjects:item1_1, item1_2, nil];
-    } else if ([path isEqualToString:@"/Item 0/Item 1/Item 1 2"]) {
-        return [NSMutableArray arrayWithObjects:item1_2_1, nil];
-    } else {
-        return [NSMutableArray array];
+    self.sections = [[NSMutableDictionary alloc] init];
+    BOOL found;
+    for (Layer *layer in array)
+    {
+        NSString *c = [[layer title] substringToIndex:1];
+        found = NO;
+        
+        for (NSString *str in [self.sections allKeys])
+        {
+            if ([str isEqualToString:c])
+            {
+                found = YES;
+            }
+        }
+        if (!found)
+        {
+            [self.sections setValue:[[NSMutableArray alloc] init] forKey:c];
+        }
+    }
+    for (Layer *layer in self.layers)
+    {
+        [[self.sections objectForKey:[[layer title] substringToIndex:1]] addObject:layer];
+    }
+    for (NSString *key in [self.sections allKeys])
+    {
+        [[self.sections objectForKey:key] sortUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES]]];
     }
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    self.selectedTreeItems = [NSMutableArray array];
-    // Do any additional setup after loading the view.
-    
-    self.treeItems = [self listItemsAtPath:@"/"];
-    
-    treeTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    [treeTableView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    [treeTableView setBackgroundColor:[UIColor colorWithRed:1 green:0.976 blue:0.957 alpha:1] /*#fff9f4*/];
-    [treeTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    [treeTableView setRowHeight:65.0f];
-    [treeTableView setDelegate:(id<UITableViewDelegate>)self];
-    [treeTableView setDataSource:(id<UITableViewDataSource>)self];
-    [self.view addSubview:treeTableView];
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    [[[self treeTableView] delegate] tableView:treeTableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+- (IBAction)syncLayersAndLoadTable:(id)sender {
+    LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
+    [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        
+        _layers = [[result array] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
+        [self.tableView reloadData];
+        
+    } userName:@"admin@geocab.com.br" password:@"admin"];
 }
 
-#pragma mark - UITableViewDatasource
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    // Return the number of sections.
+    return [[self.sections allKeys] count];
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return [[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.treeItems count];
+    // Return the number of rows in the section.
+    return [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section]] count];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return [[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+{
+    // Background color
+    view.tintColor = [ControllerUtil colorWithHexString:@"e7e7e7"];
+    // Text Color
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    [header.textLabel setTextColor:[ControllerUtil colorWithHexString:@"5a5a5a"]];
+    header.textLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+    
+    CALayer* layer = view.layer;
+    
+    CALayer* bottomBorder = [CALayer layer];
+    bottomBorder.borderColor = [ControllerUtil colorWithHexString:@"e7e7e7"].CGColor;
+    bottomBorder.borderWidth = 1;
+    bottomBorder.frame = CGRectMake(-1, layer.frame.size.height-1, layer.frame.size.width, 1);
+    [bottomBorder setBorderColor:[ControllerUtil colorWithHexString:@"e7e7e7"].CGColor];
+    [layer addSublayer:bottomBorder];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    LayerTreeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"selectingTableViewCell"];
-    if (!cell)
-        cell = [[LayerTreeTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"selectingTableViewCell"];
+    static NSString *cellId = @"LayerTableCell";
     
-    LayerTreeItem *treeItem = [self.treeItems objectAtIndex:indexPath.row];
+    LayerTableViewCell *cell = (LayerTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellId];
     
-    cell.treeItem = treeItem;
+    if (cell == nil)
+    {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"LayerTableViewCell" owner:self options:nil];
+        cell = (LayerTableViewCell*)[nib objectAtIndex:0];
+    }
     
-    [cell.iconButton setSelected:[self.selectedTreeItems containsObject:cell.treeItem]];
+    Layer *layer = (Layer*) [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
     
-    if ([treeItem numberOfSubitems])
-        [cell.countLabel setText:[NSString stringWithFormat:@"%ld", (long)[treeItem numberOfSubitems]]];
-    else
-        [cell.countLabel setText:@"-"];
-    
-    [cell.titleTextField setText:[treeItem base]];
-    [cell.titleTextField sizeToFit];
-    
-    [cell setDelegate:(id<LayerTreeTableViewCellDelegate>)self];
-    
-    [cell setLevel:[treeItem submersionLevel]];
+    cell.layerTitle.text = layer.title;
+    cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
+//    cell.layer = [layer copy];
     
     return cell;
 }
 
-- (void)selectingItemsToDelete:(LayerTreeItem *)selItems saveToArray:(NSMutableArray *)deleteSelectingItems{
-    for (LayerTreeItem *obj in selItems.ancestorSelectingItems) {
-        [self selectingItemsToDelete:obj saveToArray:deleteSelectingItems];
-    }
-    
-    [deleteSelectingItems addObject:selItems];
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 50;
 }
 
-- (NSMutableArray *)removeIndexPathForTreeItems:(NSMutableArray *)treeItemsToRemove {
-    NSMutableArray *result = [NSMutableArray array];
-    
-    for (NSInteger i = 0; i < [treeTableView numberOfRowsInSection:0]; ++i) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-        LayerTreeTableViewCell *cell = (LayerTreeTableViewCell *)[treeTableView cellForRowAtIndexPath:indexPath];
-        
-        for (LayerTreeItem *tmpTreeItem in treeItemsToRemove) {
-            if ([cell.treeItem isEqualToSelectingItem:tmpTreeItem])
-                [result addObject:indexPath];
-        }
-    }
-    
-    return result;
-}
-- (void)tableViewAction:(UITableView *)tableView withIndexPath:(NSIndexPath *)indexPath {
-    
-}
-#pragma mark - UITableViewDelegate
+#pragma mark - UITableView Delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self tableViewAction:tableView withIndexPath:indexPath];
+-(void)tableView:(UITableView *)_tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Which item?
+    Layer * item = (Layer*)[[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
     
-    LayerTreeTableViewCell *cell = (LayerTreeTableViewCell *)[treeTableView cellForRowAtIndexPath:indexPath];
-    
-    NSInteger insertTreeItemIndex = [self.treeItems indexOfObject:cell.treeItem];
-    NSMutableArray *insertIndexPaths = [NSMutableArray array];
-    NSMutableArray *insertselectingItems = [self listItemsAtPath:[cell.treeItem.path stringByAppendingPathComponent:cell.treeItem.base]];
-    
-    NSMutableArray *removeIndexPaths = [NSMutableArray array];
-    NSMutableArray *treeItemsToRemove = [NSMutableArray array];
-    
-    for (LayerTreeItem *tmpTreeItem in insertselectingItems) {
-        [tmpTreeItem setPath:[cell.treeItem.path stringByAppendingPathComponent:cell.treeItem.base]];
-        [tmpTreeItem setParentSelectingItem:cell.treeItem];
+    if (self.multipleSelection) {
+        item.selected = !item.selected;
         
-        [cell.treeItem.ancestorSelectingItems removeAllObjects];
-        [cell.treeItem.ancestorSelectingItems addObjectsFromArray:insertselectingItems];
+        // Update UI
+        [_tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [_tableView cellForRowAtIndexPath:indexPath].accessoryType = item.selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
         
-        insertTreeItemIndex++;
-        
-        BOOL contains = NO;
-        
-        for (LayerTreeItem *tmp2TreeItem in self.treeItems) {
-            if ([tmp2TreeItem isEqualToSelectingItem:tmpTreeItem]) {
-                contains = YES;
-                
-                [self selectingItemsToDelete:tmp2TreeItem saveToArray:treeItemsToRemove];
-                
-                removeIndexPaths = [self removeIndexPathForTreeItems:(NSMutableArray *)treeItemsToRemove];
-            }
+        // Delegate callback
+        if (item.selected) {
+//            if ([_delegate respondsToSelector:@selector(didEndSelecting:)]) [_delegate didEndSelecting:item];
+        } else {
+            //        if ([delegate respondsToSelector:@selector(selectorDidDeselectItem:)]) [delegate selectorDidDeselectItem:item];
+            //        if (selectorMode==KNSelectorModeSelected) {
+            //            [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            //        }
         }
-        
-        for (LayerTreeItem *tmp2TreeItem in treeItemsToRemove) {
-            [self.treeItems removeObject:tmp2TreeItem];
-            
-            for (LayerTreeItem *tmp3TreeItem in self.selectedTreeItems) {
-                if ([tmp3TreeItem isEqualToSelectingItem:tmp2TreeItem]) {
-                    NSLog(@"%@", tmp3TreeItem.base);
-                    [self.selectedTreeItems removeObject:tmp2TreeItem];
-                    break;
-                }
-            }
-        }
-        
-        if (!contains) {
-            [tmpTreeItem setSubmersionLevel:tmpTreeItem.submersionLevel];
-            
-            [self.treeItems insertObject:tmpTreeItem atIndex:insertTreeItemIndex];
-            
-            NSIndexPath *indexPth = [NSIndexPath indexPathForRow:insertTreeItemIndex inSection:0];
-            [insertIndexPaths addObject:indexPth];
-        }
-    }
-    
-    if ([insertIndexPaths count])
-        [treeTableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationBottom];
-    
-    if ([removeIndexPaths count])
-        [treeTableView deleteRowsAtIndexPaths:removeIndexPaths withRowAnimation:UITableViewRowAnimationBottom];
-}
-
-#pragma mark - Actions
-
-- (void)iconButtonAction:(LayerTreeTableViewCell *)cell treeItem:(LayerTreeItem *)tmpTreeItem {
-    if ([self.selectedTreeItems containsObject:cell.treeItem]) {
-        [cell.iconButton setSelected:NO];		
-        [self.selectedTreeItems removeObject:cell.treeItem];
     } else {
-        [cell.iconButton setSelected:YES];
-        
-        [self.selectedTreeItems removeAllObjects];
-        [self.selectedTreeItems addObject:cell.treeItem];
-        
-        [treeTableView reloadData];
+        if ([_delegate respondsToSelector:@selector(didEndSelecting:)]) [_delegate didEndSelecting:item];
+    }
+    
+    
+}
+
+#pragma mark - Cancel or Done button event
+
+-(void)didCancel {
+    // Clear all selections
+    for (Layer * i in self.selectedItems) {
+        i.selected = NO;
+    }
+    if ([_delegate respondsToSelector:@selector(cancelledSelecting)]) [_delegate cancelledSelecting];
+}
+
+-(void)didFinish {
+    // Delegate callback
+    if ([_delegate respondsToSelector:@selector(didEndMultipleSelecting:)]) {
+        [_delegate didEndMultipleSelecting:self.selectedItems];
     }
 }
 
-#pragma mark - LayerTreeTableViewCellDelegate
-
-- (void)treeTableViewCell:(LayerTreeTableViewCell *)cell didTapIconWithTreeItem:(LayerTreeItem *)tmpTreeItem {
-    NSLog(@"didTapIconWithselectingItem.base: %@", [tmpTreeItem base]);
-    
-    [self iconButtonAction:cell treeItem:tmpTreeItem];
+-(NSArray*)selectedItems {
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"selected = YES"];
+    return [_layers filteredArrayUsingPredicate:pred];
 }
+
+/*
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
+
+/*
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
+
+/*
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+ }
+ */
+
+/*
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
+
+/*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end
