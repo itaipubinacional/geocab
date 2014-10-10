@@ -7,7 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Layer.h"
+@protocol LayerSelectDelegate <NSObject>
+@required
+- (void)didEndSelecting:(Layer*) selectedLayer;
+- (void)cancelledSelecting;
+- (void)didEndMultipleSelecting:(NSArray*) selectedLayers;
+@end
 
 @interface SelectLayerViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
+
+{
+    // Delegate to respond back
+    id <LayerSelectDelegate> _delegate;
+    
+}
+@property (nonatomic,strong) id delegate;
+
+@property BOOL multipleSelection;
+@property (nonatomic, readonly) NSArray * selectedItems;
 
 @end
