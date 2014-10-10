@@ -48,6 +48,8 @@
 		<!-- Google Maps -->
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?client=gme-itaipubinacional&sensor=false"></script>
 
+		<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
+	
 	 	<style>
 	        .popup{
 	            background:white;

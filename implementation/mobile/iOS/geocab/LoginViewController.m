@@ -13,7 +13,7 @@
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "User.h"
-
+#import "ControllerUtil.h"
 
 @interface LoginViewController ()
 
@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *username;
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (copy) GPPSignIn *signIn;
+@property (weak, nonatomic) IBOutlet UIButton *standardLoginButton;
 
 extern NSUserDefaults *defaults;
 extern User *loggedUser;
@@ -46,8 +47,19 @@ extern User *loggedUser;
     _signIn.shouldFetchGoogleUserID = YES;
     _signIn.delegate = self;
     
+    _standardLoginButton.backgroundColor = [ControllerUtil colorWithHexString:@"27a7c6"];
+    
+    //[self.signInButton setStyle:(GPPSignInButtonStyle)];
+    
     self.fbLoginView.delegate = self;
     self.fbLoginView.readPermissions = @[@"public_profile", @"email", @"user_friends"];
+    
+    for (id obj in self.fbLoginView.subviews) {
+        if ([obj isKindOfClass:[UILabel class]]) {
+            UILabel *loginLabel = obj;
+            loginLabel.text = @"Facebook";
+        }
+    }
 }
 
 //Method to make the keyboard disappear when touch happens out of the text field

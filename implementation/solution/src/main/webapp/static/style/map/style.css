@@ -358,3 +358,8 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 .ui-tabs .ui-tabs-nav li.ui-tabs-active a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-tabs-loading a {
     cursor: pointer;
 }
+
+.msgMap > .alert {
+	margin-bottom:0px;
+}
+
