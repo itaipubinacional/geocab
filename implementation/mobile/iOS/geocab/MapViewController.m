@@ -97,18 +97,6 @@
     
 }
 
-- (void) selectorDidFinishSelectionWithItems:(NSArray *)selectedItems {
-    [_layerSelectorNavigator dismissViewControllerAnimated:YES completion:^{
-        for (KNSelectorItem *item in selectedItems) {
-            [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"alert('item: ', %@);", item.selectValue]];
-        }
-    }];
-    
-    _selectedItems = selectedItems;
-    
-    
-}
-
 - (void) selectorDidCancelSelection {
     [_layerSelectorNavigator dismissViewControllerAnimated:YES completion:^{
 

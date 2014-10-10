@@ -9,10 +9,13 @@
 #import "SelectLayerViewController.h"
 #import "LayerDelegate.h"
 #import "Layer.h"
+#import "LayerTableViewCell.h"
+#import "ControllerUtil.h"
 
 @interface SelectLayerViewController ()
 
 @property (retain, nonatomic) NSArray *layers;
+@property (nonatomic, retain) NSMutableDictionary *sections;
 
 @end
 
@@ -21,15 +24,69 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    self.navigationItem.title = NSLocalizedString(@"Layers", @"");
+    
+    UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
+    [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
+    [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
+    [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
+    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
+    self.navigationItem.rightBarButtonItem = button;
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancel)];
+    
+    LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
+    [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        
+        _layers = [[result array] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
+        [self arrangeArrayInSections:_layers];
+        [self.tableView reloadData];
+        
+    } userName:@"admin@geocab.com.br" password:@"admin"];
+}
+
+-(void)arrangeArrayInSections:(NSArray*) array {
+    
+    self.sections = [[NSMutableDictionary alloc] init];
+    BOOL found;
+    for (Layer *layer in array)
+    {
+        NSString *c = [[layer title] substringToIndex:1];
+        found = NO;
+        
+        for (NSString *str in [self.sections allKeys])
+        {
+            if ([str isEqualToString:c])
+            {
+                found = YES;
+            }
+        }
+        if (!found)
+        {
+            [self.sections setValue:[[NSMutableArray alloc] init] forKey:c];
+        }
+    }
+    for (Layer *layer in self.layers)
+    {
+        [[self.sections objectForKey:[[layer title] substringToIndex:1]] addObject:layer];
+    }
+    for (NSString *key in [self.sections allKeys])
+    {
+        [[self.sections objectForKey:key] sortUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES]]];
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)syncLayersAndLoadTable:(id)sender {
     LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
     [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
         
@@ -39,40 +96,119 @@
     } userName:@"admin@geocab.com.br" password:@"admin"];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 1;
+    return [[self.sections allKeys] count];
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return [[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [_layers count];
+    return [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section]] count];
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return [[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+{
+    // Background color
+    view.tintColor = [ControllerUtil colorWithHexString:@"e7e7e7"];
+    // Text Color
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    [header.textLabel setTextColor:[ControllerUtil colorWithHexString:@"5a5a5a"]];
+    header.textLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+    
+    CALayer* layer = view.layer;
+    
+    CALayer* bottomBorder = [CALayer layer];
+    bottomBorder.borderColor = [ControllerUtil colorWithHexString:@"e7e7e7"].CGColor;
+    bottomBorder.borderWidth = 1;
+    bottomBorder.frame = CGRectMake(-1, layer.frame.size.height-1, layer.frame.size.width, 1);
+    [bottomBorder setBorderColor:[ControllerUtil colorWithHexString:@"e7e7e7"].CGColor];
+    [layer addSublayer:bottomBorder];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+    static NSString *cellId = @"LayerTableCell";
     
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] init];
+    LayerTableViewCell *cell = (LayerTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellId];
+    
+    if (cell == nil)
+    {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"LayerTableViewCell" owner:self options:nil];
+        cell = (LayerTableViewCell*)[nib objectAtIndex:0];
     }
     
-    cell.textLabel.text = ((Layer*)[_layers objectAtIndex:indexPath.row]).title;
-    cell.detailTextLabel.text = ((Layer*)[_layers objectAtIndex:indexPath.row]).name;
-    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:((Layer*)[_layers objectAtIndex:indexPath.row]).legend]]];
+    Layer *layer = (Layer*) [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
+    
+    cell.layerTitle.text = layer.title;
+    cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
+//    cell.layer = [layer copy];
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 50;
+}
+
+#pragma mark - UITableView Delegate
+
+-(void)tableView:(UITableView *)_tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Which item?
+    Layer * item = (Layer*)[[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
+    
+    if (self.multipleSelection) {
+        item.selected = !item.selected;
+        
+        // Update UI
+        [_tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [_tableView cellForRowAtIndexPath:indexPath].accessoryType = item.selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+        
+        // Delegate callback
+        if (item.selected) {
+//            if ([_delegate respondsToSelector:@selector(didEndSelecting:)]) [_delegate didEndSelecting:item];
+        } else {
+            //        if ([delegate respondsToSelector:@selector(selectorDidDeselectItem:)]) [delegate selectorDidDeselectItem:item];
+            //        if (selectorMode==KNSelectorModeSelected) {
+            //            [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            //        }
+        }
+    } else {
+        if ([_delegate respondsToSelector:@selector(didEndSelecting:)]) [_delegate didEndSelecting:item];
+    }
+    
+    
+}
+
+#pragma mark - Cancel or Done button event
+
+-(void)didCancel {
+    // Clear all selections
+    for (Layer * i in self.selectedItems) {
+        i.selected = NO;
+    }
+    if ([_delegate respondsToSelector:@selector(cancelledSelecting)]) [_delegate cancelledSelecting];
+}
+
+-(void)didFinish {
+    // Delegate callback
+    if ([_delegate respondsToSelector:@selector(didEndMultipleSelecting:)]) {
+        [_delegate didEndMultipleSelecting:self.selectedItems];
+    }
+}
+
+-(NSArray*)selectedItems {
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"selected = YES"];
+    return [_layers filteredArrayUsingPredicate:pred];
 }
 
 /*

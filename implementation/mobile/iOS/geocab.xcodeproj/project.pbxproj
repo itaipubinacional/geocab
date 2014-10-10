@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		5D1D25C619E30E520084AA31 /* Marker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D1D25C519E30E520084AA31 /* Marker.m */; };
 		5D1F6E1119DED73D0049A889 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D1F6E1019DED73D0049A889 /* MainViewController.m */; };
+		5D21A55419E6C80D0053DEC8 /* LayerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D21A55219E6C80D0053DEC8 /* LayerTableViewCell.m */; };
+		5D21A55519E6C80D0053DEC8 /* LayerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D21A55319E6C80D0053DEC8 /* LayerTableViewCell.xib */; };
+		5D21A55E19E6D51F0053DEC8 /* sync-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D21A55D19E6D51F0053DEC8 /* sync-button.png */; };
+		5D21A56119E6D6C00053DEC8 /* LayerSelectDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D21A56019E6D6C00053DEC8 /* LayerSelectDelegate.m */; };
 		5D295EDC19E42B12004DC379 /* ControllerUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D295EDB19E42B12004DC379 /* ControllerUtil.m */; };
 		5D2B2A1319DDD2C000E354E2 /* icn_menu_20.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D2B2A1219DDD2C000E354E2 /* icn_menu_20.png */; };
 		5D35C5A919E5848500C71918 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D35C5A819E5848500C71918 /* ImageIO.framework */; };
@@ -68,6 +72,14 @@
 		5D1D25C719E311950084AA31 /* StatusMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusMarker.h; sourceTree = "<group>"; };
 		5D1F6E0F19DED73D0049A889 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		5D1F6E1019DED73D0049A889 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		5D21A55119E6C80D0053DEC8 /* LayerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerTableViewCell.h; sourceTree = "<group>"; };
+		5D21A55219E6C80D0053DEC8 /* LayerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerTableViewCell.m; sourceTree = "<group>"; };
+		5D21A55319E6C80D0053DEC8 /* LayerTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LayerTableViewCell.xib; sourceTree = "<group>"; };
+		5D21A55919E6CDEF0053DEC8 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5D21A55A19E6CDEF0053DEC8 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5D21A55D19E6D51F0053DEC8 /* sync-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sync-button.png"; sourceTree = "<group>"; };
+		5D21A55F19E6D6C00053DEC8 /* LayerSelectDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerSelectDelegate.h; sourceTree = "<group>"; };
+		5D21A56019E6D6C00053DEC8 /* LayerSelectDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerSelectDelegate.m; sourceTree = "<group>"; };
 		5D295EDA19E42B12004DC379 /* ControllerUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControllerUtil.h; sourceTree = "<group>"; };
 		5D295EDB19E42B12004DC379 /* ControllerUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControllerUtil.m; sourceTree = "<group>"; };
 		5D2B2A1219DDD2C000E354E2 /* icn_menu_20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icn_menu_20.png; sourceTree = "<group>"; };
@@ -180,6 +192,7 @@
 		5D2B2A0D19DDCFC100E354E2 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				5D21A55D19E6D51F0053DEC8 /* sync-button.png */,
 				5DA7351019E424810015236D /* cultivando-logo.png */,
 				5D2B2A1219DDD2C000E354E2 /* icn_menu_20.png */,
 			);
@@ -316,6 +329,8 @@
 				5D69E6CA19E325A000C91A6F /* AbstractDelegate.m */,
 				5D69E6CC19E325B100C91A6F /* LayerDelegate.h */,
 				5D69E6CD19E325B100C91A6F /* LayerDelegate.m */,
+				5D21A55F19E6D6C00053DEC8 /* LayerSelectDelegate.h */,
+				5D21A56019E6D6C00053DEC8 /* LayerSelectDelegate.m */,
 			);
 			name = delegate;
 			sourceTree = "<group>";
@@ -361,6 +376,9 @@
 				5D1D25C419E30E520084AA31 /* Marker.h */,
 				5D1D25C519E30E520084AA31 /* Marker.m */,
 				5D1D25C719E311950084AA31 /* StatusMarker.h */,
+				5D21A55119E6C80D0053DEC8 /* LayerTableViewCell.h */,
+				5D21A55219E6C80D0053DEC8 /* LayerTableViewCell.m */,
+				5D21A55319E6C80D0053DEC8 /* LayerTableViewCell.xib */,
 			);
 			name = Entity;
 			sourceTree = "<group>";
@@ -437,6 +455,7 @@
 			knownRegions = (
 				en,
 				Base,
+				pt,
 			);
 			mainGroup = 5D960B7719CA1EC600B8DEFF;
 			productRefGroup = 5D960B8119CA1EC600B8DEFF /* Products */;
@@ -459,6 +478,7 @@
 				5D2B2A1319DDD2C000E354E2 /* icn_menu_20.png in Resources */,
 				5DA7351119E424810015236D /* cultivando-logo.png in Resources */,
 				5D3F0C4519CB077500D52313 /* index.html in Resources */,
+				5D21A55519E6C80D0053DEC8 /* LayerTableViewCell.xib in Resources */,
 				5D7D8DAB19D9CE2D00363F7D /* map.js in Resources */,
 				5D9D137519DC7D2900BA3570 /* item-icon-folder@2x.png in Resources */,
 				5D9D137019DC7D2900BA3570 /* item-counter.png in Resources */,
@@ -467,6 +487,7 @@
 				5D960B9C19CA1EC600B8DEFF /* Images.xcassets in Resources */,
 				5D960B8E19CA1EC600B8DEFF /* InfoPlist.strings in Resources */,
 				5D3F0C4619CB077500D52313 /* ol.css in Resources */,
+				5D21A55E19E6D51F0053DEC8 /* sync-button.png in Resources */,
 				5D9D137119DC7D2900BA3570 /* item-counter@2x.png in Resources */,
 				5D960B9719CA1EC600B8DEFF /* Main.storyboard in Resources */,
 				5D9D136F19DC7D2900BA3570 /* copymove-cell-bg.png in Resources */,
@@ -528,6 +549,7 @@
 				5DA511CF19D9A8E500CE5110 /* map.js in Sources */,
 				5D69E6CB19E325A000C91A6F /* AbstractDelegate.m in Sources */,
 				5D97923A19E32E3A0017234C /* SideMenuTableViewController.m in Sources */,
+				5D21A56119E6D6C00053DEC8 /* LayerSelectDelegate.m in Sources */,
 				5D1F6E1119DED73D0049A889 /* MainViewController.m in Sources */,
 				5D960B9419CA1EC600B8DEFF /* AppDelegate.m in Sources */,
 				5DA3EE7B19DD6AB300E8E579 /* User.m in Sources */,
@@ -537,6 +559,7 @@
 				5D295EDC19E42B12004DC379 /* ControllerUtil.m in Sources */,
 				5D960BBB19CA1F5B00B8DEFF /* LoginViewController.m in Sources */,
 				5D1D25C619E30E520084AA31 /* Marker.m in Sources */,
+				5D21A55419E6C80D0053DEC8 /* LayerTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,6 +586,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				5D960B8D19CA1EC600B8DEFF /* en */,
+				5D21A55919E6CDEF0053DEC8 /* pt */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -579,6 +603,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				5D960BAC19CA1EC600B8DEFF /* en */,
+				5D21A55A19E6CDEF0053DEC8 /* pt */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
