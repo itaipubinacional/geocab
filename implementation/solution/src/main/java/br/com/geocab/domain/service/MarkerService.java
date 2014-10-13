@@ -118,6 +118,48 @@ public class MarkerService
 	}
 	
 	/**
+	 * Method to block an {@link Marker}
+	 * 
+	 * @param Marker marker
+	 */
+	public void enableMarker( Long id )
+	{
+		try{
+			Marker marker = this.findMarkerById(id);
+			marker.setStatus(StatusMarker.ACCEPTED);
+			marker = this.markerRepository.save( marker );
+		}
+		catch ( DataIntegrityViolationException e )
+		{
+			LOG.info( e.getMessage() );
+			final String error = e.getCause().getCause().getMessage();
+			
+			this.dataIntegrityViolationException(error);
+		}
+	}
+	
+	/**
+	 * Method to unblock an {@link Marker}
+	 * 
+	 * @param Marker marker
+	 */
+	public void disableMarker( Long id )
+	{
+		try{
+			Marker marker = this.findMarkerById(id);
+			marker.setStatus(StatusMarker.REFUSED);
+			marker = this.markerRepository.save( marker );
+		}
+		catch ( DataIntegrityViolationException e )
+		{
+			LOG.info( e.getMessage() );
+			final String error = e.getCause().getCause().getMessage();
+			
+			this.dataIntegrityViolationException(error);
+		}
+	}
+	
+	/**
 	 * Method to find an {@link Marker} by id
 	 * 
 	 * @param id
