@@ -170,89 +170,90 @@
 	                </div>
                 </div>
            	 </form>
-           </div>
-
-        <div id="sidebar-tabs" style="float: left;">
-            <ul class="map-menu-items tab-flag" id="menu-sidebar-2">
-                <li id="menu-item-1" ng-click="toggleSidebarLayers(300, '#menu-item-1');" class="menu-item bg-inactive">
-                    <a href="#tabs-1">
-                        <div class="icon itaipu-icon-layers sidebar-icon"></div>
-                    </a>
-                </li>
-            </ul>
-
-            <div id="sidebar-layers" class="sidebar-style">
-                <div class="sidebar-coloredbar"></div>
-                <span ng-click="toggleSidebarLayers(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
-
-                <div id="tabs-1" ng-switch="LAYER_MENU_STATE">
-                    <div ng-switch-when="list">
-                        <div id="layer-list">
-                            <div>
-                                <div class="sidebar-content-header">Camadas</div>
-                                <br style="clear: both;">
-                                <div class="form-item-horizontal radio" style="margin-left: 0;margin-top: 40px">
-                                <input type="radio" id="osm"
-                                ng-model="mapConf.type"
-                                value="osm"
-                                ng-click="initializeOSM()">
-                                <label class="radio-label" for="osm"> Open Street View </label>
-                            </div>
-                            <br/>
-                            <div class="form-item-horizontal radio" style="margin-left: 0;">
-                                <input type="radio" id="googleMap"
-                                ng-model="mapConf.type"
-                                value="gmap"
-                                ng-click="initializeGMAP()">
-                                <label class="radio-label" for="googleMap"> Google Maps </label>
-                            </div>
-                            <br/>
-                            <div class="form-item-horizontal radio" style="margin-left: 0;">
-                            <input type="radio" id="mapQuest"
-                                ng-model="mapConf.type"
-                                value="mapQuest"
-                                ng-click="initializeMapQuestOSM()">
-                                <label class="radio-label" for="mapQuest"> MapQuest </label>
-                            </div>
-                        </div>
-                    </div>
-
-                <div style="overflow-x: auto;position: absolute;top: 210px;bottom: 0px;left: 20px;right: 0px;">
-
-                <div ng-show="allLayers.length > 0">
-                    <input type="text" ng-model="bagSearch" placeholder="Grupo ou layer" class="sidebar-content-search form-control"/>
-                </div>
-
-                <div id="tree"
-                    ivh-treeview="allLayers"
-                    ivh-fn="getSelectedNode"
-                    ivh-treeview-label-attribute="'label'"
-                    ivh-treeview-legend-attribute="'legenda'"
-                    ivh-treeview-children-attribute="'children'"
-                    ivh-treeview-filter="filter:bagSearch">
-                </div>
-
-
-                <br/>
-            </div>
-        </div>
-
-        <div id="layer-legend-detail" ng-switch-when="legend_detail">
-            <div class="sidebar-content-header" ng-click="exitLegendDetail()" style="cursor: pointer;">
-                <span style="font-size: 17px;">&#x2190;</span>
-                    Camadas
-            </div>
-            <br style="clear: both;">
-            <div class="legend-detail-title">{{legendDetailTitle}}</div>
-                <hr>
-            <div class="legend-image-container">
-                <img ng-src="{{legendDetailImage}}" style="padding: 10px;">
-            </div>
-        </div>
-
-        </div>
-    </div>
-        </div>
+	           	 <div id="sidebar-tabs" style="float: left;">
+		            <ul class="map-menu-items tab-flag" id="menu-sidebar-2">
+		                <li id="menu-item-1" ng-click="toggleSidebarLayers(300, '#menu-item-1');" class="menu-item bg-inactive">
+		                    <a href="#tabs-1">
+		                        <div class="icon itaipu-icon-layers sidebar-icon"></div>
+		                    </a>
+		                </li>
+		            </ul>
+		
+			            <div id="sidebar-layers" class="sidebar-style">
+			                <div class="sidebar-coloredbar"></div>
+			                <span ng-click="toggleSidebarLayers(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
+			
+			                <div id="tabs-1" ng-switch="LAYER_MENU_STATE">
+			                    <div ng-switch-when="list">
+			                        <div id="layer-list">
+			                            <div>
+			                                <div class="sidebar-content-header">Camadas</div>
+			                                <br style="clear: both;">
+			                                <div class="form-item-horizontal radio" style="margin-left: 0;margin-top: 40px">
+			                                <input type="radio" id="osm"
+			                                ng-model="mapConf.type"
+			                                value="osm"
+			                                ng-click="initializeOSM()">
+			                                <label class="radio-label" for="osm"> Open Street View </label>
+			                            </div>
+			                            <br/>
+			                            <div class="form-item-horizontal radio" style="margin-left: 0;">
+			                                <input type="radio" id="googleMap"
+			                                ng-model="mapConf.type"
+			                                value="gmap"
+			                                ng-click="initializeGMAP()">
+			                                <label class="radio-label" for="googleMap"> Google Maps </label>
+			                            </div>
+			                            <br/>
+			                            <div class="form-item-horizontal radio" style="margin-left: 0;">
+			                            <input type="radio" id="mapQuest"
+			                                ng-model="mapConf.type"
+			                                value="mapQuest"
+			                                ng-click="initializeMapQuestOSM()">
+			                                <label class="radio-label" for="mapQuest"> MapQuest </label>
+			                            </div>
+			                        </div>
+			                    </div>
+			
+			                <div style="overflow-x: auto;position: absolute;top: 210px;bottom: 0px;left: 20px;right: 0px;">
+			
+			                <div ng-show="allLayers.length > 0">
+			                    <input type="text" ng-model="bagSearch" placeholder="Grupo ou layer" class="sidebar-content-search form-control"/>
+			                </div>
+			
+			                <div id="tree"
+			                    ivh-treeview="allLayers"
+			                    ivh-fn="getSelectedNode"
+			                    ivh-treeview-label-attribute="'label'"
+			                    ivh-treeview-legend-attribute="'legenda'"
+			                    ivh-treeview-children-attribute="'children'"
+			                    ivh-treeview-filter="filter:bagSearch">
+			                </div>
+			
+			
+			                <br/>
+			            </div>
+			        </div>
+			
+			        <div id="layer-legend-detail" ng-switch-when="legend_detail">
+			            <div class="sidebar-content-header" ng-click="exitLegendDetail()" style="cursor: pointer;">
+			                <span style="font-size: 17px;">&#x2190;</span>
+			                    Camadas
+			            </div>
+			            <br style="clear: both;">
+			            <div class="legend-detail-title">{{legendDetailTitle}}</div>
+			                <hr>
+			            <div class="legend-image-container">
+			                <img ng-src="{{legendDetailImage}}" style="padding: 10px;">
+			            </div>
+			        </div>
+			
+			        </div>
+			    </div>
+		    </div>
+	    
+       </div>
+	        
     </div>
     <!-- Google Maps -->
     <div id="gmap" style="width: 0; height: 0"></div>
