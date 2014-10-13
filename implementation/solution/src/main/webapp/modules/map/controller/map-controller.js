@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function MapController( $scope, $injector, $log, $state, $timeout, $modal, $location, $http , $importService ) {
+function MapController( $scope, $injector, $log, $state, $timeout, $modal, $location, $http , $importService, $translate ) {
 	
 	/**
 	 * Injeta os métodos, atributos e seus estados herdados de AbstractCRUDController.
