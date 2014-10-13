@@ -168,8 +168,8 @@
                        
                        <button class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
 	                </div>
+	              </form>
                 </div>
-           	 </form>
 	           	 <div id="sidebar-tabs" style="float: left;">
 		            <ul class="map-menu-items tab-flag" id="menu-sidebar-2">
 		                <li id="menu-item-1" ng-click="toggleSidebarLayers(300, '#menu-item-1');" class="menu-item bg-inactive">
@@ -254,7 +254,6 @@
 	    
        </div>
 	        
-    </div>
     <!-- Google Maps -->
     <div id="gmap" style="width: 0; height: 0"></div>
 
