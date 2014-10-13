@@ -1498,5 +1498,37 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	          }
       	});
     }
+    
+    $scope.setPhotoMarker = function(element) {
+    	 console.log(element);
+    }
+    
+    $scope.enableMarker = function() {
+    	
+    	markerService.enableMarker($scope.markerDetail.data.id, {
+			  callback : function(result) {
+				console.log(result);
+	          },
+	          errorHandler : function(message, exception) {
+	              $scope.message = {type:"error", text: message};
+	              $scope.$apply();
+	          }
+		});
+    	
+    }
+    
+    $scope.disableMarker = function() {
+    	
+    	markerService.disableMarker($scope.markerDetail.data.id, {
+			  callback : function(result) {
+				console.log(result);
+	          },
+	          errorHandler : function(message, exception) {
+	              $scope.message = {type:"error", text: message};
+	              $scope.$apply();
+	          }
+		});
+    	
+    }
 };
 

@@ -61,6 +61,8 @@
                        
                        <button style="float: right;" class="btn btn-default" ng-click="removeMarker()"><i class="itaipu-icon-delete"></i></button>
                        <button style="float: right; margin-right: 5px" class="btn btn-default"><i class="itaipu-icon-edit"></i></button>
+                       <button style="float: right; margin-right: 5px; color: red;" ng-click="disableMarker()" ng-if="markerDetail.data.status == 'ACCEPTED' || markerDetail.data.status == 'PENDING'" class="btn btn-default"><i class="glyphicon glyphicon-ban-circle"></i></button>
+                       <button style="float: right; margin-right: 5px; color: #00981F" ng-click="enableMarker()" ng-if="markerDetail.data.status == 'REFUSED' || markerDetail.data.status == 'PENDING'" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></button>
                        <br>
                        <img src="" style="width: 100%; height: 200px; margin-top: 12px;">
                        <br><br>
@@ -152,9 +154,15 @@
 
     					<br>
     					<hr>
-                       <button class="btn btn-default" ng-click="clearFcMaker()" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
-                       <button id="buttonInsert" class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
+    					
+                       <input type="file" id="upload-input" style="display:none;"
+                       accept="image/*"
+                       onchange="angular.element(this).scope().setPhotoMarker(this)"
+                       />
                        
+                       <button class="btn btn-default" onclick="angular.element('#upload-input').click();" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
+                       
+                       <button class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
 	                </div>
                 </div>
            	 </form>
