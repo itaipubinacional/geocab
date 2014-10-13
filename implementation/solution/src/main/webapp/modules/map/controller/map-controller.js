@@ -1257,6 +1257,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	$scope.toggleSidebar(time, element, '#sidebar-marker-create');
     };
     
+    $scope.toggleSidebarMarkerUpdate = function (time, element){
+    	if(element == "closeButton") {
+            $scope.screenMarkerOpenned = false;
+        }
+    	
+    	console.log($scope);
+    	
+    	$scope.toggleSidebar(time, element, '#sidebar-marker-update');
+    };
+    
     $scope.toggleSidebarMarkerDetail = function (time, element, marker){
     	
     	markerService.findAttributeByMarker($scope.markerDetail.data.id, {
@@ -1427,7 +1437,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	markerService.insertMarker($scope.currentEntity,{
       		callback : function(result) {
       			  $scope.clearFcMaker();
-      			  $scope.msg = {type: "success", text: "Ponto adicionado", dismiss: true};
+      			        			  
+      			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
+      			  $("div.msgMap").show();
+      			  
+      			  setTimeout(function(){
+      				  $("div.msgMap").fadeOut();
+      			  }, 5000);
+
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
@@ -1488,15 +1505,38 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.removeMarker = function(){
-    	markerService.removeMarker($scope.markerDetail.data.id, {
-      		  callback : function(result) {
-      			$scope.map.removeOverlay($scope.markerDetail.overlay);
-	          },
-	          errorHandler : function(message, exception) {
-	              $scope.message = {type:"error", text: message};
-	              $scope.$apply();
-	          }
-      	});
+	var dialog = $modal.open( {
+		templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+		controller: DialogController,
+		windowClass: 'dialog-enable',
+		resolve: {
+			title: function(){return $translate("map.Delete-mark")},
+			message: function(){return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"},
+			buttons: function(){return [ {label:$translate("layer-group-popup.Delete"), css:'btn btn-danger'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
+		}
+	});
+    	dialog.result.then( function(result) {
+
+	    	markerService.removeMarker($scope.markerDetail.data.id, {
+	      		  callback : function(result) {
+	      			$scope.map.removeOverlay($scope.markerDetail.overlay);
+	      			
+	      			
+	      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
+	      			$("div.msgMap").show();
+	      			  
+	      			setTimeout(function(){
+	      			  $("div.msgMap").fadeOut();
+	      			}, 5000);
+	      			
+		          },
+		          errorHandler : function(message, exception) {
+		              $scope.message = {type:"error", text: message};
+		              $scope.$apply();
+		          }
+	      	});
+				
+	});
     }
     
     $scope.setPhotoMarker = function(element) {

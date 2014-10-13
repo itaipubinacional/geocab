@@ -94,6 +94,10 @@
 						    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
 						  </optgroup>
 						</select>
+						
+						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
+                       		 		style="top: -20px">Campo Obrigatório</span>
+                       	</div>
                        <br>
                        
                        <div ng-repeat="attribute in attributesByLayer" style="position: relative">
