@@ -34,42 +34,43 @@
                 <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
             </div>
 
-            <br/>
 
-            <div class="position-relative" style="width: 350px;">
-                <label class="detail-label" required><spring:message code="Layer"/></label>
+            <!-- Camada externa -->
+            <span ng-if="currentEntity.dataSource.url">
+                <div  class="position-relative" style="width: 350px;">
+                    <label class="detail-label" required><spring:message code="Layer"/></label>
+
                 <div class="input-group">
-                    <input name="camada" type="text" disabled class="form-control"
-                           ng-model="currentEntity.name"
-                           placeholder="Informe a camada"
-                           maxlength="144" ng-minlength="1"
-                           ng-hover
-                           required>
-                <span
-                        class="input-group-btn">
+
+                <input name="camada" type="text" disabled class="form-control"
+                    ng-model="currentEntity.name"
+                    placeholder="Informe a camada"
+                    maxlength="144" ng-minlength="1"
+                    ng-hover
+                    required />
+                <span class="input-group-btn">
                     <button ng-click="selectLayer()"
-                            ng-disabled="currentEntity.dataSource == null || currentEntity.id != null"
-                            class="btn btn-default" type="button">
+                        ng-disabled="currentEntity.dataSource == null || currentEntity.id != null"
+                        class="btn btn-default" type="button">
                         <i class="icon-plus-sign icon-large"></i>
                     </button>
                 </span>
                 </div>
+                    <span ng-show="form.layer.$error.required && (form.$submitted || form.layer.$dirty)" class="tooltip-validation"><spring:message code="Layer"/> <spring:message code="required"/></span>
+                </div>
 
-                <span ng-show="form.layer.$error.required && (form.$submitted || form.layer.$dirty)" class="tooltip-validation"><spring:message code="Layer"/> <spring:message code="required"/></span>
-            </div>
-
-            <div class="form-item position-relative" ng-if="currentEntity.name" style="margin: 20px 0;">
+                <div class="form-item position-relative" ng-if="currentEntity.name" style="margin: 20px 0;">
 
                 <label class="detail-label"><spring:message code="Title"/></label>
 
                 <div class="position-relative input-group" style="width: 350px;">
-                    <input name="titulo" type="text" class="form-control"
-                           ng-model="currentEntity.title"
-                           placeholder="Informe o título"
-                           maxlength="144" ng-minlength="1"
-                           ng-hover
-                           required>
-                </div>
+                <input name="title" type="text" class="form-control"
+                    ng-model="currentEntity.title"
+                    placeholder="Informe o título"
+                    maxlength="144" ng-minlength="1"
+                    ng-hover
+                    required>
+                    </div>
                 <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty)" class="tooltip-validation"><spring:message code="Title"/> <spring:message code="required"/></span>
 
                 <br/>
@@ -77,13 +78,30 @@
                 <label class="detail-label"><spring:message code="admin.layer-config.Symbology"/></label>
 
                 <div class="position-relative input-group" style="width: 350px;">
-                    <img style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.legend}}"/>
+                <img style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.legend}}"/>
                 </div>
 
-            </div>
+                </div>
+            </span>
+
+            <!-- Camada interna -->
+            <span ng-if="!currentEntity.dataSource.url && currentEntity.dataSource.id ">
+                <br/>
+                <label class="detail-label"><spring:message code="Title"/></label>
+                <div class="position-relative input-group" style="width: 350px;">
+                <input name="title" type="text" class="form-control"
+                    ng-model="currentEntity.title"
+                    placeholder="Informe o título"
+                    maxlength="144" ng-minlength="1"
+                    ng-hover
+                    required />
+                </div>
+                <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty)" class="tooltip-validation"><spring:message code="Title"/> <spring:message code="required"/></span>
+
+                <br/>
+            </span>
 
             <br/>
-
             <div class="form-item position-relative" style="width: 350px;">
                 <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
                 <div class="input-group">

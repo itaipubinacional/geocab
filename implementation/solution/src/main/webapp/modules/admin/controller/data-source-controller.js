@@ -123,7 +123,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * não cabem em uma entidade. Ex.:
 	 * @filter - Filtro da consulta
 	 */
-	$scope.data = { filter:null, showFields: true };
+	$scope.data = { filter:null, showFields: false };
 	/**
 	 * Armazena a entitidade corrente para edição ou detalhe.
 	 */

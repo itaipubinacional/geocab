@@ -360,6 +360,16 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 }
 
 .msgMap > .alert {
+	position:absolute;
+	z-index:2;
 	margin-bottom:0px;
+	margin-left: 80px;
+	text-align: center;
+	width: 90%;
+	top:0;
+}
+
+.msgMap > .alert > .close {
+	position:initial;
 }
 
