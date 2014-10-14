@@ -6,13 +6,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
-
-	<c:if test="${!empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION}">
-		${ fn:replace(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message, 'Bad credentials', 'Username/Password are incorrect') }
-		<c:remove scope="session" var="SPRING_SECURITY_LAST_EXCEPTION"/>
-	</c:if>
-	
-	<div class="login-wrapper">
+    <c:if test="${!empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION}">
+        <input type="hidden" value="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}"  id="msg" />
+    <c:remove scope="session" var="SPRING_SECURITY_LAST_EXCEPTION"/>
+    </c:if>
+    <div class="login-wrapper">
 		<div class="border-login">
 			<div class="border-left">
 				<div class="border-red"></div>
@@ -28,6 +26,9 @@
 			<div class="title-short-login"></div>
 			<div class="title-login">
 			</div>
+            <!--Message -->
+            <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
+
 			<form method="post" action="./j_spring_security_check" name="form_login" default-button="enter" novalidate>
 				<table>
 					<tr>

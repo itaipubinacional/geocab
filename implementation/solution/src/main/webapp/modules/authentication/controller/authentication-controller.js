@@ -11,13 +11,19 @@ function AuthenticationController( $scope, $injector, $log, $state, $timeout, $m
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
     $scope.currentEntity = {};
+    $scope.msg = null ;
 
-    /*-------------------------------------------------------------------
-     * 		 				 	  NAVIGATIONS
-     *-------------------------------------------------------------------*/
-    $scope.initialize = function( toState, toParams, fromState, fromParams ) {
-        $log.info('Starting the front controller. Authentication');
-    };
+    //if return error msg
+    if($('#msg').val()){
+
+        var msg = $('#msg').val();
+
+        if( msg == 'User is disabled' ) msg = $translate('authentication.User-is-disabled');
+        if( msg == 'Bad credentials' ) msg = $translate('authentication.Bad-credentials');
+
+        $scope.msg = {type:"danger", text: msg, dismiss:true};
+    }
+
 
     $scope.changeToInsert = function() {
         $log.info('changeToInsert');
@@ -47,12 +53,16 @@ function AuthenticationController( $scope, $injector, $log, $state, $timeout, $m
      * 		 				 	  BEHAVIORS
      *-------------------------------------------------------------------*/
     $scope.login = function(){
-        if ( !$scope.form_login.$valid ) {
-            $scope.msg = {type:'danger', text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
-            return;
-        }
+        if ( !$scope.form_login.$valid )
+           return;
+
 
         $('form[name="form_login"]').submit();
     }
+
+    $scope.close = function( fechar ){
+        $scope.msg = null;
+    };
+
 
 };

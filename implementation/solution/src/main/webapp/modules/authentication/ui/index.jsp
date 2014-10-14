@@ -14,7 +14,7 @@
 		<jsp:include page="../../default-styles.jsp"/>
 		
 		<!-- Scripts -->
-		<jsp:include page="../../default-scripts.jsp"/> <!-- FIXME Deixar caminhos relativos.. -->
+		<jsp:include page="../../default-scripts.jsp"/>
 
 		<style>
 		.create-account .modal-dialog {
