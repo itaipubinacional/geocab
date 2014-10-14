@@ -40,7 +40,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	private static final long	serialVersionUID	= -4052986759552589018L;
 	
 	//----
-	// Usuários padrões
+	// Default user
 	//----
 	public static final User ADMINISTRATOR = new User(1L, "Administrator", "admin@geocab.com.br"  , true , UserRole.ADMINISTRATOR , "admin");
 	
