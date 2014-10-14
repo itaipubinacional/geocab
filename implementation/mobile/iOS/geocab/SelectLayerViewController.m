@@ -29,16 +29,37 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    self.tableView.backgroundColor = [UIColor darkGrayColor];
+    self.view.backgroundColor = [UIColor darkGrayColor];
+    
+    //Navigation Bar
     self.navigationItem.title = NSLocalizedString(@"Layers", @"");
+    self.navigationController.navigationBar.backgroundColor = [UIColor blackColor];
+
     
-    UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
-    [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
-    [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
-    [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
-    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
-    self.navigationItem.rightBarButtonItem = button;
+    if (self.multipleSelection) {
+        UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
+        [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
+        [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
+        [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
+        self.navigationItem.leftBarButtonItem = button;
+        
+        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:@"X" style:UIBarButtonItemStylePlain target:self action:@selector(didFinish)];
+        self.navigationItem.rightBarButtonItem = buttonItem;
+        
+    } else {
+        UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
+        [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
+        [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
+        [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
+        self.navigationItem.rightBarButtonItem = button;
+        
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancel)];
+    }
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancel)];
+    
     
     LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
     [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
@@ -48,6 +69,8 @@
         [self.tableView reloadData];
         
     } userName:@"admin@geocab.com.br" password:@"admin"];
+    
+    
 }
 
 -(void)arrangeArrayInSections:(NSArray*) array {
@@ -150,8 +173,9 @@
     Layer *layer = (Layer*) [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
     
     cell.layerTitle.text = layer.title;
+//    cell.layerTitle.textColor = [UIColor whiteColor];
     cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
-//    cell.layer = [layer copy];
+//    cell.backgroundColor = [UIColor blackColor];
     
     return cell;
 }

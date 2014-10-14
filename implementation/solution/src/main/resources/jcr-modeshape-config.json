@@ -1,0 +1,35 @@
+{
+    "name" : "geocab-repository",
+    "workspaces" : {
+        "default" : "default",
+        "allowCreation" : true
+    },
+    "security" : {
+        "anonymous" : {
+            "roles" : ["readonly","readwrite","admin"],
+            "useOnFailedLogin" : false
+        }
+    },
+    "storage" : {
+        "cacheConfiguration" : "jcr-infinispan-cache-config.xml",
+        "cacheName" : "geocab-repository-cache",
+        "binaryStorage" : {
+            "type" : "file",
+            "directory": "/tmp/geocab/files",
+            "minimumBinarySizeInBytes" : 40
+        }
+    },
+    "query" : {
+        "enabled" : true,
+        "indexStorage" : {
+            "type" : "filesystem",
+            "location" : "/tmp/geocab/indexes"
+        },
+        "indexing" : {
+            "rebuildOnStartup" : {
+                "when" : "if_missing",
+                "mode" : "async"
+            }
+        }
+    }
+}

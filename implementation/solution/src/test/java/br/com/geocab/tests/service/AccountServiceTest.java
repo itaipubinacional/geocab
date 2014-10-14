@@ -12,7 +12,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.service.AccountService;
-import br.com.geocab.tests.common.AbstractIntegrationTest;
+import br.com.geocab.tests.AbstractIntegrationTest;
 
 /**
  *

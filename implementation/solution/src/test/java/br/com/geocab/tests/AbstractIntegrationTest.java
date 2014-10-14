@@ -1,4 +1,4 @@
-package br.com.geocab.tests.common;
+package br.com.geocab.tests;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;

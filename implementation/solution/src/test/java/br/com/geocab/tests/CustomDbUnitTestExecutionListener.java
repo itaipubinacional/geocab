@@ -1,4 +1,4 @@
-package br.com.geocab.tests.common;
+package br.com.geocab.tests;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.IDatabaseConnection;

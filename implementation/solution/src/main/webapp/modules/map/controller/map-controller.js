@@ -1002,8 +1002,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         } else {
 
-        	
-        	
         	$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
         	$scope.currentEntity = new Marker();
         	
@@ -1258,11 +1256,46 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     };
     
     $scope.toggleSidebarMarkerUpdate = function (time, element){
+    	$scope.currentEntity = $scope.markerDetail.data;
+    	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
         }
-    	
-    	console.log($scope);
+    
+    	layerGroupService.listAllLayerGroups({
+    		callback : function(result) {
+                $scope.layersGroups = result;
+                
+                markerService.findAttributeByMarker($scope.currentEntity.id, {
+	       			 callback : function(result) {
+	       				 
+	       				$scope.attributesByMarker = result;
+	       				
+	       				 angular.forEach($scope.layersGroups, function(value, index){
+	       					angular.forEach(value.layers, function(val, ind){
+	       						if( val.id == result[0].marker.layer.id ) {
+	       							val.selected = true;
+	       							$scope.currentEntity.layer = val;
+	           					} else {
+	           						val.selected = false;
+	           					}
+	       					});
+	       				 });
+	       				 
+	       				 $scope.$apply();
+	       	          },
+	       	          errorHandler : function(message, exception) {
+	       	              $scope.message = {type:"error", text: message};
+	       	              $scope.$apply();
+	       	          }
+       	    	});
+                
+            },
+            errorHandler : function(message, exception) {
+                $scope.message = {type:"error", text: message};
+                $scope.$apply();
+            }
+    	});
     	
     	$scope.toggleSidebar(time, element, '#sidebar-marker-update');
     };
@@ -1281,8 +1314,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 					  $scope.markerResultDetail.header.date = (date.getDate() < 10 ? "0" : "") + date.getDate() + "/" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "/" + date.getFullYear();
 					  $scope.markerResultDetail.header.layer = val.attribute.layer.name;
 				  }
-				  
-				  
 				  
 			  })
 			  $scope.$apply();
@@ -1334,9 +1365,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        }
 	        //Executa a animação.
 	        $(slide).toggle('slide', { direction: 'right' }, time);
-	        $('.menu-sidebar-container').animate({
-	            'right' : opening ? '20%' : '3px'
-	        }, time);
+	        if(slide != "#sidebar-marker-update") {
+		        $('.menu-sidebar-container').animate({
+		            'right' : opening ? '20%' : '3px'
+		        }, time);
+	        }
 	    } else {
 	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
 	    }
@@ -1402,6 +1435,39 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	$scope.map.removeOverlay($scope.marker);
         
         $scope.screenMarkerOpenned = false;
+    }
+    
+    $scope.updateMarker = function(){
+    	/*
+    	 * TODO: Verificar se todo o formário foi preenchido.
+    	 * */
+    	
+    	/*if (!$scope.form('sidebarMarkerUpdate').$valid){
+    		 $scope.msg = {type: "danger", text: "preencha", dismiss: true};
+    		return;
+    	}*/
+    	
+    	if( $scope.currentEntity.layer == null ) {
+    		var layer = new Layer();
+        	layer.id = $scope.currentEntity.layer;
+        	$scope.currentEntity.layer = layer;	
+    	}
+    	
+    	
+    	$scope.currentEntity.markerAttribute = $scope.attributesByMarker;
+    		
+    	markerService.updateMarker($scope.currentEntity,{
+      		callback : function(result) {
+      		
+
+                  $scope.$apply();
+              },
+              errorHandler : function(message, exception) {
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
+              }
+      	});
+
     }
     
     $scope.insertMarker = function(){
@@ -1582,7 +1648,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
   		});
     		
     	});
-    
     	
     }
     
@@ -1621,8 +1686,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		});
     		
     	});
-    	
-    	
     	
     }
 };
