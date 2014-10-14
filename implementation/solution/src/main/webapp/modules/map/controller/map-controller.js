@@ -1611,29 +1611,77 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.enableMarker = function() {
     	
-    	markerService.enableMarker($scope.markerDetail.data.id, {
-			  callback : function(result) {
-				console.log(result);
-	          },
-	          errorHandler : function(message, exception) {
-	              $scope.message = {type:"error", text: message};
-	              $scope.$apply();
-	          }
-		});
+    	var dialog = $modal.open( {
+    		templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+    		controller: DialogController,
+    		windowClass: 'dialog-enable',
+    		resolve: {
+    			title: function(){return $translate("map.Enable-mark")},
+    			message: function(){return $translate("map.Are-you-sure-you-want-to-enable-the-mark") + " ?"},
+    			buttons: function(){return [ {label:$translate("map.Enable"), css:'btn btn-success'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
+    		}
+    	});
+    	
+    	
+    	dialog.result.then(function(result) {
+    		
+    		markerService.enableMarker($scope.markerDetail.data.id, {
+  			  callback : function(result) {
+  				console.log(result);
+  				
+  				
+  				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-enabled"), dismiss: true};
+      			$("div.msgMap").show();
+      			  
+      			setTimeout(function(){
+      			  $("div.msgMap").fadeOut();
+      			}, 5000);
+  				
+  	          },
+  	          errorHandler : function(message, exception) {
+  	              $scope.message = {type:"error", text: message};
+  	              $scope.$apply();
+  	          }
+  		});
+    		
+    	});
     	
     }
     
     $scope.disableMarker = function() {
+    	var dialog = $modal.open( {
+    		templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+    		controller: DialogController,
+    		windowClass: 'dialog-enable',
+    		resolve: {
+    			title: function(){return $translate("map.Disable-mark")},
+    			message: function(){return $translate("map.Are-you-sure-you-want-to-disable-the-mark") + " ?"},
+    			buttons: function(){return [ {label:$translate("map.Disable"), css:'btn btn-danger'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
+    		}
+    	});
     	
-    	markerService.disableMarker($scope.markerDetail.data.id, {
+    	dialog.result.then(function(result) {
+    		
+    		markerService.disableMarker($scope.markerDetail.data.id, {
 			  callback : function(result) {
 				console.log(result);
+				
+				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
+      			$("div.msgMap").show();
+      			  
+      			setTimeout(function(){
+      			  $("div.msgMap").fadeOut();
+      			}, 5000);
+				
+				
 	          },
 	          errorHandler : function(message, exception) {
 	              $scope.message = {type:"error", text: message};
 	              $scope.$apply();
 	          }
-		});
+    		});
+    		
+    	});
     	
     }
 };

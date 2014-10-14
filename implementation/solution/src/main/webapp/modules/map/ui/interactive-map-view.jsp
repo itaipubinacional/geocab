@@ -192,7 +192,7 @@
 						
 						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
                        		 		style="top: -20px">Campo Obrigatório</span>
-                       	</div>
+                    
                        <br>
                        
                        <div ng-repeat="attribute in attributesByLayer" style="position: relative">
@@ -262,6 +262,7 @@
                        <button class="btn btn-default" onclick="angular.element('#upload-input').click();" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
                        
                        <button class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
+                       </div>
 	                </div>
 	              </form>
                 </div>
