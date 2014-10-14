@@ -13,7 +13,7 @@ import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.entity.layer.MapScale;
 import br.com.geocab.domain.service.DataSourceService;
 import br.com.geocab.domain.service.LayerGroupService;
-import br.com.geocab.tests.common.AbstractIntegrationTest;
+import br.com.geocab.tests.AbstractIntegrationTest;
 
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;

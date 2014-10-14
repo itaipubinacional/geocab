@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.service.DataSourceService;
-import br.com.geocab.tests.common.AbstractIntegrationTest;
+import br.com.geocab.tests.AbstractIntegrationTest;
 
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -33,7 +33,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 		dataSource.setName("Data Source");
 		dataSource.setLogin("user");
 		dataSource.setPassword("password123");
-		dataSource.setInternal(true);
+//		dataSource.setInternal(true);
 		dataSource.setUrl("url1");
 	
 		
@@ -44,7 +44,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals("user", dataSource.getLogin());
 		Assert.assertEquals("password123", dataSource.getPassword());
 		Assert.assertEquals("url1", dataSource.getUrl());
-		Assert.assertTrue(dataSource.getInternal());
+//		Assert.assertTrue(dataSource.getInternal());
 			
 	}
 	
@@ -60,7 +60,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 		dataSource.setLogin("user changed");
 		dataSource.setPassword("password123 changed");
 		dataSource.setUrl("url1 changed");
-		dataSource.setInternal(false);
+//		dataSource.setInternal(false);
 		
 		dataSource = dataSourceService.updateDataSource(dataSource);
 		
@@ -70,7 +70,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals("user changed", dataSource.getLogin());
 		Assert.assertEquals("password123 changed", dataSource.getPassword());
 		Assert.assertEquals("url1 changed", dataSource.getUrl());
-		Assert.assertFalse(dataSource.getInternal());
+//		Assert.assertFalse(dataSource.getInternal());
 		
 	}
 	

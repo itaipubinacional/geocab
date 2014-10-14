@@ -221,4 +221,17 @@
 	<bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
+    
+    <!-- 
+		JCR ModeShape - MetaFile
+	-->
+	<bean id="metaFileRepository" 
+		class="br.com.geocab.infrastructure.jcr.MetaFileRepository"/>
+		
+	<bean id="modeShapeRepositoryFactory" class="br.com.geocab.infrastructure.jcr.modeshape.ModeShapeRepositoryFactory">
+       <property name="configuration" value="classpath:jcr-modeshape-config.json"/>
+    </bean>
+    
+	<bean id="modeShapeSessionFactory" 
+		class="br.com.geocab.infrastructure.jcr.modeshape.ModeShapeSessionFactory"/>
 </beans>
