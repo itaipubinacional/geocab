@@ -15,7 +15,10 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
     /*-------------------------------------------------------------------
      * 		 				 	  NAVIGATIONS
      *-------------------------------------------------------------------*/
-    $scope.initialize = function(){};
+    $scope.initialize = function(){
+
+
+    };
 
     /*-------------------------------------------------------------------
      * 		 				 	  BEHAVIORS
