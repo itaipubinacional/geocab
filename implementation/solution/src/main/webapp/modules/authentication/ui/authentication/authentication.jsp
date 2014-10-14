@@ -7,6 +7,11 @@
 <!DOCTYPE html>
 <html>
 
+	<c:if test="${!empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION}">
+		${ fn:replace(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message, 'Bad credentials', 'Username/Password are incorrect') }
+		<c:remove scope="session" var="SPRING_SECURITY_LAST_EXCEPTION"/>
+	</c:if>
+	
 	<div class="login-wrapper">
 		<div class="border-login">
 			<div class="border-left">
