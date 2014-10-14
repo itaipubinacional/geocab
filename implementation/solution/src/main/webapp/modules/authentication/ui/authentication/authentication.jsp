@@ -5,7 +5,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-
 <html>
 
 	<div class="login-wrapper">
@@ -23,8 +22,6 @@
 			<div class="login-logo"></div>
 			<div class="title-short-login"></div>
 			<div class="title-login">
-				<!--Message -->
-        		<div ng-include="'static/libs/eits-directives/alert/alert.html'" class="msg"></div>
 			</div>
 			<form method="post" action="./j_spring_security_check" name="form_login" default-button="enter" novalidate>
 				<table>
@@ -35,7 +32,7 @@
 						<td><span ng-show="form_login.email.$error.required && form_login.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>							
 					</tr>
 					<tr>
-						<td><span ng-show="form_login.email.$error.email" class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
+						<td><span ng-show="form_login.email.$error.email && form_login.$submitted" class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
 					</tr>
 					<tr>	
 						<td><input class="form-control" 
@@ -49,7 +46,7 @@
 					<tr>
 						<td>
 							<label><spring:message code="authentication.Password" /></label>
-							<a class="forget-password" ng-click="changeToUpdate()"><spring:message code="authentication.Forget-password" /></a>
+							<%--<a class="forget-password" ng-click="changeToForgetPassword()"><spring:message code="authentication.Forget-password" /></a>--%>
 						</td>
 					</tr>
 					<tr>
@@ -99,13 +96,4 @@
 			</table>
 		</div>
 	</div>
-
-
-   	
-   	<form id="facebookSignin" action="<c:url value="/signin/facebook"/>" method="POST">
-   		<input type="hidden" name="scope" value="email,public_profile"/>
-				<button type="submit" class="facebook-btn">
-					<i data-icon="m" class="icon"></i>
-				</button>
-	</form>
 </html>
