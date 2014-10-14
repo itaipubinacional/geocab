@@ -60,7 +60,7 @@
                         <hr>
                        
                        <button style="float: right;" class="btn btn-default" ng-click="removeMarker()"><i class="itaipu-icon-delete"></i></button>
-                       <button style="float: right; margin-right: 5px" class="btn btn-default"><i class="itaipu-icon-edit"></i></button>
+                       <button style="float: right; margin-right: 5px" class="btn btn-default" ng-click="toggleSidebarMarkerUpdate(300, '#menu-item-1')"><i class="itaipu-icon-edit"></i></button>
                        <button style="float: right; margin-right: 5px; color: red;" ng-click="disableMarker()" ng-if="markerDetail.data.status == 'ACCEPTED' || markerDetail.data.status == 'PENDING'" class="btn btn-default"><i class="glyphicon glyphicon-ban-circle"></i></button>
                        <button style="float: right; margin-right: 5px; color: #00981F" ng-click="enableMarker()" ng-if="markerDetail.data.status == 'REFUSED' || markerDetail.data.status == 'PENDING'" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></button>
                        <br>
@@ -76,7 +76,102 @@
                 </div>
            	 </form>
            </div>
+			
+		<div id="sidebar-marker-update" class="sidebar-style">
+		  	<form name="sidebarMarkerUpdate"  method="post"  default-button="buttonInsert" novalidate>
+		  		<div>
+	               <div class="sidebar-coloredbar"></div>
+	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
+	
+					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
+	                   <div class="sidebar-content-header">Editar postagem</div>
+                        <br style="clear: both;">
+                        <br>
+                       <label>Camada</label>                     
+                       <select name="camada" ng-model="currentEntity.layer" chosen class="form-control" ng-change="listAttributesByLayer(currentEntity.layer)" ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" required>                       	
+						  <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
+						    <option ng-repeat="layer in group.layers" ng-selected="layer.selected" value="{{ layer.id  }}">{{ layer.title }}</option>	    
+						  </optgroup>
+						</select>
+						
+						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
+                       		 		style="top: -20px">Campo Obrigatório</span>
+                       	</div>
+                       <br>
+                       
+                       <div ng-repeat="markerAttribute in attributesByMarker" style="position: relative">
+                    
+                       		 <ng-form name="ngSideMarker" default-button="buttonInsert">
+                       		 <label >{{ markerAttribute.attribute.name }}</label> 
+                       		 
+                       		 <input type="number" 
+                       		 		name="number1"
+                       		 		ng-if="markerAttribute.attribute.type == 'NUMBER'" 
+                       		 		class="form-control" 
+                       		 		ng-model="markerAttribute.value"
+                       		 		value="{{ markerAttribute.value }}"
+                       		 		ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+									required
+                       		 		>
+                       		 
+                       		 <input type="date" 
+                       		 		name="date1"
+                       		 		ng-if="markerAttribute.attribute.type == 'DATE'" 
+                       		 		class="form-control" 
+                       		 		ng-model="markerAttribute.value"
+                       		 		ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+                       		 		required
+                       		 		>
+                       		 		
+                       		 <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'" >
+                       		 		
+                       		  		<input type="radio" name="boolean" ng-model="markerAttribute.value" value="Yes">
+                       		  		<input type="radio" name="boolean" ng-model="markerAttribute.value" value="No">
+                       		 </div>
 
+                       		 <input type="text" 
+                       		 		ng-if="markerAttribute.attribute.type == 'TEXT'" 
+                       		 		name="texto"
+                       		 		class="form-control" 
+                       		 		ng-model="markerAttribute.value"
+                       		 		ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+                       		 		required
+                       		 		>
+							
+							 <span class="tooltip-validation" ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"  
+                       		 		style="top: 3px">Campo Obrigatório</span>
+                       		 
+                       		 <span class="tooltip-validation" ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"  
+                       		 		style="top: 3px">Campo Obrigatório</span>
+                       		 		
+                       		 <span class="tooltip-validation" ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"  
+                       		 		style="top: 3px">Campo Obrigatório</span>
+                       		 
+                       		 <span class="tooltip-validation" ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"  
+                       		 		style="top: 3px">Campo Obrigatório</span>
+                       		 		
+							 <ng-form>
+							 
+                       </div>
+
+                      
+                       <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
+                       <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
+
+    					<br>
+    					<hr>
+    					
+                       <input type="file" id="upload-input" style="display:none;"
+                       accept="image/*"
+                       onchange="angular.element(this).scope().setPhotoMarker(this)"
+                       />
+                       
+                       <button class="btn btn-default" onclick="angular.element('#upload-input').click();" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
+                       
+                       <button class="btn btn-primary" ng-click="updateMarker()" style="float: right">Enviar</button>
+	                </div>
+	            </form>
+          </div>
 		  <div id="sidebar-marker-create" class="sidebar-style">
 		  	<form name="sidebarMarker"  method="post"  default-button="buttonInsert" novalidate>
 		  					
