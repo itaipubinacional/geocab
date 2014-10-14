@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "User.h"
 #import "ControllerUtil.h"
+#import "AccountDelegate.h"
 
 @interface LoginViewController ()
 
@@ -69,10 +70,16 @@ extern User *loggedUser;
 
 - (IBAction)login:(id)sender {
     if (self.isFormValid) {
-        User *loggedUser = [[User alloc] init];
-        loggedUser.name = _username.text;
-        loggedUser.email = _password.text;
-        [self authenticateUser:loggedUser];
+        AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/"];
+        [accountDelegate loginWithEmail:_username.text password:_password.text successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+            User *loggedUser = [[User alloc] init];
+            loggedUser = [[result array] objectAtIndex:0];
+            [self authenticateUser:loggedUser];
+        } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+            UIAlertView *errorMessage = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [errorMessage show];
+        }];
+        
     }
 }
 
