@@ -159,6 +159,18 @@
 			<version>3.2.0</version>
 		</dependency>
 		
+		<!-- JCR - ModeShape -->
+        <dependency>
+            <groupId>org.modeshape</groupId>
+            <artifactId>modeshape-jcr</artifactId>
+            <version>${modeshape.version}</version>
+        </dependency>
+	    <dependency>
+	      <groupId>org.infinispan</groupId>
+	      <artifactId>infinispan-cachestore-jdbm</artifactId>
+	      <version>${infinispan.version}</version>
+	    </dependency>
+		
 		<!-- OGC SCHEMAS -->
 		<dependency>
 			<groupId>org.jvnet.ogc</groupId>
