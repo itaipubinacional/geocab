@@ -34,3 +34,6 @@
     display    : inline-block;
 }
 
+.chosen-container{
+    width: 100% !important;
+}
