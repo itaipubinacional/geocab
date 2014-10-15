@@ -81,22 +81,37 @@
 		  	<form name="sidebarMarkerUpdate"  method="post"  default-button="buttonInsert" novalidate>
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
-	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
+	               <span ng-click="toggleSidebarMarkerUpdate(300, 'closeButton');" class="icon itaipu-icon-close sidebar-close"></span>
 	
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 	                   <div class="sidebar-content-header">Editar postagem</div>
                         <br style="clear: both;">
                         <br>
-                       <label>Camada</label>                     
-                       <select name="camada" ng-model="currentEntity.layer" chosen class="form-control" ng-change="listAttributesByLayer(currentEntity.layer)" ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" required>                       	
+                       <label>Camada</label>     
+                       <!-- <select name="camada" ng-model="currentEntity.layer" class="form-control" ng-change="listAttributesByLayer(currentEntity.layer)" ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" required>                       	
 						  <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
 						    <option ng-repeat="layer in group.layers" ng-selected="layer.selected" value="{{ layer.id  }}">{{ layer.title }}</option>	    
 						  </optgroup>
+						</select>-->
+						 <select 
+                       ng-change="listAttributesByLayer()" 
+                       	   data-placeholder="Selecione uma camada"
+                       	   name="camada"                
+                       	   ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"        	   
+                       	   ng-model="currentEntity.layer" 
+	                       chosen 
+	                       class="form-control"
+	                       ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" 
+	                       required>    
+	                                          	
+							  <!-- <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
+							    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
+							  </optgroup> -->
 						</select>
 						
 						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
                        		 		style="top: -20px">Campo Obrigatório</span>
-                       	</div>
+                       	
                        <br>
                        
                        <div ng-repeat="markerAttribute in attributesByMarker" style="position: relative">
@@ -169,6 +184,7 @@
                        <button class="btn btn-default" onclick="angular.element('#upload-input').click();" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
                        
                        <button class="btn btn-primary" ng-click="updateMarker()" style="float: right">Enviar</button>
+                    </div>
 	                </div>
 	            </form>
           </div>
@@ -177,17 +193,31 @@
 		  					
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
-	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
+	               <span ng-click="clearFcMaker(true)" class="icon itaipu-icon-close sidebar-close"></span>
 	
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 	                   <div class="sidebar-content-header">Nova postagem</div>
                         <br style="clear: both;">
                         <br>
-                       <label>Camada</label>                     
-                       <select name="camada" ng-model="currentEntity.layer" chosen class="form-control" ng-change="listAttributesByLayer(currentEntity.layer)" ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" required>                       	
-						  <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
-						    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
-						  </optgroup>
+                       <label>Camada</label> 
+                                         
+                       <!-- no-results-text="Nenhum registro encontrado com" -->
+						
+                       <select 
+                       ng-change="listAttributesByLayer()" 
+                       	   data-placeholder="Selecione uma camada"
+                       	   name="camada"                
+                       	   ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"        	   
+                       	   ng-model="currentEntity.layer" 
+	                       chosen 
+	                       class="form-control" 
+	                       
+	                       ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" 
+	                       required>    
+	                                          	
+							  <!-- <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
+							    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
+							  </optgroup> -->
 						</select>
 						
 						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  

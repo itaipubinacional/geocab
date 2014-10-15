@@ -1,5 +1,5 @@
 (function(window, angular, undefined) {
-	"use strict";
+	"use strict"; 
 
 	//Start the AngularJS
 	var projectModule = angular.module("map", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker" , "eits-angular-translate" , "ivh.treeview", "ivh.treeview-extend",'eits-default-button'])

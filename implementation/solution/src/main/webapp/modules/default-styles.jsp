@@ -20,6 +20,11 @@
 <link href="<c:url value="/static/style/sprites.css"/>" type="text/css" rel="stylesheet" />
 <link href="<c:url value="/static/style/global.css"/>" type="text/css" rel="stylesheet" />
 
+<!-- chosen -->
+
+<link href="<c:url value="/static/libs/angular-chosen/chosen-spinner.css"/>" type="text/css" rel="stylesheet" />
+<link href="<c:url value="/static/libs/angular-chosen/chosen.css"/>" type="text/css" rel="stylesheet" />
+
 <!-- Itaipu Icons -->
 
 <link href="<c:url value="/static/style/icon-itaipu/styles.css"/>" type="text/css" rel="stylesheet" />
