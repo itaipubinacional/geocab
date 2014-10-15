@@ -87,11 +87,26 @@
 	                   <div class="sidebar-content-header">Editar postagem</div>
                         <br style="clear: both;">
                         <br>
-                       <label>Camada</label>     sad  
-                       <select name="camada" ng-model="currentEntity.layer" class="form-control" ng-change="listAttributesByLayer(currentEntity.layer)" ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" required>                       	
+                       <label>Camada</label>     
+                       <!-- <select name="camada" ng-model="currentEntity.layer" class="form-control" ng-change="listAttributesByLayer(currentEntity.layer)" ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" required>                       	
 						  <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
 						    <option ng-repeat="layer in group.layers" ng-selected="layer.selected" value="{{ layer.id  }}">{{ layer.title }}</option>	    
 						  </optgroup>
+						</select>-->
+						 <select 
+                       ng-change="listAttributesByLayer()" 
+                       	   data-placeholder="Selecione uma camada"
+                       	   name="camada"                
+                       	   ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"        	   
+                       	   ng-model="currentEntity.layer" 
+	                       chosen 
+	                       class="form-control"
+	                       ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" 
+	                       required>    
+	                                          	
+							  <!-- <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
+							    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
+							  </optgroup> -->
 						</select>
 						
 						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
