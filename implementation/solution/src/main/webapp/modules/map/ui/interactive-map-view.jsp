@@ -81,7 +81,7 @@
 		  	<form name="sidebarMarkerUpdate"  method="post"  default-button="buttonInsert" novalidate>
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
-	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
+	               <span ng-click="toggleSidebarMarkerUpdate(300, 'closeButton');" class="icon itaipu-icon-close sidebar-close"></span>
 	
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 	                   <div class="sidebar-content-header">Editar postagem</div>
@@ -96,7 +96,7 @@
 						
 						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
                        		 		style="top: -20px">Campo Obrigatório</span>
-                       	</div>
+                       	
                        <br>
                        
                        <div ng-repeat="markerAttribute in attributesByMarker" style="position: relative">
@@ -169,6 +169,7 @@
                        <button class="btn btn-default" onclick="angular.element('#upload-input').click();" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
                        
                        <button class="btn btn-primary" ng-click="updateMarker()" style="float: right">Enviar</button>
+                    </div>
 	                </div>
 	            </form>
           </div>
@@ -177,7 +178,7 @@
 		  					
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
-	               <span ng-click="clearFcMaker()" class="icon itaipu-icon-close sidebar-close"></span>
+	               <span ng-click="clearFcMaker(true)" class="icon itaipu-icon-close sidebar-close"></span>
 	
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 	                   <div class="sidebar-content-header">Nova postagem</div>
