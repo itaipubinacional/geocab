@@ -2,13 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.geocab" >
 
+    <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".controller.app.AppController"
+        android:name="br.com.geocab.controller.app.AppController"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -36,12 +40,16 @@
         </activity>
         <activity
             android:name="br.com.geocab.controller.activity.MapActivity"
-            android:label="@string/title_activity_map"
-            android:hardwareAccelerated="true">
+            android:hardwareAccelerated="true"
+            android:label="@string/title_activity_map" >
         </activity>
         <activity
             android:name="br.com.geocab.controller.activity.MarkActivity"
             android:label="@string/title_activity_mark" >
+        </activity>
+        <activity
+            android:name="br.com.geocab.controller.activity.LayerActivity"
+            android:label="@string/title_activity_layer" >
         </activity>
     </application>
 
