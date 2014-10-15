@@ -934,7 +934,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.initializeDistanceCalc = function () {
 
     	if($scope.menu.fcMarker){
-    		$scope.clearFcMaker();
+    		$scope.clearFcMaker(true);
     	}
     	
         // verifica se alguma funcionalidade ja está ativa
@@ -1022,7 +1022,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.initializeAreaCalc = function () {
 
     	if($scope.menu.fcMarker){
-    		$scope.clearFcMaker();
+    		$scope.clearFcMaker(true);
     	}
 
         // verifica se alguma funcionalidade ja está ativa
@@ -1302,6 +1302,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.toggleSidebarMarkerDetail = function (time, element, marker){
     	
+    	
+    	
     	markerService.findAttributeByMarker($scope.markerDetail.data.id, {
 		  callback : function(result) {
 			  $scope.markerResultDetail = result;
@@ -1424,7 +1426,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         $scope.LAYER_MENU_STATE = 'list';
     }
     
-    $scope.clearFcMaker = function() {
+    $scope.clearFcMaker = function(removeOverlay) {
     	$scope.currentEntity = new Marker();
     	
     	$scope.menu.fcMarker = false;
@@ -1432,9 +1434,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	if($scope.screenMarkerOpenned)
     		$scope.toggleSidebarMarkerCreate(300, 'closeButton');
 
-    	$scope.map.removeOverlay($scope.marker);
+    	if( removeOverlay ) {
+    		$scope.map.removeOverlay($scope.marker);
+    	}
+    		
         
         $scope.screenMarkerOpenned = false;
+        $scope.attributesByLayer = [];
     }
     
     $scope.updateMarker = function(){
@@ -1458,8 +1464,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
     	markerService.updateMarker($scope.currentEntity,{
       		callback : function(result) {
-      		
-
+      		      			
+      			$scope.toggleSidebarMarkerUpdate(300, 'closeButton')
+      			
+      			 $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
+     			  $("div.msgMap").show();
+     			  
+     			  setTimeout(function(){
+     				  $("div.msgMap").fadeOut();
+     			  }, 5000);
+      			
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
@@ -1502,7 +1516,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	markerService.insertMarker($scope.currentEntity,{
       		callback : function(result) {
-      			  $scope.clearFcMaker();
+      			  $scope.clearFcMaker(false);
       			        			  
       			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
       			  $("div.msgMap").show();
