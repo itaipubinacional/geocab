@@ -17,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import br.com.geocab.R;
+import br.com.geocab.controller.delegate.AbstractDelegate;
+import br.com.geocab.controller.delegate.AccountDelegate;
+import br.com.geocab.entity.User;
 
 public class AuthenticationActivity extends Activity implements OnClickListener, ConnectionCallbacks, OnConnectionFailedListener
 {
@@ -51,6 +55,8 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
      * Button for default sign in
      */
     private Button btnSignIn;
+
+    private EditText editTextUsername, editTextPassword;
 
     /*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES GOOGLE
@@ -112,6 +118,9 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		setContentView(R.layout.activity_main);
+
+        editTextUsername = (EditText) findViewById(R.id.edit_text_username);
+        editTextPassword = (EditText) findViewById(R.id.edit_text_password);
 
         loginButton = (LoginButton) findViewById(R.id.btn_sign_in_facebook);
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
@@ -216,8 +225,10 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
         }
         else if( view.getId() == R.id.btn_sign_in )
         {
-            Intent mapIntent = new Intent(this, MapActivity.class);
-            startActivity(mapIntent);
+            AccountDelegate accountDelegate = new AccountDelegate(this);
+            final byte[] credentials = ( editTextUsername.getText() + ":" + editTextPassword.getText() ).getBytes();
+            AbstractDelegate.loggedUser = new User(editTextPassword.getText().toString());
+            accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP));
         }
     }
 

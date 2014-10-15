@@ -10,4 +10,10 @@
 
     <color name="line_login">#ffdfe5e3</color>
 
+    <!-- Layer list -->
+    <color name="list_layer_background">#ffffff</color>
+    <color name="list_layer_background_pressed">#ff77a7c6</color>
+    <color name="list_layer_item_title">#000000</color>
+
+
 </resources>
