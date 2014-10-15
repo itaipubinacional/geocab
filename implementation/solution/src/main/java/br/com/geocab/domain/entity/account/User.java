@@ -171,7 +171,6 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		if ( role.equals( UserRole.ADMINISTRATOR ) ) 
 		{
 			authorities.add( UserRole.ADMINISTRATOR );
-			authorities.add( UserRole.MODERATOR );
 		}
 		
 		if ( role.equals( UserRole.MODERATOR ) ) 
@@ -179,7 +178,11 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 			authorities.add( UserRole.MODERATOR );
 		}
 		
-		authorities.add( UserRole.USER );
+		if ( role.equals( UserRole.USER ) ) 
+		{
+			authorities.add( UserRole.USER );
+		}
+
 		return authorities;
 	}
 	
