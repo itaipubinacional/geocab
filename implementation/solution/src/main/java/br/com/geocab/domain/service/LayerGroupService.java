@@ -52,6 +52,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
  */
 
 @Service
+@Transactional
 @RemoteProxy(name="layerGroupService")
 public class LayerGroupService
 {
@@ -666,20 +667,24 @@ public class LayerGroupService
 		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setLayerGroup(layer.getLayerGroup());
 		
-		List<Attribute> attributesByLayer = attributeRepository.listAttributeByLayer(layer.getId());
+		final List<Attribute> attributesByLayer = this.attributeRepository.listAttributeByLayer(layer.getId());
 	
-		for(Attribute attribute : attributesByLayer) {
-			
+		for(Attribute attribute : attributesByLayer) 
+		{
 			Boolean attributeDeleted = true;
 			
-			for(Attribute attributeInLayer : layer.getAttributes()) {
-				if(	attributeInLayer.getId() == attribute.getId() ) {
+			for(Attribute attributeInLayer : layer.getAttributes()) 
+			{
+				if(	attributeInLayer.getId().equals(attribute.getId()) ) 
+				{
 					attributeDeleted = false;
 				}
 			}
 			
-			if( attributeDeleted ) {
-				this.attributeRepository.delete( attribute.getId() );
+			if( attributeDeleted ) 
+			{
+				final Attribute attr = this.attributeRepository.findOne( attribute.getId() );
+				this.attributeRepository.delete( attr );
 			}
 			
 		}
