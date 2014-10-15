@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,7 +12,6 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.web.context.request.NativeWebRequest;
-
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.repository.account.IUserRepository;
 
@@ -39,12 +39,20 @@ public class SpringSecuritySignInAdapter implements SignInAdapter
 	public String signIn( String userId, Connection<?> connection, NativeWebRequest nativeWebRequest )
 	{
 		final User user = this.userRepository.findByEmail(userId);
+		final HttpServletRequest request = (HttpServletRequest) nativeWebRequest.getNativeRequest();
+		final HttpSession session = request.getSession(true);
+		
+		if( false == user.isEnabled() ){
+			final DisabledException erro = new DisabledException("User is disabled" );
+			
+			session.setAttribute("SPRING_SECURITY_LAST_EXCEPTION" , erro );
+			return null;
+		}
 		
 		final SecurityContext securityContext = SecurityContextHolder.getContext();
 		securityContext.setAuthentication( new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()) );
 		
-		final HttpServletRequest request = (HttpServletRequest) nativeWebRequest.getNativeRequest();
-		final HttpSession session = request.getSession(true);
+	
 		session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
 		
 		return null;//redirects to /
