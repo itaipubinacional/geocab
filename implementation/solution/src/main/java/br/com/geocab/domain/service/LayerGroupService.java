@@ -725,13 +725,17 @@ public class LayerGroupService
 	 * @param url
 	 * @return
 	 */
-	public String listAllFeatures(String url)
+	public List<String> listAllFeatures(List<String>  listUrls)
 	{
 		this.template = new RestTemplate();
+		List<String> listFeatures = new ArrayList<String>();
 		
-		String features = this.template.getForObject(url, String.class);
+		for (String url : listUrls)
+		{
+			listFeatures.add(this.template.getForObject(url, String.class));
+		}
 		
-		return features;
+		return listFeatures;
 	}
 	
 	
