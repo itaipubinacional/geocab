@@ -456,7 +456,10 @@ public class LayerGroupService
 						for(int j = 0; j < layerGroup.getLayers().size(); j++)
 						{
 							// traz a legenda da camada do GeoServer
-							layerGroup.getLayers().get(j).setLegend((getLegendLayerFromGeoServer(layerGroup.getLayers().get(j))));
+							if( layerGroup.getLayers().get(j).getDataSource().getUrl() != null ) {
+								layerGroup.getLayers().get(j).setLegend((getLegendLayerFromGeoServer(layerGroup.getLayers().get(j))));	
+							}
+							
 						}
 					}
 				}
@@ -607,7 +610,9 @@ public class LayerGroupService
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
-			layer.setLegend(getLegendLayerFromGeoServer(layer));
+			if(layer.getDataSource().getUrl() != null ) {
+				layer.setLegend(getLegendLayerFromGeoServer(layer));	
+			}
 		}
 		
 		return layers;
@@ -646,8 +651,26 @@ public class LayerGroupService
 		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setLayerGroup(layer.getLayerGroup());
 		
-		/* Na atualizaï¿½ï¿½o nï¿½o ï¿½ permitido modificar a fonte de dados, camada e tï¿½tulo, dessa forma, 
-		Os valores originais sï¿½o mantidos. */
+		List<Attribute> attributesByLayer = attributeRepository.listAttributeByLayer(layer.getId());
+	
+		for(Attribute attribute : attributesByLayer) {
+			
+			Boolean attributeDeleted = true;
+			
+			for(Attribute attributeInLayer : layer.getAttributes()) {
+				if(	attributeInLayer.getId() == attribute.getId() ) {
+					attributeDeleted = false;
+				}
+			}
+			
+			if( attributeDeleted ) {
+				this.attributeRepository.delete( attribute.getId() );
+			}
+			
+		}
+		
+		/* Na atualização não foi permitido modificar a fonte de dados, camada e títuulo, dessa forma, 
+		Os valores originais são mantidos. */
 		layer.setDataSource(layerDatabase.getDataSource());
 		layer.setName(layerDatabase.getName());
 		
@@ -677,7 +700,9 @@ public class LayerGroupService
 		final Layer layer = this.layerRepository.findOne(id);
 		
 		// traz a legenda da camada do GeoServer
-		layer.setLegend(getLegendLayerFromGeoServer(layer));
+		if( layer.getDataSource().getUrl() != null ) {
+			layer.setLegend(getLegendLayerFromGeoServer(layer));	
+		}
 		
 		return layer;
 	}
