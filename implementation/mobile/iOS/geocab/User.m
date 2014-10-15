@@ -10,6 +10,6 @@
 
 @implementation User
 
-@synthesize id, name, email, password;
+@synthesize id, name, email, password, enabled, role, created, updated, username, authorities, accountNonExpired, accountNonLocked;
 
 @end

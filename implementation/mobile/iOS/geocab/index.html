@@ -35,10 +35,13 @@
 							source: new ol.source.OSM()
 						})
 			],
+			// rotação
+            interactions: ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false}),
 			view: new ol.View({
 				center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
 				zoom: 7
 			}),
+			controls: ol.control.defaults({rotate: false})
 
 		});
 
@@ -56,7 +59,6 @@
 
 		function addPoint(latitude, longitude)
 		{
-
 			var iconFeature = new ol.Feature({
 				geometry: new ol.geom.Point(ol.proj.transform([parseFloat(longitude), parseFloat(latitude)], 'EPSG:4326', 'EPSG:3857')),
 				name: 'Localizacao'
@@ -83,7 +85,35 @@
 
 			map.addLayer(vectorLayer);
 		}
-				
+		
+		function addLayer()
+		{
+			var iconFeature = new ol.Feature({
+				geometry: new ol.geom.Point(ol.proj.transform([parseFloat(longitude), parseFloat(latitude)], 'EPSG:4326', 'EPSG:3857')),
+				name: 'Localizacao'
+			});
+
+			//create the style
+			var iconStyle = new ol.style.Style({
+				image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+					size: [48, 48],
+					src: 'http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png'
+				}))
+			});
+
+			var vectorSource = new ol.source.Vector({
+				features: [iconFeature]
+			});
+
+			//add the feature vector to the layer vector, and apply a style to whole layer
+			var vectorLayer = new ol.layer.Vector({
+				source: vectorSource,
+				style: iconStyle
+			});
+
+
+			map.addLayer(vectorLayer);
+		}
 	</script>
 	
 </body>

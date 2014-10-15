@@ -35,6 +35,8 @@ public class DataSource extends AbstractEntity implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = -6937800700125744070L;
+	
+	
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
@@ -44,11 +46,11 @@ public class DataSource extends AbstractEntity implements Serializable
 	@NotEmpty
 	@Column(nullable=false, length=144, unique=true)
 	private String name;
+	
 	/**
 	 * URL of {@link DataSource}
 	 */
-	@NotEmpty
-	@Column(nullable=false, length=255, unique=true)
+	@Column(nullable=true, length=255  )
 	private String url;
 	/**
 	 * Login to access the url {@link DataSource}
@@ -61,11 +63,8 @@ public class DataSource extends AbstractEntity implements Serializable
 	@Column(nullable=true, length=144)
 	private String password;
 	
-	/**
-	 * Flag to see if it is internal or external {@link DataSource}
-	 */
-	private Boolean internal;
-
+	
+	
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -237,21 +236,5 @@ public class DataSource extends AbstractEntity implements Serializable
 	public void setPassword(String password)
 	{
 		this.password = password;
-	}
-	
-	/**
-	 * @return the internal
-	 */
-	public Boolean getInternal()
-	{
-		return internal;
-	}
-
-	/**
-	 * @param internal the internal to set
-	 */
-	public void setInternal(Boolean internal)
-	{
-		this.internal = internal;
 	}
 }
