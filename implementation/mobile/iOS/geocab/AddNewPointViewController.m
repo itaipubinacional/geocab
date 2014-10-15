@@ -39,8 +39,7 @@
     _layerTableView.delegate = self;
     _layerTableView.dataSource = self;
     
-    _selectLayerViewController = [[SelectLayerViewController alloc] init];
-    _selectLayerViewController.delegate = self;
+    //[self.navigationController setNavigationBarHidden:NO];
     
     _selectLayerViewController = [[SelectLayerViewController alloc] init];
     _selectLayerViewController.delegate = self;

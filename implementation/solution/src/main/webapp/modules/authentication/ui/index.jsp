@@ -4,9 +4,9 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
 <html>
 	<head>
-		
 		<title><spring:message code="authentication.Authentication" /></title>
 		
 		<!-- Styles -->
@@ -14,11 +14,8 @@
 		<jsp:include page="../../default-styles.jsp"/>
 		
 		<!-- Scripts -->
-		<jsp:include page="../../default-scripts.jsp"/> <!-- FIXME Deixar caminhos relativos.. -->
-		
-		<!-- Main -->
-		<script type="text/javascript" src="modules/authentication/authentication-main.js"></script>
-		
+		<jsp:include page="../../default-scripts.jsp"/>
+
 		<style>
 		.create-account .modal-dialog {
 		  width: 330px;
@@ -34,7 +31,6 @@
 	</head>
 <body>
 	
-	
 	<div class="container-fluid">
 
 		<!-- content -->
@@ -46,13 +42,12 @@
 	<!--
 		Controllers 
 	-->
-	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
-	<script type="text/javascript" src="modules/authentication/controller/user-controller.js"></script>
+    <!-- Main -->
+    <script type="text/javascript" src="modules/authentication/authentication-main.js"></script>
+	<script type="text/javascript" src="modules/authentication/controller/authentication-controller.js"></script>
 	<script type="text/javascript" src="modules/authentication/controller/popup/create-user-popup-controller.js"></script>
-	<script type="text/javascript" src="modules/authentication/controller/popup/forget-password-popup-controller.js"></script>
-	
+	<%--<script type="text/javascript" src="modules/authentication/controller/popup/forget-password-popup-controller.js"></script>--%>
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
-	
 </body>
 </html>
 
