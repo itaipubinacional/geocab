@@ -1,10 +1,14 @@
 package br.com.geocab.controller.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -14,7 +18,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -58,14 +65,6 @@ public class MapActivity extends Activity
      */
     private ActionBarDrawerToggle mDrawerToggle;
     /**
-     * nav drawer title
-     */
-    private CharSequence mDrawerTitle;
-    /**
-     * used to store app title
-     */
-    private CharSequence mTitle;
-    /**
      * nav drawer adapter listview nav drawer
      */
     private NavDrawerListAdapter adapter;
@@ -89,6 +88,14 @@ public class MapActivity extends Activity
      *
      */
     private Button buttonRefreshLayers;
+    /**
+     *
+     */
+    private Button buttonOpenMenu;
+    /**
+     *
+     */
+    private Button buttonAddMarker;
     /**
      * the layout side menu list
      */
@@ -116,12 +123,17 @@ public class MapActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_map);
 
         webViewMap = (WebView) findViewById(R.id.web_view_map);
         webViewMap.getSettings().setJavaScriptEnabled(true);
+        webViewMap.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webViewMap.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         webViewMap.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        webViewMap.setWebViewClient(new WebViewClient());
         webViewMap.loadUrl("file:///android_asset/map.html");
 
         //String html = "<!DOCTYPE html><html lang=en><head><link rel=stylesheet href=ol.css type=text/css><style>.map{height:100%;width:100%}</style><body style=margin:0><script src=ol.js type=text/javascript></script><script src=jquery.min.js type=text/javascript></script><div id=map class=map></div><script type=text/javascript>function showLayer(e,o,r){if(r){var a=new ol.source.TileWMS({url:e,params:{LAYERS:o}}),l=new ol.layer.Tile({source:a});map.addLayer(l)}}map=new ol.Map({target:\"map\",layers:[new ol.layer.Tile({source:new ol.source.OSM})],view:new ol.View({center:ol.proj.transform([-54.1394,-24.7568],\"EPSG:4326\",\"EPSG:3857\"),zoom:7})});</script>";
@@ -143,7 +155,6 @@ public class MapActivity extends Activity
         {
 
         }
-
 
         searchLayerEditText = (EditText) findViewById(R.id.edit_text_search_layer);
 
@@ -172,7 +183,6 @@ public class MapActivity extends Activity
                 searchLayerEditText.setText("");
             }
         });
-
 
         searchLayerEditText.addTextChangedListener(new TextWatcher()
         {
@@ -206,64 +216,109 @@ public class MapActivity extends Activity
 
         linearLayoutLayer = (LinearLayout) findViewById(R.id.left_drawer);
 
+        buttonOpenMenu = (Button) findViewById(R.id.btn_open_menu);
+        buttonOpenMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerLayout.openDrawer(linearLayoutLayer);
+            }
+        });
+
+
+        Button buttonAddMarker = (Button) findViewById(R.id.btn_add_marker);
+        buttonAddMarker.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Drawable d = new ColorDrawable(Color.TRANSPARENT);
+                final Dialog dialog = new Dialog(v.getContext());
+                dialog.getWindow().setBackgroundDrawable(d);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_mark);
+                dialog.setCanceledOnTouchOutside(true);
+
+                Button buttonUserPosition = (Button) dialog.findViewById(R.id.btn_user_position);
+                buttonUserPosition.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
+
+                        gpsTracker = new GPSTracker(MapActivity.this);
+
+                        // check if GPS enabled
+                        if(gpsTracker.canGetLocation()){
+
+                            double latitude = gpsTracker.getLatitude();
+                            double longitude = gpsTracker.getLongitude();
+
+                            webViewMap.loadUrl("javascript:showUserMarker(\""+latitude+"\",\""+longitude+"\")");
+
+                            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+
+                        }else{
+                            // can't get location
+                            // GPS or Network is not enabled
+                            // Ask user to enable GPS/network in settings
+                            gpsTracker.showSettingsAlert();
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+
+                Button buttonOtherPosition = (Button) dialog.findViewById(R.id.btn_other_position);
+                buttonOtherPosition.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
+
+                        Intent intent = new Intent(MapActivity.this, MarkActivity.class);
+                        startActivity(intent);
+
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+
         //NAV DRAWER
 
-        // nav drawer title
-        mTitle = mDrawerTitle = getTitle();
+        mDrawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        mDrawerList=(ListView) findViewById(R.id.list_slidermenu);
 
         mDrawerList.setTextFilterEnabled(true);
 
         // setting the nav drawer list adapter
         Object[] objects = new Object[1];
-        objects[0] = this.webViewMap;
-        adapter = new NavDrawerListAdapter(getApplicationContext(), 0, objects);
+        objects[0]=this.webViewMap;
+        adapter=new NavDrawerListAdapter(getApplicationContext(), 0,objects);
         mDrawerList.setAdapter(adapter);
 
-        this.layerDelegate = new LayerDelegate(MapActivity.this, adapter);
+        this.layerDelegate=new LayerDelegate(MapActivity.this, adapter);
+
         this.layerDelegate.listLayersPublished(MapActivity.this.animationLoadLayer);
 
-        // enabling action bar app icon and behaving it as toggle button
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        mDrawerToggle=new ActionBarDrawerToggle(this,mDrawerLayout,
+                        R.drawable.ic_drawer, //nav menu toggle icon
+                        R.string.app_name, // nav drawer open - description for accessibility
+                        R.string.app_name // nav drawer close - description for accessibility
+                )
+        {
+        public void onDrawerClosed (View view)
+        {
+            hideSoftKeyboard(MapActivity.this);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, //nav menu toggle icon
-                R.string.app_name, // nav drawer open - description for accessibility
-                R.string.app_name // nav drawer close - description for accessibility
-        ) {
-            public void onDrawerClosed(View view)
-            {
-                getActionBar().setTitle(mTitle);
+            invalidateOptionsMenu();
+        }
 
-                hideSoftKeyboard(MapActivity.this);
+        public void onDrawerOpened(View drawerView)
+        {
+            hideSoftKeyboard(MapActivity.this);
 
-//                for(Layer layer : MapActivity.this.adapter.getListLayers() )
-//                {
-//                    int index = layer.getName().indexOf(":");
-//                    int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-//                    String typeLayer = layer.getName().substring(0,index);
-//                    String nameLayer = layer.getName().substring(index+1,layer.getName().length());
-//                    String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"wms";
-//
-//                    webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\",\""+layer.getIsChecked()+"\")");
-//                }
-
-                // calling onPrepareOptionsMenu() to show action bar icons
-                invalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView)
-            {
-                getActionBar().setTitle(mDrawerTitle);
-                // calling onPrepareOptionsMenu() to hide action bar icons
-
-                hideSoftKeyboard(MapActivity.this);
-
-                invalidateOptionsMenu();
-            }
+            invalidateOptionsMenu();
+        }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
@@ -284,95 +339,6 @@ public class MapActivity extends Activity
     {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
-
-    /**
-     *
-     * Initialize the contents of the Activity's standard options menu
-     *
-     * @param menu
-     * @return
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.map, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /**
-     *
-     * Prepare the Screen's standard options menu to be displayed.
-     *
-     * @param menu
-     * @return
-     */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(this.linearLayoutLayer);
-        menu.findItem(R.id.action_localization).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    /**
-     * This hook is called whenever an item in your options menu is selected
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
-        // toggle nav drawer on selecting action bar app icon/title
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        // Handle action buttons
-        switch(item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-            case R.id.action_localization:
-                gpsTracker = new GPSTracker(MapActivity.this);
-
-                // check if GPS enabled
-                if(gpsTracker.canGetLocation()){
-
-                    double latitude = gpsTracker.getLatitude();
-                    double longitude = gpsTracker.getLongitude();
-
-                    webViewMap.loadUrl("javascript:userLocation(\""+latitude+"\",\""+longitude+"\")");
-
-                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-
-                }else{
-                    // can't get location
-                    // GPS or Network is not enabled
-                    // Ask user to enable GPS/network in settings
-                    gpsTracker.showSettingsAlert();
-                }
-                return true;
-            case R.id.action_other_localization:
-                Intent intent = new Intent(MapActivity.this, MarkActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     *
-     * set title from nav drawer
-     *
-     * @param title
-     */
-    @Override
-    public void setTitle(CharSequence title)
-    {
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
     }
 
     /**

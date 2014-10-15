@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:padding="30dp"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btn_user_position"
+        android:text="Marcar minha localizacao"
+        android:layout_width="match_parent"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:drawableTop="@drawable/ic_user_marker"
+        android:drawablePadding="-15sp"
+        android:background="@android:color/white"
+        android:layout_height="80dp" />
+    
+
+    <Button
+        android:id="@+id/btn_other_position"
+        android:text="Marcar outra posicao"
+        android:layout_width="match_parent"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:drawableTop="@drawable/ic_new_marker"
+        android:drawablePadding="-15sp"
+        android:background="@android:color/white"
+        android:layout_marginTop="10dp"
+        android:layout_height="80dp" />
+
+</LinearLayout>
