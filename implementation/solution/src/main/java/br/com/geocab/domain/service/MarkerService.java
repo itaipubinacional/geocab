@@ -14,9 +14,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
@@ -32,7 +34,6 @@ import br.com.geocab.domain.repository.marker.IMarkerRepository;
  */
 @Service
 @Transactional
-//@PreAuthorize("hasRole('"+UserRole.ADMINISTRADOR_VALUE+"')")
 @RemoteProxy(name="markerService")
 public class MarkerService
 {
@@ -92,6 +93,7 @@ public class MarkerService
 	 * @param Marker
 	 * @return Marker
 	 */
+	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public Marker updateMarker( Marker marker )
 	{			
 		try{
@@ -112,6 +114,7 @@ public class MarkerService
 	 * 
 	 * @param id
 	 */
+	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public void removeMarker( Long id )
 	{
 		this.markerRepository.delete( id );
@@ -122,6 +125,7 @@ public class MarkerService
 	 * 
 	 * @param Marker marker
 	 */
+	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public void enableMarker( Long id )
 	{
 		try{
@@ -143,6 +147,7 @@ public class MarkerService
 	 * 
 	 * @param Marker marker
 	 */
+	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public void disableMarker( Long id )
 	{
 		try{

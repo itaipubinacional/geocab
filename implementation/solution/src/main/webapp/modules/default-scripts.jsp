@@ -40,3 +40,5 @@
 
 <script type="text/javascript" src="<c:url value="/static/libs/eits-directives/dialog/dialog-controller.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/static/libs/activity-dialog.js"/>"></script>
+
+<script type="text/javascript" src="broker/interface/loginService.js"></script>

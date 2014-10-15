@@ -14,7 +14,7 @@
    			
   		<div class="alreadyHaveAccount"><spring:message code="authentication.Already-have-an-account"/>
 			<a class="enter" ng-click="closePopUp()"><spring:message code="authentication.Enter"/></a>
-		</div>
+		</div>x'x
 		<div class="line" ><hr></hr></div>
 		
 		<!--Message -->
