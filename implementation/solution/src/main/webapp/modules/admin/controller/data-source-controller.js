@@ -129,6 +129,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 */
 	$scope.currentEntity;
 	
+	
 	/*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
@@ -382,6 +383,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 				$state.go($scope.LIST_STATE);
 				$scope.msg = {type:"success", text: $translate("admin.datasource.Geographic-data-source-successfully-inserted")+"!", dismiss:true};
 				$scope.$apply();
+				$scope.data.showFieldUrl = null;
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
@@ -403,6 +405,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 
 		dataSourceService.updateDataSource( $scope.currentEntity , {
 			callback : function() {
+			
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
 				$scope.msg = {type:"success", text: $translate("admin.datasource.Geographic-data-source-successfully-updated")+"!", dismiss:true};
@@ -450,11 +453,46 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * Clear the fields
 	 */
 	$scope.clearFields = function(){
-		if(!$scope.data.showFields){
-			$scope.currentEntity.nomeUsuario = "";
-			$scope.currentEntity.senha = "";
+		if( ! $('#authenticationRequired').is(':checked')){
+			$scope.currentEntity.login = "";
+			$scope.currentEntity.password = "";
 		}
 	};
+	
+	$scope.clearFieldUrl= function(){
+		if(! $('#urlRequired').is(':checked')){
+			$scope.currentEntity.url="";
+			$('#authenticationRequired').attr('checked',false);
+			$scope.clearFields();
+		}
+	};
+
+	$scope.externalDataSource;
+	
+	$scope.isUrlChecked = function(){
+		if ( $('#urlRequired').is(':checked')  ) {
+			return true;
+		}
+	}
+	
+	$scope.isUserChecked = function(){
+		if( $('#authenticationRequired').is(':checked') ){
+			return true;
+		}
+	}
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
 
 };
 
