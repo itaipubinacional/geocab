@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.geocab.controller.adapter.ListLayerAdapter;
 import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.controller.app.AppController;
 import br.com.geocab.entity.Layer;
@@ -27,12 +28,12 @@ import br.com.geocab.entity.Layer;
 /**
  *
  */
-public class LayerDelegate extends AbstractDelegate
+public class LayerMarkerDelegate extends AbstractDelegate
 {
 
     private final Context context;
 
-    private NavDrawerListAdapter listAdapter;
+    private ListLayerAdapter listAdapter;
 
     private AnimationDrawable animationLoadLayer;
 
@@ -43,19 +44,17 @@ public class LayerDelegate extends AbstractDelegate
     /**
      *
      */
-    public LayerDelegate(Context context, BaseAdapter adapter)
+    public LayerMarkerDelegate(Context context, BaseAdapter adapter)
     {
         super("layergroup");
 
         this.context = context;
 
-        this.listAdapter = (NavDrawerListAdapter) adapter;
+        this.listAdapter = (ListLayerAdapter) adapter;
 
     }
 
-
-
-    /*-------------------------------------------------------------------
+	/*-------------------------------------------------------------------
 	 * 		 					BEHAVIORS
 	 *-------------------------------------------------------------------*/
 
@@ -63,10 +62,8 @@ public class LayerDelegate extends AbstractDelegate
     /**
      * @return
      */
-    public void listLayersPublished( AnimationDrawable d )
+    public void listLayersMarker()
     {
-        this.animationLoadLayer = d;
-
         String url = getUrl()+ "/layers";
 
         JsonArrayRequest jReq = new JsonArrayRequest(url,
@@ -83,22 +80,16 @@ public class LayerDelegate extends AbstractDelegate
                             try
                             {
                                 Layer layer = json.fromJson(response.getString(i), Layer.class);
-                                if( layer.getIsChecked() == null )
-                                {
-                                    layer.setIsChecked(false);
-                                }
                                 result.add(layer);
-
-                                LayerDelegate.this.animationLoadLayer.stop();
 
                             }
                             catch (JSONException e)
                             {
-                                Toast.makeText(LayerDelegate.this.context, "Unable to call service: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LayerMarkerDelegate.this.context, "Unable to call service: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
-                        LayerDelegate.this.listAdapter.setItemList(result);
-                        LayerDelegate.this.listAdapter.notifyDataSetChanged();
+                        LayerMarkerDelegate.this.listAdapter.setItemList(result);
+                        LayerMarkerDelegate.this.listAdapter.notifyDataSetChanged();
 
                     }
                 }, new Response.ErrorListener() {
@@ -107,7 +98,6 @@ public class LayerDelegate extends AbstractDelegate
             public void onErrorResponse(VolleyError error) {
                 // Handle error
                 Log.e("ERROR", "ERROR");
-
             }
         })
         {
