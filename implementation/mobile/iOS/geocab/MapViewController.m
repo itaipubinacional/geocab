@@ -25,10 +25,14 @@
 @property (retain, nonatomic) UIActionSheet *actionSheet;
 
 @property (weak, nonatomic) MFSideMenuContainerViewController *sideMenu;
-@property (strong, nonatomic) KNMultiItemSelector *layerSelector;
+@property (strong, nonatomic) SelectLayerViewController *layerSelector;
 @property (strong, nonatomic) UINavigationController *layerSelectorNavigator;
 @property (strong, nonatomic) NSMutableArray *items;
-@property (strong, nonatomic) NSArray *selectedItems;
+@property (strong, nonatomic) NSArray *selectedLayers;
+
+@property (weak, nonatomic) IBOutlet UIButton *addMyLocationButton;
+@property (weak, nonatomic) IBOutlet UIButton *addAnotherLocationButton;
+
 
 @end
 
@@ -58,15 +62,8 @@
     _locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
     _locationManager.distanceFilter = 500;
     
-    //Configures the touch and hold event for adding a new point
-    /*UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
-     gesture.minimumPressDuration = 0.1;
-     gesture.allowableMovement = 600;
-     [self.view addGestureRecognizer:gesture];*/
-    
     if (_actionSheet == nil)
         _actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil otherButtonTitles:@"Adicionar minha localização", @"Adicionar outra localização",nil];
-    //[_actionSheet setBackgroundColor:[UIColor whiteColor]];
     [_actionSheet setTintColor:[UIColor blackColor]];
     
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -74,32 +71,27 @@
     
     [self.navigationController.navigationItem.leftBarButtonItem setImage:[UIImage imageNamed:@"inc_menu_20.png"]];
     
-    _selectedItems = [NSMutableArray array];
+    _selectedLayers = [NSMutableArray array];
     
-    LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
-    [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
-        
-        _layers = [result array];
-        
-        _items = [NSMutableArray array];
-        
-        for (Layer *layer in _layers) {
-            [_items addObject:[[KNSelectorItem alloc] initWithDisplayValue:layer.title selectValue:layer.name imageUrl:layer.legend]];
-        }
-        
-        _layerSelector = [[KNMultiItemSelector alloc] initWithItems:_items
-                                                   preselectedItems:_selectedItems
-                                                              title:@"Select a layer"
-                                                    placeholderText:@"Search for the layer title"
-                                                           delegate:self];
-
-    } userName:@"admin@geocab.com.br" password:@"admin"];
+    _layerSelector = [[SelectLayerViewController alloc] init];
+    _layerSelector.delegate = self;
+    _layerSelector.multipleSelection = YES;
     
+    //Add marker buttons customization
+    _addAnotherLocationButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    _addMyLocationButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    _addAnotherLocationButton.layer.borderWidth = 0.3;
+    _addMyLocationButton.layer.borderWidth = 0.3;
+    
+    [_addMyLocationButton addTarget:self action:@selector(addCurrentLocation:) forControlEvents:UIControlEventTouchUpInside];
+    [_addAnotherLocationButton addTarget:self action:@selector(addSelectedLocation:) forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void) selectorDidCancelSelection {
+- (void) didEndMultipleSelecting:(NSArray *)selectedLayers {
+    _selectedLayers = selectedLayers;
+    
     [_layerSelectorNavigator dismissViewControllerAnimated:YES completion:^{
-
+        
     }];
 }
 
@@ -107,10 +99,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)createPoint:(NSTimer *)timer {
-    [_actionSheet showInView:self.view];
 }
 
 - (IBAction)toggleMenu:(id)sender {
@@ -126,7 +114,18 @@
 }
 
 -(IBAction)addNewPoint:(id)sender {
-    [_actionSheet showInView:self.view];
+    [self toogleButtons];
+}
+
+-(void)toogleButtons {
+    [UIView animateWithDuration:1
+                          delay:1.5
+                        options: UIViewAnimationCurveEaseInOut
+                     animations:^{
+                         _addMyLocationButton.hidden = !_addMyLocationButton.hidden;
+                         _addAnotherLocationButton.hidden = !_addAnotherLocationButton.hidden;
+                     } 
+                     completion:nil];
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView
@@ -152,6 +151,7 @@
 //        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
         
         [_locationManager stopUpdatingLocation];
+        [self toogleButtons];
         [self performSegueWithIdentifier:@"addNewPointSegue" sender:self];
     }
 }
@@ -164,6 +164,17 @@
 //        AddNewPointViewController *addNewPointViewController = (AddNewPointViewController*) segue.destinationViewController;
 //        addNewPointViewController.latitude = _location.x;
     }
+}
+
+-(IBAction)addCurrentLocation:(id)sender {
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
+        [_locationManager requestWhenInUseAuthorization];
+    }
+    [_locationManager startUpdatingLocation];
+}
+
+-(IBAction)addSelectedLocation:(id)sender {
+    [self toogleButtons];
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -183,14 +194,20 @@
     [errorAlert show];
 }
 
--(void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:NO];
+- (void)viewWillAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    //_sideMenu.panMode = MFSideMenuPanModeDefault;
+    [super viewWillAppear:animated];
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:NO];
-    
-    //_sideMenu.panMode = MFSideMenuPanModeDefault;
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//    
+//}
+
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 @end

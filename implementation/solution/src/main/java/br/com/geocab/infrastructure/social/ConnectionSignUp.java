@@ -55,9 +55,11 @@ public class ConnectionSignUp implements org.springframework.social.connect.Conn
 			user = new User();
 			user.setEmail(profile.getEmail());
 			user.setName(name);
-			user.setPassword("123"); //TODO: Random password
+			user.setPassword("none");
 			user.setRole(UserRole.USER);
 			user = this.accountService.insertUser( user );
+		}else if( !user.isEnabled() ){//Disabled User
+			return null; 
 		}
 		
 		return user.getUsername();

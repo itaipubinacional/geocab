@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="l6o-aM-Q9t">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -178,32 +177,84 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="syb-5q-Pdd">
+                            <webView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="syb-5q-Pdd">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </webView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Map" id="fst-os-tLY">
-                        <barButtonItem key="leftBarButtonItem" style="plain" id="g8S-vw-dTD">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="008-8K-sTg">
-                                <rect key="frame" x="16" y="-2" width="18" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="icn_menu_20.png"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gpl-z5-l45">
+                                <rect key="frame" x="127" y="481" width="67" height="67"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="67" id="5wi-MZ-p3C"/>
+                                    <constraint firstAttribute="width" constant="67" id="YGZ-Jw-EhU"/>
+                                </constraints>
+                                <size key="titleShadowOffset" width="1" height="1"/>
+                                <state key="normal" image="icon-add-point.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <action selector="toggleMenu:" destination="Ufn-yj-YLQ" eventType="touchUpInside" id="vUh-bq-5O4"/>
+                                    <action selector="addNewPoint:" destination="Ufn-yj-YLQ" eventType="touchUpInside" id="N1S-WB-FIr"/>
                                 </connections>
                             </button>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="RtV-B4-RzN">
-                            <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="addNewPoint:" destination="Ufn-yj-YLQ" id="tcP-c6-SUZ"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lJz-Lm-QPe">
+                                <rect key="frame" x="37" y="107" width="247" height="86"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <inset key="contentEdgeInsets" minX="50" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <inset key="titleEdgeInsets" minX="-550" minY="28" maxX="0.0" maxY="0.0"/>
+                                <inset key="imageEdgeInsets" minX="60" minY="20" maxX="110" maxY="40"/>
+                                <state key="normal" title="Adicionar minha localização" image="icon-point.png">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f1k-gy-Ely">
+                                <rect key="frame" x="37" y="210" width="247" height="86"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="247" id="Fqj-C7-Meu"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="86" id="gwS-Ps-E03"/>
+                                    <constraint firstAttribute="height" constant="86" id="zCx-P5-TAJ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <inset key="contentEdgeInsets" minX="50" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <inset key="titleEdgeInsets" minX="-550" minY="28" maxX="0.0" maxY="0.0"/>
+                                <inset key="imageEdgeInsets" minX="57" minY="20" maxX="107" maxY="40"/>
+                                <state key="normal" title="Adicionar outra localização" image="icon-new-point.png">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yIo-zT-dUG">
+                                <rect key="frame" x="-14" y="497" width="39" height="35"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" image="icn_menu_20.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleMenu:" destination="Ufn-yj-YLQ" eventType="touchUpInside" id="J9D-YP-Qjt"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="f1k-gy-Ely" firstAttribute="top" secondItem="lJz-Lm-QPe" secondAttribute="bottom" constant="17" id="2h4-Ub-CTy"/>
+                            <constraint firstItem="f1k-gy-Ely" firstAttribute="leading" secondItem="Thr-cX-tFy" secondAttribute="leadingMargin" constant="21" id="8Yj-eE-swn"/>
+                            <constraint firstItem="gpl-z5-l45" firstAttribute="leading" secondItem="yIo-zT-dUG" secondAttribute="trailing" constant="102" id="AkR-nl-8lg"/>
+                            <constraint firstItem="lJz-Lm-QPe" firstAttribute="top" secondItem="Thr-cX-tFy" secondAttribute="topMargin" constant="107" id="KfF-S0-Kba"/>
+                            <constraint firstItem="lJz-Lm-QPe" firstAttribute="leading" secondItem="f1k-gy-Ely" secondAttribute="leading" id="Ld2-iM-5cc"/>
+                            <constraint firstItem="lJz-Lm-QPe" firstAttribute="centerX" secondItem="syb-5q-Pdd" secondAttribute="centerX" id="N39-4S-FEY"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="gpl-z5-l45" secondAttribute="trailing" constant="110" id="Nl5-zl-Rzc"/>
+                            <constraint firstItem="f1k-gy-Ely" firstAttribute="centerX" secondItem="gpl-z5-l45" secondAttribute="centerX" id="Tm9-qo-J1d"/>
+                            <constraint firstItem="f1k-gy-Ely" firstAttribute="top" secondItem="Thr-cX-tFy" secondAttribute="top" constant="210" id="ZTw-gC-IEZ"/>
+                            <constraint firstItem="gpl-z5-l45" firstAttribute="top" secondItem="Thr-cX-tFy" secondAttribute="topMargin" constant="481" id="i2b-GM-Mq7"/>
+                            <constraint firstItem="f1k-gy-Ely" firstAttribute="centerX" secondItem="syb-5q-Pdd" secondAttribute="centerX" id="sp0-95-jyz"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Map" id="fst-os-tLY"/>
                     <connections>
+                        <outlet property="AddAnotherLocationButton" destination="f1k-gy-Ely" id="RTO-Vm-p0c"/>
+                        <outlet property="addAnotherLocationButton" destination="f1k-gy-Ely" id="V39-Xd-4Qo"/>
+                        <outlet property="addMyLocationButton" destination="lJz-Lm-QPe" id="nHm-H3-KQQ"/>
                         <outlet property="webView" destination="syb-5q-Pdd" id="xdM-2b-r0n"/>
                         <segue destination="Oa5-5p-cID" kind="push" identifier="addNewPointSegue" id="u57-AN-6lX"/>
                     </connections>
@@ -421,6 +472,9 @@
     <resources>
         <image name="cultivando-logo.png" width="300" height="300"/>
         <image name="icn_menu_20.png" width="16" height="16"/>
+        <image name="icon-add-point.png" width="512" height="512"/>
+        <image name="icon-new-point.png" width="512" height="512"/>
+        <image name="icon-point.png" width="512" height="512"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
@@ -428,6 +482,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="z5K-Hz-Zts"/>
+        <segue reference="dwQ-9T-eO6"/>
     </inferredMetricsTieBreakers>
 </document>

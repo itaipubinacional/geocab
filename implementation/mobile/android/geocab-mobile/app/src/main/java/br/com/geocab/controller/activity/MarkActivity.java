@@ -1,17 +1,116 @@
 package br.com.geocab.controller.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
-import br.com.geocab.R;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
-public class MarkActivity extends Activity {
+import br.com.geocab.R;
+import br.com.geocab.controller.adapter.ListLayerAdapter;
+import br.com.geocab.controller.delegate.LayerMarkerDelegate;
+
+public class MarkActivity extends Activity
+{
+
+    private EditText selectLayerEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mark);
+
+        selectLayerEditText = (EditText) findViewById(R.id.edit_text_select_layer);
+
+        selectLayerEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_UP == event.getAction()) {
+                    selectLayerEditText.setText("Teste");
+                    Intent i = new Intent(MarkActivity.this, LayerActivity.class);
+                    startActivity(i);
+                }
+                return true; // return is important...
+            }
+        });
+
+        Button buttonOpenDialog = (Button) findViewById(R.id.btn_select_image_marker);
+        buttonOpenDialog.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                final Dialog dialog = new Dialog(v.getContext());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_image);
+                dialog.setCanceledOnTouchOutside(true);
+
+                Button buttonCamera = (Button) dialog.findViewById(R.id.button_camera);
+                buttonCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(takePicture, 0);
+                        dialog.dismiss();
+                    }
+                });
+
+                Button buttonGallery = (Button) dialog.findViewById(R.id.button_gallery);
+                buttonGallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(pickPhoto, 1);
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+
+        });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        ImageView imageView = (ImageView) findViewById(R.id.image_view_marker);
+        switch(requestCode) {
+            case 0:
+                if(resultCode == RESULT_OK){
+                    Bitmap photo = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                    imageView.setImageBitmap(photo);
+                }
+
+                break;
+            case 1:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                    Cursor cursor = getContentResolver().query(selectedImage,
+                            filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String picturePath = cursor.getString(columnIndex);
+                    cursor.close();
+
+                    imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+                }
+                break;
+        }
     }
 
 
