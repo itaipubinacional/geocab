@@ -415,7 +415,21 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 
                 layerGroupService.listAllLayerGroups({
             		callback : function(result) {
-                        $scope.layersGroups = result;
+                        //$scope.layersGroups = result;
+                        $scope.selectLayerGroup = [];
+                        
+                        angular.forEach(result, function(group,index){
+                        	
+                        	angular.forEach(group.layers, function(layer, index){
+                        		$scope.selectLayerGroup.push({
+                            		"layerTitle": layer.title,
+                            		"layerId": layer.id,
+                            		"group": group.name
+                            	});
+                        	})
+                        	
+                        })
+                        
                         $scope.currentState = $scope.LIST_STATE;
                         $state.go( $scope.LIST_STATE );
                         $scope.$apply();
@@ -1263,13 +1277,34 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         }
     
     	layerGroupService.listAllLayerGroups({
-    		callback : function(result) {
-                $scope.layersGroups = result;
+    		callback : function(groups) {
+               // $scope.layersGroups = result;
+                
+                $scope.selectLayerGroup = [];
+                
+                angular.forEach(groups, function(group,index){
+                	
+                	angular.forEach(group.layers, function(layer, index){
+                		
+                
+                		$scope.selectLayerGroup.push({
+                    		"layerTitle": layer.title,
+                    		"layerId": layer.id,
+                    		"group": group.name
+                    	});
+                	})
+                	
+                })
+                
+                
                 
                 markerService.findAttributeByMarker($scope.currentEntity.id, {
 	       			 callback : function(result) {
-	       				 
 	       				$scope.attributesByMarker = result;
+	       				
+	       				/*
+	       				
+	       				
 	       				
 	       				 angular.forEach($scope.layersGroups, function(value, index){
 	       					angular.forEach(value.layers, function(val, ind){
@@ -1280,7 +1315,15 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	           						val.selected = false;
 	           					}
 	       					});
-	       				 });
+	       				 });*/
+	       				
+	       			
+	       				
+                        angular.forEach($scope.selectLayerGroup, function(layer,index){
+                        		if( layer.layerId == result[0].marker.layer.id ) {
+	       							$scope.currentEntity.layer = layer;
+	           					}
+                        })
 	       				 
 	       				 $scope.$apply();
 	       	          },
@@ -1495,7 +1538,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	}
     	
     	var layer = new Layer();
-    	layer.id = $scope.currentEntity.layer;
+    	layer.id = $scope.currentEntity.layer.layerId;
     	$scope.currentEntity.layer = layer;
     	
     	$scope.currentEntity.markerAttribute = [];
@@ -1535,8 +1578,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     }
     
-    $scope.listAttributesByLayer = function( layerId ){
-    	  layerGroupService.listAttributesByLayer(layerId,{
+    $scope.listAttributesByLayer = function(){
+    	  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
       		callback : function(result) {
                   $scope.attributesByLayer = result;
                   $scope.$apply();
