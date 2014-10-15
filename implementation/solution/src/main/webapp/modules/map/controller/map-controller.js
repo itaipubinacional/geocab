@@ -1399,7 +1399,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.showMapInfo = function(features) {
         var dialog = $modal.open({
-            templateUrl: 'modules/mapa/ui/popup/map-info-popup.html',
+            templateUrl: 'modules/map/ui/popup/map-info-popup.jsp',
             controller: MapInfoPopUpController,
             resolve : {
                 features: function(){ return features }

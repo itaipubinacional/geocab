@@ -12,7 +12,7 @@
         <h3 class="modal-title">Associar grupo de acesso</h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
-        <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>
+        <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
 
         <form novalidate name="form" default-button="{{buttonInsert}}" style="margin-bottom: 10px; margin-top: 10px;">
             <input type="text" ng-model="data.filter" name="nome" style="width: 300px; float: left;"
