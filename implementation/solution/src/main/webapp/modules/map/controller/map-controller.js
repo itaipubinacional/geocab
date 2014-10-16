@@ -1381,10 +1381,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		/*
     		 * TODO: Colocar um loading...
     		 * */
-    		$scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
+    		
+    		
+    		//$scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
+    		
+    		
     	}
     	
-    	$scope.toggleSidebar(time, element, '#sidebar-marker-detail');
+    	if ( $('#sidebar-marker-detail').css("display") == 'none' ){
+    		$scope.toggleSidebar(time, element, '#sidebar-marker-detail');
+    	}
     	
     };
     
@@ -1693,6 +1699,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
   				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-enabled"), dismiss: true};
       			$("div.msgMap").show();
       			  
+      			
+      			
       			setTimeout(function(){
       			  $("div.msgMap").fadeOut();
       			}, 5000);
@@ -1730,6 +1738,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
       			$("div.msgMap").show();
       			  
+      			
+      			
       			setTimeout(function(){
       			  $("div.msgMap").fadeOut();
       			}, 5000);
