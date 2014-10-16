@@ -62,7 +62,7 @@
                        <button style="float: right;" class="btn btn-default" ng-click="removeMarker()"><i class="itaipu-icon-delete"></i></button>
                        <button style="float: right; margin-right: 5px" class="btn btn-default" ng-click="toggleSidebarMarkerUpdate(300, '#menu-item-1')"><i class="itaipu-icon-edit"></i></button>
                        <button style="float: right; margin-right: 5px; color: red;" ng-click="disableMarker()" ng-if="markerDetail.data.status == 'ACCEPTED' || markerDetail.data.status == 'PENDING'" class="btn btn-default"><i class="glyphicon glyphicon-ban-circle"></i></button>
-                       <button style="float: right; margin-right: 5px; color: #00981F" ng-click="enableMarker()" ng-if="markerDetail.data.status == 'REFUSED' || markerDetail.data.status == 'PENDING'" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></button>
+                       <button style="float: right; margin-right: 5px; color: #00981F" ng-click="enableMarker()" ng-if="markerDetail.data.status == 'REFUSED' || markerDetail.data.status == 'PENDING' " class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></button>
                        <br>
                        <img src="" style="width: 100%; height: 200px; margin-top: 12px;">
                        <br><br>
@@ -211,13 +211,9 @@
                        	   ng-model="currentEntity.layer" 
 	                       chosen 
 	                       class="form-control" 
-	                       
 	                       ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" 
 	                       required>    
-	                                          	
-							  <!-- <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
-							    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
-							  </optgroup> -->
+							   <option value=""></option>
 						</select>
 						
 						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
