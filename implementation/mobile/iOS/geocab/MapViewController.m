@@ -33,6 +33,12 @@
 @property (weak, nonatomic) IBOutlet UIButton *addMyLocationButton;
 @property (weak, nonatomic) IBOutlet UIButton *addAnotherLocationButton;
 
+@property (weak, nonatomic) IBOutlet UIButton *changeMarkerButton;
+@property (weak, nonatomic) IBOutlet UIButton *confirmMarkerButton;
+@property (weak, nonatomic) IBOutlet UIButton *cancelMarkerButton;
+@property (weak, nonatomic) IBOutlet UIButton *showMarkerOptionsButton;
+
+@property (weak, nonatomic) IBOutlet UILabel *hintLabel;
 
 @end
 
@@ -79,20 +85,55 @@
     
     //Add marker buttons customization
     _addAnotherLocationButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    _addMyLocationButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     _addAnotherLocationButton.layer.borderWidth = 0.3;
+    
     _addMyLocationButton.layer.borderWidth = 0.3;
+    _addMyLocationButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    
+    _changeMarkerButton.layer.borderWidth = 0.3;
+    _changeMarkerButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    
+    _confirmMarkerButton.layer.borderWidth = 0.3;
+    _confirmMarkerButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    
+    _cancelMarkerButton.layer.borderWidth = 0.3;
+    _cancelMarkerButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     
     [_addMyLocationButton addTarget:self action:@selector(addCurrentLocation:) forControlEvents:UIControlEventTouchUpInside];
     [_addAnotherLocationButton addTarget:self action:@selector(addSelectedLocation:) forControlEvents:UIControlEventTouchUpInside];
+    [_cancelMarkerButton addTarget:self action:@selector(cancelMarkerRegistration:) forControlEvents:UIControlEventTouchUpInside];
+    [_confirmMarkerButton addTarget:self action:@selector(confirmMarkerRegistration:) forControlEvents:UIControlEventTouchUpInside];
+    [_changeMarkerButton addTarget:self action:@selector(changeMarkerRegistration:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void) didEndMultipleSelecting:(NSArray *)selectedLayers {
     _selectedLayers = selectedLayers;
     
     [_layerSelectorNavigator dismissViewControllerAnimated:YES completion:^{
-        
+
     }];
+}
+
+- (void) didCheckedLayer:(Layer *)layer {
+    NSRange index = [layer.name rangeOfString:@":"];
+    NSRange position = [layer.dataSource.url rangeOfString:@"geoserver/" options:NSBackwardsSearch];
+    NSString *typeLayer = [layer.name substringWithRange:NSMakeRange(0, index.location)];
+    
+    NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
+    
+    NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@')", urlFormated , layer.name];
+    [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+}
+
+- (void) didUnheckedLayer:(Layer *)layer {
+    NSRange index = [layer.name rangeOfString:@":"];
+    NSRange position = [layer.dataSource.url rangeOfString:@"geoserver/" options:NSBackwardsSearch];
+    NSString *typeLayer = [layer.name substringWithRange:NSMakeRange(0, index.location)];
+    
+    NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
+    
+    NSString *functionCall = [NSString stringWithFormat:@"removeLayer('%@', '%@')", urlFormated , layer.name];
+    [_webView stringByEvaluatingJavaScriptFromString:functionCall];
 }
 
 - (void)didReceiveMemoryWarning
@@ -109,30 +150,80 @@
     [self presentViewController:_layerSelectorNavigator animated:YES completion:^{
 
     }];
-    
-    //[_sideMenu toggleLeftSideMenuCompletion:^{}];
 }
 
 -(IBAction)addNewPoint:(id)sender {
-    [self toogleButtons];
+    [self showNewMarkerButtons];
+    [self hideMarkerOptions];
 }
 
--(void)toogleButtons {
-    [UIView animateWithDuration:1
-                          delay:1.5
-                        options: UIViewAnimationCurveEaseInOut
-                     animations:^{
-                         _addMyLocationButton.hidden = !_addMyLocationButton.hidden;
-                         _addAnotherLocationButton.hidden = !_addAnotherLocationButton.hidden;
-                     } 
-                     completion:nil];
+-(void)showNewMarkerButtons {
+    if (_addMyLocationButton.hidden) {
+        [UIView animateWithDuration:1
+                              delay:1.5
+                            options: UIViewAnimationCurveEaseInOut
+                         animations:^{
+                             _addMyLocationButton.hidden = false;
+                             _addAnotherLocationButton.hidden = false;
+                         } 
+                         completion:nil];
+    }
+}
+
+-(void)hideNewMarkerButtons {
+    if (!_addMyLocationButton.hidden) {
+        [UIView animateWithDuration:1
+                              delay:1.5
+                            options: UIViewAnimationCurveEaseInOut
+                         animations:^{
+                             _addMyLocationButton.hidden = true;
+                             _addAnotherLocationButton.hidden = true;
+                         }
+                         completion:nil];
+    }
+}
+
+- (void) showMarkerOptions {
+    if (_confirmMarkerButton.hidden) {
+        [UIView animateWithDuration:1
+                              delay:1.5
+                            options: UIViewAnimationCurveEaseInOut
+                         animations:^{
+                             _confirmMarkerButton.hidden = false;
+                             _changeMarkerButton.hidden = false;
+                             _cancelMarkerButton.hidden = false;
+                         }
+                         completion:nil];
+    }
+        
+}
+
+- (void) hideMarkerOptions {
+    if (!_confirmMarkerButton.hidden) {
+        [UIView animateWithDuration:1
+                              delay:1.5
+                            options: UIViewAnimationCurveEaseInOut
+                         animations:^{
+                             _confirmMarkerButton.hidden = true;
+                             _changeMarkerButton.hidden = true;
+                             _cancelMarkerButton.hidden = true;
+                         }
+                         completion:nil];
+    }
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView
 {
     JSContext *context = [_webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-    context[@"submitButton"] = ^(NSString *param1) {
-        //NSLog([NSString stringWithFormat:@"Clicou no botão: %@", param1]);
+    context[@"confirmToProceed"] = ^(NSString *param1, NSString *param2) {
+        [_webView stringByEvaluatingJavaScriptFromString:@"unbindTouchEvent()"];
+        NSString *functionCall = [NSString stringWithFormat:@"addPoint(%@, %@, true)", param1, param2];
+        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        [self hideNewMarkerButtons];
+        [self showMarkerOptions];
+
+        if (!_hintLabel.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _hintLabel.hidden = true;} completion:nil];
+        if (!_showMarkerOptionsButton.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _showMarkerOptionsButton.hidden = true;} completion:nil];
     };
 }
 
@@ -147,12 +238,14 @@
     NSDate *eventDate = location.timestamp;
     NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
     if (abs(howRecent) < 15.0) {
-//        NSString *functionCall = [NSString stringWithFormat:@"addPoint(%.5f, %.5f)", location.coordinate.latitude, location.coordinate.longitude];
-//        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        NSString *functionCall = [NSString stringWithFormat:@"addPoint(%.5f, %.5f, false)", location.coordinate.latitude, location.coordinate.longitude];
+        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
         
         [_locationManager stopUpdatingLocation];
-        [self toogleButtons];
-        [self performSegueWithIdentifier:@"addNewPointSegue" sender:self];
+        [self hideNewMarkerButtons];
+        [self showMarkerOptions];
+        if (!_hintLabel.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _hintLabel.hidden = true;} completion:nil];
+        if (!_showMarkerOptionsButton.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _showMarkerOptionsButton.hidden = true;} completion:nil];
     }
 }
 
@@ -161,8 +254,9 @@
         
         NSLog(@"%.5f  %.5f", _locationManager.location.coordinate.latitude, _locationManager.location.coordinate.longitude);
         
-//        AddNewPointViewController *addNewPointViewController = (AddNewPointViewController*) segue.destinationViewController;
-//        addNewPointViewController.latitude = _location.x;
+        AddNewPointViewController *addNewPointViewController = (AddNewPointViewController*) segue.destinationViewController;
+        addNewPointViewController.latitude = _location.x;
+        addNewPointViewController.longitude = _location.y;
     }
 }
 
@@ -174,7 +268,10 @@
 }
 
 -(IBAction)addSelectedLocation:(id)sender {
-    [self toogleButtons];
+    [self hideNewMarkerButtons];
+    [self hideMarkerOptions];
+    [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _hintLabel.hidden = !_hintLabel.hidden;} completion:nil];
+    [_webView stringByEvaluatingJavaScriptFromString:@"bindTouchEvent()"];
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -184,6 +281,31 @@
         }
         [_locationManager startUpdatingLocation];
     }
+}
+
+- (IBAction)cancelMarkerRegistration:(id)sender {
+    [_webView stringByEvaluatingJavaScriptFromString:@"removeMarker()"];
+    [self hideMarkerOptions];
+    [self hideNewMarkerButtons];
+    if (_showMarkerOptionsButton.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _showMarkerOptionsButton.hidden = false;} completion:nil];
+}
+
+- (IBAction)changeMarkerRegistration:(id)sender {
+    [self hideMarkerOptions];
+    [self hideNewMarkerButtons];
+    
+    [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _hintLabel.hidden = false; } completion:nil];
+    if (!_showMarkerOptionsButton.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _showMarkerOptionsButton.hidden = true; } completion:nil];
+    
+    [_webView stringByEvaluatingJavaScriptFromString:@"bindTouchEvent()"];
+}
+
+- (IBAction)confirmMarkerRegistration:(id)sender {
+    [self performSegueWithIdentifier:@"addNewPointSegue" sender:self];
+    [self hideMarkerOptions];
+    [self hideNewMarkerButtons];
+    
+    [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _showMarkerOptionsButton.hidden = false; } completion:nil];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
@@ -199,11 +321,6 @@
     //_sideMenu.panMode = MFSideMenuPanModeDefault;
     [super viewWillAppear:animated];
 }
-
-//- (void)viewWillDisappear:(BOOL)animated {
-//    [super viewWillDisappear:animated];
-//    
-//}
 
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
