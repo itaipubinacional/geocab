@@ -17,7 +17,7 @@
             </div>
             <br>
             
-            <div class="form-item">
+            <div class="form-item" ng-if="currentEntity.url">
                 <b class="detail-label"><spring:message code="Address"/></b>
                 <br>
                 <span class="detail-value">{{currentEntity.url}}</span>

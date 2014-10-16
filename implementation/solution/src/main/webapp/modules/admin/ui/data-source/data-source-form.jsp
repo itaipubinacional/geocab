@@ -25,8 +25,19 @@
                       class="tooltip-validation"><spring:message code="Name"/> <spring:message code="required"/></span>
             </div>
             <br>
+            
+            <div>
+                <input id="urlRequired" type="checkbox"
+                       ng-model="externalDataSource"
+                       ng-change="clearFieldUrl()" 
+                       ng-checked=" currentEntity.url "
+                       >
+                <label for="urlRequired" title="Url required"><spring:message code="admin.External-data-source.External-data-source"/></label>
+            </div>
 
-            <div class="form-item position-relative" style="width: 500px;">
+		    <div ng-if="externalDataSource ||  isUrlChecked()" >
+		    
+            <div class="form-item position-relative" style="width: 500px;" >
                 <label class="detail-label" ><spring:message code="Address"/></label>
                 <input name="url" type="text" class="form-control"
                        ng-model="currentEntity.url"
@@ -36,15 +47,17 @@
             </div>
             <br>
 
-            <div>
+            <div >
                 <input id="authenticationRequired" type="checkbox"
                        ng-model="data.showFields"
-                       ng-change="clearFields()" ng-checked="data.showFields">
+                       ng-change="clearFields()" ng-checked="currentEntity.login && currentEntity.password">
                 <label for="authenticationRequired" title="Authentication required"><spring:message code="Authentication"/> <spring:message code="required"/></label>
             </div>
             <br ng-if="data.show"/>
 
-            <div class="form-item position-relative" ng-if="data.showFields" style="width: 200px;">
+			<div ng-if ="data.showFields || isUserChecked()">
+			
+            <div class="form-item position-relative" ng-if=" isUserChecked()" style="width: 200px;">
                 <label class="detail-label" required><spring:message code="Username"/></label>
                 <input name="username" type="text" class="form-control"
                        ng-model="currentEntity.login"
@@ -60,7 +73,7 @@
             
             <input type="text" style="display: none"/>
 
-            <div class="form-item position-relative" ng-if="data.showFields" style="width: 200px;">
+            <div class="form-item position-relative" ng-if=" isUserChecked() " style="width: 200px;">
                 <label class="detail-label" required><spring:message code="Password"/></label>
                 <input name="password" type="password" class="form-control"
                        placeholder="<spring:message code="admin.datasource.Enter-your-password"/>"
@@ -71,6 +84,11 @@
 				<span ng-show="form.password.$error.required && (form.$submitted || form.password.$dirty)"
                       class="tooltip-validation"><spring:message code="Password"/> <spring:message code="required"/></span>
             </div>
+            
+            </div>
+        
+        	</div>
+        	
         </div>
     </form>
 </div>

@@ -4,6 +4,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"  %>
 <!DOCTYPE html>
 <html xmlns:ng="http://angularjs.org">
 	<sec:authorize access="isAnonymous()">
@@ -62,13 +63,21 @@
 	
 	<body class="overflow-hidden">
 	<div class="container-fluid" style="height: 100%;"> 
-		<header>
-				<jsp:include page="../../common/header.jsp"/>
-		</header>
+	<header>
+		<jsp:include page="../../common/header.jsp"/>
+	</header>
 
-    <!-- content -->
-    <div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
-    <!-- /content -->
+	<!-- content -->
+	<security:authorize ifAnyGranted="ADMINISTRATOR" >
+	    <div  id="sb-site"  ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
+	</security:authorize>
+	
+	<security:authorize ifAnyGranted="USER,MODERATOR">
+	    <div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 60px; left: 0; right: 0;" ng-controller="MapController"></div>
+	</security:authorize>
+
+	<!-- /content -->
+       
 	<footer></footer>
 </div>
 	</body>

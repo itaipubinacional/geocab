@@ -147,6 +147,7 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 		this.setName(name);
 	}
 	
+	
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
