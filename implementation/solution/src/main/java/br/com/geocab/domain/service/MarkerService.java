@@ -3,12 +3,16 @@
  */
 package br.com.geocab.domain.service;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.jcr.RepositoryException;
 import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
+import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,11 +22,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.StatusMarker;
+import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
@@ -59,6 +65,9 @@ public class MarkerService
 	 */
 	@Autowired
 	private MessageSource messages;
+	
+	@Autowired
+	private IMetaFileRepository metaFileRepository;
 	
 	
 	
@@ -209,7 +218,6 @@ public class MarkerService
 	@Transactional(readOnly=true)
 	public Page<Marker> listMarkerByFilters( String filter, PageRequest pageable )
 	{
-		//return this.markerRepository.listByFilters(filter, pageable);
 		return this.markerRepository.listByFilters(pageable);
 	}
 	
@@ -236,6 +244,17 @@ public class MarkerService
 		if(!fieldError.isEmpty()){
 			throw new IllegalArgumentException( this.messages.getMessage("The-field-entered-already-exists,-change-and-try-again", new Object [] {fieldError}, null) );
 		}*/
+	}
+	
+	public MetaFile uploadImg( FileTransfer fileTransfer ) throws IOException, RepositoryException {
+		
+		MetaFile metaFile = new MetaFile();
+		metaFile.setContentType( fileTransfer.getMimeType() );
+		metaFile.setFolder("/test/files");
+		metaFile.setInputStream(fileTransfer.getInputStream());
+		metaFile.setName( fileTransfer.getFilename() );
+		
+		return this.metaFileRepository.insert( metaFile );
 	}
 
 }
