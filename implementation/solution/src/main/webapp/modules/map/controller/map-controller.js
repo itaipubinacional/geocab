@@ -413,20 +413,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.currentEntity.latitude = evt.coordinate[0];
                 $scope.currentEntity.longitude = evt.coordinate[1];
                 
-                layerGroupService.listAllLayerGroups({
+                layerGroupService.listAllInternalLayerGroups({
             		callback : function(result) {
                         //$scope.layersGroups = result;
                         $scope.selectLayerGroup = [];
                         
-                        angular.forEach(result, function(group,index){
+                        angular.forEach(result, function(layer,index){
                         	
-                        	angular.forEach(group.layers, function(layer, index){
-                        		$scope.selectLayerGroup.push({
-                            		"layerTitle": layer.title,
-                            		"layerId": layer.id,
-                            		"group": group.name
-                            	});
-                        	})
+                        	$scope.selectLayerGroup.push({
+                        		"layerTitle": layer.title,
+                        		"layerId": layer.id,
+                        		"group": layer.layerGroup.name
+                        	});
                         	
                         })
                         
@@ -1276,49 +1274,26 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.screenMarkerOpenned = false;
         }
     
-    	layerGroupService.listAllLayerGroups({
-    		callback : function(groups) {
+    	layerGroupService.listAllInternalLayerGroups({
+    		callback : function(result) {
                // $scope.layersGroups = result;
                 
                 $scope.selectLayerGroup = [];
-                
-                angular.forEach(groups, function(group,index){
+                        
+                angular.forEach(result, function(layer,index){
                 	
-                	angular.forEach(group.layers, function(layer, index){
-                		
-                
-                		$scope.selectLayerGroup.push({
-                    		"layerTitle": layer.title,
-                    		"layerId": layer.id,
-                    		"group": group.name
-                    	});
-                	})
+                	$scope.selectLayerGroup.push($.extend(layer, {
+                		"layerTitle": layer.title,
+                		"layerId": layer.id,
+                		"group": layer.layerGroup.name
+                	}));
                 	
                 })
-                
-                
                 
                 markerService.findAttributeByMarker($scope.currentEntity.id, {
 	       			 callback : function(result) {
 	       				$scope.attributesByMarker = result;
-	       				
-	       				/*
-	       				
-	       				
-	       				
-	       				 angular.forEach($scope.layersGroups, function(value, index){
-	       					angular.forEach(value.layers, function(val, ind){
-	       						if( val.id == result[0].marker.layer.id ) {
-	       							val.selected = true;
-	       							$scope.currentEntity.layer = val;
-	           					} else {
-	           						val.selected = false;
-	           					}
-	       					});
-	       				 });*/
-	       				
-	       			
-	       				
+	  
                         angular.forEach($scope.selectLayerGroup, function(layer,index){
                         		if( layer.layerId == result[0].marker.layer.id ) {
 	       							$scope.currentEntity.layer = layer;
@@ -1672,7 +1647,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.setPhotoMarker = function(element) {
-    	 console.log(element);
+    	
+    	 markerService.uploadImg(element, {
+     		  callback : function(result) {
+     	
+     			
+	          },
+	          errorHandler : function(message, exception) {
+	              $scope.message = {type:"error", text: message};
+	              $scope.$apply();
+	          }
+     	});
+    	 
     }
     
     $scope.enableMarker = function() {
