@@ -18,6 +18,11 @@ public enum UserRole implements GrantedAuthority
 	MODERATOR, 		//1
 	USER;			//2
 
+	
+	public static final String ADMINISTRATOR_VALUE = "ADMINISTRATOR";
+	public static final String MODERATOR_VALUE = "MODERATOR";
+	public static final String USER_VALUE = "USER";
+	
 	/* (non-Javadoc)
 	 * @see org.springframework.security.core.GrantedAuthority#getAuthority()
 	 */

@@ -23,10 +23,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.ExternalLayer;
@@ -91,6 +93,7 @@ public class LayerGroupService
 	 * @param layerGroup
 	 * @return layerGroup
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public LayerGroup insertLayerGroup( LayerGroup layerGroup )
 	{
 		layerGroup.setPublished(false);
@@ -104,6 +107,7 @@ public class LayerGroupService
 	 * @param layerGroup
 	 * @return layerGroup
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public LayerGroup updateLayerGroup( LayerGroup layerGroup )
 	{
 		return this.layerGroupRepository.save( layerGroup );
@@ -116,6 +120,7 @@ public class LayerGroupService
 	 * @param List<layerGroup>
 	 * @return
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void saveAllLayersGroup( List<LayerGroup> layerGroup )
 	{
 		this.prioritizeLayersGroup( layerGroup, null );
@@ -139,6 +144,7 @@ public class LayerGroupService
 	 * 
 	 * @param List<layerGroup>
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void saveAllParentLayerGroup(List<LayerGroup> layerGroup)
 	{
 		List<LayerGroup> layersGroups = this.layerGroupRepository.listAllParentLayerGroup();
@@ -155,6 +161,7 @@ public class LayerGroupService
 	 * 
 	 * @param List<layerGroup>
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void publishLayerGroup(List<LayerGroup> layersGroup)
 	{
 		this.saveAllLayersGroup(layersGroup); // save layersGroup
@@ -193,6 +200,7 @@ public class LayerGroupService
 	/**
 	 * M�todo que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void populateChildrenInLayerGroupPublished()
 	{
 		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listAllLayersGroupPublished();
@@ -210,6 +218,7 @@ public class LayerGroupService
 	 * @param gruposCamadasPublicados
 	 * @param grupoCamadaPublicadosSuperior
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void removeLayerGroupPublished( LayerGroup layerGroupPublished )
 	{
 		if ( layerGroupPublished.getLayersGroup() != null )
@@ -233,6 +242,7 @@ public class LayerGroupService
 	 * @param grupoCamadaOriginal
 	 * @param grupoCamadaPaiPublicado
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void recursive( LayerGroup layerGroupOriginal, LayerGroup layerGroupUpperPublished )
 	{
 		final Long layerGroupOriginalId = layerGroupOriginal.getId();
@@ -321,6 +331,7 @@ public class LayerGroupService
 	 * @param layerGroups
 	 * @param layerGroupUpper
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void prioritizeLayersGroup( List<LayerGroup> layerGroups, LayerGroup layerGroupUpper )
 	{
 		if ( layerGroups != null )
@@ -341,6 +352,7 @@ public class LayerGroupService
 	 * 
 	 * @param layerGroups
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void prioritizeLayers( List<LayerGroup> layerGroups )
 	{
 		if ( layerGroups != null )
@@ -370,6 +382,7 @@ public class LayerGroupService
 	 * 
 	 * @param id
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void removeLayerGroup( Long id )
 	{
 		final LayerGroup layerGroup = this.layerGroupRepository.findOne(id);
@@ -646,6 +659,7 @@ public class LayerGroupService
 	 * @param layer
 	 * @return
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer insertLayer( Layer layer )
 	{
 		layer.setLayerGroup(this.findLayerGroupById(layer.getLayerGroup().getId()));
@@ -659,6 +673,7 @@ public class LayerGroupService
 	 * @param camada
 	 * @return camada
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer updateLayer( Layer layer )
 	{
 		Layer layerDatabase = this.findLayerById(layer.getId());
@@ -699,6 +714,7 @@ public class LayerGroupService
 	 * 
 	 * @param id
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void removeLayer( Long id )
 	{	
 		this.layerRepository.delete( id );
@@ -785,6 +801,7 @@ public class LayerGroupService
 	 * 
 	 * @param grupoCamadas
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void removeLayersGroupPublishedEmpty( LayerGroup layerGroup )
 	{
 		if ( layerGroup.getLayersGroup() != null )
