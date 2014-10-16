@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**
@@ -60,4 +61,15 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 			"WHERE ( layer.publishedLayer != NULL "
 			+ "AND layer.published = false ) ")
 	public List<Layer> listLayersPublished();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Query(value="SELECT new Layer(layer.id, layer.title, layerGroup) "
+			+ "FROM Layer layer " 
+			+ "LEFT OUTER JOIN layer.dataSource dataSource "
+			+ "LEFT OUTER JOIN layer.layerGroup layerGroup "
+			+ "WHERE ( dataSource.url = NULL ) " )
+	public List<Layer> listAllInternalLayerGroups();
 }

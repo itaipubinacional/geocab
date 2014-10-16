@@ -211,13 +211,9 @@
                        	   ng-model="currentEntity.layer" 
 	                       chosen 
 	                       class="form-control" 
-	                       
 	                       ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" 
 	                       required>    
-	                                          	
-							  <!-- <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
-							    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
-							  </optgroup> -->
+							   <option value=""></option>
 						</select>
 						
 						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
