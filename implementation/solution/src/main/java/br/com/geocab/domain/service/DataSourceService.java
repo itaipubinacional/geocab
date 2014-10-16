@@ -14,9 +14,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.repository.datasource.IDataSourceRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
@@ -34,7 +36,7 @@ import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 @Service
 @Transactional
 @RemoteProxy(name="dataSourceService")
-//@PreAuthorize("hasRole('"+UserRole.ADMINISTRADOR_VALUE+"')")
+@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 public class DataSourceService
 {
 	/*-------------------------------------------------------------------

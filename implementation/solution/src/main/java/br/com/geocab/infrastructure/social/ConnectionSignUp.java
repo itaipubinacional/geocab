@@ -7,6 +7,7 @@ import org.springframework.social.connect.UserProfile;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.service.AccountService;
+import br.com.geocab.domain.service.LoginService;
 
 /**
  * 
@@ -18,7 +19,7 @@ public class ConnectionSignUp implements org.springframework.social.connect.Conn
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
 	@Autowired
-	private AccountService accountService;
+	private LoginService loginService;
 	
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
@@ -34,7 +35,7 @@ public class ConnectionSignUp implements org.springframework.social.connect.Conn
 		
 		if ( profile.getEmail() == null ) return null;
 		
-		User user = this.accountService.findUserByEmail( profile.getEmail() );
+		User user = this.loginService.findUserByEmail( profile.getEmail() );
 		
 		if( null == user ){ //Create if not exist 
 			
@@ -57,7 +58,7 @@ public class ConnectionSignUp implements org.springframework.social.connect.Conn
 			user.setName(name);
 			user.setPassword("none");
 			user.setRole(UserRole.USER);
-			user = this.accountService.insertUser( user );
+			user = this.loginService.insertUser( user );
 		}else if( !user.isEnabled() ){//Disabled User
 			return null; 
 		}

@@ -3,10 +3,14 @@ package br.com.geocab.application.controller;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -77,6 +81,16 @@ public class NavigationController
 	public String authentication( Locale locale )
 	{
 		return "modules/authentication/ui/index";
+	}
+	
+	/**
+	 * 
+	 */
+	@RequestMapping( value="/signin", method=RequestMethod.GET )
+	public String signinError( @RequestParam String error, HttpServletRequest httpServletRequest )
+	{
+		System.out.println( error );
+		return null;
 	}
 
 
