@@ -99,7 +99,38 @@
                 <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty)" class="tooltip-validation"><spring:message code="Title"/> <spring:message code="required"/></span>
 
                 <br/>
+                
+            <div>
+            <button ng-click="addAttribute()"  class="btn btn-primary" style="margin-bottom: 5px">Adicionar atributos</button>
+            <div ng-grid="gridAttributes" style="height: 320px; border: 1px solid rgb(212,212,212);"></div>
+            
+            <label class="detail-label" style="margin: 15px 0 5px 0;" required>Escolha um ícone</label>
+            
+            <table style="text-align: center; background: #E6E6E6;">
+            
+           		<tr>
+           			<td><img src="<c:url value="/static/icons/1.png"/>" width="25" height="25"></td>
+           			<td><img src="<c:url value="/static/icons/2.png"/>" width="25" height="25"></td>
+           			<td><img src="<c:url value="/static/icons/3.png"/>" width="25" height="25"></td>
+           			<td><img src="<c:url value="/static/icons/4.png"/>" width="25" height="25"></td>
+           			<td><img src="<c:url value="/static/icons/5.png"/>" width="25" height="25"></td>
+           		</tr>
+           		<tr>
+           			<td><input type="radio" value="/static/icons/1.png" ng-checked="currentEntity.icon == '/static/icons/1.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           			<td><input type="radio" value="/static/icons/2.png" ng-checked="currentEntity.icon == '/static/icons/2.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           			<td><input type="radio" value="/static/icons/3.png" ng-checked="currentEntity.icon == '/static/icons/3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           			<td><input type="radio" value="/static/icons/4.png" ng-checked="currentEntity.icon == '/static/icons/4.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           			<td><input type="radio" value="/static/icons/5.png" ng-checked="currentEntity.icon == '/static/icons/5.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           		</tr>
+           		
+           	</table>
+            
+            
+            </div>
+            
             </span>
+            
+            
 
             <br/>
             <div class="form-item position-relative" style="width: 350px;">

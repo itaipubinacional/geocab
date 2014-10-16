@@ -49,6 +49,7 @@
 	
 	<!-- Controllers -->
 	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/add-attribute-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-layer-group-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-access-group-popup-controller.js"></script>

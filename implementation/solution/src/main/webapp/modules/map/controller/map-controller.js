@@ -413,9 +413,21 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.currentEntity.latitude = evt.coordinate[0];
                 $scope.currentEntity.longitude = evt.coordinate[1];
                 
-                layerGroupService.listAllLayerGroups({
+                layerGroupService.listAllInternalLayerGroups({
             		callback : function(result) {
-                        $scope.layersGroups = result;
+                        //$scope.layersGroups = result;
+                        $scope.selectLayerGroup = [];
+                        
+                        angular.forEach(result, function(layer,index){
+                        	
+                        	$scope.selectLayerGroup.push({
+                        		"layerTitle": layer.title,
+                        		"layerId": layer.id,
+                        		"group": layer.layerGroup.name
+                        	});
+                        	
+                        })
+                        
                         $scope.currentState = $scope.LIST_STATE;
                         $state.go( $scope.LIST_STATE );
                         $scope.$apply();
@@ -934,7 +946,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.initializeDistanceCalc = function () {
 
     	if($scope.menu.fcMarker){
-    		$scope.clearFcMaker();
+    		$scope.clearFcMaker(true);
     	}
     	
         // verifica se alguma funcionalidade ja está ativa
@@ -1022,7 +1034,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.initializeAreaCalc = function () {
 
     	if($scope.menu.fcMarker){
-    		$scope.clearFcMaker();
+    		$scope.clearFcMaker(true);
     	}
 
         // verifica se alguma funcionalidade ja está ativa
@@ -1262,25 +1274,31 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.screenMarkerOpenned = false;
         }
     
-    	layerGroupService.listAllLayerGroups({
+    	layerGroupService.listAllInternalLayerGroups({
     		callback : function(result) {
-                $scope.layersGroups = result;
+               // $scope.layersGroups = result;
+                
+                $scope.selectLayerGroup = [];
+                        
+                angular.forEach(result, function(layer,index){
+                	
+                	$scope.selectLayerGroup.push($.extend(layer, {
+                		"layerTitle": layer.title,
+                		"layerId": layer.id,
+                		"group": layer.layerGroup.name
+                	}));
+                	
+                })
                 
                 markerService.findAttributeByMarker($scope.currentEntity.id, {
 	       			 callback : function(result) {
-	       				 
 	       				$scope.attributesByMarker = result;
-	       				
-	       				 angular.forEach($scope.layersGroups, function(value, index){
-	       					angular.forEach(value.layers, function(val, ind){
-	       						if( val.id == result[0].marker.layer.id ) {
-	       							val.selected = true;
-	       							$scope.currentEntity.layer = val;
-	           					} else {
-	           						val.selected = false;
+	  
+                        angular.forEach($scope.selectLayerGroup, function(layer,index){
+                        		if( layer.layerId == result[0].marker.layer.id ) {
+	       							$scope.currentEntity.layer = layer;
 	           					}
-	       					});
-	       				 });
+                        })
 	       				 
 	       				 $scope.$apply();
 	       	          },
@@ -1301,6 +1319,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     };
     
     $scope.toggleSidebarMarkerDetail = function (time, element, marker){
+    	
+    	
     	
     	markerService.findAttributeByMarker($scope.markerDetail.data.id, {
 		  callback : function(result) {
@@ -1336,10 +1356,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		/*
     		 * TODO: Colocar um loading...
     		 * */
-    		$scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
+    		
+    		
+    		//$scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
+    		
+    		
     	}
     	
-    	$scope.toggleSidebar(time, element, '#sidebar-marker-detail');
+    	if ( $('#sidebar-marker-detail').css("display") == 'none' ){
+    		$scope.toggleSidebar(time, element, '#sidebar-marker-detail');
+    	}
     	
     };
     
@@ -1399,7 +1425,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.showMapInfo = function(features) {
         var dialog = $modal.open({
-            templateUrl: 'modules/mapa/ui/popup/map-info-popup.html',
+            templateUrl: 'modules/map/ui/popup/map-info-popup.jsp',
             controller: MapInfoPopUpController,
             resolve : {
                 features: function(){ return features }
@@ -1424,7 +1450,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         $scope.LAYER_MENU_STATE = 'list';
     }
     
-    $scope.clearFcMaker = function() {
+    $scope.clearFcMaker = function(removeOverlay) {
     	$scope.currentEntity = new Marker();
     	
     	$scope.menu.fcMarker = false;
@@ -1432,9 +1458,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	if($scope.screenMarkerOpenned)
     		$scope.toggleSidebarMarkerCreate(300, 'closeButton');
 
-    	$scope.map.removeOverlay($scope.marker);
+    	if( removeOverlay ) {
+    		$scope.map.removeOverlay($scope.marker);
+    	}
+    		
         
         $scope.screenMarkerOpenned = false;
+        $scope.attributesByLayer = [];
     }
     
     $scope.updateMarker = function(){
@@ -1458,8 +1488,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
     	markerService.updateMarker($scope.currentEntity,{
       		callback : function(result) {
-      		
-
+      		      			
+      			$scope.toggleSidebarMarkerUpdate(300, 'closeButton')
+      			
+      			 $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
+     			  $("div.msgMap").show();
+     			  
+     			  setTimeout(function(){
+     				  $("div.msgMap").fadeOut();
+     			  }, 5000);
+      			
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
@@ -1481,7 +1519,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	}
     	
     	var layer = new Layer();
-    	layer.id = $scope.currentEntity.layer;
+    	layer.id = $scope.currentEntity.layer.layerId;
     	$scope.currentEntity.layer = layer;
     	
     	$scope.currentEntity.markerAttribute = [];
@@ -1502,7 +1540,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	markerService.insertMarker($scope.currentEntity,{
       		callback : function(result) {
-      			  $scope.clearFcMaker();
+      			  $scope.clearFcMaker(false);
       			        			  
       			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
       			  $("div.msgMap").show();
@@ -1521,8 +1559,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     }
     
-    $scope.listAttributesByLayer = function( layerId ){
-    	  layerGroupService.listAttributesByLayer(layerId,{
+    $scope.listAttributesByLayer = function(){
+    	  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
       		callback : function(result) {
                   $scope.attributesByLayer = result;
                   $scope.$apply();
@@ -1609,7 +1647,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.setPhotoMarker = function(element) {
-    	 console.log(element);
+    	
+    	 markerService.uploadImg(element, {
+     		  callback : function(result) {
+     	
+     			
+	          },
+	          errorHandler : function(message, exception) {
+	              $scope.message = {type:"error", text: message};
+	              $scope.$apply();
+	          }
+     	});
+    	 
     }
     
     $scope.enableMarker = function() {
@@ -1636,6 +1685,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
   				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-enabled"), dismiss: true};
       			$("div.msgMap").show();
       			  
+      			
+      			
       			setTimeout(function(){
       			  $("div.msgMap").fadeOut();
       			}, 5000);
@@ -1673,6 +1724,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
       			$("div.msgMap").show();
       			  
+      			
+      			
       			setTimeout(function(){
       			  $("div.msgMap").fadeOut();
       			}, 5000);
