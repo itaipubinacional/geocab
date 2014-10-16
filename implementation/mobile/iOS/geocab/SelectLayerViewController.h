@@ -13,6 +13,8 @@
 - (void)didEndSelecting:(Layer*) selectedLayer;
 - (void)cancelledSelecting;
 - (void)didEndMultipleSelecting:(NSArray*) selectedLayers;
+- (void)didCheckedLayer:(Layer*) layer;
+- (void)didUnheckedLayer:(Layer*) layer;
 @end
 
 @interface SelectLayerViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>

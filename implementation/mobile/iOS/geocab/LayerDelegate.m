@@ -21,6 +21,16 @@
                                                   @"legend"    : @"legend",
                                                   }];
     
+    RKObjectMapping *dataSourceMapping = [RKObjectMapping mappingForClass:[DataSource class]];
+    [dataSourceMapping addAttributeMappingsFromDictionary:@{
+                                                            @"name"        : @"name",
+                                                            @"url"         : @"url",
+                                                            @"login"       : @"login",
+                                                            @"password"    : @"password",
+                                                            }];
+    
+    [mapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"dataSource" toKeyPath:@"dataSource" withMapping:dataSourceMapping]];
+    
     return mapping;
 }
 
