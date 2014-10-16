@@ -86,4 +86,6 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	@Query(value="FROM LayerGroup layerGroup " + 
 			"WHERE ( LOWER(layerGroup.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " )
 	public Page<LayerGroup> listByFilter( @Param("filter") String filter, Pageable pageable );
+	
+	
 }

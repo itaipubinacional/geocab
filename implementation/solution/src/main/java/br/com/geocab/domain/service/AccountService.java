@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.repository.account.IUserRepository;
 
@@ -25,7 +27,7 @@ import br.com.geocab.domain.repository.account.IUserRepository;
  */
 @Service
 @Transactional
-//@PreAuthorize("hasRole('"+UserRole.ADMINISTRADOR_VALUE+"')")
+@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 @RemoteProxy(name="accountService")
 public class AccountService
 {
