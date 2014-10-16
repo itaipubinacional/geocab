@@ -49,6 +49,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	@Test
 	public void insert() throws RepositoryException, IOException, FileSizeLimitExceededException
 	{
+		
 		final FileInputStream file = new FileInputStream(this.getClass().getResource("/example.pdf").getPath());
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf", "application/pdf", file);
 		
@@ -56,6 +57,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 		metaFile.setContentType("application/pdf");
 		metaFile.setDescription("Description");
 		metaFile.setFolder("/test/files");
+		
+		System.out.println(metaFile.getFolder());
+		
 		metaFile.setInputStream(fileTransfer.getInputStream());
 		metaFile.setName("example.pdf");
 		
