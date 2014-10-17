@@ -1,14 +1,18 @@
 package br.com.geocab.controller.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import br.com.geocab.R;
 import br.com.geocab.controller.adapter.ListLayerAdapter;
 import br.com.geocab.controller.delegate.LayerMarkerDelegate;
+import br.com.geocab.entity.Layer;
 
 public class LayerActivity extends Activity {
 
@@ -39,6 +43,19 @@ public class LayerActivity extends Activity {
         this.layerMarkerDelegate = new LayerMarkerDelegate(LayerActivity.this, listLayerAdapter);
 
         this.layerMarkerDelegate.listLayersMarker();
+
+        this.listViewLayers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent returnIntent = new Intent();
+                Layer layer = (Layer) parent.getAdapter().getItem(position);
+                returnIntent.putExtra("name", layer.getName());
+                returnIntent.putExtra("title", layer.getTitle());
+                returnIntent.putExtra("id", layer.getId());
+                setResult(RESULT_OK, returnIntent);
+                finish();
+            }
+        });
     }
 
 

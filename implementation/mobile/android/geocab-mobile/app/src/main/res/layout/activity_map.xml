@@ -14,12 +14,45 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
 
+        <LinearLayout
+            android:id="@+id/linear_layout_option_mark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="30dp"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_choose_other_location"
+                android:text="Choose other location"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_cancel_location"
+                android:text="Cancel"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_confirm_location"
+                android:text="Confirm"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
         <Button
             android:id="@+id/btn_open_menu"
             android:background="@drawable/custom_btn_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="-25dp"
+            android:layout_marginLeft="-35dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"></Button>
 
@@ -78,6 +111,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:background="@drawable/custom_btn_clear_edit_text"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_gravity="right|center_vertical"
                 />
@@ -89,10 +123,10 @@
             android:id="@+id/list_slidermenu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="@color/list_divider"
+            android:dividerHeight="1sp"
             android:padding="10dp"
-            android:background="@android:color/transparent"
             android:layout_gravity="start"
-            android:choiceMode="singleChoice"
             android:listSelector="@drawable/list_selector"/>
     </LinearLayout>
 
