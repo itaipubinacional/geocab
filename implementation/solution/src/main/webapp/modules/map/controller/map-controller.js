@@ -123,6 +123,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.layers = [];
 
+    /**
+     * Variável que armazena todas as camadas internas selecionada pelo usuário
+     * @type {Array}
+     */
+    $scope.internalLayers = [];
+    
+    /**
+     * Variável que armazena a camada interna que está sendo criada
+     * @type {Array}
+     */
+    $scope.currentCreatingInternalLayer;
+
 	/**
      *
      */
@@ -317,7 +329,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         $scope.rasterMapQuestSAT.setVisible(false);
         
         // Registra as postagens no mapa
-        $scope.loadMarkers();
+        //$scope.loadMarkers();
 
         /**
          * Configuração do mapa GMAP
@@ -374,6 +386,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
          * Evento de click para solicitar ao geoserver as informações das camadas da coordenada clicada
          */
         $scope.map.on('click', function(evt) {
+        	
+        	
+        	/* get the feature click to open marker detail */
+        	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+    		        return feature;
+    		      });
+        		
+        	/* if click on the marker */
+        	if( feature ){
+        		$scope.markerDetail = {data: feature.getProperties().marker, layerId: feature.getProperties().layerId};
+            	$scope.toggleSidebarMarkerDetail(300, '#menu-item-1');	
+        	}
 
             if ($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
 
@@ -388,7 +412,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(),
                         {'INFO_FORMAT': 'application/json'});
 
-
                     listUrls.push(decodeURIComponent(url));
                 }
 
@@ -399,16 +422,39 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
             	$scope.screenMarkerOpenned = true;
                 $scope.toggleSidebarMarkerCreate(300, '#menu-item-1');
-
-                $("#marker-point").css('display','inherit');
                 
+                
+                var iconStyle = new ol.style.Style({
+                    image: new ol.style.Icon(({
+                        anchor: [0.5, 1],
+                        anchorXUnits: 'fraction',
+                        anchorYUnits: 'fraction',
+                        src: 'http://openlayers.org/api/img/marker.png'
+                    }))
+                });
+
+                var iconFeature = new ol.Feature({
+                    geometry: new ol.geom.Point([  evt.coordinate[0] , evt.coordinate[1]])
+                    
+                });	
+
+               var layer = new ol.layer.Vector({
+                    source: new ol.source.Vector({ features: [iconFeature] })
+                });
+
+                layer.setStyle(iconStyle);
+                
+                $scope.currentCreatingInternalLayer = layer;
+                $scope.map.addLayer(layer);
+                $scope.$apply();
+               /*
                 $scope.marker = new ol.Overlay({
                     position: evt.coordinate,
                     positioning: 'center-center',
                     element: document.getElementById('marker-point'),
                     stopEvent: false
                 });
-                $scope.map.addOverlay($scope.marker);
+                $scope.map.addOverlay($scope.marker);*/
                 
                 $scope.currentEntity.latitude = evt.coordinate[0];
                 $scope.currentEntity.longitude = evt.coordinate[1];
@@ -630,7 +676,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param node
      */
     $scope.getSelectedNode = function(node){
-
+    	
+    	/* Check if it is an internal layer */
+    	if(node.fonteDadosEndereco == null) {
+    		if( node.selected ) {
+    			$scope.addInternalLayer(node.value);
+    		} else {
+    			$scope.removeInternalLayer(node.value);
+    		}
+    	}
+    	
         if( node && node.type == 'camada' && !node.pesquisa){
             if( node.selected ){
 
@@ -1264,6 +1319,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.screenMarkerOpenned = false;
         }
     	
+    	markerService.findImgByMarker(1, {
+  			 callback : function(result) {
+  				 console.log(result);
+  				 $scope.imgResult = result;
+  	          },
+  	          errorHandler : function(message, exception) {
+  	              $scope.message = {type:"error", text: message};
+  	              $scope.$apply();
+  	          }
+	    	});
+    	
     	$scope.toggleSidebar(time, element, '#sidebar-marker-create');
     };
     
@@ -1536,19 +1602,25 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
     	});
     	
-    	//$scope.currentEntity.markerAttribute = $scope.attributesByLayer;
     	
     	markerService.insertMarker($scope.currentEntity,{
       		callback : function(result) {
-      			  $scope.clearFcMaker(false);
-      			        			  
-      			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
-      			  $("div.msgMap").show();
       			  
-      			  setTimeout(function(){
-      				  $("div.msgMap").fadeOut();
-      			  }, 5000);
+      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+      			  
+      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
+      				   $scope.addInternalLayer(layerId);
+      			  })
 
+      			$scope.clearFcMaker(false);
+    			  
+    			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
+    			  $("div.msgMap").show();
+    			  
+    			  setTimeout(function(){
+    				  $("div.msgMap").fadeOut();
+    			  }, 5000);
+      			  
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
@@ -1572,7 +1644,66 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
       	});
     }
     
-    $scope.loadMarkers = function(){
+    $scope.removeInternalLayer = function(layerId, callback){
+    	angular.forEach($scope.internalLayers, function(value, index){
+			  if(value.id == layerId) {
+				  $scope.map.removeLayer(value.layer);
+				  $scope.internalLayers.splice(index,0);
+				 if(typeof callback != 'undefined') {
+					 callback(value.id); 
+				 }
+			  }
+		  });
+    }
+    
+    $scope.addInternalLayer = function( layerId ) {
+    	
+    	markerService.listMarkerByLayer(layerId, {
+				 callback : function(result) {
+					var iconStyle = new ol.style.Style({
+	                   image: new ol.style.Icon(({
+	                       anchor: [0.5, 1],
+	                       anchorXUnits: 'fraction',
+	                       anchorYUnits: 'fraction',
+	                       src: 'http://openlayers.org/api/img/marker.png'
+	                   }))
+	               });
+	
+					var icons = [];
+	
+	     			angular.forEach(result, function(val, ind){
+	                   var iconFeature = new ol.Feature({
+	                       geometry: new ol.geom.Point([  val.latitude , val.longitude]),
+	                       marker: val,
+	                       layerId: layerId
+	                   });	
+	                  
+	                   icons.push(iconFeature);
+	     			});
+	
+	     			
+	               var layer = new ol.layer.Vector({
+	                   source: new ol.source.Vector({ features: icons })
+	               });
+	
+	               layer.setStyle(iconStyle);
+	
+	               $scope.map.addLayer(layer);
+	               
+	               $scope.internalLayers.push({"layer": layer, "id": layerId});
+	               
+	               $scope.$apply();
+	 		
+		          },
+		          errorHandler : function(message, exception) {
+		              $scope.message = {type:"error", text: message};
+		              $scope.$apply();
+		          }
+		});
+    	
+    } 
+    
+    /*$scope.loadMarkers = function(){
     	markerService.listAll({
       		callback : function(result) {
       			
@@ -1586,14 +1717,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	                stopEvent: false
     	            });
     	  			
-    	            $scope.map.addOverlay(marker);
+    	            //$scope.map.addOverlay(marker);
     	            
     	            $("#marker-point-"+ind).dblclick(function(event){
-    	            	$(".marker-point").css("color","#0077bf");
-    	            	event.stopPropagation();
+    	            	//$(".marker-point").css("color","#0077bf");
+    	            	//event.stopPropagation();
     	            	$scope.markerDetail = {data: val, overlay: marker};
     	            	$scope.toggleSidebarMarkerDetail(300, '#menu-item-1');
-    	            	$(this).css("color","#FF0000");
+    	            	//$(this).css("color","#FF0000");
     	  			})
     	  			
     	            
@@ -1606,43 +1737,48 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               }
       	});
-    }
+    }*/
     
     $scope.removeMarker = function(){
     	
-	var dialog = $modal.open( {
-		templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-		controller: DialogController,
-		windowClass: 'dialog-enable',
-		resolve: {
-			title: function(){return $translate("map.Delete-mark")},
-			message: function(){return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"},
-			buttons: function(){return [ {label:$translate("layer-group-popup.Delete"), css:'btn btn-danger'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
-		}
-	});
-    	
-	dialog.result.then( function(result) {
-
-    	markerService.removeMarker($scope.markerDetail.data.id, {
-      		  callback : function(result) {
-      			$scope.map.removeOverlay($scope.markerDetail.overlay);
-      			
-      			
-      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
-      			$("div.msgMap").show();
-      			  
-      			setTimeout(function(){
-      			  $("div.msgMap").fadeOut();
-      			}, 5000);
-      			
-	          },
-	          errorHandler : function(message, exception) {
-	              $scope.message = {type:"error", text: message};
-	              $scope.$apply();
-	          }
-      	});
-			
-	});
+		var dialog = $modal.open( {
+			templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+			controller: DialogController,
+			windowClass: 'dialog-enable',
+			resolve: {
+				title: function(){return $translate("map.Delete-mark")},
+				message: function(){return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"},
+				buttons: function(){return [ {label:$translate("layer-group-popup.Delete"), css:'btn btn-danger'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
+			}
+		});
+	    	
+		dialog.result.then( function(result) {
+	
+	    	markerService.removeMarker($scope.markerDetail.data.id, {
+	      		  callback : function(result) {
+	      			//$scope.map.removeOverlay($scope.markerDetail.overlay);
+	      			
+		  			$scope.removeInternalLayer($scope.markerDetail.layerId, function(layerId){
+	   				   $scope.addInternalLayer(layerId);
+	    			  })
+	      			
+	      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
+	      			$("div.msgMap").show();
+	      			  
+	      			setTimeout(function(){
+	      			  $("div.msgMap").fadeOut();
+	      			}, 5000);
+	      			
+	      			
+	      			
+		          },
+		          errorHandler : function(message, exception) {
+		              $scope.message = {type:"error", text: message};
+		              $scope.$apply();
+		          }
+	      	});
+				
+		});
     
     }
     
