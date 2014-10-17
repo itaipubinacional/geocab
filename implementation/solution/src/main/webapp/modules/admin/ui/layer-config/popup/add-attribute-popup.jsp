@@ -46,10 +46,10 @@
         		   				  required
         		   				  >
 				<option value="" disabled selected style="display:none" ><spring:message code="admin.layer-config.Attribute-type" /></option>
-				<option value="TEXT">Text</option>
-				<option value="NUMBER">Number</option>
-				<option value="DATE">Date</option>
-				<option value="BOOLEAN">Boolean</option>
+				<option value="TEXT"><spring:message code="admin.layer-config.Text" /></option>
+				<option value="NUMBER"><spring:message code="admin.layer-config.Number" /></option>
+				<option value="DATE"><spring:message code="admin.layer-config.Date" /></option>
+				<option value="BOOLEAN"><spring:message code="admin.layer-config.Boolean" /></option>
 			</select>
 			</div>
 			

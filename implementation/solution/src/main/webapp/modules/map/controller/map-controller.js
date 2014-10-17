@@ -1574,13 +1574,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     }
     
-    $scope.insertMarker = function(){
-    	/*
-    	 * TODO: Verificar se todo o formário foi preenchido.
-    	 * */
+    $scope.insertMarker = function(){    	
     	
     	if (!$scope.form('sidebarMarker').$valid){
-    		 $scope.msg = {type: "danger", text: "preencha", dismiss: true};
+    		 
     		return;
     	}
     	
@@ -1762,6 +1759,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	   				   $scope.addInternalLayer(layerId);
 	    			  })
 	      			
+	    			$scope.toggleSidebarMarkerDetail(300, 'closeButton');  
+	    			  
 	      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
 	      			$("div.msgMap").show();
 	      			  
