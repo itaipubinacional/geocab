@@ -1,14 +1,20 @@
 package br.com.geocab.application.restful;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.service.AccountService;
 import br.com.geocab.domain.service.LayerGroupService;
 
 
@@ -20,10 +26,10 @@ import br.com.geocab.domain.service.LayerGroupService;
  */
 
 @Controller
-@RequestMapping("layergroup")
-public class LayerGroupRESTful
+@RequestMapping("authentication")
+public class AuthenticationRESTful
 {
-	
+
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
@@ -31,7 +37,7 @@ public class LayerGroupRESTful
 	 * 
 	 */
 	@Autowired
-	private LayerGroupService layerGroupService;
+	private AccountService accountService;
 	
 	/*-------------------------------------------------------------------
 	 * 		 					BEHAVIORS
@@ -40,23 +46,24 @@ public class LayerGroupRESTful
 	
 	/**
 	 * 
+	 * @param credentials using base64 form.
+	 * @param response
 	 * @return
+	 * @throws IOException
 	 */
-	@RequestMapping(value="layers", method = RequestMethod.GET)
-	public @ResponseBody List<Layer> listLayerGroups()
+	@RequestMapping(value = "check", method = RequestMethod.POST)
+	public @ResponseBody User checkCredentials( @RequestParam String credentials,
+								  HttpServletResponse response ) throws IOException
 	{
-		List<Layer> layers = this.layerGroupService.listLayersPublished();
-		
-		for ( Layer layer : layers )
+		try 
 		{
-			
-			int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-			String urlGeoserver = layer.getDataSource().getUrl().substring(0, position+10);
-			
-			layer.setLegend( urlGeoserver + Layer.LEGEND_GRAPHIC_URL + layer.getName() + Layer.LEGEND_GRAPHIC_FORMAT );
+			return this.accountService.checkCredentials(credentials);
+		} 
+		catch (Exception e) 
+		{
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+			return null;
 		}
-		
-		return layers;
 	}
 	
 	

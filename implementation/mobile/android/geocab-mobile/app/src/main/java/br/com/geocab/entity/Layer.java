@@ -79,12 +79,14 @@ public class Layer
         this.maximumScaleMap = maximumScaleMap;
         this.dataSource = dataSource;
         this.published = published;
+        this.isChecked = false;
     }
 
     public Layer(String name, String title)
     {
         this.name = name;
         this.title = title;
+        this.isChecked = false;
     }
 
     /*-------------------------------------------------------------------
