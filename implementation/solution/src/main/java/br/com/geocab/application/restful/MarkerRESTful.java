@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.service.LayerGroupService;
 
 
@@ -43,10 +44,10 @@ public class MarkerRESTful
 	 * @param layerId
 	 * @return
 	 */
-	@RequestMapping(value="{layerId}/attributes", method = RequestMethod.GET)
-	public @ResponseBody List<Attribute> listContactsByUserAndEventAndFilter( @PathVariable long layerId )
+	@RequestMapping(value="/layers", method = RequestMethod.GET)
+	public @ResponseBody List<Layer> listAllInternalLayers()
 	{
-		return this.layerGroupService.listAttributesByLayer(layerId);		
+		return this.layerGroupService.listAllInternalLayers();	
 	}
 	
 	

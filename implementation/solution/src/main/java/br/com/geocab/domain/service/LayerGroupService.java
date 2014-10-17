@@ -512,14 +512,23 @@ public class LayerGroupService
 	
 	/**
 	 * 
-	 * @param filter
-	 * @param pageable
 	 * @return
 	 */
 	@Transactional(readOnly=true)
 	public List<Layer> listAllInternalLayerGroups()
 	{
 		return this.layerRepository.listAllInternalLayerGroups();
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public List<Layer> listAllInternalLayers()
+	{
+		return this.layerRepository.listAllInternalLayers();
 	}
 	
 	/**
