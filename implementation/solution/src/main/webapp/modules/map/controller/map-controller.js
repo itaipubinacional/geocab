@@ -1417,6 +1417,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.toggleSidebarMarkerDetail = function (time, element){
     	
+    	if(element == "closeButton") {
+            $scope.screenMarkerOpenned = false;
+            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
+            return;
+        }
+    	
     	markerService.findAttributeByMarker($scope.markerDetail.data.id, {
 		  callback : function(result) {
 			  $scope.markerResultDetail = result;
@@ -1429,9 +1435,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 					  $scope.markerResultDetail.header.date = (date.getDate() < 10 ? "0" : "") + date.getDate() + "/" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "/" + date.getFullYear();
 					  $scope.markerResultDetail.header.layer = val.attribute.layer.name;
 				  }
-				  
 			  })
-			  //$scope.$apply();
+			  
+			  $scope.$apply();
 			 
           },
           errorHandler : function(message, exception) {
@@ -1440,21 +1446,19 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
           }
     	});
     	
-    	if(element == "closeButton") {
-            $scope.screenMarkerOpenned = false;
-            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
-            return;
-        }
-    	
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
     	 * */
+    	
+    	if($scope.slideActived == '#sidebar-marker-detail') return;
+    	
     	if($scope.slideActived == '#sidebar-layers') {
     		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
     		
     		$timeout(function(){
         		$scope.toggleSidebar(time, '', '#sidebar-marker-detail');
-        	}, 400)
+        	}, 400);
+    		
     	} else {
     		$scope.toggleSidebar(time, '', '#sidebar-marker-detail');
     	}
@@ -1496,7 +1500,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
 	    }
 	    $scope.lastActive = element;
-	    $scope.slideActived = slide;
+	    
+	    if(element == "closeButton"){
+	    	$scope.slideActived = '';
+	    } else {
+	    	$scope.slideActived = slide;
+	    }
+	    
     }
 
     /*-------------------------------------------------------------------
