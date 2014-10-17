@@ -32,6 +32,7 @@
     _layerTableView.dataSource = self;
     
     _scrollView.delegate = self;
+    [_scrollView setScrollEnabled:YES];
     
     [_layerTableView.layer setBorderWidth:0.3];
     [_layerTableView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
@@ -39,6 +40,8 @@
     _selectLayerViewController = [[SelectLayerViewController alloc] init];
     _selectLayerViewController.delegate = self;
     
+    _pointName.delegate = self;
+    _pointDescription.delegate = self;
     [_pointDescription.layer setBorderWidth:0.3];
     [_pointDescription.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     [_pointDescription.layer setCornerRadius:5];
@@ -48,9 +51,28 @@
     [_imageButton.layer setCornerRadius:5];
         
     _NewMarker = [[Marker alloc] init];
+    _NewMarker.latitude = &(_latitude);
+    _NewMarker.longitude = &(_longitude);
     
     _takeController = [[FDTakeController alloc] init];
     _takeController.delegate = self;
+}
+
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [[event allTouches] anyObject];
+    if ([self.pointName isFirstResponder] && [touch view] != self.pointName)
+    {
+        [self.pointName resignFirstResponder];
+    }
+    else if ([self.pointDescription isFirstResponder] && [touch view] != self.pointDescription)
+    {
+        [self.pointDescription resignFirstResponder];
+    }
+}
+
+-(void)viewDidLayoutSubviews{
+    [_scrollView setContentSize:CGSizeMake(310, 650)];
 }
 
 - (IBAction)takePhotoOrChoseFromLibrary:(id)sender {
@@ -66,7 +88,11 @@
 }
 
 - (IBAction)saveMarker:(id)sender {
-    
+    if ([self validateForm]) {
+        _NewMarker.name = _pointName.text;
+        _NewMarker.description = _pointDescription.text;
+        NSLog(@"Marker: %@", _NewMarker);
+    }
 }
 
 - (void)didEndSelecting:(Layer *)selectedLayer{
@@ -98,6 +124,15 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (BOOL)validateForm {
+    if ([_pointName.text isEqualToString:@""]) {
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Preencha o campo [nome]" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [errorAlert show];
+        return NO;
+    }
+    return YES;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

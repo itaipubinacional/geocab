@@ -172,10 +172,10 @@
     
     Layer *layer = (Layer*) [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
     
+    cell.accessoryType = layer.selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+    
     cell.layerTitle.text = layer.title;
-//    cell.layerTitle.textColor = [UIColor whiteColor];
     cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
-//    cell.backgroundColor = [UIColor blackColor];
     
     return cell;
 }
@@ -191,27 +191,17 @@
     Layer * item = (Layer*)[[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
     
     if (self.multipleSelection ) {
-        item.selected = !item.selected;
-        
-        if (item.selected) {
+        if (!item.selected && [self numberOfSelectedItems] < 3) {
+            item.selected = !item.selected;
             if ([_delegate respondsToSelector:@selector(didCheckedLayer:)]) [_delegate didCheckedLayer:item];
-        } else {
+        } else if (item.selected){
+            item.selected = !item.selected;
             if ([_delegate respondsToSelector:@selector(didUnheckedLayer:)]) [_delegate didUnheckedLayer:item];
         }
         
         // Update UI
         [_tableView deselectRowAtIndexPath:indexPath animated:YES];
         [_tableView cellForRowAtIndexPath:indexPath].accessoryType = item.selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-        
-        // Delegate callback
-        if (item.selected) {
-//            if ([_delegate respondsToSelector:@selector(didEndSelecting:)]) [_delegate didEndSelecting:item];
-        } else {
-            //        if ([delegate respondsToSelector:@selector(selectorDidDeselectItem:)]) [delegate selectorDidDeselectItem:item];
-            //        if (selectorMode==KNSelectorModeSelected) {
-            //            [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            //        }
-        }
     } else {
         if ([_delegate respondsToSelector:@selector(didEndSelecting:)]) [_delegate didEndSelecting:item];
     }
@@ -239,6 +229,10 @@
 -(NSArray*)selectedItems {
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"selected = YES"];
     return [_layers filteredArrayUsingPredicate:pred];
+}
+
+-(NSUInteger)numberOfSelectedItems {
+    return [[_layers filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"selected = YES"]] count];
 }
 
 /*
