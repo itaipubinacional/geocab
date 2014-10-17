@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.xml.bind.JAXBException;
 
@@ -187,6 +188,20 @@ public class MarkerService
 	}
 	
 	/**
+	 * Method to find an {@link Marker} by layer
+	 * 
+	 * @param layerId
+	 * @return marker List
+	 * @throws JAXBException 
+	 */
+	@Transactional(readOnly = true)
+	public List<Marker> listMarkerByLayer( Long layerId )
+	{
+		return this.markerRepository.listMarkerByLayer( layerId );
+	}
+	
+	
+	/**
 	 * Method to list all {@link Marker}
 	 * 
 	 * @param id
@@ -246,15 +261,30 @@ public class MarkerService
 		}*/
 	}
 	
-	public MetaFile uploadImg( FileTransfer fileTransfer ) throws IOException, RepositoryException {
+	public void uploadImg( FileTransfer fileTransfer ) throws IOException, RepositoryException {
 		
 		MetaFile metaFile = new MetaFile();
 		metaFile.setContentType( fileTransfer.getMimeType() );
-		metaFile.setFolder("/test/files");
+		metaFile.setFolder("/marker/images/1");
 		metaFile.setInputStream(fileTransfer.getInputStream());
 		metaFile.setName( fileTransfer.getFilename() );
 		
-		return this.metaFileRepository.insert( metaFile );
+		MetaFile mf = this.metaFileRepository.insert( metaFile );
+		
+		System.out.println(mf);
+	}
+	
+	public FileTransfer findImgByMarker( Long markerId ) throws RepositoryException
+	{
+		try
+		{
+			final MetaFile metaFile = this.metaFileRepository.findByPath("/test/files", false);
+			return new FileTransfer(metaFile.getName(), metaFile.getContentType(), metaFile.getInputStream());
+		}
+		catch ( PathNotFoundException e )
+		{
+			return null;
+		}	
 	}
 
 }

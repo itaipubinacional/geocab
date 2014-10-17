@@ -1,0 +1,45 @@
+
+/* Class = "IBUIButton"; normalTitle = "Photo"; ObjectID = "7OT-jg-oVn"; */
+"7OT-jg-oVn.normalTitle" = "Foto";
+
+/* Class = "IBUIButton"; normalTitle = "Google"; ObjectID = "7bM-OH-vdc"; */
+"7bM-OH-vdc.normalTitle" = "Google";
+
+/* Class = "IBUIButton"; normalTitle = "Login"; ObjectID = "BdG-iE-eCz"; */
+"BdG-iE-eCz.normalTitle" = "Login";
+
+/* Class = "IBUITextField"; placeholder = "Password"; ObjectID = "FW6-aU-sBN"; */
+"FW6-aU-sBN.placeholder" = "Senha";
+
+/* Class = "IBUILabel"; text = "Description"; ObjectID = "Lpa-ir-ujs"; */
+"Lpa-ir-ujs.text" = "Descrição";
+
+/* Class = "IBUIBarButtonItem"; title = "Save"; ObjectID = "R8E-UF-xxo"; */
+"R8E-UF-xxo.title" = "Salvar";
+
+/* Class = "IBUILabel"; text = "Login com"; ObjectID = "V2k-dr-ftR"; */
+"V2k-dr-ftR.text" = "Login com";
+
+/* Class = "IBUINavigationItem"; title = "Geocab"; ObjectID = "WK3-8O-z0J"; */
+"WK3-8O-z0J.title" = "Geocab";
+
+/* Class = "IBUILabel"; text = "Name"; ObjectID = "bEL-pC-iSI"; */
+"bEL-pC-iSI.text" = "Nome";
+
+/* Class = "IBUIButton"; normalTitle = "Adicionar outra localização"; ObjectID = "f1k-gy-Ely"; */
+"f1k-gy-Ely.normalTitle" = "Adicionar outra localização";
+
+/* Class = "IBUINavigationItem"; title = "Map"; ObjectID = "fst-os-tLY"; */
+"fst-os-tLY.title" = "Mapa";
+
+/* Class = "IBUINavigationItem"; title = "New point"; ObjectID = "iQZ-2J-3Sk"; */
+"iQZ-2J-3Sk.title" = "Novo ponto";
+
+/* Class = "IBUILabel"; text = "layer title"; ObjectID = "k69-mJ-nJB"; */
+"k69-mJ-nJB.text" = "Selecionar camada";
+
+/* Class = "IBUIButton"; normalTitle = "Adicionar minha localização"; ObjectID = "lJz-Lm-QPe"; */
+"lJz-Lm-QPe.normalTitle" = "Adicionar minha localização";
+
+/* Class = "IBUITextField"; placeholder = "Email"; ObjectID = "zqD-Fc-n4X"; */
+"zqD-Fc-n4X.placeholder" = "Email";
