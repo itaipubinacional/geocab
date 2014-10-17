@@ -14,13 +14,13 @@
    			
   		<div class="alreadyHaveAccount"><spring:message code="authentication.Already-have-an-account"/>
 			<a class="enter" ng-click="closePopUp()"><spring:message code="authentication.Enter"/></a>
-		</div>x'x
+		</div>
 		<div class="line" ><hr></hr></div>
 		
 		<!--Message -->
         <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
         
-        <form name="form_create_account" method="post" action="./j_spring_security_check"  default-button="buttonInsert" novalidate>
+        <form name="form_create_account" method="post" action="./j_spring_security_check"  default-button="buttonInsert" novalidate autocomplete="off">
 					<table>					
 						<tr>
 							<td><label required><spring:message code="authentication.Name" /></label>
@@ -32,6 +32,7 @@
 						<tr>
 							<td>
 							<input 
+							 id="popupName"
 							 class="form-control" 
 							 ng-model="currentEntity.name" 
 							 name="name" 
@@ -54,9 +55,10 @@
 						</tr>
 						<tr>												
 							<td><input 
+							id="popupEmail"
 							class="form-control" 
 							ng-model="currentEntity.email" 
-							name="email" 							
+							name="popupEmail" 							
 							type="email"
 							ng-class="{ ngInvalid: form_create_account.$submitted && form_create_account.email.$error.required }"			
 							required
@@ -74,9 +76,10 @@
 						</tr>
 						<tr>
 							<td><input 
+							id="popupPassword"
 							class="form-control" 
 							ng-model="currentEntity.password" 
-							name="password" 
+							name="popupPassword" 
 							ng-class="{ ngInvalid:form_create_account.password.$error.required && (form_create_account.$submitted ) }"
 							type="password" 
 							required
@@ -101,6 +104,7 @@
 						</tr>
 						<tr>
 							<td><input 
+							id="popupConfirm"
 							class="form-control" 
 							ng-model="confirmPassword" 
 							name="confirmPassword" 

@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function AddAttributePopUpController($scope, $injector,$modalInstance, $state, attributes) {
+function AddAttributePopUpController($scope, $injector,$modalInstance, $state, attributes ) {
 
 
 	$scope.msg = null;
@@ -67,6 +67,12 @@ function AddAttributePopUpController($scope, $injector,$modalInstance, $state, a
 	 *-------------------------------------------------------------------*/
 
 	$scope.addAttribute = function () {
+		
+		if( !$scope.form('form_add_attribute').$valid ){
+			console.log("213");
+			return;
+		}
+		
 		if(!$scope.currentEntity.required) $scope.currentEntity.required = false;
 		
 		attributes.push($scope.currentEntity);
