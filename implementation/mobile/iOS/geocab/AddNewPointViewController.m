@@ -18,8 +18,8 @@
 @property (strong, nonatomic) UINavigationController *navigationController;
 @property (strong, nonatomic) Marker *NewMarker;
 @property (weak, nonatomic) IBOutlet UILabel *layerTitle;
-@property (weak, nonatomic) IBOutlet UILabel *layerName;
-@property (weak, nonatomic) IBOutlet UIImageView *layerImage;
+@property (weak, nonatomic) IBOutlet UIButton *imageButton;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @end
 
@@ -28,25 +28,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _pointDescription.layer.borderWidth = 0.5f;
-    _pointDescription.layer.borderColor = [UIColor grayColor].CGColor;
-    _pointDescription.layer.cornerRadius = 5;
-    
-    _pointName.layer.borderWidth = 0.5f;
-    _pointName.layer.borderColor = [UIColor grayColor].CGColor;
-    _pointName.layer.cornerRadius = 5;
-    
     _layerTableView.delegate = self;
     _layerTableView.dataSource = self;
     
-    //[self.navigationController setNavigationBarHidden:NO];
+    _scrollView.delegate = self;
+    
+    [_layerTableView.layer setBorderWidth:0.3];
+    [_layerTableView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     
     _selectLayerViewController = [[SelectLayerViewController alloc] init];
     _selectLayerViewController.delegate = self;
     
-    _layerTitle.text = @"Select a layer";
-    _layerName.text = @"";
+    [_pointDescription.layer setBorderWidth:0.3];
+    [_pointDescription.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [_pointDescription.layer setCornerRadius:5];
     
+    [_imageButton.layer setBorderWidth:0.3];
+    [_imageButton.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [_imageButton.layer setCornerRadius:5];
+        
     _NewMarker = [[Marker alloc] init];
     
     _takeController = [[FDTakeController alloc] init];
@@ -72,8 +72,7 @@
 - (void)didEndSelecting:(Layer *)selectedLayer{
     _NewMarker.layer = selectedLayer;
     _layerTitle.text = _NewMarker.layer.title;
-    _layerName.text = _NewMarker.layer.name;
-    _layerImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_NewMarker.layer.legend]]];
+//    _layerImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_NewMarker.layer.legend]]];
     
     [_navigationController dismissViewControllerAnimated:YES completion:^{
         
@@ -116,8 +115,13 @@
     
     UIButton *selectLayerButton = (UIButton*)[cell viewWithTag:1001];
     [selectLayerButton addTarget:self action:@selector(selectLayer:) forControlEvents:UIControlEventTouchUpInside];
+
     
     return cell;
+}
+
+-(void)tableView:(UITableView *)_tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self selectLayer:self];
 }
 
 - (void)takeController:(FDTakeController *)controller gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info {

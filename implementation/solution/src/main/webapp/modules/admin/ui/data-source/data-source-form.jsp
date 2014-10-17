@@ -31,8 +31,8 @@
                        ng-model="externalDataSource"
                        ng-change="clearFieldUrl()" 
                        ng-checked=" currentEntity.url "
-                       ">
-                <label for="urlRequired" title="Url required"><spring:message code="External-data-source"/></label>
+                       >
+                <label for="urlRequired" title="Url required"><spring:message code="admin.External-data-source.External-data-source"/></label>
             </div>
 
 		    <div ng-if="externalDataSource ||  isUrlChecked()" >

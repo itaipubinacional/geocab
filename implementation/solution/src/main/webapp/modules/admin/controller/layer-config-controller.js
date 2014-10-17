@@ -99,6 +99,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @type {Array}
      */
     $scope.originalGroups = [];
+    
+    /**
+     * @type {Array}
+     * */
+    $scope.attributes = [];
 
     //DATA GRID
     /**
@@ -163,6 +168,57 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             {displayName: $translate('Name'), field: 'name'},
             {displayName: $translate('Description'), field: 'description'},
             {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ACESSO_BUTTONS, width: '100px'}
+        ]
+    };
+    
+    var GRID_ACTION_ATTRIBUTES_BUTTONS = '<div class="cell-centered">' +
+    '<a ng-if="!row.entity.attributeDefault" ng-click="removeAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    '</div>';
+    
+    /**
+     * Configurações gerais da ng-grid.
+     * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
+     */
+    $scope.gridAttributes = {
+        data: 'attributes',
+        useExternalSorting: false,
+        multiSelect: false,
+        headerRowHeight: 45,
+        rowHeight: 45,
+        beforeSelectionChange: function (row, event) {
+            //evita chamar a selecao, quando clicado em um action button.
+        	/*if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
+				$state.go($scope.DETAIL_STATE, {id:row.entity.id});*/
+        },
+        columnDefs: [
+            {displayName: $translate('Name'), field: 'name', width: '30%'},
+            {displayName: $translate('Type'), field: 'type',  width: '30%'},
+            {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: '<div>' +
+                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
+                '</div>', width: '30%'},
+            {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ATTRIBUTES_BUTTONS, width: '10%'}
+        ]
+    };
+    
+    /**
+     * Configurações gerais da ng-grid.
+     * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
+     */
+    $scope.gridAttributesDetail = {
+        data: 'attributes',
+        useExternalSorting: false,
+        multiSelect: false,
+        headerRowHeight: 45,
+        rowHeight: 45,
+        beforeSelectionChange: function (row, event) {
+            //evita chamar a selecao, quando clicado em um action button.
+        	/*f ( $(event.target).is("a") || $(event.target).is("i") ) return false;
+				$state.go($scope.DETAIL_STATE, {id:row.entity.id});*/
+        },
+        columnDefs: [
+            {displayName: $translate('Name'), field: 'name', width: '33%'},
+            {displayName: $translate('Type'), field: 'type',  width: '33%'},
+            {displayName: 'Required', field: 'required',  width: '33%'},
         ]
     };
 
@@ -284,7 +340,19 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $log.info("changeToInsert");
 
         $scope.layers = {};
-
+        
+        /**
+         * Attributes default
+         * */
+        var attribute = new Attribute();
+        attribute.name = "Título";
+        attribute.type = "TEXT";
+        attribute.required = "true";
+        attribute.attributeDefault = true;
+         
+        $scope.attributes = [];
+        $scope.attributes.push(attribute);
+        
         $scope.originalGroups = [];
         $scope.selectedGroups = [];
         $scope.addGroups = [];
@@ -312,6 +380,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         layerGroupService.findLayerById(id, {
             callback: function (result) {
                 $scope.currentEntity = result;
+                $scope.attributes = result.attributes;
                 $scope.layers.values = {};
                 $scope.layers.values[0] = '1:'+$scope.currentEntity.minimumScaleMap.substring(2);
                 $scope.layers.values[1] = '1:'+$scope.currentEntity.maximumScaleMap.substring(2);
@@ -349,6 +418,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         layerGroupService.findLayerById(id, {
             callback: function (result) {
                 $scope.currentEntity = result;
+                $scope.attributes = result.attributes;
                 $scope.layers.values = {};
                 $scope.layers.values[0] = '1:'+$scope.currentEntity.minimumScaleMap.substring(2);
                 $scope.layers.values[1] = '1:'+$scope.currentEntity.maximumScaleMap.substring(2);
@@ -470,6 +540,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
             return;
         }
+        
+        layer.name = layer.title;
+        
+        angular.forEach($scope.attributes, function(value, index){
+        	value.layer = layer;
+        	//if( value.attributeDefault ) delete(value.attributeDefault);
+        })
+        
+        layer.attributes = $scope.attributes;
 
         layerGroupService.insertLayer(layer, {
             callback: function (result) {
@@ -500,6 +579,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
             return;
         }
+
+        layer.name = layer.title;
+        
+        angular.forEach($scope.attributes, function(value, index){
+        	value.layer = layer;
+        })
+        
+        layer.attributes = $scope.attributes;
+        
 
         layerGroupService.updateLayer(layer, {
             callback: function () {
@@ -671,4 +759,39 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             }
         });
     };
+    
+    /**
+     * Add attribute
+     * */
+    $scope.addAttribute = function() {
+    	var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/layer-config/popup/add-attribute-popup.jsp",
+            controller: AddAttributePopUpController,
+            windowClass: 'xx-dialog',
+            resolve: {
+                attributes: function () {
+                    return $scope.attributes;
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+
+            if (result) {
+                $scope.currentEntity.name = result.name;
+                $scope.currentEntity.title = result.title;
+                $scope.currentEntity.legend = result.legend;
+            }
+
+        });
+    }
+    
+    /**
+     * Remove attribute
+     * */
+    $scope.removeAttribute = function(row){
+    	var index = $scope.attributes.indexOf(row);
+
+        $scope.attributes.splice(index, 1);
+    }
 };

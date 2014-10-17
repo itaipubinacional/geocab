@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DataSource.h"
 
 @interface Layer: NSObject
 
@@ -14,6 +15,7 @@
 @property (retain, nonatomic) NSString *name;
 @property (retain, nonatomic) NSString *title;
 @property (retain, nonatomic) NSString *legend;
+@property (retain, nonatomic) DataSource *dataSource;
 @property BOOL selected;
 
 @end

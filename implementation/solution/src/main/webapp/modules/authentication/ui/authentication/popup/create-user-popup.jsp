@@ -20,7 +20,7 @@
 		<!--Message -->
         <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
         
-        <form name="form_create_account" method="post" action="./j_spring_security_check"  default-button="buttonInsert" novalidate>
+        <form name="form_create_account" method="post" action="./j_spring_security_check"  default-button="buttonInsert" novalidate autocomplete="off">
 					<table>					
 						<tr>
 							<td><label required><spring:message code="authentication.Name" /></label>
@@ -32,6 +32,7 @@
 						<tr>
 							<td>
 							<input 
+							 id="popupName"
 							 class="form-control" 
 							 ng-model="currentEntity.name" 
 							 name="name" 
@@ -50,17 +51,18 @@
 							<td><span ng-show="form_create_account.email.$error.required && form_create_account.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>							
 						</tr>
 						<tr>
-							<td><span ng-show="form_create_account.email.$error.email" class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
+							<td><span ng-show="form_create_account.email.$error.email && form_create_account.$submitted " class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
 						</tr>
 						<tr>												
 							<td><input 
-							class="form-control ng-invalid" 
+							id="popupEmail"
+							class="form-control" 
 							ng-model="currentEntity.email" 
-							name="email" 							
-							ng-class="{ ngInvalid: form_create_account.email.$error.required && (form_create_account.$error.email || form_create_account.email.$dirty || form_create_account.$submitted ) }"
-							type="email" 
+							name="popupEmail" 							
+							type="email"
+							ng-class="{ ngInvalid: form_create_account.$submitted && form_create_account.email.$error.required }"			
 							required
-							ng-hover
+							
 							>
 							</td>
 						</tr>						
@@ -74,10 +76,11 @@
 						</tr>
 						<tr>
 							<td><input 
+							id="popupPassword"
 							class="form-control" 
 							ng-model="currentEntity.password" 
-							name="password" 
-							ng-class="{ ngInvalid:form_create_account.password.$error.required && (form_create_account.$submitted || form_create_account.password.$dirty) }"
+							name="popupPassword" 
+							ng-class="{ ngInvalid:form_create_account.password.$error.required && (form_create_account.$submitted ) }"
 							type="password" 
 							required
 							ng-hover
@@ -95,17 +98,17 @@
 													/></span></td>
 						</tr>
 						<tr>
-							<td><span ng-show="(form_create_account.confirmPassword.$dirty || form_create_account.password.$dirty ) 
-													&& (currentEntity.password != confirmPassword)" 
+							<td><span ng-show="(form_create_account.$submitted) && (currentEntity.password != confirmPassword)" 
 												class="tooltip-validation create"><spring:message code="admin.user.The-password-fields-must-be-equal" 
 												/></span><td>
 						</tr>
 						<tr>
 							<td><input 
+							id="popupConfirm"
 							class="form-control" 
 							ng-model="confirmPassword" 
 							name="confirmPassword" 
-							ng-class="{ngInvalid: (form_create_account.confirmPassword.$error.required && ( form_create_account.$submitted || form_create_account.password.$dirty)) || (currentEntity.password != confirmPassword)  }"
+							ng-class="{ngInvalid: (form_create_account.$submitted && form_create_account.confirmPassword.$error.required) || (currentEntity.password != confirmPassword)  }"
 							type="password" 
 							required
 							ng-hover

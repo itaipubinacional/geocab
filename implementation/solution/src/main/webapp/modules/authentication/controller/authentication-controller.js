@@ -27,7 +27,7 @@ function AuthenticationController( $scope, $injector, $log, $state, $timeout, $m
 
     $scope.changeToInsert = function() {
         $log.info('changeToInsert');
-
+        
         var dialog = $modal.open({
             templateUrl: 'modules/authentication/ui/authentication/popup/create-user-popup.jsp',
             controller: CreateUserPopUpController,
@@ -64,5 +64,20 @@ function AuthenticationController( $scope, $injector, $log, $state, $timeout, $m
         $scope.msg = null;
     };
 
+    $("#email").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#enter").click();
+        }
+    });
+    
+    $("#password").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#enter").click();
+        }
+    });
+    
+    if ( $('input[name=password]').val() != '' ){
+    	$scope.form_login.setValid(true)
+    }
 
 };
