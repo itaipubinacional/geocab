@@ -195,7 +195,7 @@
 		  					
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
-	               <span ng-click="clearFcMaker(true)" class="icon itaipu-icon-close sidebar-close"></span>
+	               <span ng-click="clearFcMarker()" class="icon itaipu-icon-close sidebar-close"></span>
 	
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 	                   <div class="sidebar-content-header">Nova postagem</div>
@@ -297,7 +297,7 @@
                 </div>
 	           	 <div id="sidebar-tabs" style="float: left;">
 		            <ul class="map-menu-items tab-flag" id="menu-sidebar-2">
-		                <li id="menu-item-1" ng-click="toggleSidebarLayers(300, '#menu-item-1');" class="menu-item bg-inactive">
+		                <li id="menu-item-1" ng-click="toggleSidebarMenu(300, '#menu-item-1');" class="menu-item bg-inactive">
 		                    <a href="#tabs-1">
 		                        <div class="icon itaipu-icon-layers sidebar-icon"></div>
 		                    </a>
@@ -306,7 +306,7 @@
 		
 			            <div id="sidebar-layers" class="sidebar-style">
 			                <div class="sidebar-coloredbar"></div>
-			                <span ng-click="toggleSidebarLayers(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
+			                <span ng-click="toggleSidebarMenu(300, 'closeButton')" class="icon itaipu-icon-close sidebar-close"></span>
 			
 			                <div id="tabs-1" ng-switch="LAYER_MENU_STATE">
 			                    <div ng-switch-when="list">

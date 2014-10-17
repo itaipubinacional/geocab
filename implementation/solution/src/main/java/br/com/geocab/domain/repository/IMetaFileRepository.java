@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadBase.FileSizeLimitExceededException;
-
 import br.com.geocab.domain.entity.MetaFile;
 
 /**
@@ -30,7 +28,6 @@ public interface IMetaFileRepository
 	 * @return
 	 * @throws RepositoryException
 	 * @throws IOException
-	 * @throws FileSizeLimitExceededException 
 	 */
 	public MetaFile insert( MetaFile metaFile ) throws RepositoryException, IOException;
 	

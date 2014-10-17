@@ -3,7 +3,6 @@
  */
 package br.com.geocab.domain.service;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;

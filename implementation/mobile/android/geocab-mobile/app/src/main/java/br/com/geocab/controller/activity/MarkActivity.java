@@ -38,9 +38,8 @@ public class MarkActivity extends Activity
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_UP == event.getAction()) {
-                    selectLayerEditText.setText("Teste");
                     Intent i = new Intent(MarkActivity.this, LayerActivity.class);
-                    startActivity(i);
+                    startActivityForResult(i, 10);
                 }
                 return true; // return is important...
             }
@@ -82,20 +81,20 @@ public class MarkActivity extends Activity
         });
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         ImageView imageView = (ImageView) findViewById(R.id.image_view_marker);
         switch(requestCode) {
             case 0:
                 if(resultCode == RESULT_OK){
-                    Bitmap photo = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
                     imageView.setImageBitmap(photo);
                 }
 
                 break;
             case 1:
                 if(resultCode == RESULT_OK){
-                    Uri selectedImage = imageReturnedIntent.getData();
+                    Uri selectedImage = data.getData();
                     String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
                     Cursor cursor = getContentResolver().query(selectedImage,
@@ -108,6 +107,17 @@ public class MarkActivity extends Activity
 
                     imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 
+                }
+            case 10:
+                if(resultCode == RESULT_OK){
+                    String layerName = data.getStringExtra("name");
+                    String layerTitle = data.getStringExtra("title");
+                    int layerId = data.getIntExtra("id", 0);
+
+                    this.selectLayerEditText.setText(layerTitle);
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    //Write your code if there's no result
                 }
                 break;
         }
