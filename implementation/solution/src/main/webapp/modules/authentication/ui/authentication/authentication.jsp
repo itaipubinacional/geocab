@@ -29,16 +29,16 @@
             <!--Message -->
             <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
 
-			<form method="post" action="./j_spring_security_check" name="form_login" default-button="enter" novalidate autocomplete="off">
+			<form id="form_login" method="post" action="./j_spring_security_check" name="form_login" default-button="enter" novalidate >
 				<table>
 					<tr>
 						<td><label><spring:message code="authentication.Email" /></label></td>
 					</tr>
 					<tr>
-						<td><span ng-show="form_login.email.$error.required && form_login.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>							
+						<td><span ng-if="form_login.email.$error.required && form_login.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>							
 					</tr>
 					<tr>
-						<td><span ng-show="form_login.email.$error.email && form_login.$submitted" class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
+						<td><span ng-if="form_login.email.$error.email && form_login.$submitted" class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
 					</tr>
 					<tr>	
 						<td><input class="form-control" 
@@ -48,7 +48,7 @@
 								   type="email"
 								   ng-class="{ ngInvalid: form_login.email.$error.required && (form_login.$error.email || form_login.email.$dirty || form_login.$submitted) }"
 								   required
-								   /></td>
+								   auto-fill-sync/></td>
 					</tr>
 					<tr>
 						<td>
@@ -57,7 +57,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td><span ng-show="form_login.password.$error.required && form_login.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>
+						<td><span ng-if="form_login.password.$error.required && (form_login.$submitted )" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>
 					</tr>
 					<tr>
 						<td><input class="form-control" 
@@ -66,7 +66,8 @@
 								   name="password" 
 								   type="password" 
 								   required
-								   ng-class="{ ngInvalid: form_login.password.$error.required && (form_login.$submitted || form_login.password.$dirty) }"
+								   ng-class="{ ngInvalid: form_login.password.$error.required && (form_login.$submitted ) }"
+								   auto-fill-sync
 								   /></td>
 					</tr>
 					<tr>

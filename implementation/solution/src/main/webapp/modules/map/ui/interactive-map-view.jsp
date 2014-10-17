@@ -116,7 +116,7 @@
                        
                        <div ng-repeat="markerAttribute in attributesByMarker" style="position: relative">
                     
-                       		 <ng-form name="ngSideMarker" default-button="buttonInsert">
+                       		 <ng-form name="ngSideMarker" default-button="buttonUpdate">
                        		 <label >{{ markerAttribute.attribute.name }}</label> 
                        		 
                        		 <input type="number" 
@@ -183,11 +183,13 @@
                        
                        <button class="btn btn-default" onclick="angular.element('#upload-input').click();" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
                        
-                       <button class="btn btn-primary" ng-click="updateMarker()" style="float: right">Enviar</button>
+                       <button id="buttonUpdate" class="btn btn-primary" ng-click="updateMarker()" style="float: right">Enviar</button>
                     </div>
 	                </div>
 	            </form>
           </div>
+          
+          
 		  <div id="sidebar-marker-create" class="sidebar-style">
 		  	<form name="sidebarMarker"  method="post"  default-button="buttonInsert" novalidate>
 		  					
@@ -211,8 +213,9 @@
                        	   ng-model="currentEntity.layer" 
 	                       chosen 
 	                       class="form-control" 
-	                       ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" 
-	                       required>    
+	                       ng-class="{ngInvalid: sidebarMarker.camada.$error.required }" 
+	                       required
+	                       >    
 							   <option value=""></option>
 						</select>
 						
@@ -258,7 +261,7 @@
                        		 		required
                        		 		>
 							
-							 <span class="tooltip-validation" ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"  
+							 <span class="tooltip-validation" ng-show=" ngSideMarker.texto.$error.required && ngSideMarker.$submitted "  
                        		 		style="top: 3px">Campo Obrigatório</span>
                        		 
                        		 <span class="tooltip-validation" ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"  
@@ -287,7 +290,7 @@
                        
                        <button class="btn btn-default" onclick="angular.element('#upload-input').click();" style="float: left;"><span class="glyphicon glyphicon-picture"></span></button>
                        
-                       <button class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
+                       <button id="buttonInsert" class="btn btn-primary" ng-click="insertMarker()" style="float: right">Enviar</button>
                        </div>
 	                </div>
 	              </form>

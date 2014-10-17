@@ -47,7 +47,13 @@
 	<script type="text/javascript" src="modules/authentication/controller/authentication-controller.js"></script>
 	<script type="text/javascript" src="modules/authentication/controller/popup/create-user-popup-controller.js"></script>
 	<%--<script type="text/javascript" src="modules/authentication/controller/popup/forget-password-popup-controller.js"></script>--%>
+	
+	<!--
+		Directives 
+	-->
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
+	<script type="text/javascript" src="static/libs/eits-directives/auto-fill/auto-fill.js"></script>
+	
 </body>
 </html>
 
