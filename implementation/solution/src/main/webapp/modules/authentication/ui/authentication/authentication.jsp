@@ -29,7 +29,7 @@
             <!--Message -->
             <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
 
-			<form method="post" action="./j_spring_security_check" name="form_login" default-button="enter" novalidate>
+			<form method="post" action="./j_spring_security_check" name="form_login" default-button="enter" novalidate autocomplete="off">
 				<table>
 					<tr>
 						<td><label><spring:message code="authentication.Email" /></label></td>
@@ -42,6 +42,7 @@
 					</tr>
 					<tr>	
 						<td><input class="form-control" 
+								   id="email"
 								   ng-model="currentEntity.email"
 								   name="email" 
 								   type="email"
@@ -60,6 +61,7 @@
 					</tr>
 					<tr>
 						<td><input class="form-control" 
+								   id="password"
 								   ng-model="currentEntity.password"
 								   name="password" 
 								   type="password" 
@@ -68,7 +70,7 @@
 								   /></td>
 					</tr>
 					<tr>
-						<td><input type="button" ng-click="login()" value='<spring:message code="authentication.Enter" />' id="enter" class="btn-enter" /></td>
+						<td><input type="button"  ng-click="login()" value='<spring:message code="authentication.Enter" />' id="enter" class="btn-enter" /></td>
 					</tr>
 				</table>
 			</form>

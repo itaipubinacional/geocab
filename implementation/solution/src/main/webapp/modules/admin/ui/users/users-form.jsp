@@ -9,7 +9,7 @@
 <!-- Users - Form -->
 <div>
     <form novalidate name="form"
-          default-button="{{ (currentState == INSERT_STATE) && 'buttonInsert' || 'buttonUpdate' }}">
+          default-button="{{ (currentState == INSERT_STATE) && 'buttonInsert' || 'buttonUpdate' }}" autocomplete="off">
 
         <div class="content-tab">
             <div class="form-item position-relative" style="width: 300px;">

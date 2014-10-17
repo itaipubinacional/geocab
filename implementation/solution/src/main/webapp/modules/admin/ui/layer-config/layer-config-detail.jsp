@@ -30,11 +30,36 @@
                 <span class="detail-value">{{currentEntity.title}}</span>
             </div>
             <br>
+            
+            <div ng-grid="gridAttributesDetail" style="height: 320px; border: 1px solid rgb(212,212,212);"></div>
+
+			<label class="detail-label" style="margin: 15px 0 5px 0;" required>Ícone</label>
+            
+            <table style="text-align: center; background: #E6E6E6;">
+            
+           		<tr>
+           			<td><img src="<c:url value="/static/icons/1.png"/>" width="25" height="25"></td>
+           			<td><img src="<c:url value="/static/icons/2.png"/>" width="25" height="25"></td>
+           			<td><img src="<c:url value="/static/icons/3.png"/>" width="25" height="25"></td>
+           			<td><img src="<c:url value="/static/icons/4.png"/>" width="25" height="25"></td>
+           			<td><img src="<c:url value="/static/icons/5.png"/>" width="25" height="25"></td>
+           		</tr>
+           		<tr>
+           			<td><input type="radio" value="/static/icons/1.png" ng-disabled="true" ng-checked="currentEntity.icon == '/static/icons/1.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           			<td><input type="radio" value="/static/icons/2.png" ng-disabled="true" ng-checked="currentEntity.icon == '/static/icons/2.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           			<td><input type="radio" value="/static/icons/3.png" ng-disabled="true" ng-checked="currentEntity.icon == '/static/icons/3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           			<td><input type="radio" value="/static/icons/4.png" ng-disabled="true" ng-checked="currentEntity.icon == '/static/icons/4.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           			<td><input type="radio" value="/static/icons/5.png" ng-disabled="true" ng-checked="currentEntity.icon == '/static/icons/5.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+           		</tr>
+           		
+           	</table>
+           	<br>
 
 			<div class="form-item">
                 <b class="detail-label"><spring:message code="admin.layer-config.Symbology"/></b>
                 <br>
-                <img style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.legend}}"/>
+                <img ng-if="currentEntity.dataSource.url"style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.legend}}"/>
+                <img style="border: 1px solid #000" ng-if="!currentEntity.dataSource.url && currentEntity.dataSource.id " src="<c:url value="/static/images/symbology.image"/>">
             </div>
             <br>
             

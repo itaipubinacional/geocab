@@ -3,24 +3,33 @@
  */
 package br.com.geocab.domain.service;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
+import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.geocab.domain.entity.MetaFile;
+import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.StatusMarker;
+import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
@@ -32,7 +41,6 @@ import br.com.geocab.domain.repository.marker.IMarkerRepository;
  */
 @Service
 @Transactional
-//@PreAuthorize("hasRole('"+UserRole.ADMINISTRADOR_VALUE+"')")
 @RemoteProxy(name="markerService")
 public class MarkerService
 {
@@ -58,6 +66,9 @@ public class MarkerService
 	 */
 	@Autowired
 	private MessageSource messages;
+	
+	@Autowired
+	private IMetaFileRepository metaFileRepository;
 	
 	
 	
@@ -92,6 +103,7 @@ public class MarkerService
 	 * @param Marker
 	 * @return Marker
 	 */
+	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public Marker updateMarker( Marker marker )
 	{			
 		try{
@@ -112,6 +124,7 @@ public class MarkerService
 	 * 
 	 * @param id
 	 */
+	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public void removeMarker( Long id )
 	{
 		this.markerRepository.delete( id );
@@ -122,6 +135,7 @@ public class MarkerService
 	 * 
 	 * @param Marker marker
 	 */
+	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public void enableMarker( Long id )
 	{
 		try{
@@ -143,6 +157,7 @@ public class MarkerService
 	 * 
 	 * @param Marker marker
 	 */
+	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public void disableMarker( Long id )
 	{
 		try{
@@ -171,6 +186,20 @@ public class MarkerService
 	{
 		return this.markerRepository.findOne( id );
 	}
+	
+	/**
+	 * Method to find an {@link Marker} by layer
+	 * 
+	 * @param layerId
+	 * @return marker List
+	 * @throws JAXBException 
+	 */
+	@Transactional(readOnly = true)
+	public List<Marker> listMarkerByLayer( Long layerId )
+	{
+		return this.markerRepository.listMarkerByLayer( layerId );
+	}
+	
 	
 	/**
 	 * Method to list all {@link Marker}
@@ -204,7 +233,6 @@ public class MarkerService
 	@Transactional(readOnly=true)
 	public Page<Marker> listMarkerByFilters( String filter, PageRequest pageable )
 	{
-		//return this.markerRepository.listByFilters(filter, pageable);
 		return this.markerRepository.listByFilters(pageable);
 	}
 	
@@ -231,6 +259,32 @@ public class MarkerService
 		if(!fieldError.isEmpty()){
 			throw new IllegalArgumentException( this.messages.getMessage("The-field-entered-already-exists,-change-and-try-again", new Object [] {fieldError}, null) );
 		}*/
+	}
+	
+	public void uploadImg( FileTransfer fileTransfer ) throws IOException, RepositoryException {
+		
+		MetaFile metaFile = new MetaFile();
+		metaFile.setContentType( fileTransfer.getMimeType() );
+		metaFile.setFolder("/marker/images/1");
+		metaFile.setInputStream(fileTransfer.getInputStream());
+		metaFile.setName( fileTransfer.getFilename() );
+		
+		MetaFile mf = this.metaFileRepository.insert( metaFile );
+		
+		System.out.println(mf);
+	}
+	
+	public FileTransfer findImgByMarker( Long markerId ) throws RepositoryException
+	{
+		try
+		{
+			final MetaFile metaFile = this.metaFileRepository.findByPath("/test/files", false);
+			return new FileTransfer(metaFile.getName(), metaFile.getContentType(), metaFile.getInputStream());
+		}
+		catch ( PathNotFoundException e )
+		{
+			return null;
+		}	
 	}
 
 }
