@@ -7,7 +7,6 @@ import java.util.List;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadBase.FileSizeLimitExceededException;
 import org.directwebremoting.io.FileTransfer;
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,10 +43,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	 * 
 	 * @throws IOException 
 	 * @throws RepositoryException 
-	 * @throws FileSizeLimitExceededException 
 	 */
 	@Test
-	public void insert() throws RepositoryException, IOException, FileSizeLimitExceededException
+	public void insert() throws RepositoryException, IOException
 	{
 		
 		final FileInputStream file = new FileInputStream(this.getClass().getResource("/example.pdf").getPath());
@@ -76,10 +74,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	 * 
 	 * @throws IOException 
 	 * @throws RepositoryException 
-	 * @throws FileSizeLimitExceededException 
 	 */
 	@Test
-	public void insertWithCreator() throws RepositoryException, IOException, FileSizeLimitExceededException
+	public void insertWithCreator() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(this.getClass().getResource("/example.pdf").getPath());
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf", "application/pdf", file);
@@ -106,10 +103,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	 * 
 	 * @throws IOException 
 	 * @throws RepositoryException 
-	 * @throws FileSizeLimitExceededException 
 	 */
 	@Test
-	public void removeByPath() throws RepositoryException, IOException, FileSizeLimitExceededException
+	public void removeByPath() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(this.getClass().getResource("/example.pdf").getPath());
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf", "application/pdf", file);
@@ -140,10 +136,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	 * 
 	 * @throws IOException 
 	 * @throws RepositoryException 
-	 * @throws FileSizeLimitExceededException 
 	 */
 	@Test
-	public void removeByFolder() throws RepositoryException, IOException, FileSizeLimitExceededException
+	public void removeByFolder() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(this.getClass().getResource("/example.pdf").getPath());
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf", "application/pdf", file);
@@ -179,10 +174,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	 * 
 	 * @throws IOException 
 	 * @throws RepositoryException 
-	 * @throws FileSizeLimitExceededException 
 	 */
 	@Test
-	public void remove() throws RepositoryException, IOException, FileSizeLimitExceededException
+	public void remove() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(this.getClass().getResource("/example.pdf").getPath());
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf", "application/pdf", file);
@@ -213,10 +207,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	 * 
 	 * @throws IOException 
 	 * @throws RepositoryException 
-	 * @throws FileSizeLimitExceededException 
 	 */
 	@Test
-	public void findByPath() throws RepositoryException, IOException, FileSizeLimitExceededException
+	public void findByPath() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(this.getClass().getResource("/example.pdf").getPath());
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf", "application/pdf", file);
@@ -233,7 +226,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 		
 		try
 		{
-			this.metaFileRepository.findByPath( "/wrogn/pathx/10293019239021091", false );
+			this.metaFileRepository.findByPath( metaFile.getFolder(), false );
 			Assert.fail("Deveria lançar a exceção PathNotFoundException");
 		}
 		catch ( PathNotFoundException e )
@@ -258,10 +251,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	 * 
 	 * @throws IOException 
 	 * @throws RepositoryException 
-	 * @throws FileSizeLimitExceededException 
 	 */
 	@Test
-	public void findById() throws RepositoryException, IOException, FileSizeLimitExceededException
+	public void findById() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(this.getClass().getResource("/example.pdf").getPath());
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf", "application/pdf", file);
@@ -303,10 +295,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	 * 
 	 * @throws IOException 
 	 * @throws RepositoryException 
-	 * @throws FileSizeLimitExceededException 
 	 */
 	@Test
-	public void listByFolder() throws RepositoryException, IOException, FileSizeLimitExceededException
+	public void listByFolder() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(this.getClass().getResource("/example.pdf").getPath());
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf", "application/pdf", file);
