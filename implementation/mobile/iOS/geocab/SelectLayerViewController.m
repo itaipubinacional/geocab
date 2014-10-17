@@ -29,12 +29,12 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    self.tableView.backgroundColor = [UIColor darkGrayColor];
-    self.view.backgroundColor = [UIColor darkGrayColor];
+//    self.tableView.backgroundColor = [UIColor darkGrayColor];
+//    self.view.backgroundColor = [UIColor darkGrayColor];
     
     //Navigation Bar
     self.navigationItem.title = NSLocalizedString(@"Layers", @"");
-    self.navigationController.navigationBar.backgroundColor = [UIColor blackColor];
+//    self.navigationController.navigationBar.backgroundColor = [UIColor blackColor];
 
     
     if (self.multipleSelection) {
@@ -190,8 +190,14 @@
     // Which item?
     Layer * item = (Layer*)[[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
     
-    if (self.multipleSelection) {
+    if (self.multipleSelection ) {
         item.selected = !item.selected;
+        
+        if (item.selected) {
+            if ([_delegate respondsToSelector:@selector(didCheckedLayer:)]) [_delegate didCheckedLayer:item];
+        } else {
+            if ([_delegate respondsToSelector:@selector(didUnheckedLayer:)]) [_delegate didUnheckedLayer:item];
+        }
         
         // Update UI
         [_tableView deselectRowAtIndexPath:indexPath animated:YES];
