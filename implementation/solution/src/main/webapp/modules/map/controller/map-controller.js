@@ -1400,7 +1400,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	});
     	
     	
-    		$scope.toggleSidebar(time, element, '#sidebar-marker-update');
+    		$scope.toggleSidebar(time, '', '#sidebar-marker-update');
     	
     };
     

@@ -64,15 +64,15 @@
                 <label class="detail-label"><spring:message code="Title"/></label>
 
                 <div class="position-relative input-group" style="width: 350px;">
+         
                 <input name="title" type="text" class="form-control"
                     ng-model="currentEntity.title"
                     placeholder="Informe o título"
                     maxlength="144" ng-minlength="1"
                     ng-hover
                     required>
-                    </div>
-                <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty)" class="tooltip-validation"><spring:message code="Title"/> <spring:message code="required"/></span>
-
+                </div>
+                
                 <br/>
 
                 <label class="detail-label"><spring:message code="admin.layer-config.Symbology"/></label>
@@ -96,7 +96,7 @@
                     ng-hover
                     required />
                 </div>
-                <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty)" class="tooltip-validation"><spring:message code="Title"/> <spring:message code="required"/></span>
+                
 
                 <br/>
                 
