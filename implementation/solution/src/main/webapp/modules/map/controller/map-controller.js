@@ -1335,17 +1335,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.screenMarkerOpenned = false;
         }
     	
-    	markerService.findImgByMarker(1, {
-  			 callback : function(result) {
-  				 console.log(result);
-  				 $scope.imgResult = result;
-  	          },
-  	          errorHandler : function(message, exception) {
-  	              $scope.message = {type:"error", text: message};
-  	              $scope.$apply();
-  	          }
-	    	});
-    	
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
     	 * */
@@ -1422,6 +1411,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
             return;
         }
+    	
+    	markerService.findImgByMarker($scope.markerDetail.data.id, {
+ 			 callback : function(result) {
+ 				 
+ 				 $scope.imgResult = result;
+ 	          },
+ 	          errorHandler : function(message, exception) {
+ 	              $scope.message = {type:"error", text: message};
+ 	              $scope.$apply();
+ 	          }
+	    	});
     	
     	markerService.findAttributeByMarker($scope.markerDetail.data.id, {
 		  callback : function(result) {
@@ -1821,17 +1821,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.setPhotoMarker = function(element) {
     	
-    	 markerService.uploadImg(element, {
-     		  callback : function(result) {
-     	
-     			
-	          },
-	          errorHandler : function(message, exception) {
-	              $scope.message = {type:"error", text: message};
-	              $scope.$apply();
-	          }
-     	});
-    	 
+    	$scope.currentEntity.image = element;
     }
     
     $scope.enableMarker = function() {

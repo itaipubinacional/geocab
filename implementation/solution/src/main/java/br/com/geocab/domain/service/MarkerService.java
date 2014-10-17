@@ -79,12 +79,15 @@ public class MarkerService
 	 * 
 	 * @param Marker
 	 * @return Marker
+	 * @throws RepositoryException 
+	 * @throws IOException 
 	 */
-	public Marker insertMarker( Marker marker )
+	public Marker insertMarker( Marker marker ) throws IOException, RepositoryException
 	{
 		try{
 			marker.setStatus(StatusMarker.PENDING);
 			marker = this.markerRepository.save( marker );
+			this.uploadImg(marker.getImage(), marker.getId());
 		}
 		catch ( DataIntegrityViolationException e )
 		{
@@ -260,24 +263,24 @@ public class MarkerService
 		}*/
 	}
 	
-	public void uploadImg( FileTransfer fileTransfer ) throws IOException, RepositoryException {
+	public void uploadImg( FileTransfer fileTransfer, Long markerId ) throws IOException, RepositoryException {
 		
 		MetaFile metaFile = new MetaFile();
+		metaFile.setId(String.valueOf(markerId));
 		metaFile.setContentType( fileTransfer.getMimeType() );
-		metaFile.setFolder("/marker/images/1");
+		metaFile.setContentLength( fileTransfer.getSize() );
+		metaFile.setFolder("/marker/"+markerId);
 		metaFile.setInputStream(fileTransfer.getInputStream());
 		metaFile.setName( fileTransfer.getFilename() );
 		
 		MetaFile mf = this.metaFileRepository.insert( metaFile );
-		
-		System.out.println(mf);
 	}
 	
 	public FileTransfer findImgByMarker( Long markerId ) throws RepositoryException
 	{
 		try
 		{
-			final MetaFile metaFile = this.metaFileRepository.findByPath("/test/files", false);
+			final MetaFile metaFile = this.metaFileRepository.findByPath("/marker/"+markerId+"/"+markerId, true);
 			return new FileTransfer(metaFile.getName(), metaFile.getContentType(), metaFile.getInputStream());
 		}
 		catch ( PathNotFoundException e )
