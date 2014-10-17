@@ -18,15 +18,15 @@
     [FBLoginView class];
   
     //MenuSideBar configuration
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    
-    self.container = (MFSideMenuContainerViewController *) self.window.rootViewController;
-    
-    UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"navigationController"];
-    UIViewController *leftSideMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"leftSideMenuViewController"];
-    
-    [_container setLeftMenuViewController:leftSideMenuViewController];
-    [_container setCenterViewController:navigationController];
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+//    
+//    self.container = (MFSideMenuContainerViewController *) self.window.rootViewController;
+//    
+//    UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"navigationController"];
+//    UIViewController *leftSideMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"leftSideMenuViewController"];
+//    
+//    [_container setLeftMenuViewController:leftSideMenuViewController];
+//    [_container setCenterViewController:navigationController];
     
     return YES;
 }

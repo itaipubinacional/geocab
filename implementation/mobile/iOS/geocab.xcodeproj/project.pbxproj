@@ -56,6 +56,10 @@
 		DC17C10219EC57FF00727C89 /* icon-point.png in Resources */ = {isa = PBXBuildFile; fileRef = DC17C10119EC57FF00727C89 /* icon-point.png */; };
 		DC17C10419EC580400727C89 /* icon-new-point.png in Resources */ = {isa = PBXBuildFile; fileRef = DC17C10319EC580400727C89 /* icon-new-point.png */; };
 		DC22270419ED3A96007CBF43 /* AccountDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DC22270319ED3A96007CBF43 /* AccountDelegate.m */; };
+		DC46151319EEB09300275AD7 /* rightArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = DC46151219EEB09300275AD7 /* rightArrow.png */; };
+		DC46151519EEBAC300275AD7 /* picture-58.png in Resources */ = {isa = PBXBuildFile; fileRef = DC46151419EEBAC300275AD7 /* picture-58.png */; };
+		DC46151719EEBB5F00275AD7 /* picture-29.png in Resources */ = {isa = PBXBuildFile; fileRef = DC46151619EEBB5F00275AD7 /* picture-29.png */; };
+		DC87CD5E19ED9F3A002EBA86 /* DataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DC87CD5D19ED9F3A002EBA86 /* DataSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +145,11 @@
 		DC22270219ED3A96007CBF43 /* AccountDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountDelegate.h; sourceTree = "<group>"; };
 		DC22270319ED3A96007CBF43 /* AccountDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountDelegate.m; sourceTree = "<group>"; };
 		DC22270519ED4A6C007CBF43 /* UserRole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRole.h; sourceTree = "<group>"; };
+		DC46151219EEB09300275AD7 /* rightArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightArrow.png; sourceTree = "<group>"; };
+		DC46151419EEBAC300275AD7 /* picture-58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picture-58.png"; sourceTree = "<group>"; };
+		DC46151619EEBB5F00275AD7 /* picture-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picture-29.png"; sourceTree = "<group>"; };
+		DC87CD5C19ED9F3A002EBA86 /* DataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSource.h; sourceTree = "<group>"; };
+		DC87CD5D19ED9F3A002EBA86 /* DataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSource.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +208,9 @@
 		5D2B2A0D19DDCFC100E354E2 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				DC46151619EEBB5F00275AD7 /* picture-29.png */,
+				DC46151419EEBAC300275AD7 /* picture-58.png */,
+				DC46151219EEB09300275AD7 /* rightArrow.png */,
 				DC17C10319EC580400727C89 /* icon-new-point.png */,
 				DC17C10119EC57FF00727C89 /* icon-point.png */,
 				DC17C0FF19EC53E100727C89 /* icon-add-point.png */,
@@ -390,6 +402,8 @@
 				5D21A55219E6C80D0053DEC8 /* LayerTableViewCell.m */,
 				5D21A55319E6C80D0053DEC8 /* LayerTableViewCell.xib */,
 				DC22270519ED4A6C007CBF43 /* UserRole.h */,
+				DC87CD5C19ED9F3A002EBA86 /* DataSource.h */,
+				DC87CD5D19ED9F3A002EBA86 /* DataSource.m */,
 			);
 			name = Entity;
 			sourceTree = "<group>";
@@ -497,11 +511,14 @@
 				5D21A55519E6C80D0053DEC8 /* LayerTableViewCell.xib in Resources */,
 				5D7D8DAB19D9CE2D00363F7D /* map.js in Resources */,
 				5D9D137519DC7D2900BA3570 /* item-icon-folder@2x.png in Resources */,
+				DC46151319EEB09300275AD7 /* rightArrow.png in Resources */,
 				DC17C10219EC57FF00727C89 /* icon-point.png in Resources */,
+				DC46151719EEBB5F00275AD7 /* picture-29.png in Resources */,
 				5D9D137019DC7D2900BA3570 /* item-counter.png in Resources */,
 				5D9D137419DC7D2900BA3570 /* item-icon-folder.png in Resources */,
 				5D960BBE19CA310C00B8DEFF /* logo-login.png in Resources */,
 				5D960B9C19CA1EC600B8DEFF /* Images.xcassets in Resources */,
+				DC46151519EEBAC300275AD7 /* picture-58.png in Resources */,
 				5D960B8E19CA1EC600B8DEFF /* InfoPlist.strings in Resources */,
 				5D3F0C4619CB077500D52313 /* ol.css in Resources */,
 				DC17C10419EC580400727C89 /* icon-new-point.png in Resources */,
@@ -569,6 +586,7 @@
 				5D97923A19E32E3A0017234C /* SideMenuTableViewController.m in Sources */,
 				DC22270419ED3A96007CBF43 /* AccountDelegate.m in Sources */,
 				5D1F6E1119DED73D0049A889 /* MainViewController.m in Sources */,
+				DC87CD5E19ED9F3A002EBA86 /* DataSource.m in Sources */,
 				5D960B9419CA1EC600B8DEFF /* AppDelegate.m in Sources */,
 				5DA3EE7B19DD6AB300E8E579 /* User.m in Sources */,
 				5DAD66F719DADD0600DEC6EA /* AddNewPointViewController.m in Sources */,
