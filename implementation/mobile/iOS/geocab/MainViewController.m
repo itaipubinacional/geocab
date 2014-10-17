@@ -22,8 +22,6 @@ extern User *loggedUser;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    NSLog(NSLocalizedString(@"teste", @""));
-    
     if ( [defaults objectForKey:@"name"] != NULL
         && [defaults objectForKey:@"email"] != NULL )
     {

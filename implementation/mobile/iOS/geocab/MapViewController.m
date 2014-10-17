@@ -11,6 +11,7 @@
 #import "AddNewPointViewController.h"
 #import "LayerDelegate.h"
 #import "Layer.h"
+#import "ControllerUtil.h"
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
@@ -37,6 +38,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *confirmMarkerButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelMarkerButton;
 @property (weak, nonatomic) IBOutlet UIButton *showMarkerOptionsButton;
+@property (weak, nonatomic) IBOutlet UIView *markerOptionsOverlay;
 
 @property (weak, nonatomic) IBOutlet UILabel *hintLabel;
 
@@ -92,12 +94,15 @@
     
     _changeMarkerButton.layer.borderWidth = 0.3;
     _changeMarkerButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    [_changeMarkerButton setBackgroundColor:[ControllerUtil colorWithHexString:@"828282"]];
+    _changeMarkerButton.layer.cornerRadius = 3;
     
     _confirmMarkerButton.layer.borderWidth = 0.3;
     _confirmMarkerButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    [_confirmMarkerButton setBackgroundColor:[ControllerUtil colorWithHexString:@"00b7cd"]];
+    _confirmMarkerButton.layer.cornerRadius = 3;
     
-    _cancelMarkerButton.layer.borderWidth = 0.3;
-    _cancelMarkerButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    [_markerOptionsOverlay setBackgroundColor:[[UIColor darkGrayColor] colorWithAlphaComponent:0.8]];
     
     [_addMyLocationButton addTarget:self action:@selector(addCurrentLocation:) forControlEvents:UIControlEventTouchUpInside];
     [_addAnotherLocationButton addTarget:self action:@selector(addSelectedLocation:) forControlEvents:UIControlEventTouchUpInside];
@@ -121,7 +126,7 @@
     
     NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
     
-    NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@')", urlFormated , layer.name];
+    NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', 'true')", urlFormated , layer.name];
     [_webView stringByEvaluatingJavaScriptFromString:functionCall];
 }
 
@@ -132,7 +137,7 @@
     
     NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
     
-    NSString *functionCall = [NSString stringWithFormat:@"removeLayer('%@', '%@')", urlFormated , layer.name];
+    NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', 'false')", urlFormated , layer.name];
     [_webView stringByEvaluatingJavaScriptFromString:functionCall];
 }
 
@@ -153,7 +158,13 @@
 }
 
 -(IBAction)addNewPoint:(id)sender {
-    [self showNewMarkerButtons];
+    if (!_addMyLocationButton.hidden) {
+        [self hideNewMarkerButtons];
+    } else {
+        [self showNewMarkerButtons];
+    }
+    
+    
     [self hideMarkerOptions];
 }
 
@@ -189,6 +200,7 @@
                               delay:1.5
                             options: UIViewAnimationCurveEaseInOut
                          animations:^{
+                             _markerOptionsOverlay.hidden = false;
                              _confirmMarkerButton.hidden = false;
                              _changeMarkerButton.hidden = false;
                              _cancelMarkerButton.hidden = false;
@@ -204,6 +216,7 @@
                               delay:1.5
                             options: UIViewAnimationCurveEaseInOut
                          animations:^{
+                             _markerOptionsOverlay.hidden = true;
                              _confirmMarkerButton.hidden = true;
                              _changeMarkerButton.hidden = true;
                              _cancelMarkerButton.hidden = true;
@@ -224,6 +237,9 @@
 
         if (!_hintLabel.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _hintLabel.hidden = true;} completion:nil];
         if (!_showMarkerOptionsButton.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _showMarkerOptionsButton.hidden = true;} completion:nil];
+        
+        _location.x = [param1 floatValue];
+        _location.y = [param2 floatValue];
     };
 }
 
@@ -240,6 +256,9 @@
     if (abs(howRecent) < 15.0) {
         NSString *functionCall = [NSString stringWithFormat:@"addPoint(%.5f, %.5f, false)", location.coordinate.latitude, location.coordinate.longitude];
         [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        
+        _location.x = location.coordinate.latitude;
+        _location.y = location.coordinate.longitude;
         
         [_locationManager stopUpdatingLocation];
         [self hideNewMarkerButtons];
@@ -311,14 +330,13 @@
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     NSLog(@"didFailWithError: %@", error);
     
-    UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Erro de GPS" message:@"Houve um erro ao tentar obter sua localização" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"gps.error.title", @"") message:NSLocalizedString(@"gps.error.message", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     
     [errorAlert show];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [self.navigationController setNavigationBarHidden:YES animated:animated];
-    //_sideMenu.panMode = MFSideMenuPanModeDefault;
     [super viewWillAppear:animated];
 }
 

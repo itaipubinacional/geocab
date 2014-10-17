@@ -10,6 +10,6 @@
 
 @implementation Marker
 
-@synthesize latitude, longitude, layer, statusMarker;
+@synthesize name, description, latitude, longitude, layer, statusMarker;
 
 @end

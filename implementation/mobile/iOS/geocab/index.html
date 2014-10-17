@@ -19,7 +19,7 @@
 	 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script src="ol.js" type="text/javascript"></script>
 	<script src="jquery.mobile-1.4.4.js" type="text/javascript"></script>
-	<title>OpenLayers 3 example</title>
+	<title>Geocab</title>
 </head>
 <body style="margin: 0">
 
@@ -45,7 +45,7 @@
 			// rotação
             interactions: ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false}),
 			view: view,
-			controls: ol.control.defaults({rotate: false})
+			control: ol.control.defaults({rotate: false})
 
 		});
 
@@ -74,7 +74,7 @@
 			});
 		}
 
-		var activeLayers = [];
+		var layersAdd = [];
 		
 		function bindTouchEvent() {
 			$( "div.map" ).bind( "taphold", tapholdHandler );
@@ -115,31 +115,38 @@
 			if (!fromTap) zoomToArea(latitude, longitude);
 		}
 
-		function showLayer(url, name)
-        {
-			var wmsSource = new ol.source.TileWMS({
-				 url: url,
+		function showLayer(url, name, checked) {
+			if( checked == 'true') {
+				var wmsSource = new ol.source.TileWMS({
+				url: url,
 				params: {'LAYERS': name},
-			});
+				});
 
-			var wmsLayer = new ol.layer.Tile({
+				var wmsLayer = new ol.layer.Tile({
 				source: wmsSource
-			});
+				});
 
-			map.addLayer(wmsLayer);
-			push
-        }
+				map.addLayer(wmsLayer);
 
-        function removeMarker()
-        {
-			var layers = map.getLayers();
+				layersAdd.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'name': name});
+			} else {
+			   for( i in layersAdd ) {
+				   if( layersAdd[i].name == name ) {
+					   map.removeLayer(layersAdd[i].wmsLayer);
+				   }
+			   }
+			}
 
-			for (var i = 0; i < layers.a.length; i++) {
-
-					map.removeLayer(layers.a[i]);
-
-				}
-
+		}
+        
+        function removeMarker(name) {
+        	var lyr_list = map.getLayersByName("name");
+	        if (typeOf(lyr_list) === "array") {
+        		for (var i in lyr_list) {
+               		lyr_list[i].removeAllFeatures();
+                    map.removeLayer(lyr_list[i]);
+            	}
+ 			}
         }
         
         function zoomToArea(latitude, longitude) {
@@ -149,7 +156,7 @@
 			var coordinates = ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857');
 			map.beforeRender(pan);
 			view.setCenter(coordinates);
-			view.setZoom(20);
+			view.setZoom(14);
 		}
 	</script>
 
