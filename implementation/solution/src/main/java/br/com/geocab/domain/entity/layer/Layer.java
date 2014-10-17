@@ -25,12 +25,11 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.datasource.DataSource;
-import br.com.geocab.domain.entity.marker.MarkerAttribute;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 
@@ -175,11 +174,23 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setOrderLayer(orderLayer);
 	}
 	
+	
 	/**
 	 * 
 	 * @param id
 	 * @param title
-	 * @param order
+	 */
+	public Layer( Long id, String title )
+	{
+		this.setId(id);
+		this.setTitle(title);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param title
+	 * @param group
 	 */
 	public Layer( Long id, String title, LayerGroup group )
 	{
