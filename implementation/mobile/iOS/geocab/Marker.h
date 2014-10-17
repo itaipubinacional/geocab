@@ -13,6 +13,8 @@
 
 @interface Marker : NSObject
 
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *description;
 @property (nonatomic) CLLocationDegrees *latitude;
 @property (nonatomic) CLLocationDegrees *longitude;
 @property (strong, nonatomic) Layer *layer;

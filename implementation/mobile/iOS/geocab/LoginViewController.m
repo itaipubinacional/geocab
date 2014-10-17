@@ -52,6 +52,11 @@ extern User *loggedUser;
     
     //[self.signInButton setStyle:(GPPSignInButtonStyle)];
     
+    _username.delegate = self;
+    _password.delegate = self;
+    
+    [self.password setReturnKeyType:UIReturnKeyDone];
+    
     self.fbLoginView.delegate = self;
     self.fbLoginView.readPermissions = @[@"public_profile", @"email", @"user_friends"];
     
@@ -64,8 +69,17 @@ extern User *loggedUser;
 }
 
 //Method to make the keyboard disappear when touch happens out of the text field
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [[event allTouches] anyObject];
+    if ([self.username isFirstResponder] && [touch view] != self.username)
+    {
+        [self.username resignFirstResponder];
+    }
+    else if ([self.password isFirstResponder] && [touch view] != self.password)
+    {
+        [self.password resignFirstResponder];
+    }
 }
 
 - (IBAction)login:(id)sender {
