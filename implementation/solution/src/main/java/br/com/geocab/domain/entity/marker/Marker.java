@@ -13,9 +13,11 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
+import org.directwebremoting.io.FileTransfer;
 import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -42,6 +44,9 @@ public class Marker extends AbstractEntity implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = 1806026076674494131L;
+	
+	@Transient
+	private FileTransfer image;
 	
 	@NotNull
 	private String latitude;
@@ -170,4 +175,20 @@ public class Marker extends AbstractEntity implements Serializable
 		this.markerAttributes = markerAttributes;
 	}
 
+	/**
+	 * @return the image
+	 */
+	public FileTransfer getImage()
+	{
+		return image;
+	}
+
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(FileTransfer image)
+	{
+		this.image = image;
+	}
+	
 }
