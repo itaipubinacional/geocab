@@ -607,7 +607,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.allLayers = [];
 
                 for(var i =0; i < result.length ; ++i){
-                    $scope.allLayers.push( parseNode( result[i] ) )
+                   $scope.allLayers.push( parseNode( result[i] ) )
                 }
 
                 if( $scope.allLayers[0] )
@@ -690,6 +690,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		} else {
     			$scope.removeInternalLayer(node.value);
     		}
+    		return;
     	}
     	
         if( node && node.type == 'camada' && !node.pesquisa){
