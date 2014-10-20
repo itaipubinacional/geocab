@@ -17,6 +17,8 @@ package org.springframework.data.domain;
 
 import java.io.Serializable;
 
+import org.springframework.data.domain.Sort.Direction;
+
 /**
  * Basic Java Bean implementation of {@code Pageable}.
  * 
