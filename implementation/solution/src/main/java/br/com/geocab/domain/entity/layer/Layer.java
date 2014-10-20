@@ -128,7 +128,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * Draft {@link Layer} that originated the published {@link Layer}
 	 */
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.REMOVE})
+	@OneToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
 	private Layer publishedLayer;
 	
 	@OneToMany(mappedBy="layer", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
