@@ -12,6 +12,7 @@
 #import "LayerDelegate.h"
 #import "Layer.h"
 #import "ControllerUtil.h"
+#import "LoginViewController.h"
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
@@ -41,6 +42,8 @@
 @property (weak, nonatomic) IBOutlet UIView *markerOptionsOverlay;
 
 @property (weak, nonatomic) IBOutlet UILabel *hintLabel;
+
+extern NSUserDefaults *defaults;
 
 @end
 
@@ -333,6 +336,22 @@
     UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"gps.error.title", @"") message:NSLocalizedString(@"gps.error.message", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     
     [errorAlert show];
+}
+
+-(void)logoutButtonPressed {
+    
+    
+    UINavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"navigationController"];
+    [[[[UIApplication sharedApplication] delegate] window] setRootViewController:navigationController];
+    
+    defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary * dict = [defaults dictionaryRepresentation];
+    for (id key in dict) {
+        
+        //heck the keys if u need
+        [defaults removeObjectForKey:key];
+    }
+    [defaults synchronize];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
