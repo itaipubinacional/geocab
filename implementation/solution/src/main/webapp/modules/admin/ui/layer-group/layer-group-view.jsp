@@ -11,7 +11,7 @@
      <div class="navbar">
 
          <!--Mensagens-->
-         <div ng-include="'static/libs/eits-directives/alert/alert.html'" style="margin-bottom: 15px"></div>
+         <div class="msg" ng-include="'static/libs/eits-directives/alert/alert.html'" style="margin-bottom: 15px"></div>
 
          <div class="navbar-inner navbar-container">
 			<div ng-switch on="currentState" class="navbar-title" style="float: left; width: 180px;">
