@@ -35,7 +35,7 @@ import br.com.geocab.domain.entity.layer.Layer;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="Marker")
 @Table(schema=IEntity.SCHEMA)
 public class Marker extends AbstractEntity implements Serializable
 {
