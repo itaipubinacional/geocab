@@ -1822,6 +1822,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.setPhotoMarker = function(element) {
     	
     	$scope.currentEntity.image = element;
+    	
+    	$scope.readURL(element);
     }
     
     $scope.enableMarker = function() {
@@ -1904,5 +1906,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	});
     	
     }
+    
+    $scope.readURL = function(input){
+
+        if (input.files && input.files[0] && input.files[0].size < 200000) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+            	console.log(e);
+                $('#marker-image').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
 };
+/**
+ * Função responsável por carregar a foto do usuário na tela no momento em que foi selecionada
+ */
+
 

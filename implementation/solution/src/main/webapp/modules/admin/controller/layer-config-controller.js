@@ -546,15 +546,16 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             return;
         }
         
-        layer.name = layer.title;
+        if ( layer.legend == null ) {
+        	layer.name = layer.title;
+            
+            angular.forEach($scope.attributes, function(value, index){
+            	value.layer = layer;
+            })
+            
+            layer.attributes = $scope.attributes;	
+        }
         
-        angular.forEach($scope.attributes, function(value, index){
-        	value.layer = layer;
-        	//if( value.attributeDefault ) delete(value.attributeDefault);
-        })
-        
-        layer.attributes = $scope.attributes;
-
         layerGroupService.insertLayer(layer, {
             callback: function (result) {
 				$scope.currentState = $scope.LIST_STATE;

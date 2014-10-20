@@ -285,8 +285,11 @@
                        <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
                        <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
+						<img id="marker-image">
     					<br>	
     					<hr>
+    					
+    					
     					
                        <input type="file" id="upload-input" style="display:none;"
                        accept="image/*"
@@ -403,3 +406,5 @@
 </section>
 
 </html>
+
+
