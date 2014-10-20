@@ -25,7 +25,7 @@ import br.com.geocab.domain.entity.IEntity;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="Attribute")
 @Table(schema=IEntity.SCHEMA)
 public class Attribute extends AbstractEntity implements Serializable
 {

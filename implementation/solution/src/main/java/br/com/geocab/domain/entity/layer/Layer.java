@@ -40,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="Layer")
 @Table(schema=IEntity.SCHEMA)
 public class Layer extends AbstractEntity implements Serializable, ITreeNode
 {

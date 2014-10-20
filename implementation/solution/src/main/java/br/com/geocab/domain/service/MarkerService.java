@@ -273,7 +273,7 @@ public class MarkerService
 		metaFile.setInputStream(fileTransfer.getInputStream());
 		metaFile.setName( fileTransfer.getFilename() );
 		
-		MetaFile mf = this.metaFileRepository.insert( metaFile );
+		this.metaFileRepository.insert( metaFile );
 	}
 	
 	public FileTransfer findImgByMarker( Long markerId ) throws RepositoryException
