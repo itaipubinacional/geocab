@@ -243,6 +243,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		}); 
@@ -263,6 +264,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 
 		if ( id == null || id == "" || id == 0 ) {
 			$scope.msg = {type:"error", text: $scope.INVALID_ID_MESSAGE, dismiss:true};
+			
 			$scope.currentState = $scope.LIST_STATE;
 			$state.go($scope.LIST_STATE);
 			return;
@@ -317,9 +319,13 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 					}
 
 					$scope.msg = {type: "success", text: $translate("admin.datasource.The-register") + ' "'+dataSource.name+'" '+$translate("admin.datasource.was-successfully-deleted")+'.', dismiss:true};
+					
+					$scope.fadeMsg();
+					
 				},
 				errorHandler : function(message, exception) {
 					$scope.msg = {type:"danger", text: message, dismiss:true};
+					$scope.fadeMsg();
 					$scope.$apply();
 				}
 			});
@@ -361,6 +367,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		});
@@ -374,6 +381,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 
 		if ( !$scope.form().$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
+			$scope.fadeMsg();
 			return;
 		}
 
@@ -382,11 +390,13 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
 				$scope.msg = {type:"success", text: $translate("admin.datasource.Geographic-data-source-successfully-inserted")+"!", dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 				$scope.data.showFieldUrl = null;
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		});
@@ -400,6 +410,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 
 		if ( !$scope.form().$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
+			$scope.fadeMsg();
 			return;
 		}
 
@@ -409,6 +420,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
 				$scope.msg = {type:"success", text: $translate("admin.datasource.Geographic-data-source-successfully-updated")+"!", dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
@@ -416,6 +428,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 					message = $translate("admin.datasource.The-name-or-address-entered-field-already-exists,-change-and-try-again")+".";
 				}
 				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		});
@@ -429,21 +442,25 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 		
 		if ( $scope.currentState != $scope.DETAIL_STATE && !$scope.form().url.$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
+			$scope.fadeMsg();
 			return;
 		}
 
 		dataSourceService.testConnection( $scope.currentEntity.url, {
 			callback : function(result) {
 				if(result){
-					$scope.msg = {type:"success", text: $translate("admin.datasource.Connection-successfully-established"), dismiss:true};					
+					$scope.msg = {type:"success", text: $translate("admin.datasource.Connection-successfully-established"), dismiss:true};	
+					$scope.fadeMsg();
 				}
 				else{
 					$scope.msg = {type:"danger", text: $translate("admin.datasource.Could-not-connect-to-the-geographic-data-source")+".", dismiss:true};
+					$scope.fadeMsg();
 				}
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		});
@@ -482,17 +499,13 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	}
 	
 	
-	
-
-
-
-
-
-
-
-
-
-
+	$scope.fadeMsg = function(){
+		$("div.msg").show();
+		  
+		  	setTimeout(function(){
+		  		$("div.msg").fadeOut();
+		  	}, 3000);
+	}
 
 };
 

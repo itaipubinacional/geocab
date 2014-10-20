@@ -43,7 +43,13 @@
                        ng-model="currentEntity.url"
                        maxlength="255"
                        placeholder="http://"
-                       ng-hover>
+                       ng-hover
+                       required
+                       ng-class="{ngInvalid: form.url.$error.required && (form.$submitted || form.url.$dirty) }"
+                       >
+                       
+                <span ng-if="(form.url.$error.required && (form.$submitted || form.url.$dirty))" class="tooltip-validation"><spring:message code="admin.datasource.Adress-required" /></span>       
+                
             </div>
             <br>
 

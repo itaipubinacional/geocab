@@ -17,12 +17,14 @@
             <div class="form-item position-relative" style="width: 350px;">
                 <label class="detail-label" required><spring:message code="admin.datasource.Data-Source"/></label>
                 <div class="input-group position-relative">
-                    <input name="fonteDados" type="text" disabled class="form-control"
+                    <input name="dataSource" type="text" disabled class="form-control"
                            ng-model="currentEntity.dataSource.name"
                            placeholder="Informe a fonte de dados" maxlength="144"
                            ng-minlength="1"
                            ng-hover
-                           required>
+                           required
+                           ng-class="{ngInvalid:form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)}"
+                           >
                     <span class="input-group-btn">
                         <button ng-click="selectDataSource()" class="btn btn-default"
                                 type="button" ng-disabled="currentEntity.id != null">
@@ -42,7 +44,7 @@
 
                 <div class="input-group">
 
-                <input name="camada" type="text" disabled class="form-control"
+                <input name="layer" type="text" disabled class="form-control"
                     ng-model="currentEntity.name"
                     placeholder="Informe a camada"
                     maxlength="144" ng-minlength="1"
@@ -61,7 +63,7 @@
 
                 <div class="form-item position-relative" ng-if="currentEntity.name" style="margin: 20px 0;">
 
-                <label class="detail-label"><spring:message code="Title"/></label>
+                <label class="detail-label" required><spring:message code="Title"/></label>
 
                 <div class="position-relative input-group" style="width: 350px;">
          
@@ -85,19 +87,23 @@
             </span>
 
             <!-- Camada interna -->
-            <span ng-if="!currentEntity.dataSource.url && currentEntity.dataSource.id ">
+           
                 <br/>
-                <label class="detail-label"><spring:message code="Title"/></label>
                 <div class="position-relative input-group" style="width: 350px;">
-                <input name="title" type="text" class="form-control"
-                    ng-model="currentEntity.title"
-                    placeholder="Informe o título"
-                    maxlength="144" ng-minlength="1"
-                    ng-hover
-                    required />
+                	<label class="detail-label" required><spring:message code="Title"/></label>
+                
+                	<input name="title" type="text" class="form-control"
+                    	ng-model="currentEntity.title"
+                    	placeholder="Informe o título"
+                    	maxlength="144" ng-minlength="1"
+                    	ng-hover
+                    	required 
+                    	ng-class="{ngInvalid:form.title.$error.required && (form.$submitted || form.title.$dirty) }"
+                    	/>
+           
+           			 <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty) " class="tooltip-validation"><spring:message code="admin.layer-config.Title-required" /></span>
                 </div>
                 
-
                 <br/>
                 
             <div>
@@ -141,7 +147,9 @@
                            placeholder="Informe o grupo de camada"
                            maxlength="144" ng-minlength="1"
                            ng-hover
-                           required>
+                           required
+                           ng-class="{ng-invalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation}"                           
+                           >
                     <span class="input-group-btn">
                         <button ng-click="selectLayerGroup()" class="btn btn-default"
                                 type="button">
