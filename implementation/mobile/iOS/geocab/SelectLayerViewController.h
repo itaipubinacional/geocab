@@ -15,9 +15,10 @@
 - (void)didEndMultipleSelecting:(NSArray*) selectedLayers;
 - (void)didCheckedLayer:(Layer*) layer;
 - (void)didUnheckedLayer:(Layer*) layer;
+- (void)logoutButtonPressed;
 @end
 
-@interface SelectLayerViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
+@interface SelectLayerViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 {
     // Delegate to respond back

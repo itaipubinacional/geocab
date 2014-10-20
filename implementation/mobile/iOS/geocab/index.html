@@ -11,10 +11,10 @@
 			height: 100%;
 			width: 100%;
 		}
-
-		.ol-has-tooltip {
-			display: none;
-		}
+		
+		.ol-attribution button, .ol-attribution u, .ol-zoom {
+        	display: none;
+        }
 	</style>
 	 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script src="ol.js" type="text/javascript"></script>
@@ -34,6 +34,33 @@
 			zoom: 7
 		});
 
+		var iconFeature = new ol.Feature({
+		  geometry: new ol.geom.Point([0, 0]),
+		  name: 'Null Island',
+		  population: 4000,
+		  rainfall: 500
+		});
+
+		var iconStyle = new ol.style.Style({
+		  image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+			anchor: [0.5, 46],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'pixels',
+			opacity: 0.75,
+			src: 'http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png'
+		  }))
+		});
+
+		iconFeature.setStyle(iconStyle);
+
+		var vectorSource = new ol.source.Vector({
+		  features: [iconFeature]
+		});
+
+		var vectorLayer = new ol.layer.Vector({
+		  source: vectorSource
+		});
+		
 		var map = new ol.Map({
 			target: 'map',
 			layers: [
@@ -41,29 +68,67 @@
 							//source: new ol.source.MapQuest({layer: 'sat'})
 							source: new ol.source.OSM()
 						})
-			],
+			,
+			vectorLayer],
 			// rotação
-            interactions: ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false}),
+            interactions: ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false, keyboard: false}),
 			view: view,
 			control: ol.control.defaults({rotate: false})
 
 		});
+		
+		var element = document.getElementById('popup');
+
+		var popup = new ol.Overlay({
+		  element: element,
+		  positioning: 'bottom-center',
+		  stopEvent: false
+		});
+		map.addOverlay(popup);
+
+		// display popup on click
+		map.on('click', function(evt) {
+		  var feature = map.forEachFeatureAtPixel(evt.pixel,
+			  function(feature, layer) {
+				return feature;
+			  });
+		  if (feature) {
+			var geometry = feature.getGeometry();
+			var coord = geometry.getCoordinates();
+			popup.setPosition(coord);
+			$(element).popover({
+			  'placement': 'top',
+			  'html': true,
+			  'content': feature.get('name')
+			});
+			$(element).popover('show');
+		  } else {
+			$(element).popover('destroy');
+		  }
+		});
+
+		// change mouse cursor when over marker
+		//$(map .getViewport()).on('mousemove', function(e) {
+// 		  var pixel = map.getEventPixel(e.originalEvent);
+// 		  var hit = map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+// 			return true;
+// 		  });
+// 		  if (hit) {
+// 			map.getTarget().style.cursor = 'pointer';
+// 		  } else {
+// 			map.getTarget().style.cursor = '';
+// 		  }
+// 		});
 
 		function tapholdHandler( event ){
-
 			var getPosition = false;
 			map.on('click', function(evt) {
-
 				if( !getPosition )  {
-
 					var lat = evt.coordinate[0];
 					var lon = evt.coordinate[1];
-
 					getPosition = true;
-					
 					confirmToProceed(lat, lon);
 				}
-
 			});
 		}
 		

@@ -9,3 +9,5 @@
 "Layers" = "Camadas";
 "gps.error.message" = "Houve um erro ao tentar obter sua localização";
 "gps.error.title" = "Erro de GPS";
+"login.error.message" = "Houve um erro com o login. Verifique seu email e senha.";
+"error" = "Erro";

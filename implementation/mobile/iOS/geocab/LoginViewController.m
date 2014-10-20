@@ -90,7 +90,7 @@ extern User *loggedUser;
             loggedUser = [[result array] objectAtIndex:0];
             [self authenticateUser:loggedUser];
         } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
-            UIAlertView *errorMessage = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *errorMessage = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"") message:NSLocalizedString(@"login.error.message", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [errorMessage show];
         }];
         
