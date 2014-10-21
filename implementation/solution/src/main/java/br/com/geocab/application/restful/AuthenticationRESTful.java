@@ -1,7 +1,6 @@
 package br.com.geocab.application.restful;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.layer.Layer;
-import br.com.geocab.domain.service.AccountService;
-import br.com.geocab.domain.service.LayerGroupService;
+import br.com.geocab.domain.service.LoginService;
 
 
 /**
@@ -37,7 +34,7 @@ public class AuthenticationRESTful
 	 * 
 	 */
 	@Autowired
-	private AccountService accountService;
+	private LoginService loginService;
 	
 	/*-------------------------------------------------------------------
 	 * 		 					BEHAVIORS
@@ -57,7 +54,8 @@ public class AuthenticationRESTful
 	{
 		try 
 		{
-			return this.accountService.checkCredentials(credentials);
+			return this.loginService.checkCredentials(credentials);
+			
 		} 
 		catch (Exception e) 
 		{
