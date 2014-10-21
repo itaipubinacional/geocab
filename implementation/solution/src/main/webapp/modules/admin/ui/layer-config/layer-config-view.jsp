@@ -11,7 +11,7 @@
     <div class="navbar">
 
         <!--Message-->
-        <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
+        <div class="msg" ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
 
         <!-- Bar controller -->
         <div class="navbar-inner navbar-container">
@@ -24,41 +24,41 @@
             </div>
 
             <!-- State List -->
-            <button ng-show="currentState == LIST_STATE" style="float: right;"
+            <button ng-if="currentState == LIST_STATE" style="float: right;"
                     class="btn btn-primary"
                     ui-sref="layer-config.create"><spring:message code="admin.layer-config.New-layer"/>
             </button>
 
             <!-- State Detail -->
-            <button ng-show="currentState == DETAIL_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
+            <button ng-if="currentState == DETAIL_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
                     class="btn btn-default"
                     ui-sref="layer-config.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button> 
             
-            <button ng-show="currentState == DETAIL_STATE" style="float: right;"
+            <button ng-if="currentState == DETAIL_STATE" style="float: right;"
                     class="btn btn-danger"
                     ng-click="changeToRemove(currentEntity)"><spring:message code="Remove"/>
             </button>
-            <button ng-show="currentState == DETAIL_STATE" style="float: right;"
+            <button ng-if="currentState == DETAIL_STATE" style="float: right;"
                     class="btn btn-primary"
                     ui-sref="layer-config.update( {id:currentEntity.id} )"><spring:message code="Update"/>
             </button>
 
             <!-- State Create | Update -->
-            <button ng-show="currentState == INSERT_STATE || currentState == UPDATE_STATE"
+            <button ng-if="currentState == INSERT_STATE || currentState == UPDATE_STATE"
                     style="float: left; margin-right: 15px; min-width: 40px;"
                     class="btn btn-default"
                     ui-sref="layer-config.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button>
 
             <!-- State Create -->
-            <button ng-show="currentState == INSERT_STATE" style="float: right;"
+            <button ng-if="currentState == INSERT_STATE" style="float: right;"
                     class="btn btn-success"
                     id="buttonInsert"
                     ng-click="insertLayer(currentEntity)"><spring:message code="Save"/>
             </button>
             <!-- State Update -->
-            <button ng-show="currentState == UPDATE_STATE" style="float: right;"
+            <button ng-if="currentState == UPDATE_STATE" style="float: right;"
                     class="btn btn-success"
                     id="buttonUpdate"
                     ng-click="updateLayer(currentEntity)"><spring:message code="Save"/>

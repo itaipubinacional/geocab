@@ -9,7 +9,7 @@
 <!-- Users - Form -->
 <div>
     <form novalidate name="form"
-          default-button="{{ (currentState == INSERT_STATE) && 'buttonInsert' || 'buttonUpdate' }}">
+          default-button="{{ (currentState == INSERT_STATE) && 'buttonInsert' || 'buttonUpdate' }}" autocomplete="off">
 
         <div class="content-tab">
             <div class="form-item position-relative" style="width: 300px;">
@@ -28,14 +28,17 @@
             <br>           
             <div class="form-item position-relative" style="width: 300px;">
                 <label class="detail-label" required><spring:message code="admin.users.E-mail"/></label>
-                <input name="address" type="text" class="form-control"
+                <input name="address" type="text" id="address" class="form-control"
                        ng-model="currentEntity.email"
                        numbers-only
                        maxlength="255"
                        placeholder="<spring:message code="admin.users.E-mail"/>"
                        required ng-minlength="1"
                        ng-class="{ ngInvalid: form.address.$error.required && (form.$submitted || form.address.$dirty) }"
-                       ng-hover>
+                       ng-hover
+                       autocomplete="off"
+                       
+                      >
                 <span ng-show="form.address.$error.required && (form.$submitted || form.address.$dirty)"
                       class="tooltip-validation"><spring:message code="admin.users.E-mail"/> <spring:message code="admin.users.required"/></span>
             </div>
@@ -47,7 +50,8 @@
                        ng-model="currentEntity.password"
                        maxlength="144"
                        ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted || form.password.$dirty) }"
-                       ng-hover>
+                       ng-hover
+                       autocomplete="off">
             </div>
             <div ng-if="currentState == INSERT_STATE" class="form-item position-relative" style="width: 200px;">
                 <label class="detail-label" required><spring:message code="admin.users.Password"/></label>

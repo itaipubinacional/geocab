@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.geocab.domain.entity.layer.Attribute;
-import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**
@@ -18,7 +17,7 @@ import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
  * @category Repository
  *
  */
-public interface IAttributeRepository extends IDataRepository<Layer, Long>
+public interface IAttributeRepository extends IDataRepository<Attribute, Long>
 {
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
@@ -33,5 +32,5 @@ public interface IAttributeRepository extends IDataRepository<Layer, Long>
 				"LEFT OUTER JOIN attribute.layer layer " + 
 				"WHERE ( :layerId = layer.id ) ")
 	public List<Attribute> listAttributeByLayer( @Param("layerId") Long layerId );
-	
+
 }

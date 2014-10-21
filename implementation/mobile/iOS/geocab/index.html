@@ -7,71 +7,176 @@
 			width: 100%;
 			height: 100%;
 		}
-		.map {
+		div.map {
 			height: 100%;
 			width: 100%;
 		}
-
-		.ol-has-tooltip {
-			display: none;
-		}
+		
+		.ol-attribution button, .ol-attribution u, .ol-zoom {
+        	display: none;
+        }
 	</style>
+	 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script src="ol.js" type="text/javascript"></script>
-	<title>OpenLayers 3 example</title>
+	<script src="jquery.mobile-1.4.4.js" type="text/javascript"></script>
+	<title>Geocab</title>
 </head>
 <body style="margin: 0">
-	
-	<div id="olmap" class="map">
-		
+
+	<!-- Include the markup -->
+	<div class="bellows">
+		<!-- The Accordion Items -->
+		<div class="bellows__item">
+			<div class="bellows__header">
+				<!-- Item Header - Content can be whatever you want -->
+			</div>
+			<div class="bellows__content">
+				<!-- Item Content - Content can be whatever you want -->
+			</div>
+		</div>
+		<div class="bellows__item">
+			<div class="bellows__header">
+				<h3>Header</h3>
+			</div>
+			<div class="bellows__content">
+				<p>Content</p>
+			</div>
+		</div>
+		<div class="bellows__item">
+			<div class="bellows__header">
+				<h3>Header</h3>
+			</div>
+			<div class="bellows__content">
+				<p>Content</p>
+			</div>
+		</div>
 	</div>
-	
+
+	<div id="map" class="map">
+
+	</div>
+
 	<script type="text/javascript">
 	
-		map = new ol.Map({
-			target: 'olmap',
+		var view = new ol.View({
+			center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
+			zoom: 7
+		});
+
+		var iconFeature = new ol.Feature({
+		  geometry: new ol.geom.Point([0, 0]),
+		  name: 'Null Island',
+		  population: 4000,
+		  rainfall: 500
+		});
+
+		var iconStyle = new ol.style.Style({
+		  image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+			anchor: [0.5, 46],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'pixels',
+			opacity: 0.75,
+			src: 'http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png'
+		  }))
+		});
+
+		iconFeature.setStyle(iconStyle);
+
+		var vectorSource = new ol.source.Vector({
+		  features: [iconFeature]
+		});
+
+		var vectorLayer = new ol.layer.Vector({
+		  source: vectorSource
+		});
+		
+		var map = new ol.Map({
+			target: 'map',
 			layers: [
 			new ol.layer.Tile({
 							//source: new ol.source.MapQuest({layer: 'sat'})
 							source: new ol.source.OSM()
 						})
-			],
-			view: new ol.View({
-				center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
-				zoom: 7
-			}),
+			,
+			vectorLayer],
+			// rotação
+            interactions: ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false, keyboard: false}),
+			view: view,
+			control: ol.control.defaults({rotate: false})
 
 		});
+		
+		var element = document.getElementById('popup');
 
-		var wmsSource = new ol.source.TileWMS({
-			url: 'http://172.17.6.112/geoserver/bdgeo/wms',
-			params: {'LAYERS': 'v_bacia_hidrografica_bp3'},
+		// display popup on click
+		map.on('click', function(evt) {
+		  var feature = map.forEachFeatureAtPixel(evt.pixel,
+			  function(feature, layer) {
+				return feature;
+			  });
+		  if (feature) {
+			var geometry = feature.getGeometry();
+			var coord = geometry.getCoordinates();
+			popup.setPosition(coord);
+			$(element).popover({
+			  'placement': 'top',
+			  'html': true,
+			  'content': feature.get('name')
+			});
+			$(element).popover('show');
+		  } else {
+			$(element).popover('destroy');
+		  }
 		});
 
-		var wmsLayer = new ol.layer.Tile({
-			source: wmsSource
-		});
+		function tapholdHandler( event ){
+			var getPosition = false;
+			map.on('click', function(evt) {
+				if( !getPosition )  {
+					var lat = evt.coordinate[0];
+					var lon = evt.coordinate[1];
+					getPosition = true;
+					confirmToProceed(lat, lon);
+				}
+			});
+		}
+		
+		function unbindTouchEvent() {
+			$( "div.map" ).unbind( "taphold" );
+			map.on('click', function(evt) {
+				return null;
+			});
+		}
 
-		map.addLayer(wmsLayer);
+		var layersAdd = [];
+		
+		function bindTouchEvent() {
+			$( "div.map" ).bind( "taphold", tapholdHandler );
+		}
 
-
-		function addPoint(latitude, longitude)
+		function addPoint(latitude, longitude, fromTap)
 		{
-
+			if (fromTap == true) {
+				var point = new ol.geom.Point([latitude, longitude])
+			} else {
+				var point = new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'))
+			}
+			
 			var iconFeature = new ol.Feature({
-				geometry: new ol.geom.Point(ol.proj.transform([parseFloat(longitude), parseFloat(latitude)], 'EPSG:4326', 'EPSG:3857')),
+				geometry: point,
 				name: 'Localizacao'
 			});
 
 			//create the style
 			var iconStyle = new ol.style.Style({
 				image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-					size: [48, 48],
-					src: 'http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png'
+				size: [48, 48],
+				src: 'http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png'
 				}))
 			});
 
 			var vectorSource = new ol.source.Vector({
-				features: [iconFeature]
+					features: [iconFeature]
 			});
 
 			//add the feature vector to the layer vector, and apply a style to whole layer
@@ -80,11 +185,54 @@
 				style: iconStyle
 			});
 
-
 			map.addLayer(vectorLayer);
+			if (!fromTap) zoomToArea(latitude, longitude);
 		}
-				
+
+		function showLayer(url, name, checked) {
+			if( checked == 'true') {
+				var wmsSource = new ol.source.TileWMS({
+					url: url,
+					params: {'LAYERS': name},
+				});
+
+				var wmsLayer = new ol.layer.Tile({
+					source: wmsSource
+				});
+
+				map.addLayer(wmsLayer);
+
+				layersAdd.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'name': name});
+			} else {
+			   for( i in layersAdd ) {
+				   if( layersAdd[i].name == name ) {
+					   map.removeLayer(layersAdd[i].wmsLayer);
+				   }
+			   }
+			}
+
+		}
+        
+        function removeMarker(name) {
+        	var lyr_list = map.getLayersByName("name");
+	        if (typeOf(lyr_list) === "array") {
+        		for (var i in lyr_list) {
+               		lyr_list[i].removeAllFeatures();
+                    map.removeLayer(lyr_list[i]);
+            	}
+ 			}
+        }
+        
+        function zoomToArea(latitude, longitude) {
+			var pan = ol.animation.pan({
+				source: view.getCenter()
+			});
+			var coordinates = ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857');
+			map.beforeRender(pan);
+			view.setCenter(coordinates);
+			view.setZoom(14);
+		}
 	</script>
-	
+
 </body>
 </html>

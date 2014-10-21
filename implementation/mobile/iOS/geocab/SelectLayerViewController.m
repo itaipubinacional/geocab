@@ -11,11 +11,15 @@
 #import "Layer.h"
 #import "LayerTableViewCell.h"
 #import "ControllerUtil.h"
+#import "User.h"
 
 @interface SelectLayerViewController ()
 
 @property (retain, nonatomic) NSArray *layers;
 @property (nonatomic, retain) NSMutableDictionary *sections;
+@property (nonatomic, retain) UITableView *tableView;
+
+extern User *loggedUser;
 
 @end
 
@@ -24,21 +28,49 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.clearsSelectionOnViewWillAppear = NO;
-    
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    //Navigation Bar
     self.navigationItem.title = NSLocalizedString(@"Layers", @"");
     
-    UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
-    [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
-    [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
-    [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
-    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
-    self.navigationItem.rightBarButtonItem = button;
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    [self.view addSubview:self.tableView];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancel)];
+    if (self.multipleSelection) {
+        UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
+        [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
+        [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
+        [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
+        self.navigationItem.leftBarButtonItem = button;
+        
+        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:@"X" style:UIBarButtonItemStylePlain target:self action:@selector(didFinish)];
+        self.navigationItem.rightBarButtonItem = buttonItem;
+        
+        UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        logoutButton.frame = CGRectMake(0, self.view.bounds.size.height-44, 320, 44);
+        logoutButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        logoutButton.backgroundColor = [UIColor lightGrayColor];
+        logoutButton.tintColor = [UIColor whiteColor];
+        
+        [logoutButton addTarget:self action:@selector(logoutMethodCall) forControlEvents:UIControlEventTouchUpInside];
+        
+        [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
+        [self.view addSubview:logoutButton];
+        
+    } else {
+        UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
+        [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
+        [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
+        [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
+        self.navigationItem.rightBarButtonItem = button;
+        
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancel)];
+    }
+    
+    
     
     LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
     [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
@@ -47,7 +79,9 @@
         [self arrangeArrayInSections:_layers];
         [self.tableView reloadData];
         
-    } userName:@"admin@geocab.com.br" password:@"admin"];
+    } userName:loggedUser.email password:loggedUser.password];
+    
+    
 }
 
 -(void)arrangeArrayInSections:(NSArray*) array {
@@ -109,7 +143,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section]] count];
+//    return [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section]] count];
+    return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -149,9 +184,10 @@
     
     Layer *layer = (Layer*) [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
     
+    cell.accessoryType = layer.selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+    
     cell.layerTitle.text = layer.title;
     cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
-//    cell.layer = [layer copy];
     
     return cell;
 }
@@ -166,22 +202,18 @@
     // Which item?
     Layer * item = (Layer*)[[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
     
-    if (self.multipleSelection) {
-        item.selected = !item.selected;
+    if (self.multipleSelection ) {
+        if (!item.selected && [self numberOfSelectedItems] < 3) {
+            item.selected = !item.selected;
+            if ([_delegate respondsToSelector:@selector(didCheckedLayer:)]) [_delegate didCheckedLayer:item];
+        } else if (item.selected){
+            item.selected = !item.selected;
+            if ([_delegate respondsToSelector:@selector(didUnheckedLayer:)]) [_delegate didUnheckedLayer:item];
+        }
         
         // Update UI
         [_tableView deselectRowAtIndexPath:indexPath animated:YES];
         [_tableView cellForRowAtIndexPath:indexPath].accessoryType = item.selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-        
-        // Delegate callback
-        if (item.selected) {
-//            if ([_delegate respondsToSelector:@selector(didEndSelecting:)]) [_delegate didEndSelecting:item];
-        } else {
-            //        if ([delegate respondsToSelector:@selector(selectorDidDeselectItem:)]) [delegate selectorDidDeselectItem:item];
-            //        if (selectorMode==KNSelectorModeSelected) {
-            //            [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            //        }
-        }
     } else {
         if ([_delegate respondsToSelector:@selector(didEndSelecting:)]) [_delegate didEndSelecting:item];
     }
@@ -211,48 +243,12 @@
     return [_layers filteredArrayUsingPredicate:pred];
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
+-(NSUInteger)numberOfSelectedItems {
+    return [[_layers filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"selected = YES"]] count];
+}
 
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+-(void)logoutMethodCall {
+    if ([_delegate respondsToSelector:@selector(logoutButtonPressed)]) [_delegate logoutButtonPressed];
+}
 
 @end

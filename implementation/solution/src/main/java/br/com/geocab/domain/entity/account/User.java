@@ -31,7 +31,7 @@ import br.com.geocab.domain.entity.AbstractEntity;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="User")
 public class User extends AbstractEntity implements Serializable, UserDetails
 {
 	/**
@@ -40,7 +40,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	private static final long	serialVersionUID	= -4052986759552589018L;
 	
 	//----
-	// Usuários padrões
+	// Default user
 	//----
 	public static final User ADMINISTRATOR = new User(1L, "Administrator", "admin@geocab.com.br"  , true , UserRole.ADMINISTRATOR , "admin");
 	
@@ -171,7 +171,6 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		if ( role.equals( UserRole.ADMINISTRATOR ) ) 
 		{
 			authorities.add( UserRole.ADMINISTRATOR );
-			authorities.add( UserRole.MODERATOR );
 		}
 		
 		if ( role.equals( UserRole.MODERATOR ) ) 
@@ -179,7 +178,11 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 			authorities.add( UserRole.MODERATOR );
 		}
 		
-		authorities.add( UserRole.USER );
+		if ( role.equals( UserRole.USER ) ) 
+		{
+			authorities.add( UserRole.USER );
+		}
+
 		return authorities;
 	}
 	

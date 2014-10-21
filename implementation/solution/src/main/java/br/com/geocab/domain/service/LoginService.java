@@ -3,7 +3,6 @@
  */
 package br.com.geocab.domain.service;
 
-import java.util.logging.Logger;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,9 @@ import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.repository.account.IUserRepository;
@@ -26,11 +27,9 @@ import br.com.geocab.domain.repository.account.IUserRepository;
 
 @Service
 @Transactional
-//@PreAuthorize("hasRole('"+UserRole.ADMINISTRADOR_VALUE+"')")
 @RemoteProxy(name="loginService")
 public class LoginService
 {
-	
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
@@ -52,12 +51,6 @@ public class LoginService
 	 */
 	@Autowired
 	private IUserRepository userRepository;
-	
-	/**
-	 * Logger
-	 */
-	private static final Logger LOG = Logger.getLogger( AccountService.class.getName() );
-
 	
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
@@ -83,38 +76,25 @@ public class LoginService
 		return this.userRepository.save( user );
 	}
 	
-	/**
-	 * Update User
-	 * 
-	 * @param User
-	 * @return User
-	 */
-	public User updateUser( User user )
-	{			
-		try{
-			User dbUser = this.userRepository.findOne(user.getId());
-			
-			//Update database user
-			dbUser.setEmail(user.getEmail());
-			dbUser.setName(user.getName());
-			dbUser.setRole(user.getRole());
-			dbUser.setEnabled(true);
-			
-			if( !user.getPassword().isEmpty() ){ //if set new password
-				final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( dbUser ) ); 
-				dbUser.setPassword( encodedPassword );
-			}
-						
-			user = this.userRepository.save( dbUser );//save data in database
-			
-		}
-		catch ( DataIntegrityViolationException e )
-		{
-			LOG.info( e.getMessage() );
-			final String error = e.getCause().getCause().getMessage();
-		}
-		
+	@Transactional(readOnly = true)
+	public User findUserByEmail( String userName )
+	{
+		return this.userRepository.findByEmail( userName );
+	}
+	
+	public User authenticatedUser()
+	{
+		User user = this.userRepository.save(ContextHolder.getAuthenticatedUser());		
 		return user;
 	}
-
+	
+	/**
+	 * Realiza o logout do sistema
+	 * @param user
+	 */
+	public void logout()
+	{
+		SecurityContextHolder.clearContext();
+		SecurityContextHolder.createEmptyContext();
+	}
 }

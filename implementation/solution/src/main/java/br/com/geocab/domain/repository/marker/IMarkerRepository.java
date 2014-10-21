@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
@@ -37,4 +38,16 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status) " +
 				"FROM Marker marker ")
 	public List<Marker> listAll();
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status) " +
+				"FROM Marker marker "+
+				"LEFT OUTER JOIN marker.layer layer "+
+				"WHERE (layer.id = :layerId) ")
+	public List<Marker> listMarkerByLayer(@Param("layerId") Long layerId);
+	
 }

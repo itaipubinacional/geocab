@@ -646,6 +646,14 @@ input:-moz-placeholder {
 	display: inherit;
 }
 
+.panel-collapse.collapse{
+    display: none;
+}
+
+.panel-collapse.collapse.in{
+    display: inherit;
+}
+
 .search-input {
 	border: 1px solid #cdcdcd;
 	border-right: none;
@@ -2416,3 +2424,13 @@ ul.abn-tree li.abn-tree-row a {
     padding-left: 20px;
     padding-right: 20px;
 }
+
+.addAttribute{
+	margin-bottom: 15px;
+}
+
+
+
+
+
+

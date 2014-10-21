@@ -15,6 +15,8 @@ import javax.validation.constraints.NotNull;
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.layer.Attribute;
@@ -26,7 +28,7 @@ import br.com.geocab.domain.entity.layer.AttributeType;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="MarkerAttribute")
 @Table(schema=IEntity.SCHEMA)
 public class MarkerAttribute extends AbstractEntity implements Serializable
 {

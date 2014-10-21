@@ -60,4 +60,25 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 			"WHERE ( layer.publishedLayer != NULL "
 			+ "AND layer.published = false ) ")
 	public List<Layer> listLayersPublished();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Query(value="SELECT new Layer(layer.id, layer.title, layerGroup) "
+			+ "FROM Layer layer " 
+			+ "LEFT OUTER JOIN layer.dataSource dataSource "
+			+ "LEFT OUTER JOIN layer.layerGroup layerGroup "
+			+ "WHERE ( dataSource.url = NULL AND layer.publishedLayer != NULL  ) " )
+	public List<Layer> listAllInternalLayerGroups();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Query(value="SELECT new Layer(layer.id, layer.title) "
+			+ "FROM Layer layer " 
+			+ "LEFT OUTER JOIN layer.dataSource dataSource "
+			+ "WHERE ( dataSource.url = NULL ) " )
+	public List<Layer> listAllInternalLayers();
 }

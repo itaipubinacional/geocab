@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "User.h"
 #import "ControllerUtil.h"
+#import "AccountDelegate.h"
 
 @interface LoginViewController ()
 
@@ -51,6 +52,11 @@ extern User *loggedUser;
     
     //[self.signInButton setStyle:(GPPSignInButtonStyle)];
     
+    _username.delegate = self;
+    _password.delegate = self;
+    
+    [self.password setReturnKeyType:UIReturnKeyDone];
+    
     self.fbLoginView.delegate = self;
     self.fbLoginView.readPermissions = @[@"public_profile", @"email", @"user_friends"];
     
@@ -63,16 +69,32 @@ extern User *loggedUser;
 }
 
 //Method to make the keyboard disappear when touch happens out of the text field
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [[event allTouches] anyObject];
+    if ([self.username isFirstResponder] && [touch view] != self.username)
+    {
+        [self.username resignFirstResponder];
+    }
+    else if ([self.password isFirstResponder] && [touch view] != self.password)
+    {
+        [self.password resignFirstResponder];
+    }
 }
 
 - (IBAction)login:(id)sender {
     if (self.isFormValid) {
-        User *loggedUser = [[User alloc] init];
-        loggedUser.name = _username.text;
-        loggedUser.email = _password.text;
-        [self authenticateUser:loggedUser];
+        AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/"];
+        [accountDelegate loginWithEmail:_username.text password:_password.text successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+            User *loggedUser = [[User alloc] init];
+            loggedUser = [[result array] objectAtIndex:0];
+            [loggedUser setPassword:_password.text];
+            [self authenticateUser:loggedUser];
+        } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+            UIAlertView *errorMessage = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"") message:NSLocalizedString(@"login.error.message", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [errorMessage show];
+        }];
+        
     }
 }
 
