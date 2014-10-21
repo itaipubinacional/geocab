@@ -446,7 +446,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         anchor: [0.5, 1],
                         anchorXUnits: 'fraction',
                         anchorYUnits: 'fraction',
-                        src: 'http://openlayers.org/api/img/marker.png'
+                        src: 'static/images/marker.png'
                     }))
                 });
 
@@ -1714,7 +1714,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	                       anchor: [0.5, 1],
 	                       anchorXUnits: 'fraction',
 	                       anchorYUnits: 'fraction',
-	                       src: 'http://openlayers.org/api/img/marker.png'
+	                       src: 'static/images/marker.png'
+	                    
 	                   }))
 	               });
 	
