@@ -182,32 +182,4 @@ public class AccountService
 		return user;
 	}
 	
-	/**
-	 * 
-	 * @param credentials This value must be base64 encoded, following the pattern: "email:password"
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public User checkCredentials( String credentials )
-	{
-		try 
-		{
-			credentials = new String( Base64.decode(credentials.getBytes()) );
-			final String email = credentials.substring(0, credentials.indexOf(':'));
-			final String password = credentials.substring(credentials.indexOf(':')+1);
-			
-			final User user = (User) this.userRepository.findByEmail( email );
-			final String encodedPassword = this.passwordEncoder.encodePassword(password, saltSource.getSalt(user) );
-			
-			if ( !user.getPassword().equals(encodedPassword) )
-			{
-				throw new SecurityException("Email and/or password is invalid.");
-			}
-			return user;
-		} 
-		catch ( Exception e ) 
-		{
-			throw new SecurityException("Email and/or password is invalid.");
-		}
-	}
 }

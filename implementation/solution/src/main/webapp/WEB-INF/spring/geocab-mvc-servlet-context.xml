@@ -58,7 +58,7 @@
 	<context:component-scan  
 		base-package="br.com.geocab.application.controller"/>
 		
-		<context:component-scan  
+	<context:component-scan  
 		base-package="br.com.geocab.application.restful"/>
 		
 	<!-- Social -->
