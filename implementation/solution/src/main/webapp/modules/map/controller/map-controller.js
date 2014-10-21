@@ -435,7 +435,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         anchor: [0.5, 1],
                         anchorXUnits: 'fraction',
                         anchorYUnits: 'fraction',
-                        src: 'http://openlayers.org/api/img/marker.png'
+                        src: 'static/images/marker.png'
                     }))
                 });
 
@@ -1615,8 +1615,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.insertMarker = function(){    	
     	
-    	if (!$scope.form('sidebarMarker').$valid){
-    		 
+    	if (!$scope.form('sidebarMarker').$valid){    		 
     		return;
     	}
     	
@@ -1701,12 +1700,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	                       anchor: [0.5, 1],
 	                       anchorXUnits: 'fraction',
 	                       anchorYUnits: 'fraction',
-	                       src: 'http://openlayers.org/api/img/marker.png'
+	                       src: 'static/images/marker.png'
+	                    
 	                   }))
 	               });
-	
+					
 					var icons = [];
-	
+					
 	     			angular.forEach(result, function(val, ind){
 	                   var iconFeature = new ol.Feature({
 	                       geometry: new ol.geom.Point([  val.latitude , val.longitude]),
@@ -1714,20 +1714,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	                       layerId: layerId
 	                   });	
 	                  
-	                   icons.push(iconFeature);
+	                   icons.push(iconFeature);	     
+	                   
 	     			});
 	
 	     			
 	               var layer = new ol.layer.Vector({
 	                   source: new ol.source.Vector({ features: icons })
 	               });
-	
+	     					          
+	               
 	               layer.setStyle(iconStyle);
 	
 	               $scope.map.addLayer(layer);
 	               
 	               $scope.internalLayers.push({"layer": layer, "id": layerId});
-	               
+	
 	               $scope.$apply();
 	 		
 		          },
