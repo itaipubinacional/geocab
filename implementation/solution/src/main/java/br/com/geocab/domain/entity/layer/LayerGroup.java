@@ -34,7 +34,7 @@ import br.com.geocab.domain.entity.IEntity;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="LayerGroup")
 @Table(schema=IEntity.SCHEMA, uniqueConstraints= @UniqueConstraint(columnNames={"name", "layer_group_upper_id"}))
 public class LayerGroup extends AbstractEntity implements Serializable, ITreeNode
 {
@@ -146,6 +146,7 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 		this.setId(id);
 		this.setName(name);
 	}
+	
 	
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS

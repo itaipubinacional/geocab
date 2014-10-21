@@ -119,20 +119,15 @@
 
  	<!-- DWR - This is required if you want to configure any beans not managed by Spring.-->
 	<dwr:configuration>
+		<dwr:convert type="bean" class="java.lang.StackTraceElement"/>
 		<dwr:convert type="exception" class="java.lang.Exception"/>
-		<dwr:convert type="object" class="java.lang.StackTraceElement"/>
-		<dwr:convert type="enum" class="org.springframework.data.domain.Direction" javascript="Direction"/>
-		<dwr:convert type="bean" class="org.springframework.data.domain.Sort$Order" javascript="Order"/>
-		<dwr:convert type="bean" class="org.springframework.data.domain.Sort" javascript="Sort"/>
+		
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageImpl" javascript="PageImpl"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.PageRequest" javascript="PageRequest"/>
-		<dwr:convert type="bean" class="br.com.geocab.domain.entity.datasource.DataSource" javascript="DataSource"/>
-		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.LayerGroup" javascript="LayerGroup"/>
-		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.Layer" javascript="Layer"/>
-		<dwr:convert type="bean" class="br.com.geocab.domain.entity.account.User" javascript="User"/>
-		<dwr:convert type="bean" class="br.com.geocab.domain.entity.marker.Marker" javascript="Marker"/>
-		<dwr:convert type="bean" class="br.com.geocab.domain.entity.marker.MarkerAttribute" javascript="MarkerAttribute"/>
-		<dwr:convert type="bean" class="br.com.geocab.domain.entity.layer.Attribute" javascript="Attribute"/>
+		<dwr:convert type="bean" class="org.springframework.data.domain.Sort" javascript="Sort"/>
+		<dwr:convert type="enum" class="org.springframework.data.domain.Sort$Direction"/>
+		<dwr:convert type="enum" class="org.springframework.data.domain.Sort$NullHandling"/>
+		<dwr:convert type="bean" class="org.springframework.data.domain.Sort$Order" javascript="Order"/>
 	</dwr:configuration>
 
 	<!--
@@ -221,4 +216,17 @@
 	<bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
+    
+    <!-- 
+		JCR ModeShape - MetaFile
+	-->
+	<bean id="metaFileRepository" 
+		class="br.com.geocab.infrastructure.jcr.MetaFileRepository"/>
+		
+	<bean id="modeShapeRepositoryFactory" class="br.com.geocab.infrastructure.jcr.modeshape.ModeShapeRepositoryFactory">
+       <property name="configuration" value="classpath:jcr-modeshape-config.json"/>
+    </bean>
+    
+	<bean id="modeShapeSessionFactory" 
+		class="br.com.geocab.infrastructure.jcr.modeshape.ModeShapeSessionFactory"/>
 </beans>

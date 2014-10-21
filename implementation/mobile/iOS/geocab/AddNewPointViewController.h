@@ -11,7 +11,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "SelectLayerViewController.h"
 
-@interface AddNewPointViewController: UIViewController <UITableViewDelegate, UITableViewDataSource, FDTakeDelegate, UIGestureRecognizerDelegate, LayerSelectDelegate>
+@interface AddNewPointViewController: UIViewController <UITableViewDelegate, UITableViewDataSource, FDTakeDelegate, UIGestureRecognizerDelegate, LayerSelectDelegate, UIScrollViewDelegate, UITextFieldDelegate, UITextViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *pointName;
 @property (weak, nonatomic) IBOutlet UITextView *pointDescription;

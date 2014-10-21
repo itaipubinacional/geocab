@@ -119,6 +119,7 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
 		if ( !$scope.form().$valid ) 
 		{
 			$scope.msg = {type:"danger", text: $translate("layer-group-popup.Please-enter-a-name-for-the-group") , dismiss:true};
+			$scope.fadeMsg();
 			return;
 		}
 		
@@ -132,6 +133,7 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
 				if( layerGroups[i].name.toUpperCase() == $scope.currentEntity.name.toUpperCase() && layerGroups[i].id != $scope.currentEntity.id )
 				{
 					$scope.msg = {type:"danger", text:  $translate("layer-group-popup.Already-have-a-group-with-this-name-at-the-same-level") , dismiss:true};
+					$scope.fadeMsg();
 					return;
 				}
 			}
@@ -139,7 +141,8 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
 			if( isEqual == true )
 			{
 				$scope.msg = {type:"warning", text: $translate("layer-group-popup.Already-exists-a-group-with-this-name-on-another-level-Want-to-save-anyway-?"), dismiss:true};
-                $scope.currentState = $scope.CONFIRM_STATE;
+				scope.fadeMsg();
+				$scope.currentState = $scope.CONFIRM_STATE;
 				isEqual = false;
 				return;
 			}
@@ -194,4 +197,13 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
 		$scope.msg = null;
 		$modalInstance.close(null);
 	};
+
+	$scope.fadeMsg = function(){
+    	$("div.msg").show();
+		  
+    	setTimeout(function(){
+	  		$("div.msg").fadeOut();
+	  	}, 3000);
+    }
+
 };

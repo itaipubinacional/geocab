@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -31,6 +32,9 @@ public class NavDrawerListAdapter extends ArrayAdapter {
 	private ArrayList<Layer> navDrawerItemsSearch;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     private WebView webViewMap;
+
+    private int selectedItemCount = 0;
+    private final int limitCheckList = 3;
 
     public NavDrawerListAdapter(Context context, int resource, Object[] objects) {
         super(context, resource);
@@ -81,81 +85,84 @@ public class NavDrawerListAdapter extends ArrayAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
     {
+        ViewHolder viewHolder;
+
         if (convertView == null)
         {
             LayoutInflater mInflater = (LayoutInflater)
                     context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+
+            viewHolder = new ViewHolder();
+            viewHolder.networkImageViewLegend = (NetworkImageView) convertView.findViewById(R.id.network_image_view_legend);
+            viewHolder.txtTitle = (TextView) convertView.findViewById(R.id.text_view_title_layer);
+            viewHolder.checkBoxLayer = (CheckBox) convertView.findViewById(R.id.checkbox_layer);
+
+            convertView.setTag(viewHolder);
+
+        }
+        else
+        {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         if (imageLoader == null)
         {
             imageLoader = AppController.getInstance().getImageLoader();
         }
-        NetworkImageView networkImageViewLegend = (NetworkImageView) convertView
-                .findViewById(R.id.network_image_view_legend);
 
-        TextView txtTitle = (TextView) convertView.findViewById(R.id.text_view_title_layer);
-        CheckBox checkBoxLayer = (CheckBox) convertView.findViewById(R.id.checkbox_layer);
+        Layer layer = (Layer) getItem(position);
+        viewHolder.checkBoxLayer.setTag(layer);
+        viewHolder.txtTitle.setText(layer.getTitle());
+        viewHolder.networkImageViewLegend.setImageUrl(layer.getLegend(), imageLoader);
 
-        checkBoxLayer.setTag(getItem(position));
+        viewHolder.checkBoxLayer.setChecked(layer.getIsChecked());
 
-        txtTitle.setText(navDrawerItems.get(position).getTitle());
-
-        // thumbnail image
-        networkImageViewLegend.setImageUrl(navDrawerItems.get(position).getLegend(), imageLoader);
-
-
-        checkBoxLayer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        viewHolder.checkBoxLayer.setOnCheckedChangeListener(null);
+        viewHolder.checkBoxLayer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 CheckBox checkBoxLayer = (CheckBox) buttonView;
+                Layer layer = (Layer) checkBoxLayer.getTag();
 
-                if( isChecked )
+                if( (isChecked && layer.getIsChecked()) || (!isChecked && !layer.getIsChecked()) )
                 {
-                    Layer layer = (Layer) checkBoxLayer.getTag();
-
-                    layer.setIsChecked(isChecked);
-
-                    int index = layer.getName().indexOf(":");
-                    int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-                    String typeLayer = layer.getName().substring(0,index);
-                    String nameLayer = layer.getName().substring(index+1,layer.getName().length());
-                    String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"/wms";
-
-                    webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\",\""+layer.getIsChecked()+"\")");
-
+                    return;
                 }
+
+                if( isChecked && !layer.getIsChecked() )
+                {
+                    if( selectedItemCount >= limitCheckList )
+                    {
+                        Toast.makeText(NavDrawerListAdapter.this.context, "Limite maximo de seleções", Toast.LENGTH_LONG).show();
+                        checkBoxLayer.setChecked(false);
+                        return;
+                    }
+
+                    layer.setIsChecked(true);
+                    selectedItemCount++;
+                } else if( !isChecked && layer.getIsChecked() )
+                {
+                    layer.setIsChecked(false);
+                    selectedItemCount--;
+                }
+
+                //layer.setIsChecked(isChecked);
+
+                int index = layer.getName().indexOf(":");
+                int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
+                String typeLayer = layer.getName().substring(0,index);
+                String nameLayer = layer.getName().substring(index+1,layer.getName().length());
+                String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"/wms";
+
+                webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\",\""+layer.getIsChecked()+"\")");
+
             }
         });
 
-//        checkBoxLayer.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                CheckBox checkBoxLayer = (CheckBox) v;
-//
-//                if( checkBoxLayer.isChecked() )
-//                {
-//                    Layer layer = (Layer) checkBoxLayer.getTag();
-//
-//                    layer.setIsChecked(checkBoxLayer.isChecked());
-//
-//                    int index = layer.getName().indexOf(":");
-//                    int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-//                    String typeLayer = layer.getName().substring(0,index);
-//                    String nameLayer = layer.getName().substring(index+1,layer.getName().length());
-//                    String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"/wms";
-//
-//                    webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\",\""+layer.getIsChecked()+"\")");
-//
-//                }
-//
-//            }
-//        });
-        
+        viewHolder.checkBoxLayer.setChecked(layer.getIsChecked());
+
         return convertView;
 	}
 
@@ -165,7 +172,6 @@ public class NavDrawerListAdapter extends ArrayAdapter {
      */
     public void filter(String charText)
     {
-        charText = charText.toLowerCase(Locale.getDefault());
         this.navDrawerItems.clear();
         if (charText.length() == 0)
         {
@@ -175,13 +181,19 @@ public class NavDrawerListAdapter extends ArrayAdapter {
         {
             for (Layer layer : this.navDrawerItemsSearch)
             {
-                if ( layer.getTitle().toLowerCase(Locale.getDefault()).contains(charText))
+                if ( layer.getTitle().toLowerCase(Locale.getDefault()).contains(charText.toLowerCase(Locale.getDefault())))
                 {
                     this.navDrawerItems.add(layer);
                 }
             }
         }
         notifyDataSetChanged();
+    }
+
+    static class ViewHolder {
+        TextView txtTitle;
+        NetworkImageView networkImageViewLegend;
+        CheckBox checkBoxLayer;
     }
 
 }

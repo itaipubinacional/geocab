@@ -10,6 +10,6 @@
 
 @implementation Layer
 
-@synthesize id, name, title, legend, selected;
+@synthesize id, name, title, legend, selected, dataSource;
 
 @end

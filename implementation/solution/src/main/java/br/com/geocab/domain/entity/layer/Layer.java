@@ -4,6 +4,7 @@
 package br.com.geocab.domain.entity.layer;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -14,6 +15,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -23,11 +25,11 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.datasource.DataSource;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 
@@ -38,7 +40,7 @@ import br.com.geocab.domain.entity.datasource.DataSource;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="Layer")
 @Table(schema=IEntity.SCHEMA)
 public class Layer extends AbstractEntity implements Serializable, ITreeNode
 {
@@ -95,6 +97,11 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	@Column
 	private int orderLayer;
 	/**
+	 * Icon of {@link Layer}
+	 */
+	@Column
+	private String icon;
+	/**
 	 * {@link MapScale} minimum of {@link Layer}
 	 */
 	@NotNull
@@ -121,8 +128,11 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * Draft {@link Layer} that originated the published {@link Layer}
 	 */
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.REMOVE})
+	@OneToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
 	private Layer publishedLayer;
+	
+	@OneToMany(mappedBy="layer", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	private List<Attribute> attributes = new ArrayList<Attribute>();
 	
 	/**
 	 * Field that informs if the {@link Layer} is published
@@ -164,6 +174,31 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setOrderLayer(orderLayer);
 	}
 	
+	
+	/**
+	 * 
+	 * @param id
+	 * @param title
+	 */
+	public Layer( Long id, String title )
+	{
+		this.setId(id);
+		this.setTitle(title);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param title
+	 * @param group
+	 */
+	public Layer( Long id, String title, LayerGroup group )
+	{
+		this.setId(id);
+		this.setTitle(title);
+		this.setLayerGroup(group);
+	}
+	
 	/**
 	 * 
 	 * @param id
@@ -191,6 +226,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
 	}
+
 	
 	/**
 	 * 
@@ -507,8 +543,38 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	{
 		this.published = published;
 	}
-	
-	
 
+	/**
+	 * @return the attributes
+	 */
+	public List<Attribute> getAttributes()
+	{
+		return attributes;
+	}
+
+	/**
+	 * @param attributes the attributes to set
+	 */
+	public void setAttributes(List<Attribute> attributes)
+	{
+		this.attributes = attributes;
+	}
+
+	/**
+	 * @return the icon
+	 */
+	public String getIcon()
+	{
+		return icon;
+	}
+
+	/**
+	 * @param icon the icon to set
+	 */
+	public void setIcon(String icon)
+	{
+		this.icon = icon;
+	}
+	
 	
 }

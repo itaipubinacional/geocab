@@ -23,10 +23,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.ExternalLayer;
@@ -50,6 +52,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
  */
 
 @Service
+@Transactional
 @RemoteProxy(name="layerGroupService")
 public class LayerGroupService
 {
@@ -90,6 +93,7 @@ public class LayerGroupService
 	 * @param layerGroup
 	 * @return layerGroup
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public LayerGroup insertLayerGroup( LayerGroup layerGroup )
 	{
 		layerGroup.setPublished(false);
@@ -103,6 +107,7 @@ public class LayerGroupService
 	 * @param layerGroup
 	 * @return layerGroup
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public LayerGroup updateLayerGroup( LayerGroup layerGroup )
 	{
 		return this.layerGroupRepository.save( layerGroup );
@@ -115,6 +120,7 @@ public class LayerGroupService
 	 * @param List<layerGroup>
 	 * @return
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void saveAllLayersGroup( List<LayerGroup> layerGroup )
 	{
 		this.prioritizeLayersGroup( layerGroup, null );
@@ -138,6 +144,7 @@ public class LayerGroupService
 	 * 
 	 * @param List<layerGroup>
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void saveAllParentLayerGroup(List<LayerGroup> layerGroup)
 	{
 		List<LayerGroup> layersGroups = this.layerGroupRepository.listAllParentLayerGroup();
@@ -154,6 +161,7 @@ public class LayerGroupService
 	 * 
 	 * @param List<layerGroup>
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void publishLayerGroup(List<LayerGroup> layersGroup)
 	{
 		this.saveAllLayersGroup(layersGroup); // save layersGroup
@@ -192,6 +200,7 @@ public class LayerGroupService
 	/**
 	 * Mï¿½todo que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void populateChildrenInLayerGroupPublished()
 	{
 		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listAllLayersGroupPublished();
@@ -209,6 +218,7 @@ public class LayerGroupService
 	 * @param gruposCamadasPublicados
 	 * @param grupoCamadaPublicadosSuperior
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void removeLayerGroupPublished( LayerGroup layerGroupPublished )
 	{
 		if ( layerGroupPublished.getLayersGroup() != null )
@@ -232,6 +242,7 @@ public class LayerGroupService
 	 * @param grupoCamadaOriginal
 	 * @param grupoCamadaPaiPublicado
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void recursive( LayerGroup layerGroupOriginal, LayerGroup layerGroupUpperPublished )
 	{
 		final Long layerGroupOriginalId = layerGroupOriginal.getId();
@@ -320,6 +331,7 @@ public class LayerGroupService
 	 * @param layerGroups
 	 * @param layerGroupUpper
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void prioritizeLayersGroup( List<LayerGroup> layerGroups, LayerGroup layerGroupUpper )
 	{
 		if ( layerGroups != null )
@@ -340,6 +352,7 @@ public class LayerGroupService
 	 * 
 	 * @param layerGroups
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void prioritizeLayers( List<LayerGroup> layerGroups )
 	{
 		if ( layerGroups != null )
@@ -369,6 +382,7 @@ public class LayerGroupService
 	 * 
 	 * @param id
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void removeLayerGroup( Long id )
 	{
 		final LayerGroup layerGroup = this.layerGroupRepository.findOne(id);
@@ -456,7 +470,10 @@ public class LayerGroupService
 						for(int j = 0; j < layerGroup.getLayers().size(); j++)
 						{
 							// traz a legenda da camada do GeoServer
-							layerGroup.getLayers().get(j).setLegend((getLegendLayerFromGeoServer(layerGroup.getLayers().get(j))));
+							if( layerGroup.getLayers().get(j).getDataSource().getUrl() != null ) {
+								layerGroup.getLayers().get(j).setLegend((getLegendLayerFromGeoServer(layerGroup.getLayers().get(j))));	
+							}
+							
 						}
 					}
 				}
@@ -491,6 +508,27 @@ public class LayerGroupService
 	public List<LayerGroup> listAllLayerGroups()
 	{
 		return this.layerGroupRepository.findAll();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public List<Layer> listAllInternalLayerGroups()
+	{
+		return this.layerRepository.listAllInternalLayerGroups();
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public List<Layer> listAllInternalLayers()
+	{
+		return this.layerRepository.listAllInternalLayers();
 	}
 	
 	/**
@@ -607,7 +645,9 @@ public class LayerGroupService
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
-			layer.setLegend(getLegendLayerFromGeoServer(layer));
+			if(layer.getDataSource().getUrl() != null ) {
+				layer.setLegend(getLegendLayerFromGeoServer(layer));	
+			}
 		}
 		
 		return layers;
@@ -628,6 +668,7 @@ public class LayerGroupService
 	 * @param layer
 	 * @return
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer insertLayer( Layer layer )
 	{
 		layer.setLayerGroup(this.findLayerGroupById(layer.getLayerGroup().getId()));
@@ -641,13 +682,36 @@ public class LayerGroupService
 	 * @param camada
 	 * @return camada
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer updateLayer( Layer layer )
 	{
 		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setLayerGroup(layer.getLayerGroup());
 		
-		/* Na atualizaï¿½ï¿½o nï¿½o ï¿½ permitido modificar a fonte de dados, camada e tï¿½tulo, dessa forma, 
-		Os valores originais sï¿½o mantidos. */
+		final List<Attribute> attributesByLayer = this.attributeRepository.listAttributeByLayer(layer.getId());
+	
+		for(Attribute attribute : attributesByLayer) 
+		{
+			Boolean attributeDeleted = true;
+			
+			for(Attribute attributeInLayer : layer.getAttributes()) 
+			{
+				if(	attributeInLayer.getId().equals(attribute.getId()) ) 
+				{
+					attributeDeleted = false;
+				}
+			}
+			
+			if( attributeDeleted ) 
+			{
+				final Attribute attr = this.attributeRepository.findOne( attribute.getId() );
+				this.attributeRepository.delete( attr );
+			}
+			
+		}
+		
+		/* Na atualização não foi permitido modificar a fonte de dados, camada e títuulo, dessa forma, 
+		Os valores originais são mantidos. */
 		layer.setDataSource(layerDatabase.getDataSource());
 		layer.setName(layerDatabase.getName());
 		
@@ -659,6 +723,7 @@ public class LayerGroupService
 	 * 
 	 * @param id
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void removeLayer( Long id )
 	{	
 		this.layerRepository.delete( id );
@@ -677,7 +742,9 @@ public class LayerGroupService
 		final Layer layer = this.layerRepository.findOne(id);
 		
 		// traz a legenda da camada do GeoServer
-		layer.setLegend(getLegendLayerFromGeoServer(layer));
+		if( layer.getDataSource().getUrl() != null ) {
+			layer.setLegend(getLegendLayerFromGeoServer(layer));	
+		}
 		
 		return layer;
 	}
@@ -725,13 +792,17 @@ public class LayerGroupService
 	 * @param url
 	 * @return
 	 */
-	public String listAllFeatures(String url)
+	public List<String> listAllFeatures(List<String>  listUrls)
 	{
 		this.template = new RestTemplate();
+		List<String> listFeatures = new ArrayList<String>();
 		
-		String features = this.template.getForObject(url, String.class);
+		for (String url : listUrls)
+		{
+			listFeatures.add(this.template.getForObject(url, String.class));
+		}
 		
-		return features;
+		return listFeatures;
 	}
 	
 	
@@ -739,6 +810,7 @@ public class LayerGroupService
 	 * 
 	 * @param grupoCamadas
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void removeLayersGroupPublishedEmpty( LayerGroup layerGroup )
 	{
 		if ( layerGroup.getLayersGroup() != null )
