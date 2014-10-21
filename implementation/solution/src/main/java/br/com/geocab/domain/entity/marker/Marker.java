@@ -22,6 +22,7 @@ import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.layer.Layer;
 
 /**
@@ -59,6 +60,9 @@ public class Marker extends AbstractEntity implements Serializable
 	
 	@ManyToOne(fetch=FetchType.EAGER, optional=true)
 	private Layer layer;
+	
+	@ManyToOne(fetch=FetchType.EAGER, optional=true)
+	private User user;
 	
 	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
@@ -99,6 +103,25 @@ public class Marker extends AbstractEntity implements Serializable
 		this.setStatus(status);
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @param latitude
+	 * @param longitude
+	 * @param status
+	 * @param user
+	 */
+	public Marker( Long id, String latitude, String longitude, StatusMarker status, Layer layer, User user)
+	{
+		this.setId(id);
+		this.setLatitude(latitude);
+		this.setLongitude(longitude);
+		this.setStatus(status);
+		user.setPassword("");
+		user.setEmail("");
+		this.setUser(user);
+		this.setLayer(layer);
+	}
 	
 	/**
 	 * @return the latitude
@@ -189,6 +212,22 @@ public class Marker extends AbstractEntity implements Serializable
 	public void setImage(FileTransfer image)
 	{
 		this.image = image;
+	}
+
+	/**
+	 * @return the user
+	 */
+	public User getUser()
+	{
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user)
+	{
+		this.user = user;
 	}
 	
 }
