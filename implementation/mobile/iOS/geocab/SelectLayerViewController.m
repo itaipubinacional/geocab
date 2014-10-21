@@ -11,12 +11,15 @@
 #import "Layer.h"
 #import "LayerTableViewCell.h"
 #import "ControllerUtil.h"
+#import "User.h"
 
 @interface SelectLayerViewController ()
 
 @property (retain, nonatomic) NSArray *layers;
 @property (nonatomic, retain) NSMutableDictionary *sections;
 @property (nonatomic, retain) UITableView *tableView;
+
+extern User *loggedUser;
 
 @end
 
@@ -76,7 +79,7 @@
         [self arrangeArrayInSections:_layers];
         [self.tableView reloadData];
         
-    } userName:@"admin@geocab.com.br" password:@"admin"];
+    } userName:loggedUser.email password:loggedUser.password];
     
     
 }

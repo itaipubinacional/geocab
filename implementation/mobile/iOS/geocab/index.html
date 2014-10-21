@@ -23,6 +23,35 @@
 </head>
 <body style="margin: 0">
 
+	<!-- Include the markup -->
+	<div class="bellows">
+		<!-- The Accordion Items -->
+		<div class="bellows__item">
+			<div class="bellows__header">
+				<!-- Item Header - Content can be whatever you want -->
+			</div>
+			<div class="bellows__content">
+				<!-- Item Content - Content can be whatever you want -->
+			</div>
+		</div>
+		<div class="bellows__item">
+			<div class="bellows__header">
+				<h3>Header</h3>
+			</div>
+			<div class="bellows__content">
+				<p>Content</p>
+			</div>
+		</div>
+		<div class="bellows__item">
+			<div class="bellows__header">
+				<h3>Header</h3>
+			</div>
+			<div class="bellows__content">
+				<p>Content</p>
+			</div>
+		</div>
+	</div>
+
 	<div id="map" class="map">
 
 	</div>
@@ -79,13 +108,6 @@
 		
 		var element = document.getElementById('popup');
 
-		var popup = new ol.Overlay({
-		  element: element,
-		  positioning: 'bottom-center',
-		  stopEvent: false
-		});
-		map.addOverlay(popup);
-
 		// display popup on click
 		map.on('click', function(evt) {
 		  var feature = map.forEachFeatureAtPixel(evt.pixel,
@@ -106,19 +128,6 @@
 			$(element).popover('destroy');
 		  }
 		});
-
-		// change mouse cursor when over marker
-		//$(map .getViewport()).on('mousemove', function(e) {
-// 		  var pixel = map.getEventPixel(e.originalEvent);
-// 		  var hit = map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-// 			return true;
-// 		  });
-// 		  if (hit) {
-// 			map.getTarget().style.cursor = 'pointer';
-// 		  } else {
-// 			map.getTarget().style.cursor = '';
-// 		  }
-// 		});
 
 		function tapholdHandler( event ){
 			var getPosition = false;
@@ -183,12 +192,12 @@
 		function showLayer(url, name, checked) {
 			if( checked == 'true') {
 				var wmsSource = new ol.source.TileWMS({
-				url: url,
-				params: {'LAYERS': name},
+					url: url,
+					params: {'LAYERS': name},
 				});
 
 				var wmsLayer = new ol.layer.Tile({
-				source: wmsSource
+					source: wmsSource
 				});
 
 				map.addLayer(wmsLayer);
