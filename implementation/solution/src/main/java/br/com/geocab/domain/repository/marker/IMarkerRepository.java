@@ -44,10 +44,23 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status) " +
+	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status, layer, user) " +
 				"FROM Marker marker "+
 				"LEFT OUTER JOIN marker.layer layer "+
-				"WHERE (layer.id = :layerId) ")
-	public List<Marker> listMarkerByLayer(@Param("layerId") Long layerId);
+				"LEFT OUTER JOIN marker.user user "+
+				"WHERE (layer.id = :layerId AND (marker.status = 0 OR user.id = :userId) ) ")
+	public List<Marker> listMarkerByLayer(@Param("layerId") Long layerId, @Param("userId") Long userId);
+	
+	/**
+	 * 
+	 * @param layerId
+	 * @param userId
+	 * @return
+	 */
+	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status, layer, user) " +
+				"FROM Marker marker "+
+				"LEFT OUTER JOIN marker.layer layer "+
+				"LEFT OUTER JOIN marker.user user ")
+	public List<Marker> listMarkerByLayerAll();
 	
 }

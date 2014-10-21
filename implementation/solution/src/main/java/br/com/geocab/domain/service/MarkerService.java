@@ -22,7 +22,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
@@ -85,7 +87,10 @@ public class MarkerService
 	public Marker insertMarker( Marker marker ) throws IOException, RepositoryException
 	{
 		try{
+			User user = ContextHolder.getAuthenticatedUser();
+			
 			marker.setStatus(StatusMarker.PENDING);
+			marker.setUser(user);
 			marker = this.markerRepository.save( marker );
 			this.uploadImg(marker.getImage(), marker.getId());
 		}
@@ -189,6 +194,11 @@ public class MarkerService
 		return this.markerRepository.findOne( id );
 	}
 	
+	public User getUserMe(){
+		User u = ContextHolder.getAuthenticatedUser();
+		return u;
+	}
+	
 	/**
 	 * Method to find an {@link Marker} by layer
 	 * 
@@ -199,7 +209,21 @@ public class MarkerService
 	@Transactional(readOnly = true)
 	public List<Marker> listMarkerByLayer( Long layerId )
 	{
-		return this.markerRepository.listMarkerByLayer( layerId );
+		User user = ContextHolder.getAuthenticatedUser();
+	
+		List<Marker> listMarker = null;
+		
+		if(user != null) {
+			 
+			if( user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) {
+				listMarker = this.markerRepository.listMarkerByLayerAll();
+			} else {
+				listMarker = this.markerRepository.listMarkerByLayer( layerId, user.getId() );
+			}
+			
+		}
+		
+		return listMarker;
 	}
 	
 	
