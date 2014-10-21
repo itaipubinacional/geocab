@@ -726,7 +726,8 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void removeLayer( Long id )
 	{	
-		this.layerRepository.delete( id );
+		final Layer attr = this.layerRepository.findOne( id );
+		this.layerRepository.delete( attr );
 	}
 	
 	/**
