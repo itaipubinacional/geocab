@@ -59,24 +59,66 @@
 	               <div class="sidebar-coloredbar"></div>
 	               <span ng-click="toggleSidebarMarkerDetail(300, 'closeButton');" class="icon itaipu-icon-close sidebar-close"></span>
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
-	                    <span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{ markerResultDetail.header.title }}</span>
+	                    <span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{ marker.layer.title }}</span>
                         <br style="clear: both;">
                         <br>
-                        <span style="float: left">{{ markerResultDetail.header.layer }}</span> <span style="float: right">{{ markerResultDetail.header.date }}</span>
+                        <span style="float: left">Criado por: <b>{{ marker.user.name }}</b></span> <span style="float: right">{{ marker.layer.created | date:'dd/MM/yyyy'  }}</span>
                         <hr>
-                       
-                       <button style="float: right;" class="btn btn-default" ng-click="removeMarker()"><i class="itaipu-icon-delete"></i></button>
-                       <button style="float: right; margin-right: 5px" class="btn btn-default" ng-click="toggleSidebarMarkerUpdate(300, '#menu-item-1')"><i class="itaipu-icon-edit"></i></button>
-                       <button style="float: right; margin-right: 5px; color: red;" ng-click="disableMarker()" ng-if="markerDetail.data.status == 'ACCEPTED' || markerDetail.data.status == 'PENDING'" class="btn btn-default"><i class="glyphicon glyphicon-ban-circle"></i></button>
-                       <button style="float: right; margin-right: 5px; color: #00981F" ng-click="enableMarker()" ng-if="markerDetail.data.status == 'REFUSED' || markerDetail.data.status == 'PENDING' " class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></button>
+                        
+                       <button ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)" style="float: right;" class="btn btn-default" ng-click="removeMarker()"><i class="itaipu-icon-delete"></i></button>
+                       <button ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)" style="float: right; margin-right: 5px" class="btn btn-default" ng-click="toggleSidebarMarkerUpdate(300, '#menu-item-1')"><i class="itaipu-icon-edit"></i></button>
+                       <button ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')" style="float: right; margin-right: 5px; color: red;" ng-click="disableMarker()" class="btn btn-default"><i class="glyphicon glyphicon-ban-circle"></i></button>
+                       <button ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'REFUSED' || marker.status == 'PENDING')" style="float: right; margin-right: 5px; color: #00981F" ng-click="enableMarker()"  class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></button>
                        <br>
                        <img ng-src="{{ imgResult }}" style="width: 100%; height: 200px; margin-top: 12px;">
                        <br><br>
                       	
-                       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet urna eu nulla lacinia convallis. Morbi at gravida ligula, at sagittis quam</p>
-                      	
-                       <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
-                       <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
+                       <div ng-repeat="markerAttribute in attributesByMarker" style="position: relative">
+                    
+                       		 <ng-form name="ngSideMarker" default-button="buttonUpdate">
+                       		 <label >{{ markerAttribute.attribute.name }}</label> 
+                       		 
+                       		 <input type="number" 
+                       		 		name="number1"
+                       		 		ng-if="markerAttribute.attribute.type == 'NUMBER'" 
+                       		 		class="form-control" 
+                       		 		ng-model="markerAttribute.value"
+                       		 		value="{{ markerAttribute.value }}"
+                       		 		ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+									required
+									ng-disabled="true"
+                       		 		>
+                       		 
+                       		 <input type="date" 
+                       		 		name="date1"
+                       		 		ng-if="markerAttribute.attribute.type == 'DATE'" 
+                       		 		class="form-control" 
+                       		 		ng-model="markerAttribute.value"
+                       		 		ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+                       		 		required
+                       		 		ng-disabled="true"
+                       		 		>
+                       		 		
+                       		 <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'" >
+                       		 		
+                       		  		<input ng-disabled="true" type="radio" name="boolean" ng-model="markerAttribute.value" value="Yes">
+                       		  		<input ng-disabled="true" type="radio" name="boolean" ng-model="markerAttribute.value" value="No">
+                       		 </div>
+
+                       		 <input type="text" 
+                       		 		ng-if="markerAttribute.attribute.type == 'TEXT'" 
+                       		 		name="texto"
+                       		 		class="form-control" 
+                       		 		ng-model="markerAttribute.value"
+                       		 		ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+                       		 		required
+                       		 		ng-disabled="true"
+                       		 		>
+							
+                       		 		
+							 <ng-form>
+							 
+                       </div>
 
 	                </div>
                 </div>
