@@ -607,7 +607,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.allLayers = [];
 
                 for(var i =0; i < result.length ; ++i){
-                    $scope.allLayers.push( parseNode( result[i] ) )
+                   $scope.allLayers.push( parseNode( result[i] ) )
                 }
 
                 if( $scope.allLayers[0] )
@@ -690,6 +690,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		} else {
     			$scope.removeInternalLayer(node.value);
     		}
+    		return;
     	}
     	
         if( node && node.type == 'camada' && !node.pesquisa){
@@ -1335,17 +1336,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.screenMarkerOpenned = false;
         }
     	
-    	markerService.findImgByMarker(1, {
-  			 callback : function(result) {
-  				 console.log(result);
-  				 $scope.imgResult = result;
-  	          },
-  	          errorHandler : function(message, exception) {
-  	              $scope.message = {type:"error", text: message};
-  	              $scope.$apply();
-  	          }
-	    	});
-    	
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
     	 * */
@@ -1411,11 +1401,28 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	});
     	
     	
-    		$scope.toggleSidebar(time, element, '#sidebar-marker-update');
+    		$scope.toggleSidebar(time, '', '#sidebar-marker-update');
     	
     };
     
     $scope.toggleSidebarMarkerDetail = function (time, element){
+    	
+    	if(element == "closeButton") {
+            $scope.screenMarkerOpenned = false;
+            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
+            return;
+        }
+    	
+    	markerService.findImgByMarker($scope.markerDetail.data.id, {
+ 			 callback : function(result) {
+ 				 
+ 				 $scope.imgResult = result;
+ 	          },
+ 	          errorHandler : function(message, exception) {
+ 	              $scope.message = {type:"error", text: message};
+ 	              $scope.$apply();
+ 	          }
+	    	});
     	
     	markerService.findAttributeByMarker($scope.markerDetail.data.id, {
 		  callback : function(result) {
@@ -1429,9 +1436,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 					  $scope.markerResultDetail.header.date = (date.getDate() < 10 ? "0" : "") + date.getDate() + "/" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "/" + date.getFullYear();
 					  $scope.markerResultDetail.header.layer = val.attribute.layer.name;
 				  }
-				  
 			  })
-			  //$scope.$apply();
+			  
+			  $scope.$apply();
 			 
           },
           errorHandler : function(message, exception) {
@@ -1440,21 +1447,19 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
           }
     	});
     	
-    	if(element == "closeButton") {
-            $scope.screenMarkerOpenned = false;
-            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
-            return;
-        }
-    	
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
     	 * */
+    	
+    	if($scope.slideActived == '#sidebar-marker-detail') return;
+    	
     	if($scope.slideActived == '#sidebar-layers') {
     		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
     		
     		$timeout(function(){
         		$scope.toggleSidebar(time, '', '#sidebar-marker-detail');
-        	}, 400)
+        	}, 400);
+    		
     	} else {
     		$scope.toggleSidebar(time, '', '#sidebar-marker-detail');
     	}
@@ -1496,7 +1501,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
 	    }
 	    $scope.lastActive = element;
-	    $scope.slideActived = slide;
+	    
+	    if(element == "closeButton"){
+	    	$scope.slideActived = '';
+	    } else {
+	    	$scope.slideActived = slide;
+	    }
+	    
     }
 
     /*-------------------------------------------------------------------
@@ -1811,17 +1822,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.setPhotoMarker = function(element) {
     	
-    	 markerService.uploadImg(element, {
-     		  callback : function(result) {
-     	
-     			
-	          },
-	          errorHandler : function(message, exception) {
-	              $scope.message = {type:"error", text: message};
-	              $scope.$apply();
-	          }
-     	});
-    	 
+    	$scope.currentEntity.image = element;
+    	
+    	$scope.readURL(element);
     }
     
     $scope.enableMarker = function() {
@@ -1904,5 +1907,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	});
     	
     }
+    
+    $scope.readURL = function(input){
+
+        if (input.files && input.files[0] && input.files[0].size < 200000) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+            	console.log(e);
+                $('#marker-image').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
 };
+/**
+ * Função responsável por carregar a foto do usuário na tela no momento em que foi selecionada
+ */
+
 

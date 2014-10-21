@@ -477,10 +477,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                         $scope.listLayersByFilters($scope.data.filter, $scope.currentPage.pageable);
                     }
 
-                    $scope.msg = {type: "success", text: $translate('admin.datasource.The-register')+' "'+ layer.nome + '" '+$translate('admin.datasource.was-successfully-deleted')+'.', dismiss: true};
+                    $scope.msg = {type: "success", text: $translate('admin.datasource.The-register')+' "'+ layer.name + '" '+$translate('admin.datasource.was-successfully-deleted')+'.', dismiss: true};
+                         			  
+      			  	$scope.fadeMsg();
                 },
                 errorHandler: function (message, exception) {
                     $scope.msg = {type: "danger", text: message, dismiss: true};
+                    $scope.fadeMsg();                   
+                    
                     $scope.$apply();
                 }
             });
@@ -488,7 +492,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Configura o pageRequest conforme o componente visual pager
+     * Configura o pageRequest conforme o coponente visual pager
      * e chama o serviçoe de listagem, considerando o filtro corrente na tela.
      *
      * @see currentPage
@@ -538,29 +542,33 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         
         if (!$scope.form().$valid) {
             $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
+            $scope.fadeMsg();
             return;
         }
         
-        layer.name = layer.title;
+        if ( layer.legend == null ) {
+        	layer.name = layer.title;
+            
+            angular.forEach($scope.attributes, function(value, index){
+            	value.layer = layer;
+            })
+            
+            layer.attributes = $scope.attributes;	
+        }
         
-        angular.forEach($scope.attributes, function(value, index){
-        	value.layer = layer;
-        	//if( value.attributeDefault ) delete(value.attributeDefault);
-        })
-        
-        layer.attributes = $scope.attributes;
-
         layerGroupService.insertLayer(layer, {
             callback: function (result) {
 				$scope.currentState = $scope.LIST_STATE;
                 $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
                 $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
+                $scope.fadeMsg();
                 $scope.$apply();
                 $scope.saveGroups();
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -794,4 +802,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         $scope.attributes.splice(index, 1);
     }
+    
+    $scope.fadeMsg = function(){
+    	$("div.msg").show();
+		  
+    	setTimeout(function(){
+	  		$("div.msg").fadeOut();
+	  	}, 3000);
+    }
+    
 };

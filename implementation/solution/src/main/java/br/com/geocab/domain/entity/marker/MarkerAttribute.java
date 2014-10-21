@@ -28,7 +28,7 @@ import br.com.geocab.domain.entity.layer.AttributeType;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="MarkerAttribute")
 @Table(schema=IEntity.SCHEMA)
 public class MarkerAttribute extends AbstractEntity implements Serializable
 {

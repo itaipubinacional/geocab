@@ -31,7 +31,7 @@ import br.com.geocab.domain.entity.AbstractEntity;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="User")
 public class User extends AbstractEntity implements Serializable, UserDetails
 {
 	/**

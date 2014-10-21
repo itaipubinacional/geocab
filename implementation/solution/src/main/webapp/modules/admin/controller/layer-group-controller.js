@@ -133,11 +133,13 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                 $scope.listLayerGroup();
                 isNeedSave = false;
                 $scope.msg = {type:"success", text: $translate("layer-group-view.Ordering-the-draft-layer-group-has-been-saved-successfully"), dismiss:true};
+                $scope.fadeMsg();
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {
                 console.error( message, exception );
                 $scope.message = {type:"error", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -150,11 +152,13 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                 $scope.listLayerGroup();
                 isNeedSave = false;
                 $scope.msg = {type:"success", text: $translate("layer-group-view.Layer-group-succesfully-published"), dismiss:true};
+                $scope.fadeMsg();
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {
                 console.error( message, exception );
                 $scope.message = {type:"error", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -178,11 +182,13 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 && scope.$modelValue.camadas && scope.$modelValue.camadas.length > 0)
         {
             $scope.msg = {type:"danger", text: $translate("layer-group-view.Is-not-possible-to-remove-layers-groups-that-have-layers"), dismiss:true};
+            $scope.fadeMsg();
             return;
         } else
         if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 )
         {
             $scope.msg = {type:"danger", text: $translate("layer-group-view.Is-not-possible-to-remove-layers-groups-that-have-children"), dismiss:true};
+            $scope.fadeMsg();
             return;
         }
 
@@ -232,6 +238,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         {
             $scope.msg = null;
             $scope.msg = {type:"danger", text: $translate("layer-group-view.Please-save-the-ordination-before-creating-or-editing-a-group"), dismiss:true};
+            $scope.fadeMsg();
             return;
         }
 
@@ -382,6 +389,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                 if( destNodes.$modelValue[i].nodes && destNodes.$modelValue[i].name == sourceNode.$modelValue.name && destNodes.$modelValue[i].id != sourceNode.$modelValue.id )
                 {
                     $scope.msg = {type:"danger", text: $translate("layer-group-popup.Already-have-a-group-with-this-name-at-the-same-level"), dismiss:true};
+                    $scope.fadeMsg();
                     event.source.nodeScope.$$apply = false;
                 }
             }
@@ -464,5 +472,13 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         return angular.element(document.getElementById("tree-root")).scope();
     };
 
+    $scope.fadeMsg = function(){
+		$("div.msg").show();
+		  
+		  	setTimeout(function(){
+		  		$("div.msg").fadeOut();
+		  	}, 3000);
+	}
+    
 };
 
