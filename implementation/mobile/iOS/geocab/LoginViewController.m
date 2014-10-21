@@ -88,6 +88,7 @@ extern User *loggedUser;
         [accountDelegate loginWithEmail:_username.text password:_password.text successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
             User *loggedUser = [[User alloc] init];
             loggedUser = [[result array] objectAtIndex:0];
+            [loggedUser setPassword:_password.text];
             [self authenticateUser:loggedUser];
         } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
             UIAlertView *errorMessage = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"") message:NSLocalizedString(@"login.error.message", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
