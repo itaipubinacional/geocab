@@ -106,12 +106,6 @@
 
 	}
 
-	function showToast(message){
-
-		app.showOtherMarker(message);
-		return false;
-	}
-
 	function showOther(lat, lon)
 	{
 		var iconFeature = new ol.Feature({
@@ -148,13 +142,30 @@
 
 			var getPosition = false;
 
+			app.vibrateOnSelect();
+
 			map.on('click', function(evt) {
 
-			 if( !getPosition )
-			 {
-				app.showOtherMarker(evt.coordinate);
-				getPosition = true;
-			 }
+			 //if( !getPosition )
+			 //{
+			//	app.showOtherMarker(evt.coordinate);
+			//	getPosition = true;
+			 //}
+
+            if( !getPosition )
+            {
+                     app.showInformation();
+
+                 var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+                return feature;
+                });
+                if (feature) {
+                var geometry = feature.getGeometry();
+                var coord = geometry.getCoordinates();
+                }
+
+                getPosition = true;
+            }
 
 			});
 		}
