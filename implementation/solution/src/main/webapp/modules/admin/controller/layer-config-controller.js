@@ -344,14 +344,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         /**
          * Attributes default
          * */
-        var attribute = new Attribute();
+        /*var attribute = new Attribute();
         attribute.name = "Título";
         attribute.type = "TEXT";
         attribute.required = "true";
-        attribute.attributeDefault = true;
+        attribute.attributeDefault = true;*/
          
         $scope.attributes = [];
-        $scope.attributes.push(attribute);
+        //$scope.attributes.push(attribute);
         
         $scope.originalGroups = [];
         $scope.selectedGroups = [];
