@@ -27,7 +27,7 @@ import br.com.geocab.domain.entity.IEntity;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="DataSource")
 @Table(schema=IEntity.SCHEMA)
 public class DataSource extends AbstractEntity implements Serializable
 {

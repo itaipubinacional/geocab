@@ -276,10 +276,14 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 					}
 
 					$scope.msg = {type: "success", text: $translate('admin.users.The-record-was-successfully-inactivated')+'.', dismiss:true};
+					
+					$scope.fadeMsg();
+										
 				},
 				errorHandler : function(message, exception) {
 					$scope.msg = {type:"danger", text: message, dismiss:true};
-					$scope.$apply();
+					$scope.fadeMsg();
+					$scope.$apply();					
 				}
 			});
 		});
@@ -314,9 +318,12 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 					}
 
 					$scope.msg = {type: "success", text: $translate('admin.users.The-record-was-successfully-enabled') + '.', dismiss:true};
+				
+					$scope.fadeMsg();
 				},
 				errorHandler : function(message, exception) {
 					$scope.msg = {type:"danger", text: message, dismiss:true};
+					$scope.fadeMsg();
 					$scope.$apply();
 				}
 			});
@@ -341,6 +348,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		}); 
@@ -358,6 +366,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 
 		if ( !$scope.form().$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
+			$scope.fadeMsg();
 			return;
 		}
 
@@ -366,10 +375,12 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
 				$scope.msg = {type:"success", text: $translate('admin.users.User-successfully-inserted') + '!', dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		});
@@ -407,6 +418,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		});
@@ -420,6 +432,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 
 		if ( !$scope.form().$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
+			$scope.fadeMsg();
 			return;
 		}
 
@@ -428,6 +441,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
 				$scope.msg = {type:"success", text: $translate('admin.users.User-updated-successfully')+ '!', dismiss:true};
+				$scope.fadeMsg();
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
@@ -464,5 +478,15 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 			return $translate("admin.users.User")
 		}
 	}
+	
+	$scope.fadeMsg = function(){
+		$("div.msg").show();
+		  
+		  	setTimeout(function(){
+		  		$("div.msg").fadeOut();
+		  	}, 3000);
+	};
+	
+	
 	
 };

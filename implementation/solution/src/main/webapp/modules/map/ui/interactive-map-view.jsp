@@ -1,10 +1,16 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 
 <span id="marker-point" class="glyphicon glyphicon-map-marker sidebar-icon" style="display: none;"></span>
 
 <section id="main-content" style="height: 100%">
-	<!--Message -->
+	<!--Message -->	
     <div class="msgMap" ng-include="'static/libs/eits-directives/alert/alert.html'" ></div>
     
     <div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
@@ -64,13 +70,13 @@
                        <button style="float: right; margin-right: 5px; color: red;" ng-click="disableMarker()" ng-if="markerDetail.data.status == 'ACCEPTED' || markerDetail.data.status == 'PENDING'" class="btn btn-default"><i class="glyphicon glyphicon-ban-circle"></i></button>
                        <button style="float: right; margin-right: 5px; color: #00981F" ng-click="enableMarker()" ng-if="markerDetail.data.status == 'REFUSED' || markerDetail.data.status == 'PENDING' " class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></button>
                        <br>
-                       <img src="" style="width: 100%; height: 200px; margin-top: 12px;">
+                       <img ng-src="{{ imgResult }}" style="width: 100%; height: 200px; margin-top: 12px;">
                        <br><br>
                       	
                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet urna eu nulla lacinia convallis. Morbi at gravida ligula, at sagittis quam</p>
                       	
                        <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
-                       <!-- <label>Descri玢o</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
+                       <!-- <label>Descri莽茫o</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
 	                </div>
                 </div>
@@ -110,7 +116,7 @@
 						</select>
 						
 						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
-                       		 		style="top: -20px">Campo Obrigat髍io</span>
+                       		 		style="top: -20px">Campo Obrigat贸rio</span>
                        	
                        <br>
                        
@@ -154,16 +160,16 @@
                        		 		>
 							
 							 <span class="tooltip-validation" ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"  
-                       		 		style="top: 3px">Campo Obrigat髍io</span>
+                       		 		style="top: 3px">Campo Obrigat贸rio</span>
                        		 
                        		 <span class="tooltip-validation" ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"  
-                       		 		style="top: 3px">Campo Obrigat髍io</span>
+                       		 		style="top: 3px">Campo Obrigat贸rio</span>
                        		 		
                        		 <span class="tooltip-validation" ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"  
-                       		 		style="top: 3px">Campo Obrigat髍io</span>
+                       		 		style="top: 3px">Campo Obrigat贸rio</span>
                        		 
                        		 <span class="tooltip-validation" ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"  
-                       		 		style="top: 3px">Campo Obrigat髍io</span>
+                       		 		style="top: 3px">Campo Obrigat贸rio</span>
                        		 		
 							 <ng-form>
 							 
@@ -171,7 +177,7 @@
 
                       
                        <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
-                       <!-- <label>Descri玢o</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
+                       <!-- <label>Descri莽茫o</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
     					<br>
     					<hr>
@@ -191,8 +197,7 @@
           
           
 		  <div id="sidebar-marker-create" class="sidebar-style">
-		  	<form name="sidebarMarker"  method="post"  default-button="buttonInsert" novalidate>
-		  					
+		  	<form name="sidebarMarker"  method="post"  default-button="buttonInsert" novalidate>			
 		  		<div>
 	               <div class="sidebar-coloredbar"></div>
 	               <span ng-click="clearFcMarker()" class="icon itaipu-icon-close sidebar-close"></span>
@@ -220,7 +225,7 @@
 						</select>
 						
 						<span class="tooltip-validation" ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"  
-                       		 		style="top: -20px">Campo Obrigat髍io</span>
+                       		 		style="top: -20px">Campo Obrigat贸rio</span>
                     
                        <br>
                        
@@ -262,26 +267,29 @@
                        		 		>
 							
 							 <span class="tooltip-validation" ng-show=" ngSideMarker.texto.$error.required && ngSideMarker.$submitted "  
-                       		 		style="top: 3px">Campo Obrigat髍io</span>
+                       		 		style="top: 3px">Campo Obrigat贸rio</span>
                        		 
                        		 <span class="tooltip-validation" ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"  
-                       		 		style="top: 3px">Campo Obrigat髍io</span>
+                       		 		style="top: 3px">Campo Obrigat贸rio</span>
                        		 		
                        		 <span class="tooltip-validation" ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"  
-                       		 		style="top: 3px">Campo Obrigat髍io</span>
+                       		 		style="top: 3px">Campo Obrigat贸rio</span>
                        		 
                        		 <span class="tooltip-validation" ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"  
-                       		 		style="top: 3px">Campo Obrigat髍io</span>
+                       		 		style="top: 3px">Campo Obrigat贸rio</span>
                        		 		
 							 <ng-form>
                        </div>
 
                       
                        <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
-                       <!-- <label>Descri玢o</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
+                       <!-- <label>Descri莽茫o</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
-    					<br>
+						<img id="marker-image">
+    					<br>	
     					<hr>
+    					
+    					
     					
                        <input type="file" id="upload-input" style="display:none;"
                        accept="image/*"
@@ -398,3 +406,5 @@
 </section>
 
 </html>
+
+
