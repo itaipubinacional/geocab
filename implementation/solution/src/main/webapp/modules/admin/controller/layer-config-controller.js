@@ -344,14 +344,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         /**
          * Attributes default
          * */
-        var attribute = new Attribute();
+        /*var attribute = new Attribute();
         attribute.name = "Título";
         attribute.type = "TEXT";
         attribute.required = "true";
-        attribute.attributeDefault = true;
+        attribute.attributeDefault = true;*/
          
         $scope.attributes = [];
-        $scope.attributes.push(attribute);
+        //$scope.attributes.push(attribute);
         
         $scope.originalGroups = [];
         $scope.selectedGroups = [];
@@ -477,10 +477,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                         $scope.listLayersByFilters($scope.data.filter, $scope.currentPage.pageable);
                     }
 
-                    $scope.msg = {type: "success", text: $translate('admin.datasource.The-register')+' "'+ layer.nome + '" '+$translate('admin.datasource.was-successfully-deleted')+'.', dismiss: true};
+                    $scope.msg = {type: "success", text: $translate('admin.datasource.The-register')+' "'+ layer.name + '" '+$translate('admin.datasource.was-successfully-deleted')+'.', dismiss: true};
+                         			  
+      			  	$scope.fadeMsg();
                 },
                 errorHandler: function (message, exception) {
                     $scope.msg = {type: "danger", text: message, dismiss: true};
+                    $scope.fadeMsg();                   
+                    
                     $scope.$apply();
                 }
             });
@@ -488,7 +492,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Configura o pageRequest conforme o componente visual pager
+     * Configura o pageRequest conforme o coponente visual pager
      * e chama o serviçoe de listagem, considerando o filtro corrente na tela.
      *
      * @see currentPage
@@ -538,6 +542,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         
         if (!$scope.form().$valid) {
             $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
+            $scope.fadeMsg();
             return;
         }
         
@@ -557,11 +562,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
                 $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
+                $scope.fadeMsg();
                 $scope.$apply();
                 $scope.saveGroups();
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -795,4 +802,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         $scope.attributes.splice(index, 1);
     }
+    
+    $scope.fadeMsg = function(){
+    	$("div.msg").show();
+		  
+    	setTimeout(function(){
+	  		$("div.msg").fadeOut();
+	  	}, 3000);
+    }
+    
 };

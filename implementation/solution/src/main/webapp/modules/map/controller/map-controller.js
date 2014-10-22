@@ -74,6 +74,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.screenMarkerOpenned = false;
     
     $scope.marker;
+    
+    /**
+     * User credentials
+     * */
+    $scope.userMe;
 
     /**
      * Variável que armazena o tipo do mapa selecionado pelo usuário - GMAP ou OSM
@@ -290,10 +295,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 
+		/**
+		 * Caso não existe uma nav bar
+		 * */
+		if( !$("#navbar-administrator").length ) {
+			$(".sidebar-style").css("top","60px");
+		}
+		
         /**
          * Configuração do mapa openlayers
          */
-
         $scope.olMapDiv = document.getElementById('olmap');
         $scope.map = new ol.Map({
 
@@ -401,7 +412,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         		
         	/* if click on the marker */
         	if( feature ){
-        		$scope.markerDetail = {data: feature.getProperties().marker, layerId: feature.getProperties().layerId};
+        		$scope.marker = feature.getProperties().marker;
             	$scope.toggleSidebarMarkerDetail(300);	
         	}
 
@@ -435,7 +446,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         anchor: [0.5, 1],
                         anchorXUnits: 'fraction',
                         anchorYUnits: 'fraction',
-                        src: 'http://openlayers.org/api/img/marker.png'
+                        src: 'static/images/marker.png'
                     }))
                 });
 
@@ -495,6 +506,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
         });
+        /**
+		 * authenticated user
+		 * */
+        markerService.getUserMe({
+    		callback : function(result) {
+    			$scope.userMe = result;
+            },
+            errorHandler : function(message, exception) {
+                $scope.message = {type:"error", text: message};
+                $scope.$apply();
+            }
+    	});
 
     };
 
@@ -607,7 +630,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.allLayers = [];
 
                 for(var i =0; i < result.length ; ++i){
-                    $scope.allLayers.push( parseNode( result[i] ) )
+                   $scope.allLayers.push( parseNode( result[i] ) )
                 }
 
                 if( $scope.allLayers[0] )
@@ -690,6 +713,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		} else {
     			$scope.removeInternalLayer(node.value);
     		}
+    		return;
     	}
     	
         if( node && node.type == 'camada' && !node.pesquisa){
@@ -1352,7 +1376,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     };
     
     $scope.toggleSidebarMarkerUpdate = function (time, element){
-    	$scope.currentEntity = $scope.markerDetail.data;
+    	$scope.currentEntity = $scope.marker;
     	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
@@ -1412,7 +1436,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             return;
         }
     	
-    	markerService.findImgByMarker($scope.markerDetail.data.id, {
+    	markerService.findImgByMarker($scope.marker.id, {
  			 callback : function(result) {
  				 
  				 $scope.imgResult = result;
@@ -1423,20 +1447,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
  	          }
 	    	});
     	
-    	markerService.findAttributeByMarker($scope.markerDetail.data.id, {
+    	markerService.findAttributeByMarker($scope.marker.id, {
 		  callback : function(result) {
-			  $scope.markerResultDetail = result;
-			  $scope.markerResultDetail.header = {};
-			  angular.forEach(result, function(val, ind){
-				  
-				  if(val.attribute.type == "TEXT" && val.attribute.name == "Title") {
-					  $scope.markerResultDetail.header.title = val.value;
-					  var date = new Date(val.marker.created);
-					  $scope.markerResultDetail.header.date = (date.getDate() < 10 ? "0" : "") + date.getDate() + "/" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "/" + date.getFullYear();
-					  $scope.markerResultDetail.header.layer = val.attribute.layer.name;
-				  }
-			  })
-			  
+			  $scope.attributesByMarker = result;
+			 
 			  $scope.$apply();
 			 
           },
@@ -1700,17 +1714,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	                       anchor: [0.5, 1],
 	                       anchorXUnits: 'fraction',
 	                       anchorYUnits: 'fraction',
-	                       src: 'http://openlayers.org/api/img/marker.png'
+	                       src: 'static/images/marker.png'
+	                    
 	                   }))
 	               });
 	
 					var icons = [];
 	
-	     			angular.forEach(result, function(val, ind){
+	     			angular.forEach(result, function(marker, index){
 	                   var iconFeature = new ol.Feature({
-	                       geometry: new ol.geom.Point([  val.latitude , val.longitude]),
-	                       marker: val,
-	                       layerId: layerId
+	                       geometry: new ol.geom.Point([  marker.latitude , marker.longitude]),
+	                       marker: marker,
 	                   });	
 	                  
 	                   icons.push(iconFeature);
@@ -1738,42 +1752,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     } 
     
-    /*$scope.loadMarkers = function(){
-    	markerService.listAll({
-      		callback : function(result) {
-      			
-      			angular.forEach(result, function(val, ind){
-      				$("body").append('<span id="marker-point-'+ind+'" class="marker-point glyphicon glyphicon-map-marker"></span>');
-      			
-    	  			var marker = new ol.Overlay({
-    	                position: [val.latitude, val.longitude],
-    	                positioning: 'center-center',
-    	                element: document.getElementById('marker-point-'+ind),
-    	                stopEvent: false
-    	            });
-    	  			
-    	            //$scope.map.addOverlay(marker);
-    	            
-    	            $("#marker-point-"+ind).dblclick(function(event){
-    	            	//$(".marker-point").css("color","#0077bf");
-    	            	//event.stopPropagation();
-    	            	$scope.markerDetail = {data: val, overlay: marker};
-    	            	$scope.toggleSidebarMarkerDetail(300, '#menu-item-1');
-    	            	//$(this).css("color","#FF0000");
-    	  			})
-    	  			
-    	            
-    	            $scope.$apply();
-      			})
-      			
-              },
-              errorHandler : function(message, exception) {
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
-              }
-      	});
-    }*/
-    
     $scope.removeMarker = function(){
     	
 		var dialog = $modal.open( {
@@ -1789,11 +1767,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    	
 		dialog.result.then( function(result) {
 	
-	    	markerService.removeMarker($scope.markerDetail.data.id, {
+	    	markerService.removeMarker($scope.marker.id, {
 	      		  callback : function(result) {
 	      			//$scope.map.removeOverlay($scope.markerDetail.overlay);
 	      			
-		  			$scope.removeInternalLayer($scope.markerDetail.layerId, function(layerId){
+		  			$scope.removeInternalLayer($scope.marker.layer.id, function(layerId){
 	   				   $scope.addInternalLayer(layerId);
 	    			  })
 	      			
@@ -1842,7 +1820,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	dialog.result.then(function(result) {
     		
-    		markerService.enableMarker($scope.markerDetail.data.id, {
+    		markerService.enableMarker($scope.marker.id, {
   			  callback : function(result) {
   				console.log(result);
   				
@@ -1882,7 +1860,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	dialog.result.then(function(result) {
     		
-    		markerService.disableMarker($scope.markerDetail.data.id, {
+    		markerService.disableMarker($scope.marker.id, {
 			  callback : function(result) {
 				console.log(result);
 				

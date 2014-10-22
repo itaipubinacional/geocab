@@ -69,7 +69,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 			+ "FROM Layer layer " 
 			+ "LEFT OUTER JOIN layer.dataSource dataSource "
 			+ "LEFT OUTER JOIN layer.layerGroup layerGroup "
-			+ "WHERE ( dataSource.url = NULL ) " )
+			+ "WHERE ( dataSource.url = NULL AND layer.publishedLayer != NULL  ) " )
 	public List<Layer> listAllInternalLayerGroups();
 	
 	/**

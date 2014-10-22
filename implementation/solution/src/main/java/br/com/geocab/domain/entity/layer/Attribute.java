@@ -4,10 +4,14 @@
 package br.com.geocab.domain.entity.layer;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -17,6 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -59,8 +64,11 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * Layer {@link Layer}
 	 * */
-	@ManyToOne(fetch=FetchType.EAGER, optional=true)
+	@ManyToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
 	private Layer layer;
+	
+	@OneToMany(mappedBy="attribute", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
 
 	public Attribute(){
 		

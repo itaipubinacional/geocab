@@ -38,7 +38,7 @@
 	
 
 	<security:authorize ifAnyGranted="ADMINISTRATOR">
-		<div class="navbar navbar-2" style="z-index: 1001;">
+		<div id="navbar-administrator" class="navbar navbar-2" style="z-index: 1001;">
 			<div class="navbar-inner border-radius-0">
 	
 				<div class="nav-collapse collapse">

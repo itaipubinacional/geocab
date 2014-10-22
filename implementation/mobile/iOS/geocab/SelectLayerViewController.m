@@ -11,11 +11,15 @@
 #import "Layer.h"
 #import "LayerTableViewCell.h"
 #import "ControllerUtil.h"
+#import "User.h"
 
 @interface SelectLayerViewController ()
 
 @property (retain, nonatomic) NSArray *layers;
 @property (nonatomic, retain) NSMutableDictionary *sections;
+@property (nonatomic, retain) UITableView *tableView;
+
+extern User *loggedUser;
 
 @end
 
@@ -24,18 +28,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.clearsSelectionOnViewWillAppear = NO;
-    
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-//    self.tableView.backgroundColor = [UIColor darkGrayColor];
-//    self.view.backgroundColor = [UIColor darkGrayColor];
-    
     //Navigation Bar
     self.navigationItem.title = NSLocalizedString(@"Layers", @"");
-//    self.navigationController.navigationBar.backgroundColor = [UIColor blackColor];
-
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    [self.view addSubview:self.tableView];
     
     if (self.multipleSelection) {
         UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -47,6 +47,17 @@
         
         UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:@"X" style:UIBarButtonItemStylePlain target:self action:@selector(didFinish)];
         self.navigationItem.rightBarButtonItem = buttonItem;
+        
+        UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        logoutButton.frame = CGRectMake(0, self.view.bounds.size.height-44, 320, 44);
+        logoutButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        logoutButton.backgroundColor = [UIColor lightGrayColor];
+        logoutButton.tintColor = [UIColor whiteColor];
+        
+        [logoutButton addTarget:self action:@selector(logoutMethodCall) forControlEvents:UIControlEventTouchUpInside];
+        
+        [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
+        [self.view addSubview:logoutButton];
         
     } else {
         UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -68,7 +79,7 @@
         [self arrangeArrayInSections:_layers];
         [self.tableView reloadData];
         
-    } userName:@"admin@geocab.com.br" password:@"admin"];
+    } userName:loggedUser.email password:loggedUser.password];
     
     
 }
@@ -132,7 +143,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section]] count];
+//    return [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section]] count];
+    return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -235,48 +247,8 @@
     return [[_layers filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"selected = YES"]] count];
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+-(void)logoutMethodCall {
+    if ([_delegate respondsToSelector:@selector(logoutButtonPressed)]) [_delegate logoutButtonPressed];
+}
 
 @end
