@@ -25,6 +25,7 @@ import br.com.geocab.R;
 import br.com.geocab.controller.app.AppController;
 import br.com.geocab.controller.delegate.MarkerDelegate;
 import br.com.geocab.entity.Layer;
+import br.com.geocab.entity.Marker;
 
 public class NavDrawerListAdapter extends ArrayAdapter {
 
@@ -41,6 +42,8 @@ public class NavDrawerListAdapter extends ArrayAdapter {
     private TextView textViewTotalItems;
 
     private MarkerDelegate markerDelegate;
+
+    private List<Marker> markers;
 
     public NavDrawerListAdapter(Context context, int resource, Object[] objects) {
         super(context, resource);
@@ -163,17 +166,31 @@ public class NavDrawerListAdapter extends ArrayAdapter {
 
                 //layer.setIsChecked(isChecked);
 
-                int index = layer.getName().indexOf(":");
-                int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-                String typeLayer = layer.getName().substring(0,index);
-                String nameLayer = layer.getName().substring(index+1,layer.getName().length());
-                String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"/wms";
+                if( layer.getDataSource().getUrl() != null )
+                {
+                    int index = layer.getName().indexOf(":");
+                    int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
+                    String typeLayer = layer.getName().substring(0,index);
+                    String nameLayer = layer.getName().substring(index+1,layer.getName().length());
+                    String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"/wms";
 
-                webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\",\""+layer.getIsChecked()+"\")");
+                    webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\",\""+layer.getIsChecked()+"\")");
+                }
+                else
+                {
+                    if( layer.getIsChecked() )
+                    {
+                        NavDrawerListAdapter.this.markerDelegate = new MarkerDelegate(NavDrawerListAdapter.this.context, webViewMap, layer.getName() );
+                        NavDrawerListAdapter.this.markerDelegate.listMarkersByLayer(layer.getId());
+                    }
+                    else
+                    {
+                        webViewMap.loadUrl("javascript:closeMarker(\""+ layer.getName() + "\")");
+                    }
 
 
-               NavDrawerListAdapter.this.markerDelegate = new MarkerDelegate(NavDrawerListAdapter.this.context);
-               NavDrawerListAdapter.this.markerDelegate.listLayersPublished(3l);
+                }
+
 
             }
         });

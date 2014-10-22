@@ -22,11 +22,14 @@
 </head>
 <body style="margin: 0">
 
+<span id="oi">a</span>
 <div id="map" class="map"/>
 
 <script type="text/javascript">
 
     var layersAdd = [];
+
+    var markersAdd = [];
 
     var view =  new ol.View({
           center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
@@ -106,33 +109,48 @@
 
 	}
 
-	function showOther(lat, lon)
+	function showMarker(lat, lon, name, markerId)
 	{
-		var iconFeature = new ol.Feature({
-		geometry: new ol.geom.Point([lat, lon]),
-		name: 'Localizacao'
-		});
 
-		//create the style
-		var iconStyle = new ol.style.Style({
-		image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-		size: [48, 48],
-		src: 'http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png'
-		}))
-		});
+        var iconFeature = new ol.Feature({
+        geometry: new ol.geom.Point([lat, lon]),
+        name: 'Localizacao',
+        markerId: markerId
+        });
 
-		var vectorSource = new ol.source.Vector({
-		features: [iconFeature]
-		});
+        //create the style
+        var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+        size: [48, 48],
+        src: 'http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png'
+        }))
+        });
 
-		//add the feature vector to the layer vector, and apply a style to whole layer
-		var vectorLayer = new ol.layer.Vector({
-		source: vectorSource,
-		style: iconStyle
-		});
+        var vectorSource = new ol.source.Vector({
+        features: [iconFeature]
+        });
 
-		map.addLayer(vectorLayer);
+        //add the feature vector to the layer vector, and apply a style to whole layer
+        var vectorLayer = new ol.layer.Vector({
+        source: vectorSource,
+        style: iconStyle
+        });
 
+        map.addLayer(vectorLayer);
+
+        markersAdd.push({'vectorLayer': vectorLayer, 'name': name});
+
+	}
+
+	function closeMarker(name)
+	{
+        for( i in markersAdd )
+            {
+                if( markersAdd[i].name == name )
+                {
+                    map.removeLayer(markersAdd[i].vectorLayer);
+                }
+            }
 	}
 
 	$(function(){
@@ -163,8 +181,9 @@
                 return feature;
                 });
                 if (feature) {
-                var geometry = feature.getGeometry();
-                var coord = geometry.getCoordinates();
+
+                //$('#oi').html(feature.getProperties().layerId);
+                app.showLayerId(parseInt(feature.getProperties().markerId));
                 }
 
                 getPosition = true;

@@ -134,7 +134,9 @@ public class MarkerService
 	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public void removeMarker( Long id )
 	{
-		this.markerRepository.delete( id );
+		Marker marker = this.findMarkerById(id);
+		marker.setDeleted(true);
+		this.markerRepository.save(marker);
 	}
 	
 	/**
@@ -216,7 +218,7 @@ public class MarkerService
 		if(user != null) {
 			 
 			if( user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) {
-				listMarker = this.markerRepository.listMarkerByLayerAll();
+				listMarker = this.markerRepository.listMarkerByLayerAll( layerId );
 			} else {
 				listMarker = this.markerRepository.listMarkerByLayer( layerId, user.getId() );
 			}
@@ -245,8 +247,8 @@ public class MarkerService
 	 * 
 	 * @param id 
 	 */
-	public List<MarkerAttribute> findAttributeByMarker(Long id){
-		return this.markerAttributeRepository.findAttributeByMarker(id);
+	public List<MarkerAttribute> listAttributeByMarker(Long id){
+		return this.markerAttributeRepository.listAttributeByMarker(id);
 	}
 	
 	/**
