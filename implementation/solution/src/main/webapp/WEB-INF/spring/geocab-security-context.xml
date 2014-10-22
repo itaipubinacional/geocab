@@ -26,6 +26,7 @@
 	
 	<!-- Login service -->
 	<security:http pattern="/broker/call/plaincall/loginService.*" security="none"/>
+	<security:http pattern="/broker/call/plaincall/__System.*" security="none"/>
 	<security:http pattern="/broker/interface/loginService.js" security="none"/>
 
     <!-- Translator -->
