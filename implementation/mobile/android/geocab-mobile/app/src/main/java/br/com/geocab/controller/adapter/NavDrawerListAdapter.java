@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import br.com.geocab.R;
 import br.com.geocab.controller.app.AppController;
+import br.com.geocab.controller.delegate.MarkerDelegate;
 import br.com.geocab.entity.Layer;
 
 public class NavDrawerListAdapter extends ArrayAdapter {
@@ -36,6 +37,11 @@ public class NavDrawerListAdapter extends ArrayAdapter {
     private int selectedItemCount = 0;
     private final int limitCheckList = 3;
 
+    private TextView textViewSelectedCountItems;
+    private TextView textViewTotalItems;
+
+    private MarkerDelegate markerDelegate;
+
     public NavDrawerListAdapter(Context context, int resource, Object[] objects) {
         super(context, resource);
 
@@ -43,6 +49,8 @@ public class NavDrawerListAdapter extends ArrayAdapter {
         this.navDrawerItems = new ArrayList<Layer>();
         this.navDrawerItemsSearch = new ArrayList<Layer>();
         this.webViewMap = (WebView) objects[0];
+        this.textViewSelectedCountItems = (TextView) objects[1];
+        this.textViewTotalItems = (TextView) objects[2];
     }
 
 	@Override
@@ -86,6 +94,8 @@ public class NavDrawerListAdapter extends ArrayAdapter {
 	public View getView(int position, View convertView, ViewGroup parent)
     {
         ViewHolder viewHolder;
+        
+        textViewTotalItems.setText(Integer.toString(limitCheckList));
 
         if (convertView == null)
         {
@@ -97,6 +107,7 @@ public class NavDrawerListAdapter extends ArrayAdapter {
             viewHolder.networkImageViewLegend = (NetworkImageView) convertView.findViewById(R.id.network_image_view_legend);
             viewHolder.txtTitle = (TextView) convertView.findViewById(R.id.text_view_title_layer);
             viewHolder.checkBoxLayer = (CheckBox) convertView.findViewById(R.id.checkbox_layer);
+            viewHolder.txtSelectedCountItems = (TextView) convertView.findViewById(R.id.text_view_count_selected_items);
 
             convertView.setTag(viewHolder);
 
@@ -148,6 +159,8 @@ public class NavDrawerListAdapter extends ArrayAdapter {
                     selectedItemCount--;
                 }
 
+                textViewSelectedCountItems.setText(Integer.toString(selectedItemCount));
+
                 //layer.setIsChecked(isChecked);
 
                 int index = layer.getName().indexOf(":");
@@ -157,6 +170,10 @@ public class NavDrawerListAdapter extends ArrayAdapter {
                 String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"/wms";
 
                 webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\",\""+layer.getIsChecked()+"\")");
+
+
+               NavDrawerListAdapter.this.markerDelegate = new MarkerDelegate(NavDrawerListAdapter.this.context);
+               NavDrawerListAdapter.this.markerDelegate.listLayersPublished(3l);
 
             }
         });
@@ -194,6 +211,8 @@ public class NavDrawerListAdapter extends ArrayAdapter {
         TextView txtTitle;
         NetworkImageView networkImageViewLegend;
         CheckBox checkBoxLayer;
+        TextView txtSelectedCountItems;
+        TextView txtTotalItems;
     }
 
 }

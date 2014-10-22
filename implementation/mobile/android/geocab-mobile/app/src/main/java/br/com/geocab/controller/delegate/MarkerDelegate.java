@@ -23,18 +23,16 @@ import java.util.Map;
 import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.controller.app.AppController;
 import br.com.geocab.entity.Layer;
+import br.com.geocab.entity.Marker;
 
 /**
  *
  */
-public class LayerDelegate extends AbstractDelegate
+public class MarkerDelegate extends AbstractDelegate
 {
 
     private final Context context;
 
-    private NavDrawerListAdapter listAdapter;
-
-    private AnimationDrawable animationLoadLayer;
 
 	/*-------------------------------------------------------------------
      * 		 					CONSTRUCTORS
@@ -43,13 +41,11 @@ public class LayerDelegate extends AbstractDelegate
     /**
      *
      */
-    public LayerDelegate(Context context, BaseAdapter adapter)
+    public MarkerDelegate(Context context)
     {
-        super("layergroup");
+        super("marker");
 
         this.context = context;
-
-        this.listAdapter = (NavDrawerListAdapter) adapter;
 
     }
 
@@ -63,11 +59,9 @@ public class LayerDelegate extends AbstractDelegate
     /**
      * @return
      */
-    public void listLayersPublished( AnimationDrawable d )
+    public void listLayersPublished( long layerId )
     {
-        this.animationLoadLayer = d;
-
-        String url = getUrl()+ "/layers";
+        String url = getUrl()+ "/"+layerId+"/markers";
 
         JsonArrayRequest jReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -76,29 +70,23 @@ public class LayerDelegate extends AbstractDelegate
 
                     @Override
                     public void onResponse(JSONArray response) {
-                        ArrayList<Layer> result = new ArrayList<Layer>();
+                        ArrayList<Marker> result = new ArrayList<Marker>();
 
                         for (int i = 0; i < response.length(); i++)
                         {
                             try
                             {
-                                Layer layer = json.fromJson(response.getString(i), Layer.class);
-                                if( layer.getIsChecked() == null )
-                                {
-                                    layer.setIsChecked(false);
-                                }
-                                result.add(layer);
+                                Marker marker = json.fromJson(response.getString(i), Marker.class);
 
-                                LayerDelegate.this.animationLoadLayer.stop();
+                                result.add(marker);
+
 
                             }
                             catch (JSONException e)
                             {
-                                Toast.makeText(LayerDelegate.this.context, "Unable to call service: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MarkerDelegate.this.context, "Unable to call service: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
-                        LayerDelegate.this.listAdapter.setItemList(result);
-                        LayerDelegate.this.listAdapter.notifyDataSetChanged();
 
                     }
                 }, new Response.ErrorListener() {

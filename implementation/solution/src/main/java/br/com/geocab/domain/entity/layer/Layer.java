@@ -131,6 +131,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	@OneToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
 	private Layer publishedLayer;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="layer", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 	
