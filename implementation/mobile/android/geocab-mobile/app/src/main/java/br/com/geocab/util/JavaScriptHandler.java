@@ -27,8 +27,7 @@ public class JavaScriptHandler {
 
     public void showInformation()
     {
-       DialogInformation dialogInformation = new DialogInformation(this.mapActivity);
-        dialogInformation.childSectionView();
+        this.mapActivity.showInformation();
     }
 
 }
