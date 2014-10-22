@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Base64;
 import android.util.Log;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
@@ -33,6 +34,9 @@ public class MarkerDelegate extends AbstractDelegate
 
     private final Context context;
 
+    private static String layerName;
+
+    private static WebView webViewMap;
 
 	/*-------------------------------------------------------------------
      * 		 					CONSTRUCTORS
@@ -41,11 +45,15 @@ public class MarkerDelegate extends AbstractDelegate
     /**
      *
      */
-    public MarkerDelegate(Context context)
+    public MarkerDelegate(Context context, WebView webViewMap, String name)
     {
         super("marker");
 
         this.context = context;
+
+        this.layerName = name;
+
+        this.webViewMap = webViewMap;
 
     }
 
@@ -59,17 +67,17 @@ public class MarkerDelegate extends AbstractDelegate
     /**
      * @return
      */
-    public void listLayersPublished( long layerId )
+    public void listMarkersByLayer( final long layerId )
     {
         String url = getUrl()+ "/"+layerId+"/markers";
 
-        JsonArrayRequest jReq = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
+        JsonArrayRequest jReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
 
                     Gson json = new Gson();
 
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONArray response)
+                    {
                         ArrayList<Marker> result = new ArrayList<Marker>();
 
                         for (int i = 0; i < response.length(); i++)
@@ -78,7 +86,9 @@ public class MarkerDelegate extends AbstractDelegate
                             {
                                 Marker marker = json.fromJson(response.getString(i), Marker.class);
 
-                                result.add(marker);
+                                //result.add(marker);
+
+                                webViewMap.loadUrl("javascript:showMarker(\"" + marker.getLatitude() + "\",\"" + marker.getLongitude() + "\", \""+layerName+"\", \""+marker.getId()+"\")");
 
 
                             }
@@ -112,7 +122,7 @@ public class MarkerDelegate extends AbstractDelegate
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
                 //final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
-                final String credentials = "admin@geocab.com.br:admin";
+                final String credentials = "admin@admin.com:admin";
                 params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
                 params.put("Content-Type","application/x-www-form-urlencoded");
                 return params;

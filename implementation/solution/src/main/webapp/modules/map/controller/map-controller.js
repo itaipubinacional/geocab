@@ -1398,9 +1398,15 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 	
                 })
                 
-                markerService.findAttributeByMarker($scope.currentEntity.id, {
+                markerService.listAttributeByMarker($scope.currentEntity.id, {
 	       			 callback : function(result) {
 	       				$scope.attributesByMarker = result;
+	       				
+	       				angular.forEach(result,function(markerAttribute,index){
+	       					if (markerAttribute.attribute.type == "NUMBER") {
+	       						markerAttribute.value = parseInt(markerAttribute.value);
+	       					}  
+	       				  })
 	  
                         angular.forEach($scope.selectLayerGroup, function(layer,index){
                         		if( layer.layerId == result[0].marker.layer.id ) {
@@ -1447,9 +1453,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
  	          }
 	    	});
     	
-    	markerService.findAttributeByMarker($scope.marker.id, {
+    	markerService.listAttributeByMarker($scope.marker.id, {
 		  callback : function(result) {
-			  $scope.attributesByMarker = result;
+			  $scope.attributesByMarker = result;   
+			  
+			  angular.forEach(result,function(markerAttribute,index){
+				if (markerAttribute.attribute.type == "NUMBER") {
+					markerAttribute.value = parseInt(markerAttribute.value);
+				}  
+			  })
+			  
 			 
 			  $scope.$apply();
 			 
@@ -1697,7 +1710,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	angular.forEach($scope.internalLayers, function(value, index){
 			  if(value.id == layerId) {
 				  $scope.map.removeLayer(value.layer);
-				  $scope.internalLayers.splice(index,0);
+				  $scope.internalLayers.splice(index, 1);
 				 if(typeof callback != 'undefined') {
 					 callback(value.id); 
 				 }
@@ -1709,6 +1722,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	markerService.listMarkerByLayer(layerId, {
 				 callback : function(result) {
+					 
 					var iconStyle = new ol.style.Style({
 	                   image: new ol.style.Icon(({
 	                       anchor: [0.5, 1],
@@ -1772,8 +1786,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	      			//$scope.map.removeOverlay($scope.markerDetail.overlay);
 	      			
 		  			$scope.removeInternalLayer($scope.marker.layer.id, function(layerId){
-	   				   $scope.addInternalLayer(layerId);
-	    			  })
+	   				   	$scope.addInternalLayer(layerId);
+	    			})
 	      			
 	    			$scope.toggleSidebarMarkerDetail(300, 'closeButton');  
 	    			  
@@ -1783,8 +1797,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	      			setTimeout(function(){
 	      			  $("div.msgMap").fadeOut();
 	      			}, 5000);
-	      			
-	      			
 	      			
 		          },
 		          errorHandler : function(message, exception) {
@@ -1822,13 +1834,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
     		markerService.enableMarker($scope.marker.id, {
   			  callback : function(result) {
-  				console.log(result);
-  				
+  				$scope.marker.status = "ACCEPTED";
   				
   				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-enabled"), dismiss: true};
       			$("div.msgMap").show();
-      			  
-      			
       			
       			setTimeout(function(){
       			  $("div.msgMap").fadeOut();
@@ -1862,17 +1871,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
     		markerService.disableMarker($scope.marker.id, {
 			  callback : function(result) {
-				console.log(result);
+				$scope.marker.status = "REFUSED";
 				
 				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
       			$("div.msgMap").show();
-      			  
-      			
       			
       			setTimeout(function(){
       			  $("div.msgMap").fadeOut();
       			}, 5000);
-				
 				
 	          },
 	          errorHandler : function(message, exception) {

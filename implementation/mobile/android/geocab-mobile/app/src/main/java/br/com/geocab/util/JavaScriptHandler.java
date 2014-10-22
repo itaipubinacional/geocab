@@ -30,4 +30,11 @@ public class JavaScriptHandler {
         this.mapActivity.showInformation();
     }
 
+    public void showLayerId(int layerId)
+    {
+        Toast.makeText(this.mapActivity, "LayerId: " + layerId, Toast.LENGTH_SHORT).show();
+    }
+
+
+
 }
