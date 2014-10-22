@@ -28,36 +28,38 @@
             <br>           
             <div class="form-item position-relative" style="width: 300px;">
                 <label class="detail-label" required><spring:message code="admin.users.E-mail"/></label>
-                <input name="address" type="text" id="address" class="form-control"
-                       ng-model="currentEntity.email"
-                       numbers-only
+                <input name="address" type="email" id="address" class="form-control"
+                       ng-model="currentEntity.address"
                        maxlength="255"
                        placeholder="<spring:message code="admin.users.E-mail"/>"
                        required ng-minlength="1"
                        ng-class="{ ngInvalid: form.address.$error.required && (form.$submitted || form.address.$dirty) }"
                        ng-hover
                        autocomplete="off"
-                       
-                      >
+                      />
                 <span ng-show="form.address.$error.required && (form.$submitted || form.address.$dirty)"
                       class="tooltip-validation"><spring:message code="admin.users.E-mail"/> <spring:message code="admin.users.required"/></span>
             </div>
   			<br>
+            
+            <input style="display:none" type="text" name="fakeusernameremembered"/>
+			<input style="display:none" type="password" name="fakepasswordremembered"/>
+            
             <div ng-if="currentState == UPDATE_STATE" class="form-item position-relative" style="width: 200px;">
                 <label class="detail-label"><spring:message code="admin.users.Password"/></label>
                 <input name="password" type="password" class="form-control"
                        placeholder="<spring:message code="admin.users.Password"/>"
-                       ng-model="currentEntity.password"
+                       ng-model="currentEntity.pass"
                        maxlength="144"
                        ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted || form.password.$dirty) }"
                        ng-hover
                        autocomplete="off">
-            </div>
+            </div>            
             <div ng-if="currentState == INSERT_STATE" class="form-item position-relative" style="width: 200px;">
                 <label class="detail-label" required><spring:message code="admin.users.Password"/></label>
                 <input name="password" type="password" class="form-control"
                        placeholder="<spring:message code="admin.users.Password"/>"
-                       ng-model="currentEntity.password"
+                       ng-model="currentEntity.pass"
                        required maxlength="144"
                        ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted || form.password.$dirty) }"
                        ng-hover>
@@ -82,4 +84,6 @@
         </div>
     </form>
 </div>
+
+
 </html>
