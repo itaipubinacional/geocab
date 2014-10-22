@@ -1709,6 +1709,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	markerService.listMarkerByLayer(layerId, {
 				 callback : function(result) {
+					 
 					var iconStyle = new ol.style.Style({
 	                   image: new ol.style.Icon(({
 	                       anchor: [0.5, 1],
@@ -1822,13 +1823,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
     		markerService.enableMarker($scope.marker.id, {
   			  callback : function(result) {
-  				console.log(result);
-  				
+  				$scope.marker.status = "ACCEPTED";
   				
   				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-enabled"), dismiss: true};
       			$("div.msgMap").show();
-      			  
-      			
       			
       			setTimeout(function(){
       			  $("div.msgMap").fadeOut();
@@ -1862,17 +1860,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
     		markerService.disableMarker($scope.marker.id, {
 			  callback : function(result) {
-				console.log(result);
+				$scope.marker.status = "REFUSED";
 				
 				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
       			$("div.msgMap").show();
-      			  
-      			
       			
       			setTimeout(function(){
       			  $("div.msgMap").fadeOut();
       			}, 5000);
-				
 				
 	          },
 	          errorHandler : function(message, exception) {
