@@ -2,12 +2,14 @@ package br.com.geocab.controller.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -33,6 +35,7 @@ import br.com.geocab.R;
 import br.com.geocab.controller.activity.dialog.DialogInformation;
 import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.controller.delegate.LayerDelegate;
+import br.com.geocab.controller.delegate.MarkerDelegate;
 import br.com.geocab.util.GPSTracker;
 import br.com.geocab.util.JavaScriptHandler;
 
@@ -227,6 +230,8 @@ public class MapActivity extends Activity
 
         mDrawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
 
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
         mDrawerList=(ListView) findViewById(R.id.list_slidermenu);
 
         mDrawerList.setTextFilterEnabled(true);
@@ -255,6 +260,8 @@ public class MapActivity extends Activity
             hideSoftKeyboard(MapActivity.this);
 
             invalidateOptionsMenu();
+
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
 
         public void onDrawerOpened(View drawerView)
@@ -262,7 +269,10 @@ public class MapActivity extends Activity
             hideSoftKeyboard(MapActivity.this);
 
             invalidateOptionsMenu();
+
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
+
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
@@ -275,7 +285,13 @@ public class MapActivity extends Activity
 
     public void showOtherMarker(double lat, double lon)
     {
-        webViewMap.loadUrl("javascript:showOther(\""+lat+"\",\""+lon+"\")");
+        webViewMap.loadUrl("javascript:showOther(\"" + lat + "\",\"" + lon + "\")");
+    }
+
+    public void showInformation()
+    {
+            DialogInformation dialogInformation = new DialogInformation(this);
+            dialogInformation.childSectionView();
     }
 
     /**

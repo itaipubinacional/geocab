@@ -138,6 +138,9 @@
 	$(function(){
 		$( "div.map" ).bind( "taphold", tapholdHandler );
 
+		$.event.special.tap.tapholdThreshold = 1000,
+        $.event.special.swipe.durationThreshold = 2000;
+
 		function tapholdHandler( event ){
 
 			var getPosition = false;
