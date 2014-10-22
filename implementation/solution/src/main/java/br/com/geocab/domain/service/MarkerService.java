@@ -247,8 +247,8 @@ public class MarkerService
 	 * 
 	 * @param id 
 	 */
-	public List<MarkerAttribute> findAttributeByMarker(Long id){
-		return this.markerAttributeRepository.findAttributeByMarker(id);
+	public List<MarkerAttribute> listAttributeByMarker(Long id){
+		return this.markerAttributeRepository.listAttributeByMarker(id);
 	}
 	
 	/**

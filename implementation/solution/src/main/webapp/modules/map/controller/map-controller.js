@@ -1398,7 +1398,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 	
                 })
                 
-                markerService.findAttributeByMarker($scope.currentEntity.id, {
+                markerService.listAttributeByMarker($scope.currentEntity.id, {
 	       			 callback : function(result) {
 	       				$scope.attributesByMarker = result;
 	       				
@@ -1453,7 +1453,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
  	          }
 	    	});
     	
-    	markerService.findAttributeByMarker($scope.marker.id, {
+    	markerService.listAttributeByMarker($scope.marker.id, {
 		  callback : function(result) {
 			  $scope.attributesByMarker = result;   
 			  
