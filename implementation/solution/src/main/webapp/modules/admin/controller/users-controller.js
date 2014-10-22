@@ -8,6 +8,7 @@
  */
 function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService , $translate) {
 	
+	
 	/**
 	 * Inject methods, attributes and states inherited of the AbstractCRUDController 
 	 * @see AbstractCRUDController
@@ -186,6 +187,8 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 				$state.go( $scope.LIST_STATE );
 			}
 		}
+		
+		
 	};
 	
 	/**
@@ -204,15 +207,19 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 	 * Boot the state users.insert 
 	 */
 	$scope.changeToInsert = function() {
+		
 		$log.info("changeToInsert");
 
 		//Clear current entity
 		$scope.currentEntity = {};
 		
+		
 		//Default role value
 		$scope.currentEntity.role = 'ADMINISTRATOR';
 		
 		$scope.currentState = $scope.INSERT_STATE;
+		
+		
 	};
 	
 	/**
