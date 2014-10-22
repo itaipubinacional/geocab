@@ -50,10 +50,14 @@ public class LayerGroupRESTful
 		for ( Layer layer : layers )
 		{
 			
-			int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-			String urlGeoserver = layer.getDataSource().getUrl().substring(0, position+10);
+			if( layer.getDataSource().getUrl() != null )
+			{
+				int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
+				String urlGeoserver = layer.getDataSource().getUrl().substring(0, position+10);
+				
+				layer.setLegend( urlGeoserver + Layer.LEGEND_GRAPHIC_URL + layer.getName() + Layer.LEGEND_GRAPHIC_FORMAT );
+			}
 			
-			layer.setLegend( urlGeoserver + Layer.LEGEND_GRAPHIC_URL + layer.getName() + Layer.LEGEND_GRAPHIC_FORMAT );
 		}
 		
 		return layers;
