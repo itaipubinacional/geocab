@@ -1401,6 +1401,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 markerService.findAttributeByMarker($scope.currentEntity.id, {
 	       			 callback : function(result) {
 	       				$scope.attributesByMarker = result;
+	       				
+	       				angular.forEach(result,function(markerAttribute,index){
+	       					if (markerAttribute.attribute.type == "NUMBER") {
+	       						markerAttribute.value = parseInt(markerAttribute.value);
+	       					}  
+	       				  })
 	  
                         angular.forEach($scope.selectLayerGroup, function(layer,index){
                         		if( layer.layerId == result[0].marker.layer.id ) {
@@ -1449,7 +1455,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	markerService.findAttributeByMarker($scope.marker.id, {
 		  callback : function(result) {
-			  $scope.attributesByMarker = result;
+			  $scope.attributesByMarker = result;   
+			  
+			  angular.forEach(result,function(markerAttribute,index){
+				if (markerAttribute.attribute.type == "NUMBER") {
+					markerAttribute.value = parseInt(markerAttribute.value);
+				}  
+			  })
+			  
 			 
 			  $scope.$apply();
 			 
