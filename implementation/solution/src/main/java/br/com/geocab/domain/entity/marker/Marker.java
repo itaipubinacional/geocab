@@ -58,6 +58,8 @@ public class Marker extends AbstractEntity implements Serializable
 	@NotNull
 	private StatusMarker status;
 	
+	private Boolean deleted;
+	
 	@ManyToOne(fetch=FetchType.EAGER, optional=true)
 	private Layer layer;
 	
@@ -228,6 +230,22 @@ public class Marker extends AbstractEntity implements Serializable
 	public void setUser(User user)
 	{
 		this.user = user;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted()
+	{
+		return deleted;
+	}
+
+	/**
+	 * @param deleted the deleted to set
+	 */
+	public void setDeleted(Boolean deleted)
+	{
+		this.deleted = deleted;
 	}
 	
 }

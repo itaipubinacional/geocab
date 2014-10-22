@@ -1697,7 +1697,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	angular.forEach($scope.internalLayers, function(value, index){
 			  if(value.id == layerId) {
 				  $scope.map.removeLayer(value.layer);
-				  $scope.internalLayers.splice(index,0);
+				  $scope.internalLayers.splice(index, 1);
 				 if(typeof callback != 'undefined') {
 					 callback(value.id); 
 				 }
@@ -1773,8 +1773,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	      			//$scope.map.removeOverlay($scope.markerDetail.overlay);
 	      			
 		  			$scope.removeInternalLayer($scope.marker.layer.id, function(layerId){
-	   				   $scope.addInternalLayer(layerId);
-	    			  })
+	   				   	$scope.addInternalLayer(layerId);
+	    			})
 	      			
 	    			$scope.toggleSidebarMarkerDetail(300, 'closeButton');  
 	    			  
@@ -1784,8 +1784,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	      			setTimeout(function(){
 	      			  $("div.msgMap").fadeOut();
 	      			}, 5000);
-	      			
-	      			
 	      			
 		          },
 		          errorHandler : function(message, exception) {
