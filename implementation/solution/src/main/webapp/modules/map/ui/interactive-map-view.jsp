@@ -51,8 +51,9 @@
 			</ul>
 		</div>
 
-		<div id="sidebar-marker-detail" class="sidebar-style"  >
-			<form name="sidebarMarker1" >
+		<div id="sidebar-marker-detail-update" class="sidebar-style"  >
+		
+			<form name="sidebarMarkerDetail" ng-show="screen == 'detail'">
 				<div>
 					<div class="sidebar-coloredbar"></div>
 					<span ng-click="toggleSidebarMarkerDetail(300, 'closeButton');"
@@ -73,9 +74,11 @@
 							<i class="itaipu-icon-delete"></i>
 						</button>
 						<button
+							
 							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
 							style="float: right; margin-right: 5px" class="btn btn-default"
-							ng-click="toggleSidebarMarkerUpdate(300, '#menu-item-1')">
+							ng-click="changeToScreen('update')"
+							>
 							<i class="itaipu-icon-edit"></i>
 						</button>
 						<button
@@ -90,7 +93,7 @@
 							ng-click="enableMarker()" class="btn btn-default">
 							<i class="glyphicon glyphicon-ok"></i>
 						</button>
-						<br> <img ng-src="{{ imgResult }}"
+						<br> <img class="marker-image" ng-src="{{ imgResult }}"
 							style="width: 100%; height: 200px; margin-top: 12px;"> <br>
 						<br>
 
@@ -128,14 +131,19 @@
 					</div>
 				</div>
 			</form>
-		</div>
-
-		<div id="sidebar-marker-update" class="sidebar-style">
-			<form name="sidebarMarkerUpdate" method="post"
+			
+			<form name="sidebarMarkerUpdate" method="post" ng-show="screen == 'update'"
 				default-button="buttonInsert" novalidate>
 				<div>
 					<div class="sidebar-coloredbar"></div>
-					<span ng-click="toggleSidebarMarkerUpdate(300, 'closeButton');"
+					<button
+							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+							style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
+							ng-click="changeToScreen('detail')">
+							<
+						</button>
+						
+					<span ng-click="toggleSidebarMarkerDetail(300, 'closeButton');"
 						class="icon itaipu-icon-close sidebar-close"></span>
 
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
@@ -152,11 +160,9 @@
 							ng-model="currentEntity.layer" chosen class="form-control"
 							ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}"
 							required>
-
-							<!-- <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
-							    <option ng-repeat="layer in group.layers" value="{{ layer.id  }}">{{ layer.title }}</option>	    
-							  </optgroup> -->
-						</select> <span class="tooltip-validation"
+							<option value=""></option>							
+						</select> 
+						<span class="tooltip-validation"
 							ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
 							style="top: -20px">Campo Obrigatório</span> <br>
 
@@ -208,6 +214,10 @@
 						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
 						<br>
+						 <img class="marker-image" ng-src="{{ imgResult }}"
+							style="width: 100%; height: 200px; margin-top: 12px;"> <br>
+						<br>
+						
 						<hr>
 
 						<input type="file" id="upload-input" style="display: none;"
@@ -226,7 +236,6 @@
 				</div>
 			</form>
 		</div>
-
 
 		<div id="sidebar-marker-create" class="sidebar-style">
 			<form name="sidebarMarker" method="post"
@@ -315,7 +324,7 @@
 						<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
 						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
-						<img id="marker-image"> <br>
+						<img class="marker-image"> <br>
 						<hr>
 
 
