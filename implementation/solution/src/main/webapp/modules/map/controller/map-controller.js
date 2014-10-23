@@ -1724,12 +1724,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	markerService.listMarkerByLayer(layerId, {
 				 callback : function(result) {
 					 
+					var iconPath = "static/images/marker.png";
+					 
+					if(result.length > 0) {
+						iconPath = result[0].layer.icon
+					}
+					
 					var iconStyle = new ol.style.Style({
 	                   image: new ol.style.Icon(({
 	                       anchor: [0.5, 1],
 	                       anchorXUnits: 'fraction',
 	                       anchorYUnits: 'fraction',
-	                       src: 'static/images/marker.png'
+	                       src: iconPath
 	                    
 	                   }))
 	               });
