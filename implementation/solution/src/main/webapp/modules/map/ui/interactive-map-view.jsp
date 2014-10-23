@@ -255,12 +255,18 @@
 
 						<div ng-repeat="attribute in attributesByLayer"
 							style="position: relative">
+							
 							<ng-form name="ngSideMarker" default-button="buttonInsert">
-							<label>{{ attribute.name }}</label> <input type="number"
+							<label>{{ attribute.name }}</label> 
+							
+							<input type="number"
 								name="number1" ng-if="attribute.type == 'NUMBER'"
 								class="form-control" ng-model="attribute.value"
-								ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-								required> <input
+								ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+								required
+								> 
+								
+							<input
 								type="date" name="date1" ng-if="attribute.type == 'DATE'"
 								class="form-control" ng-model="attribute.value"
 								ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
@@ -276,19 +282,33 @@
 							<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
 								class="form-control" ng-model="attribute.value"
 								ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-								required> <span
+								required> 
+								
+								<span
 								class="tooltip-validation"
-								ng-show=" ngSideMarker.texto.$error.required && ngSideMarker.$submitted "
-								style="top: 3px">Campo Obrigatório</span> <span
+								ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
+								style="top: 3px">Campo Obrigatório
+								</span> 
+								
+								<span
 								class="tooltip-validation"
 								ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-								style="top: 3px">Campo Obrigatório</span> <span
+								style="top: 3px">Campo Obrigatório
+								</span> 
+								
+								<span
 								class="tooltip-validation"
 								ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-								style="top: 3px">Campo Obrigatório</span> <span
+								style="top: 3px">Campo Obrigatório
+								</span> 
+								
+								<span
 								class="tooltip-validation"
 								ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-								style="top: 3px">Campo Obrigatório</span> <ng-form>
+								style="top: 3px">Campo Obrigatório
+								</span> 
+								
+								<ng-form>
 						</div>
 
 

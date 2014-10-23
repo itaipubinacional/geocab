@@ -69,7 +69,7 @@ function AddAttributePopUpController($scope, $injector,$modalInstance, $state, a
 	$scope.addAttribute = function () {
 		
 		if( !$scope.form('form_add_attribute').$valid ){
-			console.log("213");
+			
 			return;
 		}
 		
