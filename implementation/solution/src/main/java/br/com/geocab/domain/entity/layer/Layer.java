@@ -113,6 +113,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	@NotNull
 	@Enumerated(EnumType.ORDINAL)
 	private MapScale maximumScaleMap;
+	
+	/**
+	 * status
+	 */
+	private Boolean enabled;
+	
 	/**
 	 * {@link DataSource} of {@link Layer}
 	 */
@@ -213,7 +219,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, String title, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource,
+	public Layer( Long id, String name, String title, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, DataSource dataSource,
 			LayerGroup layerGroup )
 	{
 		this.setId(id);
@@ -224,6 +230,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setOrderLayer(orderLayer);
 		this.setMinimumScaleMap(maximumMapScale);
 		this.setMaximumScaleMap(maximumMapScale);
+		this.setEnabled(enabled);
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
 	}
@@ -575,6 +582,22 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	public void setIcon(String icon)
 	{
 		this.icon = icon;
+	}
+
+	/**
+	 * @return the enabled
+	 */
+	public Boolean getEnabled()
+	{
+		return enabled;
+	}
+
+	/**
+	 * @param enabled the enabled to set
+	 */
+	public void setEnabled(Boolean enabled)
+	{
+		this.enabled = enabled;
 	}
 	
 	
