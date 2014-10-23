@@ -123,11 +123,11 @@
 	           			<td><img src="<c:url value="/static/icons/5.png"/>" width="25" height="25"></td>
 	           		</tr>
 	           		<tr>
-	           			<td><input type="radio" value="/static/icons/1.png" ng-checked="currentEntity.icon == '/static/icons/1.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="/static/icons/2.png" ng-checked="currentEntity.icon == '/static/icons/2.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="/static/icons/3.png" ng-checked="currentEntity.icon == '/static/icons/3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="/static/icons/4.png" ng-checked="currentEntity.icon == '/static/icons/4.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="/static/icons/5.png" ng-checked="currentEntity.icon == '/static/icons/5.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/1.png" ng-checked="currentEntity.icon == 'static/icons/1.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/2.png" ng-checked="currentEntity.icon == 'static/icons/2.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/3.png" ng-checked="currentEntity.icon == 'static/icons/3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/4.png" ng-checked="currentEntity.icon == 'static/icons/4.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/5.png" ng-checked="currentEntity.icon == 'static/icons/5.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           		</tr>
 	           		
 	           	</table>
