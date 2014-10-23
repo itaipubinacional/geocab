@@ -673,7 +673,22 @@ public class LayerGroupService
 	{
 		layer.setLayerGroup(this.findLayerGroupById(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
+		layer.setEnabled(true);
 		return this.layerRepository.save( layer );
+	}
+	
+	public void enableLayer( Long layerId ){ 
+		Layer layer = this.findLayerById(layerId);
+		
+		layer.setEnabled(true);
+		this.layerRepository.save( layer );
+	}
+	
+	public void disableLayer( Long layerId ){ 
+		Layer layer = this.findLayerById(layerId);
+		
+		layer.setEnabled(false);
+		this.layerRepository.save( layer );
 	}
 	
 	/**
