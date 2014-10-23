@@ -54,7 +54,7 @@
 		<div id="sidebar-marker-detail-update" class="sidebar-style"  >
 		
 			<form name="sidebarMarkerDetail" ng-show="screen == 'detail'">
-				<div>
+				<div style="height:650px;">
 					<div class="sidebar-coloredbar"></div>
 					<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
 						class="icon itaipu-icon-close sidebar-close"></span>
@@ -98,24 +98,29 @@
 						<br>
 
 						<div style=" overflow: auto; height: 320px;">
-							<div ng-repeat="markerAttribute in attributesByMarker" style="position: relative;">
+							<div ng-repeat="markerAttribute in attributesByMarker" style="position: relative;margin-bottom:15px">
 							
 									<label>{{ markerAttribute.attribute.name }}</label> 
 										<input
 										type="number" name="number1"
 										ng-if="markerAttribute.attribute.type == 'NUMBER'"
 										class="form-control" ng-model="markerAttribute.value"									
-										required ng-disabled="true"> 
+										required ng-disabled="true"
+										> 
 																		
 										<input type="date"
 										name="date1" ng-if="markerAttribute.attribute.type == 'DATE'"
 										class="form-control" ng-model="markerAttribute.value"									
-										required ng-disabled="true">
+										required 
+										ng-disabled="true"
+										>
 
 									<div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
 										<input ng-disabled="true" type="radio"
 											ng-checked="markerAttribute.value == 'Yes'"
-											ng-model="markerAttribute.value" value="Yes"> <input
+											ng-model="markerAttribute.value" value="Yes"> 
+											
+											<input
 											ng-disabled="true" type="radio"
 											ng-checked="markerAttribute.value == 'No'"
 											ng-model="markerAttribute.value" value="No">
@@ -133,8 +138,8 @@
 			</form>
 			
 			<form name="sidebarMarkerUpdate" method="post" ng-show="screen == 'update'"
-				default-button="buttonInsert" novalidate>
-				<div>
+				default-button="buttonInsert" novalidate >
+				<div style="height:650px">
 					<div class="sidebar-coloredbar"></div>
 					<button
 							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
@@ -146,28 +151,29 @@
 					<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
 						class="icon itaipu-icon-close sidebar-close"></span>
 
-					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
+					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:100%">
 						<div class="sidebar-content-header">Editar postagem</div>
-						<br style="clear: both;"> <br> <label>Camada</label>
-						<!-- <select name="camada" ng-model="currentEntity.layer" class="form-control" ng-change="listAttributesByLayer(currentEntity.layer)" ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}" required>                       	
-						  <optgroup ng-repeat="group in layersGroups" label="{{ group.name }}">
-						    <option ng-repeat="layer in group.layers" ng-selected="layer.selected" value="{{ layer.id  }}">{{ layer.title }}</option>	    
-						  </optgroup>
-						</select>-->
-						<select ng-change="listAttributesByLayer()"
-							data-placeholder="Selecione uma camada" name="camada"
-							ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
-							ng-model="currentEntity.layer" chosen class="form-control"
-							ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}"
-							required>
-							<option value=""></option>							
-						</select> 
+						
+						<br style="clear: both;"> <br> 
+						<label>Camada</label>
+						
+						<div style="margin-bottom:5px;">
+							<select ng-change="listAttributesByLayer()"
+								data-placeholder="Selecione uma camada" name="camada"
+								ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
+								ng-model="currentEntity.layer" chosen class="form-control"
+								ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}"
+								required>
+								<option value=""></option>							
+							</select> 
+						</div>
 						<span class="tooltip-validation"
 							ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
 							style="top: -20px">Campo Obrigatório</span> <br>
 
+						
 						<div ng-repeat="markerAttribute in attributesByMarker"
-							style="position: relative">
+							style="position: relative;margin-bottom:15px;">
 
 							<ng-form name="ngSideMarker" default-button="buttonUpdate">
 							<label>{{ markerAttribute.attribute.name }}</label> <input
@@ -175,17 +181,24 @@
 								ng-if="markerAttribute.attribute.type == 'NUMBER'"
 								class="form-control" ng-model="markerAttribute.value"
 								ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-								required> <input
+								ng-required="markerAttribute.required"
+								> 
+								
+								<input
 								type="date" name="date1"
 								ng-if="markerAttribute.attribute.type == 'DATE'"
 								class="form-control" ng-model="markerAttribute.value"
 								ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
-								required>
+								required
+								ng-required="markerAttribute.required"
+								>								
 
 							<div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
 
 								<input type="radio" ng-checked="markerAttribute.value == 'Yes'"
-									ng-model="markerAttribute.value" value="Yes"> <input
+									ng-model="markerAttribute.value" value="Yes"> 
+									
+									<input
 									type="radio" ng-checked="markerAttribute.value == 'No'"
 									ng-model="markerAttribute.value" value="No">
 							</div>
@@ -194,21 +207,34 @@
 								ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
 								class="form-control" ng-model="markerAttribute.value"
 								ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-								required> <span
-								class="tooltip-validation"
-								ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"
-								style="top: 3px">Campo Obrigatório</span> <span
-								class="tooltip-validation"
-								ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-								style="top: 3px">Campo Obrigatório</span> <span
-								class="tooltip-validation"
-								ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-								style="top: 3px">Campo Obrigatório</span> <span
-								class="tooltip-validation"
-								ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-								style="top: 3px">Campo Obrigatório</span> <ng-form>
+								ng-required="markerAttribute.required"
+								> 
+								
+								<span class="tooltip-validation"
+									ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"
+									style="top: 3px"> Campo Obrigatório
+								</span> 
+								
+								<span
+									class="tooltip-validation"
+									ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
+									style="top: 3px" >Campo Obrigatório
+								</span> 
+								
+								<span
+									class="tooltip-validation"
+									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
+									style="top: 3px">Campo Obrigatório
+								</span> 
+								
+								<span
+									class="tooltip-validation"
+									ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
+									style="top: 3px">Campo Obrigatório
+								</span> 
+							<ng-form>
+						
 						</div>
-
 
 						<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
 						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
@@ -256,9 +282,12 @@
 							ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
 							ng-model="currentEntity.layer" chosen class="form-control"
 							ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
-							required>
+							required				
+							>
 							<option value=""></option>
-						</select> <span class="tooltip-validation"
+						</select> 
+						
+						<span class="tooltip-validation"
 							ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
 							style="top: -20px">Campo Obrigatório</span> <br>
 
@@ -272,26 +301,30 @@
 								name="number1" ng-if="attribute.type == 'NUMBER'"
 								class="form-control" ng-model="attribute.value"
 								ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-								required
+								ng-required="attribute.required"
 								> 
 								
 							<input
 								type="date" name="date1" ng-if="attribute.type == 'DATE'"
 								class="form-control" ng-model="attribute.value"
 								ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
-								required>
+								ng-required="attribute.required"
+								>
 
 							<div ng-if="attribute.type == 'BOOLEAN'">
 
 								<input type="radio" name="boolean" ng-model="attribute.value"
-									value="Yes"> <input type="radio" name="boolean"
+									value="Yes"> 
+									
+								<input type="radio" name="boolean"
 									ng-model="attribute.value" value="No">
 							</div>
 
 							<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
 								class="form-control" ng-model="attribute.value"
 								ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-								required> 
+								ng-required="attribute.required"
+								> 
 								
 								<span
 								class="tooltip-validation"
