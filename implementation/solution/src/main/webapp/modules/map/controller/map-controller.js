@@ -182,7 +182,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @type {number}
      */
     $scope.PERMISSION_CALCULO_DISTANCIA = 1;
-
+    
     //Permissão cálculo área
     /**
      *
@@ -412,8 +412,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         		
         	/* if click on the marker */
         	if( feature ){
+        		$scope.screen = 'detail';
+        		
+				if( $scope.screenMarkerOpenned ) {
+					$scope.clearFcMarker();
+				}
+			        		
         		$scope.marker = feature.getProperties().marker;
-            	$scope.toggleSidebarMarkerDetail(300);	
+        		$timeout(function(){
+        			$scope.toggleSidebarMarkerDetailUpdate(300);	
+    	    	}, 400)
+            	
         	}
 
             if ($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
@@ -520,6 +529,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	});
 
     };
+    
+    $scope.changeToScreen = function(screen) {
+    	$scope.screen = screen;
+    }
 
     /**
      * Funcão que faz requisição ao geo server para trazer as features
@@ -1077,7 +1090,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     $scope.initializeMarker = function () {
     	
-    	if($("#sidebar-marker-detail").css("display") == 'block') {
+    	if($("#sidebar-marker-detail-update").css("display") == 'block') {
     		$scope.clearDetailMarker();
     	}
     	
@@ -1375,13 +1388,47 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     };
     
-    $scope.toggleSidebarMarkerUpdate = function (time, element){
+    $scope.toggleSidebarMarkerDetailUpdate = function (time, element){
     	$scope.currentEntity = $scope.marker;
     	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
+            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
+            return;
         }
-    
+    	
+    	markerService.findImgByMarker($scope.marker.id, {
+ 			 callback : function(result) {
+ 				 
+ 				 $scope.imgResult = result;
+ 	          },
+ 	          errorHandler : function(message, exception) {
+ 	              $scope.message = {type:"error", text: message};
+ 	              $scope.$apply();
+ 	          }
+	    	});
+    	
+    	markerService.listAttributeByMarker($scope.marker.id, {
+		  callback : function(result) {
+			  $scope.attributesByMarker = result;   
+			  
+			  angular.forEach(result,function(markerAttribute,index){
+				if (markerAttribute.attribute.type == "NUMBER") {
+					markerAttribute.value = parseInt(markerAttribute.value);
+				}  
+			  })
+			  
+			 
+			  $scope.$apply();
+			 
+          },
+          errorHandler : function(message, exception) {
+              $scope.message = {type:"error", text: message};
+              $scope.$apply();
+          }
+    	});
+    	
+    	/* Lista para o edit*/
     	layerGroupService.listAllInternalLayerGroups({
     		callback : function(result) {
                // $scope.layersGroups = result;
@@ -1429,65 +1476,21 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             }
     	});
     	
-    	
-    		$scope.toggleSidebar(time, '', '#sidebar-marker-update');
-    	
-    };
-    
-    $scope.toggleSidebarMarkerDetail = function (time, element){
-    	
-    	if(element == "closeButton") {
-            $scope.screenMarkerOpenned = false;
-            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
-            return;
-        }
-    	
-    	markerService.findImgByMarker($scope.marker.id, {
- 			 callback : function(result) {
- 				 
- 				 $scope.imgResult = result;
- 	          },
- 	          errorHandler : function(message, exception) {
- 	              $scope.message = {type:"error", text: message};
- 	              $scope.$apply();
- 	          }
-	    	});
-    	
-    	markerService.listAttributeByMarker($scope.marker.id, {
-		  callback : function(result) {
-			  $scope.attributesByMarker = result;   
-			  
-			  angular.forEach(result,function(markerAttribute,index){
-				if (markerAttribute.attribute.type == "NUMBER") {
-					markerAttribute.value = parseInt(markerAttribute.value);
-				}  
-			  })
-			  
-			 
-			  $scope.$apply();
-			 
-          },
-          errorHandler : function(message, exception) {
-              $scope.message = {type:"error", text: message};
-              $scope.$apply();
-          }
-    	});
-    	
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
     	 * */
     	
-    	if($scope.slideActived == '#sidebar-marker-detail') return;
+    	if($scope.slideActived == '#sidebar-marker-detail-update') return;
     	
     	if($scope.slideActived == '#sidebar-layers') {
     		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
     		
     		$timeout(function(){
-        		$scope.toggleSidebar(time, '', '#sidebar-marker-detail');
+        		$scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
         	}, 400);
     		
     	} else {
-    		$scope.toggleSidebar(time, '', '#sidebar-marker-detail');
+    		$scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
     	}
     	/*
     	if ( $('#sidebar-marker-detail').css("display") == 'none' ){
@@ -1497,7 +1500,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     };
     
     $scope.clearDetailMarker = function() {
-    	$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail');
+    	$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail-update');
     }
     
     $scope.toggleSidebar = function (time, element, slide){
@@ -1518,11 +1521,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        //Executa a animação.
 	        
 	        $(slide).toggle('slide', { direction: 'right' }, time);
-	        if(slide != "#sidebar-marker-update") {
-		        $('.menu-sidebar-container').animate({
-		            'right' : closed ? '20%' : '3px'
-		        }, time);
-	        }
+	        $('.menu-sidebar-container').animate({
+	            'right' : closed ? '20%' : '3px'
+	        }, time);
 	    } else {
 	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
 	    }
@@ -1789,7 +1790,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	   				   	$scope.addInternalLayer(layerId);
 	    			})
 	      			
-	    			$scope.toggleSidebarMarkerDetail(300, 'closeButton');  
+	    			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton');  
 	    			  
 	      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
 	      			$("div.msgMap").show();
@@ -1898,7 +1899,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
             reader.onload = function (e) {
             	console.log(e);
-                $('#marker-image').attr('src', e.target.result);
+                $('.marker-image').attr('src', e.target.result);
             };
             reader.readAsDataURL(input.files[0]);
         }
