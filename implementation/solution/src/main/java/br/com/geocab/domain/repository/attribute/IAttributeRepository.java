@@ -27,7 +27,7 @@ public interface IAttributeRepository extends IDataRepository<Attribute, Long>
 	 * @param layerId
 	 * @return
 	 */
-	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.type ) " +
+	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.type, attribute.required ) " +
 				"FROM Attribute attribute " +
 				"LEFT OUTER JOIN attribute.layer layer " + 
 				"WHERE ( :layerId = layer.id ) ")

@@ -59,7 +59,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	@NotNull
 	private Boolean required;
 	
-	private Boolean attributeDefault;
+	private Boolean attributeDefault; 
 	
 	/**
 	 * Layer {@link Layer}
@@ -79,10 +79,11 @@ public class Attribute extends AbstractEntity implements Serializable
 		super(id);
 	}
 	
-	public Attribute(Long id, String name, AttributeType type){
+	public Attribute(Long id, String name, AttributeType type, Boolean required){
 		super(id);
 		this.setType(type);
 		this.setName(name);
+		this.setRequired(required);
 	}
 	
 	public Attribute(Long id, String name, AttributeType type, Layer layer){
