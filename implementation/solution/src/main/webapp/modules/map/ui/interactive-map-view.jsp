@@ -56,7 +56,7 @@
 			<form name="sidebarMarkerDetail" ng-show="screen == 'detail'">
 				<div>
 					<div class="sidebar-coloredbar"></div>
-					<span ng-click="toggleSidebarMarkerDetail(300, 'closeButton');"
+					<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
 						class="icon itaipu-icon-close sidebar-close"></span>
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 						<span
@@ -143,7 +143,7 @@
 							<
 						</button>
 						
-					<span ng-click="toggleSidebarMarkerDetail(300, 'closeButton');"
+					<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
 						class="icon itaipu-icon-close sidebar-close"></span>
 
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
