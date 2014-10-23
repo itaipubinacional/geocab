@@ -109,11 +109,22 @@ public class MarkerService
 	 * 
 	 * @param Marker
 	 * @return Marker
+	 * @throws RepositoryException 
+	 * @throws IOException 
 	 */
 	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
-	public Marker updateMarker( Marker marker )
+	public Marker updateMarker( Marker marker ) throws IOException, RepositoryException
 	{			
 		try{
+			
+			FileTransfer file = this.findImgByMarker(marker.getId());
+			
+			if( file != null ){
+				this.removeImg(String.valueOf(marker.getId()));
+			}
+			
+			this.uploadImg(marker.getImage(), marker.getId());	
+			
 			marker = this.markerRepository.save( marker );
 		}
 		catch ( DataIntegrityViolationException e )
@@ -288,6 +299,13 @@ public class MarkerService
 			throw new IllegalArgumentException( this.messages.getMessage("The-field-entered-already-exists,-change-and-try-again", new Object [] {fieldError}, null) );
 		}*/
 	}
+	
+	public void removeImg( String metaFileId ) throws IOException, RepositoryException {
+		
+	
+		this.metaFileRepository.remove(metaFileId);
+	}
+	
 	
 	public void uploadImg( FileTransfer fileTransfer, Long markerId ) throws IOException, RepositoryException {
 		
