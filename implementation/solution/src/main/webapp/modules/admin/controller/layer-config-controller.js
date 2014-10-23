@@ -114,6 +114,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
         '<a ui-sref="layer-config.update({id:row.entity.id})" title="Editar" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '<a ng-click="changeToRemove(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+        '<a ng-if="row.entity.enabled == true" ng-click="disableLayer(row.entity)" title="disable" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
+        '<a ng-if="row.entity.enabled == false" ng-click="enableLayer(row.entity)" title="enable" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
         '</div>';
     
     var IMAGE_LEGEND = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
@@ -141,7 +143,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             {displayName: $translate('Layer'), field: 'name'},
             {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name'},
             {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '15%'},
-            {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
+            {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '150px'}
         ]
     };
 
