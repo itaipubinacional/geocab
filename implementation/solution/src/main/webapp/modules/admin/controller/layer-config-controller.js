@@ -220,7 +220,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '33%'},
             {displayName: $translate('Type'), field: 'type',  width: '33%'},
-            {displayName: 'Required', field: 'required',  width: '33%'},
+            {displayName: $translate('Required'), field: 'required',  width: '33%'},
         ]
     };
 
@@ -817,6 +817,10 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     	layerGroupService.enableLayer(layer.id, {
             callback: function(){
             	layer.enabled = true;
+            	
+            	$scope.msg = {type: "success", text: $translate('admin.layer-config.The-layer-was-enabled-successfully'), dismiss: true};
+  			  	$scope.fadeMsg();
+            	
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -829,6 +833,10 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     	layerGroupService.disableLayer(layer.id, {
             callback: function(){
             	layer.enabled = false;
+            	
+            	$scope.msg = {type: "success", text: $translate('admin.layer-config.The-layer-was-disable-successfully'), dismiss: true};
+  			  	$scope.fadeMsg();
+            	
                 $scope.$apply();
             },
             errorHandler: function(error){
