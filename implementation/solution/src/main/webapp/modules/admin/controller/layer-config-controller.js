@@ -114,11 +114,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
         '<a ui-sref="layer-config.update({id:row.entity.id})" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
-        '<a ng-if="row.entity.enabled == true" ng-click="disableLayer(row.entity)" title="'+ $translate("admin.layer-config.Disable") +'" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
-        '<a ng-if="row.entity.enabled == false" ng-click="enableLayer(row.entity)" title="'+ $translate("admin.layer-config.Enable") +'" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
         '</div>';
     
-    var IMAGE_LEGEND = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+    var MARKER_BUTTONS = '<div  class="cell-centered">' +
+    '<a ng-if="row.entity.enabled == false" title="'+ $translate("admin.layer-config.Disable") +'" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
+    '<a ng-if="row.entity.enabled == true" title="'+ $translate("admin.layer-config.Enable") +'" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
+    '</div>';
+    
+    var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
 	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
 	'</div>';
 
@@ -138,12 +141,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $state.go($scope.DETAIL_STATE, {id: row.entity.id});
         },
         columnDefs: [
-            {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
-            {displayName: $translate('Title'), field: 'title'},
-            {displayName: $translate('Layer'), field: 'name'},
-            {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name'},
-            {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '15%'},
-            {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '150px'}
+            {displayName: 'Postagem', sortable: false, cellTemplate: MARKER_BUTTONS, width: '6%'},
+            {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '6%', cellTemplate: IMAGE_LEGEND},
+            {displayName: $translate('Title'), field: 'title', width: '19%'},
+            {displayName: $translate('Layer'), field: 'name', width: '19%'},
+            {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name', width: '30%'},
+            {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '13%'},
+            {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '7%'}
         ]
     };
 
