@@ -448,6 +448,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
             	$scope.screenMarkerOpenned = true;
                 $scope.toggleSidebarMarkerCreate(300);
+
                 
                 
                 var iconStyle = new ol.style.Style({
@@ -495,6 +496,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         	$scope.selectLayerGroup.push({
                         		"layerTitle": layer.title,
                         		"layerId": layer.id,
+                        		"layerIcon": layer.icon,
                         		"group": layer.layerGroup.name
                         	});
                         	
@@ -1368,6 +1370,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param element Nome do elemento que está chamando a função.
      */
     $scope.toggleSidebarMarkerCreate = function (time, element){
+    	$scope.imgResult = "";
+    	$scope.$apply();
+    	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
         }
@@ -1621,7 +1626,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	markerService.updateMarker($scope.currentEntity,{
       		callback : function(result) {
       		      			
-      			$scope.toggleSidebarMarkerUpdate(300, 'closeButton')
+      			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
       			
       			 $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
      			  $("div.msgMap").show();
@@ -1700,6 +1705,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.listAttributesByLayer = function(){
+    	var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+                anchor: [0.5, 1],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                src: $scope.currentEntity.layer.layerIcon
+            }))
+        });
+    	$scope.currentCreatingInternalLayer.setStyle(iconStyle);
+    	 
     	  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
       		callback : function(result) {
                   $scope.attributesByLayer = result;
@@ -1910,6 +1925,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
             reader.onload = function (e) {
             	console.log(e);
+            	$scope.imgResult = e.target.result;
+            	$scope.$apply();
                 $('.marker-image').attr('src', e.target.result);
             };
             reader.readAsDataURL(input.files[0]);

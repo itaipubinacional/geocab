@@ -92,7 +92,10 @@ public class MarkerService
 			marker.setStatus(StatusMarker.PENDING);
 			marker.setUser(user);
 			marker = this.markerRepository.save( marker );
-			this.uploadImg(marker.getImage(), marker.getId());
+			if( marker.getImage() != null ) {
+				this.uploadImg(marker.getImage(), marker.getId());
+			}
+			
 		}
 		catch ( DataIntegrityViolationException e )
 		{
@@ -119,11 +122,14 @@ public class MarkerService
 			
 			FileTransfer file = this.findImgByMarker(marker.getId());
 			
-			if( file != null ){
+			if( file != null && marker.getImage() != null ){
 				this.removeImg(String.valueOf(marker.getId()));
 			}
 			
-			this.uploadImg(marker.getImage(), marker.getId());	
+			if( marker.getImage() != null ) {
+				this.uploadImg(marker.getImage(), marker.getId());	
+			}
+			
 			
 			marker = this.markerRepository.save( marker );
 		}
