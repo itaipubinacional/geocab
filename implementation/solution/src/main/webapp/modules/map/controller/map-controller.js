@@ -1605,14 +1605,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.updateMarker = function(){
-    	/*
-    	 * TODO: Verificar se todo o formário foi preenchido.
-    	 * */
     	
-    	/*if (!$scope.form('sidebarMarkerUpdate').$valid){
-    		 $scope.msg = {type: "danger", text: "preencha", dismiss: true};
+    	if (!$scope.form('sidebarMarkerUpdate').$valid){
+    		 $scope.msg = {type: "danger", text: "preencha os campos obrigatorios", dismiss: true};
     		return;
-    	}*/
+    	}
     	
     	if( $scope.currentEntity.layer == null ) {
     		var layer = new Layer();
@@ -1620,6 +1617,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	$scope.currentEntity.layer = layer;	
     	}
     	
+    	var i=0;
+    	
+    	angular.forEach($scope.attributesByMarker, function(){
+    		
+    		if ($scope.attributesByMarker[i].value == null){
+    			$scope.attributesByMarker[i].value = "";
+    		}
+    		
+    		i++;    		
+    	})
     	
     	$scope.currentEntity.markerAttribute = $scope.attributesByMarker;
     		
