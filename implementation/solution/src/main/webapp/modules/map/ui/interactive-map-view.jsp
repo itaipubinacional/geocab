@@ -93,7 +93,7 @@
 							ng-click="enableMarker()" class="btn btn-default">
 							<i class="glyphicon glyphicon-ok"></i>
 						</button>
-						<br> <img class="marker-image" ng-src="{{ imgResult }}"
+						<br> <img ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
 							style="width: 100%; height: 200px; margin-top: 12px;"> <br>
 						<br>
 
@@ -214,7 +214,7 @@
 						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
 						<br>
-						 <img class="marker-image" ng-src="{{ imgResult }}"
+						 <img ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
 							style="width: 100%; height: 200px; margin-top: 12px;"> <br>
 						<br>
 						
@@ -324,10 +324,8 @@
 						<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
 						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
-						<img class="marker-image"> <br>
+						<img class="marker-image" ng-show="imgResult"> <br>
 						<hr>
-
-
 
 						<input type="file" id="upload-input" style="display: none;"
 							accept="image/*"

@@ -65,7 +65,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.title, layerGroup) "
+	@Query(value="SELECT new Layer(layer.id, layer.title, layer.icon, layerGroup) "
 			+ "FROM Layer layer " 
 			+ "LEFT OUTER JOIN layer.dataSource dataSource "
 			+ "LEFT OUTER JOIN layer.layerGroup layerGroup "
