@@ -27,8 +27,8 @@
                     <a href="http://google.com"><img src="{{node.legend}}" ng-if="node.nodes == null" style="margin-right: 5px; width: 20px; height: 20px; border: solid 1px #c9c9c9;"/></a>
 
                     {{node.nodes ? node.name : node.title}}
-                    <a ng-show="hover" data-nodrag class="icon itaipu-icon-edit tree-itaipu-icon" ng-if="node.nodes != null" data-nodrag ng-click="editItem(this)" style="position: absolute;margin-left: 18px;"></a>
-                    <a ng-show="hover" data-nodrag class="icon itaipu-icon-delete tree-itaipu-icon"  ng-if="node.nodes != null" data-nodrag ng-click="removeItem(this)" style="position: absolute;margin-left: 48px;"></a>
+                    <a ng-show="hover" data-nodrag class="icon itaipu-icon-edit tree-itaipu-icon" ng-if="node.nodes != null" data-nodrag ng-click="editItem(this)" title="<spring:message code="layer-group-popup.Update"/>" style="position: absolute;margin-left: 18px;"></a>
+                    <a ng-show="hover" data-nodrag class="icon itaipu-icon-delete tree-itaipu-icon"  ng-if="node.nodes != null" data-nodrag ng-click="removeItem(this)" title="<spring:message code="layer-group-popup.Delete" />" style="position: absolute;margin-left: 48px;"></a>
                 </div>
                 <ol ui-tree-nodes="" class="children-nodes" ng-model="node.nodes" ng-class="{hidden: collapsed}">
                     <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'" ng-show="visible(node)">

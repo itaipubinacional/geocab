@@ -1663,7 +1663,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		attribute.id = val.id;
 
     		var markerAttribute = new MarkerAttribute();
-    		markerAttribute.value = val.value;
+    		if (val.value != "" && val.value != undefined){
+    			markerAttribute.value = val.value;
+    		} else {
+    			markerAttribute.value = "";
+    		}
+    		
     		markerAttribute.attribute = attribute
     		markerAttribute.marker = $scope.currentEntity;
     		$scope.currentEntity.markerAttribute.push(markerAttribute);
