@@ -117,8 +117,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         '</div>';
     
     var MARKER_BUTTONS = '<div  class="cell-centered">' +
-    '<a ng-if="row.entity.enabled == false" title="'+ $translate("admin.layer-config.Disable") +'" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
-    '<a ng-if="row.entity.enabled == true" title="'+ $translate("admin.layer-config.Enable") +'" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
+    '<a ng-if="row.entity.enabled == false" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
+    '<a ng-if="row.entity.enabled == true" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
     '</div>';
     
     var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
