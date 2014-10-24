@@ -673,24 +673,9 @@ public class LayerGroupService
 	{
 		layer.setLayerGroup(this.findLayerGroupById(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
-		layer.setEnabled(true);
+		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		return this.layerRepository.save( layer );
 	}
-	
-	public void enableLayer( Long layerId ){ 
-		Layer layer = this.findLayerById(layerId);
-		
-		layer.setEnabled(true);
-		this.layerRepository.save( layer );
-	}
-	
-	public void disableLayer( Long layerId ){ 
-		Layer layer = this.findLayerById(layerId);
-		
-		layer.setEnabled(false);
-		this.layerRepository.save( layer );
-	}
-	
 	/**
 	 * mï¿½todo para atualizar uma {@link Camada}
 	 * 
@@ -729,6 +714,7 @@ public class LayerGroupService
 		Os valores originais são mantidos. */
 		layer.setDataSource(layerDatabase.getDataSource());
 		layer.setName(layerDatabase.getName());
+		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		
 		return this.layerRepository.save( layer );
 	}
