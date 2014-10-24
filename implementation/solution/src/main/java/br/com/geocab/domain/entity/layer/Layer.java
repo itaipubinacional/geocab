@@ -28,6 +28,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.datasource.DataSource;
+import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -138,8 +140,13 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	private Layer publishedLayer;
 	
 	@JsonIgnore
+	@OneToMany(mappedBy="layer", fetch=FetchType.EAGER, cascade={CascadeType.REMOVE})
+	private List<Marker> markers = new ArrayList<Marker>();
+	
+	@JsonIgnore
 	@OneToMany(mappedBy="layer", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	private List<Attribute> attributes = new ArrayList<Attribute>();
+
 	
 	/**
 	 * Field that informs if the {@link Layer} is published
@@ -600,6 +607,21 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	{
 		this.enabled = enabled;
 	}
-	
+
+	/**
+	 * @return the markers
+	 */
+	public List<Marker> getMarkers()
+	{
+		return markers;
+	}
+
+	/**
+	 * @param markers the markers to set
+	 */
+	public void setMarkers(List<Marker> markers)
+	{
+		this.markers = markers;
+	}
 	
 }
