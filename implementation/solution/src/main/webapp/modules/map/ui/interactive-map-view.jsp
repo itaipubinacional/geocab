@@ -57,7 +57,9 @@
 				<div style="height:650px;">
 					<div class="sidebar-coloredbar"></div>
 					<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
-						class="icon itaipu-icon-close sidebar-close"></span>
+						class="icon itaipu-icon-close sidebar-close"
+						title="<spring:message code="map.Close" />"
+						></span>
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 						<span
 							style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
@@ -69,28 +71,35 @@
 
 						<button
 							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
-							style="float: right;" class="btn btn-default"
+							style="float: right;" 
+							class="btn btn-default"
+							title="<spring:message code="map.Delete"/>"
 							ng-click="removeMarker()">
 							<i class="itaipu-icon-delete"></i>
 						</button>
-						<button
-							
+						<button		
 							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
 							style="float: right; margin-right: 5px" class="btn btn-default"
 							ng-click="changeToScreen('update')"
+							title="<spring:message code="map.Update"/>"
 							>
 							<i class="itaipu-icon-edit"></i>
 						</button>
 						<button
 							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')"
 							style="float: right; margin-right: 5px; color: red;"
-							ng-click="disableMarker()" class="btn btn-default">
+							ng-click="disableMarker()" class="btn btn-default"
+							title="<spring:message code="map.Disable"/>"
+							>
 							<i class="glyphicon glyphicon-ban-circle"></i>
 						</button>
 						<button
 							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'REFUSED' || marker.status == 'PENDING')"
 							style="float: right; margin-right: 5px; color: #00981F"
-							ng-click="enableMarker()" class="btn btn-default">
+							ng-click="enableMarker()" 
+							class="btn btn-default"
+							title="<spring:message code="map.Enable"/>"
+							>
 							<i class="glyphicon glyphicon-ok"></i>
 						</button>
 						<br> <img ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
@@ -100,34 +109,43 @@
 						<div style=" overflow: auto; height: 320px;">
 							<div ng-repeat="markerAttribute in attributesByMarker" style="position: relative;margin-bottom:15px">
 							
-									<label>{{ markerAttribute.attribute.name }}</label> 
+									<label ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
 										<input
 										type="number" name="number1"
-										ng-if="markerAttribute.attribute.type == 'NUMBER'"
+										ng-if="markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '' "
 										class="form-control" ng-model="markerAttribute.value"									
 										required ng-disabled="true"
 										> 
 																		
 										<input type="date"
-										name="date1" ng-if="markerAttribute.attribute.type == 'DATE'"
+										name="date1" 
+										ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
 										class="form-control" ng-model="markerAttribute.value"									
 										required 
 										ng-disabled="true"
 										>
 
-									<div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
-										<input ng-disabled="true" type="radio"
+									<div ng-if="markerAttribute.attribute.type == 'BOOLEAN' && !markerAttribute.value == ''">
+										<input 
+											ng-disabled="true" type="radio"
 											ng-checked="markerAttribute.value == 'Yes'"
-											ng-model="markerAttribute.value" value="Yes"> 
+											ng-model="markerAttribute.value" 
+											value="Yes"
+											>
+											<spring:message code="map.No" /> 
 											
-											<input
+										<input
 											ng-disabled="true" type="radio"
 											ng-checked="markerAttribute.value == 'No'"
-											ng-model="markerAttribute.value" value="No">
+											ng-model="markerAttribute.value" 
+											value="No"
+											>
+											<spring:message code="map.No" />
 									</div>
 
 									<input type="text"
-										ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
+										ng-if="markerAttribute.attribute.type == 'TEXT' && !markerAttribute.value == ''" 
+										name="texto"
 										class="form-control" ng-model="markerAttribute.value"
 										required ng-disabled="true"> 
 														
@@ -142,14 +160,17 @@
 				<div style="height:650px">
 					<div class="sidebar-coloredbar"></div>
 					<button
-							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
-							style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
-							ng-click="changeToScreen('detail')">
-							<
-						</button>
+						ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+						style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
+						ng-click="changeToScreen('detail')"
+						title="<spring:message code="map.Back" />"						
+						>							
+						<
+					</button>
 						
 					<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
-						class="icon itaipu-icon-close sidebar-close"></span>
+						class="icon itaipu-icon-close sidebar-close"
+						title="<spring:message code="map.Close" />"></span>
 
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:100%">
 						<div class="sidebar-content-header">Editar postagem</div>
@@ -195,12 +216,22 @@
 
 							<div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
 
-								<input type="radio" ng-checked="markerAttribute.value == 'Yes'"
-									ng-model="markerAttribute.value" value="Yes"> 
+								<input 
+									type="radio" 
+									ng-checked="markerAttribute.value == 'Yes'"
+									ng-model="markerAttribute.value" 
+									value="Yes"
+									>
+									<spring:message code="map.Yes" /> 
 									
-									<input
-									type="radio" ng-checked="markerAttribute.value == 'No'"
-									ng-model="markerAttribute.value" value="No">
+								<input
+									type="radio" 
+									ng-checked="markerAttribute.value == 'No'"
+									ng-model="markerAttribute.value" 
+									value="No"
+									>
+									<spring:message code="map.No" />
+									
 							</div>
 
 							<input type="text"
@@ -252,7 +283,9 @@
 
 						<button class="btn btn-default"
 							onclick="angular.element('#upload-input').click();"
-							style="float: left;">
+							style="float: left;"
+							title="<spring:message code="map.Picture"/>"
+							>
 							<span class="glyphicon glyphicon-picture"></span>
 						</button>
 
@@ -269,7 +302,9 @@
 				<div>
 					<div class="sidebar-coloredbar"></div>
 					<span ng-click="clearFcMarker()"
-						class="icon itaipu-icon-close sidebar-close"></span>
+						class="icon itaipu-icon-close sidebar-close"
+						title="<spring:message code="map.Close" />"
+						></span>
 
 					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
 						<div class="sidebar-content-header">Nova postagem</div>
@@ -314,10 +349,10 @@
 							<div ng-if="attribute.type == 'BOOLEAN'">
 
 								<input type="radio" name="boolean" ng-model="attribute.value"
-									value="Yes"> 
+									value="Yes"><spring:message code="map.Yes" /> 
 									
-								<input type="radio" name="boolean"
-									ng-model="attribute.value" value="No">
+								<input type="radio" name="boolean" ng-model="attribute.value" 
+									value="No"><spring:message code="map.No" /> 
 							</div>
 
 							<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
@@ -366,7 +401,9 @@
 
 						<button class="btn btn-default"
 							onclick="angular.element('#upload-input').click();"
-							style="float: left;">
+							style="float: left;"
+							title="<spring:message code="map.Picture" />"
+							>
 							<span class="glyphicon glyphicon-picture"></span>
 						</button>
 

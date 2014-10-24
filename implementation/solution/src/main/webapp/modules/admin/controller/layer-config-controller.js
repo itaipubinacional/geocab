@@ -112,10 +112,10 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
-        '<a ui-sref="layer-config.update({id:row.entity.id})" title="Editar" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
-        '<a ng-click="changeToRemove(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
-        '<a ng-if="row.entity.enabled == true" ng-click="disableLayer(row.entity)" title="disable" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
-        '<a ng-if="row.entity.enabled == false" ng-click="enableLayer(row.entity)" title="enable" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
+        '<a ui-sref="layer-config.update({id:row.entity.id})" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+        '<a ng-if="row.entity.enabled == true" ng-click="disableLayer(row.entity)" title="'+ $translate("admin.layer-config.Disable") +'" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
+        '<a ng-if="row.entity.enabled == false" ng-click="enableLayer(row.entity)" title="'+ $translate("admin.layer-config.Enable") +'" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
         '</div>';
     
     var IMAGE_LEGEND = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
