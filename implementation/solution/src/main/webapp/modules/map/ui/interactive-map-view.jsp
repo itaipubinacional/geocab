@@ -197,22 +197,26 @@
 							style="position: relative;margin-bottom:15px;">
 
 							<ng-form name="ngSideMarker" default-button="buttonUpdate">
-							<label>{{ markerAttribute.attribute.name }}</label> <input
-								type="number" name="number1"
-								ng-if="markerAttribute.attribute.type == 'NUMBER'"
-								class="form-control" ng-model="markerAttribute.value"
-								ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-								ng-required="markerAttribute.required"
-								> 
-								
+							<label>{{ markerAttribute.attribute.name }}</label> 
+							
 								<input
-								type="date" name="date1"
-								ng-if="markerAttribute.attribute.type == 'DATE'"
-								class="form-control" ng-model="markerAttribute.value"
-								ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
-								required
-								ng-required="markerAttribute.required"
-								>								
+									type="number" 
+									name="number1"
+									ng-if="markerAttribute.attribute.type == 'NUMBER'"
+									class="form-control"
+									ng-model="markerAttribute.value"
+									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+									ng-required="markerAttribute.attribute.required"
+									> 
+								
+								<input								
+									type="date" name="date1"
+									ng-if="markerAttribute.attribute.type == 'DATE'"
+									class="form-control" ng-model="markerAttribute.value"
+									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+									required
+									ng-required="markerAttribute.attribute.required"
+									>								
 
 							<div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
 
@@ -238,7 +242,7 @@
 								ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
 								class="form-control" ng-model="markerAttribute.value"
 								ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-								ng-required="markerAttribute.required"
+								ng-required="markerAttribute.attribute.required"
 								> 
 								
 								<span class="tooltip-validation"
@@ -255,7 +259,7 @@
 								<span
 									class="tooltip-validation"
 									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px">Precisa ser um numero
 								</span> 
 								
 								<span
@@ -289,8 +293,17 @@
 							<span class="glyphicon glyphicon-picture"></span>
 						</button>
 
-						<button id="buttonUpdate" class="btn btn-primary"
-							ng-click="updateMarker()" style="float: right">Enviar</button>
+						<button 
+							id="buttonUpdate"
+					   		class="btn btn-primary"
+							ng-click="updateMarker()" 
+							style="float: right"
+							title="<spring:message code="map.Submit" />"
+							>
+							
+							<spring:message code="map.Submit" />
+							
+						</button>
 					</div>
 				</div>
 			</form>
@@ -407,8 +420,15 @@
 							<span class="glyphicon glyphicon-picture"></span>
 						</button>
 
-						<button id="buttonInsert" class="btn btn-primary"
-							ng-click="insertMarker()" style="float: right">Enviar</button>
+						<button 
+							id="buttonInsert" 
+							class="btn btn-primary"
+							ng-click="insertMarker()" 
+							style="float: right"
+							title="<spring:message code="map.Submit" />"
+							>
+							<spring:message code="map.Submit" />					
+						</button>
 					</div>
 				</div>
 			</form>
