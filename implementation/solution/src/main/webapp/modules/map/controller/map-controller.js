@@ -1626,7 +1626,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	markerService.updateMarker($scope.currentEntity,{
       		callback : function(result) {
       		      			
-      			$scope.toggleSidebarMarkerUpdate(300, 'closeButton')
+      			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
       			
       			 $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
      			  $("div.msgMap").show();
