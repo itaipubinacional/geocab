@@ -813,36 +813,4 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 	  	}, 3000);
     }
     
-    $scope.enableLayer = function( layer ) {
-    	layerGroupService.enableLayer(layer.id, {
-            callback: function(){
-            	layer.enabled = true;
-            	
-            	$scope.msg = {type: "success", text: $translate('admin.layer-config.The-layer-was-enabled-successfully'), dismiss: true};
-  			  	$scope.fadeMsg();
-            	
-                $scope.$apply();
-            },
-            errorHandler: function(error){
-                $log.error(error);
-            }
-        })
-    }
-    
-    $scope.disableLayer = function( layer ) {
-    	layerGroupService.disableLayer(layer.id, {
-            callback: function(){
-            	layer.enabled = false;
-            	
-            	$scope.msg = {type: "success", text: $translate('admin.layer-config.The-layer-was-disable-successfully'), dismiss: true};
-  			  	$scope.fadeMsg();
-            	
-                $scope.$apply();
-            },
-            errorHandler: function(error){
-                $log.error(error);
-            }
-        })
-    }
-    
 };
