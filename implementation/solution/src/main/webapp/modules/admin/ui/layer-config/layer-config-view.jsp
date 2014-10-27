@@ -48,7 +48,11 @@
             <button ng-if="currentState == INSERT_STATE || currentState == UPDATE_STATE"
                     style="float: left; margin-right: 15px; min-width: 40px;"
                     class="btn btn-default"
-                    ui-sref="layer-config.list"><span class="icon itaipu-icon-arrow-left"></span>
+                    ui-sref="layer-config.list"
+                    title="<spring:message code="admin.layer-config.Back"/>" >
+                                        
+                    <span class="icon itaipu-icon-arrow-left"></span>
+                    
             </button>
 
             <!-- State Create -->

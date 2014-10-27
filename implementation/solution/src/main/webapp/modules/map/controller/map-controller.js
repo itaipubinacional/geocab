@@ -1605,14 +1605,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.updateMarker = function(){
-    	/*
-    	 * TODO: Verificar se todo o formário foi preenchido.
-    	 * */
     	
-    	/*if (!$scope.form('sidebarMarkerUpdate').$valid){
-    		 $scope.msg = {type: "danger", text: "preencha", dismiss: true};
+    	if (!$scope.form('sidebarMarkerUpdate').$valid){
+    		 $scope.msg = {type: "danger", text: "preencha os campos obrigatorios", dismiss: true};
     		return;
-    	}*/
+    	}
     	
     	if( $scope.currentEntity.layer == null ) {
     		var layer = new Layer();
@@ -1620,13 +1617,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	$scope.currentEntity.layer = layer;	
     	}
     	
+    	var i=0;
+    	
+    	angular.forEach($scope.attributesByMarker, function(){
+    		
+    		if ($scope.attributesByMarker[i].value == null){
+    			$scope.attributesByMarker[i].value = "";
+    		}
+    		
+    		i++;    		
+    	})
     	
     	$scope.currentEntity.markerAttribute = $scope.attributesByMarker;
     		
     	markerService.updateMarker($scope.currentEntity,{
       		callback : function(result) {
       		      			
-      			$scope.toggleSidebarMarkerUpdate(300, 'closeButton')
+      			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
       			
       			 $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
      			  $("div.msgMap").show();
@@ -1663,7 +1670,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		attribute.id = val.id;
 
     		var markerAttribute = new MarkerAttribute();
-    		markerAttribute.value = val.value;
+    		if (val.value != "" && val.value != undefined){
+    			markerAttribute.value = val.value;
+    		} else {
+    			markerAttribute.value = "";
+    		}
+    		
     		markerAttribute.attribute = attribute
     		markerAttribute.marker = $scope.currentEntity;
     		$scope.currentEntity.markerAttribute.push(markerAttribute);
