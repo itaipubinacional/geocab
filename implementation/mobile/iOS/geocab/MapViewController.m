@@ -10,7 +10,12 @@
 #import "AppDelegate.h"
 #import "AddNewPointViewController.h"
 #import "LayerDelegate.h"
+#import "MarkerDelegate.h"
 #import "Layer.h"
+#import "User.h"
+#import "Marker.h"
+#import "MarkerAttribute.h"
+#import "AttributeType.h"
 #import "ControllerUtil.h"
 #import "LoginViewController.h"
 
@@ -63,6 +68,8 @@ extern NSUserDefaults *defaults;
     [super viewDidLoad];
     
     _webView.delegate = self;
+    _webView.scrollView.bounces = NO;
+    
     [self loadWebView];
     
     //Configures the location manager to fetch the users location.
@@ -123,25 +130,44 @@ extern NSUserDefaults *defaults;
 }
 
 - (void) didCheckedLayer:(Layer *)layer {
-    NSRange index = [layer.name rangeOfString:@":"];
-    NSRange position = [layer.dataSource.url rangeOfString:@"geoserver/" options:NSBackwardsSearch];
-    NSString *typeLayer = [layer.name substringWithRange:NSMakeRange(0, index.location)];
-    
-    NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
-    
-    NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', 'true')", urlFormated , layer.name];
-    [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+    if (layer.dataSource.url != nil) {
+        NSRange index = [layer.name rangeOfString:@":"];
+        NSRange position = [layer.dataSource.url rangeOfString:@"geoserver/" options:NSBackwardsSearch];
+        NSString *typeLayer = [layer.name substringWithRange:NSMakeRange(0, index.location)];
+        
+        NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
+        
+        NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', 'true')", urlFormated , layer.name];
+        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+    } else {
+        MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker/"];
+        [markerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+            NSArray *markers = [result array];
+            
+            for (Marker *marker in markers) {
+                NSString *functionCall = [NSString stringWithFormat:@"showMarker(%@, %@, %@, '%@', true)", marker.latitude, marker.longitude, marker.id, marker.layer.name];
+                [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+            }
+        } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] layerId:layer.id];
+    }
 }
 
 - (void) didUnheckedLayer:(Layer *)layer {
-    NSRange index = [layer.name rangeOfString:@":"];
-    NSRange position = [layer.dataSource.url rangeOfString:@"geoserver/" options:NSBackwardsSearch];
-    NSString *typeLayer = [layer.name substringWithRange:NSMakeRange(0, index.location)];
-    
-    NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
-    
-    NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', 'false')", urlFormated , layer.name];
-    [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+    if (layer.dataSource.url != nil) {
+        NSRange index = [layer.name rangeOfString:@":"];
+        NSRange position = [layer.dataSource.url rangeOfString:@"geoserver/" options:NSBackwardsSearch];
+        NSString *typeLayer = [layer.name substringWithRange:NSMakeRange(0, index.location)];
+        
+        NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
+        
+        NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', false)", urlFormated , layer.name];
+        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+    } else {
+        
+        NSString *functionCall = [NSString stringWithFormat:@"showMarker(null, null, null, '%@', false)", layer.name];
+        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -244,6 +270,55 @@ extern NSUserDefaults *defaults;
         _location.x = [param1 floatValue];
         _location.y = [param2 floatValue];
     };
+    
+    context[@"getMarkerAtributes"] = ^(NSNumber *markerId, NSString *markerName, BOOL collapsed ) {
+        
+        MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
+        
+        [markerDelegate listAttributesById:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+            
+            NSString *html = @"";
+            
+            html = [html stringByAppendingString:@"<div data-role=\"collapsible\" data-collapsed=\"false\">"];
+            html = [html stringByAppendingString:[NSString stringWithFormat:@"<h1>%@</h1>", markerName]];
+            html = [html stringByAppendingString:@"<div>"];
+            NSArray *array = [result array];
+            for (MarkerAttribute *markerAtrribute in array) {
+                
+                NSString *htmlClass, *attributeType;
+                if (markerAtrribute.attribute.type == TEXT) {
+                    htmlClass = @"text-content-type";
+                    attributeType = NSLocalizedString(@"layer.content-type.text", @"");
+                } else if (markerAtrribute.attribute.type == NUMBER) {
+                    htmlClass = @"number-content-type";
+                    attributeType = NSLocalizedString(@"layer.content-type.number", @"");
+                } else if (markerAtrribute.attribute.type == DATE) {
+                    htmlClass = @"date-content-type";
+                    attributeType = NSLocalizedString(@"layer.content-type.date", @"");
+                } else if (markerAtrribute.attribute.type == BOOLEAN) {
+                    htmlClass = @"boolean-content-type";
+                    attributeType = NSLocalizedString(@"layer.content-type.boolean", @"");
+                }
+                html = [html stringByAppendingString:[NSString stringWithFormat:@"<div class=\"%@\"> <h4>%@</h4> <p>%@</p></div>", htmlClass, attributeType, markerAtrribute.value]];
+            }
+            html = [html stringByAppendingString:[NSString stringWithFormat:@"<img id=\"marker-image-%@\" class=\"layer-content-image loading-gif\" alt=\"\" src=\"ajax-loader.gif\"/>", markerId]];
+            html = [html stringByAppendingString:@"</div>"];
+            html = [html stringByAppendingString:@"</div>"];
+            
+            [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadPopupContent('%@')", html]];
+            [self loadMarkerImageOnHtml:markerId];
+            
+        } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:markerId];
+    };
+}
+
+- (void) loadMarkerImageOnHtml:(NSNumber*)markerId {
+    MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"files/markers/"];
+    [markerDelegate downloadMarkerAttributePhoto:markerId success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSString *embbedImageString = [NSString stringWithFormat:[NSString stringWithFormat:@"<img id=\"marker-image-%@\" class=\"layer-content-image\" alt=\"\" src=\"data:image/jpeg;base64,%@\" />", markerId, [operation.responseData base64EncodedStringWithOptions:0]]];
+        
+        [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadImageContent(%@, '%@')", markerId, embbedImageString]];
+    } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
 }
 
 - (void)loadWebView

@@ -13,11 +13,12 @@
 
 @interface Marker : NSObject
 
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *description;
-@property (nonatomic) CLLocationDegrees *latitude;
-@property (nonatomic) CLLocationDegrees *longitude;
+@property (nonatomic, retain) NSNumber *id;
+@property (nonatomic, retain) NSString *latitude;
+@property (nonatomic, retain) NSString *longitude;
+@property (nonatomic, retain) NSData *image;
 @property (strong, nonatomic) Layer *layer;
-@property (nonatomic) enum StatusMarker statusMarker;
+@property (nonatomic) enum StatusMarker status;
+@property (nonatomic, retain) NSArray *markerAtrributes;
 
 @end

@@ -25,8 +25,9 @@ extern User *loggedUser;
     if ( [defaults objectForKey:@"name"] != NULL
         && [defaults objectForKey:@"email"] != NULL )
     {
-        NSLog(@"%@", [defaults objectForKey:@"name"]);
-        NSLog(@"%@", [defaults objectForKey:@"name"]);
+        loggedUser.name = [defaults objectForKey:@"name"];
+        loggedUser.email = [defaults objectForKey:@"email"];
+        loggedUser.password = [defaults objectForKey:@"password"];
         [self performSegueWithIdentifier:@"mainSegue" sender:nil];
     }
     else

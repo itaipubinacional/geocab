@@ -51,8 +51,8 @@
     [_imageButton.layer setCornerRadius:5];
         
     _NewMarker = [[Marker alloc] init];
-    _NewMarker.latitude = &(_latitude);
-    _NewMarker.longitude = &(_longitude);
+//    _NewMarker.latitude = &(_latitude);
+//    _NewMarker.longitude = &(_longitude);
     
     _takeController = [[FDTakeController alloc] init];
     _takeController.delegate = self;
@@ -89,8 +89,6 @@
 
 - (IBAction)saveMarker:(id)sender {
     if ([self validateForm]) {
-        _NewMarker.name = _pointName.text;
-        _NewMarker.description = _pointDescription.text;
         NSLog(@"Marker: %@", _NewMarker);
     }
 }
