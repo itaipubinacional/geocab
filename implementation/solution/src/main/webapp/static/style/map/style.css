@@ -373,3 +373,7 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 	position:initial;
 }
 
+.min-height-accordion .panel-collapse .panel-body {
+	min-height : 400px;
+}
+
