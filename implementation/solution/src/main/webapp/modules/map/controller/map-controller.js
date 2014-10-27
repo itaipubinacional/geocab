@@ -1735,12 +1735,15 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.removeInternalLayer = function(layerId, callback){
-    	angular.forEach($scope.internalLayers, function(value, index){
+    	var callBackHasExecuted = false;
+    	var internalLayers =  $.extend([], $scope.internalLayers);
+    	angular.forEach(internalLayers, function(value, index){
 			  if(value.id == layerId) {
 				  $scope.map.removeLayer(value.layer);
 				  $scope.internalLayers.splice(index, 1);
-				 if(typeof callback != 'undefined') {
-					 callback(value.id); 
+				 if(typeof callback != 'undefined' && !callBackHasExecuted) {
+					 callback(value.id);
+					 callBackHasExecuted = true;
 				 }
 			  }
 		  });
@@ -1768,10 +1771,31 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	               });
 	
 					var icons = [];
-	
+					
+					angular.forEach(result, function(marker, index){
+		                   var iconFeature = new ol.Feature({
+		                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
+		                       marker: marker,
+		                   });	
+		                  
+		                   
+		                   var layer = new ol.layer.Vector({
+			                   source: new ol.source.Vector({ features: [iconFeature] })
+			               });
+			
+			               layer.setStyle(iconStyle);
+			
+			               $scope.map.addLayer(layer);
+			               
+			               $scope.internalLayers.push({"layer": layer, "id": layerId});
+		     			});
+		
+		     			
+		              
+	/*
 	     			angular.forEach(result, function(marker, index){
 	                   var iconFeature = new ol.Feature({
-	                       geometry: new ol.geom.Point([  marker.latitude , marker.longitude]),
+	                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
 	                       marker: marker,
 	                   });	
 	                  
@@ -1786,8 +1810,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	               layer.setStyle(iconStyle);
 	
 	               $scope.map.addLayer(layer);
-	               
 	               $scope.internalLayers.push({"layer": layer, "id": layerId});
+	               */
+	               
+	               
 	               
 	               $scope.$apply();
 	 		
