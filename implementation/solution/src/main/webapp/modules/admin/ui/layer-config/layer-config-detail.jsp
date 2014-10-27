@@ -98,6 +98,16 @@
                        ng-disabled="currentState == DETAIL_STATE"> <label><spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
 
             </div>
+            
+            <br />
+
+            <div class="form-item position-relative" style="width: 300px;"
+                 ng-if="currentState">
+                <input type="checkbox" id="grupo" style="width: 20px;"
+                       ng-model="currentEntity.enabled"
+                       ng-disabled="currentState == DETAIL_STATE"> <label>Disponível para receber postagens</label>
+
+            </div>
 
      
         </div>

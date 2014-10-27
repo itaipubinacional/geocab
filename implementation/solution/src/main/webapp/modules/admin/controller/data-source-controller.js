@@ -82,8 +82,8 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * now the delete button a direct method calls via click-ng why not have a specific status screen.
 	 */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
-	'<a ui-sref="data-source.update({id:row.entity.id})" title="Update" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>'+
-	'<a ng-click="changeToRemove(row.entity)" title="Remove" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
+	'<a ui-sref="data-source.update({id:row.entity.id})" title="'+ $translate('admin.datasource.Update') +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>'+
+	'<a ng-click="changeToRemove(row.entity)" title="'+ $translate('admin.datasource.Delete') +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
 	'</div>';
 
 	/**
