@@ -67,6 +67,11 @@
 		var wmsLayer = new ol.layer.Tile({
 			source: wmsSource
 		});
+
+		var layersAdd = [];
+		var markersAdd = [];
+
+		// layersAdd.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'name': 'vslsgeoregiao', 'title': 'Regiao'});
 		
 		var map = new ol.Map({
 			target: 'map',
@@ -74,12 +79,18 @@
 			new ol.layer.Tile({
 				//source: new ol.source.MapQuest({layer: 'sat'})
 				source: new ol.source.OSM()
-			}), wmsLayer],
+			})],
 			// rotação
             interactions: ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false, keyboard: false}),
 			view: view,
 			control: ol.control.defaults({rotate: false})
 
+		});
+
+		$( "#popupCloseLeft" ).bind({
+		   popupafterclose: function(event, ui) { 
+		   		$('#collapsible-content').html('');
+		   }
 		});
 		
 		// display popup on click
@@ -89,11 +100,12 @@
 				return feature;
 			}))
 
-			if (layersAdd.length > 0 ){
+			if (layersAdd.length > 0){
 
 				var listUrls = [];
+				var listTitles = [];
 
-                for(var i in layersAdd )
+                for(var i in layersAdd)
                 {
                     var url = layersAdd[i].wmsSource.getGetFeatureInfoUrl(
                         evt.coordinate, view.getResolution(), view.getProjection(),
@@ -104,20 +116,22 @@
                 }
 
             }
-
+            var collapsed = true;
 			if (features.length > 0 && features[0] != undefined) {
 				var html = '';
-				var collapsed = false;
 				for ( var i = 0; i < features.length; i++) {
-					// html += getCollapsibleHtml(features[i].get('markerId'), features[i].get('name'), features[i].get('description'), collapsed);
-					// collapsed = true;
-					//getMarkerAtributes(features[i].get('markerId'), features[i].get('name'), collapsed);
-					collapsed = true;
+					getMarkerAtributes(features[i].get('markerId'), features[i].get('name'), collapsed);
+					collapsed = false;
 				}
+			}
 
-				// var geometry = feature.getGeometry();
-				// var coord = geometry.getCoordinates();
-			} 
+			if (listUrls.length > 0) {
+				var collapsed = true;
+				for (var i in listUrls) {
+					getExternalLayerAttributes(listUrls[i], listTitles[i], collapsed);
+					collapsed = false;
+				}
+			}
 		});
 
 		function tapholdHandler( event ){
@@ -139,9 +153,6 @@
 			});
 		}
 
-		var layersAdd = [];
-		var markersAdd = [];
-		
 		function bindTouchEvent() {
 			$( "div.map" ).bind( "taphold", tapholdHandler );
 		}
@@ -183,7 +194,7 @@
 				markersAdd.push({'vectorLayer': vectorLayer, 'name': name});
 				// if (!fromTap) zoomToArea(latitude, longitude);
 			} else {
-				for( i in markersAdd ) {
+				for( var i in markersAdd ) {
 				   if( markersAdd[i].name == name ) {
 					   map.removeLayer(markersAdd[i].vectorLayer);
 					   markersAdd.splice(i,1);
@@ -193,7 +204,7 @@
 			
 		}
 
-		function showLayer(url, name, checked) {
+		function showLayer(url, name, title, checked) {
 			if( checked == 'true') {
 				var wmsSource = new ol.source.TileWMS({
 					url: url,
@@ -206,9 +217,9 @@
 
 				map.addLayer(wmsLayer);
 
-				layersAdd.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'name': name});
+				layersAdd.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'name': name, 'title': title});
 			} else {
-			   for( i in layersAdd ) {
+			   for( var i in layersAdd ) {
 				   if( layersAdd[i].name == name ) {
 					   map.removeLayer(layersAdd[i].wmsLayer);
 					   layersAdd.splice(i,1);
@@ -228,19 +239,8 @@
  			}
         }
 
-        function getCollapsibleHtml(id, title, content, collapsed) {
-        	html = '';
-        	html += collapsed ? '<div data-role="collapsible">' : '<div data-role="collapsible" data-collapsed="false">';
-        	html += "<h1>" + title + "</h1>";
-        	html += "<div>" + getMarkerAtributes(id) + "</div>";
-        	html += "</div>";
-
-        	return html;
-        }
-
         function loadPopupContent (html) {
         	$('#popupCloseLeft').popup('open');
-        	$('#collapsible-content').html('');
         	$('#collapsible-content').append(html).trigger("create");
         }
 
