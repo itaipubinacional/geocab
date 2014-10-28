@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.geocab.R;
 import br.com.geocab.controller.activity.MapActivity;
 import br.com.geocab.entity.User;
 
@@ -76,7 +77,7 @@ public class AccountDelegate extends AbstractDelegate
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(AccountDelegate.this.context, "Usuário ou senha inválido", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AccountDelegate.this.context, R.string.error_authentication, Toast.LENGTH_SHORT).show();
                         Log.d("ERROR","error => "+error.toString());
                     }
                 }

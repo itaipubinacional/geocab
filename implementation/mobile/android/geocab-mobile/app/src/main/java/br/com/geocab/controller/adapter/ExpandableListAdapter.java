@@ -9,6 +9,7 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -29,10 +30,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		mContext = pContext;
 		mGroupCollection = pGroupCollection;
 		mExpandableListView = pExpandableListView;
-		groupStatus = new int[mGroupCollection.size()];
+
 
 		setListEvent();
 	}
+
+    public void setItemList(GroupEntity groupEntity)
+    {
+        this.mGroupCollection.add(groupEntity);
+        groupStatus = new int[mGroupCollection.size()];
+    }
 
 
 	private void setListEvent() {
@@ -68,50 +75,74 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 				});
 	}
 
-	@Override
-	public String getChild(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		return mGroupCollection.get(arg0).GroupItemCollection.get(arg1).Name;
-	}
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        // TODO Auto-generated method stub
+        return mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).title;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
 	@Override
-	public long getChildId(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public View getChildView(int arg0, int arg1, boolean arg2, View arg3,
-			ViewGroup arg4) {
-		// TODO Auto-generated method stub
+	public View getChildView(int groupPosition, int childPosition,
+                             boolean isLastChild, View convertView, ViewGroup parent) {
 
 		ChildHolder childHolder;
-		if (arg3 == null) {
-			arg3 = LayoutInflater.from(mContext).inflate(
+		if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(
 					R.layout.list_information_group_item, null);
 
 			childHolder = new ChildHolder();
 
-			childHolder.title = (TextView) arg3.findViewById(R.id.item_title);
-			arg3.setTag(childHolder);
+			childHolder.title = (TextView) convertView.findViewById(R.id.text_view_marker_attribute_title);
+			childHolder.value = (TextView) convertView.findViewById(R.id.text_view_marker_attribute_value);
+			childHolder.image = (ImageView) convertView.findViewById(R.id.image_view_marker_attribute);
+            convertView.setTag(childHolder);
 		}else {
-			childHolder = (ChildHolder) arg3.getTag();
+			childHolder = (ChildHolder) convertView.getTag();
 		}
 
-		childHolder.title.setText(mGroupCollection.get(arg0).GroupItemCollection.get(arg1).Name);
-		return arg3;
+        if( mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).value == null )
+        {
+            childHolder.title.setVisibility(View.GONE);
+            childHolder.value.setVisibility(View.GONE);
+        }
+        else
+        {
+            childHolder.title.setVisibility(View.VISIBLE);
+            childHolder.value.setVisibility(View.VISIBLE);
+            childHolder.title.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).title);
+            childHolder.value.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).value);
+        }
+
+        if( mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).image == null )
+        {
+            childHolder.image.setVisibility(View.GONE);
+        }
+        else
+        {
+            childHolder.image.setVisibility(View.VISIBLE);
+
+            childHolder.image.setImageBitmap(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).image);
+        }
+
+		return convertView;
 	}
 
 	@Override
-	public int getChildrenCount(int arg0) {
+	public int getChildrenCount(int groupPosition) {
 		// TODO Auto-generated method stub
-		return mGroupCollection.get(arg0).GroupItemCollection.size();
+		return mGroupCollection.get(groupPosition).groupItemCollection.size();
 	}
 
 	@Override
-	public Object getGroup(int arg0) {
+	public Object getGroup(int groupPosition) {
 		// TODO Auto-generated method stub
-		return mGroupCollection.get(arg0);
+		return mGroupCollection.get(groupPosition);
 	}
 
 	@Override
@@ -121,33 +152,36 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public long getGroupId(int arg0) {
+	public long getGroupId(int groupPosition) {
 		// TODO Auto-generated method stub
-		return arg0;
+		return groupPosition;
 	}
 
 	@Override
-	public View getGroupView(int arg0, boolean arg1, View arg2, ViewGroup arg3) {
+	public View getGroupView(int groupPosition, boolean isExpanded,
+                             View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		GroupHolder groupHolder;
-		if (arg2 == null) {
-			arg2 = LayoutInflater.from(mContext).inflate(R.layout.list_information_group,
+		if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_information_group,
 					null);
 			groupHolder = new GroupHolder();
-			groupHolder.img = (ImageView) arg2.findViewById(R.id.tag_img);
-			groupHolder.title = (TextView) arg2.findViewById(R.id.group_title);
-			arg2.setTag(groupHolder);
+			groupHolder.img = (ImageView) convertView.findViewById(R.id.tag_img);
+			groupHolder.title = (TextView) convertView.findViewById(R.id.group_title);
+            convertView.setTag(groupHolder);
 		} else {
-			groupHolder = (GroupHolder) arg2.getTag();
+			groupHolder = (GroupHolder) convertView.getTag();
 		}
-		if (groupStatus[arg0] == 0) {
-			groupHolder.img.setImageResource(R.drawable.icon_arrow_close);
-		} else {
-			groupHolder.img.setImageResource(R.drawable.icon_arrow_open);
-		}
-		groupHolder.title.setText(mGroupCollection.get(arg0).Name);
 
-		return arg2;
+            if (groupStatus[groupPosition] == 0) {
+                groupHolder.img.setImageResource(R.drawable.icon_arrow_close);
+            } else {
+                groupHolder.img.setImageResource(R.drawable.icon_arrow_open);
+            }
+
+		groupHolder.title.setText(mGroupCollection.get(groupPosition).title);
+
+		return convertView;
 	}
 
 	class GroupHolder {
@@ -157,6 +191,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 	class ChildHolder {
 		TextView title;
+        TextView value;
+        ImageView image;
 	}
 
 	@Override

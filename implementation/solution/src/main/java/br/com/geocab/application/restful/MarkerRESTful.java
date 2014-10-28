@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.service.MarkerService;
 
 
@@ -49,5 +50,15 @@ public class MarkerRESTful
 		return this.markerService.listMarkerByLayer(layerId);
 	}
 	
+	/**
+	 * 
+	 * @param layerId
+	 * @return
+	 */
+	@RequestMapping(value="/{markerId}/markerattributes", method = RequestMethod.GET)
+	public @ResponseBody List<MarkerAttribute> listAttributeByMarker(@PathVariable long markerId)
+	{
+		return this.markerService.listAttributeByMarker(markerId);
+	}
 	
 }
