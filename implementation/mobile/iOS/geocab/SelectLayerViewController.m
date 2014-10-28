@@ -19,23 +19,24 @@
 @property (nonatomic, retain) NSMutableDictionary *sections;
 @property (nonatomic, retain) UITableView *tableView;
 
-extern User *loggedUser;
+extern NSUserDefaults *defaults;
 
 @end
 
 @implementation SelectLayerViewController
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
     
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
+    [super viewDidLoad];
     
     //Navigation Bar
     self.navigationItem.title = NSLocalizedString(@"Layers", @"");
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     [self.view addSubview:self.tableView];
+    
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
     
     if (self.multipleSelection) {
         UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -70,8 +71,6 @@ extern User *loggedUser;
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancel)];
     }
     
-    
-    
     LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
     [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
         
@@ -79,7 +78,7 @@ extern User *loggedUser;
         [self arrangeArrayInSections:_layers];
         [self.tableView reloadData];
         
-    } userName:loggedUser.email password:loggedUser.password];
+    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
     
     
 }
@@ -125,9 +124,10 @@ extern User *loggedUser;
     [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
         
         _layers = [[result array] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
+        [self arrangeArrayInSections:_layers];
         [self.tableView reloadData];
         
-    } userName:@"admin@geocab.com.br" password:@"admin"];
+    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
 }
 
 #pragma mark - Table view data source

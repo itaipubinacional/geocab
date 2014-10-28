@@ -15,6 +15,7 @@
 @property (retain, nonatomic) NSString *name;
 @property (retain, nonatomic) NSString *title;
 @property (retain, nonatomic) NSString *legend;
+@property (retain, nonatomic) NSString *icon;
 @property (retain, nonatomic) DataSource *dataSource;
 @property BOOL selected;
 

@@ -29,7 +29,7 @@
             <div class="form-item position-relative" style="width: 300px;">
                 <label class="detail-label" required><spring:message code="admin.users.E-mail"/></label>
                 <input name="address" type="email" id="address" class="form-control"
-                       ng-model="currentEntity.address"
+                       ng-model="currentEntity.email"
                        maxlength="255"
                        placeholder="<spring:message code="admin.users.E-mail"/>"
                        required ng-minlength="1"
@@ -49,7 +49,7 @@
                 <label class="detail-label"><spring:message code="admin.users.Password"/></label>
                 <input name="password" type="password" class="form-control"
                        placeholder="<spring:message code="admin.users.Password"/>"
-                       ng-model="currentEntity.pass"
+                       ng-model="currentEntity.password"
                        maxlength="144"
                        ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted || form.password.$dirty) }"
                        ng-hover
@@ -59,7 +59,7 @@
                 <label class="detail-label" required><spring:message code="admin.users.Password"/></label>
                 <input name="password" type="password" class="form-control"
                        placeholder="<spring:message code="admin.users.Password"/>"
-                       ng-model="currentEntity.pass"
+                       ng-model="currentEntity.password"
                        required maxlength="144"
                        ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted || form.password.$dirty) }"
                        ng-hover>

@@ -46,4 +46,21 @@
                            alpha:1.0f];
 }
 
++ (BOOL)verifyInternetConection
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"")
+                                                        message:NSLocalizedString(@"no-internet-error.message", @"")
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 @end

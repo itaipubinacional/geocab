@@ -19,6 +19,7 @@
                                                   @"name"      : @"name",
                                                   @"title"     : @"title",
                                                   @"legend"    : @"legend",
+                                                  @"icon"      : @"icon"
                                                   }];
     
     RKObjectMapping *dataSourceMapping = [RKObjectMapping mappingForClass:[DataSource class]];

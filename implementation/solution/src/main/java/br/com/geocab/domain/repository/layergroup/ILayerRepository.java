@@ -27,7 +27,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param pageable
 	 * @return
 	 */
-	@Query(value="SELECT new Layer( layer.id, layer.name, layer.title, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, dataSource, layerGroup ) " +
+	@Query(value="SELECT new Layer( layer.id, layer.name, layer.title, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup ) " +
 				"FROM Layer layer " +
 				"LEFT OUTER JOIN layer.dataSource dataSource " + 
 				"LEFT OUTER JOIN layer.layerGroup layerGroup " +
@@ -65,11 +65,11 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.title, layerGroup) "
+	@Query(value="SELECT new Layer(layer.id, layer.title, layer.icon, layerGroup) "
 			+ "FROM Layer layer " 
 			+ "LEFT OUTER JOIN layer.dataSource dataSource "
 			+ "LEFT OUTER JOIN layer.layerGroup layerGroup "
-			+ "WHERE ( dataSource.url = NULL AND layer.publishedLayer != NULL  ) " )
+			+ "WHERE ( dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE ) " )
 	public List<Layer> listAllInternalLayerGroups();
 	
 	/**

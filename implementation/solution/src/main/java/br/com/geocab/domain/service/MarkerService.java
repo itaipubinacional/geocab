@@ -4,6 +4,7 @@
 package br.com.geocab.domain.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -92,7 +93,10 @@ public class MarkerService
 			marker.setStatus(StatusMarker.PENDING);
 			marker.setUser(user);
 			marker = this.markerRepository.save( marker );
-			this.uploadImg(marker.getImage(), marker.getId());
+			if( marker.getImage() != null ) {
+				this.uploadImg(marker.getImage(), marker.getId());
+			}
+			
 		}
 		catch ( DataIntegrityViolationException e )
 		{
@@ -109,11 +113,25 @@ public class MarkerService
 	 * 
 	 * @param Marker
 	 * @return Marker
+	 * @throws RepositoryException 
+	 * @throws IOException 
 	 */
 	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
-	public Marker updateMarker( Marker marker )
+	public Marker updateMarker( Marker marker ) throws IOException, RepositoryException
 	{			
 		try{
+			
+			FileTransfer file = this.findImgByMarker(marker.getId());
+			
+			if( file != null && marker.getImage() != null ){
+				this.removeImg(String.valueOf(marker.getId()));
+			}
+			
+			if( marker.getImage() != null ) {
+				this.uploadImg(marker.getImage(), marker.getId());	
+			}
+			
+			
 			marker = this.markerRepository.save( marker );
 		}
 		catch ( DataIntegrityViolationException e )
@@ -289,7 +307,27 @@ public class MarkerService
 		}*/
 	}
 	
+	public void removeImg( String metaFileId ) throws IOException, RepositoryException {
+		
+	
+		this.metaFileRepository.remove(metaFileId);
+	}
+	
+	
 	public void uploadImg( FileTransfer fileTransfer, Long markerId ) throws IOException, RepositoryException {
+		
+		final String  mimeType = fileTransfer.getMimeType();
+		
+		final List<String> validMimeTypes = new ArrayList<String>();
+		validMimeTypes.add("image/gif");
+		validMimeTypes.add("image/jpeg");
+		validMimeTypes.add("image/bmp");
+		validMimeTypes.add("image/png");
+		
+		if ( mimeType == null || !validMimeTypes.contains(mimeType))
+		{
+			throw new IllegalArgumentException( "Formato inválido!" );
+		}
 		
 		MetaFile metaFile = new MetaFile();
 		metaFile.setId(String.valueOf(markerId));

@@ -182,7 +182,7 @@
 }
 
 .sidebar-style .container {
-    width: 300px;
+    width: 90%;
 }
 .sidebar-style .container label{
     display: block;
@@ -371,5 +371,9 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 
 .msgMap > .alert > .close {
 	position:initial;
+}
+
+.min-height-accordion .panel-collapse .panel-body {
+	min-height : 400px;
 }
 
