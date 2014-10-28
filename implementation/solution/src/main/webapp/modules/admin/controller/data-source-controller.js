@@ -109,9 +109,10 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	};
 
 	/**
-	 * Variável que armazena o estado da paginação 
-	 * para renderizar o pager e também para fazer as requisições das
-	 * novas páginas, contendo o estado do Sort incluído.
+	 * 
+	 * Store the state of paging
+	 * to render the pager and to make requisitions of new pages containing the state Sort included.
+	 * @type PageRequest
 	 * 
 	 * @type PageRequest
 	 */
@@ -122,10 +123,14 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * Variável para armazenar atributos do formulário que
 	 * não cabem em uma entidade. Ex.:
 	 * @filter - Filtro da consulta
+	 * 
+	 * Store auxiliary information that dont't fit in an entity Ex:
+	 * @filter - Search filter
+	 * 
 	 */
 	$scope.data = { filter:null, showFields: false };
 	/**
-	 * Armazena a entitidade corrente para edição ou detalhe.
+	 * Store current User entity for update
 	 */
 	$scope.currentEntity;
 	
@@ -134,14 +139,14 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Método principal que faz o papel de front-controller da tela.
-	 * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-	 * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
+	 * 
+	 * Main method that makes the role of front-controller screen.
+	 * It is invoked whenever there is a change of URL (@see $stateChangeSuccess),
 	 * Ex.: /list -> changeToList()
-	 *      /criar -> changeToInsert()
+	 *      /create -> changeToInsert()
 	 *      
-	 * Caso o estado não for encontrado, ele direciona para a listagem,
-	 * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+	 * If the state is not found, it directs you to the list
+	 * 
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		var state = $state.current.name;
@@ -180,12 +185,13 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	};
 
 	/**
-	 * Realiza os procedimentos iniciais (prepara o estado) 
-	 * para a tela de consulta e após isso, muda o estado para list. 
+	 * 
+	 * Boot the state users.list
 	 * @see LIST_STATE
 	 * @see $stateChangeSuccess
 	 * 
-	 * Para mudar para este estado, deve-se primeiro carregar os dados da consulta.
+	 * To switch to this state, you must first load the data from the query.
+	 * 
 	 */
 	$scope.changeToList = function() {
 		$log.info("changeToList");
@@ -200,13 +206,14 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	};
 
 	/**
-	 * Realiza os procedimentos iniciais (prepara o estado) 
-	 * para a tela de inserção e após isso, muda o estado para insert. 
+	 * 
+	 * Boot the state users.insert 
 	 * @see INSERT_STATE
 	 * @see $stateChangeSuccess
 	 * 
-	 * Para mudar para este estado, deve-se primeiro instanciar um novo currentEntity,
-	 * para limpar os campos e configurar valores defaults.
+	 * To switch to this state, you must first instantiate a new currentEntity, 
+	 * To clear the fields and set default values​​.	
+	 * 
 	 */
 	$scope.changeToInsert = function() {
 		$log.info("changeToInsert");
@@ -223,13 +230,14 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	};
 
 	/**
-	 * Realiza os procedimentos iniciais (prepara o estado) 
-	 * para a tela de edição e após isso, muda o estado para update. 
+	 * Boot the state users.update
 	 * @see UPDATE_STATE
-	 * @see $stateChangeSuccess
-	 * 
-	 * Para mudar para este estado, deve-se primeiro obter via id
-	 * o registro pelo serviço de consulta e só então mudar o estado da tela.
+	 * @see $stateChangeSuccess 
+	 *
+	 * To move to this state, must first obtain the ID 
+	 * The record of the consultation service and only then change the state of the screen.
+	 *
+	 *
 	 */
 	$scope.changeToUpdate = function( id ) {
 		$log.info("changeToUpdate", id);
@@ -250,14 +258,15 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	};
 
 	/**
-	 * Realiza os procedimentos iniciais (prepara o estado) 
-	 * para a tela de detalhe e após isso, muda o estado para detail. 
+	 * 
+	 * Boot the state users.detail 
 	 * @see DETAIL_STATE
 	 * @see $stateChangeSuccess
 	 * 
-	 * Para mudar para este estado, deve-se primeiro obter via id
-	 * o registro atualizado pelo serviço de consulta e só então mudar o estado da tela.
-	 * Caso o indentificador esteja inválido, retorna para o estado de listagem.
+	 * To switch to this state, one must first get through the 
+	 * registration id updated by the consultation service and only then change the state of the screen. 
+	 * If the identifier is invalid, returns to the state list.
+	 * 
 	 */
 	$scope.changeToDetail = function( id ) {
 		$log.info("changeToDetail", id);
@@ -285,12 +294,11 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	};
 
 	/**
-	 * Realiza os procedimentos iniciais (prepara o estado) 
-	 * para a tela de exclusão. 
+	 * Boot the state users.remove
 	 * 
-	 * Antes de excluir, o usuário notificado para confirmação 
-	 * e só então o registro é excluido.
-	 * Após excluído, atualizamos a grid com estado de filtro, paginação e sorting. 
+	 * Before deleting the user notified for confirmation
+	 * and then the record is excluded.
+	 * Once deleted, update the grid with state filter, paging and sorting.
 	 */
 	$scope.changeToRemove = function( dataSource ) {
 		$log.info("changeToRemove", dataSource);
@@ -302,7 +310,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 			resolve: {
 				title: function(){return $translate("admin.datasource.Deleting-data-source"); },
 				message: function(){return $translate("admin.datasource.Are-you-sure-you-want-to-delete-the-data-source")+' "'+dataSource.name+'"? <br/>'+$translate("admin.datasource.This-operation-can-not-be-undone")+'.'; },
-				buttons: function(){return [ {label:'Excluir', css:'btn btn-danger'}, {label:'Cancelar', css:'btn btn-default', dismiss:true} ];}
+				buttons: function(){return [ {label: $translate("Remove") , css:'btn btn-danger'}, {label: $translate('admin.datasource.Cancel') , css:'btn btn-default', dismiss:true} ];}
 			}
 		});
 
@@ -333,8 +341,8 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	};
 
 	/**
-	 * Configura o pageRequest conforme o componente visual pager
-	 * e chama o serviçoe de listagem, considerando o filtro corrente na tela.
+	 * Sets the pageRequest as the visual component and calls the pager listing service, 
+	 * considering the current filter on the screen.
 	 * 
 	 * @see currentPage
 	 * @see data.filter 
@@ -349,8 +357,8 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 *-------------------------------------------------------------------*/
 
 	/**
-	 * Realiza a consulta de registros, consirando filtro, paginação e sorting.
-	 * Quando ok, muda o estado da tela para list.
+	 * Performs the query logs, consirando filter, paging and sorting. 
+	 * When ok, change the state of the screen to list.
 	 * 
 	 * @see data.filter
 	 * @see currentPage
@@ -403,8 +411,8 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	};
 
 	/**
-	 * Realiza a atualiza de um registro
-	 * e no sucesso modifica o estado da tela para o estado de detalhe
+	 *Performs updates a record 
+	 *and successfully modifies the state of the screen to state detail
 	 */
 	$scope.updateDataSource = function() {
 

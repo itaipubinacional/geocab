@@ -47,7 +47,7 @@
                 ui-sref="users.update( {id:currentEntity.id} )"><spring:message code="admin.users.Update"/>
             </button>
 
-            <!-- State Criar | Editar -->
+            <!-- State Create | Edit -->
             <button ng-show="currentState == INSERT_STATE || currentState == UPDATE_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
                 class="btn btn-default"
                 ui-sref="users.list"><span class="icon itaipu-icon-arrow-left"></span>
