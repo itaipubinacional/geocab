@@ -301,7 +301,7 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     @Override
     public void onConnectionSuspended(int arg0)
     {
-        Toast.makeText(this, "onConnectionSuspended", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "onConnectionSuspended", Toast.LENGTH_LONG).show();
         mGoogleApiClient.connect();
     }
 

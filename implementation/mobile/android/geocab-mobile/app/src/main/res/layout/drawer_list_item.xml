@@ -8,6 +8,7 @@
         android:id="@+id/network_image_view_legend"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:scaleType="fitXY"
         android:layout_marginRight="10dp"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"

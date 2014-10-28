@@ -1,16 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="br.com.geocab.controller.activity.MapActivity" >
-    <item android:id="@+id/action_localization"
-        android:title="Minha localização"
-        android:orderInCategory="100"
-        />
-    <item android:id="@+id/action_other_localization"
-        android:title="Outra localização"
-        android:orderInCategory="100"
-        />
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        />
 </menu>
