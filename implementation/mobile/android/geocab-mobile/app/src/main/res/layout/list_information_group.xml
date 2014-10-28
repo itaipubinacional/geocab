@@ -23,7 +23,7 @@
         android:layout_toRightOf="@id/tag_img"
         android:layout_marginLeft="10dip"
         android:text="Teste"
-        android:textSize="14dip"
+        android:textSize="15dp"
         android:textStyle="bold" />
 
 </RelativeLayout>
