@@ -274,10 +274,10 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 
         	accountService.disableUser( user.id, {
 				callback : function(result) {
-					//caso o currentPage esteja null, configura o pager default
+					//if currentPage is null, configure the pager default
 					if ( $scope.currentPage == null ) {
 						$scope.changeToList();
-						//caso não, usa o mesmo estado para carregar a listagem
+						//else, use the same estate to load the listing
 					} else {
 						$scope.listUsersByFilters($scope.data.filter, $scope.currentPage.pageable);
 					}
