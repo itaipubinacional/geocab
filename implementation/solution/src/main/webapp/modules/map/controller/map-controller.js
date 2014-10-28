@@ -1410,6 +1410,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.toggleSidebarMarkerDetailUpdate = function (time, element){
     	$scope.currentEntity = $scope.marker;
     	
+    	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
             $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
@@ -1476,8 +1477,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	       				  })
 	  
                         angular.forEach($scope.selectLayerGroup, function(layer,index){
-                        		if( layer.layerId == result[0].marker.layer.id ) {
+                        		if( layer.layerId == $scope.currentEntity.layer.id ) {
+                        			layer.created = $scope.currentEntity.layer.created;
 	       							$scope.currentEntity.layer = layer;
+	       							
+	       							return false;
 	           					}
                         })
 	       				 
@@ -1494,7 +1498,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.message = {type:"error", text: message};
                 $scope.$apply();
             }
-    	});
+    	});    	
     	
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
@@ -1719,6 +1723,24 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
+            	  if(message == "Empty reply from the server") {
+	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+	      			  
+	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
+	      				   $scope.addInternalLayer(layerId);
+	      			  })
+
+          			  $scope.clearFcMarker();
+        			  
+        			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
+        			  $("div.msgMap").show();
+        			  
+        			  setTimeout(function(){
+        				  $("div.msgMap").fadeOut();
+        			  }, 5000);
+          			  
+                      $scope.$apply();
+            	  }
                   $scope.message = {type:"error", text: message};
                   $scope.$apply();
               }
@@ -1762,6 +1784,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				 }
 			  }
 		  });
+    	
+    	if( !callBackHasExecuted ) {
+    		callback(layerId);
+    	}
     }
     
     $scope.addInternalLayer = function( layerId ) {
