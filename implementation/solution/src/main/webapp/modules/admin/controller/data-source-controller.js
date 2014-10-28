@@ -21,9 +21,9 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 *-------------------------------------------------------------------*/
 
 	/**
-	 *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
-	 *  Quando o evento é disparado, configuramos o pager do spring-data 
-	 *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
+	 * Handler listening whenever the user / programmatically does the sorting in grid-ng. 
+     * When the event is fired, we set the pager's spring-data 
+     * and call the query again, also considering the state of the filter(@see $scope.data.filter)
 	 */
 	$scope.$on('ngGridEventSorted', function(event, sort) {
 
@@ -97,7 +97,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
             headerRowHeight: 45,
             rowHeight: 45,
 			beforeSelectionChange: function (row, event) {
-				//evita chamar a selecao, quando clicado em um action button.
+				//avoids calling include selecting, when clicked on a button action.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
 				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
 			},
@@ -120,9 +120,6 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 
 	//FORM
 	/**
-	 * Variável para armazenar atributos do formulário que
-	 * não cabem em uma entidade. Ex.:
-	 * @filter - Filtro da consulta
 	 * 
 	 * Store auxiliary information that dont't fit in an entity Ex:
 	 * @filter - Search filter
@@ -152,8 +149,8 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 		var state = $state.current.name;
 	
 		/**
-		 * É necessario remover o atributo sortInfo pois o retorno de uma edição estava duplicando o valor do mesmo com o atributo Sort
-		 * impossibilitando as ordenações nas colunas da grid.
+		 * It is necessary to remove the SortInfo attribute for the return of an issue was doubling the value of the same attribute with the Sort 
+		 * Preventing the ordinations in the columns of the grid.
 		 */
 		if( $scope.gridOptions.sortInfo ){
 			delete $scope.gridOptions.sortInfo;
@@ -318,10 +315,10 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 
 			dataSourceService.removeDataSource( dataSource.id, {
 				callback : function(result) {
-					//caso o currentPage esteja null, configura o pager default
+					//if the currentPage is null, configure the pager default
 					if ( $scope.currentPage == null ) {
 						$scope.changeToList();
-						//caso não, usa o mesmo estado para carregar a listagem
+						//else, use the same state to load the listing
 					} else {
 						$scope.listDataSourceByFilters($scope.data.filter, $scope.currentPage.pageable);
 					}
@@ -357,7 +354,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 *-------------------------------------------------------------------*/
 
 	/**
-	 * Performs the query logs, consirando filter, paging and sorting. 
+	 * Performs the query logs, considering filter, paging and sorting. 
 	 * When ok, change the state of the screen to list.
 	 * 
 	 * @see data.filter

@@ -26,21 +26,25 @@
             <!-- State List -->
             <button ng-if="currentState == LIST_STATE" style="float: right;"
                     class="btn btn-primary"
+                    title="<spring:message code="admin.layer-config.New-layer"/>"
                     ui-sref="layer-config.create"><spring:message code="admin.layer-config.New-layer"/>
             </button>
 
             <!-- State Detail -->
             <button ng-if="currentState == DETAIL_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
                     class="btn btn-default"
+                    title="<spring:message code="admin.layer-config.Back" /> "
                     ui-sref="layer-config.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button> 
             
             <button ng-if="currentState == DETAIL_STATE" style="float: right;"
                     class="btn btn-danger"
+                    title="<spring:message code="Remove"/>"
                     ng-click="changeToRemove(currentEntity)"><spring:message code="Remove"/>
             </button>
             <button ng-if="currentState == DETAIL_STATE" style="float: right;"
                     class="btn btn-primary"
+                    title="<spring:message code="Update"/>"
                     ui-sref="layer-config.update( {id:currentEntity.id} )"><spring:message code="Update"/>
             </button>
 
@@ -59,12 +63,14 @@
             <button ng-if="currentState == INSERT_STATE" style="float: right;"
                     class="btn btn-success"
                     id="buttonInsert"
+                    title="<spring:message code="Save"/>"
                     ng-click="insertLayer(currentEntity)"><spring:message code="Save"/>
             </button>
             <!-- State Update -->
             <button ng-if="currentState == UPDATE_STATE" style="float: right;"
                     class="btn btn-success"
                     id="buttonUpdate"
+                    title="<spring:message code="Save"/>"
                     ng-click="updateLayer(currentEntity)"><spring:message code="Save"/>
             </button>
         </div>
