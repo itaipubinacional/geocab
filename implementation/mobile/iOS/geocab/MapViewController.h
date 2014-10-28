@@ -11,7 +11,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "SelectLayerViewController.h"
 
-@interface MapViewController : UIViewController <UIWebViewDelegate, CLLocationManagerDelegate, UIActionSheetDelegate, LayerSelectDelegate, UIAlertViewDelegate>
+@interface MapViewController : UIViewController <UIWebViewDelegate, CLLocationManagerDelegate, UIActionSheetDelegate, LayerSelectDelegate, UIAlertViewDelegate, NSURLConnectionDelegate>
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 
 
