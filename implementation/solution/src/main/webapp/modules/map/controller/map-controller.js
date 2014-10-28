@@ -1410,6 +1410,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.toggleSidebarMarkerDetailUpdate = function (time, element){
     	$scope.currentEntity = $scope.marker;
     	
+    	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
             $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
@@ -1476,8 +1477,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	       				  })
 	  
                         angular.forEach($scope.selectLayerGroup, function(layer,index){
-                        		if( layer.layerId == result[0].marker.layer.id ) {
+                        		if( layer.layerId == $scope.currentEntity.layer.id ) {
+                        			layer.created = $scope.currentEntity.layer.created;
 	       							$scope.currentEntity.layer = layer;
+	       							
+	       							return false;
 	           					}
                         })
 	       				 
@@ -1494,7 +1498,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.message = {type:"error", text: message};
                 $scope.$apply();
             }
-    	});
+    	});    	
     	
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
@@ -1660,8 +1664,28 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
+            	  if(message == "Empty reply from the server") {
+	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+	      			  
+	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
+	      				   $scope.addInternalLayer(layerId);
+	      			  })
+
+          			  $scope.clearDetailMarker();
+        			  
+        			  $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
+        			  $("div.msgMap").show();
+        			  
+        			  setTimeout(function(){
+        				  $("div.msgMap").fadeOut();
+        			  }, 5000);
+          			  
+            	  } else {
+            		  $scope.message = {type:"error", text: message};
+                      $scope.$apply();
+            	  }
+            	  
+                  
               }
       	});
 
@@ -1719,8 +1743,26 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
+            	  if(message == "Empty reply from the server") {
+	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+	      			  
+	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
+	      				   $scope.addInternalLayer(layerId);
+	      			  })
+
+          			  $scope.clearFcMarker();
+        			  
+        			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
+        			  $("div.msgMap").show();
+        			  
+        			  setTimeout(function(){
+        				  $("div.msgMap").fadeOut();
+        			  }, 5000);
+          			  
+            	  } else {
+	                  $scope.message = {type:"error", text: message};
+	                  $scope.$apply();
+            	  }
               }
       	});
 
@@ -1762,6 +1804,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				 }
 			  }
 		  });
+    	
+    	if( !callBackHasExecuted ) {
+    		callback(layerId);
+    	}
     }
     
     $scope.addInternalLayer = function( layerId ) {
@@ -1885,6 +1931,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.setPhotoMarker = function(element) {
+    	if (!(/\.(gif|jpg|jpeg|bmp|png)$/i).test(element.value)){
+            $scope.msg = {text: $translate("map.The-selected-file-is-invalid"), type: "danger", dismiss: true};
+            return false;
+        }
+    	
     	
     	$scope.currentEntity.image = element;
     	
@@ -1968,7 +2019,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.readURL = function(input){
 
-        if (input.files && input.files[0] && input.files[0].size < 200000) {
+        if (input.files && input.files[0] && input.files[0].size < 2000000) {
             var reader = new FileReader();
 
             reader.onload = function (e) {

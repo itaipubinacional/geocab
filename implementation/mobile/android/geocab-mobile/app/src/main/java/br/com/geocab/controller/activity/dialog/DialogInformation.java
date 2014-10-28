@@ -2,6 +2,8 @@ package br.com.geocab.controller.activity.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Display;
@@ -15,20 +17,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.geocab.R;
+import br.com.geocab.controller.activity.MapActivity;
 import br.com.geocab.controller.adapter.ExpandableListAdapter;
+import br.com.geocab.controller.delegate.MarkerDelegate;
 import br.com.geocab.entity.GroupEntity;
+import br.com.geocab.entity.Marker;
+import br.com.geocab.entity.MarkerAttribute;
 
 /**
  * Created by Vinicius on 21/10/2014.
  */
-public class DialogInformation {
+public class DialogInformation{
 
     private ExpandableListView mExpandableListView;
     private List<GroupEntity> mGroupCollection;
-    private Activity context;
+    private Context context;
+    private Marker marker;
+    private ExpandableListAdapter adapter;
+    private String[] listUrls;
+    private String[] listTitles;
 
-    public DialogInformation(Activity context) {
+    public DialogInformation(Context context, Marker marker, String[] listUrls, String[] listTitles) {
         this.context = context;
+        this.marker = marker;
+        this.mGroupCollection = new ArrayList<GroupEntity>();
+        this.listUrls = listUrls;
+        this.listTitles = listTitles;
+
+        ReceiverThread r = new ReceiverThread();
+        r.run();
+
+
     }
 
     public void childSectionView() {
@@ -43,7 +62,7 @@ public class DialogInformation {
         Window window = dialog.getWindow();
         lp.copyFrom(window.getAttributes());
 
-        Display display = this.context.getWindowManager().getDefaultDisplay();
+        Display display = ((Activity)this.context).getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         lp.width = size.x;
@@ -55,7 +74,8 @@ public class DialogInformation {
 
         ImageView icon_close = (ImageView) dialog.findViewById(R.id.icon_close);
 
-        prepareResource();
+        //populateMarkerAttributes(marker);
+        //prepareResource(markerAttributes);
         initPage(dialog);
 
         icon_close.setOnClickListener(new View.OnClickListener() {
@@ -67,36 +87,110 @@ public class DialogInformation {
         });
 
         dialog.show();
+
     }
 
-    private void prepareResource() {
 
-        mGroupCollection = new ArrayList<GroupEntity>();
+    private class ReceiverThread extends Thread {
+        @Override
+        public void run() {
+            ((MapActivity)context).runOnUiThread(new Runnable() {
 
-        for (int i = 1; i < 6; i++) {
-            GroupEntity ge = new GroupEntity();
-            ge.Name = "Group" + i;
+                @Override
+                public void run() {
+                    childSectionView();
+                }
+            });
+        }
+    }
 
-//            for (int j = 1; j < 5; j++) {
-//                GroupEntity.GroupItemEntity gi = ge.new GroupItemEntity();
-//                gi.Name = "Child" + j;
-//                ge.GroupItemCollection.add(gi);
-//            }
 
-            GroupEntity.GroupItemEntity gi = ge.new GroupItemEntity();
-            gi.Name = "Child";
-            ge.GroupItemCollection.add(gi);
+    public void populateLayerProperties(final GroupEntity groupEntity)
+    {
+        if( groupEntity.groupItemCollection.size() > 0)
+        {
+            adapter.setItemList(groupEntity);
 
-            mGroupCollection.add(ge);
+            ((MapActivity)context).runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+
+
+    public void populateMarkerAttributes(Marker marker) {
+
+        if( marker.getMarkerAttribute().size() == 0 )
+        {
+            GroupEntity groupEntity = new GroupEntity();
+
+            GroupEntity.GroupItemEntity groupItemEntity = groupEntity.new GroupItemEntity();
+            groupEntity.title = marker.getLayer().getName();
+
+            groupItemEntity.title = null;
+            groupItemEntity.value = null;
+            groupItemEntity.image = marker.getImage();
+            groupEntity.groupItemCollection.add(groupItemEntity);
+
+            adapter.setItemList(groupEntity);
+        }
+        else
+        {
+            GroupEntity groupEntity = new GroupEntity();
+            GroupEntity.GroupItemEntity groupItemEntity;
+
+
+            for(MarkerAttribute markerAttribute : marker.getMarkerAttribute())
+            {
+
+                groupEntity.title = markerAttribute.getAttribute().getLayer().getName();
+                groupItemEntity = groupEntity.new GroupItemEntity();
+                groupItemEntity.title = markerAttribute.getAttribute().getName();
+                groupItemEntity.value = markerAttribute.getValue();
+                groupItemEntity.image = null;
+
+                groupEntity.groupItemCollection.add(groupItemEntity);
+
+            }
+
+            groupItemEntity = groupEntity.new GroupItemEntity();
+            groupItemEntity.title = null;
+            groupItemEntity.value = null;
+            groupItemEntity.image = marker.getImage();
+            groupEntity.groupItemCollection.add(groupItemEntity);
+
+            adapter.setItemList(groupEntity);
         }
 
+
+
+        ((MapActivity)context).runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void initPage(Dialog dialog) {
         mExpandableListView = (ExpandableListView) dialog.findViewById(R.id.expandableListView);
-        ExpandableListAdapter adapter = new ExpandableListAdapter(this.context,
+        adapter = new ExpandableListAdapter(this.context,
                 mExpandableListView, mGroupCollection);
 
         mExpandableListView.setAdapter(adapter);
+    }
+
+    public ExpandableListAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(ExpandableListAdapter adapter) {
+        this.adapter = adapter;
     }
 }

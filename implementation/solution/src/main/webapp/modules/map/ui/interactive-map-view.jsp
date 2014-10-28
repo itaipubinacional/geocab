@@ -51,6 +51,8 @@
 			</ul>
 		</div>
 
+
+
 		<div id="sidebar-marker-detail-update" class="sidebar-style"  >
 
 
@@ -123,7 +125,7 @@
 										style="width: 100%; height: 200px; margin-top: 12px;"> <br>
 									<br>
 			
-									<div style=" overflow: auto; height: 320px;">
+									<div style=" overflow: auto;">
 										<div ng-repeat="markerAttribute in attributesByMarker" style="position: relative;margin-bottom:15px">
 										
 												<label ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
@@ -206,7 +208,6 @@
 						
 						<br style="clear: both;"> <br> 
 						<label>Camada</label>
-						
 						<div style="margin-bottom:5px;">
 							<select ng-change="listAttributesByLayer()"
 								data-placeholder="Selecione uma camada" name="camada"
@@ -434,7 +435,7 @@
 						<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
 						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
-						<img class="marker-image" ng-show="imgResult"> <br>
+						<img class="marker-image" ng-show="imgResult" style="width: 100%; height: 200px; margin-top: 12px;"> <br>
 						<hr>
 
 						<input type="file" id="upload-input" style="display: none;"

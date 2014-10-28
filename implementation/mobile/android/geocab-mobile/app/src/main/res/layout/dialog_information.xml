@@ -31,9 +31,9 @@
                 android:id="@+id/expandableListView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:dividerHeight="1dp"
                 android:groupIndicator="@drawable/list_expand_background"
                 android:listSelector="@drawable/list_expand_selector"
+                android:childDivider="@color/transparent"
                 android:scrollbars="none" >
             </ExpandableListView>
 
