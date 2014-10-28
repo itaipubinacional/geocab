@@ -32,17 +32,17 @@
 		</div>
 
         <div class="modal-footer">
-            <button id="buttonInsert" ng-show="currentState == NORMAL_STATE" class="btn btn-primary" ng-click="closePopup()"><spring:message code="layer-group-popup.Save" /></button>
-            <button id="buttonClose" ng-show="currentState == NORMAL_STATE" class="btn btn-default" ng-click="close()"><spring:message code="layer-group-popup.Close" /></button>
+            <button id="buttonInsert" ng-show="currentState == NORMAL_STATE" class="btn btn-primary" title="<spring:message code="layer-group-popup.Save" />" ng-click="closePopup()"><spring:message code="layer-group-popup.Save" /></button>
+            <button id="buttonClose" ng-show="currentState == NORMAL_STATE" class="btn btn-default" title="<spring:message code="layer-group-popup.Close" />" ng-click="close()"><spring:message code="layer-group-popup.Close" /></button>
 
-            <button id="buttonConfirmInsert" ng-show="currentState == CONFIRM_STATE" class="btn btn-primary" ng-click="closePopupConfirm()"><spring:message code="layer-group-popup.Yes"/></button>
-            <button id="buttonConfirmClose" ng-show="currentState == CONFIRM_STATE" class="btn btn-default" ng-click="closeConfirm()"><spring:message code="layer-group-popup.No"/></button>
+            <button id="buttonConfirmInsert" ng-show="currentState == CONFIRM_STATE" class="btn btn-primary" title="<spring:message code="layer-group-popup.Yes"/>" ng-click="closePopupConfirm()"><spring:message code="layer-group-popup.Yes"/></button>
+            <button id="buttonConfirmClose" ng-show="currentState == CONFIRM_STATE" class="btn btn-default"  title="<spring:message code="layer-group-popup.No"/>" ng-click="closeConfirm()"><spring:message code="layer-group-popup.No"/></button>
         </div>
     </div>
 
 <script type="text/javascript">
     /**
-     * Jquery usado para nao permitir que a popup seja aberta novamente toda vez que o usuario teclar enter
+     * Jquery used to not allow the popup to open again every time the User press enter
      */
     $(document).ready(function(){
         $("#hide").focus();

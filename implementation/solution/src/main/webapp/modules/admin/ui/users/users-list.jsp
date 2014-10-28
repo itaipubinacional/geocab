@@ -9,12 +9,13 @@
 <!-- Users - List -->
 <div>
         
-	<!-- Barra de filtro -->
+	<!-- Filter Bar -->
 	<div class="search-div">
 		<form>
-			<input type="text" ng-model="data.filter" class="form-control" placeholder="<spring:message code="admin.users.Name-or-E-mail"/>" style="float:left; width:300px"/>
+			<input type="text" ng-model="data.filter" class="form-control" title="<spring:message code="admin.users.Search"/>" placeholder="<spring:message code="admin.users.Name-or-E-mail"/>" style="float:left; width:300px"/>
 			<input type="submit" value="<spring:message code="admin.users.Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
-			       ng-click="listUsersByFilters(data.filter, currentPage.pageable)"/>
+			       ng-click="listUsersByFilters(data.filter, currentPage.pageable)"
+			       title="<spring:message code="admin.users.Search"/>"/>
 	    </form>
 	</div>
 	
