@@ -7,9 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Reachability.h"
 
 @interface ControllerUtil : NSObject
 
 +(UIColor*)colorWithHexString:(NSString*)hex;
++ (BOOL)verifyInternetConection;
 
 @end

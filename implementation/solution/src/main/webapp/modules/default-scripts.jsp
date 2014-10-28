@@ -14,6 +14,7 @@
 <!-- JQuery -->
 <script type="text/javascript" src="<c:url value="/webjars/jquery/2.1.1/jquery.min.js"/>"></script> <!-- FIXME Tirar as versoes -->
 
+
 <!-- JQuery UI -->
 <script type="text/javascript" src="<c:url value="/static/libs/jquery-ui/jquery-ui-1.10.3.custom.js"/>"></script>
 	
@@ -46,3 +47,5 @@
 <script type="text/javascript" src="<c:url value="/static/libs/activity-dialog.js"/>"></script>
 
 <script type="text/javascript" src="broker/interface/loginService.js"></script>
+
+

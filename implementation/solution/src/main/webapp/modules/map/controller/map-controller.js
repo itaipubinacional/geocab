@@ -182,7 +182,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @type {number}
      */
     $scope.PERMISSION_CALCULO_DISTANCIA = 1;
-
+    
     //Permissão cálculo área
     /**
      *
@@ -294,7 +294,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      *
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
-
+		
 		/**
 		 * Caso não existe uma nav bar
 		 * */
@@ -404,18 +404,73 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
          */
         $scope.map.on('click', function(evt) {
         	
-        	
-        	/* get the feature click to open marker detail */
-        	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-    		        return feature;
-    		      });
-        		
-        	/* if click on the marker */
-        	if( feature ){
-        		$scope.marker = feature.getProperties().marker;
-            	$scope.toggleSidebarMarkerDetail(300);	
-        	}
+        	 if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
+             	$scope.screenMarkerOpenned = true;
+                 $scope.toggleSidebarMarkerCreate(300);
 
+                 var iconStyle = new ol.style.Style({
+                     image: new ol.style.Icon(({
+                         anchor: [0.5, 1],
+                         anchorXUnits: 'fraction',
+                         anchorYUnits: 'fraction',
+                         src: 'static/images/marker.png'
+                     }))
+                 });
+
+                 var iconFeature = new ol.Feature({
+                     geometry: new ol.geom.Point([  evt.coordinate[0] , evt.coordinate[1]])
+                     
+                 });	
+
+                var layer = new ol.layer.Vector({
+                     source: new ol.source.Vector({ features: [iconFeature] })
+                 });
+
+                 layer.setStyle(iconStyle);
+                 
+                 $scope.currentCreatingInternalLayer = layer;
+                 $scope.map.addLayer(layer);
+                 $scope.$apply();
+                /*
+                 $scope.marker = new ol.Overlay({
+                     position: evt.coordinate,
+                     positioning: 'center-center',
+                     element: document.getElementById('marker-point'),
+                     stopEvent: false
+                 });
+                 $scope.map.addOverlay($scope.marker);*/
+                 
+                 $scope.currentEntity.latitude = evt.coordinate[0];
+                 $scope.currentEntity.longitude = evt.coordinate[1];
+                 
+                 layerGroupService.listAllInternalLayerGroups({
+             		callback : function(result) {
+                         //$scope.layersGroups = result;
+                         $scope.selectLayerGroup = [];
+                         
+                         angular.forEach(result, function(layer,index){
+                         	
+                         	$scope.selectLayerGroup.push({
+                         		"layerTitle": layer.title,
+                         		"layerId": layer.id,
+                         		"layerIcon": layer.icon,
+                         		"group": layer.layerGroup.name
+                         	});
+                         	
+                         })
+                         
+                         $scope.currentState = $scope.LIST_STATE;
+                         $state.go( $scope.LIST_STATE );
+                         $scope.$apply();
+                     },
+                     errorHandler : function(message, exception) {
+                         $scope.message = {type:"error", text: message};
+                         $scope.$apply();
+                     }
+             	});
+              return false;   
+             }
+        	
             if ($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
 
                 // zera os valores
@@ -433,77 +488,39 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 }
 
                 listAllFeatures(listUrls);
+                
+                $scope.screen = 'detail';
+               
             }
 
+            /* get the feature click to open marker detail */
+        	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+    		        return feature;
+    		      });
+        		
+        	/* if click on the marker */
+        	if( feature ){
+        		if( typeof feature.getProperties().marker != "undefined" ) {
+	        		$scope.screen = 'detail';
+	        		
+					if( $scope.screenMarkerOpenned ) {
+						$scope.clearFcMarker();
+					}
+				        		
+	        		$scope.marker = feature.getProperties().marker;
+	        		$scope.features.push({"feature": $scope.marker, "type": "internal"});
+        		}
+        	}
+        	
+        	if( $scope.features.length > 0 ) {
+                $timeout(function(){
+        			$scope.toggleSidebarMarkerDetailUpdate(300);	
+    	    	}, 400)
+	    	} 
+        	
+    		
 
-            if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
-            	$scope.screenMarkerOpenned = true;
-                $scope.toggleSidebarMarkerCreate(300);
-                
-                
-                var iconStyle = new ol.style.Style({
-                    image: new ol.style.Icon(({
-                        anchor: [0.5, 1],
-                        anchorXUnits: 'fraction',
-                        anchorYUnits: 'fraction',
-                        src: 'static/images/marker.png'
-                    }))
-                });
-
-                var iconFeature = new ol.Feature({
-                    geometry: new ol.geom.Point([  evt.coordinate[0] , evt.coordinate[1]])
-                    
-                });	
-
-               var layer = new ol.layer.Vector({
-                    source: new ol.source.Vector({ features: [iconFeature] })
-                });
-
-                layer.setStyle(iconStyle);
-                
-                $scope.currentCreatingInternalLayer = layer;
-                $scope.map.addLayer(layer);
-                $scope.$apply();
-               /*
-                $scope.marker = new ol.Overlay({
-                    position: evt.coordinate,
-                    positioning: 'center-center',
-                    element: document.getElementById('marker-point'),
-                    stopEvent: false
-                });
-                $scope.map.addOverlay($scope.marker);*/
-                
-                $scope.currentEntity.latitude = evt.coordinate[0];
-                $scope.currentEntity.longitude = evt.coordinate[1];
-                
-                layerGroupService.listAllInternalLayerGroups({
-            		callback : function(result) {
-                        //$scope.layersGroups = result;
-                        $scope.selectLayerGroup = [];
-                        
-                        angular.forEach(result, function(layer,index){
-                        	
-                        	$scope.selectLayerGroup.push({
-                        		"layerTitle": layer.title,
-                        		"layerId": layer.id,
-                        		"group": layer.layerGroup.name
-                        	});
-                        	
-                        })
-                        
-                        $scope.currentState = $scope.LIST_STATE;
-                        $state.go( $scope.LIST_STATE );
-                        $scope.$apply();
-                    },
-                    errorHandler : function(message, exception) {
-                        $scope.message = {type:"error", text: message};
-                        $scope.$apply();
-                    }
-            	});
-                
-            }
-
-
+           
 
         });
         /**
@@ -520,6 +537,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	});
 
     };
+    
+    $scope.changeToScreen = function(screen) {
+    	$scope.screen = screen;
+    }
 
     /**
      * Funcão que faz requisição ao geo server para trazer as features
@@ -557,20 +578,28 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         }
 
                         if (insere){
-                            $scope.features.push(feature);
+                            $scope.features.push({"feature": feature, "type":"external"});
+                        }
+                        
+                        if( $scope.features.length > 0 ) {
+                            
+        	                $timeout(function(){
+        	        			$scope.toggleSidebarMarkerDetailUpdate(300);	
+        	    	    	}, 400)
+        	    	    	
                         }
 
                     });
+                    
                 }
+                
+                if ( $scope.features.length <= 0 && $('.menu-sidebar-container').css('right') != '3px' ) {
+        			$scope.clearDetailMarker();
+        		}
+                
+                
 
                 $scope.$apply();
-
-
-                // inicializa popup
-                if ($scope.features.length > 0){
-                    $scope.showMapInfo($scope.features);
-                }
-
 
             },
             errorHandler: function (message, exception) {
@@ -1077,7 +1106,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     $scope.initializeMarker = function () {
     	
-    	if($("#sidebar-marker-detail").css("display") == 'block') {
+    	if($("#sidebar-marker-detail-update").css("display") == 'block') {
     		$scope.clearDetailMarker();
     	}
     	
@@ -1355,6 +1384,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param element Nome do elemento que está chamando a função.
      */
     $scope.toggleSidebarMarkerCreate = function (time, element){
+    	$scope.imgResult = "";
+    	$scope.$apply();
+    	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
         }
@@ -1375,13 +1407,49 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     };
     
-    $scope.toggleSidebarMarkerUpdate = function (time, element){
+    $scope.toggleSidebarMarkerDetailUpdate = function (time, element){
     	$scope.currentEntity = $scope.marker;
+    	
     	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
+            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
+            return;
         }
-    
+    	
+    	if( typeof $scope.marker != "undefined" ) {
+	    	markerService.findImgByMarker($scope.marker.id, {
+	 			 callback : function(result) {
+	 				 
+	 				 $scope.imgResult = result;
+	 	          },
+	 	          errorHandler : function(message, exception) {
+	 	              $scope.message = {type:"error", text: message};
+	 	              $scope.$apply();
+	 	          }
+		    	});
+	    	
+	    	markerService.listAttributeByMarker($scope.marker.id, {
+			  callback : function(result) {
+				  $scope.attributesByMarker = result;   
+				  
+				  angular.forEach(result,function(markerAttribute,index){
+					if (markerAttribute.attribute.type == "NUMBER") {
+						markerAttribute.value = parseInt(markerAttribute.value);
+					}  
+				  })
+				  
+				 
+				  $scope.$apply();
+				 
+	          },
+	          errorHandler : function(message, exception) {
+	              $scope.message = {type:"error", text: message};
+	              $scope.$apply();
+	          }
+	    	});
+    	}
+    	/* Lista para o edit*/
     	layerGroupService.listAllInternalLayerGroups({
     		callback : function(result) {
                // $scope.layersGroups = result;
@@ -1409,8 +1477,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	       				  })
 	  
                         angular.forEach($scope.selectLayerGroup, function(layer,index){
-                        		if( layer.layerId == result[0].marker.layer.id ) {
+                        		if( layer.layerId == $scope.currentEntity.layer.id ) {
+                        			layer.created = $scope.currentEntity.layer.created;
 	       							$scope.currentEntity.layer = layer;
+	       							
+	       							return false;
 	           					}
                         })
 	       				 
@@ -1427,67 +1498,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.message = {type:"error", text: message};
                 $scope.$apply();
             }
-    	});
-    	
-    	
-    		$scope.toggleSidebar(time, '', '#sidebar-marker-update');
-    	
-    };
-    
-    $scope.toggleSidebarMarkerDetail = function (time, element){
-    	
-    	if(element == "closeButton") {
-            $scope.screenMarkerOpenned = false;
-            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail');
-            return;
-        }
-    	
-    	markerService.findImgByMarker($scope.marker.id, {
- 			 callback : function(result) {
- 				 
- 				 $scope.imgResult = result;
- 	          },
- 	          errorHandler : function(message, exception) {
- 	              $scope.message = {type:"error", text: message};
- 	              $scope.$apply();
- 	          }
-	    	});
-    	
-    	markerService.listAttributeByMarker($scope.marker.id, {
-		  callback : function(result) {
-			  $scope.attributesByMarker = result;   
-			  
-			  angular.forEach(result,function(markerAttribute,index){
-				if (markerAttribute.attribute.type == "NUMBER") {
-					markerAttribute.value = parseInt(markerAttribute.value);
-				}  
-			  })
-			  
-			 
-			  $scope.$apply();
-			 
-          },
-          errorHandler : function(message, exception) {
-              $scope.message = {type:"error", text: message};
-              $scope.$apply();
-          }
-    	});
+    	});    	
     	
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
     	 * */
     	
-    	if($scope.slideActived == '#sidebar-marker-detail') return;
+    	if($scope.slideActived == '#sidebar-marker-detail-update') return;
     	
     	if($scope.slideActived == '#sidebar-layers') {
     		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
     		
     		$timeout(function(){
-        		$scope.toggleSidebar(time, '', '#sidebar-marker-detail');
+        		$scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
         	}, 400);
     		
     	} else {
-    		$scope.toggleSidebar(time, '', '#sidebar-marker-detail');
+    		$scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
     	}
     	/*
     	if ( $('#sidebar-marker-detail').css("display") == 'none' ){
@@ -1497,7 +1524,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     };
     
     $scope.clearDetailMarker = function() {
-    	$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail');
+    	$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail-update');
     }
     
     $scope.toggleSidebar = function (time, element, slide){
@@ -1518,11 +1545,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        //Executa a animação.
 	        
 	        $(slide).toggle('slide', { direction: 'right' }, time);
-	        if(slide != "#sidebar-marker-update") {
-		        $('.menu-sidebar-container').animate({
-		            'right' : closed ? '20%' : '3px'
-		        }, time);
-	        }
+	        $('.menu-sidebar-container').animate({
+	            'right' : closed ? '20%' : '3px'
+	        }, time);
 	    } else {
 	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
 	    }
@@ -1599,14 +1624,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.updateMarker = function(){
-    	/*
-    	 * TODO: Verificar se todo o formário foi preenchido.
-    	 * */
     	
-    	/*if (!$scope.form('sidebarMarkerUpdate').$valid){
-    		 $scope.msg = {type: "danger", text: "preencha", dismiss: true};
+    	if (!$scope.form('sidebarMarkerUpdate').$valid){
+    		 $scope.msg = {type: "danger", text: "preencha os campos obrigatorios", dismiss: true};
     		return;
-    	}*/
+    	}
     	
     	if( $scope.currentEntity.layer == null ) {
     		var layer = new Layer();
@@ -1614,13 +1636,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	$scope.currentEntity.layer = layer;	
     	}
     	
+    	var i=0;
+    	
+    	angular.forEach($scope.attributesByMarker, function(){
+    		
+    		if ($scope.attributesByMarker[i].value == null){
+    			$scope.attributesByMarker[i].value = "";
+    		}
+    		
+    		i++;    		
+    	})
     	
     	$scope.currentEntity.markerAttribute = $scope.attributesByMarker;
     		
     	markerService.updateMarker($scope.currentEntity,{
       		callback : function(result) {
       		      			
-      			$scope.toggleSidebarMarkerUpdate(300, 'closeButton')
+      			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
       			
       			 $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
      			  $("div.msgMap").show();
@@ -1632,8 +1664,28 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
+            	  if(message == "Empty reply from the server") {
+	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+	      			  
+	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
+	      				   $scope.addInternalLayer(layerId);
+	      			  })
+
+          			  $scope.clearDetailMarker();
+        			  
+        			  $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
+        			  $("div.msgMap").show();
+        			  
+        			  setTimeout(function(){
+        				  $("div.msgMap").fadeOut();
+        			  }, 5000);
+          			  
+            	  } else {
+            		  $scope.message = {type:"error", text: message};
+                      $scope.$apply();
+            	  }
+            	  
+                  
               }
       	});
 
@@ -1657,7 +1709,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		attribute.id = val.id;
 
     		var markerAttribute = new MarkerAttribute();
-    		markerAttribute.value = val.value;
+    		if (val.value != "" && val.value != undefined){
+    			markerAttribute.value = val.value;
+    		} else {
+    			markerAttribute.value = "";
+    		}
+    		
     		markerAttribute.attribute = attribute
     		markerAttribute.marker = $scope.currentEntity;
     		$scope.currentEntity.markerAttribute.push(markerAttribute);
@@ -1686,14 +1743,42 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
+            	  if(message == "Empty reply from the server") {
+	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+	      			  
+	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
+	      				   $scope.addInternalLayer(layerId);
+	      			  })
+
+          			  $scope.clearFcMarker();
+        			  
+        			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
+        			  $("div.msgMap").show();
+        			  
+        			  setTimeout(function(){
+        				  $("div.msgMap").fadeOut();
+        			  }, 5000);
+          			  
+            	  } else {
+	                  $scope.message = {type:"error", text: message};
+	                  $scope.$apply();
+            	  }
               }
       	});
 
     }
     
     $scope.listAttributesByLayer = function(){
+    	var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+                anchor: [0.5, 1],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                src: $scope.currentEntity.layer.layerIcon
+            }))
+        });
+    	$scope.currentCreatingInternalLayer.setStyle(iconStyle);
+    	 
     	  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
       		callback : function(result) {
                   $scope.attributesByLayer = result;
@@ -1707,15 +1792,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.removeInternalLayer = function(layerId, callback){
-    	angular.forEach($scope.internalLayers, function(value, index){
+    	var callBackHasExecuted = false;
+    	var internalLayers =  $.extend([], $scope.internalLayers);
+    	angular.forEach(internalLayers, function(value, index){
 			  if(value.id == layerId) {
 				  $scope.map.removeLayer(value.layer);
 				  $scope.internalLayers.splice(index, 1);
-				 if(typeof callback != 'undefined') {
-					 callback(value.id); 
+				 if(typeof callback != 'undefined' && !callBackHasExecuted) {
+					 callback(value.id);
+					 callBackHasExecuted = true;
 				 }
 			  }
 		  });
+    	
+    	if( !callBackHasExecuted ) {
+    		callback(layerId);
+    	}
     }
     
     $scope.addInternalLayer = function( layerId ) {
@@ -1723,21 +1815,48 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	markerService.listMarkerByLayer(layerId, {
 				 callback : function(result) {
 					 
+					var iconPath = "static/images/marker.png";
+					 
+					if(result.length > 0) {
+						iconPath = result[0].layer.icon
+					}
+					
 					var iconStyle = new ol.style.Style({
 	                   image: new ol.style.Icon(({
 	                       anchor: [0.5, 1],
 	                       anchorXUnits: 'fraction',
 	                       anchorYUnits: 'fraction',
-	                       src: 'static/images/marker.png'
+	                       src: iconPath
 	                    
 	                   }))
 	               });
 	
 					var icons = [];
-	
+					
+					angular.forEach(result, function(marker, index){
+		                   var iconFeature = new ol.Feature({
+		                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
+		                       marker: marker,
+		                   });	
+		                  
+		                   
+		                   var layer = new ol.layer.Vector({
+			                   source: new ol.source.Vector({ features: [iconFeature] })
+			               });
+			
+			               layer.setStyle(iconStyle);
+			
+			               $scope.map.addLayer(layer);
+			               
+			               $scope.internalLayers.push({"layer": layer, "id": layerId});
+		     			});
+		
+		     			
+		              
+	/*
 	     			angular.forEach(result, function(marker, index){
 	                   var iconFeature = new ol.Feature({
-	                       geometry: new ol.geom.Point([  marker.latitude , marker.longitude]),
+	                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
 	                       marker: marker,
 	                   });	
 	                  
@@ -1752,8 +1871,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	               layer.setStyle(iconStyle);
 	
 	               $scope.map.addLayer(layer);
-	               
 	               $scope.internalLayers.push({"layer": layer, "id": layerId});
+	               */
+	               
+	               
 	               
 	               $scope.$apply();
 	 		
@@ -1789,7 +1910,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	   				   	$scope.addInternalLayer(layerId);
 	    			})
 	      			
-	    			$scope.toggleSidebarMarkerDetail(300, 'closeButton');  
+	    			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton');  
 	    			  
 	      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
 	      			$("div.msgMap").show();
@@ -1810,6 +1931,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.setPhotoMarker = function(element) {
+    	if (!(/\.(gif|jpg|jpeg|bmp|png)$/i).test(element.value)){
+            $scope.msg = {text: $translate("map.The-selected-file-is-invalid"), type: "danger", dismiss: true};
+            return false;
+        }
+    	
     	
     	$scope.currentEntity.image = element;
     	
@@ -1893,12 +2019,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.readURL = function(input){
 
-        if (input.files && input.files[0] && input.files[0].size < 200000) {
+        if (input.files && input.files[0] && input.files[0].size < 2000000) {
             var reader = new FileReader();
 
             reader.onload = function (e) {
             	console.log(e);
-                $('#marker-image').attr('src', e.target.result);
+            	$scope.imgResult = e.target.result;
+            	$scope.$apply();
+                $('.marker-image').attr('src', e.target.result);
             };
             reader.readAsDataURL(input.files[0]);
         }

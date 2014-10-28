@@ -112,11 +112,16 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
-        '<a ui-sref="layer-config.update({id:row.entity.id})" title="Editar" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
-        '<a ng-click="changeToRemove(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+        '<a ui-sref="layer-config.update({id:row.entity.id})" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
     
-    var IMAGE_LEGEND = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+    var MARKER_BUTTONS = '<div  class="cell-centered">' +
+    '<a ng-if="row.entity.enabled == false" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
+    '<a ng-if="row.entity.enabled == true" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
+    '</div>';
+    
+    var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
 	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
 	'</div>';
 
@@ -136,12 +141,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $state.go($scope.DETAIL_STATE, {id: row.entity.id});
         },
         columnDefs: [
-            {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
-            {displayName: $translate('Title'), field: 'title'},
-            {displayName: $translate('Layer'), field: 'name'},
-            {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name'},
-            {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '15%'},
-            {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
+            {displayName: 'Postagem', sortable: false, cellTemplate: MARKER_BUTTONS, width: '6%'},
+            {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '6%', cellTemplate: IMAGE_LEGEND},
+            {displayName: $translate('Title'), field: 'title', width: '19%'},
+            {displayName: $translate('Layer'), field: 'name', width: '19%'},
+            {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name', width: '30%'},
+            {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '13%'},
+            {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '7%'}
         ]
     };
 
@@ -218,7 +224,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '33%'},
             {displayName: $translate('Type'), field: 'type',  width: '33%'},
-            {displayName: 'Required', field: 'required',  width: '33%'},
+            {displayName: $translate('Required'), field: 'required',  width: '33%'},
         ]
     };
 

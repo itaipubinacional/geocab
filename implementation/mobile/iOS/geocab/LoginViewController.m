@@ -83,7 +83,8 @@ extern User *loggedUser;
 }
 
 - (IBAction)login:(id)sender {
-    if (self.isFormValid) {
+    
+    if ( [ControllerUtil verifyInternetConection] && self.isFormValid ) {
         AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/"];
         [accountDelegate loginWithEmail:_username.text password:_password.text successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
             User *loggedUser = [[User alloc] init];
@@ -101,7 +102,7 @@ extern User *loggedUser;
 - (void) authenticateUser:(User*) user {
     [defaults setObject:user.email forKey:@"email"];
     [defaults setObject:user.name forKey:@"name"];
-    //[defaults setObject:[[[result array] objectAtIndex:0] id] forKey:@"userId"];
+    [defaults setObject:_password.text forKey:@"password"];
     loggedUser = user;
     [defaults synchronize];
     [self performSegueWithIdentifier:@"loginToMainSegue" sender:self];
