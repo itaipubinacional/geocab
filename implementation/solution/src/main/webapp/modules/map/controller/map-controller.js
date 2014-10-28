@@ -1664,8 +1664,28 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
+            	  if(message == "Empty reply from the server") {
+	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+	      			  
+	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
+	      				   $scope.addInternalLayer(layerId);
+	      			  })
+
+          			  $scope.clearDetailMarker();
+        			  
+        			  $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
+        			  $("div.msgMap").show();
+        			  
+        			  setTimeout(function(){
+        				  $("div.msgMap").fadeOut();
+        			  }, 5000);
+          			  
+            	  } else {
+            		  $scope.message = {type:"error", text: message};
+                      $scope.$apply();
+            	  }
+            	  
+                  
               }
       	});
 
@@ -1739,10 +1759,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         				  $("div.msgMap").fadeOut();
         			  }, 5000);
           			  
-                      $scope.$apply();
+            	  } else {
+	                  $scope.message = {type:"error", text: message};
+	                  $scope.$apply();
             	  }
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
               }
       	});
 
@@ -1911,6 +1931,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.setPhotoMarker = function(element) {
+    	if (!(/\.(gif|jpg|jpeg|bmp|png)$/i).test(element.value)){
+            $scope.msg = {text: $translate("map.The-selected-file-is-invalid"), type: "danger", dismiss: true};
+            return false;
+        }
+    	
     	
     	$scope.currentEntity.image = element;
     	
@@ -1994,7 +2019,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.readURL = function(input){
 
-        if (input.files && input.files[0] && input.files[0].size < 200000) {
+        if (input.files && input.files[0] && input.files[0].size < 2000000) {
             var reader = new FileReader();
 
             reader.onload = function (e) {
