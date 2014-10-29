@@ -121,12 +121,115 @@ extern NSUserDefaults *defaults;
     [_changeMarkerButton addTarget:self action:@selector(changeMarkerRegistration:) forControlEvents:UIControlEventTouchUpInside];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [super viewWillAppear:animated];
+}
+
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+}
+
 - (void) didEndMultipleSelecting:(NSArray *)selectedLayers {
     _selectedLayers = selectedLayers;
     
     [_layerSelectorNavigator dismissViewControllerAnimated:YES completion:^{
 
     }];
+}
+
+- (void) webViewDidFinishLoad:(UIWebView *)webView
+{
+    JSContext *context = [_webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    context[@"confirmToProceed"] = ^(NSString *param1, NSString *param2) {
+        [_webView stringByEvaluatingJavaScriptFromString:@"unbindTouchEvent()"];
+        NSString *functionCall = [NSString stringWithFormat:@"addPoint(%@, %@, true)", param1, param2];
+        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        [self hideNewMarkerButtons];
+        [self showMarkerOptions];
+        
+        if (!_hintLabel.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _hintLabel.hidden = true;} completion:nil];
+        if (!_showMarkerOptionsButton.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _showMarkerOptionsButton.hidden = true;} completion:nil];
+        
+        _location.x = [param1 floatValue];
+        _location.y = [param2 floatValue];
+    };
+    
+    context[@"getMarkerAtributes"] = ^(NSNumber *markerId, NSString *markerName, BOOL collapsed ) {
+        
+        MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
+        
+        [markerDelegate listAttributesById:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+            
+            NSString *html = @"";
+            
+            html = [html stringByAppendingString:@"<div data-role=\"collapsible\" data-collapsed=\"false\">"];
+            html = [html stringByAppendingString:[NSString stringWithFormat:@"<h1>%@</h1>", markerName]];
+            html = [html stringByAppendingString:@"<div>"];
+            NSArray *array = [result array];
+            for (MarkerAttribute *markerAtrribute in array) {
+                
+                NSString *htmlClass, *attributeType;
+                if (markerAtrribute.attribute.type == TEXT) {
+                    htmlClass = @"text-content-type";
+                    attributeType = NSLocalizedString(@"layer.content-type.text", @"");
+                } else if (markerAtrribute.attribute.type == NUMBER) {
+                    htmlClass = @"number-content-type";
+                    attributeType = NSLocalizedString(@"layer.content-type.number", @"");
+                } else if (markerAtrribute.attribute.type == DATE) {
+                    htmlClass = @"date-content-type";
+                    attributeType = NSLocalizedString(@"layer.content-type.date", @"");
+                } else if (markerAtrribute.attribute.type == BOOLEAN) {
+                    htmlClass = @"boolean-content-type";
+                    attributeType = NSLocalizedString(@"layer.content-type.boolean", @"");
+                }
+                html = [html stringByAppendingString:[NSString stringWithFormat:@"<div class=\"%@\"> <h4>%@</h4> <p>%@</p></div>", htmlClass, attributeType, markerAtrribute.value]];
+            }
+            html = [html stringByAppendingString:[NSString stringWithFormat:@"<img id=\"marker-image-%@\" class=\"layer-content-image loading-gif\" alt=\"\" src=\"ajax-loader.gif\"/>", markerId]];
+            html = [html stringByAppendingString:@"</div>"];
+            html = [html stringByAppendingString:@"</div>"];
+            
+            [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadPopupContent('%@')", html]];
+            [self loadMarkerImageOnHtml:markerId];
+            
+        } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:markerId];
+    };
+    
+    context[@"getExternalLayerAttributes"] = ^(NSString *urlString, NSString *title, BOOL collapsed) {
+        // Prepare the link that is going to be used on the GET request
+        NSURL * url = [[NSURL alloc] initWithString:urlString];
+        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
+        
+        NSData *urlData;
+        NSURLResponse *response;
+        NSError *error;
+        
+        urlData = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
+        
+        NSDictionary * object = [NSJSONSerialization JSONObjectWithData:urlData options:0 error:&error];
+        
+        NSArray *features = [object objectForKey:@"features"];
+        if ([features count] > 0) {
+            NSDictionary *properties = [(NSDictionary*)[features firstObject] objectForKey:@"properties"];
+            
+            NSString *html = @"";
+            
+            html = [html stringByAppendingString:@"<div data-role=\"collapsible\" data-collapsed=\"false\">"];
+            html = [html stringByAppendingString:[NSString stringWithFormat:@"<h1>%@</h1>", title]];
+            html = [html stringByAppendingString:@"<div>"];
+            
+            for (NSString* key in properties) {
+                
+                html = [html stringByAppendingString:[NSString stringWithFormat:@"<div class=\"layer-content-text\"> <h4>%@</h4> <p>%@</p></div>", key, [properties objectForKey:key]]];
+                
+            }
+            html = [html stringByAppendingString:@"</div>"];
+            html = [html stringByAppendingString:@"</div>"];
+            
+            [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadPopupContent('%@')", html]];
+        }
+    };
 }
 
 - (void) didCheckedLayer:(Layer *)layer {
@@ -137,7 +240,7 @@ extern NSUserDefaults *defaults;
         
         NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
         
-        NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', 'true')", urlFormated , layer.name];
+        NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', '%@', 'true')", urlFormated , layer.name, layer.title];
         [_webView stringByEvaluatingJavaScriptFromString:functionCall];
     } else {
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker/"];
@@ -160,7 +263,7 @@ extern NSUserDefaults *defaults;
         
         NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
         
-        NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', false)", urlFormated , layer.name];
+        NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', '%@', false)", urlFormated , layer.name, layer.title];
         [_webView stringByEvaluatingJavaScriptFromString:functionCall];
     } else {
         
@@ -254,66 +357,10 @@ extern NSUserDefaults *defaults;
     }
 }
 
-- (void) webViewDidFinishLoad:(UIWebView *)webView
-{
-    JSContext *context = [_webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-    context[@"confirmToProceed"] = ^(NSString *param1, NSString *param2) {
-        [_webView stringByEvaluatingJavaScriptFromString:@"unbindTouchEvent()"];
-        NSString *functionCall = [NSString stringWithFormat:@"addPoint(%@, %@, true)", param1, param2];
-        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
-        [self hideNewMarkerButtons];
-        [self showMarkerOptions];
-
-        if (!_hintLabel.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _hintLabel.hidden = true;} completion:nil];
-        if (!_showMarkerOptionsButton.hidden) [UIView animateWithDuration:1  delay:1.5 options: UIViewAnimationCurveEaseInOut animations:^{ _showMarkerOptionsButton.hidden = true;} completion:nil];
-        
-        _location.x = [param1 floatValue];
-        _location.y = [param2 floatValue];
-    };
-    
-    context[@"getMarkerAtributes"] = ^(NSNumber *markerId, NSString *markerName, BOOL collapsed ) {
-        
-        MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
-        
-        [markerDelegate listAttributesById:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
-            
-            NSString *html = @"";
-            
-            html = [html stringByAppendingString:@"<div data-role=\"collapsible\" data-collapsed=\"false\">"];
-            html = [html stringByAppendingString:[NSString stringWithFormat:@"<h1>%@</h1>", markerName]];
-            html = [html stringByAppendingString:@"<div>"];
-            NSArray *array = [result array];
-            for (MarkerAttribute *markerAtrribute in array) {
-                
-                NSString *htmlClass, *attributeType;
-                if (markerAtrribute.attribute.type == TEXT) {
-                    htmlClass = @"text-content-type";
-                    attributeType = NSLocalizedString(@"layer.content-type.text", @"");
-                } else if (markerAtrribute.attribute.type == NUMBER) {
-                    htmlClass = @"number-content-type";
-                    attributeType = NSLocalizedString(@"layer.content-type.number", @"");
-                } else if (markerAtrribute.attribute.type == DATE) {
-                    htmlClass = @"date-content-type";
-                    attributeType = NSLocalizedString(@"layer.content-type.date", @"");
-                } else if (markerAtrribute.attribute.type == BOOLEAN) {
-                    htmlClass = @"boolean-content-type";
-                    attributeType = NSLocalizedString(@"layer.content-type.boolean", @"");
-                }
-                html = [html stringByAppendingString:[NSString stringWithFormat:@"<div class=\"%@\"> <h4>%@</h4> <p>%@</p></div>", htmlClass, attributeType, markerAtrribute.value]];
-            }
-            html = [html stringByAppendingString:[NSString stringWithFormat:@"<img id=\"marker-image-%@\" class=\"layer-content-image loading-gif\" alt=\"\" src=\"ajax-loader.gif\"/>", markerId]];
-            html = [html stringByAppendingString:@"</div>"];
-            html = [html stringByAppendingString:@"</div>"];
-            
-            [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadPopupContent('%@')", html]];
-            [self loadMarkerImageOnHtml:markerId];
-            
-        } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:markerId];
-    };
-}
-
 - (void) loadMarkerImageOnHtml:(NSNumber*)markerId {
+    
     MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"files/markers/"];
+    
     [markerDelegate downloadMarkerAttributePhoto:markerId success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSString *embbedImageString = [NSString stringWithFormat:[NSString stringWithFormat:@"<img id=\"marker-image-%@\" class=\"layer-content-image\" alt=\"\" src=\"data:image/jpeg;base64,%@\" />", markerId, [operation.responseData base64EncodedStringWithOptions:0]]];
         
@@ -427,16 +474,6 @@ extern NSUserDefaults *defaults;
         [defaults removeObjectForKey:key];
     }
     [defaults synchronize];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
-    [super viewWillAppear:animated];
-}
-
--(void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 @end

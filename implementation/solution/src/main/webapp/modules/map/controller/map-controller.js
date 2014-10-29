@@ -404,6 +404,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
          */
         $scope.map.on('click', function(evt) {
         	
+        	
+        	
         	 if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
              	$scope.screenMarkerOpenned = true;
                  $scope.toggleSidebarMarkerCreate(300);
@@ -471,10 +473,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
               return false;   
              }
         	
-            if ($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
-
-                // zera os valores
+        	 
+        	
+            /* get the feature click to open marker detail */
+         	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+ 		        return feature;
+ 		      });
+         	
+         	if(($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia) || feature) {
                 $scope.features = [];
+         	}
+         	
+            if ($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
 
                 var listUrls = [];
 
@@ -493,11 +503,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                
             }
 
-            /* get the feature click to open marker detail */
-        	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-    		        return feature;
-    		      });
-        		
         	/* if click on the marker */
         	if( feature ){
         		if( typeof feature.getProperties().marker != "undefined" ) {
@@ -2030,6 +2035,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             };
             reader.readAsDataURL(input.files[0]);
         }
+    }
+    
+    $scope.openImgModal = function() {
+    	var dialog = $modal.open({
+            templateUrl: 'modules/map/ui/popup/img-popup.jsp',
+            controller: ImgPopUpController,
+            resolve : {
+            	img: function(){ return $scope.imgResult }
+            }
+        });
     }
     
 };

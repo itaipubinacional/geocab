@@ -121,8 +121,8 @@
 										>
 										<i class="glyphicon glyphicon-ok"></i>
 									</button>
-									<br> <img ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-										style="width: 100%; height: 200px; margin-top: 12px;"> <br>
+									<br> <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+										style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer"> <br>
 									<br>
 			
 									<div style=" overflow: auto;">
@@ -305,7 +305,7 @@
 						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
 						<br>
-						 <img ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+						 <img  ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
 							style="width: 100%; height: 200px; margin-top: 12px;"> <br>
 						<br>
 						
@@ -558,7 +558,8 @@
 
 	<!-- Openlayer Map -->
 	<div id="olmap"
-		style="position: relative; width: 100%; height: 100%; top: 0 !important">
+			style="position: absolute; top: 0; bottom: 0; left: 0; right: 0"> 
+		<!-- style="position: relative; width: 100%; height: 100%; top: 0 !important"> -->
 		<div id="popup" class="ol-popup">
 			<!--<a href="#" id="popup-closer" class="ol-popup-closer"></a>-->
 			<div id="popup-content"></div>
