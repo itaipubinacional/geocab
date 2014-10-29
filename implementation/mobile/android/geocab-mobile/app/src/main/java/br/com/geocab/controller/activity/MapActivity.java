@@ -1,15 +1,9 @@
 package br.com.geocab.controller.activity;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -18,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
@@ -27,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -36,7 +30,8 @@ import br.com.geocab.controller.activity.dialog.DialogInformation;
 import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.controller.delegate.LayerDelegate;
 import br.com.geocab.controller.delegate.MarkerDelegate;
-import br.com.geocab.util.GPSTracker;
+import br.com.geocab.entity.Layer;
+import br.com.geocab.entity.Marker;
 import br.com.geocab.util.JavaScriptHandler;
 
 public class MapActivity extends Activity
@@ -66,10 +61,6 @@ public class MapActivity extends Activity
      * web view map
      */
     private WebView webViewMap;
-    /**
-     * location to get position user
-     */
-    private GPSTracker gpsTracker;
     /**
      * search layer edit text
      */
@@ -110,8 +101,6 @@ public class MapActivity extends Activity
 
     private DialogInformation dialogInformation;
 
-    private Button buttonTestInformation;
-
     /*-------------------------------------------------------------------
 	 *				 		     HANDLERS
 	 *-------------------------------------------------------------------*/
@@ -132,15 +121,6 @@ public class MapActivity extends Activity
 
         setContentView(R.layout.activity_map);
 
-        dialogInformation = new DialogInformation(this);
-        buttonTestInformation = (Button) findViewById(R.id.btn_add_marker);
-        buttonTestInformation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogInformation.childSectionView();
-            }
-        });
-
         textViewSelectedCountItems = (TextView) findViewById(R.id.text_view_count_selected_items);
         textViewTotalItems = (TextView) findViewById(R.id.text_view_total_items);
 
@@ -152,6 +132,7 @@ public class MapActivity extends Activity
         webViewMap.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         webViewMap.getSettings().setRenderPriority(RenderPriority.HIGH);
         webViewMap.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webViewMap.setWebChromeClient(new WebChromeClient());
         webViewMap.loadUrl("file:///android_asset/map.html");
 
         //String html = "<!DOCTYPE html><html lang=en><head><link rel=stylesheet href=ol.css type=text/css><style>div.map{height:100%;width:100%}</style><script src=ol.js type=text/javascript></script><script src=jquery.min.js type=text/javascript></script><script src=jquery.mobile-1.4.4.min.js></script><body style=margin:0><div id=map class=map></div><script type=text/javascript>function showLayer(e,o,a){if(a){var n=new ol.source.TileWMS({url:e,params:{LAYERS:o}}),r=new ol.layer.Tile({source:n});map.addLayer(r)}}function showUserMarker(e,o){var a=new ol.Feature({geometry:new ol.geom.Point([o,e]),name:\"Localizacao\"}),n=new ol.style.Style({image:new ol.style.Icon({size:[48,48],src:\"http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png\"})}),r=new ol.source.Vector({features:[a]}),l=new ol.layer.Vector({source:r,style:n});map.addLayer(l)}function showToast(e){return app.makeToast(e),!1}function showOther(e){app.makeToast2();var o=new ol.Feature({geometry:new ol.geom.Point([e[0],e[1]]),name:\"Localizacao\"}),a=new ol.style.Style({image:new ol.style.Icon({size:[48,48],src:\"http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png\"})}),n=new ol.source.Vector({features:[o]}),r=new ol.layer.Vector({source:n,style:a});map.addLayer(r)}map=new ol.Map({target:\"map\",layers:[new ol.layer.Tile({source:new ol.source.OSM})],view:new ol.View({center:ol.proj.transform([-54.1394,-24.7568],\"EPSG:4326\",\"EPSG:3857\"),zoom:7})}),$(function(){function e(){var e=!1;map.on(\"click\",function(o){e||(showOther(o.coordinate),e=!0)})}$(\"div.map\").bind(\"taphold\",e)});</script>";
@@ -172,6 +153,7 @@ public class MapActivity extends Activity
                 MapActivity.this.animationLoadLayer.start();
 
                 MapActivity.this.layerDelegate.listLayersPublished(MapActivity.this.animationLoadLayer);
+
             }
         });
 
@@ -276,11 +258,6 @@ public class MapActivity extends Activity
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (savedInstanceState == null)
-        {
-            // on first time display view for first nav item
-            //selectItem(0);
-        }
     }
 
     public void showOtherMarker(double lat, double lon)
@@ -288,10 +265,41 @@ public class MapActivity extends Activity
         webViewMap.loadUrl("javascript:showOther(\"" + lat + "\",\"" + lon + "\")");
     }
 
-    public void showInformation()
+    public void showInformation( long markerId, String layerName, String[] listUrls, String[] listTitles)
     {
-            DialogInformation dialogInformation = new DialogInformation(this);
-            dialogInformation.childSectionView();
+        if( markerId > 0 || listUrls != null )
+        {
+            Marker marker = new Marker();
+            marker.setId(markerId);
+            marker.setLayer(new Layer(layerName, layerName));
+
+            dialogInformation = new DialogInformation(this, marker, listUrls, listTitles);
+
+            MarkerDelegate markerDelegate = new MarkerDelegate(this, dialogInformation);
+
+            if( markerId > 0 && listUrls == null )
+            {
+                markerDelegate.downloadMarkerPicture(marker);
+                markerDelegate.listMarkerAttributesByMarker(marker);
+            }
+            else if( markerId == 0 && listUrls != null )
+            {
+                for(int i = 0; i < listUrls.length; i++)
+                {
+                    markerDelegate.listLayerProperties(listUrls[i], listTitles[i]);
+                }
+            }
+            else if(markerId > 0 && listUrls != null )
+            {
+                markerDelegate.downloadMarkerPicture(marker);
+                markerDelegate.listMarkerAttributesByMarker(marker);
+
+                for(int i = 0; i < listUrls.length; i++)
+                {
+                    markerDelegate.listLayerProperties(listUrls[i], listTitles[i]);
+                }
+            }
+        }
     }
 
     /**

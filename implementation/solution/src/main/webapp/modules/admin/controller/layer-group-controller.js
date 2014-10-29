@@ -8,7 +8,7 @@
  */
 function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate ) {
     /**
-     * Injeta os métodos, atributos e seus estados herdados de AbstractCRUDController.
+     * Injects the methods, attributes and their inherited state of AbstractCRUDController.
      * @see AbstractCRUDController
      */
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
@@ -25,8 +25,8 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      *-------------------------------------------------------------------*/
     //STATES
     /**
-     * Variável estática que representa
-     * o estado de listagem de registros.
+     * Static variable that represents 
+     * The listing of state records.
      */
     $scope.LIST_STATE = "layer-group.list";
 
@@ -37,33 +37,34 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
     //FORM
     /**
-     * Variável para armazenar atributos do formulário que
-     * não cabem em uma entidade. Ex.:
-     * @filter - Filtro da consulta
+     * Variable to store attributes of the form 
+     * That do not fit into one entity. Ex.:
+     * @filter - Query filter
      */
     $scope.data = { filter:null };
+    
+    
     /**
-     * Armazena a entitidade corrente para edição ou detalhe.
+     * Stores the current entity for editing or detail.
      */
     $scope.currentEntity;
 
     /**
-     * Controla se é necessário salvar a ordenação antes de criar ou editar grupo
+     * Controls if it's required to save the sorting before creating or editing group
      */
     var isNeedSave = false;
 
     /*-------------------------------------------------------------------
      * 		 				 	  NAVIGATIONS
      *-------------------------------------------------------------------*/
+    
     /**
-     * Método principal que faz o papel de front-controller da tela.
-     * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-     * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
-     * Ex.: /list -> changeToList()
-     *      /criar -> changeToInsert()
-     *
-     * Caso o estado não for encontrado, ele direciona para a listagem,
-     * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+     * Main method that makes the role of front-controller screen.
+	 * It is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+	 * Ex.: /list -> changeToList()
+	 *      /create -> changeToInsert()
+	 *      
+	 * If the state is not found, it directs you to the list
      */
     $scope.initialize = function( toState, toParams, fromState, fromParams ) {
     	var state = $state.current.name;
@@ -82,12 +83,13 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Realiza os procedimentos iniciais (prepara o estado)
-     * para a tela de consulta e após isso, muda o estado para list.
-     * @see LIST_STATE
-     * @see $stateChangeSuccess
-     *
-     * Para mudar para este estado, deve-se primeiro carregar os dados da consulta.
+     * 
+     * Boot the state users.list
+	 * @see LIST_STATE
+	 * @see $stateChangeSuccess
+	 * 
+	 * To switch to this state, you must first load the data from the query.
+     * 
      */
     $scope.changeToList = function() {
         $log.info("changeToList");
@@ -100,8 +102,8 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      *-------------------------------------------------------------------*/
 
     /**
-     * Realiza a consulta de registros, consirando filtro, paginação e sorting.
-     * Quando ok, muda o estado da tela para list.
+  	 * Performs the query logs, considering filter, paging and sorting. 
+  	 * When ok, change the state of the screen to list.
      *
      * @see data.filter
      * @see currentPage
@@ -172,7 +174,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      */
 
     /**
-     * Remover um item da tree
+     * Remove an item from the tree
      *
      * @param scope
      */
@@ -225,12 +227,12 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Adiciona um novo grupo de camadas
+     * Adds a new layer group
      */
     $scope.newLayerGroup = function () {
 
         /**
-         * Se houver alguma mensagem sendo exibida,
+         * If there are any messages being displayed,
          */
 //        if ($scope.msg != null) return;
 
@@ -289,7 +291,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Editar um nome de um item da tree
+     * Edit name of an item from the tree
      * @param scope
      */
     $scope.editItem = function(scope) {
@@ -344,7 +346,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Função para mostrar a tree caso haja itens
+     * Function to show the tree if it has items
      * @param item
      * @returns {boolean}
      */
@@ -359,7 +361,10 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Função para controlar as ações da tree, como a ação de aceitar o drop, a função para controlar o momento antes do drop e o momento que é feito o drop do item
+     * Function to control the actions of the tree, 
+     * as the action to accept the drop, 
+  	 * function to control the time before the drop and the time that is done drop the item
+     * 
      * @type {{accept: accept, beforeDrop: beforeDrop, dropped: dropped}}
      */
     $scope.treeOptions = {
@@ -370,7 +375,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             {
                 if( ( destNodes.$modelValue[i].nodes != null && sourceNode.$modelValue.nodes == null ) || ( sourceNode.$modelValue.nodes != null && destNodes.$modelValue[0].nodes == null ))
                 {
-                    //Caso o usuário não tenha permissão não aparece nem a possibilidade para arrastar um item
+                    //If the user does not have permission not appear nor the possibility to drag an ite
                     return false;
                 }
             }
@@ -378,7 +383,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         },
         beforeDrop: function(event) {
         	
-        	//Se tivermos alguma mensagem aparecendo, ela será removida.
+        	//If we have a message popping up, it will be removed.
         	$scope.msg = null;
         	
             var sourceNode = event.source.nodeScope;
@@ -465,7 +470,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Retorna a lista completa da tree
+     * Returns the complete list of tree
      */
     var getRootNodesScope = function() 
     {

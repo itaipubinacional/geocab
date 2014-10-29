@@ -1,5 +1,6 @@
 package br.com.geocab.controller.delegate;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Base64;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.geocab.R;
 import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.controller.app.AppController;
 import br.com.geocab.entity.Layer;
@@ -35,6 +37,8 @@ public class LayerDelegate extends AbstractDelegate
     private NavDrawerListAdapter listAdapter;
 
     private AnimationDrawable animationLoadLayer;
+
+    private ProgressDialog progressDialog;
 
 	/*-------------------------------------------------------------------
      * 		 					CONSTRUCTORS
@@ -67,6 +71,13 @@ public class LayerDelegate extends AbstractDelegate
     {
         this.animationLoadLayer = d;
 
+        progressDialog = new ProgressDialog(LayerDelegate.this.context);
+        progressDialog.setTitle("Carregando");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("Carregando mapa e a lista de camadas. Por favor, aguarde!");
+        progressDialog.setIndeterminate(false);
+        progressDialog.show();
+
         String url = getUrl()+ "/layers";
 
         JsonArrayRequest jReq = new JsonArrayRequest(url,
@@ -90,11 +101,12 @@ public class LayerDelegate extends AbstractDelegate
                                 result.add(layer);
 
                                 LayerDelegate.this.animationLoadLayer.stop();
+                                progressDialog.dismiss();
 
                             }
                             catch (JSONException e)
                             {
-                                Toast.makeText(LayerDelegate.this.context, "Unable to call service: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LayerDelegate.this.context, R.string.error_authentication, Toast.LENGTH_SHORT).show();
                             }
                         }
                         LayerDelegate.this.listAdapter.setItemList(result);
@@ -134,6 +146,5 @@ public class LayerDelegate extends AbstractDelegate
         AppController.getInstance().addToRequestQueue(jReq);
 
     }
-
 
 }

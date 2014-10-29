@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">geocab</string>
+
+    <!-- Authentication -->
+    <string name="email_address">Email address</string>
+    <string name="password">Password</string>
+    <string name="btn_login">LOGIN</string>
+
+    <string name="btn_logout_from_google">Logout from Google</string>
+    <string name="facebook_app_id">"700984299994268"</string>
+    <string name="title_activity_map">Map</string>
+
+    <!-- Map -->
+    <string name="search_layer">Search</string>
+    <string name="of_layer">of</string>
+    <string name="items_layer">items</string>
+
+    <!-- Account delegate -->
+    <string name="error_authentication">Email or password invalid</string>
+
+    <!-- Layer and Marker delegate -->
+    <string name="error_connection">Problem with connection. Please check!</string>
+
+
+    <!-- Nav Drawer -->
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+
+    <string name="title_activity_mark">Mark</string>
+    <string name="title_activity_layer">Layer</string>
+
+</resources>

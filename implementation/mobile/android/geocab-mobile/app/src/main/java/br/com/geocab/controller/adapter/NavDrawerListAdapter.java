@@ -128,7 +128,14 @@ public class NavDrawerListAdapter extends ArrayAdapter {
         Layer layer = (Layer) getItem(position);
         viewHolder.checkBoxLayer.setTag(layer);
         viewHolder.txtTitle.setText(layer.getTitle());
-        viewHolder.networkImageViewLegend.setImageUrl(layer.getLegend(), imageLoader);
+        if( layer.getLegend() != null )
+        {
+            viewHolder.networkImageViewLegend.setImageUrl(layer.getLegend(), imageLoader);
+        }
+        else
+        {
+            viewHolder.networkImageViewLegend.setDefaultImageResId(R.drawable.icon_app);
+        }
 
         viewHolder.checkBoxLayer.setChecked(layer.getIsChecked());
 
@@ -174,7 +181,7 @@ public class NavDrawerListAdapter extends ArrayAdapter {
                     String nameLayer = layer.getName().substring(index+1,layer.getName().length());
                     String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"/wms";
 
-                    webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\",\""+layer.getIsChecked()+"\")");
+                    webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\", \""+layer.getTitle()+"\",\""+layer.getIsChecked()+"\")");
                 }
                 else
                 {

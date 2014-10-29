@@ -12,7 +12,7 @@
 	<div class="search-div">
 		<form>
 			<input type="text" ng-model="data.filter" class="form-control" placeholder="<spring:message code="admin.layer-config.Title,-name,-data-source-or-layer-group"/>" style="float:left; width:450px"/>
-			<input type="submit" value="<spring:message code="Filter"/>" class="btn btn-default" ng-disabled="currentPage == null"
+			<input type="submit" value="<spring:message code="Filter"/>" title="<spring:message code="Filter"/>" class="btn btn-default" ng-disabled="currentPage == null"
 			       ng-click="listLayersByFilters(data.filter, currentPage.pageable)"/>
 	    </form>
 	</div>

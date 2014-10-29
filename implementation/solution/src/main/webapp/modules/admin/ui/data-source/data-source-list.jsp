@@ -12,7 +12,7 @@
 	<div class="search-div">
 		<form>
 			<input type="text" ng-model="data.filter" class="form-control" placeholder="<spring:message code="admin.datasource.Name-or-address"/>" style="float:left; width:300px"/>
-			<input type="submit" value="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
+			<input type="submit" value="<spring:message code="Search"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
 			       ng-click="listDataSourceByFilters(data.filter, currentPage.pageable)"/>
 	    </form>
 	</div>

@@ -20,6 +20,8 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.io.FileTransfer;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.account.User;
@@ -40,6 +42,15 @@ import br.com.geocab.domain.entity.layer.Layer;
 @Table(schema=IEntity.SCHEMA)
 public class Marker extends AbstractEntity implements Serializable
 {
+	
+	/**
+	 * 
+	 */
+	public static final String PICTURE_FOLDER = "/marker/%d";
+	/**
+	 * 
+	 */
+	public static final String PICTURE_PATH = PICTURE_FOLDER+"/%d";
 
 	/**
 	 * 
@@ -66,6 +77,7 @@ public class Marker extends AbstractEntity implements Serializable
 	@ManyToOne(fetch=FetchType.EAGER, optional=true)
 	private User user;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
 

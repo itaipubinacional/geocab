@@ -26,36 +26,44 @@
             <!-- State List -->
             <button ng-if="currentState == LIST_STATE" style="float: right;"
                 class="btn btn-primary"
-                ui-sref="data-source.create"><spring:message code="admin.datasource.New-Data-Source"/>
+                ui-sref="data-source.create"
+                title="<spring:message code="admin.datasource.New-Data-Source"/>"
+                ><spring:message code="admin.datasource.New-Data-Source"/>
             </button>
 
             <!-- State Detail -->
 			<button ng-if="currentState == DETAIL_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
 				class="btn btn-default"
+				title="<spring:message code="admin.datasource.Back" />"
 				ui-sref="data-source.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button>
             <button ng-if="currentState == DETAIL_STATE" style="float: right;"
                 class="btn btn-danger"
+                title="<spring:message code="Remove"/>"
                 ng-click="changeToRemove(currentEntity)"><spring:message code="Remove"/>
             </button>
             <button ng-if="currentState == DETAIL_STATE" style="float: right;"
                 class="btn btn-primary"
+                title="<spring:message code="Update"/>"
                 ui-sref="data-source.update( {id:currentEntity.id} )"><spring:message code="Update"/>
             </button>
 
             <!-- State Create | Update -->
             <button ng-if="currentState == INSERT_STATE || currentState == UPDATE_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
                 class="btn btn-default"
+                title="<spring:message code="admin.datasource.Back" />"
                 ui-sref="data-source.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button>
 			<button ng-if="currentState == (INSERT_STATE || currentState == UPDATE_STATE) && isUrlChecked()" style="float: right;"
 				class="btn btn-warning"
+				title="<spring:message code="admin.datasource.Connection-test"/>"
 				ng-click="testDataSourceConnection(currentEntity)"><spring:message code="admin.datasource.Connection-test"/>
             </button>
             <!-- State Create -->
             <button ng-if="currentState == INSERT_STATE" style="float: right;"
                 class="btn btn-success"
                 id="buttonInsert"
+                title="<spring:message code="Save"/>"
                 ng-click="insertDataSource()"><spring:message code="Save"/>
             </button>
             
@@ -63,7 +71,10 @@
             <button ng-if="currentState == UPDATE_STATE" style="float: right;"
                 class="btn btn-success"
                 id="buttonUpdate"
-                ng-click="updateDataSource()"><spring:message code="Save"/>
+                ng-click="updateDataSource()"
+                title="<spring:message code="Save"/>"
+                >
+                <spring:message code="Save"/>
             </button>
         </div>
     </div>
