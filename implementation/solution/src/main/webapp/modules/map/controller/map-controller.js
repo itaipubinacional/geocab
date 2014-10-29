@@ -2032,6 +2032,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         }
     }
     
+    $scope.openImgModal = function() {
+    	var dialog = $modal.open({
+            templateUrl: 'modules/map/ui/popup/img-popup.jsp',
+            controller: ImgPopUpController,
+            resolve : {
+            	img: function(){ return $scope.imgResult }
+            }
+        });
+    }
+    
 };
 /**
  * Função responsável por carregar a foto do usuário na tela no momento em que foi selecionada
