@@ -79,7 +79,8 @@
 			                
 			                <span ng-if="feature.type == 'internal'">
 				                
-								<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
+								<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="height: 100%; width: 100%; padding: 0;">
+									
 									<span
 										style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
 										marker.layer.title }}</span> <br style="clear: both;"> <br> <span
