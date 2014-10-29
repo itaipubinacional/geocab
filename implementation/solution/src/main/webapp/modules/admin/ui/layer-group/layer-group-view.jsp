@@ -6,7 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
-<!-- Grupo de camadas - Main View -->
+<!-- Layer Group - Main View -->
 <div>
      <div class="navbar">
 
@@ -19,15 +19,15 @@
 			    <span ng-switch-default><spring:message code="layer-group-view.LAYER-GROUP-Loading" /></span>
 			</div>
 			
-			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="publishLayerGroup()"
+			<button ng-show="currentState == LIST_STATE" title="<spring:message code="layer-group-view.Post" />" style="float: right; margin-bottom: 15px;" ng-click="publishLayerGroup()"
 			        class="btn btn-warning"><spring:message code="layer-group-view.Post" />
 			</button>
 			
-			<button ng-show="currentState == LIST_STATE" style="float: right; margin-bottom: 15px;" ng-click="saveLayerGroup()"
+			<button ng-show="currentState == LIST_STATE" title="<spring:message code="layer-group-view.Save-ordering"/>" style="float: right; margin-bottom: 15px;" ng-click="saveLayerGroup()"
 			        class="btn  btn-success"><spring:message code="layer-group-view.Save-ordering"/>
 			</button>
              
-			<button ng-show="currentState == LIST_STATE" style="float: left; margin-bottom: 15px; width: 122px;" ng-click="newLayerGroup()"
+			<button ng-show="currentState == LIST_STATE" title="<spring:message code="layer-group-view.New-group"/>" style="float: left; margin-bottom: 15px; width: 122px;" ng-click="newLayerGroup()"
 				class="btn btn-default"><div class="icon itaipu-icon-folder" style="float: left;margin-top: 2px;margin-right: 4px;"></div>
 				<spring:message code="layer-group-view.New-group"/>
 			</button>
@@ -35,7 +35,7 @@
          </div>
      </div>
     
-    <!-- Partial views dos states -->
+    <!-- Partial views of the states -->
 	<div ng-switch on="currentState">
         <div ng-switch-when="layer-group.list">
         	<div ng-include="'modules/admin/ui/layer-group/layer-group-list.jsp'"></div>

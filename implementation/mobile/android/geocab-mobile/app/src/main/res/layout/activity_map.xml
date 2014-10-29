@@ -23,14 +23,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"></Button>
 
-        <Button
-            android:id="@+id/btn_add_marker"
-            android:background="@drawable/custom_btn_add_marker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"></Button>
     </RelativeLayout>
 
     <LinearLayout
@@ -53,10 +45,10 @@
                 <Button
                     android:id="@+id/button_refresh_layers"
                     android:layout_width="40dp"
-                    android:layout_height="35dp"
-                    android:layout_centerVertical="true"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_alignParentLeft="true"
-                    android:alpha="0.7"
                     android:background="@android:color/transparent"
                     android:drawableLeft="@drawable/refresh_button"/>
 
@@ -69,7 +61,7 @@
                     android:layout_margin="10dp"
                     android:layout_toRightOf="@+id/button_refresh_layers"
                     android:background="@drawable/rect_round_edit_text"
-                    android:hint="Search.."
+                    android:hint="@string/search_layer"
                     android:inputType="textVisiblePassword"/>
             </RelativeLayout>
 
@@ -106,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:layout_marginRight="5dp"
-                android:text="de"/>
+                android:text="@string/of_layer"/>
 
             <TextView
                 android:id="@+id/text_view_total_items"
@@ -120,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:text="itens"/>
+                android:text="@string/items_layer"/>
 
         </LinearLayout>
 

@@ -4,6 +4,7 @@
 package br.com.geocab.domain.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -314,6 +315,19 @@ public class MarkerService
 	
 	
 	public void uploadImg( FileTransfer fileTransfer, Long markerId ) throws IOException, RepositoryException {
+		
+		final String  mimeType = fileTransfer.getMimeType();
+		
+		final List<String> validMimeTypes = new ArrayList<String>();
+		validMimeTypes.add("image/gif");
+		validMimeTypes.add("image/jpeg");
+		validMimeTypes.add("image/bmp");
+		validMimeTypes.add("image/png");
+		
+		if ( mimeType == null || !validMimeTypes.contains(mimeType))
+		{
+			throw new IllegalArgumentException( "Formato inválido!" );
+		}
 		
 		MetaFile metaFile = new MetaFile();
 		metaFile.setId(String.valueOf(markerId));

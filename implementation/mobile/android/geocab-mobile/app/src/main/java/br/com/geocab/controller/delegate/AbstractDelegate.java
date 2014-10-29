@@ -67,7 +67,6 @@ public abstract class AbstractDelegate
     protected String getUrl()
     {
          return "http://192.168.20.122:8080/geocab/" + urlPath;
-         //return "http://services.etake.com.br/" + urlPath;
     }
 
 }

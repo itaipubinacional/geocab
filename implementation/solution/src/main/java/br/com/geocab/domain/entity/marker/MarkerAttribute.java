@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -44,6 +45,7 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="marker_id")
+	@JsonBackReference
 	private Marker marker;
 	
 	@ManyToOne(fetch=FetchType.EAGER)

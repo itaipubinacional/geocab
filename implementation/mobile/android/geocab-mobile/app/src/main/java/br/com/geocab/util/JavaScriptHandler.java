@@ -6,17 +6,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import br.com.geocab.controller.activity.MapActivity;
 import br.com.geocab.controller.activity.dialog.DialogInformation;
 
 public class JavaScriptHandler {
     MapActivity mapActivity;
+
     public JavaScriptHandler(MapActivity activity)  {
         mapActivity = activity;
-    }
-
-    public void showOtherMarker(double[] s){
-        this.mapActivity.showOtherMarker( s[0], s[1]);
     }
 
     public void vibrateOnSelect()
@@ -25,16 +25,10 @@ public class JavaScriptHandler {
         vb.vibrate(100);
     }
 
-    public void showInformation()
+    public void showInformation(int markerId, String layerName, String[] listUrls, String[] listTitles)
     {
-        this.mapActivity.showInformation();
+        this.mapActivity.showInformation(markerId, layerName, listUrls, listTitles);
     }
-
-    public void showLayerId(int layerId)
-    {
-        Toast.makeText(this.mapActivity, "LayerId: " + layerId, Toast.LENGTH_SHORT).show();
-    }
-
 
 
 }

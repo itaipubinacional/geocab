@@ -26,7 +26,9 @@
             <!-- State List -->
             <button ng-show="currentState == LIST_STATE" style="float: right;"
                 class="btn btn-primary"
-                ui-sref="users.create"><spring:message code="admin.users.New-user"/>
+                ui-sref="users.create"
+                title="<spring:message code="admin.users.New-user"/>">
+                <spring:message code="admin.users.New-user"/>                
             </button>
 
             <!-- State Detail -->
@@ -47,27 +49,30 @@
                 ui-sref="users.update( {id:currentEntity.id} )"><spring:message code="admin.users.Update"/>
             </button>
 
-            <!-- State Criar | Editar -->
+            <!-- State Create | Edit -->
             <button ng-show="currentState == INSERT_STATE || currentState == UPDATE_STATE" style="float: left; margin-right: 15px; min-width: 40px;"
                 class="btn btn-default"
+                title="<spring:message code="admin.users.Back" />"
                 ui-sref="users.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button>
-            <!-- State Criar -->
+            <!-- State Create -->
             <button ng-show="currentState == INSERT_STATE" style="float: right;"
                 class="btn btn-success"
                 id="buttonInsert"
+                title="<spring:message code="admin.users.Save"/>"
                 ng-click="insertUser(currentEntity)"><spring:message code="admin.users.Save"/>
             </button>
-            <!-- State Editar -->
+            <!-- State Edit -->
             <button ng-show="currentState == UPDATE_STATE" style="float: right;"
                 class="btn btn-success"
                 id="buttonUpdate"
+                title="<spring:message code="admin.users.Save"/>"
                 ng-click="updateUser()"><spring:message code="admin.users.Save"/>
             </button>
         </div>
     </div>
     
-    <!-- Partial views dos states -->
+    <!-- Partial views of states -->
 	<div ng-switch on="currentState">
         <div ng-switch-when="users.list">
         	<div ng-include="'modules/admin/ui/users/users-list.jsp'"></div>

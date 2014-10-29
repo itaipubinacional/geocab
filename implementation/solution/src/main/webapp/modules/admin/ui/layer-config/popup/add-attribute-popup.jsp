@@ -18,7 +18,7 @@
 
 <div class="modal-content">
     <div class="modal-header">
-        <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
         <h3 class="modal-title"><spring:message code="admin.layer-config.Add-attribute" /></h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
@@ -55,7 +55,7 @@
 			
 			 <span  ng-show="form_add_attribute.$submitted && form_add_attribute.select.$error.required" class="tooltip-validation" style="right:16px;top:62px;"><spring:message code="admin.users.Field-required" /></span>
 			
-			Required </br><input  type="checkbox" ng-model="currentEntity.required">
+			<spring:message code="Required" /> </br><input  type="checkbox" ng-model="currentEntity.required">
      
         </form>
         
@@ -68,8 +68,8 @@
     </div>
 
     <div class="modal-footer">
-        <button id="buttonInsertAdd" ng-disabled="gridOptions.selectedItems.length == 0" class="btn btn-primary" ng-click="addAttribute()">Cadastrar</button>
-        <button class="btn btn-default" ng-click="close(true)">Fechar</button>
+        <button id="buttonInsertAdd" ng-disabled="gridOptions.selectedItems.length == 0" title="<spring:message code="admin.layer-config.Register" />" class="btn btn-primary" ng-click="addAttribute()"><spring:message code="admin.layer-config.Register" /></button>
+        <button class="btn btn-default" title="<spring:message code="admin.layer-config.Close" />" ng-click="close(true)"><spring:message code="admin.layer-config.Close" /></button>
     </div>
 </div>
 
