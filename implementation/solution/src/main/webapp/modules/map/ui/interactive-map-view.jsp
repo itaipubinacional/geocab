@@ -191,20 +191,21 @@
 				default-button="buttonInsert" novalidate >
 				<div style="height:650px">
 					<div class="sidebar-coloredbar"></div>
-					<button
-						ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
-						style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
-						ng-click="changeToScreen('detail')"
-						title="<spring:message code="map.Back" />"						
-						>							
-						<
-					</button>
-						
-					<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
-						class="icon itaipu-icon-close sidebar-close"
-						title="<spring:message code="map.Close" />"></span>
-
-					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:100%">
+					<div>
+						<button
+							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+							style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
+							ng-click="changeToScreen('detail')"
+							title="<spring:message code="map.Back" />"						
+							>							
+							<
+						</button>
+							
+						<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
+							class="icon itaipu-icon-close sidebar-close"
+							title="<spring:message code="map.Close" />"></span>
+					</div>
+					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:100%; width: 100%; padding: 10px;">
 						<div class="sidebar-content-header">Editar postagem</div>
 						
 						<br style="clear: both;"> <br> 
