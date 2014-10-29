@@ -12,6 +12,7 @@
 <div id="header-page">
 	<!-- navbar 1 -->
 	<div class="navbar navbar-1" style="z-index: 1002;">
+		<a class="pre" href="./">&nbsp;</a>
 		<a class="logo" href="./">&nbsp;</a>
 		<div class="nav-collapse collapse">
 			<div class="left-side">
