@@ -119,9 +119,9 @@
 	            
 	            <label class="detail-label" style="margin: 15px 0 5px 0;" required><spring:message code="admin.layer-config.Choose-an-icon" /></label>
 	            
-	            <table style="text-align: center; background: #E6E6E6;">
-	            
-	           		<tr>
+	            <table style="text-align: center; background: #E6E6E6;width:80px" >
+            
+           		<tr>
 	           			<td class="icon"><img src="<c:url value="/static/icons/alpinehut.png"/>" width="25" height="25"></td>
 	           			<td class="icon"><img src="<c:url value="/static/icons/camping.png"/>" width="25" height="25"></td>
 	           			<td class="icon"><img src="<c:url value="/static/icons/hotel2.png"/>" width="25" height="25"></td>
@@ -285,6 +285,7 @@
 	           			<td><input type="radio" value="static/icons/motorcycle.png" ng-checked="currentEntity.icon == 'static/icons/motorcycle.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/music.png" ng-checked="currentEntity.icon == 'static/icons/music.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/pet2.png" ng-checked="currentEntity.icon == 'static/icons/pet2.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/photo.png" ng-checked="currentEntity.icon == 'static/icons/photo.png'" name="layerIcon" ng-model="currentEntity.icon"></td>	           			
 	           			<td><input type="radio" value="static/icons/tackle.png" ng-checked="currentEntity.icon == 'static/icons/tackle.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/tobacco.png" ng-checked="currentEntity.icon == 'static/icons/tobacco.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			
@@ -296,11 +297,12 @@
 	           			<td><input type="radio" value="static/icons/motorracing.png" ng-checked="currentEntity.icon == 'static/icons/motorracing.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/sailing.png" ng-checked="currentEntity.icon == 'static/icons/sailing.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/soccer.png" ng-checked="currentEntity.icon == 'static/icons/soccer.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/tennis.png" ng-checked="currentEntity.icon == 'static/icons/tennis.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/swimming_outdoor.png" ng-checked="currentEntity.icon == 'static/icons/swimming_outdoor.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/swimming_outdoor.png" ng-checked="currentEntity.icon == 'static/icons/swimming_outdoor.png'" name="layerIcon" ng-model="currentEntity.icon"></td>	           			
+	           			<td><input type="radio" value="static/icons/tennis.png" ng-checked="currentEntity.icon == 'static/icons/tennis.png'" name="layerIcon" ng-model="currentEntity.icon"></td>	           		
 	           			<td><input type="radio" value="static/icons/windsurfing.png" ng-checked="currentEntity.icon == 'static/icons/windsurfing.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           		</tr>	
-	           	</table>
+	           		</tr>
+           		
+           	</table>
             
             
             </div>
