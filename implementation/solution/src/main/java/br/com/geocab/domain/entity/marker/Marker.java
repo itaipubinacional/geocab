@@ -5,6 +5,7 @@ package br.com.geocab.domain.entity.marker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -20,12 +21,12 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.io.FileTransfer;
 import org.hibernate.envers.Audited;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.layer.Layer;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * 
@@ -125,7 +126,7 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param status
 	 * @param user
 	 */
-	public Marker( Long id, String latitude, String longitude, StatusMarker status, Layer layer, User user)
+	public Marker( Long id, String latitude, String longitude, StatusMarker status, Calendar created, Layer layer, User user)
 	{
 		this.setId(id);
 		this.setLatitude(latitude);
@@ -135,6 +136,7 @@ public class Marker extends AbstractEntity implements Serializable
 		user.setEmail("");
 		this.setUser(user);
 		this.setLayer(layer);
+		this.setCreated(created);
 	}
 	
 	/**
