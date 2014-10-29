@@ -377,3 +377,6 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 	min-height : 400px;
 }
 
+.panel-default>.panel-heading+.panel-collapse>.panel-body {
+	padding: 10px
+}
