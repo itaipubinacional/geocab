@@ -85,7 +85,7 @@
 										style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
 										marker.layer.title }}</span> <br style="clear: both;"> <br> <span
 										style="float: left">Criado por: <b>{{ marker.user.name
-											}}</b></span> <span style="float: right">{{ marker.layer.created |
+											}}</b></span> <span style="float: right">{{ marker.created |
 										date:'dd/MM/yyyy' }}</span>
 									<hr>
 			
