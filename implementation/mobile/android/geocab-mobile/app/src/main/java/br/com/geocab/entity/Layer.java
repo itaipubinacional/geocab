@@ -1,5 +1,7 @@
 package br.com.geocab.entity;
 
+import java.util.Calendar;
+
 /**
  * Created by Vinicius on 25/09/2014.
  */
@@ -60,6 +62,10 @@ public class Layer
      */
     private Boolean isChecked = false;
 
+    /**
+     * Icon of {@link Layer}
+     */
+    private String icon;
 
 
     /*-------------------------------------------------------------------
@@ -67,7 +73,7 @@ public class Layer
 	 *-------------------------------------------------------------------*/
 
     public Layer(Long id, String name, String title, String legend, boolean startEnabled, boolean startVisible, int orderLayer, MapScale minimumScaleMap, MapScale maximumScaleMap,
-                 DataSource dataSource, Boolean published) {
+                 DataSource dataSource, Boolean published, String icon) {
         this.id = id;
         this.name = name;
         this.title = title;
@@ -80,6 +86,8 @@ public class Layer
         this.dataSource = dataSource;
         this.published = published;
         this.isChecked = false;
+        this.icon = icon;
+
     }
 
     public Layer(String name, String title)
@@ -185,5 +193,13 @@ public class Layer
 
     public void setIsChecked(Boolean isChecked) {
         this.isChecked = isChecked;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

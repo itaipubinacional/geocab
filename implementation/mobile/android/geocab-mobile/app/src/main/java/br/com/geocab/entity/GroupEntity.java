@@ -19,5 +19,7 @@ public class GroupEntity {
 		public String title;
 		public String value;
         public Bitmap image;
+        public String user;
+        public String date;
 	}
 }
