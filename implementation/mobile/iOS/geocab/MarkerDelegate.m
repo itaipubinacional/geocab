@@ -11,6 +11,7 @@
 #import "MarkerAttribute.h"
 #import "Attribute.h"
 #import "LayerDelegate.h"
+#import "AccountDelegate.h"
 
 @implementation MarkerDelegate
 
@@ -19,6 +20,7 @@
     RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[Marker class]];
     [mapping addAttributeMappingsFromDictionary:@{
                                                   @"id"               : @"id",
+                                                  @"created"          : @"created",
                                                   @"image"            : @"image",
                                                   @"latitude"         : @"latitude",
                                                   @"longitude"        : @"longitude",
@@ -27,13 +29,15 @@
                                                   }];
     
     LayerDelegate *layerDelegate = [[LayerDelegate alloc] init];
+    AccountDelegate *accountDelegate = [[AccountDelegate alloc] init];
     
     [mapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"layer" toKeyPath:@"layer" withMapping:[layerDelegate mapping]]];
+    [mapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:[accountDelegate mapping]]]; 
     
     return mapping;
 }
 
-- (void) list: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password layerId: (NSNumber*) layerId
+- (void) list: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failBlock userName:(NSString*)userName password:(NSString*)password layerId: (NSNumber*) layerId
 {
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:self.mapping method:RKRequestMethodGET pathPattern:nil keyPath:@"" statusCodes:nil];
     
@@ -45,7 +49,7 @@
     
     RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[ responseDescriptor ]];
     
-    [objectRequestOperation setCompletionBlockWithSuccess:successBlock failure:nil];
+    [objectRequestOperation setCompletionBlockWithSuccess:successBlock failure:failBlock];
     [objectRequestOperation start];
 }
 
@@ -85,7 +89,7 @@
     [objectRequestOperation start];
 }
 
-- (void) downloadMarkerAttributePhoto: (NSNumber *) markerId success: (void(^)(AFHTTPRequestOperation *operation, id responseObject)) success login:(NSString*)login password:(NSString*)password
+- (void) downloadMarkerAttributePhoto: (NSNumber *) markerId success: (void(^)(AFHTTPRequestOperation *operation, id responseObject)) success fail: (void(^)(AFHTTPRequestOperation *operation, NSError *error)) fail login:(NSString*)login password:(NSString*)password
 {
     NSString *urlString = [[self.baseUrl stringByAppendingString:[markerId stringValue]] stringByAppendingString:@"/download"];
     
@@ -98,7 +102,7 @@
     NSMutableURLRequest *downloadRequest = [objectManager requestWithObject:request method:RKRequestMethodGET path:urlString parameters:nil];
     AFHTTPRequestOperation *requestOperation = [[AFImageRequestOperation alloc] initWithRequest:downloadRequest];
     
-    [requestOperation setCompletionBlockWithSuccess:success failure:nil];
+    [requestOperation setCompletionBlockWithSuccess:success failure:fail];
     [objectManager.HTTPClient enqueueHTTPRequestOperation:requestOperation];
 }
 
