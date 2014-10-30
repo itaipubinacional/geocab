@@ -109,7 +109,11 @@
 
         }
 
-        function showMarker(lat, lon, name, markerId) {
+        function showMarker(lat, lon, name, icon, markerId) {
+
+            var layerIcon = "file:///android_res/drawable/"+icon;
+
+             $('#oi').html(layerIcon);
 
             var iconFeature = new ol.Feature({
                 geometry: new ol.geom.Point([lat, lon]),
@@ -121,7 +125,7 @@
             var iconStyle = new ol.style.Style({
                 image: new ol.style.Icon( /** @type {olx.style.IconOptions} */ ({
                     size: [48, 48],
-                    src: 'http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png'
+                    src: layerIcon
                 }))
             });
 

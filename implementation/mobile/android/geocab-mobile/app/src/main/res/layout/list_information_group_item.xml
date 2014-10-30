@@ -14,6 +14,44 @@
         android:orientation="vertical"
         android:clickable="true" >
 
+        <RelativeLayout
+            android:id="@+id/relative_layout_creation_information"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/text_view_created"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Criado por: "/>
+            <TextView
+                android:id="@+id/text_view_user_marker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/text_view_created"
+                android:text="teste"/>
+
+            <TextView
+                android:id="@+id/text_view_date_marker"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/text_view_user_marker"
+                android:gravity="right"
+                android:text="20/10/2014 "/>
+
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_below="@id/text_view_date_marker"
+                android:background="@android:color/darker_gray">
+
+            </View>
+
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/text_view_marker_attribute_title"
             android:layout_width="wrap_content"
@@ -35,6 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             />
 
     </LinearLayout>

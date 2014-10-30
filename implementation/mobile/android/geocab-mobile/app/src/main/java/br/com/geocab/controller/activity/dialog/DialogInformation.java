@@ -144,7 +144,6 @@ public class DialogInformation{
             GroupEntity groupEntity = new GroupEntity();
             GroupEntity.GroupItemEntity groupItemEntity;
 
-
             for(MarkerAttribute markerAttribute : marker.getMarkerAttribute())
             {
 
