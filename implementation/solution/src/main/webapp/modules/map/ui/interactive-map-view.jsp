@@ -66,13 +66,15 @@
 									title="<spring:message code="map.Close" />"
 									></span>
 						</div>			
-					<accordion close-others="true" class="accordion-popup">
+					<accordion close-others="true" class="accordion-popup accordion-caret">
 			            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' }"> 
 			            
 			                <accordion-heading>
 			                    <div style="cursor:pointer; padding: 10px 0;">
-			                        <span ng-if="feature.type == 'internal'">{{feature.feature.layer.title}}</span>
+			                    	<i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+			                        <span ng-if="feature.type == 'internal'">{{feature.feature.layer.title}} </span>
 			                        <span ng-if="feature.type == 'external'">{{feature.feature.layer.titulo}}</span>
+			                        
 			                    </div>
 			                </accordion-heading>
 			                
