@@ -1128,8 +1128,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             return;
 
         } else {
+        	
 
-        	$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
+        	//$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
         	$scope.currentEntity = new Marker();
         	
             // ativa funcionalidade e desativa as outras para só ter uma ativa por vez
