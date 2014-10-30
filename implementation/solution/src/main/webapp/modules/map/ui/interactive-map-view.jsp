@@ -66,25 +66,28 @@
 									title="<spring:message code="map.Close" />"
 									></span>
 						</div>			
-					<accordion close-others="true" class="accordion-popup">
+					<accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret">
 			            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' }"> 
 			            
 			                <accordion-heading>
 			                    <div style="cursor:pointer; padding: 10px 0;">
-			                        <span ng-if="feature.type == 'internal'">{{feature.feature.layer.title}}</span>
+			                    	<i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+			                        <span ng-if="feature.type == 'internal'" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
 			                        <span ng-if="feature.type == 'external'">{{feature.feature.layer.titulo}}</span>
+			                        
 			                    </div>
 			                </accordion-heading>
 			                
 			                
 			                <span ng-if="feature.type == 'internal'">
 				                
-								<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
+								<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="height: 100%; width: 100%; padding: 0;">
+									
 									<span
 										style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
 										marker.layer.title }}</span> <br style="clear: both;"> <br> <span
 										style="float: left">Criado por: <b>{{ marker.user.name
-											}}</b></span> <span style="float: right">{{ marker.layer.created |
+											}}</b></span> <span style="float: right">{{ marker.created |
 										date:'dd/MM/yyyy' }}</span>
 									<hr>
 			
@@ -121,8 +124,8 @@
 										>
 										<i class="glyphicon glyphicon-ok"></i>
 									</button>
-									<br> <img ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-										style="width: 100%; height: 200px; margin-top: 12px;"> <br>
+									<br> <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+										style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer"> <br>
 									<br>
 			
 									<div style=" overflow: auto;">
@@ -190,20 +193,21 @@
 				default-button="buttonInsert" novalidate >
 				<div style="height:650px">
 					<div class="sidebar-coloredbar"></div>
-					<button
-						ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
-						style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
-						ng-click="changeToScreen('detail')"
-						title="<spring:message code="map.Back" />"						
-						>							
-						<
-					</button>
-						
-					<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
-						class="icon itaipu-icon-close sidebar-close"
-						title="<spring:message code="map.Close" />"></span>
-
-					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:100%">
+					<div>
+						<button
+							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+							style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
+							ng-click="changeToScreen('detail')"
+							title="<spring:message code="map.Back" />"						
+							>							
+							<
+						</button>
+							
+						<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
+							class="icon itaipu-icon-close sidebar-close"
+							title="<spring:message code="map.Close" />"></span>
+					</div>
+					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:100%; width: 100%; padding: 10px;">
 						<div class="sidebar-content-header">Editar postagem</div>
 						
 						<br style="clear: both;"> <br> 
@@ -305,7 +309,7 @@
 						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
 						<br>
-						 <img ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+						 <img  ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
 							style="width: 100%; height: 200px; margin-top: 12px;"> <br>
 						<br>
 						
@@ -558,7 +562,8 @@
 
 	<!-- Openlayer Map -->
 	<div id="olmap"
-		style="position: relative; width: 100%; height: 100%; top: 0 !important">
+			style="position: absolute; top: 0; bottom: 0; left: 0; right: 0"> 
+		<!-- style="position: relative; width: 100%; height: 100%; top: 0 !important"> -->
 		<div id="popup" class="ol-popup">
 			<!--<a href="#" id="popup-closer" class="ol-popup-closer"></a>-->
 			<div id="popup-content"></div>
