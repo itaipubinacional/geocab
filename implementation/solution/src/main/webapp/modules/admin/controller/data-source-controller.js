@@ -511,6 +511,10 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 		  		$("div.msg").fadeOut();
 		  	}, 3000);
 	}
-
+	
+	$(document).click(function() {
+		$("div.msg").css("display","none");
+    });
+	
 };
 

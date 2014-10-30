@@ -10,7 +10,19 @@
 	.icon{
 		padding-right:3px;
 	}
+	
+	table.table{
+	
+	}
+	
 </style>
+
+<script>
+	$("input[type=radio]").attr("disabled","true");
+	
+	
+	
+</script>
 <!-- Layer config - Detail -->
 <div>
     <form>
@@ -38,9 +50,9 @@
             
             <div ng-grid="gridAttributesDetail" style="height: 320px; border: 1px solid rgb(212,212,212);"></div>
 
-			<label class="detail-label" style="margin: 15px 0 5px 0;" required>Ícone</label>
+			<label class="detail-label" style="margin: 15px 0 5px 0;" required><spring:message code="admin.layer-config.Icon" /></label>
             
-            <table style="text-align: center; background: #E6E6E6;">
+            <table style="text-align: center; background: #E6E6E6;width:80px" id="table">
             
            		<tr>
 	           			<td class="icon"><img src="<c:url value="/static/icons/alpinehut.png"/>" width="25" height="25"></td>
@@ -49,7 +61,7 @@
 	           			<td class="icon"><img src="<c:url value="/static/icons/shelter2.png"/>" width="25" height="25"></td>
 	           			<td class="icon"><img src="<c:url value="/static/icons/youth_hostel.png"/>" width="25" height="25"></td>	  
 	           			
-	           			<td class="icon" ><img src="<c:url value="/static/icons/firestation.png"/>" width="25" height="25"></td>
+	           			<td class="icon"><img src="<c:url value="/static/icons/firestation.png"/>" width="25" height="25"></td>
 	           			<td class="icon"><img src="<c:url value="/static/icons/fountain.png"/>" width="25" height="25"></td>
 	           			<td class="icon"><img src="<c:url value="/static/icons/playground.png"/>" width="25" height="25"></td>
 	           			<td class="icon"><img src="<c:url value="/static/icons/recycling.png"/>" width="25" height="25"></td>
@@ -80,26 +92,6 @@
 	           			     
 	           			<td class="icon"><img src="<c:url value="/static/icons/atm.png"/>" width="25" height="25"></td>	     
 	           			<td class="icon"><img src="<c:url value="/static/icons/bank.png"/>" width="25" height="25"></td>
-	           			
-	           			<td class="icon"><img src="<c:url value="/static/icons/christian3.png"/>" width="25" height="25"></td>	  	     
-	           			<td class="icon"><img src="<c:url value="/static/icons/islamic3.png"/>" width="25" height="25"></td>	  	     
-	           			<td class="icon"><img src="<c:url value="/static/icons/jewish3.png"/>" width="25" height="25"></td>	  	     
-	           			<td class="icon"><img src="<c:url value="/static/icons/unknown.png"/>" width="25" height="25"></td>	 
-	           			
-	           			<td class="icon"><img src="<c:url value="/static/icons/cave.png"/>" width="25" height="25"></td>     
-	           			<td class="icon"><img src="<c:url value="/static/icons/crane.png"/>" width="25" height="25"></td>     
-	           			<td class="icon"><img src="<c:url value="/static/icons/mine.png"/>" width="25" height="25"></td>     
-	           			<td class="icon"><img src="<c:url value="/static/icons/peak2.png"/>" width="25" height="25"></td>     
-	           			<td class="icon"><img src="<c:url value="/static/icons/place_city.png"/>" width="25" height="25"></td>     
-	           			<td class="icon"><img src="<c:url value="/static/icons/tower_communications.png"/>" width="25" height="25"></td>     
-	           			<td class="icon"><img src="<c:url value="/static/icons/tower_lookout.png"/>" width="25" height="25"></td>     
-	           			<td class="icon"><img src="<c:url value="/static/icons/tower_power.png"/>" width="25" height="25"></td>     
-	           			<td class="icon"><img src="<c:url value="/static/icons/tower_water.png"/>" width="25" height="25"></td>     
-	           			
-	           			<td class="icon"><img src="<c:url value="/static/icons/station_coal.png"/>" width="25" height="25"></td>  
-	           			<td class="icon"><img src="<c:url value="/static/icons/station_gas.png"/>" width="25" height="25"></td>  
-	           			<td class="icon"><img src="<c:url value="/static/icons/station_solar.png"/>" width="25" height="25"></td>  
-	           			<td class="icon"><img src="<c:url value="/static/icons/station_wind.png"/>" width="25" height="25"></td>
 	           		</tr>
 	           		
 	           		<tr>
@@ -140,7 +132,46 @@
 	           			
 	           			<td><input type="radio" value="static/icons/atm.png" ng-checked="currentEntity.icon == 'static/icons/atm.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/bank.png" ng-checked="currentEntity.icon == 'static/icons/bank.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           		</tr>
+	           		
+	           		<tr>
+	           			<td class="icon"><img src="<c:url value="/static/icons/christian3.png"/>" width="25" height="25"></td>	  	     
+	           			<td class="icon"><img src="<c:url value="/static/icons/islamic3.png"/>" width="25" height="25"></td>	  	     
+	           			<td class="icon"><img src="<c:url value="/static/icons/jewish3.png"/>" width="25" height="25"></td>	  	     
+	           			<td class="icon"><img src="<c:url value="/static/icons/unknown.png"/>" width="25" height="25"></td>	 
 	           			
+	           			<td class="icon"><img src="<c:url value="/static/icons/cave.png"/>" width="25" height="25"></td>     
+	           			<td class="icon"><img src="<c:url value="/static/icons/crane.png"/>" width="25" height="25"></td>     
+	           			<td class="icon"><img src="<c:url value="/static/icons/mine.png"/>" width="25" height="25"></td>     
+	           			<td class="icon"><img src="<c:url value="/static/icons/peak2.png"/>" width="25" height="25"></td>     
+	           			<td class="icon"><img src="<c:url value="/static/icons/place_city.png"/>" width="25" height="25"></td>     
+	           			<td class="icon"><img src="<c:url value="/static/icons/tower_communications.png"/>" width="25" height="25"></td>     
+	           			<td class="icon"><img src="<c:url value="/static/icons/tower_lookout.png"/>" width="25" height="25"></td>     
+	           			<td class="icon"><img src="<c:url value="/static/icons/tower_power.png"/>" width="25" height="25"></td>     
+	           			<td class="icon"><img src="<c:url value="/static/icons/tower_water.png"/>" width="25" height="25"></td>     
+	           			
+	           			<td class="icon"><img src="<c:url value="/static/icons/station_coal.png"/>" width="25" height="25"></td>  
+	           			<td class="icon"><img src="<c:url value="/static/icons/station_gas.png"/>" width="25" height="25"></td>  
+	           			<td class="icon"><img src="<c:url value="/static/icons/station_solar.png"/>" width="25" height="25"></td>  
+	           			<td class="icon"><img src="<c:url value="/static/icons/station_wind.png"/>" width="25" height="25"></td>
+	           			
+	           			<td class="icon"><img src="<c:url value="/static/icons/car_repair.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/car.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/clothes.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/computer.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/diy.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/fish.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/florist.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/garden_centre.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/jewelry2.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/motorcycle.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/music.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/pet2.png"/>" width="25" height="25"></td>    
+	           			<td class="icon"><img src="<c:url value="/static/icons/photo.png"/>" width="25" height="25"></td>
+	           		
+	           		</tr>
+	           		
+	           		<tr>
 	           			<td><input type="radio" value="static/icons/christian3.png" ng-checked="currentEntity.icon == 'static/icons/christian3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/islamic3.png" ng-checked="currentEntity.icon == 'static/icons/islamic3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/jewish3.png" ng-checked="currentEntity.icon == 'static/icons/jewish3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
@@ -160,22 +191,24 @@
 	           			<td><input type="radio" value="static/icons/station_gas.png" ng-checked="currentEntity.icon == 'static/icons/station_gas.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/station_solar.png" ng-checked="currentEntity.icon == 'static/icons/station_solar.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/station_wind.png" ng-checked="currentEntity.icon == 'static/icons/station_wind.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+					
+						<td><input type="radio" value="static/icons/car_repair.png" ng-checked="currentEntity.icon == 'static/icons/car_repair.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/car.png" ng-checked="currentEntity.icon == 'static/icons/car.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/clothes.png" ng-checked="currentEntity.icon == 'static/icons/clothes.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/computer.png" ng-checked="currentEntity.icon == 'static/icons/computer.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/diy.png" ng-checked="currentEntity.icon == 'static/icons/diy.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/fish.png" ng-checked="currentEntity.icon == 'static/icons/fish.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/florist.png" ng-checked="currentEntity.icon == 'static/icons/florist.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/garden_centre.png" ng-checked="currentEntity.icon == 'static/icons/garden_centre.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/jewelry2.png" ng-checked="currentEntity.icon == 'static/icons/jewelry.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/motorcycle.png" ng-checked="currentEntity.icon == 'static/icons/motorcycle.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/music.png" ng-checked="currentEntity.icon == 'static/icons/music.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/pet2.png" ng-checked="currentEntity.icon == 'static/icons/pet2.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/photo.png" ng-checked="currentEntity.icon == 'static/icons/photo.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+						
 					</tr>
 	           		
-	           		<tr>
-	           			<td class="icon"><img src="<c:url value="/static/icons/car_repair.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/car.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/clothes.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/computer.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/diy.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/fish.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/florist.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/garden_centre.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/jewelry2.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/motorcycle.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/music.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/pet2.png"/>" width="25" height="25"></td>    
-	           			<td class="icon"><img src="<c:url value="/static/icons/photo.png"/>" width="25" height="25"></td>    
+	           		<tr> 
 	           			<td class="icon"><img src="<c:url value="/static/icons/tackle.png"/>" width="25" height="25"></td>    
 	           			<td class="icon"><img src="<c:url value="/static/icons/tobacco.png"/>" width="25" height="25"></td>    
 
@@ -192,20 +225,8 @@
 						<td class="icon"><img src="<c:url value="/static/icons/windsurfing.png"/>" width="25" height="25"></td>  
 	           			       			
 	           		</tr>
-					
-					<tr>
-	           			<td><input type="radio" value="static/icons/car_repair.png" ng-checked="currentEntity.icon == 'static/icons/car_repair.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/car.png" ng-checked="currentEntity.icon == 'static/icons/car.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/clothes.png" ng-checked="currentEntity.icon == 'static/icons/clothes.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/computer.png" ng-checked="currentEntity.icon == 'static/icons/computer.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/diy.png" ng-checked="currentEntity.icon == 'static/icons/diy.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/fish.png" ng-checked="currentEntity.icon == 'static/icons/fish.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/florist.png" ng-checked="currentEntity.icon == 'static/icons/florist.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/garden_centre.png" ng-checked="currentEntity.icon == 'static/icons/garden_centre.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/jewelry2.png" ng-checked="currentEntity.icon == 'static/icons/jewelry.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/motorcycle.png" ng-checked="currentEntity.icon == 'static/icons/motorcycle.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/music.png" ng-checked="currentEntity.icon == 'static/icons/music.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/pet2.png" ng-checked="currentEntity.icon == 'static/icons/pet2.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           		
+	           		<tr>
 	           			<td><input type="radio" value="static/icons/tackle.png" ng-checked="currentEntity.icon == 'static/icons/tackle.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/tobacco.png" ng-checked="currentEntity.icon == 'static/icons/tobacco.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			
@@ -217,12 +238,12 @@
 	           			<td><input type="radio" value="static/icons/motorracing.png" ng-checked="currentEntity.icon == 'static/icons/motorracing.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/sailing.png" ng-checked="currentEntity.icon == 'static/icons/sailing.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           			<td><input type="radio" value="static/icons/soccer.png" ng-checked="currentEntity.icon == 'static/icons/soccer.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/tennis.png" ng-checked="currentEntity.icon == 'static/icons/tennis.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-	           			<td><input type="radio" value="static/icons/swimming_outdoor.png" ng-checked="currentEntity.icon == 'static/icons/swimming_outdoor.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	           			<td><input type="radio" value="static/icons/swimming_outdoor.png" ng-checked="currentEntity.icon == 'static/icons/swimming_outdoor.png'" name="layerIcon" ng-model="currentEntity.icon"></td>	           			
+	           			<td><input type="radio" value="static/icons/tennis.png" ng-checked="currentEntity.icon == 'static/icons/tennis.png'" name="layerIcon" ng-model="currentEntity.icon"></td>	           		
 	           			<td><input type="radio" value="static/icons/windsurfing.png" ng-checked="currentEntity.icon == 'static/icons/windsurfing.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 	           		</tr>
            		
-           	</table>
+           	</table>           	
            	<br>
 
 			<div class="form-item">

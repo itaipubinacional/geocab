@@ -295,6 +295,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		
+		
+		
+		
 		/**
 		 * Caso não existe uma nav bar
 		 * */
@@ -404,6 +407,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
          */
         $scope.map.on('click', function(evt) {
         	
+        	
+        	
         	 if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
              	$scope.screenMarkerOpenned = true;
                  $scope.toggleSidebarMarkerCreate(300);
@@ -471,10 +476,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
               return false;   
              }
         	
-            if ($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
-
-                // zera os valores
+        	 
+        	
+            /* get the feature click to open marker detail */
+         	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+ 		        return feature;
+ 		      });
+         	
+         	if(($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia) || feature) {
                 $scope.features = [];
+         	}
+         	
+            if ($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
 
                 var listUrls = [];
 
@@ -493,11 +506,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                
             }
 
-            /* get the feature click to open marker detail */
-        	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-    		        return feature;
-    		      });
-        		
         	/* if click on the marker */
         	if( feature ){
         		if( typeof feature.getProperties().marker != "undefined" ) {
@@ -519,7 +527,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    	} 
         	
     		
+        	if($scope.features.length == 1) {
+        		$timeout(function(){
 
+            		$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
+    	    	}, 100)
+        	}
            
 
         });
@@ -551,7 +564,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     	layerGroupService.listAllFeatures(listUrls, {
             callback: function (result) {
-
+            	
                 for (var i=0; i < result.length; i++){
 
                     var feature = {
@@ -584,10 +597,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         if( $scope.features.length > 0 ) {
                             
         	                $timeout(function(){
-        	        			$scope.toggleSidebarMarkerDetailUpdate(300);	
+        	        			$scope.toggleSidebarMarkerDetailUpdate(300);
+        	        			
+        	        			//.panel-collapse 
+        	        			$('.min-height-accordion').find('.panel-body').css('height', 
+        	        															parseInt($('#sidebar-marker-detail-update').height()) - 
+        	        															parseInt( ( ( $scope.features.length) * 37 ) + 40 ) + 'px'
+        	        														  );
         	    	    	}, 400)
         	    	    	
                         }
+                        
+                        if($scope.features.length > 1) {
+                        	$timeout(function(){
+                            	$(".min-height-accordion .panel-collapse .panel-body").css("min-height","300px")
+                        	}, 700)
+                    	}
 
                     });
                     
@@ -1123,8 +1148,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             return;
 
         } else {
+        	
 
-        	$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
+        	//$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
         	$scope.currentEntity = new Marker();
         	
             // ativa funcionalidade e desativa as outras para só ter uma ativa por vez
@@ -1905,11 +1931,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    	markerService.removeMarker($scope.marker.id, {
 	      		  callback : function(result) {
 	      			//$scope.map.removeOverlay($scope.markerDetail.overlay);
+	      			  
 	      			
 		  			$scope.removeInternalLayer($scope.marker.layer.id, function(layerId){
 	   				   	$scope.addInternalLayer(layerId);
 	    			})
 	      			
+	    			$scope.features = [];
+	    			
 	    			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton');  
 	    			  
 	      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
@@ -2030,6 +2059,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             };
             reader.readAsDataURL(input.files[0]);
         }
+    }
+    
+    $scope.openImgModal = function() {
+    	var dialog = $modal.open({
+            templateUrl: 'modules/map/ui/popup/img-popup.jsp',
+            controller: ImgPopUpController,
+            resolve : {
+            	img: function(){ return $scope.imgResult }
+            }
+        });
     }
     
 };

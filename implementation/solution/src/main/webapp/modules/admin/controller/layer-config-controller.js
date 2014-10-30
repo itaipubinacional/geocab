@@ -112,7 +112,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
-        '<a ui-sref="layer-config.update({id:row.entity.id})" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ui-sref="layer-config.update({id:row.entity.id})"  " title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
     
@@ -816,5 +816,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 	  		$("div.msg").fadeOut();
 	  	}, 3000);
     }
+    
+    $(document).click(function() {
+    	$("div.msg").hide();
+    });
     
 };

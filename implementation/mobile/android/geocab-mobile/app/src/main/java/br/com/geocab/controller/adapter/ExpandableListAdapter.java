@@ -10,6 +10,7 @@ import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -100,7 +101,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 			childHolder.title = (TextView) convertView.findViewById(R.id.text_view_marker_attribute_title);
 			childHolder.value = (TextView) convertView.findViewById(R.id.text_view_marker_attribute_value);
-			childHolder.image = (ImageView) convertView.findViewById(R.id.image_view_marker_attribute);
+            childHolder.image = (ImageView) convertView.findViewById(R.id.image_view_marker_attribute);
+            childHolder.user = (TextView) convertView.findViewById(R.id.text_view_user_marker);
+            childHolder.date = (TextView) convertView.findViewById(R.id.text_view_date_marker);
+            childHolder.relativeLayout = (RelativeLayout) convertView.findViewById(R.id.relative_layout_creation_information);
+
             convertView.setTag(childHolder);
 		}else {
 			childHolder = (ChildHolder) convertView.getTag();
@@ -115,6 +120,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         {
             childHolder.title.setVisibility(View.VISIBLE);
             childHolder.value.setVisibility(View.VISIBLE);
+            //childHolder.user.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).user);
             childHolder.title.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).title);
             childHolder.value.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).value);
         }
@@ -122,10 +128,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if( mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).image == null )
         {
             childHolder.image.setVisibility(View.GONE);
+            childHolder.relativeLayout.setVisibility(View.GONE);
         }
         else
         {
             childHolder.image.setVisibility(View.VISIBLE);
+            childHolder.relativeLayout.setVisibility(View.VISIBLE);
 
             childHolder.image.setImageBitmap(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).image);
         }
@@ -192,7 +200,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 	class ChildHolder {
 		TextView title;
         TextView value;
+        TextView user;
+        TextView date;
         ImageView image;
+        RelativeLayout relativeLayout;
 	}
 
 	@Override

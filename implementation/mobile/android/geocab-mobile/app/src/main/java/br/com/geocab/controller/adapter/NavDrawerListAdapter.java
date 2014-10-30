@@ -2,6 +2,11 @@ package br.com.geocab.controller.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +22,9 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -43,7 +51,7 @@ public class NavDrawerListAdapter extends ArrayAdapter {
 
     private MarkerDelegate markerDelegate;
 
-    private List<Marker> markers;
+    private String layerIcon;
 
     public NavDrawerListAdapter(Context context, int resource, Object[] objects) {
         super(context, resource);
@@ -134,7 +142,18 @@ public class NavDrawerListAdapter extends ArrayAdapter {
         }
         else
         {
-            viewHolder.networkImageViewLegend.setDefaultImageResId(R.drawable.icon_app);
+            String nameIcon = layer.getIcon().substring(layer.getIcon().lastIndexOf("/")+1, layer.getIcon().indexOf("."));
+            try {
+                Class res = R.drawable.class;
+                Field field = res.getField(nameIcon);
+                int drawableId = field.getInt(null);
+                viewHolder.networkImageViewLegend.setDefaultImageResId(drawableId);
+            }
+            catch (Exception e) {
+                Log.e("MyTag", "Failure to get drawable id.", e);
+            }
+
+
         }
 
         viewHolder.checkBoxLayer.setChecked(layer.getIsChecked());
@@ -187,8 +206,9 @@ public class NavDrawerListAdapter extends ArrayAdapter {
                 {
                     if( layer.getIsChecked() )
                     {
+                        String nameIcon = layer.getIcon().substring(layer.getIcon().lastIndexOf("/")+1, layer.getIcon().indexOf("."));
                         NavDrawerListAdapter.this.markerDelegate = new MarkerDelegate(NavDrawerListAdapter.this.context, webViewMap, layer.getName() );
-                        NavDrawerListAdapter.this.markerDelegate.listMarkersByLayer(layer.getId());
+                        NavDrawerListAdapter.this.markerDelegate.listMarkersByLayer(layer.getId(), nameIcon);
                     }
                     else
                     {
