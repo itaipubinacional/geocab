@@ -817,4 +817,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 	  	}, 3000);
     }
     
+    $(document).click(function() {
+    	$("div.msg").hide();
+    });
+    
 };
