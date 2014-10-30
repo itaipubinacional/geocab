@@ -295,6 +295,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		
+		
+		
+		
 		/**
 		 * Caso não existe uma nav bar
 		 * */
@@ -524,7 +527,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    	} 
         	
     		
+        	if($scope.features.length == 1) {
+        		$timeout(function(){
 
+            		$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
+    	    	}, 100)
+        	}
            
 
         });
@@ -599,6 +607,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	    	    	}, 400)
         	    	    	
                         }
+                        
+                        if($scope.features.length > 1) {
+                        	$timeout(function(){
+                            	$(".min-height-accordion .panel-collapse .panel-body").css("min-height","300px")
+                        	}, 700)
+                    	}
 
                     });
                     
@@ -1917,11 +1931,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    	markerService.removeMarker($scope.marker.id, {
 	      		  callback : function(result) {
 	      			//$scope.map.removeOverlay($scope.markerDetail.overlay);
+	      			  
 	      			
 		  			$scope.removeInternalLayer($scope.marker.layer.id, function(layerId){
 	   				   	$scope.addInternalLayer(layerId);
 	    			})
 	      			
+	    			$scope.features = [];
+	    			
 	    			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton');  
 	    			  
 	      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
