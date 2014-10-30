@@ -14,7 +14,9 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name="br.com.geocab.controller.app.AppController"
@@ -42,20 +44,16 @@
             android:name="br.com.geocab.controller.activity.MapActivity"
             android:hardwareAccelerated="true"
             android:label="@string/title_activity_map" >
+        </activity>
+        <activity
+            android:name="br.com.geocab.controller.activity.SplashScreenActivity"
+            android:label="@string/title_activity_splash_screen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<activity-->
-            <!--android:name="br.com.geocab.controller.activity.MarkActivity"-->
-            <!--android:label="@string/title_activity_mark" >-->
-        <!--</activity>-->
-        <!--<activity-->
-            <!--android:name="br.com.geocab.controller.activity.LayerActivity"-->
-            <!--android:label="@string/title_activity_layer" >-->
-        <!--</activity>-->
     </application>
 
 </manifest>

@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -35,7 +37,11 @@ public class Marker implements Serializable
 	
 	private StatusMarker status;
 
+    private User user;
+
     private Layer layer;
+
+    private GregorianCalendar created;
 	
 	private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
 
@@ -142,4 +148,19 @@ public class Marker implements Serializable
 		this.markerAttributes = markerAttributes;
 	}
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public GregorianCalendar getCreated() {
+        return created;
+    }
+
+    public void setCreated(GregorianCalendar created) {
+        this.created = created;
+    }
 }

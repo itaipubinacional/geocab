@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import br.com.geocab.R;
+import br.com.geocab.controller.activity.MapActivity;
 import br.com.geocab.controller.activity.dialog.DialogInformation;
 import br.com.geocab.controller.app.AppController;
 import br.com.geocab.entity.GroupEntity;
@@ -90,7 +91,7 @@ public class MarkerDelegate extends AbstractDelegate
     /**
      * @return
      */
-    public void listMarkersByLayer( final long layerId )
+    public void listMarkersByLayer( long layerId, final String layerIcon )
     {
         String url = getUrl()+ "/"+layerId+"/markers";
 
@@ -111,7 +112,7 @@ public class MarkerDelegate extends AbstractDelegate
 
                         result.add(marker);
 
-                        webViewMap.loadUrl("javascript:showMarker(\"" + marker.getLatitude() + "\",\"" + marker.getLongitude() + "\", \""+layerName+"\", \""+marker.getId()+"\")");
+                        webViewMap.loadUrl("javascript:showMarker(\"" + marker.getLatitude() + "\",\"" + marker.getLongitude() + "\", \""+layerName+"\", \""+layerIcon+"\", \""+marker.getId()+"\")");
 
 
                     }
