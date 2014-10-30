@@ -13,6 +13,7 @@
 
 @property (retain, nonatomic) NSNumber *id;
 @property (retain, nonatomic) NSString *name;
+@property (retain, nonatomic) NSNumber *created;
 @property (retain, nonatomic) NSString *title;
 @property (retain, nonatomic) NSString *legend;
 @property (retain, nonatomic) NSString *icon;

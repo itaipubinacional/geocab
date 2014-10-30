@@ -16,4 +16,6 @@
 "layer.content-type.number" = "Número";
 "layer.content-type.date" = "Data";
 "layer.content-type.boolean" = "Booleano";
-"no-internet-error.message" = "Verifique a sua coneção com a internet.";
+"no-internet-error.message" = "Verifique a sua conexão com a internet.";
+"layer-fetch.error.message" = "Um erro aconteceu ao tentar atualizar as camadas";
+"created-by" = "Criado por";
