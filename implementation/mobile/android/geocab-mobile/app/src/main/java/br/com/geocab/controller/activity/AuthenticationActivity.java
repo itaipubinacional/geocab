@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -37,8 +38,11 @@ import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.Plus.PlusOptions;
 import com.google.android.gms.plus.model.people.Person;
 
+import org.json.JSONException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import br.com.geocab.R;
 import br.com.geocab.controller.delegate.AbstractDelegate;
@@ -57,6 +61,8 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     private Button btnSignIn;
 
     private EditText editTextUsername, editTextPassword;
+
+    private AccountDelegate accountDelegate;
 
     /*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES GOOGLE
@@ -86,6 +92,14 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
      * Button sign in google
      */
 	private SignInButton btnSignInGoogle;
+
+    /**
+     * A flag indicating that a PendingIntent is in progress and prevents us
+     * from starting further intents.
+     */
+    private boolean mIntentInProgress;
+
+    private boolean mSignInClicked;
 
     /*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES FACEBOOK
@@ -122,13 +136,36 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
         editTextUsername = (EditText) findViewById(R.id.edit_text_username);
         editTextPassword = (EditText) findViewById(R.id.edit_text_password);
 
+        accountDelegate = new AccountDelegate(this);
+
         loginButton = (LoginButton) findViewById(R.id.btn_sign_in_facebook);
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 AuthenticationActivity.this.user = user;
-                if( user != null)
-                Toast.makeText(AuthenticationActivity.this, "LOGADO PELO FACEBOOK COM: " + user.getName(), Toast.LENGTH_LONG).show();
+
+                if( SplashScreenActivity.settings.getAll().get("email") == null && SplashScreenActivity.settings.getAll().get("password") == null )
+                {
+                    if( user != null)
+                    {
+                        try {
+                            SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
+                            SplashScreenActivity.prefEditor.putString("email", user.getInnerJSONObject().getString("email"));
+                            SplashScreenActivity.prefEditor.putString("password", "none");
+                            SplashScreenActivity.prefEditor.commit();
+                            User userApplication = new User();
+                            userApplication.setName(user.getName());
+                            userApplication.setEmail(user.getInnerJSONObject().getString("email"));
+                            userApplication.setPassword("none");
+                            accountDelegate.postNewComment(userApplication);
+
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+
+                    }
+                }
+
             }
         });
 
@@ -185,23 +222,53 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     /**
      * Called after onCreate
      */
+    @Override
 	protected void onStart()
     {
 		super.onStart();
 		mGoogleApiClient.connect();
+
 	}
 
     /**
      * Called when you are no longer visible to the user
      */
+    @Override
 	protected void onStop()
     {
 		super.onStop();
+        uiHelper.onStop();
 		if (mGoogleApiClient.isConnected())
         {
 			mGoogleApiClient.disconnect();
 		}
 	}
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Session session = Session.getActiveSession();
+
+        if(session==null){
+            // try to restore from cache
+            session = Session.openActiveSessionFromCache(this);
+        }
+
+        if (session != null &&
+                (session.isOpened() || session.isClosed()) ) {
+            onSessionStateChange(session, session.getState(), null);
+        }
+
+        uiHelper.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
 
     /**
      * Handler on click
@@ -212,23 +279,35 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     {
         if (view.getId() == R.id.btn_sign_in_google && !mGoogleApiClient.isConnected())
         {
-            try
-            {
-                mConnectionResult.startResolutionForResult(this, CODE_SIGN_IN_GOOGLE);
-            }
-            catch (SendIntentException e)
-            {
-                // Try connect again
-                mConnectionResult = null;
-                mGoogleApiClient.connect();
+            if (!mGoogleApiClient.isConnecting()) {
+                mSignInClicked = true;
+                resolveSignInError();
             }
         }
         else if( view.getId() == R.id.btn_sign_in )
         {
-            AccountDelegate accountDelegate = new AccountDelegate(this);
+            SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
+            SplashScreenActivity.prefEditor.putString("email", editTextUsername.getText().toString());
+            SplashScreenActivity.prefEditor.putString("password", editTextPassword.getText().toString());
+            SplashScreenActivity.prefEditor.commit();
+
             final byte[] credentials = ( editTextUsername.getText() + ":" + editTextPassword.getText() ).getBytes();
-            AbstractDelegate.loggedUser = new User(editTextPassword.getText().toString());
             accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP));
+        }
+    }
+
+    /**
+     * Method to resolve any signin errors
+     * */
+    private void resolveSignInError() {
+        if (mConnectionResult.hasResolution()) {
+            try {
+                mIntentInProgress = true;
+                mConnectionResult.startResolutionForResult(this, CODE_SIGN_IN_GOOGLE);
+            } catch (SendIntentException e) {
+                mIntentInProgress = false;
+                mGoogleApiClient.connect();
+            }
         }
     }
 
@@ -236,10 +315,24 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 	 *				 		   FACEBOOk HANDLERS
 	 *-------------------------------------------------------------------*/
 
+    private void onSessionStateChange(Session session, SessionState state,
+                                      Exception exception) {
+        if (state.isOpened()) {
+            Log.d(TAG, "Logged in...");
+            Session.OpenRequest request = new Session.OpenRequest((Activity) this);
+            request.setPermissions(Arrays.asList("email"));
+        } else if (state.isClosed()) {
+            Log.d(TAG, "Logged out...");
+        } else {
+            Log.d(TAG, "Unknown state: " + state);
+        }
+    }
+
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
             Log.d("TEste", String.format("Error: %s", "TESTE"));
+            onSessionStateChange(session, state, exception);
         }
     };
 
@@ -267,8 +360,15 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     {
         if (requestCode == CODE_SIGN_IN_GOOGLE)
         {
-            Intent mapIntent = new Intent(this, MapActivity.class);
-            startActivity(mapIntent);
+            if (responseCode != RESULT_OK) {
+                mSignInClicked = false;
+            }
+
+            mIntentInProgress = false;
+
+            if (!mGoogleApiClient.isConnecting()) {
+                mGoogleApiClient.connect();
+            }
         }
         else
         {
@@ -320,8 +420,18 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 			return;
 		}
 
-        // Store the ConnectionResult for later usage
-        mConnectionResult = result;
+        if (!mIntentInProgress) {
+            // Store the ConnectionResult for later usage
+            mConnectionResult = result;
+
+            if (mSignInClicked) {
+                // The user has already clicked 'sign-in' so we attempt to
+                // resolve all
+                // errors until the user is signed in, or they cancel.
+                resolveSignInError();
+            }
+        }
+
 	}
 
     /**
@@ -346,18 +456,23 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
         {
 			if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null)
             {
-				Person currentPerson = Plus.PeopleApi
-						.getCurrentPerson(mGoogleApiClient);
-				String personName = currentPerson.getDisplayName();
-				String personPhotoUrl = currentPerson.getImage().getUrl();
-				String personGooglePlusProfile = currentPerson.getUrl();
-				String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+                if( SplashScreenActivity.settings.getAll().get("email") == null && SplashScreenActivity.settings.getAll().get("password") == null )
+                {
+                    Person currentPerson = Plus.PeopleApi
+                            .getCurrentPerson(mGoogleApiClient);
+                    String personName = currentPerson.getDisplayName();
+                    String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
 
-                Toast.makeText(AuthenticationActivity.this, "LOGADO PELO GOOGLE COM: " + personName, Toast.LENGTH_LONG).show();
-
-				Log.e(TAG, "Name: " + personName + ", plusProfile: "
-						+ personGooglePlusProfile + ", email: " + email
-						+ ", Image: " + personPhotoUrl);
+                    SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
+                    SplashScreenActivity.prefEditor.putString("email", email);
+                    SplashScreenActivity.prefEditor.putString("password", "none");
+                    SplashScreenActivity.prefEditor.commit();
+                    User userApplication = new User();
+                    userApplication.setName(personName);
+                    userApplication.setEmail(email);
+                    userApplication.setPassword("none");
+                    accountDelegate.postNewComment(userApplication);
+                }
 
 			}
             else
