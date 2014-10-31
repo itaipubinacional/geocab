@@ -640,7 +640,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.enableTools = function(){
     	$scope.hasPermissionCalculoDistancia = true;
-    	$scope.hasPermissionCalculoDistancia = true;
+    	$scope.hasPermissionCalculoArea = true;
     	$scope.hasPermissionKML = true;
         enableFileKML();
     }

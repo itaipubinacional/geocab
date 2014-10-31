@@ -22,24 +22,27 @@
 
 		<div>
 			<ul class="map-menu-items tool-items" id="menu-sidebar">
-				<li ng-click="aumentarZoom()"><a href="#tabs-2">
+				<li ng-click="aumentarZoom()" title="Aumentar zoom"><a href="#tabs-2">
 						<div class="icon itaipu-icon-plus sidebar-icon"></div>
 				</a></li>
-				<li ng-click="diminuirZoom()"><a>
+				<li ng-click="diminuirZoom()" title="Diminuir zoom"><a>
 						<div class="icon itaipu-icon-minus sidebar-icon"></div>
 				</a></li>
 				<li ng-if="hasPermissionCalculoDistancia"
+					title="Calcular distância"
 					ng-click="initializeDistanceCalc()"
 					ng-class="{ferramenta_active : menu.fcDistancia}"><a>
 						<div class="icon itaipu-icon-ruler-1 sidebar-icon"></div>
 				</a></li>
 				<li ng-if="hasPermissionCalculoArea" ng-click="initializeAreaCalc()"
+					title="Calcular área"
 					ng-class="{ferramenta_active : menu.fcArea}"><a>
 						<div class="icon itaipu-icon-square sidebar-icon"></div>
 				</a></li>
 
 				<!-- Verificar... -->
 				<li ng-click="initializeMarker()"
+					title="Realizar postagem"
 					ng-class="{ferramenta_active : menu.fcMarker}"><a
 					href="#tabs-1"> <span
 						class="glyphicon glyphicon-map-marker sidebar-icon"></span>
@@ -470,6 +473,7 @@
 		<div id="sidebar-tabs" style="float: left;">
 			<ul class="map-menu-items tab-flag" id="menu-sidebar-2">
 				<li id="menu-item-1"
+					title="Menu de camadas"
 					ng-click="toggleSidebarMenu(300, '#menu-item-1');"
 					class="menu-item bg-inactive"><a href="#tabs-1">
 						<div class="icon itaipu-icon-layers sidebar-icon"></div>
@@ -551,9 +555,9 @@
 	<div id="gmap" style="width: 0; height: 0"></div>
 
 	<div id="typeMapQuest"
-		ng-if="mapa.ativo == 'mapQuest_osm' || mapa.ativo == 'mapQuest_sat'"
+		ng-if="mapConf.active == 'mapQuest_osm' || mapConf.active == 'mapQuest_sat'"
 		ng-mouseover="hideMousePosition()"
-		style="position: absolute; top: 130px; right: 10px; z-index: 1;">
+		style="position: absolute; top: 20px; right: 10px; z-index: 1;">
 		<button type="button" ng-click="initializeMapQuestOSM()"
 			class="btn btn-default btn-xs">OSM</button>
 		<button type="button" ng-click="initializeMapQuestSAT()"

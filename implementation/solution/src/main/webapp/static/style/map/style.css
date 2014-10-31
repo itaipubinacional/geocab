@@ -29,9 +29,9 @@
     display: none;
     height: 25px;
     width: 200px;
-    background-color: rgb(65, 63, 63);
+    /*background-color: rgb(65, 63, 63);
     border-radius: 4px;
-    border: 1px solid #cccccc;
+    border: 1px solid #cccccc;*/
     bottom: 0;
     left: 44%;
     margin-bottom: -3px;
@@ -41,7 +41,8 @@
 #info p {
     text-align: center;
     padding-top: 3px;
-    color: white;
+    color: black;
+    font-weight: bold;
 }
 
 #olmap .tooltip {
