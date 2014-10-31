@@ -372,7 +372,7 @@
 
 			<br/>
 			
-			<div class="form-item position-relative" style="width: 300px;"
+			<div ng-if="!currentEntity.dataSource.url" class="form-item position-relative" style="width: 300px;"
                  ng-if="currentState">
                 <input type="checkbox" style="width: 20px;"
                        ng-model="currentEntity.enabled"
