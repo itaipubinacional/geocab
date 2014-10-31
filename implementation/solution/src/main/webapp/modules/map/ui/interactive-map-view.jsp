@@ -129,9 +129,9 @@
 									<br>
 			
 									<div style=" overflow: auto;">
-										<div ng-repeat="markerAttribute in attributesByMarker" style="position: relative;margin-bottom:15px">
+										<div ng-repeat="markerAttribute in attributesByMarker track by $index" style="position: relative;margin-bottom:15px">
 										
-												<label ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
+												<label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
 													<input
 													type="number" name="number1"
 													ng-if="markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '' "
@@ -231,7 +231,7 @@
 							style="position: relative;margin-bottom:15px;">
 
 							<ng-form name="ngSideMarker" default-button="buttonUpdate">
-							<label>{{ markerAttribute.attribute.name }}</label> 
+							<label  ng-style="$index > 0 ? {'margin-top':'15px'} : '' ">{{ markerAttribute.attribute.name }}</label> 
 							
 								<input
 									type="number" 
@@ -377,7 +377,7 @@
 							style="position: relative">
 							
 							<ng-form name="ngSideMarker" default-button="buttonInsert">
-							<label>{{ attribute.name }}</label> 
+							<label style="margin-top: 15px">{{ attribute.name }}</label> 
 							
 							<input type="number"
 								name="number1" ng-if="attribute.type == 'NUMBER'"

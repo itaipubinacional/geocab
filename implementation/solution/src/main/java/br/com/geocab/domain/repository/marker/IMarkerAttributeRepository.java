@@ -18,7 +18,7 @@ import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
  * @author Administrador
  *
  */
-public interface IMarkerAttributeRepository  extends IDataRepository<Marker, Long>
+public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttribute, Long>
 {
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
