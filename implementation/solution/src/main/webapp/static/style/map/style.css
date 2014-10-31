@@ -29,9 +29,9 @@
     display: none;
     height: 25px;
     width: 200px;
-    background-color: rgb(65, 63, 63);
+    /*background-color: rgb(65, 63, 63);
     border-radius: 4px;
-    border: 1px solid #cccccc;
+    border: 1px solid #cccccc;*/
     bottom: 0;
     left: 44%;
     margin-bottom: -3px;
@@ -41,7 +41,8 @@
 #info p {
     text-align: center;
     padding-top: 3px;
-    color: white;
+    color: black;
+    font-weight: bold;
 }
 
 #olmap .tooltip {
@@ -238,7 +239,7 @@
 }
 
 .panel-body {
-    max-height: 250px;
+/*     max-height: 250px; */
     overflow-y: auto;
 }
 
@@ -378,9 +379,13 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 }
 
 .min-height-accordion .panel-collapse .panel-body {
-	max-height: initial;
+/* 	max-height: initial !important; */
 }
 
 .panel-default>.panel-heading+.panel-collapse>.panel-body {
 	padding: 10px
+}
+
+#tree li, #tree-pesquisas li, #tree-kml li {
+    background: none;
 }
