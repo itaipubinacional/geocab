@@ -111,12 +111,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * O botão de editar navega via URL (sref) por que a edição é feita em outra página,
      * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
      */
-    var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
+    var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
         '<a ui-sref="layer-config.update({id:row.entity.id})"  " title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
     
-    var MARKER_BUTTONS = '<div  class="cell-centered">' +
+    var MARKER_BUTTONS = '<div  class="cell-centered  ">' +
     '<a ng-if="row.entity.enabled == false" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
     '<a ng-if="row.entity.enabled == true" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
     '</div>';
@@ -124,7 +124,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
 	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
 	'</div>';
-
+    
     /**
      * Configurações gerais da ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
