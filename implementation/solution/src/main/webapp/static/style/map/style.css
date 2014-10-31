@@ -238,7 +238,7 @@
 }
 
 .panel-body {
-    max-height: 250px;
+/*     max-height: 250px; */
     overflow-y: auto;
 }
 
@@ -378,7 +378,7 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 }
 
 .min-height-accordion .panel-collapse .panel-body {
-	max-height: initial;
+/* 	max-height: initial !important; */
 }
 
 .panel-default>.panel-heading+.panel-collapse>.panel-body {
