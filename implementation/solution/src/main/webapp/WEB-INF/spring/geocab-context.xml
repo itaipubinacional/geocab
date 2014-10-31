@@ -229,4 +229,37 @@
     
 	<bean id="modeShapeSessionFactory" 
 		class="br.com.geocab.infrastructure.jcr.modeshape.ModeShapeSessionFactory"/>
+		
+	<!-- 
+  		MAIL 
+  	-->
+	<context:component-scan
+		base-package="br.com.geocab.infrastructure.mail" />
+		
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="protocol" value="${mail.protocol}"/>
+		<property name="host" value="${mail.host}"/>
+		<property name="port" value="${mail.port}"/>
+		<property name="username" value="${mail.user}"/>
+		<property name="password" value="${mail.password}"/>
+  		<property name="javaMailProperties">
+  			<props>
+  				<prop key="mail.smtp.starttls.enable">${mail.tls}</prop>
+  				<prop key="mail.smtp.starttls.required">${mail.tls}</prop>
+  				<prop key="mail.smtp.ssl.enable">${mail.ssl}</prop>
+  				<prop key="mail.smtps.debug">${mail.debug}</prop>
+  				<prop key="mail.smtp.debug">${mail.debug}</prop>
+  				<prop key="mail.debug">${mail.debug}</prop>
+  			</props>
+  		</property>
+	</bean>
+	
+	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value>
+                resource.loader=class
+                class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+            </value>
+        </property>
+    </bean>
 </beans>
