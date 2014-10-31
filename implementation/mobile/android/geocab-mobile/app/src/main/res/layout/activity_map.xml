@@ -19,7 +19,7 @@
             android:background="@drawable/custom_btn_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="-35dp"
+            android:layout_marginLeft="-25dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"></Button>
 
@@ -117,6 +117,11 @@
         </LinearLayout>
 
         <!-- Listview to display slider menu -->
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <ListView
             android:id="@+id/list_slidermenu"
             android:layout_width="match_parent"
@@ -124,8 +129,19 @@
             android:divider="@color/list_divider"
             android:dividerHeight="1sp"
             android:padding="10dp"
-            android:layout_gravity="start"
-            android:listSelector="@drawable/list_selector"/>
+            android:listSelector="@drawable/list_selector"
+            android:layout_above="@+id/btn_logout"/>
+
+            <Button
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/white"
+                android:text="@string/btn_logout"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>/
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

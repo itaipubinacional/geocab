@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">geocab</string>
+    <string name="app_name">GeoCAB</string>
 
     <!-- Authentication -->
     <string name="email_address">Email address</string>
     <string name="password">Password</string>
     <string name="btn_login">LOGIN</string>
+    <string name="btn_logout">Logout</string>
 
     <string name="btn_logout_from_google">Logout from Google</string>
     <string name="facebook_app_id">"700984299994268"</string>
@@ -19,16 +20,21 @@
 
     <!-- Account delegate -->
     <string name="error_authentication">Email or password invalid</string>
+    <string name="loading">Loading</string>
+    <string name="authenticating_application">Authenticating into system. Please wait!</string>
+    <string name="connection_problem">Problem with connection. Check your internet connection</string>
+    <string name="email_password_invalid">Email ou senha inválido</string>
+    <string name="problem_loading_layer">Problem loading layers</string>
 
     <!-- Layer and Marker delegate -->
-    <string name="error_connection">Problem with connection. Please check!</string>
-
+    <string name="error_connection">Problem with connection. Check your internet connection!</string>
 
     <!-- Nav Drawer -->
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
-
     <string name="title_activity_mark">Mark</string>
     <string name="title_activity_layer">Layer</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

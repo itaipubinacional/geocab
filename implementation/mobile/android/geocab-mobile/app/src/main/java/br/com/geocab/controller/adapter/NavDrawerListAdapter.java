@@ -190,8 +190,6 @@ public class NavDrawerListAdapter extends ArrayAdapter {
 
                 textViewSelectedCountItems.setText(Integer.toString(selectedItemCount));
 
-                //layer.setIsChecked(isChecked);
-
                 if( layer.getDataSource().getUrl() != null )
                 {
                     int index = layer.getName().indexOf(":");

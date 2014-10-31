@@ -25,9 +25,9 @@ public class JavaScriptHandler {
         vb.vibrate(100);
     }
 
-    public void showInformation(int markerId, String layerName, String[] listUrls, String[] listTitles)
+    public void showInformation(int markerId, String markerUser, String markerDate, String layerName, String[] listUrls, String[] listTitles)
     {
-        this.mapActivity.showInformation(markerId, layerName, listUrls, listTitles);
+        this.mapActivity.showInformation(markerId, markerUser, markerDate, layerName, listUrls, listTitles);
     }
 
 

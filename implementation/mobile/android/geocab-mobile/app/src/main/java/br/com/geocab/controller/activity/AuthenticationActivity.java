@@ -81,12 +81,12 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     /**
      * Google client to interact with Google API
      */
-	private GoogleApiClient mGoogleApiClient;
+	public static GoogleApiClient mGoogleApiClient;
 
     /**
      * Connection result of sign in google
      */
-	private ConnectionResult mConnectionResult;
+	public static ConnectionResult mConnectionResult;
 
     /**
      * Button sign in google
@@ -149,15 +149,11 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
                     if( user != null)
                     {
                         try {
-                            SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
-                            SplashScreenActivity.prefEditor.putString("email", user.getInnerJSONObject().getString("email"));
-                            SplashScreenActivity.prefEditor.putString("password", "none");
-                            SplashScreenActivity.prefEditor.commit();
                             User userApplication = new User();
                             userApplication.setName(user.getName());
                             userApplication.setEmail(user.getInnerJSONObject().getString("email"));
                             userApplication.setPassword("none");
-                            accountDelegate.postNewComment(userApplication);
+                            accountDelegate.insertUserSocial(userApplication);
 
                         } catch (JSONException e1) {
                             e1.printStackTrace();
@@ -287,12 +283,11 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
         else if( view.getId() == R.id.btn_sign_in )
         {
             SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
-            SplashScreenActivity.prefEditor.putString("email", editTextUsername.getText().toString());
             SplashScreenActivity.prefEditor.putString("password", editTextPassword.getText().toString());
             SplashScreenActivity.prefEditor.commit();
 
             final byte[] credentials = ( editTextUsername.getText() + ":" + editTextPassword.getText() ).getBytes();
-            accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP));
+            accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP), true);
         }
     }
 
@@ -390,7 +385,15 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     public void onConnected(Bundle arg0)
     {
         // Get user's information
-        getProfileInformation();
+
+        if( mSignInClicked )
+        {
+            getProfileInformation();
+        }
+        else
+        {
+            signOutFromGoogle();
+        }
     }
 
     /**
@@ -443,7 +446,6 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
             Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
             mGoogleApiClient.disconnect();
             mGoogleApiClient.connect();
-            Toast.makeText(this, "User disconnected!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -463,15 +465,13 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
                     String personName = currentPerson.getDisplayName();
                     String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
 
-                    SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
-                    SplashScreenActivity.prefEditor.putString("email", email);
-                    SplashScreenActivity.prefEditor.putString("password", "none");
-                    SplashScreenActivity.prefEditor.commit();
                     User userApplication = new User();
                     userApplication.setName(personName);
                     userApplication.setEmail(email);
                     userApplication.setPassword("none");
-                    accountDelegate.postNewComment(userApplication);
+
+                    accountDelegate.insertUserSocial(userApplication);
+
                 }
 
 			}
