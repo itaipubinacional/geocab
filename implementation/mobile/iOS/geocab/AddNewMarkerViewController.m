@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Itaipu. All rights reserved.
 //
 
-#import "AddNewPointViewController.h"
+#import "AddNewMarkerViewController.h"
 #import "Marker.h"
 
-@interface AddNewPointViewController()
+@interface AddNewMarkerViewController()
 
 @property (strong, nonatomic) IBOutlet UITableView *layerTableView;
 @property (strong, nonatomic) FDTakeController *takeController;
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation AddNewPointViewController
+@implementation AddNewMarkerViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

@@ -102,7 +102,8 @@ extern User *loggedUser;
 - (void) authenticateUser:(User*) user {
     [defaults setObject:user.email forKey:@"email"];
     [defaults setObject:user.name forKey:@"name"];
-    [defaults setObject:_password.text forKey:@"password"];
+    NSString *password = [_password.text isEqualToString:@""] ? user.password : _password.text;
+    [defaults setObject:password forKey:@"password"];
     loggedUser = user;
     [defaults synchronize];
     [self performSegueWithIdentifier:@"loginToMainSegue" sender:self];
@@ -131,11 +132,19 @@ extern User *loggedUser;
         [[[GPPSignIn sharedInstance] plusService] executeQuery:[GTLQueryPlus queryForPeopleGetWithUserId:_signIn.userID] completionHandler:^(GTLServiceTicket *ticket, GTLPlusPerson *person, NSError *error)
          {
              //Prints null in both
-             User *loggedUser = [[User alloc] init];
-             loggedUser.email = [[GPPSignIn sharedInstance] userEmail];
-             loggedUser.name = person.displayName;
+//             User *loggedUser = [[User alloc] init];
+//             loggedUser.email = [[GPPSignIn sharedInstance] userEmail];
+//             loggedUser.name = person.displayName;
              
-             [self authenticateUser:loggedUser];
+             [self clearTextInputs];
+             AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/create"];
+             [accountDelegate socialAuthenticate:[[GPPSignIn sharedInstance] userEmail] name:person.displayName successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+                 User *loggedUser = (User*)[result firstObject];
+                 loggedUser.password = @"none";
+                 [self authenticateUser:loggedUser];
+             } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+                 NSLog(@"Google plus login error");
+             }];
          }];
     }
     
@@ -143,11 +152,16 @@ extern User *loggedUser;
 
 //Facebook login callback
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user {
-    User *loggedUser = [[User alloc] init];
-    loggedUser.name = user.name;
-    loggedUser.email = [user objectForKey:@"email"];
-    
-    [self authenticateUser:loggedUser];
+    [self clearTextInputs];
+    AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/create"];
+    [accountDelegate socialAuthenticate:[user objectForKey:@"email"] name:user.name successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        User *loggedUser = (User*)[result firstObject];
+        loggedUser.password = @"none";
+        [self authenticateUser:loggedUser];
+    } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Facebook login error");
+    }];
+
 }
 
 - (void)presentSignInViewController: (UIViewController *)viewController {
@@ -160,6 +174,11 @@ extern User *loggedUser;
     
     self.navigationItem.hidesBackButton = YES;
     self.navigationItem.leftBarButtonItem = nil;
+}
+
+- (void) clearTextInputs {
+    _username.text = @"";
+    _password.text = @"";
 }
 
 @end
