@@ -159,7 +159,7 @@
                     <navigationItem key="navigationItem" id="Rvh-t5-IDo"/>
                     <connections>
                         <segue destination="vXZ-lx-hvc" kind="push" identifier="loginSegue" id="FOi-b3-CYe"/>
-                        <segue destination="Ufn-yj-YLQ" kind="push" identifier="mainSegue" id="dwQ-9T-eO6"/>
+                        <segue destination="Ufn-yj-YLQ" kind="modal" identifier="mainSegue" id="dwQ-9T-eO6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7R9-oz-VN5" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -178,7 +178,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syb-5q-Pdd">
+                            <webView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="syb-5q-Pdd">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <dataDetectorType key="dataDetectorTypes"/>
@@ -286,13 +286,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="32F-vC-ihN" firstAttribute="top" secondItem="syb-5q-Pdd" secondAttribute="bottom" id="5WV-XM-vWk"/>
-                            <constraint firstItem="syb-5q-Pdd" firstAttribute="top" secondItem="Thr-cX-tFy" secondAttribute="topMargin" id="6hm-WX-ws5"/>
                             <constraint firstItem="32F-vC-ihN" firstAttribute="top" secondItem="gpl-z5-l45" secondAttribute="bottom" constant="20" id="Qnx-lp-vqd"/>
                             <constraint firstItem="32F-vC-ihN" firstAttribute="top" secondItem="yIo-zT-dUG" secondAttribute="bottom" constant="36" id="Tay-hm-AlY"/>
                             <constraint firstItem="32F-vC-ihN" firstAttribute="top" secondItem="syb-5q-Pdd" secondAttribute="bottom" id="WSV-2j-SOH"/>
                             <constraint firstItem="f1k-gy-Ely" firstAttribute="top" secondItem="lJz-Lm-QPe" secondAttribute="bottom" constant="17" id="ZMp-bG-yJ5"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="syb-5q-Pdd" secondAttribute="trailing" constant="-16" id="by0-Z7-pqU"/>
-                            <constraint firstItem="syb-5q-Pdd" firstAttribute="leading" secondItem="Thr-cX-tFy" secondAttribute="leadingMargin" constant="-16" id="mVG-q8-VaF"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Map" id="fst-os-tLY"/>
@@ -307,7 +304,7 @@
                         <outlet property="markerOptionsOverlay" destination="xNQ-Ue-C6v" id="56b-RC-Ofw"/>
                         <outlet property="showMarkerOptionsButton" destination="gpl-z5-l45" id="yaH-H4-a2h"/>
                         <outlet property="webView" destination="syb-5q-Pdd" id="xdM-2b-r0n"/>
-                        <segue destination="Oa5-5p-cID" kind="push" identifier="addNewPointSegue" id="u57-AN-6lX"/>
+                        <segue destination="Oa5-5p-cID" kind="push" identifier="addNewMarkerSegue" id="u57-AN-6lX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Fv-2g-etr" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -317,7 +314,7 @@
         <!--New point-->
         <scene sceneID="91y-fL-Vfr">
             <objects>
-                <viewController id="Oa5-5p-cID" customClass="AddNewPointViewController" sceneMemberID="viewController">
+                <viewController id="Oa5-5p-cID" customClass="AddNewMarkerViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qYu-nc-vbo"/>
                         <viewControllerLayoutGuide type="bottom" id="ttg-lr-eJh"/>
@@ -476,6 +473,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="dwQ-9T-eO6"/>
+        <segue reference="z5K-Hz-Zts"/>
     </inferredMetricsTieBreakers>
 </document>
