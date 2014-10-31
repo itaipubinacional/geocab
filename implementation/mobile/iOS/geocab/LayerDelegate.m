@@ -19,7 +19,8 @@
                                                   @"name"      : @"name",
                                                   @"title"     : @"title",
                                                   @"legend"    : @"legend",
-                                                  @"icon"      : @"icon"
+                                                  @"icon"      : @"icon",
+                                                  @"created"   : @"created"
                                                   }];
     
     RKObjectMapping *dataSourceMapping = [RKObjectMapping mappingForClass:[DataSource class]];
@@ -35,7 +36,7 @@
     return mapping;
 }
 
-- (void) list: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password
+- (void) list: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failBlock userName:(NSString*)userName password:(NSString*)password
 {
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:self.mapping method:RKRequestMethodGET pathPattern:nil keyPath:@"" statusCodes:nil];
     
@@ -47,7 +48,7 @@
     
     RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[ responseDescriptor ]];
     
-    [objectRequestOperation setCompletionBlockWithSuccess:successBlock failure:nil];
+    [objectRequestOperation setCompletionBlockWithSuccess:successBlock failure:failBlock];
     [objectRequestOperation start];
 }
 

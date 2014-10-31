@@ -564,7 +564,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     	layerGroupService.listAllFeatures(listUrls, {
             callback: function (result) {
-
+            	
                 for (var i=0; i < result.length; i++){
 
                     var feature = {
@@ -597,7 +597,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         if( $scope.features.length > 0 ) {
                             
         	                $timeout(function(){
-        	        			$scope.toggleSidebarMarkerDetailUpdate(300);	
+        	        			$scope.toggleSidebarMarkerDetailUpdate(300);
+        	        			
+        	        			//.panel-collapse 
+        	        			$('.min-height-accordion').find('.panel-body').css('height', 
+        	        															parseInt($('#sidebar-marker-detail-update').height()) - 
+        	        															parseInt( ( ( $scope.features.length) * 37 ) + 40 ) + 'px'
+        	        														  );
         	    	    	}, 400)
         	    	    	
                         }

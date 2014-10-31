@@ -47,6 +47,16 @@
         _selectedLayers = [NSMutableArray arrayWithCapacity:[_layers count]];
         [self.tableView reloadData];
         
+    } failBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"")
+                                                        message:NSLocalizedString(@"layer-fetch.error.message", @"")
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+        
     } userName:@"admin@geocab.com.br" password:@"admin"];
 }
 

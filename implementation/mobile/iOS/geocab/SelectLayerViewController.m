@@ -18,12 +18,18 @@
 @property (retain, nonatomic) NSArray *layers;
 @property (nonatomic, retain) NSMutableDictionary *sections;
 @property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) UIButton *syncButton;
+@property (nonatomic, retain) NSArray *selectedLayers;
+
+#define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 
 extern NSUserDefaults *defaults;
 
 @end
 
 @implementation SelectLayerViewController
+
+BOOL animating;
 
 - (void)viewDidLoad {
     
@@ -39,14 +45,20 @@ extern NSUserDefaults *defaults;
     self.tableView.delegate = self;
     
     if (self.multipleSelection) {
-        UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
-        [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
-        [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
-        [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
-        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
+        _syncButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_syncButton setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
+        [_syncButton addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
+        [_syncButton setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:_syncButton];
         self.navigationItem.leftBarButtonItem = button;
         
-        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:@"X" style:UIBarButtonItemStylePlain target:self action:@selector(didFinish)];
+        UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [closeButton setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
+        [closeButton addTarget:self action:@selector(didFinish) forControlEvents:UIControlEventTouchUpInside];
+        [closeButton setImage:[UIImage imageNamed:@"menu-close-btn.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc]initWithCustomView:closeButton];
+        
+//        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(didFinish)];
         self.navigationItem.rightBarButtonItem = buttonItem;
         
         UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -61,15 +73,17 @@ extern NSUserDefaults *defaults;
         [self.view addSubview:logoutButton];
         
     } else {
-        UIButton *button1=[UIButton buttonWithType:UIButtonTypeCustom];
-        [button1 setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
-        [button1 addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
-        [button1 setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
-        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:button1];
+        _syncButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_syncButton setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
+        [_syncButton addTarget:self action:@selector(syncLayersAndLoadTable:) forControlEvents:UIControlEventTouchUpInside];
+        [_syncButton setImage:[UIImage imageNamed:@"sync-button.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithCustomView:_syncButton];
         self.navigationItem.rightBarButtonItem = button;
         
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancel)];
     }
+    
+    [self startSpin];
     
     LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
     [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
@@ -77,6 +91,18 @@ extern NSUserDefaults *defaults;
         _layers = [[result array] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
         [self arrangeArrayInSections:_layers];
         [self.tableView reloadData];
+        [self stopSpin];
+        
+    } failBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+        
+        [self stopSpin];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"")
+                                                        message:NSLocalizedString(@"layer-fetch.error.message", @"")
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+
         
     } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
     
@@ -121,11 +147,25 @@ extern NSUserDefaults *defaults;
 
 - (IBAction)syncLayersAndLoadTable:(id)sender {
     LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
+    [self startSpin];
+    
     [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
         
         _layers = [[result array] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
         [self arrangeArrayInSections:_layers];
         [self.tableView reloadData];
+        [self stopSpin];
+        
+    } failBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+        
+        [self stopSpin];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"")
+                                                        message:NSLocalizedString(@"layer-fetch.error.message", @"")
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
         
     } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
 }
@@ -185,9 +225,23 @@ extern NSUserDefaults *defaults;
     Layer *layer = (Layer*) [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
     
     cell.accessoryType = layer.selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+    for (Layer *selectedLayer in _selectedLayers) {
+        if (selectedLayer.id == layer.id) {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            layer.selected = true;
+        }
+    }
     
     cell.layerTitle.text = layer.title;
-    cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
+    
+    if (layer.legend != nil) {
+        cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
+    } else {
+        NSRange position = [layer.icon rangeOfString:@"/" options:NSBackwardsSearch];
+        NSString *iconName = [layer.icon substringWithRange:NSMakeRange(position.location+1, layer.icon.length - (position.location + 1))];
+        cell.legendImage.image = [UIImage imageNamed:iconName];
+    }
+    
     
     return cell;
 }
@@ -218,6 +272,7 @@ extern NSUserDefaults *defaults;
         if ([_delegate respondsToSelector:@selector(didEndSelecting:)]) [_delegate didEndSelecting:item];
     }
     
+    _selectedLayers = [self selectedItems];
     
 }
 
@@ -249,6 +304,39 @@ extern NSUserDefaults *defaults;
 
 -(void)logoutMethodCall {
     if ([_delegate respondsToSelector:@selector(logoutButtonPressed)]) [_delegate logoutButtonPressed];
+}
+
+- (void) spinWithOptions: (UIViewAnimationOptions) options {
+    // this spin completes 360 degrees every 2 seconds
+    [UIView animateWithDuration: 0.5f
+                          delay: 0.0f
+                        options: options
+                     animations: ^{
+                         _syncButton.imageView.transform = CGAffineTransformRotate(_syncButton.imageView.transform, M_PI );
+                     }
+                     completion: ^(BOOL finished) {
+                         if (finished) {
+                             if (animating) {
+                                 // if flag still set, keep spinning with constant speed
+                                 [self spinWithOptions: UIViewAnimationOptionCurveLinear];
+                             } else if (options != UIViewAnimationOptionCurveEaseOut) {
+                                 // one last spin, with deceleration
+                                 [self spinWithOptions: UIViewAnimationOptionCurveEaseOut];
+                             }
+                         }
+                     }];
+}
+
+- (void) startSpin {
+    if (!animating) {
+        animating = YES;
+        [self spinWithOptions: UIViewAnimationOptionCurveEaseIn];
+    }
+}
+
+- (void) stopSpin {
+    // set the flag to stop spinning after one last 90 degree increment
+    animating = NO;
 }
 
 @end
