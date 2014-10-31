@@ -48,9 +48,9 @@
 						class="glyphicon glyphicon-map-marker sidebar-icon"></span>
 				</a></li>
 
-				<li ng-if="hasPermissionKML" ng-click=""><a>
+				<!--  <li ng-if="hasPermissionKML" ng-click=""><a>
 						<div class="icon itaipu-icon-kml sidebar-icon"></div>
-				</a></li>
+				</a></li>-->
 			</ul>
 		</div>
 
@@ -475,9 +475,16 @@
 				<li id="menu-item-1"
 					title="Menu de camadas"
 					ng-click="toggleSidebarMenu(300, '#menu-item-1');"
-					class="menu-item bg-inactive"><a href="#tabs-1">
+					class="menu-item bg-inactive">
+					<a href="#tabs-1">
 						<div class="icon itaipu-icon-layers sidebar-icon"></div>
-				</a></li>
+					</a>
+				</li>
+				<li class="menu-item" id="menu-item-3" ng-click="toggleSidebarMenu(300, '#menu-item-3');" title="KML Habilitado">
+                    <a href="#tabs-3">
+                        <div class="icon itaipu-icon-kml sidebar-icon"></div>
+                    </a>
+                </li>
 			</ul>
 
 			<div id="sidebar-layers" class="sidebar-style">
@@ -546,6 +553,26 @@
 					</div>
 
 				</div>
+				<div id="tabs-3">
+
+                    <div class="sidebar-content-header">Arquivos KML</div>
+                    <br style="clear: both; ">
+
+                    <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
+                        Nenhum arquivo KML habilitado
+                    </div>
+
+                    <div style="overflow-x: auto;position: absolute;top: 110px;bottom: 0px;left: 20px;right: 0px;">
+                        <div id="tree-kml"
+                             ivh-treeview="allLayersKML"
+                             ivh-fn="getSelectedKMLNode"
+                             ivh-treeview-label-attribute="'label'"
+                             ivh-treeview-children-attribute="'children'">
+                        </div>
+                    </div>
+
+                </div>
+                
 			</div>
 		</div>
 
