@@ -68,6 +68,12 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
 	font-size: 12px;
 }
 
+.button-action{
+	padding-left: 0px;
+	position: absolute;
+	margin-left: -15px;
+}
+
 .styled-select:focus {
 	border-color: rgba(82, 168, 236, 0.8);
 	outline: 0;
