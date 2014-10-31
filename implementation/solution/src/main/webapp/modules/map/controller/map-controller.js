@@ -29,6 +29,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 *-------------------------------------------------------------------*/
 
     // CONSTANTES
+	
+	
 
     /**
      * Google Maps
@@ -127,12 +129,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @type {Array}
      */
     $scope.layers = [];
+    
+    /**
+     * Variável que armazena as camadas kml ativas no mapa
+     */
+    $scope.kmlLayers = [];
 
     /**
      * Variável que armazena todas as camadas internas selecionada pelo usuário
      * @type {Array}
      */
     $scope.internalLayers = [];
+  
+    /**
+    *
+    */
+    $scope.allLayersKML = []
     
     /**
      * Variável que armazena a camada interna que está sendo criada
@@ -821,6 +833,42 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     }
+    
+    /**
+     * Trata a seleção e desseleção da tree de camadas kml
+     * @param node
+     */
+    $scope.getSelectedKMLNode = function(node){
+
+
+        if( node && node.type == 'kml' && $scope.allLayersKML[0]){
+
+            if( node.selected ){
+
+                for(var i in $scope.allLayersKML[0].children)
+                {
+                    if($scope.allLayersKML[0].children[i].name == node.name)
+                    {
+                        $scope.map.removeLayer(node.layer);
+                        $scope.map.addLayer($scope.allLayersKML[0].children[i].layer);
+                    }
+                }
+            }
+            else
+            {
+                for(var i in $scope.allLayersKML[0].children)
+                {
+                    if( $scope.allLayersKML[0].children[i].name == node.name )
+                    {
+                        //Remove as camadas desselecionadas pelo usuário
+                        $scope.map.removeLayer($scope.allLayersKML[0].children[i].layer);
+
+                    }
+                }
+            }
+        }
+
+    }
 
     /*-------------------------------------------------------------------
      * 		 			CONFIGURAÇÃO DO GOOGLE MAP
@@ -1344,12 +1392,41 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * 		 			FUNCIONALIDADE KML
      *-------------------------------------------------------------------*/
 
+
+    /**
+     * Método que permiti arrastar um arquivo KML para o mapa interativo
+     */
+//    function enableFileKML()
+//    {
+//        //Controla o drag and drop do arquivo KML no mapa
+//        dragAndDropInteraction.on('addfeatures', function(event) {
+//            var vectorSource = new ol.source.Vector({
+//                features: event.features,
+//                projection: event.projection
+//            });
+//            $scope.map.getLayers().push(new ol.layer.Vector({
+//                source: vectorSource
+//            }));
+//
+//            //Redireciona para o ponto que o arquivo KML é arrastado
+//            var view = $scope.map.getView();
+//            view.fitExtent(
+//                vectorSource.getExtent(), ($scope.map.getSize()));
+//        });
+//
+//    }
+    
+    /*-------------------------------------------------------------------
+     * 		 			FUNCIONALIDADE KML
+     *-------------------------------------------------------------------*/
+
     //Formatos permitidos a serem arrastados no mapa
     var dragAndDropInteraction = new ol.interaction.DragAndDrop({
         formatConstructors: [
             ol.format.KML
         ]
     });
+
 
     /**
      * Método que permiti arrastar um arquivo KML para o mapa interativo
@@ -1362,15 +1439,58 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 features: event.features,
                 projection: event.projection
             });
-            $scope.map.getLayers().push(new ol.layer.Vector({
+
+            var kmlLayer = new ol.layer.Vector({
                 source: vectorSource
-            }));
+            });
+
+            $scope.kmlLayers.push({layer : kmlLayer})
+
+            $scope.map.getLayers().push(kmlLayer);
 
             //Redireciona para o ponto que o arquivo KML é arrastado
             var view = $scope.map.getView();
             view.fitExtent(
                 vectorSource.getExtent(), ($scope.map.getSize()));
+
+            var item = {};
+            item.label = 'Camadas KML';
+            item.type = 'kml'
+
+            item.children = [];
+
+            for(var i =0; i < $scope.kmlLayers.length ; ++i)
+            {
+
+                $scope.kmlLayers[i].label = "Camada "+ (i+1);
+                $scope.kmlLayers[i].type = 'kml';
+                $scope.kmlLayers[i].name = "Camada"+ (i+1);
+
+                item.children.push($scope.kmlLayers[i]);
+            }
+
+            // seleciona a ultima pesquisa
+            item.children[item.children.length-1].selected = true;
+
+            // seleciona o grupo pai
+            var selectItemPai = true;
+            for( var i in item.children )
+            {
+                if (item.children[i].selected != true){
+                    selectItemPai = false
+                }
+            }
+
+            // seleciona o grupo pai
+            if (selectItemPai) item.selected = true;
+
+            $scope.allLayersKML = [];
+            $scope.allLayersKML.push(item);
+
+
+
         });
+
 
     }
 

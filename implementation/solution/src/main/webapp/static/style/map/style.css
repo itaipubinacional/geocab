@@ -385,3 +385,7 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 .panel-default>.panel-heading+.panel-collapse>.panel-body {
 	padding: 10px
 }
+
+#tree li, #tree-pesquisas li, #tree-kml li {
+    background: none;
+}
