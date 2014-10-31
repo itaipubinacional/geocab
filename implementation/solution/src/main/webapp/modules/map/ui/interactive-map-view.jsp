@@ -22,32 +22,35 @@
 
 		<div>
 			<ul class="map-menu-items tool-items" id="menu-sidebar">
-				<li ng-click="aumentarZoom()"><a href="#tabs-2">
+				<li ng-click="aumentarZoom()" title="Aumentar zoom"><a href="#tabs-2">
 						<div class="icon itaipu-icon-plus sidebar-icon"></div>
 				</a></li>
-				<li ng-click="diminuirZoom()"><a>
+				<li ng-click="diminuirZoom()" title="Diminuir zoom"><a>
 						<div class="icon itaipu-icon-minus sidebar-icon"></div>
 				</a></li>
 				<li ng-if="hasPermissionCalculoDistancia"
+					title="Calcular distância"
 					ng-click="initializeDistanceCalc()"
 					ng-class="{ferramenta_active : menu.fcDistancia}"><a>
 						<div class="icon itaipu-icon-ruler-1 sidebar-icon"></div>
 				</a></li>
 				<li ng-if="hasPermissionCalculoArea" ng-click="initializeAreaCalc()"
+					title="Calcular área"
 					ng-class="{ferramenta_active : menu.fcArea}"><a>
 						<div class="icon itaipu-icon-square sidebar-icon"></div>
 				</a></li>
 
 				<!-- Verificar... -->
 				<li ng-click="initializeMarker()"
+					title="Realizar postagem"
 					ng-class="{ferramenta_active : menu.fcMarker}"><a
 					href="#tabs-1"> <span
 						class="glyphicon glyphicon-map-marker sidebar-icon"></span>
 				</a></li>
 
-				<li ng-if="hasPermissionKML" ng-click=""><a>
+				<!--  <li ng-if="hasPermissionKML" ng-click=""><a>
 						<div class="icon itaipu-icon-kml sidebar-icon"></div>
-				</a></li>
+				</a></li>-->
 			</ul>
 		</div>
 
@@ -129,9 +132,9 @@
 									<br>
 			
 									<div style=" overflow: auto;">
-										<div ng-repeat="markerAttribute in attributesByMarker" style="position: relative;margin-bottom:15px">
+										<div ng-repeat="markerAttribute in attributesByMarker track by $index" style="position: relative;margin-bottom:15px">
 										
-												<label ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
+												<label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
 													<input
 													type="number" name="number1"
 													ng-if="markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '' "
@@ -231,7 +234,7 @@
 							style="position: relative;margin-bottom:15px;">
 
 							<ng-form name="ngSideMarker" default-button="buttonUpdate">
-							<label>{{ markerAttribute.attribute.name }}</label> 
+							<label  ng-style="$index > 0 ? {'margin-top':'15px'} : '' ">{{ markerAttribute.attribute.name }}</label> 
 							
 								<input
 									type="number" 
@@ -377,7 +380,7 @@
 							style="position: relative">
 							
 							<ng-form name="ngSideMarker" default-button="buttonInsert">
-							<label>{{ attribute.name }}</label> 
+							<label style="margin-top: 15px">{{ attribute.name }}</label> 
 							
 							<input type="number"
 								name="number1" ng-if="attribute.type == 'NUMBER'"
@@ -470,10 +473,18 @@
 		<div id="sidebar-tabs" style="float: left;">
 			<ul class="map-menu-items tab-flag" id="menu-sidebar-2">
 				<li id="menu-item-1"
+					title="Menu de camadas"
 					ng-click="toggleSidebarMenu(300, '#menu-item-1');"
-					class="menu-item bg-inactive"><a href="#tabs-1">
+					class="menu-item bg-inactive">
+					<a href="#tabs-1">
 						<div class="icon itaipu-icon-layers sidebar-icon"></div>
-				</a></li>
+					</a>
+				</li>
+				<li class="menu-item" id="menu-item-3" ng-click="toggleSidebarMenu(300, '#menu-item-3');" title="KML Habilitado">
+                    <a href="#tabs-3">
+                        <div class="icon itaipu-icon-kml sidebar-icon"></div>
+                    </a>
+                </li>
 			</ul>
 
 			<div id="sidebar-layers" class="sidebar-style">
@@ -542,6 +553,26 @@
 					</div>
 
 				</div>
+				<div id="tabs-3">
+
+                    <div class="sidebar-content-header">Arquivos KML</div>
+                    <br style="clear: both; ">
+
+                    <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
+                        Nenhum arquivo KML habilitado
+                    </div>
+
+                    <div style="overflow-x: auto;position: absolute;top: 110px;bottom: 0px;left: 20px;right: 0px;">
+                        <div id="tree-kml"
+                             ivh-treeview="allLayersKML"
+                             ivh-fn="getSelectedKMLNode"
+                             ivh-treeview-label-attribute="'label'"
+                             ivh-treeview-children-attribute="'children'">
+                        </div>
+                    </div>
+
+                </div>
+                
 			</div>
 		</div>
 
@@ -551,9 +582,9 @@
 	<div id="gmap" style="width: 0; height: 0"></div>
 
 	<div id="typeMapQuest"
-		ng-if="mapa.ativo == 'mapQuest_osm' || mapa.ativo == 'mapQuest_sat'"
+		ng-if="mapConf.active == 'mapQuest_osm' || mapConf.active == 'mapQuest_sat'"
 		ng-mouseover="hideMousePosition()"
-		style="position: absolute; top: 130px; right: 10px; z-index: 1;">
+		style="position: absolute; top: 20px; right: 10px; z-index: 1;">
 		<button type="button" ng-click="initializeMapQuestOSM()"
 			class="btn btn-default btn-xs">OSM</button>
 		<button type="button" ng-click="initializeMapQuestSAT()"
