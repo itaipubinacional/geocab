@@ -3,11 +3,17 @@
  */
 package br.com.geocab.domain.service;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.xml.bind.JAXBException;
@@ -328,6 +334,14 @@ public class MarkerService
 		{
 			throw new IllegalArgumentException( "Formato inválido!" );
 		}
+		
+		
+		/*InputStream is = new BufferedInputStream(fileTransfer.getInputStream());
+		BufferedImage image = ImageIO.read(is);
+		Graphics2D g = image.createGraphics();
+		g.drawImage(image, 0, 0, 100, 100, null);
+		g.dispose();*/
+			
 		
 		MetaFile metaFile = new MetaFile();
 		metaFile.setId(String.valueOf(markerId));

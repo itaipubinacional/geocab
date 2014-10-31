@@ -111,7 +111,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * O botão de editar navega via URL (sref) por que a edição é feita em outra página,
      * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
      */
-    var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
+    var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
         '<a ui-sref="layer-config.update({id:row.entity.id})"  " title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
