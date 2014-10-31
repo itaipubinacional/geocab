@@ -16,3 +16,5 @@
 "layer.content-type.date" = "Date";
 "layer.content-type.boolean" = "Boolean";
 "no-internet-error.message" = "Check your internet conection.";
+"layer-fetch.error.message" = "An error ocurred while trying to fetch layers.";
+"created-by" = "Created by";

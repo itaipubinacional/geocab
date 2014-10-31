@@ -34,7 +34,6 @@
     NSString *credentials = [[email stringByAppendingString:@":"] stringByAppendingString:password];
     NSData *credentialsData = [credentials dataUsingEncoding:NSUTF8StringEncoding];
     NSString *credentialsEncoded = [credentialsData base64EncodedStringWithOptions:0];
-    NSLog(@"credentials: %@", credentialsEncoded);
     
     NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:credentialsEncoded, @"credentials", nil];
     
@@ -42,6 +41,16 @@
     
     [[RKObjectManager sharedManager] addResponseDescriptor:responseDescriptor];
     [[RKObjectManager sharedManager] postObject:nil path:@"check" parameters:params success:successBlock failure:failureBlock];
+}
+
+- (void) socialAuthenticate: (NSString *)email name: (NSString *)name successBlock: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failureBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failureBlock
+{
+    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:email, @"email", name, @"name", nil];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:self.mapping method:RKRequestMethodPOST pathPattern:nil keyPath:nil statusCodes:nil];
+    
+    [[RKObjectManager sharedManager] addResponseDescriptor:responseDescriptor];
+    [[RKObjectManager sharedManager] postObject:nil path:@"" parameters:params success:successBlock failure:failureBlock];
 }
 
 @end

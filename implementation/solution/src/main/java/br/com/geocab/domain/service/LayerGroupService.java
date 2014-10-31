@@ -35,9 +35,11 @@ import br.com.geocab.domain.entity.layer.ExternalLayer;
 import br.com.geocab.domain.entity.layer.FieldLayer;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
+import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -59,6 +61,12 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IMarkerAttributeRepository markerAttributeRepository;
 	
 	/**
 	 * 
@@ -685,12 +693,13 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer updateLayer( Layer layer )
 	{
-		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setLayerGroup(layer.getLayerGroup());
 		
-		final List<Attribute> attributesByLayer = this.attributeRepository.listAttributeByLayer(layer.getId());
-	
-		for(Attribute attribute : attributesByLayer) 
+		Layer layerDatabase = this.findLayerById(layer.getId());
+		
+		final List<Attribute> attributesByLayerToDelete = new ArrayList<Attribute>();
+		
+		for(Attribute attribute : layerDatabase.getAttributes()) 
 		{
 			Boolean attributeDeleted = true;
 			
@@ -699,16 +708,30 @@ public class LayerGroupService
 				if(	attributeInLayer.getId().equals(attribute.getId()) ) 
 				{
 					attributeDeleted = false;
+					break;
 				}
 			}
 			
 			if( attributeDeleted ) 
 			{
-				final Attribute attr = this.attributeRepository.findOne( attribute.getId() );
-				this.attributeRepository.delete( attr );
+				attributesByLayerToDelete.add(attribute);
 			}
 			
 		}
+		
+		//List<MarkerAttribute> ma = this.markerAttributeRepository.listAttributeByMarker(140L);
+		
+		
+		//for(Attribute attribute : attributesByLayerToDelete){
+			//List<MarkerAttribute> ma = this.markerAttributeRepository.listAttributeByMarker(140L);
+			//this.markerAttributeRepository.delete(ma);	
+		//}
+		
+		if(attributesByLayerToDelete != null) {
+			this.attributeRepository.delete(attributesByLayerToDelete);
+		}
+			
+		
 		
 		/* Na atualização não foi permitido modificar a fonte de dados, camada e títuulo, dessa forma, 
 		Os valores originais são mantidos. */
@@ -742,6 +765,7 @@ public class LayerGroupService
 	public Layer findLayerById( Long id )
 	{
 		final Layer layer = this.layerRepository.findOne(id);
+		layer.setAttributes(this.attributeRepository.listAttributeByLayer(id));
 		
 		// traz a legenda da camada do GeoServer
 		if( layer.getDataSource().getUrl() != null ) {
