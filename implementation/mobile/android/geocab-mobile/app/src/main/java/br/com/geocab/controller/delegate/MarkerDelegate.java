@@ -16,15 +16,25 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -97,22 +107,35 @@ public class MarkerDelegate extends AbstractDelegate
 
         JsonArrayRequest jReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
 
-            Gson json = new Gson();
+            GsonBuilder gsonBuilder = new GsonBuilder();
 
             @Override
             public void onResponse(JSONArray response)
             {
-                ArrayList<Marker> result = new ArrayList<Marker>();
-
                 for (int i = 0; i < response.length(); i++)
                 {
                     try
                     {
+
+                        gsonBuilder.registerTypeAdapter(Calendar.class,
+                                new JsonDeserializer<Calendar>() {
+                                    @Override
+                                    public Calendar deserialize(JsonElement jsonElement, Type type,
+                                                            JsonDeserializationContext context)
+                                            throws JsonParseException {
+                                        Calendar calendar = Calendar.getInstance();
+                                        calendar.setTimeInMillis(jsonElement.getAsLong());
+                                        return calendar;
+                                    }
+                                });
+
+                        Gson json = gsonBuilder.create();
                         Marker marker = json.fromJson(response.getString(i), Marker.class);
 
-                        result.add(marker);
+                        DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy");
+                        String dateFormatted = df1.format(marker.getCreated().getTime());
 
-                        webViewMap.loadUrl("javascript:showMarker(\"" + marker.getLatitude() + "\",\"" + marker.getLongitude() + "\", \""+layerName+"\", \""+layerIcon+"\", \""+marker.getId()+"\")");
+                        webViewMap.loadUrl("javascript:showMarker(\"" + marker.getLatitude() + "\",\"" + marker.getLongitude() + "\", \""+marker.getId()+"\", \""+marker.getUser().getName()+"\", \""+dateFormatted+"\", \""+layerName+"\", \""+layerIcon+"\")");
 
 
                     }
@@ -145,8 +168,7 @@ public class MarkerDelegate extends AbstractDelegate
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                //final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
-                final String credentials = "admin@admin.com:admin";
+                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
                 params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
                 params.put("Content-Type","application/x-www-form-urlencoded");
                 return params;
@@ -172,15 +194,13 @@ public class MarkerDelegate extends AbstractDelegate
             @Override
             public void onResponse(JSONArray response)
             {
-                ArrayList<MarkerAttribute> result = new ArrayList<MarkerAttribute>();
-
                 for (int i = 0; i < response.length(); i++)
                 {
                     try
                     {
                         MarkerAttribute markerAttribute = json.fromJson(response.getString(i), MarkerAttribute.class);
 
-                        marker.getMarkerAttribute().add(markerAttribute);
+                        marker.getMarkerAttributes().add(markerAttribute);
 
                     }
                     catch (JSONException e)
@@ -214,8 +234,7 @@ public class MarkerDelegate extends AbstractDelegate
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                //final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
-                final String credentials = "admin@admin.com:admin";
+                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
                 params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
                 params.put("Content-Type","application/x-www-form-urlencoded");
                 return params;
@@ -242,8 +261,20 @@ public class MarkerDelegate extends AbstractDelegate
 
                 marker.setImage(response);
 
+                listMarkerAttributesByMarker(marker);
+
             }
-        }, 0, 0, null, null)
+        }, 0, 0, null, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Handle error
+               marker.setImage(null);
+               listMarkerAttributesByMarker(marker);
+
+            }
+        } )
+
         {
             // this is the relevant method
             @Override
@@ -257,8 +288,7 @@ public class MarkerDelegate extends AbstractDelegate
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                //final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
-                final String credentials = "admin@admin.com:admin";
+                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
                 params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP));
                 params.put("Content-Type","application/x-www-form-urlencoded");
                 return params;
@@ -326,7 +356,6 @@ public class MarkerDelegate extends AbstractDelegate
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(MarkerDelegate.this.context, R.string.error_connection, Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -334,7 +363,6 @@ public class MarkerDelegate extends AbstractDelegate
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("Error", "Error: " + error.getMessage());
-                Toast.makeText(MarkerDelegate.this.context, R.string.error_connection, Toast.LENGTH_SHORT).show();
             }
 
         });

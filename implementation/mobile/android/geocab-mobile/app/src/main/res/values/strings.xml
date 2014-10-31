@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">geocab</string>
+    <string name="app_name">GeoCAB</string>
 
     <!-- Authentication -->
     <string name="email_address">Endereço de email</string>
     <string name="password">Senha</string>
     <string name="btn_login">LOGIN</string>
+    <string name="btn_logout">Logout</string>
+
     <string name="btn_logout_from_google">Logout from Google</string>
     <string name="facebook_app_id">"700984299994268"</string>
     <string name="title_activity_map">Mapa</string>
@@ -17,17 +19,21 @@
     <string name="items_layer">itens</string>
 
     <!-- Account delegate -->
-    <string name="error_authentication">Email ou senha inválido</string>
+    <string name="loading">Carregando</string>
+    <string name="authenticating_application">Autenticando no sistema. Por favor, aguarde!</string>
+    <string name="connection_problem">Problema com conexão. Verifique sua conexão com a internet!</string>
+    <string name="email_password_invalid">Email ou senha inválido</string>
+    <string name="problem_loading_layer">Problema ao carregar as camadas</string>
 
     <!-- Layer and Marker delegate -->
     <string name="error_connection">Problema com a conexão. Por favor verifique</string>
+
 
     <!-- Nav Drawer -->
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
     <string name="title_activity_mark">Mark</string>
     <string name="title_activity_layer">Layer</string>
-    <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
