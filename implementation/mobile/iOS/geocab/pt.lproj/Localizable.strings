@@ -19,3 +19,7 @@
 "no-internet-error.message" = "Verifique a sua conexão com a internet.";
 "layer-fetch.error.message" = "Um erro aconteceu ao tentar atualizar as camadas";
 "created-by" = "Criado por";
+"logout-confirmation.title" = "Logout";
+"logout-confirmation.message" = "Tem certeza de que quer realizar o logout?";
+"no" = "Não";
+"yes" = "Sim";

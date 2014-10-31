@@ -16,7 +16,8 @@
     
     if (self)
     {
-        self.baseUrl = [@"http://192.168.20.122:8080/geocab/" mutableCopy];
+        #warning Verificar endereço base
+        self.baseUrl = [@"http://geocab.sbox.me/" mutableCopy];
         [self.baseUrl appendString:url];
         
         RKObjectManager *objectManager = [RKObjectManager managerWithBaseURL:[NSURL URLWithString:self.baseUrl]];
