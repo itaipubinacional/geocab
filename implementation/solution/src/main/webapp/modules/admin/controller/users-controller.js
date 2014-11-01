@@ -493,4 +493,8 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 		  		$("div.msg").fadeOut();
 		  	}, 3000);
 	};
+	
+	$(document).click(function() {
+		$("div.msg").css("display","none");
+    });
 };

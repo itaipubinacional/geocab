@@ -10,6 +10,6 @@
 
 @implementation Marker
 
-@synthesize id, latitude, longitude, layer, status, image, markerAtrributes;
+@synthesize id, created, latitude, longitude, layer, status, image, markerAtrributes, user;
 
 @end

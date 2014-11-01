@@ -18,7 +18,7 @@ div.map {
 
 #popupCloseLeft {
 	width: 263px;
-	top: 20px;
+	top: 27px;
 	position: fixed;
 	right: 14px;
 	padding: 0;
@@ -85,7 +85,7 @@ a.ui-collapsible-heading-toggle.ui-btn.ui-icon-plus.ui-btn-icon-left.ui-btn-inhe
 		width: 291px;
 	}
 	#collapsible-content {
-		max-height: 496px !important;
+		max-height: 489px !important;
 	}
 }
 
@@ -95,7 +95,7 @@ a.ui-collapsible-heading-toggle.ui-btn.ui-icon-plus.ui-btn-icon-left.ui-btn-inhe
 		width: 345px;
 	}
 	#collapsible-content {
-		max-height: 593px !important;
+		max-height: 586px !important;
 	}
 }
 
@@ -105,6 +105,6 @@ a.ui-collapsible-heading-toggle.ui-btn.ui-icon-plus.ui-btn-icon-left.ui-btn-inhe
 		width: 382px;
 	}
 	#collapsible-content {
-		max-height: 660px !important;
+		max-height: 653px !important;
 	}
 }

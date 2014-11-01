@@ -192,7 +192,7 @@
 		           			<td><input type="radio" value="static/icons/pharmacy.png" ng-checked="currentEntity.icon == 'static/icons/pharmacy.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			
 		           			<td><input type="radio" value="static/icons/deciduous.png" ng-checked="currentEntity.icon == 'static/icons/deciduous.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-		           			<td><input type="radio" value="static/icons/grasss.png" ng-checked="currentEntity.icon == 'static/icons/grass.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+		           			<td><input type="radio" value="static/icons/grass.png" ng-checked="currentEntity.icon == 'static/icons/grass.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/hills.png" ng-checked="currentEntity.icon == 'static/icons/hills.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/scrub.png" ng-checked="currentEntity.icon == 'static/icons/scrub.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/swamp.png" ng-checked="currentEntity.icon == 'static/icons/swamp.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
@@ -242,14 +242,14 @@
 		           			<td><input type="radio" value="static/icons/christian3.png" ng-checked="currentEntity.icon == 'static/icons/christian3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/islamic3.png" ng-checked="currentEntity.icon == 'static/icons/islamic3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/jewish3.png" ng-checked="currentEntity.icon == 'static/icons/jewish3.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-		           			<td><input type="radio" value="static/icons/unknow.png" ng-checked="currentEntity.icon == 'static/icons/unknow.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+		           			<td><input type="radio" value="static/icons/unknown.png" ng-checked="currentEntity.icon == 'static/icons/unknown.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			
 		           			<td><input type="radio" value="static/icons/cave.png" ng-checked="currentEntity.icon == 'static/icons/cave.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/crane.png" ng-checked="currentEntity.icon == 'static/icons/crane.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/mine.png" ng-checked="currentEntity.icon == 'static/icons/mine.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/peak2.png" ng-checked="currentEntity.icon == 'static/icons/peak2.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/place_city.png" ng-checked="currentEntity.icon == 'static/icons/place_city.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
-		           			<td><input type="radio" value="static/icons/tower_communication.png" ng-checked="currentEntity.icon == 'static/icons/tower_communications.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+		           			<td><input type="radio" value="static/icons/tower_communications.png" ng-checked="currentEntity.icon == 'static/icons/tower_communications.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/tower_lookout.png" ng-checked="currentEntity.icon == 'static/icons/tower_lookout.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/tower_power.png" ng-checked="currentEntity.icon == 'static/icons/tower_power.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           			<td><input type="radio" value="static/icons/tower_water.png" ng-checked="currentEntity.icon == 'static/icons/tower_water.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
@@ -372,7 +372,7 @@
 
 			<br/>
 			
-			<div class="form-item position-relative" style="width: 300px;"
+			<div ng-if="!currentEntity.dataSource.url" class="form-item position-relative" style="width: 300px;"
                  ng-if="currentState">
                 <input type="checkbox" style="width: 20px;"
                        ng-model="currentEntity.enabled"

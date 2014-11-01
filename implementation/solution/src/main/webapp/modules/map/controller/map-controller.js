@@ -29,6 +29,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 *-------------------------------------------------------------------*/
 
     // CONSTANTES
+	
+	
 
     /**
      * Google Maps
@@ -127,12 +129,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @type {Array}
      */
     $scope.layers = [];
+    
+    /**
+     * Variável que armazena as camadas kml ativas no mapa
+     */
+    $scope.kmlLayers = [];
 
     /**
      * Variável que armazena todas as camadas internas selecionada pelo usuário
      * @type {Array}
      */
     $scope.internalLayers = [];
+  
+    /**
+    *
+    */
+    $scope.allLayersKML = []
     
     /**
      * Variável que armazena a camada interna que está sendo criada
@@ -294,6 +306,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      *
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
+		
+		
+		
 		
 		/**
 		 * Caso não existe uma nav bar
@@ -524,7 +539,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    	} 
         	
     		
+        	if($scope.features.length == 1) {
+        		$timeout(function(){
 
+            		$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
+    	    	}, 100)
+        	}
            
 
         });
@@ -556,7 +576,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     	layerGroupService.listAllFeatures(listUrls, {
             callback: function (result) {
-
+            	
                 for (var i=0; i < result.length; i++){
 
                     var feature = {
@@ -589,10 +609,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         if( $scope.features.length > 0 ) {
                             
         	                $timeout(function(){
-        	        			$scope.toggleSidebarMarkerDetailUpdate(300);	
+        	        			$scope.toggleSidebarMarkerDetailUpdate(300);
+        	        			
+        	        			//.panel-collapse 
+        	        			$('.min-height-accordion').find('.panel-body').css('height', 
+        	        															parseInt($('#sidebar-marker-detail-update').height()) - 
+        	        															parseInt( ( ( $scope.features.length) * 37 ) + 40 ) + 'px'
+        	        														  );
         	    	    	}, 400)
         	    	    	
                         }
+                        
+                        if($scope.features.length > 1) {
+                        	$timeout(function(){
+                            	$(".min-height-accordion .panel-collapse .panel-body").css("min-height","300px")
+                        	}, 700)
+                    	}
 
                     });
                     
@@ -620,7 +652,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.enableTools = function(){
     	$scope.hasPermissionCalculoDistancia = true;
-    	$scope.hasPermissionCalculoDistancia = true;
+    	$scope.hasPermissionCalculoArea = true;
     	$scope.hasPermissionKML = true;
         enableFileKML();
     }
@@ -799,6 +831,42 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             }
         }
 
+
+    }
+    
+    /**
+     * Trata a seleção e desseleção da tree de camadas kml
+     * @param node
+     */
+    $scope.getSelectedKMLNode = function(node){
+
+
+        if( node && node.type == 'kml' && $scope.allLayersKML[0]){
+
+            if( node.selected ){
+
+                for(var i in $scope.allLayersKML[0].children)
+                {
+                    if($scope.allLayersKML[0].children[i].name == node.name)
+                    {
+                        $scope.map.removeLayer(node.layer);
+                        $scope.map.addLayer($scope.allLayersKML[0].children[i].layer);
+                    }
+                }
+            }
+            else
+            {
+                for(var i in $scope.allLayersKML[0].children)
+                {
+                    if( $scope.allLayersKML[0].children[i].name == node.name )
+                    {
+                        //Remove as camadas desselecionadas pelo usuário
+                        $scope.map.removeLayer($scope.allLayersKML[0].children[i].layer);
+
+                    }
+                }
+            }
+        }
 
     }
 
@@ -1324,12 +1392,41 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * 		 			FUNCIONALIDADE KML
      *-------------------------------------------------------------------*/
 
+
+    /**
+     * Método que permiti arrastar um arquivo KML para o mapa interativo
+     */
+//    function enableFileKML()
+//    {
+//        //Controla o drag and drop do arquivo KML no mapa
+//        dragAndDropInteraction.on('addfeatures', function(event) {
+//            var vectorSource = new ol.source.Vector({
+//                features: event.features,
+//                projection: event.projection
+//            });
+//            $scope.map.getLayers().push(new ol.layer.Vector({
+//                source: vectorSource
+//            }));
+//
+//            //Redireciona para o ponto que o arquivo KML é arrastado
+//            var view = $scope.map.getView();
+//            view.fitExtent(
+//                vectorSource.getExtent(), ($scope.map.getSize()));
+//        });
+//
+//    }
+    
+    /*-------------------------------------------------------------------
+     * 		 			FUNCIONALIDADE KML
+     *-------------------------------------------------------------------*/
+
     //Formatos permitidos a serem arrastados no mapa
     var dragAndDropInteraction = new ol.interaction.DragAndDrop({
         formatConstructors: [
             ol.format.KML
         ]
     });
+
 
     /**
      * Método que permiti arrastar um arquivo KML para o mapa interativo
@@ -1342,15 +1439,58 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 features: event.features,
                 projection: event.projection
             });
-            $scope.map.getLayers().push(new ol.layer.Vector({
+
+            var kmlLayer = new ol.layer.Vector({
                 source: vectorSource
-            }));
+            });
+
+            $scope.kmlLayers.push({layer : kmlLayer})
+
+            $scope.map.getLayers().push(kmlLayer);
 
             //Redireciona para o ponto que o arquivo KML é arrastado
             var view = $scope.map.getView();
             view.fitExtent(
                 vectorSource.getExtent(), ($scope.map.getSize()));
+
+            var item = {};
+            item.label = 'Camadas KML';
+            item.type = 'kml'
+
+            item.children = [];
+
+            for(var i =0; i < $scope.kmlLayers.length ; ++i)
+            {
+
+                $scope.kmlLayers[i].label = "Camada "+ (i+1);
+                $scope.kmlLayers[i].type = 'kml';
+                $scope.kmlLayers[i].name = "Camada"+ (i+1);
+
+                item.children.push($scope.kmlLayers[i]);
+            }
+
+            // seleciona a ultima pesquisa
+            item.children[item.children.length-1].selected = true;
+
+            // seleciona o grupo pai
+            var selectItemPai = true;
+            for( var i in item.children )
+            {
+                if (item.children[i].selected != true){
+                    selectItemPai = false
+                }
+            }
+
+            // seleciona o grupo pai
+            if (selectItemPai) item.selected = true;
+
+            $scope.allLayersKML = [];
+            $scope.allLayersKML.push(item);
+
+
+
         });
+
 
     }
 
@@ -1911,11 +2051,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    	markerService.removeMarker($scope.marker.id, {
 	      		  callback : function(result) {
 	      			//$scope.map.removeOverlay($scope.markerDetail.overlay);
+	      			  
 	      			
 		  			$scope.removeInternalLayer($scope.marker.layer.id, function(layerId){
 	   				   	$scope.addInternalLayer(layerId);
 	    			})
 	      			
+	    			$scope.features = [];
+	    			
 	    			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton');  
 	    			  
 	      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
