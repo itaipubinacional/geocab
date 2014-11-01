@@ -53,7 +53,7 @@
 					<tr>
 						<td>
 							<label><spring:message code="authentication.Password" /></label>
-							<%--<a class="forget-password" ng-click="changeToForgetPassword()"><spring:message code="authentication.Forget-password" /></a>--%>
+							<a class="forget-password" ng-click="changeToForgetPassword()"><spring:message code="authentication.Forget-password" /></a>
 						</td>
 					</tr>
 					<tr>

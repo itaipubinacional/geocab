@@ -8,7 +8,7 @@
 
 #import "MapViewController.h"
 #import "AppDelegate.h"
-#import "AddNewPointViewController.h"
+#import "AddNewMarkerViewController.h"
 #import "LayerDelegate.h"
 #import "MarkerDelegate.h"
 #import "Layer.h"
@@ -18,6 +18,7 @@
 #import "AttributeType.h"
 #import "ControllerUtil.h"
 #import "LoginViewController.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
@@ -69,6 +70,7 @@ extern NSUserDefaults *defaults;
     
     _webView.delegate = self;
     _webView.scrollView.bounces = NO;
+    _webView.scrollView.scrollEnabled = NO;
     
     [self loadWebView];
     
@@ -119,6 +121,8 @@ extern NSUserDefaults *defaults;
     [_cancelMarkerButton addTarget:self action:@selector(cancelMarkerRegistration:) forControlEvents:UIControlEventTouchUpInside];
     [_confirmMarkerButton addTarget:self action:@selector(confirmMarkerRegistration:) forControlEvents:UIControlEventTouchUpInside];
     [_changeMarkerButton addTarget:self action:@selector(changeMarkerRegistration:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [ControllerUtil verifyInternetConection];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -134,7 +138,14 @@ extern NSUserDefaults *defaults;
 - (void) didEndMultipleSelecting:(NSArray *)selectedLayers {
     _selectedLayers = selectedLayers;
     
-    [_layerSelectorNavigator dismissViewControllerAnimated:YES completion:^{
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.3;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//    transition.type = kCATransitionPush;
+    transition.type = kCATransitionFromRight;
+    [self.layerSelectorNavigator.view.window.layer addAnimation:transition forKey:nil];
+    
+    [_layerSelectorNavigator dismissViewControllerAnimated:NO completion:^{
 
     }];
 }
@@ -156,7 +167,7 @@ extern NSUserDefaults *defaults;
         _location.y = [param2 floatValue];
     };
     
-    context[@"getMarkerAtributes"] = ^(NSNumber *markerId, NSString *markerName, BOOL collapsed ) {
+    context[@"getMarkerAtributes"] = ^(NSNumber *markerId, NSString *markerName, NSString *user, NSString *date) {
         
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
         
@@ -167,24 +178,13 @@ extern NSUserDefaults *defaults;
             html = [html stringByAppendingString:@"<div data-role=\"collapsible\" data-collapsed=\"false\">"];
             html = [html stringByAppendingString:[NSString stringWithFormat:@"<h1>%@</h1>", markerName]];
             html = [html stringByAppendingString:@"<div>"];
+            html = [html stringByAppendingString:[NSString stringWithFormat:@"<div>%@: %@</div>", NSLocalizedString(@"created-by", @""), user]];
+            html = [html stringByAppendingString:[NSString stringWithFormat:@"<div>%@</div><br>", date]];
             NSArray *array = [result array];
             for (MarkerAttribute *markerAtrribute in array) {
                 
-                NSString *htmlClass, *attributeType;
-                if (markerAtrribute.attribute.type == TEXT) {
-                    htmlClass = @"text-content-type";
-                    attributeType = NSLocalizedString(@"layer.content-type.text", @"");
-                } else if (markerAtrribute.attribute.type == NUMBER) {
-                    htmlClass = @"number-content-type";
-                    attributeType = NSLocalizedString(@"layer.content-type.number", @"");
-                } else if (markerAtrribute.attribute.type == DATE) {
-                    htmlClass = @"date-content-type";
-                    attributeType = NSLocalizedString(@"layer.content-type.date", @"");
-                } else if (markerAtrribute.attribute.type == BOOLEAN) {
-                    htmlClass = @"boolean-content-type";
-                    attributeType = NSLocalizedString(@"layer.content-type.boolean", @"");
-                }
-                html = [html stringByAppendingString:[NSString stringWithFormat:@"<div class=\"%@\"> <h4>%@</h4> <p>%@</p></div>", htmlClass, attributeType, markerAtrribute.value]];
+                NSString *htmlClass;
+                html = [html stringByAppendingString:[NSString stringWithFormat:@"<div class=\"%@\"> <h4>%@</h4> <p>%@</p></div>", htmlClass, markerAtrribute.attribute.name, markerAtrribute.value]];
             }
             html = [html stringByAppendingString:[NSString stringWithFormat:@"<img id=\"marker-image-%@\" class=\"layer-content-image loading-gif\" alt=\"\" src=\"ajax-loader.gif\"/>", markerId]];
             html = [html stringByAppendingString:@"</div>"];
@@ -248,9 +248,28 @@ extern NSUserDefaults *defaults;
             NSArray *markers = [result array];
             
             for (Marker *marker in markers) {
-                NSString *functionCall = [NSString stringWithFormat:@"showMarker(%@, %@, %@, '%@', true)", marker.latitude, marker.longitude, marker.id, marker.layer.name];
+                NSRange position = [layer.icon rangeOfString:@"/" options:NSBackwardsSearch];
+                NSString *iconName = [layer.icon substringWithRange:NSMakeRange(position.location+1, layer.icon.length - (position.location + 1))];
+                
+                NSTimeInterval seconds = [marker.created doubleValue] / 1000;
+                NSDate *createdDate = [NSDate dateWithTimeIntervalSince1970:seconds];
+                
+                NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                [dateFormat setDateFormat:@"dd/MM/YYYY"];
+                
+                NSString *functionCall = [NSString stringWithFormat:@"showMarker(%@, %@, %@, '%@', '%@', '%@', '%@', true)", marker.latitude, marker.longitude, marker.id, marker.layer.name, iconName, marker.user.name, [dateFormat stringFromDate:createdDate]];
                 [_webView stringByEvaluatingJavaScriptFromString:functionCall];
             }
+        } failBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"")
+                                                            message:NSLocalizedString(@"layer-fetch.error.message", @"")
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            
+            
         } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] layerId:layer.id];
     }
 }
@@ -267,7 +286,7 @@ extern NSUserDefaults *defaults;
         [_webView stringByEvaluatingJavaScriptFromString:functionCall];
     } else {
         
-        NSString *functionCall = [NSString stringWithFormat:@"showMarker(null, null, null, '%@', false)", layer.name];
+        NSString *functionCall = [NSString stringWithFormat:@"showMarker(null, null, null, '%@', null, null, null, false)", layer.name];
         [_webView stringByEvaluatingJavaScriptFromString:functionCall];
         
     }
@@ -282,9 +301,17 @@ extern NSUserDefaults *defaults;
 - (IBAction)toggleMenu:(id)sender {
     
     _layerSelectorNavigator = [[UINavigationController alloc] initWithRootViewController:_layerSelector];
-    _layerSelectorNavigator.modalTransitionStyle = UIModalPresentationNone;
     
-    [self presentViewController:_layerSelectorNavigator animated:YES completion:^{
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.3;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//    transition.type = kCATransitionPush;
+    transition.type = kCATransitionFromLeft;
+    transition.fillMode = kCAFillModeBoth;
+    [self.view.window.layer addAnimation:transition forKey:nil];
+
+    
+    [self presentViewController:_layerSelectorNavigator animated:NO completion:^{
 
     }];
 }
@@ -362,15 +389,18 @@ extern NSUserDefaults *defaults;
     MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"files/markers/"];
     
     [markerDelegate downloadMarkerAttributePhoto:markerId success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSString *embbedImageString = [NSString stringWithFormat:[NSString stringWithFormat:@"<img id=\"marker-image-%@\" class=\"layer-content-image\" alt=\"\" src=\"data:image/jpeg;base64,%@\" />", markerId, [operation.responseData base64EncodedStringWithOptions:0]]];
+        NSString *embbedImageString = responseObject != nil ? [NSString stringWithFormat:[NSString stringWithFormat:@"<img id=\"marker-image-%@\" class=\"layer-content-image\" alt=\"\" src=\"data:image/jpeg;base64,%@\" />", markerId, [operation.responseData base64EncodedStringWithOptions:0]]] : @"";
         
         [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadImageContent(%@, '%@')", markerId, embbedImageString]];
+    } fail:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error downloading image");
+        [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadImageContent(%@, '')", markerId]];
     } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
 }
 
 - (void)loadWebView
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:@"/"];
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:path]]];
 }
 
@@ -394,13 +424,13 @@ extern NSUserDefaults *defaults;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"addNewPointSegue"]) {
+    if ([segue.identifier isEqualToString:@"addNewMarkerSegue"]) {
         
         NSLog(@"%.5f  %.5f", _locationManager.location.coordinate.latitude, _locationManager.location.coordinate.longitude);
         
-        AddNewPointViewController *addNewPointViewController = (AddNewPointViewController*) segue.destinationViewController;
-        addNewPointViewController.latitude = _location.x;
-        addNewPointViewController.longitude = _location.y;
+        AddNewMarkerViewController *addNewMarkerViewController = (AddNewMarkerViewController*) segue.destinationViewController;
+        addNewMarkerViewController.latitude = _location.x;
+        addNewMarkerViewController.longitude = _location.y;
     }
 }
 
@@ -462,18 +492,38 @@ extern NSUserDefaults *defaults;
 
 -(void)logoutButtonPressed {
     
-    
-    UINavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"navigationController"];
-    [[[[UIApplication sharedApplication] delegate] window] setRootViewController:navigationController];
-    
-    defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary * dict = [defaults dictionaryRepresentation];
-    for (id key in dict) {
-        
-        //heck the keys if u need
-        [defaults removeObjectForKey:key];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"logout-confirmation.title", @"")
+                                                    message:NSLocalizedString(@"logout-confirmation.message", @"")
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"no", @"")
+                                          otherButtonTitles:NSLocalizedString(@"yes", @""), nil];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch(buttonIndex) {
+        case 0:
+            break;
+        case 1: {
+            UINavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"navigationController"];
+            [[[[UIApplication sharedApplication] delegate] window] setRootViewController:navigationController];
+            
+            defaults = [NSUserDefaults standardUserDefaults];
+            NSDictionary * dict = [defaults dictionaryRepresentation];
+            for (id key in dict) {
+                
+                //heck the keys if u need
+                [defaults removeObjectForKey:key];
+            }
+            [defaults synchronize];
+            
+            if ([[FBSession activeSession] isOpen]) {
+                [[FBSession activeSession] closeAndClearTokenInformation];
+            }
+            break;
+        }
     }
-    [defaults synchronize];
 }
 
 @end
