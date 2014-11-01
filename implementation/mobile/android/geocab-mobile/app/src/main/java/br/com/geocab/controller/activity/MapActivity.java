@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -113,7 +114,15 @@ public class MapActivity extends Activity
      */
     private TextView textViewTotalItems;
 
+    /**
+     *
+     */
     private DialogInformation dialogInformation;
+
+    /**
+     *
+     */
+    boolean doubleBackToExitPressedOnce;
 
     /*-------------------------------------------------------------------
 	 *				 		     HANDLERS
@@ -368,6 +377,37 @@ public class MapActivity extends Activity
      * onPostCreate() and onConfigurationChanged()...
      */
 
+    /**
+     *
+     */
+    @Override
+    public void onBackPressed()
+    {
+        if (doubleBackToExitPressedOnce)
+        {
+            super.onBackPressed();
+            MapActivity.this.finish();
+            MapActivity.this.moveTaskToBack(true);
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+
+        Toast.makeText( this, R.string.click_exit, Toast.LENGTH_SHORT ).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
+
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -375,6 +415,10 @@ public class MapActivity extends Activity
         mDrawerToggle.syncState();
     }
 
+    /**
+     *
+     * @param newConfig
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);

@@ -17,6 +17,7 @@
     <string name="search_layer">Search</string>
     <string name="of_layer">of</string>
     <string name="items_layer">items</string>
+    <string name="click_exit">Please click again to exit the application</string>
 
     <!-- Account delegate -->
     <string name="error_authentication">Email or password invalid</string>
