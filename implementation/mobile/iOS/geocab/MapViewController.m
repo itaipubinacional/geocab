@@ -141,9 +141,9 @@ extern NSUserDefaults *defaults;
     CATransition *transition = [CATransition animation];
     transition.duration = 0.3;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionPush;
-    transition.subtype = kCATransitionFromLeft;
-    [self.view.window.layer addAnimation:transition forKey:nil];
+//    transition.type = kCATransitionPush;
+    transition.type = kCATransitionFromRight;
+    [self.layerSelectorNavigator.view.window.layer addAnimation:transition forKey:nil];
     
     [_layerSelectorNavigator dismissViewControllerAnimated:NO completion:^{
 
@@ -301,14 +301,15 @@ extern NSUserDefaults *defaults;
 - (IBAction)toggleMenu:(id)sender {
     
     _layerSelectorNavigator = [[UINavigationController alloc] initWithRootViewController:_layerSelector];
-//    _layerSelectorNavigator.modalTransitionStyle = UIModalPresentationNone;
     
     CATransition *transition = [CATransition animation];
-    transition.duration = 0.5;
+    transition.duration = 0.3;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionPush;
-    transition.subtype = kCATransitionFromLeft;
+//    transition.type = kCATransitionPush;
+    transition.type = kCATransitionFromLeft;
+    transition.fillMode = kCAFillModeBoth;
     [self.view.window.layer addAnimation:transition forKey:nil];
+
     
     [self presentViewController:_layerSelectorNavigator animated:NO completion:^{
 
@@ -491,21 +492,37 @@ extern NSUserDefaults *defaults;
 
 -(void)logoutButtonPressed {
     
-    
-    UINavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"navigationController"];
-    [[[[UIApplication sharedApplication] delegate] window] setRootViewController:navigationController];
-    
-    defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary * dict = [defaults dictionaryRepresentation];
-    for (id key in dict) {
-        
-        //heck the keys if u need
-        [defaults removeObjectForKey:key];
-    }
-    [defaults synchronize];
-    
-    if ([[FBSession activeSession] isOpen]) {
-        [[FBSession activeSession] closeAndClearTokenInformation];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"logout-confirmation.title", @"")
+                                                    message:NSLocalizedString(@"logout-confirmation.message", @"")
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"no", @"")
+                                          otherButtonTitles:NSLocalizedString(@"yes", @""), nil];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch(buttonIndex) {
+        case 0:
+            break;
+        case 1: {
+            UINavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"navigationController"];
+            [[[[UIApplication sharedApplication] delegate] window] setRootViewController:navigationController];
+            
+            defaults = [NSUserDefaults standardUserDefaults];
+            NSDictionary * dict = [defaults dictionaryRepresentation];
+            for (id key in dict) {
+                
+                //heck the keys if u need
+                [defaults removeObjectForKey:key];
+            }
+            [defaults synchronize];
+            
+            if ([[FBSession activeSession] isOpen]) {
+                [[FBSession activeSession] closeAndClearTokenInformation];
+            }
+            break;
+        }
     }
 }
 

@@ -70,6 +70,7 @@ public class AccountMailRepository implements IAccountMailRepository
                 final Map<String, Object> model = new HashMap<String, Object>();
     	        model.put("name",  user.getName() );
     	        model.put("message", "redefinição." ); //TODO message
+    	        model.put("newPassword", user.getNewPassword());
 
                 final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/recovery-password.html", StandardCharsets.UTF_8.toString(), model);
                 message.setText(content, true);

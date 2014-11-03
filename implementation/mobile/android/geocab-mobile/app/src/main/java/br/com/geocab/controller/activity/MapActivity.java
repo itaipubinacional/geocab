@@ -1,9 +1,14 @@
 package br.com.geocab.controller.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -22,8 +27,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.Session;
 
 import java.util.Locale;
+import java.util.Map;
 
 import br.com.geocab.R;
 import br.com.geocab.controller.activity.dialog.DialogInformation;
@@ -32,6 +41,7 @@ import br.com.geocab.controller.delegate.LayerDelegate;
 import br.com.geocab.controller.delegate.MarkerDelegate;
 import br.com.geocab.entity.Layer;
 import br.com.geocab.entity.Marker;
+import br.com.geocab.entity.User;
 import br.com.geocab.util.JavaScriptHandler;
 
 public class MapActivity extends Activity
@@ -77,6 +87,11 @@ public class MapActivity extends Activity
      *
      */
     private Button buttonOpenMenu;
+
+    /**
+     *
+     */
+    private Button buttonLogout;
     /**
      * the layout side menu list
      */
@@ -99,7 +114,15 @@ public class MapActivity extends Activity
      */
     private TextView textViewTotalItems;
 
+    /**
+     *
+     */
     private DialogInformation dialogInformation;
+
+    /**
+     *
+     */
+    boolean doubleBackToExitPressedOnce;
 
     /*-------------------------------------------------------------------
 	 *				 		     HANDLERS
@@ -124,9 +147,6 @@ public class MapActivity extends Activity
         textViewSelectedCountItems = (TextView) findViewById(R.id.text_view_count_selected_items);
         textViewTotalItems = (TextView) findViewById(R.id.text_view_total_items);
 
-        //===========================================
-
-
         webViewMap = (WebView) findViewById(R.id.web_view_map);
         webViewMap.getSettings().setJavaScriptEnabled(true);
         webViewMap.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -135,7 +155,7 @@ public class MapActivity extends Activity
         webViewMap.setWebChromeClient(new WebChromeClient());
         webViewMap.loadUrl("file:///android_asset/map.html");
 
-        //String html = "<!DOCTYPE html><html lang=en><head><link rel=stylesheet href=ol.css type=text/css><style>div.map{height:100%;width:100%}</style><script src=ol.js type=text/javascript></script><script src=jquery.min.js type=text/javascript></script><script src=jquery.mobile-1.4.4.min.js></script><body style=margin:0><div id=map class=map></div><script type=text/javascript>function showLayer(e,o,a){if(a){var n=new ol.source.TileWMS({url:e,params:{LAYERS:o}}),r=new ol.layer.Tile({source:n});map.addLayer(r)}}function showUserMarker(e,o){var a=new ol.Feature({geometry:new ol.geom.Point([o,e]),name:\"Localizacao\"}),n=new ol.style.Style({image:new ol.style.Icon({size:[48,48],src:\"http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png\"})}),r=new ol.source.Vector({features:[a]}),l=new ol.layer.Vector({source:r,style:n});map.addLayer(l)}function showToast(e){return app.makeToast(e),!1}function showOther(e){app.makeToast2();var o=new ol.Feature({geometry:new ol.geom.Point([e[0],e[1]]),name:\"Localizacao\"}),a=new ol.style.Style({image:new ol.style.Icon({size:[48,48],src:\"http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png\"})}),n=new ol.source.Vector({features:[o]}),r=new ol.layer.Vector({source:n,style:a});map.addLayer(r)}map=new ol.Map({target:\"map\",layers:[new ol.layer.Tile({source:new ol.source.OSM})],view:new ol.View({center:ol.proj.transform([-54.1394,-24.7568],\"EPSG:4326\",\"EPSG:3857\"),zoom:7})}),$(function(){function e(){var e=!1;map.on(\"click\",function(o){e||(showOther(o.coordinate),e=!0)})}$(\"div.map\").bind(\"taphold\",e)});</script>";
+        //String html = "<html><head><link rel=stylesheet href=ol.css type=text/css><style>div.map{height:100%;width:100%}.ol-attribution button,.ol-attribution u{display:none}</style><script src=ol.js type=text/javascript></script><script src=jquery.min.js type=text/javascript></script><script src=jquery.mobile-1.4.4.min.js></script><body style=margin:0><div id=map class=\"map\"><script type=text/javascript>function showLayer(e,r,a,o){if(\"true\"==o){var t=new ol.source.TileWMS({url:e,params:{LAYERS:r}}),n=new ol.layer.Tile({source:t});map.addLayer(n),layersAdd.push({wmsLayer:n,wmsSource:t,name:r,title:a})}else for(i in layersAdd)layersAdd[i].name==r&&(map.removeLayer(layersAdd[i].wmsLayer),layersAdd.splice(i,1))}function showUserMarker(e,r){zoomToArea(parseFloat(e),parseFloat(r));var a=new ol.Feature({geometry:new ol.geom.Point(ol.proj.transform([parseFloat(r),parseFloat(e)],\"EPSG:4326\",\"EPSG:3857\")),name:\"User Location\"}),o=new ol.style.Style({image:new ol.style.Icon({size:[48,48],src:\"http://iconshow.me/media/images/Mixed/small-n-flat-icon/png2/48/-map-marker.png\"})}),t=new ol.source.Vector({features:[a]}),n=new ol.layer.Vector({source:t,style:o});map.addLayer(n)}function showMarker(e,r,a,o,t,n,l){var s=\"file:///android_res/drawable/\"+l,i=new ol.Feature({geometry:new ol.geom.Point([e,r]),layerName:n,markerId:a,markerUser:o,markerDate:t}),m=new ol.style.Style({image:new ol.style.Icon({size:[48,48],src:s})}),p=new ol.source.Vector({features:[i]}),d=new ol.layer.Vector({source:p,style:m});map.addLayer(d),markersAdd.push({vectorLayer:d,name:n})}function closeMarker(e){for(i in markersAdd)markersAdd[i].name==e&&map.removeLayer(markersAdd[i].vectorLayer)}function zoomToArea(e,r){var a=ol.animation.pan({source:view.getCenter()}),o=ol.proj.transform([r,e],\"EPSG:4326\",\"EPSG:3857\");map.beforeRender(a),view.setCenter(o),view.setZoom(18)}var layersAdd=[],markersAdd=[],view=new ol.View({center:ol.proj.transform([-54.1394,-24.7568],\"EPSG:4326\",\"EPSG:3857\"),zoom:7});map=new ol.Map({target:\"map\",layers:[new ol.layer.Tile({source:new ol.source.OSM})],view:view}),$(function(){function e(){var e=!1;app.vibrateOnSelect(),map.on(\"click\",function(r){if(!e){var a=map.forEachFeatureAtPixel(r.pixel,function(e){return e}),o=[],t=[];if(layersAdd.length>0)for(var n in layersAdd){var l=layersAdd[n].wmsSource.getGetFeatureInfoUrl(r.coordinate,view.getResolution(),view.getProjection(),{INFO_FORMAT:\"application/json\"});o.push(decodeURIComponent(l)),t.push(layersAdd[n].title)}a&&o.length>0?app.showInformation(parseInt(a.getProperties().markerId),a.getProperties().markerUser,a.getProperties().markerDate,a.getProperties().layerName,o,t):!a&&o.length>0?app.showInformation(null,null,null,null,o,t):a&&0==o.length&&app.showInformation(parseInt(a.getProperties().markerId),a.getProperties().markerUser,a.getProperties().markerDate,a.getProperties().layerName,null,null),e=!0}})}$(\"div.map\").bind(\"taphold\",e),$.event.special.tap.tapholdThreshold=1e3,$.event.special.swipe.durationThreshold=2e3});</script>";
         //webViewMap.loadDataWithBaseURL("file:///android_asset/blank.html",  html, "text/html", "utf-8", null);
 
         webViewMap.addJavascriptInterface(new JavaScriptHandler(this), "app");
@@ -208,6 +228,16 @@ public class MapActivity extends Activity
             }
         });
 
+        buttonLogout = (Button) findViewById(R.id.btn_logout);
+        buttonLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                openAlert(v);
+
+            }
+        });
+
         //NAV DRAWER
 
         mDrawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
@@ -260,27 +290,56 @@ public class MapActivity extends Activity
 
     }
 
-    public void showOtherMarker(double lat, double lon)
-    {
-        webViewMap.loadUrl("javascript:showOther(\"" + lat + "\",\"" + lon + "\")");
+    private void openAlert(View view) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapActivity.this);
+
+        alertDialogBuilder.setTitle("Logout");
+        alertDialogBuilder.setMessage("Tem certeza que deseja sair?");
+        // set positive button: Yes message
+        alertDialogBuilder.setPositiveButton("Sim",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int id) {
+
+                if (Session.getActiveSession() != null) {
+                    Session.getActiveSession().closeAndClearTokenInformation();
+                }
+                Session.setActiveSession(null);
+
+                SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
+                SplashScreenActivity.prefEditor.putString("email", null);
+                SplashScreenActivity.prefEditor.putString("password", null);
+                SplashScreenActivity.prefEditor.commit();
+
+                startActivity(new Intent(MapActivity.this, AuthenticationActivity.class));
+                finish();
+
+            }
+        });
+        // set negative button: No message
+        alertDialogBuilder.setNegativeButton("Não",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int id) {
+                // cancel the alert box and put a Toast to the user
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
-    public void showInformation( long markerId, String layerName, String[] listUrls, String[] listTitles)
+
+    public void showInformation( long markerId, String markerUser, String markerDate, String layerName, String[] listUrls, String[] listTitles)
     {
         if( markerId > 0 || listUrls != null )
         {
-            Marker marker = new Marker();
-            marker.setId(markerId);
+            Marker marker = new Marker(markerId, markerDate, new User("", markerUser) );
             marker.setLayer(new Layer(layerName, layerName));
 
-            dialogInformation = new DialogInformation(this, marker, listUrls, listTitles);
+            dialogInformation = new DialogInformation(this, marker);
 
             MarkerDelegate markerDelegate = new MarkerDelegate(this, dialogInformation);
 
             if( markerId > 0 && listUrls == null )
             {
                 markerDelegate.downloadMarkerPicture(marker);
-                markerDelegate.listMarkerAttributesByMarker(marker);
             }
             else if( markerId == 0 && listUrls != null )
             {
@@ -292,7 +351,6 @@ public class MapActivity extends Activity
             else if(markerId > 0 && listUrls != null )
             {
                 markerDelegate.downloadMarkerPicture(marker);
-                markerDelegate.listMarkerAttributesByMarker(marker);
 
                 for(int i = 0; i < listUrls.length; i++)
                 {
@@ -319,6 +377,37 @@ public class MapActivity extends Activity
      * onPostCreate() and onConfigurationChanged()...
      */
 
+    /**
+     *
+     */
+    @Override
+    public void onBackPressed()
+    {
+        if (doubleBackToExitPressedOnce)
+        {
+            super.onBackPressed();
+            MapActivity.this.finish();
+            MapActivity.this.moveTaskToBack(true);
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+
+        Toast.makeText( this, R.string.click_exit, Toast.LENGTH_SHORT ).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
+
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -326,6 +415,10 @@ public class MapActivity extends Activity
         mDrawerToggle.syncState();
     }
 
+    /**
+     *
+     * @param newConfig
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);

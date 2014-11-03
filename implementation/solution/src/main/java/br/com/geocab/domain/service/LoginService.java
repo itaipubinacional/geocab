@@ -4,6 +4,11 @@
 package br.com.geocab.domain.service;
 
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.util.Calendar;
+
+import org.apache.commons.lang.RandomStringUtils;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SaltSource;
@@ -15,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
+import br.com.geocab.domain.entity.account.IAccountMailRepository;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.repository.account.IUserRepository;
@@ -52,6 +58,12 @@ public class LoginService
 	@Autowired
 	private IUserRepository userRepository;
 	
+	/**
+	 * AccountMail Repository
+	 */
+	@Autowired
+	private IAccountMailRepository accountMailRepository;
+	
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -86,6 +98,27 @@ public class LoginService
 	{
 		User user = this.userRepository.save(ContextHolder.getAuthenticatedUser());		
 		return user;
+	}
+	
+	public void recoverPassword(User user) throws Exception
+	{
+		User userValid = this.findUserByEmail(user.getEmail());
+		
+		if(userValid == null){
+			throw new Exception();
+		}
+		
+		String s = userValid.getEmail() + Calendar.getInstance().getTime();
+		MessageDigest m=MessageDigest.getInstance("MD5");
+		m.update(s.getBytes(),0,s.length());
+		userValid.setNewPassword(new BigInteger(1,m.digest()).toString(16).substring(0, 6));
+		
+		final String encodedPassword = this.passwordEncoder.encodePassword( userValid.getNewPassword(), saltSource.getSalt( userValid ) ); 
+		userValid.setPassword( encodedPassword );
+		
+		this.userRepository.save(userValid);
+		
+		this.accountMailRepository.sendRecoveryPassword( userValid );
 	}
 	
 	/**

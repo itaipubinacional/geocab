@@ -6,7 +6,7 @@
  * @param $modalInstance
  * @constructor
  */
-function ForgetPasswordPopUpController( $scope, $modalInstance, $state, $importService, $translate ) {
+function ForgetPasswordPopUpController( $scope, $modalInstance, $state, $importService, $translate, $timeout ) {
 
 
 	$importService("loginService");
@@ -48,13 +48,30 @@ function ForgetPasswordPopUpController( $scope, $modalInstance, $state, $importS
      * 		 				 	  BEHAVIORS
      *-------------------------------------------------------------------*/
    
-    $scope.ForgetPassword = function(){
+    $scope.forgetPassword = function(){
     	if ( !$scope.form('form_forget_password').$valid ) 
     	{    		    		    	
 			$scope.msg = {type:"danger", text: $translate('admin.users.The-highlighted-fields-are-required') , dismiss:true};
 			$scope.$apply();
 			return;
 		} 
+
+    	$scope.msg = {type:"info", text: "Aguarde um momento" + '...', dismiss:true};
+    	
+    	loginService.recoverPassword($scope.currentEntity, {
+            callback: function (result) {
+            	$scope.msg = {type:"success", text: "Uma nova senha foi enviada ao e-mail" + '!', dismiss:true};
+            	$scope.$apply();
+            	$timeout(function(){
+            		$scope.fechaPopup();
+            	}, 5000);
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.$apply();
+            }
+        });
+    	
     }
 
     /**
