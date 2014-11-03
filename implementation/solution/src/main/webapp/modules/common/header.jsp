@@ -30,7 +30,7 @@
 				<li class="box-separator"></li>
 				<li>
 					<div class="user-logout">
-						<a onclick="loginService.logout();" href="./authentication"><spring:message code="Logout" /></a>
+						<a href="<c:url value="/j_spring_security_logout"/>"><spring:message code="Logout" /></a>
 					</div>
 				</li>
 			</ul>
