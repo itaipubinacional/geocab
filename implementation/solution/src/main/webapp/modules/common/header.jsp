@@ -25,7 +25,7 @@
 			<ul class="nav navbar-nav pull-right right-side">
 				<li><a href="#" class="active box-separator"
 					style="border: none; margin-top: 7px;"> <span
-						style="color: #000000" ng-bind="userAuthencated.name"></span>
+						style="color: #000000" > <sec:authentication property="principal.name"/> </span>
 				</a></li>
 				<li class="box-separator"></li>
 				<li>
