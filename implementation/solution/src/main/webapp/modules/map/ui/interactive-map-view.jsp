@@ -22,27 +22,27 @@
 
 		<div>
 			<ul class="map-menu-items tool-items" id="menu-sidebar">
-				<li ng-click="aumentarZoom()" title="Aumentar zoom"><a href="#tabs-2">
+				<li ng-click="aumentarZoom()" title="<spring:message code="map.Zoom-in" />"><a href="#tabs-2">
 						<div class="icon itaipu-icon-plus sidebar-icon"></div>
 				</a></li>
-				<li ng-click="diminuirZoom()" title="Diminuir zoom"><a>
+				<li ng-click="diminuirZoom()" title="<spring:message code="map.Zoom-out" />"><a>
 						<div class="icon itaipu-icon-minus sidebar-icon"></div>
 				</a></li>
-				<li ng-if="hasPermissionCalculoDistancia"
-					title="Calcular distância"
+				<li ng-if="hasPermissionCalculoDistancia"  
+					title="<spring:message code="map.Calculate-distance" />"
 					ng-click="initializeDistanceCalc()"
 					ng-class="{ferramenta_active : menu.fcDistancia}"><a>
 						<div class="icon itaipu-icon-ruler-1 sidebar-icon"></div>
 				</a></li>
 				<li ng-if="hasPermissionCalculoArea" ng-click="initializeAreaCalc()"
-					title="Calcular área"
+					title="<spring:message code="map.Calculate-area" />"
 					ng-class="{ferramenta_active : menu.fcArea}"><a>
 						<div class="icon itaipu-icon-square sidebar-icon"></div>
 				</a></li>
 
 				<!-- Verificar... -->
 				<li ng-click="initializeMarker()"
-					title="Realizar postagem"
+					title="<spring:message code="map.Perform-post" />"
 					ng-class="{ferramenta_active : menu.fcMarker}"><a
 					href="#tabs-1"> <span
 						class="glyphicon glyphicon-map-marker sidebar-icon"></span>
@@ -194,7 +194,7 @@
 			
 			<form name="sidebarMarkerUpdate" method="post" ng-show="screen == 'update'"
 				default-button="buttonInsert" novalidate >
-				<div style="height:650px">
+				<div style="height:737px">
 					<div class="sidebar-coloredbar"></div>
 					<div>
 						<button
@@ -349,15 +349,15 @@
 		<div id="sidebar-marker-create" class="sidebar-style">
 			<form name="sidebarMarker" method="post"
 				default-button="buttonInsert" novalidate>
-				<div>
+				
 					<div class="sidebar-coloredbar"></div>
 					<span ng-click="clearFcMarker()"
 						class="icon itaipu-icon-close sidebar-close"
 						title="<spring:message code="map.Close" />"
 						></span>
-
-					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container">
-						<div class="sidebar-content-header">Nova postagem</div>
+					<div style="height:737px">
+					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" style="overflow:auto" class="container">
+						<div class="sidebar-content-header"><spring:message code="map.New-post" /></div>
 						<br style="clear: both;"> <br> <label>Camada</label>
 
 						<!-- no-results-text="Nenhum registro encontrado com" -->
@@ -473,14 +473,14 @@
 		<div id="sidebar-tabs" style="float: left;">
 			<ul class="map-menu-items tab-flag" id="menu-sidebar-2">
 				<li id="menu-item-1"
-					title="Menu de camadas"
+					title="<spring:message code="map.Layer-menu" />"
 					ng-click="toggleSidebarMenu(300, '#menu-item-1');"
 					class="menu-item bg-inactive">
 					<a href="#tabs-1">
 						<div class="icon itaipu-icon-layers sidebar-icon"></div>
 					</a>
 				</li>
-				<li class="menu-item" id="menu-item-3" ng-click="toggleSidebarMenu(300, '#menu-item-3');" title="KML Habilitado">
+				<li class="menu-item" id="menu-item-3" ng-click="toggleSidebarMenu(300, '#menu-item-3');" title="<spring:message code="map.KML-enabled" />">
                     <a href="#tabs-3">
                         <div class="icon itaipu-icon-kml sidebar-icon"></div>
                     </a>
