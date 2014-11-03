@@ -27,21 +27,6 @@
                 <span ng-show="form.name.$error.required && (form.$submitted || form.name.$dirty)"
                       class="tooltip-validation"><spring:message code="admin.users.Name"/> <spring:message code="admin.users.required"/></span>
             </div>
-            <br>           
-            <div class="form-item position-relative" style="width: 300px;">
-                <label class="detail-label" required><spring:message code="admin.users.E-mail"/></label>
-                <input name="address" type="email" id="address" class="form-control"
-                       ng-model="currentEntity.email"
-                       maxlength="255"
-                       placeholder="<spring:message code="admin.users.E-mail"/>"
-                       required ng-minlength="1"
-                       ng-class="{ ngInvalid: form.address.$error.required && (form.$submitted || form.address.$dirty) }"
-                       ng-hover
-                       autocomplete="off"
-                      />
-                <span ng-show="form.address.$error.required && (form.$submitted || form.address.$dirty)"
-                      class="tooltip-validation"><spring:message code="admin.users.E-mail"/> <spring:message code="admin.users.required"/></span>
-            </div>
   			<br>
   			<div class="form-item position-relative" style="width: 300px;">
                 <label class="detail-label" required><spring:message code="admin.users.Password"/></label>

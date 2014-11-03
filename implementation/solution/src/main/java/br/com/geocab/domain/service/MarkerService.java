@@ -28,6 +28,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
@@ -122,7 +123,7 @@ public class MarkerService
 	 * @throws RepositoryException 
 	 * @throws IOException 
 	 */
-	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
+	//@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
 	public Marker updateMarker( Marker marker ) throws IOException, RepositoryException
 	{			
 		try{
@@ -366,5 +367,7 @@ public class MarkerService
 			return null;
 		}	
 	}
+	
+	
 
 }
