@@ -2,6 +2,7 @@ package br.com.geocab.controller.delegate;
 
 import android.accounts.Account;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Base64;
@@ -9,9 +10,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -34,6 +40,8 @@ public class AccountDelegate extends AbstractDelegate
 
     private final Context context;
 
+    private ProgressDialog progressDialog;
+
 	/*-------------------------------------------------------------------
      * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -55,8 +63,18 @@ public class AccountDelegate extends AbstractDelegate
 
 
 
-    public void checkLogin(final String credentials) {
+    public void checkLogin(final String credentials, boolean needAuthentication) {
 
+        progressDialog = new ProgressDialog(AccountDelegate.this.context);
+
+        if( needAuthentication )
+        {
+            progressDialog.setTitle(R.string.loading);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setMessage(AccountDelegate.this.context.getString(R.string.authenticating_application));
+            progressDialog.setIndeterminate(false);
+            progressDialog.show();
+        }
 
         RequestQueue queue = Volley.newRequestQueue(this.context);
         String url = this.getUrl()+"/check";
@@ -72,6 +90,10 @@ public class AccountDelegate extends AbstractDelegate
 
                         AbstractDelegate.loggedUser = user;
 
+                        SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
+                        SplashScreenActivity.prefEditor.putString("email", user.getEmail());
+                        SplashScreenActivity.prefEditor.commit();
+
                         if(SplashScreenActivity.settings.getAll().get("email") != null && SplashScreenActivity.settings.getAll().get("password") != null )
                         {
                             AbstractDelegate.loggedUser.setPassword(SplashScreenActivity.settings.getAll().get("password").toString());
@@ -79,15 +101,26 @@ public class AccountDelegate extends AbstractDelegate
 
                         Intent mapIntent = new Intent(AccountDelegate.this.context, MapActivity.class);
                         AccountDelegate.this.context.startActivity(mapIntent);
+                        progressDialog.dismiss();
                         ((Activity)AccountDelegate.this.context).finish();
+
                     }
                 },
                 new Response.ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(AccountDelegate.this.context, R.string.error_authentication, Toast.LENGTH_SHORT).show();
-                        Log.d("ERROR","error => "+error.toString());
+                        if( error instanceof TimeoutError )
+                        {
+                            Toast.makeText(AccountDelegate.this.context, R.string.email_password_invalid, Toast.LENGTH_LONG).show();
+                        }
+                        else if( error instanceof AuthFailureError )
+                        {
+                            Toast.makeText(AccountDelegate.this.context, R.string.email_password_invalid, Toast.LENGTH_LONG).show();
+                        }
+
+                        progressDialog.dismiss();
+
                     }
                 }
         ) {
@@ -111,20 +144,47 @@ public class AccountDelegate extends AbstractDelegate
         queue.add(postRequest);
     }
 
-    public void postNewComment(final User user){
+    public void insertUserSocial(final User user){
+
+        progressDialog = new ProgressDialog(AccountDelegate.this.context);
+        progressDialog.setTitle(R.string.loading);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(AccountDelegate.this.context.getString(R.string.authenticating_application));
+        progressDialog.setIndeterminate(false);
+        progressDialog.show();
+
         RequestQueue queue = Volley.newRequestQueue(this.context);
         String url = this.getUrl()+"/create";
         StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
+                Gson json = new Gson();
+
+                SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
+                SplashScreenActivity.prefEditor.putString("email", user.getEmail());
+                SplashScreenActivity.prefEditor.putString("password", "none");
+                SplashScreenActivity.prefEditor.commit();
+
+                User user = json.fromJson(response, User.class);
+
+                AbstractDelegate.loggedUser = user;
+
+                if(SplashScreenActivity.settings.getAll().get("email") != null && SplashScreenActivity.settings.getAll().get("password") != null )
+                {
+                    AbstractDelegate.loggedUser.setPassword(SplashScreenActivity.settings.getAll().get("password").toString());
+                }
+
                 Intent mapIntent = new Intent(AccountDelegate.this.context, MapActivity.class);
                 AccountDelegate.this.context.startActivity(mapIntent);
+                progressDialog.dismiss();
                 ((Activity)AccountDelegate.this.context).finish();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("AE",error.getMessage());
+                progressDialog.dismiss();
             }
         }){
             @Override

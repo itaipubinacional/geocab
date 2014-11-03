@@ -546,6 +546,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	    	}, 100)
         	}
            
+        	
+        	$("div.msgMap").css("display","none");
 
         });
         /**
