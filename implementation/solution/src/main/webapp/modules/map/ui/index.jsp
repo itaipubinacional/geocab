@@ -21,6 +21,10 @@
 		<!-- Scripts -->
 		<jsp:include page="../../default-scripts.jsp"/>
 		
+		
+		<script src="<c:url value="/static/libs/right/right-src.js"/>"></script> 
+		<script src="<c:url value="/static/libs/right/right-resizable.js"/>"></script>
+		
 		<!-- OpenLayers 3  -->
 	    <link rel="stylesheet" href="static/libs/openlayers/ol.css" type="text/css">
 	

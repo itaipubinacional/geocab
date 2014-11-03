@@ -507,7 +507,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
                 var listUrls = [];
 
-                for(var i in $scope.layers )
+                for(var i =0; i < $scope.layers.length; i++)
                 {
                     var url = $scope.layers[i].wmsSource.getGetFeatureInfoUrl(
                         evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(),
@@ -806,7 +806,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
                 var isAdded = false;
 
-                for(var i in $scope.layers)
+                for(var i=0; i < $scope.layers.length; i++)
                 {
                     if($scope.layers[i].name == node.name)
                     {
@@ -825,7 +825,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             }
             else
             {
-                for(var i in $scope.layers)
+            	for(var i=0; i < $scope.layers.length; i++)
                 {
                     if( $scope.layers[i].name == node.name )
                     {
@@ -851,7 +851,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
             if( node.selected ){
 
-                for(var i in $scope.allLayersKML[0].children)
+            	for(var i=0; i < $scope.allLayersKML[0].children.length; i++)
                 {
                     if($scope.allLayersKML[0].children[i].name == node.name)
                     {
@@ -862,7 +862,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             }
             else
             {
-                for(var i in $scope.allLayersKML[0].children)
+                for(var i=0; i < $scope.allLayersKML[0].children.length; i++)
                 {
                     if( $scope.allLayersKML[0].children[i].name == node.name )
                     {
