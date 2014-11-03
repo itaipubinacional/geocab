@@ -25,7 +25,7 @@
 			<ul class="nav navbar-nav pull-right right-side">
 				<li><a href="#" class="active box-separator"
 					style="border: none; margin-top: 7px;"> <span
-						style="color: #000000" ng-bind="usuarioAutenticado.name"></span>
+						style="color: #000000" ng-bind="userAuthencated.name"></span>
 				</a></li>
 				<li class="box-separator"></li>
 				<li>
@@ -37,6 +37,28 @@
 		</div>
 	</div>
 	
+	<security:authorize ifAnyGranted="USER">
+		<div id="navbar-user" class="navbar navbar-2" style="z-index: 1001;">
+			<div class="navbar-inner border-radius-0">
+	
+				<div class="nav-collapse collapse">
+					<ul class="nav navbar-nav">
+												
+						<li class="position-relative"><a href="./"
+							style="width: 50px;" ng-class="{active: menuActive == null}"><span
+								class="icon-mapa-interativo"></span></a></li>
+	
+						<li class="position-relative"><a
+							href="user#/account"
+							ng-class="{active: menuActive == 'my-account'}"
+							style="width: 150px;">Minha conta</a></li>
+							
+							
+	                </ul>
+				</div>
+			</div>
+		</div>
+	</security:authorize>	
 
 	<security:authorize ifAnyGranted="ADMINISTRATOR">
 		<div id="navbar-administrator" class="navbar navbar-2" style="z-index: 1001;">

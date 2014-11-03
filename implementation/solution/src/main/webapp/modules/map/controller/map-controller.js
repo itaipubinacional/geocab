@@ -313,9 +313,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 		/**
 		 * Caso não existe uma nav bar
 		 * */
-		if( !$("#navbar-administrator").length ) {
+		/*if( !$("#navbar-administrator").length ) {
 			$(".sidebar-style").css("top","60px");
-		}
+		}*/
 		
         /**
          * Configuração do mapa openlayers
