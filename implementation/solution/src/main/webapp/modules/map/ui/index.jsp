@@ -53,9 +53,6 @@
 
 		<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
 		
-		
-    			
-	
 	 	<style>
 	        .popup{
 	            background:white;
@@ -67,23 +64,23 @@
 	</head> 
 	
 	<body class="overflow-hidden">
-	<div class="container-fluid" style="height: 100%;"> 
-	<header>
-		<jsp:include page="../../common/header.jsp"/>
-	</header>
-
-	<!-- content -->
-	<security:authorize ifAnyGranted="ADMINISTRATOR" >
-	    <div  id="sb-site"  ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
-	</security:authorize>
-	
-	<security:authorize ifAnyGranted="USER,MODERATOR">
-	    <div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 60px; left: 0; right: 0;" ng-controller="MapController"></div>
-	</security:authorize>
-
-	<!-- /content -->
-       
-	<footer></footer>
-</div>
+		<div class="container-fluid" style="height: 100%;"> 
+			<header>
+				<jsp:include page="../../common/header.jsp"/>
+			</header>
+		
+			<!-- content -->
+			<security:authorize ifAnyGranted="ADMINISTRATOR" >
+			    <div  id="sb-site"  ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
+			</security:authorize>
+			
+			<security:authorize ifAnyGranted="USER,MODERATOR">
+			    <div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
+			</security:authorize>
+		
+			<!-- /content -->
+		       
+			<footer></footer>
+		</div>
 	</body>
 </html>
