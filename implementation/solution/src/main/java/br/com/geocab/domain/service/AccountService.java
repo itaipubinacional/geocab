@@ -217,7 +217,6 @@ public class AccountService
 			throw new Exception();
 		}
 		
-		user.setEmail(u.getEmail());
 		user.setName(u.getName());
 		user.setRole(UserRole.USER);
 		
