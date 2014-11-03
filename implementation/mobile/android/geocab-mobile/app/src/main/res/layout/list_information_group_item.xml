@@ -30,16 +30,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/text_view_created"
-                android:text="teste"/>
+                android:layout_toRightOf="@+id/text_view_created"/>
 
             <TextView
                 android:id="@+id/text_view_date_marker"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/text_view_user_marker"
-                android:gravity="right"
-                android:text="20/10/2014 "/>
+                android:gravity="right"/>
 
             <View android:layout_width="match_parent"
                 android:layout_height="1dp"

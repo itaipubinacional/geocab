@@ -38,8 +38,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     public void setItemList(GroupEntity groupEntity)
     {
-        this.mGroupCollection.add(groupEntity);
-        groupStatus = new int[mGroupCollection.size()];
+        if( groupEntity != null )
+        {
+            this.mGroupCollection.add(groupEntity);
+            groupStatus = new int[mGroupCollection.size()];
+        }
     }
 
 
@@ -111,6 +114,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			childHolder = (ChildHolder) convertView.getTag();
 		}
 
+        if( mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).user != null && mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).date != null)
+        {
+            childHolder.relativeLayout.setVisibility(View.VISIBLE);
+            childHolder.user.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).user);
+            childHolder.date.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).date);
+        }
+        else
+        {
+            childHolder.relativeLayout.setVisibility(View.GONE);
+        }
+
         if( mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).value == null )
         {
             childHolder.title.setVisibility(View.GONE);
@@ -120,7 +134,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         {
             childHolder.title.setVisibility(View.VISIBLE);
             childHolder.value.setVisibility(View.VISIBLE);
-            //childHolder.user.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).user);
             childHolder.title.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).title);
             childHolder.value.setText(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).value);
         }
@@ -128,14 +141,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if( mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).image == null )
         {
             childHolder.image.setVisibility(View.GONE);
-            childHolder.relativeLayout.setVisibility(View.GONE);
         }
         else
         {
             childHolder.image.setVisibility(View.VISIBLE);
-            childHolder.relativeLayout.setVisibility(View.VISIBLE);
-
             childHolder.image.setImageBitmap(mGroupCollection.get(groupPosition).groupItemCollection.get(childPosition).image);
+
         }
 
 		return convertView;

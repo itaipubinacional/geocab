@@ -76,7 +76,7 @@ public class SplashScreenActivity extends Activity {
                     user.setPassword(settings.getAll().get("password").toString());
 
                     final byte[] credentials = (user.getEmail() + ":" + user.getPassword()).getBytes();
-                    accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP));
+                    accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP), false);
 
                 }
                 else
@@ -87,68 +87,5 @@ public class SplashScreenActivity extends Activity {
             }
         }, 1000);
 
-    }
-
-    /**
-     *  Responsável por carregar os preferences do APK e Realizar o Login do Usuario.
-     */
-    private class InitiliazeApp extends AsyncTask<Void, Void, Boolean>
-    {
-        /**
-         *
-         * @param voids
-         * @return
-         */
-        @Override
-        protected Boolean doInBackground( Void... voids )
-        {
-            try
-            {
-                settings = getSharedPreferences( GEOCAB_PREFERENCES, MODE_PRIVATE );
-                prefEditor = settings.edit();
-                Thread.sleep( 1000 );
-                progressBar.setProgress( 60 );
-
-                if (settings.getAll().get("email") != null && settings.getAll().get("password") != null) {
-                    accountDelegate = new AccountDelegate(SplashScreenActivity.this);
-
-                    User user = new User();
-
-                    user.setEmail(settings.getAll().get("email").toString());
-                    user.setPassword(settings.getAll().get("password").toString());
-
-                    final byte[] credentials = (user.getEmail() + ":" + user.getPassword()).getBytes();
-                    accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP));
-
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            catch ( InterruptedException e )
-            {
-                e.printStackTrace();
-            }
-
-            return true;
-
-        }
-
-        /**
-         *
-         * @param aVoid
-         */
-        @Override
-        protected void onPostExecute( final Boolean aVoid )
-        {
-            progressBar.setProgress( 100 );
-            if ( !aVoid )
-            {
-                startActivity(new Intent(SplashScreenActivity.this, AuthenticationActivity.class));
-                SplashScreenActivity.this.finish();
-            }
-        }
     }
 }

@@ -43,7 +43,7 @@
 						</tr>						
 								
 						<tr>
-							<td><input type="button" id="buttonForget" ng-click="ForgetPassword()" value='<spring:message code="authentication.Rescue-password"></spring:message>' id="createAccount" class="btn-enter" /></td>
+							<td><input type="button" id="buttonForget" ng-click="forgetPassword()" value='<spring:message code="authentication.Rescue-password"></spring:message>' id="createAccount" class="btn-enter" /></td>
 						</tr>
 					</table>				
 				</form>

@@ -55,8 +55,6 @@ extern User *loggedUser;
     _username.delegate = self;
     _password.delegate = self;
     
-    [self.password setReturnKeyType:UIReturnKeyDone];
-    
     self.fbLoginView.delegate = self;
     self.fbLoginView.readPermissions = @[@"public_profile", @"email", @"user_friends"];
     
@@ -169,16 +167,23 @@ extern User *loggedUser;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    delegate.container.panMode = MFSideMenuPanModeNone;
-    
-    self.navigationItem.hidesBackButton = YES;
-    self.navigationItem.leftBarButtonItem = nil;
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
 - (void) clearTextInputs {
     _username.text = @"";
     _password.text = @"";
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    [textField resignFirstResponder];
+    
+    if (textField == self.username) {
+        [self.password becomeFirstResponder];
+    }
+    
+    return YES;
 }
 
 @end

@@ -38,8 +38,6 @@ public class LayerDelegate extends AbstractDelegate
 
     private AnimationDrawable animationLoadLayer;
 
-    private ProgressDialog progressDialog;
-
 	/*-------------------------------------------------------------------
      * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -71,13 +69,6 @@ public class LayerDelegate extends AbstractDelegate
     {
         this.animationLoadLayer = d;
 
-        progressDialog = new ProgressDialog(LayerDelegate.this.context);
-        progressDialog.setTitle("Carregando");
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage("Carregando mapa e a lista de camadas. Por favor, aguarde!");
-        progressDialog.setIndeterminate(false);
-        progressDialog.show();
-
         String url = getUrl()+ "/layers";
 
         JsonArrayRequest jReq = new JsonArrayRequest(url,
@@ -101,12 +92,11 @@ public class LayerDelegate extends AbstractDelegate
                                 result.add(layer);
 
                                 LayerDelegate.this.animationLoadLayer.stop();
-                                progressDialog.dismiss();
 
                             }
                             catch (JSONException e)
                             {
-                                Toast.makeText(LayerDelegate.this.context, R.string.error_authentication, Toast.LENGTH_SHORT).show();
+
                             }
                         }
                         LayerDelegate.this.listAdapter.setItemList(result);
@@ -117,8 +107,8 @@ public class LayerDelegate extends AbstractDelegate
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                // Handle error
-                Log.e("ERROR", "ERROR");
+
+                Toast.makeText(LayerDelegate.this.context, R.string.problem_loading_layer, Toast.LENGTH_SHORT).show();
 
             }
         })
@@ -135,8 +125,7 @@ public class LayerDelegate extends AbstractDelegate
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                //final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
-                final String credentials = "admin@admin.com:admin";
+                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
                 params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
                 params.put("Content-Type","application/x-www-form-urlencoded");
                 return params;

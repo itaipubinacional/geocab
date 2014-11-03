@@ -41,9 +41,11 @@ public class Marker implements Serializable
 
     private Layer layer;
 
-    private GregorianCalendar created;
-	
-	private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
+    private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
+
+    private Calendar created;
+
+    private String markerCreatedFormated;
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -51,9 +53,11 @@ public class Marker implements Serializable
 	/**
 	 * 
 	 */
-	public Marker()
+	public Marker(Long id, String markerCreatedFormated, User user)
 	{
-		
+        this.id = id;
+        this.markerCreatedFormated = markerCreatedFormated;
+		this.user = user;
 	}
 
     public Marker(Long id, String latitude, String longitude, StatusMarker status, List<MarkerAttribute> markerAttributes) {
@@ -72,34 +76,21 @@ public class Marker implements Serializable
         this.id = id;
     }
 
-    /**
-	 * @return the latitude
-	 */
-	public String getLatitude()
-	{
-		return latitude;
-	}
-	/**
-	 * @param latitude the latitude to set
-	 */
-	public void setLatitude(String latitude)
-	{
-		this.latitude = latitude;
-	}
-	/**
-	 * @return the longitude
-	 */
-	public String getLongitude()
-	{
-		return longitude;
-	}
-	/**
-	 * @param longitude the longitude to set
-	 */
-	public void setLongitude(String longitude)
-	{
-		this.longitude = longitude;
-	}
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 
     public Bitmap getImage() {
         return image;
@@ -109,44 +100,13 @@ public class Marker implements Serializable
         this.image = image;
     }
 
-    /**
-	 * @return the status
-	 */
-	public StatusMarker getStatus()
-	{
-		return status;
-	}
-	/**
-	 * @param status the status to set
-	 */
-	public void setStatus(StatusMarker status)
-	{
-		this.status = status;
-	}
-
-    public Layer getLayer() {
-        return layer;
+    public StatusMarker getStatus() {
+        return status;
     }
 
-    public void setLayer(Layer layer) {
-        this.layer = layer;
+    public void setStatus(StatusMarker status) {
+        this.status = status;
     }
-
-    /**
-	 * @return the markerAttributes
-	 */
-	public List<MarkerAttribute> getMarkerAttribute()
-	{
-		return markerAttributes;
-	}
-
-	/**
-	 * @param markerAttributes the markerAttribute to set
-	 */
-	public void setMarkerAttribute(List<MarkerAttribute> markerAttributes)
-	{
-		this.markerAttributes = markerAttributes;
-	}
 
     public User getUser() {
         return user;
@@ -156,11 +116,35 @@ public class Marker implements Serializable
         this.user = user;
     }
 
-    public GregorianCalendar getCreated() {
+    public Layer getLayer() {
+        return layer;
+    }
+
+    public void setLayer(Layer layer) {
+        this.layer = layer;
+    }
+
+    public List<MarkerAttribute> getMarkerAttributes() {
+        return markerAttributes;
+    }
+
+    public void setMarkerAttributes(List<MarkerAttribute> markerAttributes) {
+        this.markerAttributes = markerAttributes;
+    }
+
+    public Calendar getCreated() {
         return created;
     }
 
-    public void setCreated(GregorianCalendar created) {
+    public void setCreated(Calendar created) {
         this.created = created;
+    }
+
+    public String getMarkerCreatedFormated() {
+        return markerCreatedFormated;
+    }
+
+    public void setMarkerCreatedFormated(String markerCreatedFormated) {
+        this.markerCreatedFormated = markerCreatedFormated;
     }
 }
