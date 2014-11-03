@@ -38,6 +38,7 @@
 		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
 
+
    		<!-- Treeview -->
 		<script type="text/javascript"
 		        src="static/libs/angular-treeview/ivh-treeview.min.js"></script>
