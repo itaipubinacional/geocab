@@ -16,8 +16,8 @@
 <script type="text/javascript" src="<c:url value="/webjars/jquery/2.1.1/jquery.min.js"/>"></script> <!-- FIXME Tirar as versoes -->
 <script type="text/javascript" src="<c:url value="/static/libs/jquery-resize/jquery.resize.js"/>"></script>
 
-<script src="<c:url value="/static/libs/right/right-src.js"/>"></script>
-<script src="<c:url value="/static/libs/right/right-resizable.js"/>"></script>
+ 
+
 
 <!-- JQuery UI -->
 <script type="text/javascript" src="<c:url value="/static/libs/jquery-ui/jquery-ui-1.10.3.custom.js"/>"></script>
