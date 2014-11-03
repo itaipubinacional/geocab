@@ -637,7 +637,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 }
                 
                 if ( $scope.features.length <= 0 && $('.menu-sidebar-container').css('right') != '3px' ) {
-        			$scope.clearDetailMarker();
+        			
+        			if($scope.menu.fcMarker){
+        	    		$scope.clearFcMarker();
+        	    	} else {
+        	    		$scope.clearDetailMarker();
+        	    	}
         		}
                 
                 
