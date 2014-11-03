@@ -307,10 +307,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		
-		$("#sidebar-marker-create, #sidebar-marker-detail-update").css("max-width", parseInt($(window).width()) - 100 );
+		$("#sidebar-marker-create, #sidebar-marker-detail-update").css("max-width", parseInt($(window).width()) - 68 );
 		
 		$("#sidebar-marker-create, #sidebar-marker-detail-update").resize(function() { 
-			$(".menu-sidebar-container").css("right",parseInt($(this).css("width")) + 20); 
+			$(".menu-sidebar-container").css("right",parseInt($(this).css("width")) + 5); 
 		});
 		
 		
