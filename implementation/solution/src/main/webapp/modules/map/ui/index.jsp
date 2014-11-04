@@ -21,6 +21,10 @@
 		<!-- Scripts -->
 		<jsp:include page="../../default-scripts.jsp"/>
 		
+		
+		<script src="<c:url value="/static/libs/right/right-src.js"/>"></script> 
+		<script src="<c:url value="/static/libs/right/right-resizable.js"/>"></script>
+		
 		<!-- OpenLayers 3  -->
 	    <link rel="stylesheet" href="static/libs/openlayers/ol.css" type="text/css">
 	
@@ -38,6 +42,7 @@
 		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
 
+
    		<!-- Treeview -->
 		<script type="text/javascript"
 		        src="static/libs/angular-treeview/ivh-treeview.min.js"></script>
@@ -52,9 +57,6 @@
 
 		<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
 		
-		
-    			
-	
 	 	<style>
 	        .popup{
 	            background:white;
@@ -66,23 +68,23 @@
 	</head> 
 	
 	<body class="overflow-hidden">
-	<div class="container-fluid" style="height: 100%;"> 
-	<header>
-		<jsp:include page="../../common/header.jsp"/>
-	</header>
-
-	<!-- content -->
-	<security:authorize ifAnyGranted="ADMINISTRATOR" >
-	    <div  id="sb-site"  ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
-	</security:authorize>
-	
-	<security:authorize ifAnyGranted="USER,MODERATOR">
-	    <div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 60px; left: 0; right: 0;" ng-controller="MapController"></div>
-	</security:authorize>
-
-	<!-- /content -->
-       
-	<footer></footer>
-</div>
+		<div class="container-fluid" style="height: 100%;"> 
+			<header>
+				<jsp:include page="../../common/header.jsp"/>
+			</header>
+		
+			<!-- content -->
+			<security:authorize ifAnyGranted="ADMINISTRATOR" >
+			    <div  id="sb-site"  ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
+			</security:authorize>
+			
+			<security:authorize ifAnyGranted="USER,MODERATOR">
+			    <div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
+			</security:authorize>
+		
+			<!-- /content -->
+		       
+			<footer></footer>
+		</div>
 	</body>
 </html>

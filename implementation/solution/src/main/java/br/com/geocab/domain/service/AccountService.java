@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.repository.account.IUserRepository;
@@ -37,6 +38,17 @@ public class AccountService
 	 *-------------------------------------------------------------------*/
 	
 	/**
+	 * User Repository
+	 */
+	@Autowired
+	private IUserRepository userRepository;
+	
+	/**
+	 * Logger
+	 */
+	private static final Logger LOG = Logger.getLogger( AccountService.class.getName() );
+	
+	/**
 	 * Password encoder
 	 */
 	@Autowired
@@ -47,17 +59,6 @@ public class AccountService
 	 */
 	@Autowired
 	private SaltSource saltSource;
-	
-	/**
-	 * User Repository
-	 */
-	@Autowired
-	private IUserRepository userRepository;
-	
-	/**
-	 * Logger
-	 */
-	private static final Logger LOG = Logger.getLogger( AccountService.class.getName() );
 
 	
 	/*-------------------------------------------------------------------
@@ -180,6 +181,51 @@ public class AccountService
 		}
 		
 		return user;
+	}
+	
+	/**
+	 * Update User
+	 * 
+	 * @param user
+	 * @return
+	 * @throws Exception 
+	 */
+	@PreAuthorize("hasRole('"+UserRole.USER_VALUE+"')")
+	public User getUserAuthenticated() throws Exception
+	{
+		User user = ContextHolder.getAuthenticatedUser();
+		return this.userRepository.findOne(user.getId());
+	}
+	
+	/**
+	 * Update User
+	 * 
+	 * @param user
+	 * @return
+	 * @throws Exception 
+	 */
+	@PreAuthorize("hasRole('"+UserRole.USER_VALUE+"')")
+	public User updateUserAuthenticated( User u ) throws Exception
+	{
+		Assert.notNull( u );
+		
+		User userAuthencated = ContextHolder.getAuthenticatedUser();
+		
+		User user = this.findUserByEmail(userAuthencated.getEmail());
+		
+		if(user == null){
+			throw new Exception();
+		}
+		
+		user.setName(u.getName());
+		user.setRole(UserRole.USER);
+		
+		if(u.getNewPassword() != null) {	
+			final String encodedPassword = this.passwordEncoder.encodePassword( u.getNewPassword(), saltSource.getSalt( u ) ); 
+			user.setPassword( encodedPassword );
+		}
+		
+		return this.userRepository.save( user );
 	}
 	
 }
