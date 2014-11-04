@@ -127,8 +127,11 @@
 											>
 											<i class="glyphicon glyphicon-ok"></i>
 										</button>
-										<br> <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-											style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer"> <br>
+										<br> 
+										<div style="text-align:center">
+											<img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+												style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px"> <br>
+										</div>
 										<br>
 				
 										<div style=" overflow: auto;">
