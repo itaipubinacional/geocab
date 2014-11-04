@@ -127,6 +127,15 @@ public class MarkerService
 	public Marker updateMarker( Marker marker ) throws IOException, RepositoryException
 	{			
 		try{
+			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
+			
+			if(markerTemporary.getLayer().getId() != marker.getLayer().getId()) {
+				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
+				
+				if( markerAttributes != null ) {
+					this.markerAttributeRepository.deleteInBatch(markerAttributes);	
+				}
+			}
 			
 			FileTransfer file = this.findImgByMarker(marker.getId());
 			
