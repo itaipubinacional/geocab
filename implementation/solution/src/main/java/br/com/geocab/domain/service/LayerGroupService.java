@@ -705,7 +705,8 @@ public class LayerGroupService
 			
 			for(Attribute attributeInLayer : layer.getAttributes()) 
 			{
-				if(	attributeInLayer.getId().equals(attribute.getId()) ) 
+				attributeInLayer.setId(attributeInLayer.getTemporaryId());
+				if(	attributeInLayer.getId().equals(attribute.getTemporaryId()) ) 
 				{
 					attributeDeleted = false;
 					break;
@@ -719,19 +720,23 @@ public class LayerGroupService
 			
 		}
 		
-		//List<MarkerAttribute> ma = this.markerAttributeRepository.listAttributeByMarker(140L);
+		for(Attribute attribute : attributesByLayerToDelete) {
+			List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listMarkerAttributeByAttribute(attribute.getTemporaryId());
+			
+			if( markerAttributes != null ) {
+				this.markerAttributeRepository.deleteInBatch(markerAttributes);	
+			}
+			
+		}
 		
-		
-		//for(Attribute attribute : attributesByLayerToDelete){
-			//List<MarkerAttribute> ma = this.markerAttributeRepository.listAttributeByMarker(140L);
-			//this.markerAttributeRepository.delete(ma);	
-		//}
+		final List<Attribute> attributesByLayerToDeleteTemporary = new ArrayList<Attribute>();
+		for(Attribute attribute : attributesByLayerToDelete) {
+			attributesByLayerToDeleteTemporary.add(this.attributeRepository.findOne(attribute.getTemporaryId()));
+		}
 		
 		if(attributesByLayerToDelete != null) {
-			this.attributeRepository.delete(attributesByLayerToDelete);
+			this.attributeRepository.deleteInBatch(attributesByLayerToDeleteTemporary);
 		}
-			
-		
 		
 		/* Na atualização não foi permitido modificar a fonte de dados, camada e títuulo, dessa forma, 
 		Os valores originais são mantidos. */
@@ -765,7 +770,7 @@ public class LayerGroupService
 	public Layer findLayerById( Long id )
 	{
 		final Layer layer = this.layerRepository.findOne(id);
-		layer.setAttributes(this.attributeRepository.listAttributeByLayer(id));
+		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));
 		
 		// traz a legenda da camada do GeoServer
 		if( layer.getDataSource().getUrl() != null ) {
