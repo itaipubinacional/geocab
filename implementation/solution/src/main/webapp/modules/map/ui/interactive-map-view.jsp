@@ -563,92 +563,96 @@
                 </li>
 			</ul>
 
-			<div id="sidebar-layers" class="sidebar-style">
-				<div class="sidebar-coloredbar"></div>
-				<span ng-click="toggleSidebarMenu(300, 'closeButton')"
-					class="icon itaipu-icon-close sidebar-close"></span>
-
-				<div id="tabs-1" ng-switch="LAYER_MENU_STATE">
-					<div ng-switch-when="list">
-						<div id="layer-list">
-							<div>
-								<div class="sidebar-content-header">Camadas</div>
+			<div id="sidebar-layers" class="sidebar-style rui-resizable-left resizable-test-block" style="min-width: 384px" >
+				<!--  <div class="sidebar-coloredbar"></div> -->
+				
+					<div class='rui-resizable-content' style="position: static;">
+					
+						<span style="z-index: 1000;" ng-click="toggleSidebarMenu(300, 'closeButton')"
+						class="icon itaipu-icon-close sidebar-close"></span>
+	
+						<div id="tabs-1" ng-switch="LAYER_MENU_STATE" style="position: absolute; top:0; right:0; left:0; bottom:0">
+							<div ng-switch-when="list">
+								<div id="layer-list">
+									<div>
+										<div class="sidebar-content-header">Camadas</div>
+										<br style="clear: both;">
+										<div class="form-item-horizontal radio"
+											style="margin-left: 0; margin-top: 40px">
+											<input type="radio" id="osm" ng-model="mapConf.type"
+												value="osm" ng-click="initializeOSM()"> <label
+												class="radio-label" for="osm"> Open Street View </label>
+										</div>
+										<br />
+										<div class="form-item-horizontal radio" style="margin-left: 0;">
+											<input type="radio" id="googleMap" ng-model="mapConf.type"
+												value="gmap" ng-click="initializeGMAP()"> <label
+												class="radio-label" for="googleMap"> Google Maps </label>
+										</div>
+										<br />
+										<div class="form-item-horizontal radio" style="margin-left: 0;">
+											<input type="radio" id="mapQuest" ng-model="mapConf.type"
+												value="mapQuest" ng-click="initializeMapQuestOSM()"> <label
+												class="radio-label" for="mapQuest"> MapQuest </label>
+										</div>
+									</div>
+								</div>
+		
+								<div
+									style="overflow-x: auto; position: absolute; top: 210px; bottom: 0px; left: 20px; right: 0px;">
+		
+									<div ng-show="allLayers.length > 0">
+										<input type="text" ng-model="bagSearch"
+											placeholder="Grupo ou layer"
+											class="sidebar-content-search form-control" />
+									</div>
+		
+									<div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
+										ivh-treeview-label-attribute="'label'"
+										ivh-treeview-legend-attribute="'legenda'"
+										ivh-treeview-children-attribute="'children'"
+										ivh-treeview-filter="filter:bagSearch"></div>
+		
+		
+									<br />
+								</div>
+							</div>
+		
+							<div id="layer-legend-detail" ng-switch-when="legend_detail">
+								<div class="sidebar-content-header" ng-click="exitLegendDetail()"
+									style="cursor: pointer;">
+									<span style="font-size: 17px;">&#x2190;</span> Camadas
+								</div>
 								<br style="clear: both;">
-								<div class="form-item-horizontal radio"
-									style="margin-left: 0; margin-top: 40px">
-									<input type="radio" id="osm" ng-model="mapConf.type"
-										value="osm" ng-click="initializeOSM()"> <label
-										class="radio-label" for="osm"> Open Street View </label>
-								</div>
-								<br />
-								<div class="form-item-horizontal radio" style="margin-left: 0;">
-									<input type="radio" id="googleMap" ng-model="mapConf.type"
-										value="gmap" ng-click="initializeGMAP()"> <label
-										class="radio-label" for="googleMap"> Google Maps </label>
-								</div>
-								<br />
-								<div class="form-item-horizontal radio" style="margin-left: 0;">
-									<input type="radio" id="mapQuest" ng-model="mapConf.type"
-										value="mapQuest" ng-click="initializeMapQuestOSM()"> <label
-										class="radio-label" for="mapQuest"> MapQuest </label>
+								<div class="legend-detail-title">{{legendDetailTitle}}</div>
+								<hr>
+								<div class="legend-image-container">
+									<img ng-src="{{legendDetailImage}}" style="padding: 10px;">
 								</div>
 							</div>
+		
 						</div>
-
-						<div
-							style="overflow-x: auto; position: absolute; top: 210px; bottom: 0px; left: 20px; right: 0px;">
-
-							<div ng-show="allLayers.length > 0">
-								<input type="text" ng-model="bagSearch"
-									placeholder="Grupo ou layer"
-									class="sidebar-content-search form-control" />
-							</div>
-
-							<div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
-								ivh-treeview-label-attribute="'label'"
-								ivh-treeview-legend-attribute="'legenda'"
-								ivh-treeview-children-attribute="'children'"
-								ivh-treeview-filter="filter:bagSearch"></div>
-
-
-							<br />
-						</div>
-					</div>
-
-					<div id="layer-legend-detail" ng-switch-when="legend_detail">
-						<div class="sidebar-content-header" ng-click="exitLegendDetail()"
-							style="cursor: pointer;">
-							<span style="font-size: 17px;">&#x2190;</span> Camadas
-						</div>
-						<br style="clear: both;">
-						<div class="legend-detail-title">{{legendDetailTitle}}</div>
-						<hr>
-						<div class="legend-image-container">
-							<img ng-src="{{legendDetailImage}}" style="padding: 10px;">
-						</div>
-					</div>
-
-				</div>
-				<div id="tabs-3">
-
-                    <div class="sidebar-content-header">Arquivos KML</div>
-                    <br style="clear: both; ">
-
-                    <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
-                        Nenhum arquivo KML habilitado
-                    </div>
-
-                    <div style="overflow-x: auto;position: absolute;top: 110px;bottom: 0px;left: 20px;right: 0px;">
-                        <div id="tree-kml"
-                             ivh-treeview="allLayersKML"
-                             ivh-fn="getSelectedKMLNode"
-                             ivh-treeview-label-attribute="'label'"
-                             ivh-treeview-children-attribute="'children'">
-                        </div>
-                    </div>
-
-                </div>
-                
+						<div id="tabs-3" style="position: absolute; top:0; right:0; left:0; bottom:0">
+		
+		                    <div class="sidebar-content-header">Arquivos KML</div>
+		                    <br style="clear: both; ">
+		
+		                    <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
+		                        Nenhum arquivo KML habilitado
+		                    </div>
+		
+		                    <div style="overflow-x: auto;position: absolute;top: 110px;bottom: 0px;left: 20px;right: 0px;">
+		                        <div id="tree-kml"
+		                             ivh-treeview="allLayersKML"
+		                             ivh-fn="getSelectedKMLNode"
+		                             ivh-treeview-label-attribute="'label'"
+		                             ivh-treeview-children-attribute="'children'">
+		                        </div>
+		                    </div>
+		
+		                </div>
+	              </div>
+	              <div class='rui-resizable-handle' style="background: #0077bf; width: 3px"></div>
 			</div>
 		</div>
 
