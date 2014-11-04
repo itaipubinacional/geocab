@@ -55,7 +55,8 @@
 			
 			 <span  ng-show="form_add_attribute.$submitted && form_add_attribute.select.$error.required" class="tooltip-validation" style="right:16px;top:62px;"><spring:message code="admin.users.Field-required" /></span>
 			
-			<spring:message code="Required" /> </br><input  type="checkbox" ng-model="currentEntity.required">
+			<input  type="checkbox" ng-model="currentEntity.required">
+			<spring:message code="Required" /> 
      
         </form>
         
