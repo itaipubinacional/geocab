@@ -13,7 +13,7 @@
     
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Hello <sec:authentication property="principal.name"/></title>
+		<title>GEOCAB - Cultivando água boa </title>
 		
 		<!-- Styles -->
 		<jsp:include page="../../default-styles.jsp"/>
