@@ -251,7 +251,7 @@ public class MarkerDelegate extends AbstractDelegate
      */
     public void downloadMarkerPicture(final Marker marker)
     {
-        String url =  "http://192.168.20.122:8080/geocab/files/markers/"+marker.getId()+"/download";
+        String url =  "http://geocab.sbox.me/files/markers/"+marker.getId()+"/download";
 
         ImageRequest jReq = new ImageRequest(url, new Response.Listener<Bitmap>() {
 
