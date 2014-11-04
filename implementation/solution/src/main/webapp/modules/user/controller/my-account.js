@@ -125,6 +125,7 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 			}
 		}
 		
+		$scope.flag = 0;
 	};
 	
 	/**
@@ -138,16 +139,23 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	
 	$scope.updateUser = function() {
 		
-		if($scope.currentEntity.newPassword != $scope.currentEntity.repeatNewPassword) {
-			$scope.msg = {type:"danger", text: "As senhas não coincidem" + '!', dismiss:true};
-			return false;
+		if(!$scope.form('form').$valid ){
+			$scope.msg = {type:"danger", text: $translate("admin.users.The-highlighted-fields-are-required") , dismiss:true};
+			$scope.fadeMsg();
+			return;
 		}
+		
+//		if($scope.currentEntity.newPassword != $scope.currentEntity.repeatNewPassword) {
+//			$scope.msg = {type:"danger", text: "As senhas não coincidem" + '!', dismiss:true};
+//			return false;
+//		}
 		delete $scope.currentEntity.repeatNewPassword;
 		
 		accountService.updateUserAuthenticated($scope.currentEntity, {
     		callback : function(result) {
     			$scope.currentEntity = result;
-    			$scope.msg = {type:"success", text: "Informações atualizadas com sucesso" + '!', dismiss:true};
+    			$scope.msg = {type:"success", text: $translate("admin.user.Successfully-updated-informations") + '!', dismiss:true};
+    			$scope.fadeMsg();
     			$scope.$apply();
             },
             errorHandler : function(message, exception) {
@@ -158,5 +166,32 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		
 	}
 	
-
+	$scope.fadeMsg = function(){
+		$("div.msg").show();
+		  
+		setTimeout(function(){
+		  	$("div.msg").fadeOut();
+		 }, 3000);
+	}
+	
+	$scope.passwordRequired = function(){
+		if( $('#password').val() != '' ){
+			return true;
+		}
+	}
+	
+	
+	$('#buttonUpdate').click(function(){
+		$scope.flag = 1;
+	}) 
+			
+	$(document).click(function() {
+		if($scope.flag == 1){
+			$scope.flag = 0;
+		} else {
+			$("div.msg").css("display","none");
+			$scope.sim = 1;
+		}
+	});
+	
 };
