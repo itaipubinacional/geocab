@@ -262,12 +262,19 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
         }
         else if( view.getId() == R.id.btn_sign_in )
         {
-            SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
-            SplashScreenActivity.prefEditor.putString("password", editTextPassword.getText().toString());
-            SplashScreenActivity.prefEditor.commit();
+            if( editTextUsername.getText().length() == 0 || editTextPassword.getText().length() == 0 )
+            {
+                Toast.makeText(this, R.string.fill_login, Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
+                SplashScreenActivity.prefEditor.putString("password", editTextPassword.getText().toString());
+                SplashScreenActivity.prefEditor.commit();
 
-            final byte[] credentials = ( editTextUsername.getText() + ":" + editTextPassword.getText() ).getBytes();
-            accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP), true);
+                final byte[] credentials = ( editTextUsername.getText() + ":" + editTextPassword.getText() ).getBytes();
+                accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP), true);
+            }
         }
     }
 
@@ -294,8 +301,6 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
                                       Exception exception) {
         if (state.isOpened()) {
             Log.d(TAG, "Logged in...");
-            Session.OpenRequest request = new Session.OpenRequest((Activity) this);
-            request.setPermissions(Arrays.asList("email"));
         } else if (state.isClosed()) {
             Log.d(TAG, "Logged out...");
         } else {
