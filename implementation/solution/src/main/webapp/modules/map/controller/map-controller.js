@@ -1586,9 +1586,42 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 	          }
 		    	});
 	    	
+	    	$scope.attributesByLayer = [];
+			$scope.showNewAttributes = false;
+	    	
 	    	markerService.listAttributeByMarker($scope.marker.id, {
 			  callback : function(result) {
 				  $scope.attributesByMarker = result;   
+				  
+				  layerGroupService.listAttributesByLayer($scope.marker.layer.id,{
+		          		callback : function(result) {
+		          			$scope.attributesByLayer = [];
+		          			
+		          			angular.forEach(result, function(attribute, index){
+			          				
+		          					var exist = false;
+		          					
+		          					angular.forEach($scope.attributesByMarker, function(attributeByMarker, index){
+		          					
+			          					if(attributeByMarker.attribute.id == attribute.id){
+			          						exist = true;
+			          					}
+			          				});
+			          				
+			          				if( !exist ) {
+			          					$scope.attributesByLayer.push(attribute);
+			          					$scope.showNewAttributes = true;
+			          				}
+			          				
+			          			});
+		          			
+		                      $scope.$apply();
+		                  },
+		                  errorHandler : function(message, exception) {
+		                      $scope.message = {type:"error", text: message};
+		                      $scope.$apply();
+		                  }
+		          	});
 				  
 				  angular.forEach(result,function(markerAttribute,index){
 					if (markerAttribute.attribute.type == "NUMBER") {
@@ -1802,10 +1835,28 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		}
     		
     		i++;    		
-    	})
-    	
+    	});
+
     	$scope.currentEntity.markerAttribute = $scope.attributesByMarker;
+    	
+    	angular.forEach($scope.attributesByLayer, function(val,ind){
     		
+    		var attribute = new Attribute();
+    		attribute.id = val.id;
+
+    		var markerAttribute = new MarkerAttribute();
+    		if (val.value != "" && val.value != undefined){
+    			markerAttribute.value = val.value;
+    		} else {
+    			markerAttribute.value = "";
+    		}
+    		
+    		markerAttribute.attribute = attribute
+    		markerAttribute.marker = $scope.currentEntity;
+    		$scope.currentEntity.markerAttribute.push(markerAttribute);
+    		
+    	});
+    	
     	markerService.updateMarker($scope.currentEntity,{
       		callback : function(result) {
       		      			
@@ -1821,28 +1872,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
-            	  if(message == "Empty reply from the server") {
-	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-	      			  
-	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
-	      				   $scope.addInternalLayer(layerId);
-	      			  })
-
-          			  $scope.clearDetailMarker();
-        			  
-        			  $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
-        			  $("div.msgMap").show();
-        			  
-        			  setTimeout(function(){
-        				  $("div.msgMap").fadeOut();
-        			  }, 5000);
-          			  
-            	  } else {
-            		  $scope.message = {type:"error", text: message};
-                      $scope.$apply();
-            	  }
-            	  
-                  
+        		  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
               }
       	});
 
@@ -1900,29 +1931,75 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
-            	  if(message == "Empty reply from the server") {
-	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-	      			  
-	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
-	      				   $scope.addInternalLayer(layerId);
-	      			  })
-
-          			  $scope.clearFcMarker();
-        			  
-        			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
-        			  $("div.msgMap").show();
-        			  
-        			  setTimeout(function(){
-        				  $("div.msgMap").fadeOut();
-        			  }, 5000);
-          			  
-            	  } else {
-	                  $scope.message = {type:"error", text: message};
-	                  $scope.$apply();
-            	  }
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
               }
       	});
 
+    }
+    
+    $scope.showAttributesAlone = false;
+    $scope.showNewAttributes = false;
+    $scope.listAttributesByLayerUpdate = function(){
+//    	var iconStyle = new ol.style.Style({
+//            image: new ol.style.Icon(({
+//                anchor: [0.5, 1],
+//                anchorXUnits: 'fraction',
+//                anchorYUnits: 'fraction',
+//                src: $scope.currentEntity.layer.layerIcon
+//            }))
+//        });
+//    	$scope.currentCreatingInternalLayer.setStyle(iconStyle);
+    	$scope.showAttributesAlone = true;
+    	
+    	if($scope.attributesByMarker.length > 0) {
+	    	if($scope.attributesByMarker[0].marker.layer.id == $scope.currentEntity.layer.layerId) {
+	    		$scope.showAttributesAlone = false;
+	    		
+	    		layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
+	          		callback : function(result) {
+	          			$scope.attributesByLayer = [];
+	          			
+	          			angular.forEach(result, function(attribute, index){
+		          				
+	          					var exist = false;
+	          					
+	          					angular.forEach($scope.attributesByMarker, function(attributeByMarker, index){
+	          					
+		          					if(attributeByMarker.attribute.id == attribute.id){
+		          						exist = true;
+		          					}
+		          				});
+		          				
+		          				if( !exist ) {
+		          					$scope.attributesByLayer.push(attribute);
+		          					$scope.showNewAttributes = true;
+		          				}
+		          				
+		          			});
+	          			
+	                      $scope.$apply();
+	                  },
+	                  errorHandler : function(message, exception) {
+	                      $scope.message = {type:"error", text: message};
+	                      $scope.$apply();
+	                  }
+	          	});
+	    		
+	    		return false;
+	    	}
+    	}
+    	 
+    	  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
+      		callback : function(result) {
+                  $scope.attributesByLayer = result;
+                  $scope.$apply();
+              },
+              errorHandler : function(message, exception) {
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
+              }
+      	});
     }
     
     $scope.listAttributesByLayer = function(){
