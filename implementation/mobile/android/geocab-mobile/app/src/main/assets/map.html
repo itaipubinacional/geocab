@@ -85,7 +85,7 @@
 
         function showMarker(lat, lon, markerId, markerUser, markerDate, name, icon) {
 
-            var layerIcon = "file:///android_res/drawable/"+icon;
+            var layerIcon = "file:///android_res/drawable/"+icon+".png";
 
             var iconFeature = new ol.Feature({
                 geometry: new ol.geom.Point([lat, lon]),
@@ -98,8 +98,8 @@
             //create the style
             var iconStyle = new ol.style.Style({
                 image: new ol.style.Icon( /** @type {olx.style.IconOptions} */ ({
-                    size: [48, 48],
-                    src: layerIcon
+                    size: [25, 25],
+                    src: 'file:///android_res/drawable/'+icon+'.png'
                 }))
             });
 
