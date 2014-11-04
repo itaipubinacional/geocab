@@ -24,8 +24,8 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/	
 	/**
-	 * @param filter
-	 * @param pageable
+	 * 
+	 * @param markerId
 	 * @return
 	 */
 	@Query(value="SELECT new MarkerAttribute( markerAttribute.id, markerAttribute.value, marker, attribute ) " +
@@ -35,4 +35,16 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 				 " WHERE (markerAttribute.marker.id = :markerId)")
 	public List<MarkerAttribute> listAttributeByMarker( @Param("markerId") Long markerId );
 	
+	/**
+	 * 
+	 * @param layerId
+	 * @return
+	 */
+	@Query(value="SELECT new MarkerAttribute(  markerAttribute.id, markerAttribute.value, marker, attribute ) " +
+				 " FROM MarkerAttribute markerAttribute "+  
+				 " LEFT OUTER JOIN markerAttribute.marker marker " + 
+				 " LEFT OUTER JOIN markerAttribute.attribute attribute " + 
+				 " WHERE (attribute.id = :attributeId)")
+	public List<MarkerAttribute> listMarkerAttributeByAttribute( @Param("attributeId") Long attributeId );
+		
 }
