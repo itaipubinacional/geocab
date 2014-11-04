@@ -11,8 +11,12 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
     
+
 <!-- JQuery -->
 <script type="text/javascript" src="<c:url value="/webjars/jquery/2.1.1/jquery.min.js"/>"></script> <!-- FIXME Tirar as versoes -->
+<script type="text/javascript" src="<c:url value="/static/libs/jquery-resize/jquery.resize.js"/>"></script>
+
+ 
 
 
 <!-- JQuery UI -->
@@ -47,5 +51,8 @@
 <script type="text/javascript" src="<c:url value="/static/libs/activity-dialog.js"/>"></script>
 
 <script type="text/javascript" src="broker/interface/loginService.js"></script>
+
+
+	
 
 

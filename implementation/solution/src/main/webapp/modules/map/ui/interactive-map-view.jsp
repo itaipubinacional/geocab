@@ -56,420 +56,430 @@
 
 
 
-		<div id="sidebar-marker-detail-update" class="sidebar-style"  >
+		<div id="sidebar-marker-detail-update" class="sidebar-style rui-resizable-left resizable-test-block" style="min-width: 384px" >
 
-
-			<form name="sidebarMarkerDetail" ng-show="screen == 'detail'">
-
-				<div style="height:650px;">
-					<div class="sidebar-coloredbar"></div>
-					<div style="height: 35px">
-						<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
-									class="icon itaipu-icon-close sidebar-close"
-									title="<spring:message code="map.Close" />"
-									></span>
-						</div>			
-					<accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret">
-			            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' }"> 
-			            
-			                <accordion-heading>
-			                    <div style="cursor:pointer; padding: 10px 0;">
-			                    	<i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-			                        <span ng-if="feature.type == 'internal'" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
-			                        <span ng-if="feature.type == 'external'">{{feature.feature.layer.titulo}}</span>
-			                        
-			                    </div>
-			                </accordion-heading>
-			                
-			                
-			                <span ng-if="feature.type == 'internal'">
+			<div class='rui-resizable-content' style="position: static;">
+				<form name="sidebarMarkerDetail" ng-show="screen == 'detail'">
+	
+					<div style="position: absolute; top:0; right:0; left:0; bottom:0">
+						<!-- <div class="sidebar-coloredbar"></div> -->
+						<div style="height: 35px">
+							<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
+										class="icon itaipu-icon-close sidebar-close"
+										title="<spring:message code="map.Close" />"
+										></span>
+							</div>			
+						<accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret">
+				            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' }"> 
+				            
+				                <accordion-heading>
+				                    <div style="cursor:pointer; padding: 10px 0;">
+				                    	<i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+				                        <span ng-if="feature.type == 'internal'" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
+				                        <span ng-if="feature.type == 'external'">{{feature.feature.layer.titulo}}</span>
+				                        
+				                    </div>
+				                </accordion-heading>
 				                
-								<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="height: 100%; width: 100%; padding: 0;">
-									
-									<span
-										style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
-										marker.layer.title }}</span> <br style="clear: both;"> <br> <span
-										style="float: left">Criado por: <b>{{ marker.user.name
-											}}</b></span> <span style="float: right">{{ marker.created |
-										date:'dd/MM/yyyy' }}</span>
-									<hr>
-			
-									<button
-										ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
-										style="float: right;" 
-										class="btn btn-default"
-										title="<spring:message code="map.Delete"/>"
-										ng-click="removeMarker()">
-										<i class="itaipu-icon-delete"></i>
-									</button>
-									<button		
-										ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
-										style="float: right; margin-right: 5px" class="btn btn-default"
-										ng-click="changeToScreen('update')"
-										title="<spring:message code="map.Update"/>"
-										>
-										<i class="itaipu-icon-edit"></i>
-									</button>
-									<button
-										ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')"
-										style="float: right; margin-right: 5px; color: red;"
-										ng-click="disableMarker()" class="btn btn-default"
-										title="<spring:message code="map.Disable"/>"
-										>
-										<i class="glyphicon glyphicon-ban-circle"></i>
-									</button>
-									<button
-										ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'REFUSED' || marker.status == 'PENDING')"
-										style="float: right; margin-right: 5px; color: #00981F"
-										ng-click="enableMarker()" 
-										class="btn btn-default"
-										title="<spring:message code="map.Enable"/>"
-										>
-										<i class="glyphicon glyphicon-ok"></i>
-									</button>
-									<br> <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-										style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer"> <br>
-									<br>
-			
-									<div style=" overflow: auto;">
-										<div ng-repeat="markerAttribute in attributesByMarker track by $index" style="position: relative;margin-bottom:15px">
+				                
+				                <span ng-if="feature.type == 'internal'">
+					                
+									<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="height: 100%; width: 100%; padding: 0;">
 										
-												<label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
-													<input
-													type="number" name="number1"
-													ng-if="markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '' "
-													class="form-control" ng-model="markerAttribute.value"									
-													required ng-disabled="true"
-													> 
-																					
-													<input type="date"
-													name="date1" 
-													ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
-													class="form-control" ng-model="markerAttribute.value"									
-													required 
-													ng-disabled="true"
-													>
-			
-												<div ng-if="markerAttribute.attribute.type == 'BOOLEAN' && !markerAttribute.value == ''">
-													<input 
-														ng-disabled="true" type="radio"
-														ng-checked="markerAttribute.value == 'Yes'"
-														ng-model="markerAttribute.value" 
-														value="Yes"
+										<span
+											style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
+											marker.layer.title }}</span> <br style="clear: both;"> <br> <span
+											style="float: left">Criado por: <b>{{ marker.user.name
+												}}</b></span> <span style="float: right">{{ marker.created |
+											date:'dd/MM/yyyy' }}</span>
+										<hr>
+				
+										<button
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+											style="float: right;" 
+											class="btn btn-default"
+											title="<spring:message code="map.Delete"/>"
+											ng-click="removeMarker()">
+											<i class="itaipu-icon-delete"></i>
+										</button>
+										<button		
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+											style="float: right; margin-right: 5px" class="btn btn-default"
+											ng-click="changeToScreen('update')"
+											title="<spring:message code="map.Update"/>"
+											>
+											<i class="itaipu-icon-edit"></i>
+										</button>
+										<button
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')"
+											style="float: right; margin-right: 5px; color: red;"
+											ng-click="disableMarker()" class="btn btn-default"
+											title="<spring:message code="map.Disable"/>"
+											>
+											<i class="glyphicon glyphicon-ban-circle"></i>
+										</button>
+										<button
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'REFUSED' || marker.status == 'PENDING')"
+											style="float: right; margin-right: 5px; color: #00981F"
+											ng-click="enableMarker()" 
+											class="btn btn-default"
+											title="<spring:message code="map.Enable"/>"
+											>
+											<i class="glyphicon glyphicon-ok"></i>
+										</button>
+										<br> <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+											style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer"> <br>
+										<br>
+				
+										<div style=" overflow: auto;">
+											<div ng-repeat="markerAttribute in attributesByMarker track by $index" style="position: relative;margin-bottom:15px">
+											
+													<label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
+														<input
+														type="number" name="number1"
+														ng-if="markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '' "
+														class="form-control" ng-model="markerAttribute.value"									
+														required ng-disabled="true"
+														> 
+																						
+														<input type="date"
+														name="date1" 
+														ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
+														class="form-control" ng-model="markerAttribute.value"									
+														required 
+														ng-disabled="true"
 														>
-														<spring:message code="map.No" /> 
-														
-													<input
-														ng-disabled="true" type="radio"
-														ng-checked="markerAttribute.value == 'No'"
-														ng-model="markerAttribute.value" 
-														value="No"
-														>
-														<spring:message code="map.No" />
-												</div>
-			
-												<input type="text"
-													ng-if="markerAttribute.attribute.type == 'TEXT' && !markerAttribute.value == ''" 
-													name="texto"
-													class="form-control" ng-model="markerAttribute.value"
-													required ng-disabled="true"> 
-																	
+				
+													<div ng-if="markerAttribute.attribute.type == 'BOOLEAN' && !markerAttribute.value == ''">
+														<input 
+															ng-disabled="true" type="radio"
+															ng-checked="markerAttribute.value == 'Yes'"
+															ng-model="markerAttribute.value" 
+															value="Yes"
+															>
+															<spring:message code="map.No" /> 
+															
+														<input
+															ng-disabled="true" type="radio"
+															ng-checked="markerAttribute.value == 'No'"
+															ng-model="markerAttribute.value" 
+															value="No"
+															>
+															<spring:message code="map.No" />
+													</div>
+				
+													<input type="text"
+														ng-if="markerAttribute.attribute.type == 'TEXT' && !markerAttribute.value == ''" 
+														name="texto"
+														class="form-control" ng-model="markerAttribute.value"
+														required ng-disabled="true"> 
+																		
+											</div>
 										</div>
 									</div>
-								</div>
-			               </span>
-			               
-			               <span ng-if="feature.type == 'external'">
-				               <span ng-repeat="(key, value) in feature.feature.campos" >
-				                   <b>{{key}}</b> - {{value}}
-				                   </br>
 				               </span>
-			               </span>
-			            </accordion-group>
-			
-			        </accordion>
-        
-				</div>
-			</form>
-			
-			<form name="sidebarMarkerUpdate" method="post" ng-show="screen == 'update'"
-				default-button="buttonInsert" novalidate >
-				<div style="height:737px">
-					<div class="sidebar-coloredbar"></div>
-					<div>
-						<button
-							ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
-							style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
-							ng-click="changeToScreen('detail')"
-							title="<spring:message code="map.Back" />"						
-							>							
-							<
-						</button>
-							
-						<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
-							class="icon itaipu-icon-close sidebar-close"
-							title="<spring:message code="map.Close" />"></span>
+				               
+				               <span ng-if="feature.type == 'external'">
+					               <span ng-repeat="(key, value) in feature.feature.campos" >
+					                   <b>{{key}}</b> - {{value}}
+					                   </br>
+					               </span>
+				               </span>
+				            </accordion-group>
+				
+				        </accordion>
+	        
 					</div>
-					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:100%; width: 100%; padding: 10px;">
-						<div class="sidebar-content-header">Editar postagem</div>
-						
-						<br style="clear: both;"> <br> 
-						<label>Camada</label>
-						<div style="margin-bottom:5px;">
+				</form>
+				
+				<form name="sidebarMarkerUpdate" method="post" ng-show="screen == 'update'"
+					default-button="buttonInsert" novalidate >
+					<div style="position: absolute; top:0; right:0; left:0; bottom:0">
+						<!-- <div class="sidebar-coloredbar"></div> -->
+						<div>
+							<button
+								ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+								style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
+								ng-click="changeToScreen('detail')"
+								title="<spring:message code="map.Back" />"						
+								>							
+								<
+							</button>
+								
+							<span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
+								class="icon itaipu-icon-close sidebar-close"
+								title="<spring:message code="map.Close" />"></span>
+						</div>
+						<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:95%; width: 100%; padding: 10px;">
+							<div class="sidebar-content-header">Editar postagem</div>
+							
+							<br style="clear: both;"> <br> 
+							<label>Camada</label>
+							<div style="margin-bottom:5px;">
+								<select ng-change="listAttributesByLayer()"
+									data-placeholder="Selecione uma camada" name="camada"
+									ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
+									ng-model="currentEntity.layer" chosen class="form-control"
+									ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}"
+									required>
+									<option value=""></option>							
+								</select> 
+							</div>
+							<span class="tooltip-validation"
+								ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
+								style="top: -20px">Campo Obrigatório</span> <br>
+	
+							
+							<div ng-repeat="markerAttribute in attributesByMarker"
+								style="position: relative;margin-bottom:15px;">
+	
+								<ng-form name="ngSideMarker" default-button="buttonUpdate">
+								<label  ng-style="$index > 0 ? {'margin-top':'15px'} : '' ">{{ markerAttribute.attribute.name }}</label> 
+								
+									<input
+										type="number" 
+										name="number1"
+										ng-if="markerAttribute.attribute.type == 'NUMBER'"
+										class="form-control"
+										ng-model="markerAttribute.value"
+										ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+										ng-required="markerAttribute.attribute.required"
+										> 
+									
+									<input								
+										type="date" name="date1"
+										ng-if="markerAttribute.attribute.type == 'DATE'"
+										class="form-control" ng-model="markerAttribute.value"
+										ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+										required
+										ng-required="markerAttribute.attribute.required"
+										>								
+	
+								<div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
+	
+									<input 
+										type="radio" 
+										ng-checked="markerAttribute.value == 'Yes'"
+										ng-model="markerAttribute.value" 
+										value="Yes"
+										>
+										<spring:message code="map.Yes" /> 
+										
+									<input
+										type="radio" 
+										ng-checked="markerAttribute.value == 'No'"
+										ng-model="markerAttribute.value" 
+										value="No"
+										>
+										<spring:message code="map.No" />
+										
+								</div>
+	
+								<input type="text"
+									ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
+									class="form-control" ng-model="markerAttribute.value"
+									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+									ng-required="markerAttribute.attribute.required"
+									> 
+									
+									<span class="tooltip-validation"
+										ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"
+										style="top: 3px"> Campo Obrigatório
+									</span> 
+									
+									<span
+										class="tooltip-validation"
+										ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
+										style="top: 3px" >Campo Obrigatório
+									</span> 
+									
+									<span
+										class="tooltip-validation"
+										ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
+										style="top: 3px">Precisa ser um numero
+									</span> 
+									
+									<span
+										class="tooltip-validation"
+										ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
+										style="top: 3px">Campo Obrigatório
+									</span> 
+								<ng-form>
+							
+							</div>
+	
+							<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
+							<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
+	
+							<br>
+							 <img  ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+								style="width: 100%; height: 200px; margin-top: 12px;"> <br>
+							<br>
+							
+							<hr>
+	
+							<input type="file" id="upload-input" style="display: none;"
+								accept="image/*"
+								onchange="angular.element(this).scope().setPhotoMarker(this)" />
+	
+							<button class="btn btn-default"
+								onclick="angular.element('#upload-input').click();"
+								style="float: left;"
+								title="<spring:message code="map.Picture"/>"
+								>
+								<span class="glyphicon glyphicon-picture"></span>
+							</button>
+	
+							<button 
+								id="buttonUpdate"
+						   		class="btn btn-primary"
+								ng-click="updateMarker()" 
+								style="float: right"
+								title="<spring:message code="map.Submit" />"
+								>
+								
+								<spring:message code="map.Submit" />
+								
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class='rui-resizable-handle' style="background: #0077bf; width: 3px"></div>
+		</div>
+
+		<div id="sidebar-marker-create" style="min-width: 384px" class="sidebar-style rui-resizable-left resizable-test-block">
+		
+			<div class='rui-resizable-content' style="position: static;">
+	  
+				<form name="sidebarMarker" method="post"
+					default-button="buttonInsert" novalidate>
+					
+						<!--  <div class="sidebar-coloredbar"></div>-->
+						<span ng-click="clearFcMarker()"
+							style="z-index: 10000"
+							class="icon itaipu-icon-close sidebar-close"
+							title="<spring:message code="map.Close" />"
+							></span>
+						<div style="position: absolute; left: 0; right: 0; bottom: 0; top: 0">
+						<div id="tabs-2" ng-switch="LAYER_MENU_STATE" style="overflow:auto; width: auto" class="container">
+							<div class="sidebar-content-header"><spring:message code="map.New-post" /></div>
+							<br style="clear: both;"> <br> <label>Camada</label>
+	
+							<!-- no-results-text="Nenhum registro encontrado com" -->
+	
 							<select ng-change="listAttributesByLayer()"
 								data-placeholder="Selecione uma camada" name="camada"
 								ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
 								ng-model="currentEntity.layer" chosen class="form-control"
-								ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}"
-								required>
-								<option value=""></option>							
+								ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+								required				
+								>
+								<option value=""></option>
 							</select> 
-						</div>
-						<span class="tooltip-validation"
-							ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
-							style="top: -20px">Campo Obrigatório</span> <br>
-
-						
-						<div ng-repeat="markerAttribute in attributesByMarker"
-							style="position: relative;margin-bottom:15px;">
-
-							<ng-form name="ngSideMarker" default-button="buttonUpdate">
-							<label  ng-style="$index > 0 ? {'margin-top':'15px'} : '' ">{{ markerAttribute.attribute.name }}</label> 
 							
-								<input
-									type="number" 
-									name="number1"
-									ng-if="markerAttribute.attribute.type == 'NUMBER'"
-									class="form-control"
-									ng-model="markerAttribute.value"
-									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-									ng-required="markerAttribute.attribute.required"
+							<span class="tooltip-validation"
+								ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
+								style="top: -20px">Campo Obrigatório</span> <br>
+	
+							<div ng-repeat="attribute in attributesByLayer"
+								style="position: relative">
+								
+								<ng-form name="ngSideMarker" default-button="buttonInsert">
+								<label style="margin-top: 15px">{{ attribute.name }}</label> 
+								
+								<input type="number"
+									name="number1" ng-if="attribute.type == 'NUMBER'"
+									class="form-control" ng-model="attribute.value"
+									ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+									ng-required="attribute.required"
 									> 
-								
-								<input								
-									type="date" name="date1"
-									ng-if="markerAttribute.attribute.type == 'DATE'"
-									class="form-control" ng-model="markerAttribute.value"
-									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
-									required
-									ng-required="markerAttribute.attribute.required"
-									>								
-
-							<div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
-
-								<input 
-									type="radio" 
-									ng-checked="markerAttribute.value == 'Yes'"
-									ng-model="markerAttribute.value" 
-									value="Yes"
-									>
-									<spring:message code="map.Yes" /> 
 									
 								<input
-									type="radio" 
-									ng-checked="markerAttribute.value == 'No'"
-									ng-model="markerAttribute.value" 
-									value="No"
+									type="date" name="date1" ng-if="attribute.type == 'DATE'"
+									class="form-control" ng-model="attribute.value"
+									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+									ng-required="attribute.required"
 									>
-									<spring:message code="map.No" />
+	
+								<div ng-if="attribute.type == 'BOOLEAN'">
+	
+									<input type="radio" name="boolean" ng-model="attribute.value"
+										value="Yes"><spring:message code="map.Yes" /> 
+										
+									<input type="radio" name="boolean" ng-model="attribute.value" 
+										value="No"><spring:message code="map.No" /> 
+								</div>
+	
+								<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
+									class="form-control" ng-model="attribute.value"
+									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+									ng-required="attribute.required"
+									> 
 									
-							</div>
-
-							<input type="text"
-								ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
-								class="form-control" ng-model="markerAttribute.value"
-								ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-								ng-required="markerAttribute.attribute.required"
-								> 
-								
-								<span class="tooltip-validation"
-									ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px"> Campo Obrigatório
-								</span> 
-								
-								<span
+									<span
+									class="tooltip-validation"
+									ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
+									style="top: 3px">Campo Obrigatório
+									</span> 
+									
+									<span
 									class="tooltip-validation"
 									ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px" >Campo Obrigatório
-								</span> 
-								
-								<span
+									style="top: 3px">Campo Obrigatório
+									</span> 
+									
+									<span
 									class="tooltip-validation"
 									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-									style="top: 3px">Precisa ser um numero
-								</span> 
-								
-								<span
+									style="top: 3px">Campo Obrigatório
+									</span> 
+									
+									<span
 									class="tooltip-validation"
 									ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
 									style="top: 3px">Campo Obrigatório
-								</span> 
-							<ng-form>
-						
-						</div>
-
-						<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
-						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
-
-						<br>
-						 <img  ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-							style="width: 100%; height: 200px; margin-top: 12px;"> <br>
-						<br>
-						
-						<hr>
-
-						<input type="file" id="upload-input" style="display: none;"
-							accept="image/*"
-							onchange="angular.element(this).scope().setPhotoMarker(this)" />
-
-						<button class="btn btn-default"
-							onclick="angular.element('#upload-input').click();"
-							style="float: left;"
-							title="<spring:message code="map.Picture"/>"
-							>
-							<span class="glyphicon glyphicon-picture"></span>
-						</button>
-
-						<button 
-							id="buttonUpdate"
-					   		class="btn btn-primary"
-							ng-click="updateMarker()" 
-							style="float: right"
-							title="<spring:message code="map.Submit" />"
-							>
-							
-							<spring:message code="map.Submit" />
-							
-						</button>
-					</div>
-				</div>
-			</form>
-		</div>
-
-		<div id="sidebar-marker-create" class="sidebar-style">
-			<form name="sidebarMarker" method="post"
-				default-button="buttonInsert" novalidate>
-				
-					<div class="sidebar-coloredbar"></div>
-					<span ng-click="clearFcMarker()"
-						class="icon itaipu-icon-close sidebar-close"
-						title="<spring:message code="map.Close" />"
-						></span>
-					<div style="height:737px">
-					<div id="tabs-2" ng-switch="LAYER_MENU_STATE" style="overflow:auto" class="container">
-						<div class="sidebar-content-header"><spring:message code="map.New-post" /></div>
-						<br style="clear: both;"> <br> <label>Camada</label>
-
-						<!-- no-results-text="Nenhum registro encontrado com" -->
-
-						<select ng-change="listAttributesByLayer()"
-							data-placeholder="Selecione uma camada" name="camada"
-							ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
-							ng-model="currentEntity.layer" chosen class="form-control"
-							ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
-							required				
-							>
-							<option value=""></option>
-						</select> 
-						
-						<span class="tooltip-validation"
-							ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
-							style="top: -20px">Campo Obrigatório</span> <br>
-
-						<div ng-repeat="attribute in attributesByLayer"
-							style="position: relative">
-							
-							<ng-form name="ngSideMarker" default-button="buttonInsert">
-							<label style="margin-top: 15px">{{ attribute.name }}</label> 
-							
-							<input type="number"
-								name="number1" ng-if="attribute.type == 'NUMBER'"
-								class="form-control" ng-model="attribute.value"
-								ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-								ng-required="attribute.required"
-								> 
-								
-							<input
-								type="date" name="date1" ng-if="attribute.type == 'DATE'"
-								class="form-control" ng-model="attribute.value"
-								ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
-								ng-required="attribute.required"
-								>
-
-							<div ng-if="attribute.type == 'BOOLEAN'">
-
-								<input type="radio" name="boolean" ng-model="attribute.value"
-									value="Yes"><spring:message code="map.Yes" /> 
+									</span> 
 									
-								<input type="radio" name="boolean" ng-model="attribute.value" 
-									value="No"><spring:message code="map.No" /> 
+									<ng-form>
 							</div>
-
-							<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
-								class="form-control" ng-model="attribute.value"
-								ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-								ng-required="attribute.required"
-								> 
-								
-								<span
-								class="tooltip-validation"
-								ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
-								style="top: 3px">Campo Obrigatório
-								</span> 
-								
-								<span
-								class="tooltip-validation"
-								ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-								style="top: 3px">Campo Obrigatório
-								</span> 
-								
-								<span
-								class="tooltip-validation"
-								ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-								style="top: 3px">Campo Obrigatório
-								</span> 
-								
-								<span
-								class="tooltip-validation"
-								ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-								style="top: 3px">Campo Obrigatório
-								</span> 
-								
-								<ng-form>
+	
+	
+							<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
+							<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
+	
+							<img class="marker-image" ng-show="imgResult" style="width: 100%; height: 200px; margin-top: 12px;"> <br>
+							<hr>
+	
+							<input type="file" id="upload-input" style="display: none;"
+								accept="image/*"
+								onchange="angular.element(this).scope().setPhotoMarker(this)" />
+	
+							<button class="btn btn-default"
+								onclick="angular.element('#upload-input').click();"
+								style="float: left;"
+								title="<spring:message code="map.Picture" />"
+								>
+								<span class="glyphicon glyphicon-picture"></span>
+							</button>
+	
+							<button 
+								id="buttonInsert" 
+								class="btn btn-primary"
+								ng-click="insertMarker()" 
+								style="float: right"
+								title="<spring:message code="map.Submit" />"
+								>
+								<spring:message code="map.Submit" />					
+							</button>
 						</div>
-
-
-						<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
-						<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
-
-						<img class="marker-image" ng-show="imgResult" style="width: 100%; height: 200px; margin-top: 12px;"> <br>
-						<hr>
-
-						<input type="file" id="upload-input" style="display: none;"
-							accept="image/*"
-							onchange="angular.element(this).scope().setPhotoMarker(this)" />
-
-						<button class="btn btn-default"
-							onclick="angular.element('#upload-input').click();"
-							style="float: left;"
-							title="<spring:message code="map.Picture" />"
-							>
-							<span class="glyphicon glyphicon-picture"></span>
-						</button>
-
-						<button 
-							id="buttonInsert" 
-							class="btn btn-primary"
-							ng-click="insertMarker()" 
-							style="float: right"
-							title="<spring:message code="map.Submit" />"
-							>
-							<spring:message code="map.Submit" />					
-						</button>
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
+		
+  			<div class='rui-resizable-handle' style="background: #0077bf; width: 3px"></div>
 		</div>
+  
 		<div id="sidebar-tabs" style="float: left;">
 			<ul class="map-menu-items tab-flag" id="menu-sidebar-2">
 				<li id="menu-item-1"

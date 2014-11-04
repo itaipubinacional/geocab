@@ -68,6 +68,15 @@ public class NavigationController
 	/**
 	 * 
 	 */
+	@RequestMapping( value="/user", method=RequestMethod.GET )
+	public ModelAndView user()
+	{
+		return new ModelAndView("modules/user/ui/index");
+	}
+	
+	/**
+	 * 
+	 */
 	@RequestMapping( value="/admin", method=RequestMethod.GET )
 	public ModelAndView admin()
 	{
