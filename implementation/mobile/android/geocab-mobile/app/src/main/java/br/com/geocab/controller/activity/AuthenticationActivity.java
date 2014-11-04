@@ -139,6 +139,7 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
         accountDelegate = new AccountDelegate(this);
 
         loginButton = (LoginButton) findViewById(R.id.btn_sign_in_facebook);
+        loginButton.setReadPermissions(Arrays.asList("email"));
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
@@ -171,8 +172,6 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 
         setGooglePlusButtonText(btnSignInGoogle, "Google");
 
-        showHashKey(this);
-
 		// Button click listeners
         btnSignInGoogle.setOnClickListener(this);
         btnSignIn.setOnClickListener(this);
@@ -193,25 +192,6 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
                 tv.setText(buttonText);
                 return;
             }
-        }
-    }
-
-    /**
-     *
-     * @param context
-     */
-    //GENERATE KEY HASH ( REMOVE LATER )
-    public static void showHashKey(Context context) {
-        try {
-            PackageInfo info = context.getPackageManager().getPackageInfo(
-                    "br.com.geocab", PackageManager.GET_SIGNATURES); //Your            package name here
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.i("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-        } catch (NoSuchAlgorithmException e) {
         }
     }
 
