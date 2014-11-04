@@ -50,9 +50,9 @@
             
             <div ng-grid="gridAttributesDetail" style="height: 320px; border: 1px solid rgb(212,212,212);"></div>
 
-			<label class="detail-label" style="margin: 15px 0 5px 0;" required><spring:message code="admin.layer-config.Icon" /></label>
+			<label ng-if="!currentEntity.dataSource.url" class="detail-label" style="margin: 15px 0 5px 0;" required><spring:message code="admin.layer-config.Icon" /></label>
             
-            <table style="text-align: center; background: #E6E6E6;width:80px" id="table">
+            <table ng-if="!currentEntity.dataSource.url" style="text-align: center; background: #E6E6E6;width:80px" id="table">
             
            		<tr>
 	           			<td class="icon"><img src="<c:url value="/static/icons/alpinehut.png"/>" width="25" height="25"></td>
@@ -292,7 +292,7 @@
             
             <br />
 
-            <div class="form-item position-relative" style="width: 300px;"
+            <div ng-if="!currentEntity.dataSource.url" class="form-item position-relative" style="width: 300px;"
                  ng-if="currentState">
                 <input type="checkbox" id="grupo" style="width: 20px;"
                        ng-model="currentEntity.enabled"
