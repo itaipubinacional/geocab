@@ -7,10 +7,11 @@
     <string name="email_address">Endereço de email</string>
     <string name="password">Senha</string>
     <string name="btn_login">LOGIN</string>
-    <string name="btn_logout">Logout</string>
+    <string name="btn_logout">LOGOUT</string>
+    <string name="fill_login">Preencha os campos</string>
 
     <string name="btn_logout_from_google">Logout from Google</string>
-    <string name="facebook_app_id">"1565690900310619"</string>
+    <string name="facebook_app_id">1565690900310619</string>
     <string name="title_activity_map">Mapa</string>
 
     <!-- Map -->

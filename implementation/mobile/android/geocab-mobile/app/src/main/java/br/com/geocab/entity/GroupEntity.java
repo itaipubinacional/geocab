@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroupEntity {
+    public long id;
 	public String title;
+    public LayerType layerType;
 	public List<GroupItemEntity> groupItemCollection;
 
 	public GroupEntity()

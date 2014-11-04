@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.facebook.Session;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ import br.com.geocab.controller.activity.dialog.DialogInformation;
 import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.controller.delegate.LayerDelegate;
 import br.com.geocab.controller.delegate.MarkerDelegate;
+import br.com.geocab.entity.GroupEntity;
 import br.com.geocab.entity.Layer;
 import br.com.geocab.entity.Marker;
 import br.com.geocab.entity.User;
@@ -82,10 +84,6 @@ public class MapActivity extends Activity
     /**
      *
      */
-    private Button buttonRefreshLayers;
-    /**
-     *
-     */
     private Button buttonOpenMenu;
 
     /**
@@ -103,11 +101,6 @@ public class MapActivity extends Activity
     /**
      *
      */
-    private AnimationDrawable animationLoadLayer;
-
-    /**
-     *
-     */
     private TextView textViewSelectedCountItems;
     /**
      *
@@ -118,6 +111,8 @@ public class MapActivity extends Activity
      *
      */
     private DialogInformation dialogInformation;
+
+    private ProgressDialog progressDialog;
 
     /**
      *
@@ -150,32 +145,17 @@ public class MapActivity extends Activity
         webViewMap = (WebView) findViewById(R.id.web_view_map);
         webViewMap.getSettings().setJavaScriptEnabled(true);
         webViewMap.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        //webViewMap.getSettings().setRenderPriority(RenderPriority.HIGH);
-        //webViewMap.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        //webViewMap.setWebChromeClient(new WebChromeClient());
-        webViewMap.loadUrl("file:///android_asset/map.html");
+        webViewMap.getSettings().setRenderPriority(RenderPriority.HIGH);
+        webViewMap.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webViewMap.setWebChromeClient(new WebChromeClient());
+        //webViewMap.loadUrl("file:///android_asset/map.html");
 
-        //String html = "<html><head><link rel=stylesheet href=ol.css type=text/css><style>div.map{height:100%;width:100%}.ol-attribution button,.ol-attribution u,.ol-zoom{display:none}</style><script src=ol.js type=text/javascript></script><script src=jquery.min.js type=text/javascript></script><meta name=viewport content=\"width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no\"><body style=margin:0><div id=map class=\"map\"><script type=text/javascript>function showLayer(e,r,a,o){if(\"true\"==o){var t=new ol.source.TileWMS({url:e,params:{LAYERS:r}}),n=new ol.layer.Tile({source:t});map.addLayer(n),layersAdd.push({wmsLayer:n,wmsSource:t,name:r,title:a})}else for(i in layersAdd)layersAdd[i].name==r&&(map.removeLayer(layersAdd[i].wmsLayer),layersAdd.splice(i,1))}function showMarker(e,r,a,o,t,n,l){var s=\"file:///android_res/drawable/\"+l,i=new ol.Feature({geometry:new ol.geom.Point([e,r]),layerName:n,markerId:a,markerUser:o,markerDate:t}),m=new ol.style.Style({image:new ol.style.Icon({size:[25,25],src:s})}),d=new ol.source.Vector({features:[i]}),p=new ol.layer.Vector({source:d,style:m});map.addLayer(p),markersAdd.push({vectorLayer:p,name:n})}function closeMarker(e){for(i in markersAdd)markersAdd[i].name==e&&map.removeLayer(markersAdd[i].vectorLayer)}function zoomToArea(e,r){var a=ol.animation.pan({source:view.getCenter()}),o=ol.proj.transform([r,e],\"EPSG:4326\",\"EPSG:3857\");map.beforeRender(a),view.setCenter(o),view.setZoom(18)}var layersAdd=[],markersAdd=[],view=new ol.View({center:ol.proj.transform([-54.1394,-24.7568],\"EPSG:4326\",\"EPSG:3857\"),zoom:7});map=new ol.Map({target:\"map\",layers:[new ol.layer.Tile({source:new ol.source.OSM})],interactions:ol.interaction.defaults({altShiftDragRotate:!1,pinchRotate:!1,keyboard:!1}),view:view,control:ol.control.defaults({rotate:!1})}),map.on(\"click\",function(e){app.vibrateOnSelect();var r=map.forEachFeatureAtPixel(e.pixel,function(e){return e}),a=[],o=[];if(layersAdd.length>0)for(var t in layersAdd){var n=layersAdd[t].wmsSource.getGetFeatureInfoUrl(e.coordinate,view.getResolution(),view.getProjection(),{INFO_FORMAT:\"application/json\"});a.push(decodeURIComponent(n)),o.push(layersAdd[t].title)}r&&a.length>0?app.showInformation(parseInt(r.getProperties().markerId),r.getProperties().markerUser,r.getProperties().markerDate,r.getProperties().layerName,a,o):!r&&a.length>0?app.showInformation(null,null,null,null,a,o):r&&0==a.length&&app.showInformation(parseInt(r.getProperties().markerId),r.getProperties().markerUser,r.getProperties().markerDate,r.getProperties().layerName,null,null)});</script>";
-        //webViewMap.loadDataWithBaseURL("file:///android_asset/blank.html",  html, "text/html", "utf-8", null);
+        String html = "<html><head><link rel=stylesheet href=ol.css type=text/css><style>div.map{height:100%;width:100%}.ol-attribution button,.ol-attribution u,.ol-zoom{display:none}</style><script src=ol.js type=text/javascript></script><script src=jquery.min.js type=text/javascript></script><meta name=viewport content=\"width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no\"><body style=margin:0><div id=map class=\"map\"><script type=text/javascript>function showLayer(e,r,a,o){if(\"true\"==o){var t=new ol.source.TileWMS({url:e,params:{LAYERS:r}}),n=new ol.layer.Tile({source:t});map.addLayer(n),layersAdd.push({wmsLayer:n,wmsSource:t,name:r,title:a})}else for(i in layersAdd)layersAdd[i].name==r&&(map.removeLayer(layersAdd[i].wmsLayer),layersAdd.splice(i,1))}function showMarker(e,r,a,o,t,n,l){var s=new ol.Feature({geometry:new ol.geom.Point([e,r]),layerName:n,markerId:a,markerUser:o,markerDate:t}),i=new ol.style.Style({image:new ol.style.Icon({size:[25,25],src:\"file:///android_res/drawable/\"+l+\".png\"})}),m=new ol.source.Vector({features:[s]}),d=new ol.layer.Vector({source:m,style:i});map.addLayer(d),markersAdd.push({vectorLayer:d,name:n})}function closeMarker(e){for(i in markersAdd)markersAdd[i].name==e&&map.removeLayer(markersAdd[i].vectorLayer)}function zoomToArea(e,r){var a=ol.animation.pan({source:view.getCenter()}),o=ol.proj.transform([r,e],\"EPSG:4326\",\"EPSG:3857\");map.beforeRender(a),view.setCenter(o),view.setZoom(18)}var layersAdd=[],markersAdd=[],view=new ol.View({center:ol.proj.transform([-54.1394,-24.7568],\"EPSG:4326\",\"EPSG:3857\"),zoom:7});map=new ol.Map({target:\"map\",layers:[new ol.layer.Tile({source:new ol.source.OSM})],interactions:ol.interaction.defaults({altShiftDragRotate:!1,pinchRotate:!1,keyboard:!1}),view:view,control:ol.control.defaults({rotate:!1})}),map.on(\"click\",function(e){app.vibrateOnSelect();var r=map.forEachFeatureAtPixel(e.pixel,function(e){return e}),a=[],o=[];if(layersAdd.length>0)for(var t in layersAdd){var n=layersAdd[t].wmsSource.getGetFeatureInfoUrl(e.coordinate,view.getResolution(),view.getProjection(),{INFO_FORMAT:\"application/json\"});a.push(decodeURIComponent(n)),o.push(layersAdd[t].title)}r&&a.length>0?app.showInformation(parseInt(r.getProperties().markerId),r.getProperties().markerUser,r.getProperties().markerDate,r.getProperties().layerName,a,o):!r&&a.length>0?app.showInformation(null,null,null,null,a,o):r&&0==a.length&&app.showInformation(parseInt(r.getProperties().markerId),r.getProperties().markerUser,r.getProperties().markerDate,r.getProperties().layerName,null,null)});</script>";
+        webViewMap.loadDataWithBaseURL("file:///android_asset/blank.html",  html, "text/html", "utf-8", null);
 
         webViewMap.addJavascriptInterface(new JavaScriptHandler(this), "app");
 
         searchLayerEditText = (EditText) findViewById(R.id.edit_text_search_layer);
-        buttonRefreshLayers = (Button) findViewById(R.id.button_refresh_layers);
-
-        this.animationLoadLayer =  (AnimationDrawable) buttonRefreshLayers.getCompoundDrawables()[0];
-
-        buttonRefreshLayers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-
-                MapActivity.this.animationLoadLayer.start();
-
-                MapActivity.this.layerDelegate.listLayersPublished(MapActivity.this.animationLoadLayer);
-
-            }
-        });
 
         buttonClearSearchLayerEditText = (Button) findViewById(R.id.button_clear_edit_text);
         buttonClearSearchLayerEditText.setVisibility(RelativeLayout.INVISIBLE);
@@ -238,6 +218,9 @@ public class MapActivity extends Activity
             }
         });
 
+        progressDialog = new ProgressDialog(this);
+        dialogInformation = new DialogInformation(this);
+
         //NAV DRAWER
 
         mDrawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
@@ -259,7 +242,7 @@ public class MapActivity extends Activity
 
         this.layerDelegate=new LayerDelegate(MapActivity.this, adapter);
 
-        this.layerDelegate.listLayersPublished(MapActivity.this.animationLoadLayer);
+        this.layerDelegate.listLayersPublished();
 
         mDrawerToggle=new ActionBarDrawerToggle(this,mDrawerLayout,
                         R.drawable.ic_drawer, //nav menu toggle icon
@@ -299,10 +282,11 @@ public class MapActivity extends Activity
         alertDialogBuilder.setPositiveButton("Sim",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
 
-                if (Session.getActiveSession() != null) {
+                if (Session.getActiveSession() != null)
+                {
                     Session.getActiveSession().closeAndClearTokenInformation();
+                    Session.setActiveSession(null);
                 }
-                Session.setActiveSession(null);
 
                 SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
                 SplashScreenActivity.prefEditor.putString("email", null);
@@ -325,7 +309,6 @@ public class MapActivity extends Activity
         alertDialog.show();
     }
 
-
     public void showInformation( long markerId, String markerUser, String markerDate, String layerName, String[] listUrls, String[] listTitles)
     {
         if( markerId > 0 || listUrls != null )
@@ -333,7 +316,7 @@ public class MapActivity extends Activity
             Marker marker = new Marker(markerId, markerDate, new User("", markerUser) );
             marker.setLayer(new Layer(layerName, layerName));
 
-            dialogInformation = new DialogInformation(this, marker);
+            dialogInformation.showLoadMarkers(progressDialog);
 
             MarkerDelegate markerDelegate = new MarkerDelegate(this, dialogInformation);
 

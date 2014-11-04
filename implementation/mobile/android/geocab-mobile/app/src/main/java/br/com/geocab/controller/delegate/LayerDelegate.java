@@ -36,8 +36,6 @@ public class LayerDelegate extends AbstractDelegate
 
     private NavDrawerListAdapter listAdapter;
 
-    private AnimationDrawable animationLoadLayer;
-
 	/*-------------------------------------------------------------------
      * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -65,10 +63,8 @@ public class LayerDelegate extends AbstractDelegate
     /**
      * @return
      */
-    public void listLayersPublished( AnimationDrawable d )
+    public void listLayersPublished()
     {
-        this.animationLoadLayer = d;
-
         String url = getUrl()+ "/layers";
 
         JsonArrayRequest jReq = new JsonArrayRequest(url,
@@ -90,8 +86,6 @@ public class LayerDelegate extends AbstractDelegate
                                     layer.setIsChecked(false);
                                 }
                                 result.add(layer);
-
-                                LayerDelegate.this.animationLoadLayer.stop();
 
                             }
                             catch (JSONException e)
