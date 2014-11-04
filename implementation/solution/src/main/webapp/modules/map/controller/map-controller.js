@@ -307,9 +307,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		
-		$("#sidebar-marker-create, #sidebar-marker-detail-update").css("max-width", parseInt($(window).width()) - 68 );
+		$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").css("max-width", parseInt($(window).width()) - 68 );
 		
-		$("#sidebar-marker-create, #sidebar-marker-detail-update").resize(function() { 
+		$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").resize(function() { 
 			$(".menu-sidebar-container").css("right",parseInt($(this).css("width")) + 5); 
 		});
 		
@@ -1515,7 +1515,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param element Nome do elemento que está chamando a função.
      */
     $scope.toggleSidebarMenu = function (time, element){
-    	
+    	if($("#sidebar-marker-detail-update").css("display") == 'block') {
+    		$scope.clearDetailMarker();
+    		
+    		$timeout(function(){
+	    		$scope.toggleSidebar(time, element, '#sidebar-layers');
+	    	}, 400)
+    	}
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
     	 * */
