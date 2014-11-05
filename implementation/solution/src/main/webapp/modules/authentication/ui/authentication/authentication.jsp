@@ -24,7 +24,7 @@
 		<div class="container-login">
 			<div class="login-logo"></div>
 			<div class="title-short-login"></div>
-			<div class="title-login">
+			<div class="title-login" style="display:none">
 			</div>
             <!--Message -->
             <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
