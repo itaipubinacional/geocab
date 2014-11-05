@@ -297,8 +297,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         undefinedHTML: '&nbsp;'
     });
 
+    $scope.firstTime = true;
 
-	/*-------------------------------------------------------------------
+    /*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
@@ -307,11 +308,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		
-		$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").css("max-width", parseInt($(window).width()) - 68 );
-		
-		$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").resize(function() { 
-			$(".menu-sidebar-container").css("right",parseInt($(this).css("width")) + 5); 
-		});
+		/**
+		 * Ajuste do menu
+		 */
+			$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").css("max-width", parseInt($(window).width()) - 68 );
+			$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").resize(function() { 
+				if(!$scope.firstTime)
+					$(".menu-sidebar-container").css("right",parseInt($(this).css("width")) + 5); 
+				
+				$scope.firstTime = false;
+			});
 		
 		
 		/**
@@ -1742,7 +1748,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        
 	        $(slide).toggle('slide', { direction: 'right' }, time);
 	        $('.menu-sidebar-container').animate({
-	            'right' : closed ? '20%' : '3px'
+	            'right' : closed ? $(slide).width() : '3px'
 	        }, time);
 	    } else {
 	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
