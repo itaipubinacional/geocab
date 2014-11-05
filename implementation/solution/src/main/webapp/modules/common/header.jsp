@@ -17,7 +17,7 @@
 		<div class="nav-collapse collapse">
 			<div class="left-side">
 				<div style="float: left; margin-top: 23px">
-					<span style="font-size: 17px"><b style="font-size: 17px">GEOCAB</b>
+					<span style="font-size: 17px"><b style="font-size: 17px">GeoCAB</b>
 						- Cultivando Água Boa</span>
 				</div>
 			</div>
