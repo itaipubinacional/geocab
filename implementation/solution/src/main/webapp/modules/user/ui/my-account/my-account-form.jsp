@@ -16,16 +16,16 @@
     <form name="form" novalidate default-button="buttonUpdate">
         <div class="content-tab">
       		
-      		<input type="text" style="display:none"></input>
       		
             <div class="form-item position-relative" style="width: 300px;">
-                <label class="detail-label" required><spring:message code="admin.users.Name"/></label>
+                <label class="detail-label" ><spring:message code="admin.users.Name"/></label>
                 <input name="name" type="text" class="form-control"
                        ng-model="currentEntity.name"
                        placeholder="<spring:message code="admin.users.Name"/>"
                        required maxlength="144" ng-minlength="1"
                        ng-class="{ ngInvalid: form.name.$error.required && (form.$submitted || form.name.$dirty) }"
                        autofocus
+                       autocomplete="off"
                        ng-hover>
 
                 <span ng-show="form.name.$error.required && (form.$submitted || form.name.$dirty)"

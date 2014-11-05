@@ -52,8 +52,9 @@ input.ng-invalid.ng-dirty{
 .login-logo {
 	margin: 0 auto;
 	width: 230px;
-	height: 69px;
-	background-image: url("../../images/logo-login.png");
+	height: 173px;
+	background: url("../../images/logo-login.png") center no-repeat;
+	background-size:159px;
 }
 
 .login-wrapper {
@@ -159,7 +160,7 @@ input.ng-invalid.ng-dirty{
 
 
 .forget-password{
-	margin-left:130px;
+	margin-left:42%;
 	text-decoration: underline;
 	color: #000000;
 	cursor:pointer;
