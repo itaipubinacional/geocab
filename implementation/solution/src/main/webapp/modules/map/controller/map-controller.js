@@ -347,7 +347,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             interactions: ol.interaction.defaults({
                 dragPan: false
             }).extend([
-                    $scope.dragRotateAndZoom,
+//                    $scope.dragRotateAndZoom,
                     dragAndDropInteraction,
                     new ol.interaction.DragPan({kinetic: null})
                 ]),
