@@ -1828,7 +1828,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.updateMarker = function(){
     	
     	if (!$scope.form('sidebarMarkerUpdate').$valid){
-    		 $scope.msg = {type: "danger", text: "preencha os campos obrigatorios", dismiss: true};
+    		 $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
     		return;
     	}
     	

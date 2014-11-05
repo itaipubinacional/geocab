@@ -9,7 +9,7 @@
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h3 class="modal-title">Associar camada</h3>
+        <h3 class="modal-title"><spring:message code="admin.layer-config.Associate-layer"/></h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
         <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
@@ -27,11 +27,11 @@
         <div class="grid-align" ng-grid="gridOptions" style="height: 335px; border: 1px solid rgb(212,212,212); margin-top: 10px;"></div>
     </div>
 
-    <div class="grid-elements-count" style="margin: -14px 20px 0 0;">{{numberOfRegisters}} registro(s)</div>
+    <div class="grid-elements-count" style="margin: -14px 20px 0 0;">{{numberOfRegisters}} <spring:message code="admin.layer-config.Register"/>(s)</div>
 
     <div class="modal-footer">
         <button id="buttonClose" ng-disabled="selectedEntity == null" class="btn btn-primary" ng-click="close(false)">Selecionar</button>
-        <button class="btn btn-default" ng-click="close(true)">Fechar</button>
+        <button class="btn btn-default" ng-click="close(true)"><spring:message code="map.Close" /></button>
     </div>
 </div>
 
