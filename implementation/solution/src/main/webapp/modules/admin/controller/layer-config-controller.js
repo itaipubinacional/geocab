@@ -801,6 +801,29 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         });
     }
     
+    $scope.chooseIcons = function() {
+    	var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/layer-config/popup/icons-popup.jsp",
+            controller: ChoosePopupController,
+            windowClass: 'xx-dialog',
+            resolve: {
+                attributes: function () {
+                    return $scope.attributes;
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+
+            if (result) {
+                $scope.currentEntity.name = result.name;
+                $scope.currentEntity.title = result.title;
+                $scope.currentEntity.legend = result.legend;
+            }
+
+        });
+    }
+    
     /**
      * Remove attribute
      * */
