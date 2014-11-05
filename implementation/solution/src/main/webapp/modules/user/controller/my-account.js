@@ -106,6 +106,7 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		accountService.getUserAuthenticated({
     		callback : function(result) {
     			$scope.currentEntity = result;
+    			$scope.$apply();
             },
             errorHandler : function(message, exception) {
                 $scope.message = {type:"error", text: message};
@@ -149,17 +150,18 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 //			$scope.msg = {type:"danger", text: "As senhas não coincidem" + '!', dismiss:true};
 //			return false;
 //		}
-		delete $scope.currentEntity.repeatNewPassword;
+		//delete $scope.currentEntity.repeatNewPassword;
 		
 		accountService.updateUserAuthenticated($scope.currentEntity, {
     		callback : function(result) {
+    			result.password = null;
     			$scope.currentEntity = result;
     			$scope.msg = {type:"success", text: $translate("admin.user.Successfully-updated-informations") + '!', dismiss:true};
     			$scope.fadeMsg();
     			$scope.$apply();
             },
             errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
+                $scope.msg = {type:"danger", text: message};
                 $scope.$apply();
             }
     	});
@@ -175,7 +177,7 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	}
 	
 	$scope.passwordRequired = function(){
-		if( $('#password').val() != '' ){
+		if( $('#newPassword').val() != '' ){
 			return true;
 		}
 	}
