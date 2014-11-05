@@ -483,7 +483,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	
 	$scope.clearFieldUrl= function(){
 		if(! $('#urlRequired').is(':checked')){
-			$scope.currentEntity.url="";
+			$scope.currentEntity.url=null;
 			$('#authenticationRequired').attr('checked',false);
 			$scope.clearFields();
 		}

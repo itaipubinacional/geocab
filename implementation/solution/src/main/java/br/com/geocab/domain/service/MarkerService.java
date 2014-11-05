@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,7 +30,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
@@ -143,10 +144,9 @@ public class MarkerService
 				this.removeImg(String.valueOf(marker.getId()));
 			}
 			
-			if( marker.getImage() != null ) {
+			if( marker.getImage() != null) {
 				this.uploadImg(marker.getImage(), marker.getId());	
 			}
-			
 			
 			marker = this.markerRepository.save( marker );
 		}
@@ -322,14 +322,25 @@ public class MarkerService
 			throw new IllegalArgumentException( this.messages.getMessage("The-field-entered-already-exists,-change-and-try-again", new Object [] {fieldError}, null) );
 		}*/
 	}
-	
+	/**
+	 * 
+	 * @param metaFileId
+	 * @throws IOException
+	 * @throws RepositoryException
+	 */
 	public void removeImg( String metaFileId ) throws IOException, RepositoryException {
 		
 	
 		this.metaFileRepository.remove(metaFileId);
 	}
 	
-	
+	/**
+	 * 
+	 * @param fileTransfer
+	 * @param markerId
+	 * @throws IOException
+	 * @throws RepositoryException
+	 */
 	public void uploadImg( FileTransfer fileTransfer, Long markerId ) throws IOException, RepositoryException {
 		
 		final String  mimeType = fileTransfer.getMimeType();
@@ -345,25 +356,34 @@ public class MarkerService
 			throw new IllegalArgumentException( "Formato inválido!" );
 		}
 		
-		
-		/*InputStream is = new BufferedInputStream(fileTransfer.getInputStream());
-		BufferedImage image = ImageIO.read(is);
-		Graphics2D g = image.createGraphics();
-		g.drawImage(image, 0, 0, 100, 100, null);
-		g.dispose();*/
+		InputStream is = new BufferedInputStream(fileTransfer.getInputStream());
+		final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+		Image image = ImageIO.read(is);
+		Graphics2D g = bufferedImage.createGraphics();
+		g.drawImage(image, 0, 0, 640, 480, null);
+		g.dispose();
 			
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, "png", os);
+		InputStream isteam = new ByteArrayInputStream(os.toByteArray());
 		
 		MetaFile metaFile = new MetaFile();
 		metaFile.setId(String.valueOf(markerId));
 		metaFile.setContentType( fileTransfer.getMimeType() );
 		metaFile.setContentLength( fileTransfer.getSize() );
 		metaFile.setFolder("/marker/"+markerId);
-		metaFile.setInputStream(fileTransfer.getInputStream());
+		metaFile.setInputStream(isteam);
 		metaFile.setName( fileTransfer.getFilename() );
 		
 		this.metaFileRepository.insert( metaFile );
 	}
 	
+	/**
+	 * 
+	 * @param markerId
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public FileTransfer findImgByMarker( Long markerId ) throws RepositoryException
 	{
 		try
