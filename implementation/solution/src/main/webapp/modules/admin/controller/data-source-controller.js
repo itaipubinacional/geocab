@@ -476,8 +476,8 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 */
 	$scope.clearFields = function(){
 		if( ! $('#authenticationRequired').is(':checked')){
-			$scope.currentEntity.login = "";
-			$scope.currentEntity.password = "";
+			$scope.currentEntity.login = null;
+			$scope.currentEntity.password = null;
 		}
 	};
 	
