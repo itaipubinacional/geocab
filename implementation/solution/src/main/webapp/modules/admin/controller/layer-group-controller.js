@@ -67,7 +67,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 	 * If the state is not found, it directs you to the list
      */
     $scope.initialize = function( toState, toParams, fromState, fromParams ) {
-    	$scope.flag = 0;
+    	
     	var state = $state.current.name;
 
         $log.info("Starting the front controller.");
@@ -183,7 +183,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.removeItem = function(scope)
     {
-    	$scope.flag = 1;
+    	
     	
         if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 && scope.$modelValue.camadas && scope.$modelValue.camadas.length > 0)
         {
@@ -490,14 +490,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 	  	}, 3000);
 	}
 			
-	$(document).click(function() {
-		if($scope.flag == 1){
-			$scope.flag = 0;
-		} else {
-			$("div.msg").css("display","none");
-			$scope.flag = 1;
-		}
-	});
+	
     
 };
 
