@@ -16,7 +16,7 @@
 
         <form novalidate name="form" default-button="{{buttonInsert}}" style="margin-bottom: 10px; margin-top: 10px;">
             <input type="text" ng-model="filterOptions.filterText" name="nome" style="width: 300px; float: left;"
-                   placeholder="Filtrar nome ou titulo grupo de camadas" class="form-control"
+                   placeholder="<spring:message code="admin.layer-config.Filter-by-name-or-title"/>" class="form-control"
                    required="true"
                    ng-class="{ ngInvalid: form.nome.$error.required && (form.$submitted || form.nome.$dirty) }"/>
         </form>

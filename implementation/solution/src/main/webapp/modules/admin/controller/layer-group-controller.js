@@ -185,7 +185,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     {
     	
     	
-        if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 && scope.$modelValue.camadas && scope.$modelValue.camadas.length > 0)
+        if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 && scope.$modelValue.layers && scope.$modelValue.layers.length > 0)
         {
             $scope.msg = {type:"danger", text: $translate("layer-group-view.Is-not-possible-to-remove-layers-groups-that-have-layers"), dismiss:true};
             

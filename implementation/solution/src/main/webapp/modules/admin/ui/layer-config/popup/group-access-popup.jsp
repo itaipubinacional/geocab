@@ -36,7 +36,7 @@
         </div>
 
         <div class="grid-elements-count" ng-show="currentPage.totalElements > 0">
-            {{currentPage.numberOfElements}} de {{currentPage.totalElements}} itens
+            {{currentPage.numberOfElements}} <spring:message code="admin.layer-config.of"/> {{currentPage.totalElements}} itens
         </div>
 
     </div>

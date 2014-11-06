@@ -801,10 +801,10 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         });
     }
     
-    $scope.chooseIcons = function() {
+    $scope.moreIcons = function() {
     	var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/layer-config/popup/icons-popup.jsp",
-            controller: ChoosePopupController,
+            templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
+            controller: MorePopupController,
             windowClass: 'xx-dialog',
             resolve: {
                 attributes: function () {
