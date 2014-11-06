@@ -89,7 +89,7 @@
 										<span
 											style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
 											marker.layer.title }}</span> <br style="clear: both;"> <br> <span
-											style="float: left">Criado por: <b>{{ marker.user.name
+											style="float: left"><spring:message code="map.Created-by"/>: <b>{{ marker.user.name
 												}}</b></span> <span style="float: right">{{ marker.created |
 											date:'dd/MM/yyyy' }}</span>
 										<hr>
@@ -214,7 +214,7 @@
 								title="<spring:message code="map.Close" />"></span>
 						</div>
 						<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:95%; width: 100%; padding: 10px;">
-							<div class="sidebar-content-header">Editar postagem</div>
+							<div class="sidebar-content-header"><spring:message code="map.Edit-post"/></div>
 							
 							<br style="clear: both;"> <br> 
 							<label>Camada</label>
@@ -230,7 +230,7 @@
 							</div>
 							<span class="tooltip-validation"
 								ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
-								style="top: -20px">Campo Obrigatório</span> <br>
+								style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
 							
 							<div ng-repeat="attribute in attributesByLayer"
 								ng-if="showAttributesAlone || showNewAttributes"
@@ -271,25 +271,25 @@
 									<span
 									class="tooltip-validation"
 									ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 									class="tooltip-validation"
 									ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 									class="tooltip-validation"
 									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 									class="tooltip-validation"
 									ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<ng-form>
@@ -350,25 +350,25 @@
 									
 									<span class="tooltip-validation"
 										ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"
-										style="top: 3px"> Campo Obrigatório
+										style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 										class="tooltip-validation"
 										ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-										style="top: 3px" >Campo Obrigatório
+										style="top: 3px" ><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 										class="tooltip-validation"
 										ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-										style="top: 3px">Precisa ser um numero
+										style="top: 3px"><spring:message code="map.Must-be-a-number"/>
 									</span> 
 									
 									<span
 										class="tooltip-validation"
 										ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-										style="top: 3px">Campo Obrigatório
+										style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 								<ng-form>
 							
@@ -430,7 +430,7 @@
 						<div style="position: absolute; left: 0; right: 0; bottom: 0; top: 0">
 						<div id="tabs-2" ng-switch="LAYER_MENU_STATE" style="overflow:auto; width: auto" class="container">
 							<div class="sidebar-content-header"><spring:message code="map.New-post" /></div>
-							<br style="clear: both;"> <br> <label>Camada</label>
+							<br style="clear: both;"> <br> <label><spring:message code="map.Layer"/></label>
 	
 							<!-- no-results-text="Nenhum registro encontrado com" -->
 	
@@ -446,7 +446,7 @@
 							
 							<span class="tooltip-validation"
 								ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
-								style="top: -20px">Campo Obrigatório</span> <br>
+								style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
 	
 							<div ng-repeat="attribute in attributesByLayer"
 								style="position: relative">
@@ -486,25 +486,25 @@
 									<span
 									class="tooltip-validation"
 									ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 									class="tooltip-validation"
 									ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 									class="tooltip-validation"
 									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 									class="tooltip-validation"
 									ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<ng-form>
@@ -575,7 +575,7 @@
 							<div ng-switch-when="list">
 								<div id="layer-list">
 									<div>
-										<div class="sidebar-content-header">Camadas</div>
+										<div class="sidebar-content-header"><spring:message code="map.Layers"/></div>
 										<br style="clear: both;">
 										<div class="form-item-horizontal radio"
 											style="margin-left: 0; margin-top: 40px">
@@ -621,7 +621,7 @@
 							<div id="layer-legend-detail" ng-switch-when="legend_detail">
 								<div class="sidebar-content-header" ng-click="exitLegendDetail()"
 									style="cursor: pointer;">
-									<span style="font-size: 17px;">&#x2190;</span> Camadas
+									<span style="font-size: 17px;">&#x2190;</span><spring:message code="map.Layers"/>
 								</div>
 								<br style="clear: both;">
 								<div class="legend-detail-title">{{legendDetailTitle}}</div>
@@ -634,11 +634,11 @@
 						</div>
 						<div id="tabs-3" style="position: absolute; top:0; right:0; left:0; bottom:0">
 		
-		                    <div class="sidebar-content-header">Arquivos KML</div>
+		                    <div class="sidebar-content-header"><spring:message code="map.KML-files"/></div>
 		                    <br style="clear: both; ">
 		
 		                    <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
-		                        Nenhum arquivo KML habilitado
+		                    	<spring:message code="map.None-KML-file-enabled"/>
 		                    </div>
 		
 		                    <div style="overflow-x: auto;position: absolute;top: 110px;bottom: 0px;left: 20px;right: 0px;">
