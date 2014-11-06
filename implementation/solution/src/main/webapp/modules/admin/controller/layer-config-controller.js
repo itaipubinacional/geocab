@@ -548,9 +548,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     	layer.maximumScaleMap = 'UM'+$scope.layers.values[1].substring(2);
         
         if (!$scope.form().$valid) {
-            $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
+            $scope.msg = {type: "danger", text: $translate("admin.layer-config.The-highlighted-fields-are-required"), dismiss: true};
             $scope.fadeMsg();
             return;
+        }
+        
+        if( $scope.currentEntity.icon == undefined ){
+        	$scope.msg = {type:"danger", text:$translate("admin.layer-config.Choose-an-icon"),dissmiss:true };
+        	$scope.fadeMsg();
+        	return;
         }
         
         if ( layer.legend == null ) {
@@ -838,11 +844,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 		  
     	setTimeout(function(){
 	  		$("div.msg").fadeOut();
-	  	}, 3000);
+	  	}, 5000);
     }
     
-    $(document).click(function() {
-    	$("div.msg").hide();
-    });
+//    $(document).click(function() {
+//    	$("div.msg").hide();
+//    });
     
 };
