@@ -95,7 +95,7 @@
 										<hr>
 				
 										<button
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
 											style="float: right;" 
 											class="btn btn-default"
 											title="<spring:message code="map.Delete"/>"
@@ -103,7 +103,7 @@
 											<i class="itaipu-icon-delete"></i>
 										</button>
 										<button		
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
 											style="float: right; margin-right: 5px" class="btn btn-default"
 											ng-click="changeToScreen('update')"
 											title="<spring:message code="map.Update"/>"
@@ -111,7 +111,7 @@
 											<i class="itaipu-icon-edit"></i>
 										</button>
 										<button
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')"
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')"
 											style="float: right; margin-right: 5px; color: red;"
 											ng-click="disableMarker()" class="btn btn-default"
 											title="<spring:message code="map.Disable"/>"
@@ -119,7 +119,7 @@
 											<i class="glyphicon glyphicon-ban-circle"></i>
 										</button>
 										<button
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'REFUSED' || marker.status == 'PENDING')"
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') && (marker.status == 'REFUSED' || marker.status == 'PENDING')"
 											style="float: right; margin-right: 5px; color: #00981F"
 											ng-click="enableMarker()" 
 											class="btn btn-default"
@@ -201,7 +201,7 @@
 						<!-- <div class="sidebar-coloredbar"></div> -->
 						<div>
 							<button
-								ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+								ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
 								style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
 								ng-click="changeToScreen('detail')"
 								title="<spring:message code="map.Back" />"						

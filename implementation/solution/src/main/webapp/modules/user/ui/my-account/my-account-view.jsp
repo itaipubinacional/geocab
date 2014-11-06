@@ -8,8 +8,10 @@
 <html>
 <!-- Data source - Main View -->
 <div>
-	<div class="navbar">
+	<div class="navbar">			  
+		
 		<div class="navbar-inner navbar-container">
+			  <div class="navbar-title"><span class="ng-scope"><spring:message code="admin.users.Account-information"/></span></div>
 			  <button ng-show="currentState == UPDATE_STATE" style="float: right;"
                 class="btn btn-success"
                 id="buttonUpdate"
