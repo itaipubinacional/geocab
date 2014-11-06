@@ -64,7 +64,7 @@
 
 	<security:authorize ifAnyGranted="ADMINISTRATOR">
 		<div id="navbar-administrator" class="navbar navbar-2" style="z-index: 1001;">
-			<div class="navbar-inner border-radius-0">
+			<div class="navbar-inner border-radius-0"  style="padding-right: 0;">
 	
 				<div class="nav-collapse collapse">
 					<ul class="nav navbar-nav">
@@ -92,7 +92,15 @@
 	                            href="admin#/layer-config"
 	                            ng-class="{active: menuActive == 'layer-config'}"
 	                            style="width: 150px;"><spring:message code="admin.layer-config.Layers"/></a></li>
+	                    
 	                </ul>
+	                <ul class="nav navbar-nav" style="float: right">
+	                	<li class="position-relative"><a
+								href="user#/account"
+								ng-class="{active: menuActive == 'my-account'}"
+								style="width: 150px;">Minha conta</a></li>
+	                </ul>
+	                
 				</div>
 			</div>
 		</div>

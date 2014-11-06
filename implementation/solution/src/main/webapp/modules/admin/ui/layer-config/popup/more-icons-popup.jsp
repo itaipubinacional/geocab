@@ -16,7 +16,7 @@
 	
 </style>
 
-<div class="modal-content">
+<div class="modal-content" style="width: 1024px;">
     <div class="modal-header">
         <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
         <h3 class="modal-title"><spring:message code="admin.layer-config.Choose-an-icon" /></h3>
@@ -24,7 +24,18 @@
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
         <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>     
 	            
-	            <table style="text-align: center; background: #E6E6E6;width:80px" id="table">
+	            <!-- <ul>
+	            	<li style="display: inline" ng-repeat="icon in layerIcons">
+	            		 -->
+	            		 <div style="display: inline-block;"> 
+		            		<div ng-repeat="icon in layerIcons" style="float: left; text-align: center">
+		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="25" height="25"> <br>
+		            			<input type="radio" value="static/icons/{{ icon }}" ng-checked="currentEntity.icon == 'static/icons/{{ icon }}'" name="layerIcon" ng-model="currentEntity.icon"> 
+		            		</div>
+	            		</div>
+	            	<!-- </li>
+	            </ul> -->
+	            <!-- <table style="text-align: center; background: #E6E6E6;width:80px" id="table">
 	            
 	           		<tr>
 		           			<td class="icon"><img src="<c:url value="/static/icons/alpinehut.png"/>" width="25" height="25"></td>
@@ -236,7 +247,7 @@
 		           			<td><input type="radio" value="static/icons/jewelry2.png" ng-checked="currentEntity.icon == 'static/icons/jewelry.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
 		           		</tr>
 	           		
-	           	</table>
+	           	</table> -->
 
     </div>
 

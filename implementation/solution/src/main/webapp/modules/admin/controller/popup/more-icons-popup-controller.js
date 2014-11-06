@@ -6,8 +6,9 @@
  * @param $log
  * @param $location
  */
-function MorePopupController($scope, $injector,$modalInstance, $state, attributes ) {
+function MorePopupController($scope, $injector,$modalInstance, $state, currentEntity, $importService ) {
 
+    $importService("layerGroupService");
 
 	$scope.msg = null;
 
@@ -59,7 +60,48 @@ function MorePopupController($scope, $injector,$modalInstance, $state, attribute
 	 */
 	$scope.initialize = function() 
 	{
-		$scope.currentEntity = new Attribute();
+		layerGroupService.listLayersIcons({
+            callback: function (result) {
+            
+            	var layers = [];
+            	
+            	angular.forEach(result, function(layer, index){
+            		var allowSave = true;
+            		switch(layer){
+	            		case 'default_yellow.png':
+	            			allowSave = false;
+	            			break;
+	            		case 'default_white.png':
+	            			allowSave = false;
+	            			break;
+	            		case 'default_red.png':
+	            			allowSave = false;
+	            			break;
+	            		case 'default_pink.png':
+	            			allowSave = false;
+	            			break;
+	            		case 'default_green.png':
+	            			allowSave = false;
+	            			break;
+	            		case 'default_blue.png':
+	            			allowSave = false;
+	            			break;
+            		}
+            		
+            		if(allowSave)
+            			layers.push(layer);
+            	});
+            	
+            	$scope.layerIcons = layers;
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.$apply();
+            }
+        });
+		
+		$scope.currentEntity = currentEntity;
 	};
 
 	/*-------------------------------------------------------------------
@@ -98,6 +140,7 @@ function MorePopupController($scope, $injector,$modalInstance, $state, attribute
 	 */
 	$scope.close = function() 
 	{
+		currentEntity = $scope.currentEntity;
 		$scope.msg = null;
 		$modalInstance.close(null);
 	};
