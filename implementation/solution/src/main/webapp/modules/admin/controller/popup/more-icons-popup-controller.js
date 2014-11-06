@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function ChoosePopupController($scope, $injector,$modalInstance, $state, attributes ) {
+function MorePopupController($scope, $injector,$modalInstance, $state, attributes ) {
 
 
 	$scope.msg = null;
