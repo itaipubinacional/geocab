@@ -232,7 +232,7 @@ public class AccountService
 		}
 		
 		user.setName(u.getName());
-		user.setRole(UserRole.USER);
+		user.setRole(userAuthencated.getRole());
 		
 		if(u.getNewPassword() != null) {	
 			final String encodedPassword = this.passwordEncoder.encodePassword( u.getNewPassword(), saltSource.getSalt( u ) ); 
