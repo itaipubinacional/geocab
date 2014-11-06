@@ -4,6 +4,7 @@
 package br.com.geocab.domain.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
@@ -36,6 +38,7 @@ import br.com.geocab.domain.entity.layer.FieldLayer;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
+import br.com.geocab.domain.repository.IFileRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
@@ -78,6 +81,12 @@ public class LayerGroupService
 	 * 
 	 */
 	@Autowired
+	private ServletContext servletContext;
+	
+	/**
+	 * 
+	 */
+	@Autowired
 	private ILayerRepository layerRepository;
 
 	/**
@@ -91,9 +100,32 @@ public class LayerGroupService
 	 */
 	protected RestTemplate template;
 	
+	//files
+	/**
+	 * 
+	 */
+	@Autowired
+	private IFileRepository fileRepository;
+	
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	public List<String> listLayersIcons()
+	{
+		final String path = this.servletContext.getRealPath("/static/icons");
+		
+		File[] files = this.fileRepository.listFilePath(path);
+
+		List<String> layers = new ArrayList<String>();
+		
+		for(File file : files) {
+			if(file.isFile()){
+				layers.add(file.getName());
+			}
+		}
+		
+		return layers;
+	}
 	
 	/**
 	 * Method to insert an {@link LayerGroup}
@@ -885,7 +917,9 @@ public class LayerGroupService
 	}
 	/*
 	public List<File> listIcons(){
-		File diretorio = new File(); 
+		//File diretorio = new File(); 
+		//InputStream input = getClass().getResourceAsStream("/main/webapp/static/icons");
+		File folder = new File("/main/webapp/static/icons");
 		
 	}*/
 }

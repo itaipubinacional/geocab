@@ -276,6 +276,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.initialize = function (toState, toParams, fromState, fromParams) {
         var state = $state.current.name;
+        
+        
+        
         /**
          * É necessario remover o atributo sortInfo pois o retorno de uma edição estava duplicando o valor do mesmo com o atributo Sort
          * impossibilitando as ordenações nas colunas da grid.
@@ -813,8 +816,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             controller: MorePopupController,
             windowClass: 'xx-dialog',
             resolve: {
-                attributes: function () {
-                    return $scope.attributes;
+            	currentEntity: function () {
+                    return $scope.currentEntity;
                 }
             }
         });
