@@ -37,27 +37,29 @@
 		</div>
 	</div>
 	
-	<security:authorize ifAnyGranted="USER">
-		<div id="navbar-user" class="navbar navbar-2" style="z-index: 1001;">
-			<div class="navbar-inner border-radius-0">
-	
-				<div class="nav-collapse collapse">
-					<ul class="nav navbar-nav">
-												
-						<li class="position-relative"><a href="./"
-							style="width: 50px;" ng-class="{active: menuActive == null}"><span
-								class="icon-mapa-interativo"></span></a></li>
-	
-						<li class="position-relative"><a
-							href="user#/account"
-							ng-class="{active: menuActive == 'my-account'}"
-							style="width: 150px;">Minha conta</a></li>
-							
-							
-	                </ul>
+	<security:authorize ifAnyGranted="USER" > 
+		<sec:authorize access="principal.password != 'no password'">
+			<div id="navbar-user" class="navbar navbar-2" style="z-index: 1001;">
+				<div class="navbar-inner border-radius-0">
+		
+					<div class="nav-collapse collapse">
+						<ul class="nav navbar-nav">
+													
+							<li class="position-relative"><a href="./"
+								style="width: 50px;" ng-class="{active: menuActive == null}"><span
+									class="icon-mapa-interativo"></span></a></li>
+		
+							<li class="position-relative"><a
+								href="user#/account"
+								ng-class="{active: menuActive == 'my-account'}"
+								style="width: 150px;">Minha conta</a></li>
+								
+								
+		                </ul>
+					</div>
 				</div>
 			</div>
-		</div>
+		</sec:authorize>
 	</security:authorize>	
 
 	<security:authorize ifAnyGranted="ADMINISTRATOR">
