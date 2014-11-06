@@ -190,7 +190,7 @@ public class AccountService
 	 * @return
 	 * @throws Exception 
 	 */
-	@PreAuthorize("hasRole('"+UserRole.USER_VALUE+"')")
+	@PreAuthorize("permitAll")
 	public User getUserAuthenticated() throws Exception
 	{
 		User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
@@ -214,7 +214,7 @@ public class AccountService
 	 * @return
 	 * @throws Exception 
 	 */
-	@PreAuthorize("hasRole('"+UserRole.USER_VALUE+"')")
+	@PreAuthorize("permitAll")
 	public User updateUserAuthenticated( User u ) throws Exception
 	{
 		Assert.notNull( u );
@@ -232,7 +232,7 @@ public class AccountService
 		}
 		
 		user.setName(u.getName());
-		user.setRole(UserRole.USER);
+		user.setRole(userAuthencated.getRole());
 		
 		if(u.getNewPassword() != null) {	
 			final String encodedPassword = this.passwordEncoder.encodePassword( u.getNewPassword(), saltSource.getSalt( u ) ); 
