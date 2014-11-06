@@ -549,7 +549,21 @@ public class LayerGroupService
 	public List<ExternalLayer> listExternalLayersByFilters( DataSource dataSource )
 	{
 		GeoserverConnection geoserverConnection = new GeoserverConnection();
-		return geoserverConnection.listExternalLayersByFilters(dataSource);
+		List<ExternalLayer> externalLayers = geoserverConnection.listExternalLayersByFilters(dataSource);
+		
+		// rotina para retirar as camadas ja existentes no sistema da lista de camadas externas
+		List<ExternalLayer> layersToRemove = new ArrayList<ExternalLayer>();
+		for (ExternalLayer externalLayer : externalLayers)
+		{
+			if (layerRepository.countLayersByNameAndDataSource(externalLayer.getName(), dataSource.getId()) > 0)
+			{
+				layersToRemove.add(externalLayer);
+			}
+		}
+		
+		externalLayers.removeAll(layersToRemove);
+		
+		return externalLayers;
 	}
 	
 	
@@ -869,4 +883,9 @@ public class LayerGroupService
 		
 		return this.attributeRepository.listAttributeByLayer(layerId);
 	}
+	/*
+	public List<File> listIcons(){
+		File diretorio = new File(); 
+		
+	}*/
 }
