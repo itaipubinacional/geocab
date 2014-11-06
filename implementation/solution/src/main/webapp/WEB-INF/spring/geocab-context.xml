@@ -262,4 +262,11 @@
             </value>
         </property>
     </bean>
+    
+    <!-- 
+    	FILE 
+    -->
+    <context:component-scan 
+    	base-package="br.com.geocab.infrastructure.file"/>
+    
 </beans>
