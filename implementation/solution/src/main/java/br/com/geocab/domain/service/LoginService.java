@@ -88,6 +88,25 @@ public class LoginService
 		return this.userRepository.save( user );
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public User insertSocialUser( User user )
+	{
+		Assert.notNull( user );
+		
+		user.setRole(UserRole.USER);
+		user.setEnabled(true);
+		
+		/*//encrypt password
+		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); */
+		user.setPassword( "no password" );
+	
+		return this.userRepository.save( user );
+	}
+	
 	@Transactional(readOnly = true)
 	public User findUserByEmail( String userName )
 	{
