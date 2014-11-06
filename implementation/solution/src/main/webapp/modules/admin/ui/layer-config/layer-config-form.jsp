@@ -117,11 +117,32 @@
 	            <button ng-click="addAttribute()" title="<spring:message code="admin.layer-config.Add-attributes" />" class="btn btn-primary" style="margin-bottom: 5px"><spring:message code="admin.layer-config.Add-attributes" /></button>
 	            <div ng-grid="gridAttributes" style="height: 320px; border: 1px solid rgb(212,212,212);"></div>
 	            
-	            <button class="btn btn-default" style="margin-top:15px" ng-click="chooseIcons()" >Icones</button></br>
+	            <label class="detail-label" required><spring:message code="admin.layer-config.Choose-an-icon" /></label>
 	            
-	           
-           
-            
+	            <table style="text-align: center; background: #E6E6E6;width:80px" id="table">
+	            	
+	            	<tr>
+	            		<td class="icon"><img src="<c:url value="/static/icons/default_blue.png"/>" width="25" height="25"></td>
+	            		<td class="icon"><img src="<c:url value="/static/icons/default_green.png"/>" width="25" height="25"></td>
+	            		<td class="icon"><img src="<c:url value="/static/icons/default_pink.png"/>" width="25" height="25"></td>
+	            		<td class="icon"><img src="<c:url value="/static/icons/default_red.png"/>" width="25" height="25"></td>
+	            		<td class="icon"><img src="<c:url value="/static/icons/default_white.png"/>" width="25" height="25"></td>
+	            		<td class="icon"><img src="<c:url value="/static/icons/default_yellow.png"/>" width="25" height="25"></td>
+	            	</tr>
+	            	
+	            	<tr>
+	            		<td><input type="radio" value="static/icons/default_blue.png" ng-checked="currentEntity.icon == 'static/icons/default_blue.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	            		<td><input type="radio" value="static/icons/default_green.png" ng-checked="currentEntity.icon == 'static/icons/default_green.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	            		<td><input type="radio" value="static/icons/default_pink.png" ng-checked="currentEntity.icon == 'static/icons/default_pink.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	            		<td><input type="radio" value="static/icons/default_red.png" ng-checked="currentEntity.icon == 'static/icons/default_red.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	            		<td><input type="radio" value="static/icons/default_white.png" ng-checked="currentEntity.icon == 'static/icons/default_white.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	            		<td><input type="radio" value="static/icons/default_yellow.png" ng-checked="currentEntity.icon == 'static/icons/default_yellow.png'" name="layerIcon" ng-model="currentEntity.icon"></td>
+	            	</tr>
+	            	
+	            </table>
+	            
+	            <button class="btn btn-primary" style="margin-top:15px" ng-click="moreIcons()" ><spring:message code="admin.layer-config.More-icons"/></button></br>
+	            
             </div>
             
             </span>
@@ -136,7 +157,6 @@
                            ng-model="currentEntity.layerGroup.name"
                            placeholder="<spring:message code="admin.layer-config.Enter-the-layer-group" />"
                            maxlength="144" ng-minlength="1"
-                           ng-hover
                            required
                            ng-class="{ng-invalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation}"                           
                            >
@@ -185,7 +205,7 @@
                  ng-if="currentState">
                 <input type="checkbox" style="width: 20px;"
                        ng-model="currentEntity.enabled"
-                       ng-disabled="currentState == DETAIL_STATE"> <label>Disponível para receber postagens</label>
+                       ng-disabled="currentState == DETAIL_STATE"> <label><spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
 
             </div>
 
