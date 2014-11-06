@@ -37,7 +37,7 @@
 		</div>
 	</div>
 	
-	<security:authorize ifAnyGranted="USER" > 
+	<security:authorize ifAnyGranted="USER, MODERATOR" > 
 		<sec:authorize access="principal.password != 'no password'">
 			<div id="navbar-user" class="navbar navbar-2" style="z-index: 1001;">
 				<div class="navbar-inner border-radius-0">
