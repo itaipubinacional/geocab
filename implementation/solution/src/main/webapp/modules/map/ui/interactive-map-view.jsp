@@ -160,7 +160,7 @@
 															ng-model="markerAttribute.value" 
 															value="Yes"
 															>
-															<spring:message code="map.No" /> 
+															<spring:message code="map.Yes" /> 
 															
 														<input
 															ng-disabled="true" type="radio"
