@@ -556,7 +556,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             return;
         }
         
-        if( $scope.currentEntity.icon == undefined ){
+        if( ($scope.currentEntity.dataSource.url == null) && ($scope.currentEntity.icon == undefined) ){
         	$scope.msg = {type:"danger", text:$translate("admin.layer-config.Choose-an-icon"),dissmiss:true };
         	$scope.fadeMsg();
         	return;
