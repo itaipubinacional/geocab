@@ -60,6 +60,11 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
 	 */
 	$scope.initialize = function() 
 	{
+		$(document).keyup(function(e) {
+			  if (e.keyCode == 27) { 
+					$("#preview").remove();
+			  }   
+		});
 		
 		layerGroupService.listLayersIcons({
             callback: function (result) {
@@ -122,6 +127,7 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
 		var offset = page * $scope.currentPage.size;
 		$scope.layerIcons = $scope.totalLayers.slice( offset, offset + $scope.currentPage.size );
 		$scope.$apply();
+		$scope.imagePreview();
 	}
 
 	$scope.imagePreview = function(){	
