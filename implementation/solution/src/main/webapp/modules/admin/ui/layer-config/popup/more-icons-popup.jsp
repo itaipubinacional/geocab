@@ -16,7 +16,7 @@
 	
 </style>
 
-<div class="modal-content" style="width: 1024px;">
+<div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
         <h3 class="modal-title"><spring:message code="admin.layer-config.Choose-an-icon" /></h3>
@@ -27,12 +27,24 @@
 	            <!-- <ul>
 	            	<li style="display: inline" ng-repeat="icon in layerIcons">
 	            		 -->
-	            		 <div style="display: inline-block;"> 
-		            		<div ng-repeat="icon in layerIcons" style="float: left; text-align: center">
-		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="25" height="25"> <br>
-		            			<input type="radio" value="static/icons/{{ icon }}" ng-checked="currentEntity.icon == 'static/icons/{{ icon }}'" name="layerIcon" ng-model="currentEntity.icon"> 
+	            		<div style="text-align: center;">
+		            		 <div style="display: inline-block;"> 
+			            		<div  ng-repeat="icon in layerIcons" style="float: left; text-align: center; margin: 2px; width: 30px; height: 30px;" ng-style="currentEntity.icon == 'static/icons/' + icon ? {'border':'2px solid red'} : ''" >
+				            		<label for="{{ icon }}">
+				            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="25" height="25" class="preview" title=""  > <br>
+				            			<input id="{{ icon }}" type="radio" value="static/icons/{{ icon }}" ng-checked="currentEntity.icon == 'static/icons/{{ icon }}'" name="layerIcon" style="display: none" ng-model="currentEntity.icon"> 
+				            		</label>
+			            		</div>
 		            		</div>
-	            		</div>
+		            		<pagination style="text-align: center;"
+					                   total-items="currentPage.total" rotate="false"
+					                   items-per-page="currentPage.size"
+					                   max-size="currentPage.totalPages"
+					                   ng-change="changeToPage(data.filter, currentPage.pageable.pageNumber)"
+					                   ng-model="currentPage.pageable.pageNumber" boundary-links="true"
+					                   previous-text="‹" next-text="›" first-text="«" last-text="»">
+					       </pagination>
+				       </div>
 	            	<!-- </li>
 	            </ul> -->
 	            <!-- <table style="text-align: center; background: #E6E6E6;width:80px" id="table">

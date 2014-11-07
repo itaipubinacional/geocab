@@ -8,7 +8,7 @@
 <html>
 <!-- Layer config - Form -->
 <style>
-	.icon{
+	.icon {
 		padding-right:3px;
 	}
 </style>
@@ -146,8 +146,6 @@
             </div>
             
             </span>
-            
-            
 
             <br/>
             <div class="form-item position-relative" style="width: 350px;">
