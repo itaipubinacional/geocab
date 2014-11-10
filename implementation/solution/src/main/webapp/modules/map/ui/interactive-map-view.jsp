@@ -220,11 +220,12 @@
 							<label>Camada</label>
 							<div style="margin-bottom:5px;">
 								<select ng-change="listAttributesByLayerUpdate()"
+									ng-disabled="selectLayerGroup"
 									data-placeholder="Selecione uma camada" name="camada"
 									ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
 									ng-model="currentEntity.layer" chosen class="form-control"
 									ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}"
-									required>
+									>
 									<option value=""></option>							
 								</select> 
 							</div>
