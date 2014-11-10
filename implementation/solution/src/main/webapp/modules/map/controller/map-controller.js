@@ -531,6 +531,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	/* if click on the marker */
         	if( feature ){
         		if( typeof feature.getProperties().marker != "undefined" ) {
+        			$scope.currentCreatingInternalLayer = feature;
 	        		$scope.screen = 'detail';
 	        		
 					if( $scope.screenMarkerOpenned ) {
@@ -1579,7 +1580,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.toggleSidebarMarkerDetailUpdate = function (time, element){
     	$scope.currentEntity = $scope.marker;
     	
-    	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
             $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
@@ -1953,15 +1953,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.showAttributesAlone = false;
     $scope.showNewAttributes = false;
     $scope.listAttributesByLayerUpdate = function(){
-//    	var iconStyle = new ol.style.Style({
-//            image: new ol.style.Icon(({
-//                anchor: [0.5, 1],
-//                anchorXUnits: 'fraction',
-//                anchorYUnits: 'fraction',
-//                src: $scope.currentEntity.layer.layerIcon
-//            }))
-//        });
-//    	$scope.currentCreatingInternalLayer.setStyle(iconStyle);
+    	
+    	var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+                anchor: [0.5, 1],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                src: $scope.currentEntity.layer.icon
+            }))
+        });
+    	$scope.currentCreatingInternalLayer.setStyle(iconStyle);
+    	
     	$scope.showAttributesAlone = true;
     	
     	if($scope.attributesByMarker.length > 0) {
