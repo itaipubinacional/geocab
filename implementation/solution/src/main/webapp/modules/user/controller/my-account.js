@@ -146,6 +146,10 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 			return;
 		}
 		
+		if($scope.currentEntity.newPassword == ""){
+			$scope.currentEntity.newPassword = null;
+		}
+		
 //		if($scope.currentEntity.newPassword != $scope.currentEntity.repeatNewPassword) {
 //			$scope.msg = {type:"danger", text: "As senhas não coincidem" + '!', dismiss:true};
 //			return false;
