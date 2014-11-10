@@ -263,7 +263,8 @@
 
     </div>
 
-    <div class="modal-footer">    
+    <div class="modal-footer"> 
+    	<div ><img src="static/images/autor_icones.gif" style="float:left"></div>   
         <button class="btn btn-default" title="<spring:message code="admin.layer-config.Close" />" ng-click="close(true)"><spring:message code="admin.layer-config.Close" /></button>
     </div>
 </div>
