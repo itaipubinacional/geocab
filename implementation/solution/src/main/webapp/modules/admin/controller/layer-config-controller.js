@@ -182,6 +182,18 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     '<a ng-if="!row.entity.attributeDefault" ng-click="removeAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
     '</div>';
     
+    var TYPE_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'DATE\'" >'+ $translate("admin.layer-config.DATE") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'BOOLEAN\'" >'+ $translate("admin.layer-config.BOOLEAN") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'TEXT\'" >'+ $translate("admin.layer-config.TEXT") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'NUMBER\'" >'+ $translate("admin.layer-config.NUMBER") +'</span>' +
+    '</div>';
+    
+    var REQUIRED_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == false" >'+ $translate("admin.layer-config.false") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == true" >'+ $translate("admin.layer-config.true") +'</span>' +
+    '</div>';
+    
     /**
      * Configurações gerais da ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
@@ -199,13 +211,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         },
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '30%'},
-            {displayName: $translate('Type'), field: 'type',  width: '30%'},
-            {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: '<div>' +
-                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
-                '</div>', width: '30%'},
+            {displayName: $translate('Type'), cellTemplate:TYPE_COLUMN ,  width: '30%'},
+            {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: REQUIRED_COLUMN}, 
+//            	'<div>' +
+//                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
+//                '</div>', width: '30%'},
             {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ATTRIBUTES_BUTTONS, width: '10%'}
         ]
     };
+    
     
     /**
      * Configurações gerais da ng-grid.
@@ -224,11 +238,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         },
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '33%'},
-            {displayName: $translate('Type'), field: 'type',  width: '33%'},
-            {displayName: $translate('Required'), field: 'required',  width: '33%'},
+            {displayName: $translate('Type'),  cellTemplate: TYPE_COLUMN ,  width: '33%'},
+            {displayName: $translate('Required'), cellTemplate: REQUIRED_COLUMN,  width: '33%'},
         ]
     };
 
+    
+    
     /**
      * Variável que armazena o estado da paginação
      * para renderizar o pager e também para fazer as requisições das
