@@ -100,9 +100,9 @@ public class DialogInformation{
                 if( !progressDialog.isShowing() )
                 {
                     DialogInformation.this.progressDialog = progressDialog;
-                    progressDialog.setTitle("Carregando");
+                    progressDialog.setTitle(R.string.loading);
                     progressDialog.setCanceledOnTouchOutside(false);
-                    progressDialog.setMessage("Carregando atributos da camada");
+                    progressDialog.setMessage(DialogInformation.this.context.getString(R.string.loading_layer));
                     progressDialog.setIndeterminate(false);
                     progressDialog.show();
                 }
@@ -183,7 +183,15 @@ public class DialogInformation{
             groupItemEntity.image = marker.getImage();
             groupEntity.groupItemCollection.add(groupItemEntity);
 
-            adapter.setItemList(groupEntity);
+            if( !dialog.isShowing() )
+            {
+                dialog.show();
+                adapter.setItemList(groupEntity);
+            }
+            else
+            {
+                adapter.setItemList(groupEntity);
+            }
         }
         else
         {

@@ -1,22 +1,16 @@
 package br.com.geocab.controller.delegate;
 
-import android.accounts.Account;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -27,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.geocab.R;
-import br.com.geocab.controller.activity.AuthenticationActivity;
 import br.com.geocab.controller.activity.MapActivity;
 import br.com.geocab.controller.activity.SplashScreenActivity;
 import br.com.geocab.entity.User;

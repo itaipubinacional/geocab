@@ -18,6 +18,7 @@
     <string name="search_layer">Search</string>
     <string name="of_layer">of</string>
     <string name="items_layer">items</string>
+    <string name="loading_layer">Loading layer attribute</string>
     <string name="click_exit">Please click again to exit the application</string>
 
     <!-- Account delegate -->

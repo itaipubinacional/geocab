@@ -1,10 +1,7 @@
 package br.com.geocab.controller.delegate;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
