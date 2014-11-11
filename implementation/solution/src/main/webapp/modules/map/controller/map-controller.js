@@ -2307,7 +2307,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     				$scope.ok = false;
     				
     				$(this).find(".required-boolean").css("border", "1px solid red");
-    				$(this).prepend('<span class="tooltip-validation"style="top: 3px">Campo obrigatório </span>') ; 
+    				$(this).find(".required-boolean").css("border-radius", "5px");
+    				$(this).prepend('<span class="tooltip-validation"style="top: 3px">'+ $translate("map.Field-required") +'</span>') ; 
     			}
     			
     			  

@@ -254,13 +254,23 @@
 									ng-required="attribute.required"
 									>
 	
-								<div ng-if="attribute.type == 'BOOLEAN'" id="radioBoolean" class="boolean-required" >
+<!-- 								<div ng-if="attribute.type == 'BOOLEAN'" id="radioBoolean" class="boolean-required" > -->
 	
-									<input type="radio" name="boolean" ng-model="attribute.value"
-										value="Yes" ng-required="attribute.required" ><spring:message code="map.Yes" /> 
+<!-- 									<input type="radio" name="boolean" ng-model="attribute.value" -->
+<%-- 										value="Yes" ng-required="attribute.required" ><spring:message code="map.Yes" />  --%>
 										
-									<input type="radio" name="boolean" ng-model="attribute.value" 
-										value="No" ng-required="attribute.required"><spring:message code="map.No" /> 
+<!-- 									<input type="radio" name="boolean" ng-model="attribute.value"  -->
+<%-- 										value="No" ng-required="attribute.required"><spring:message code="map.No" />  --%>
+<!-- 								</div> -->
+								
+								<div ng-if="attribute.type == 'BOOLEAN'" ng-required="attribute.required"  >
+									<div class="required-boolean" >
+										<input type="radio" name="boolean{{ $index }}" class="boolean-1 boolean" ng-model="attribute.value"
+											value="Yes" onClick="isBooleanChecked(this)" ><spring:message code="map.Yes" /> 
+											
+										<input type="radio" name="boolean{{ $index }}" class="boolean-2 boolean" ng-model="attribute.value" 
+											value="No" onClick="isBooleanChecked(this)"><spring:message code="map.No" /> 
+									</div>
 								</div>
 	
 								<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
@@ -290,7 +300,7 @@
 									<span
 									class="tooltip-validation"
 									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-									style="top: 3px"><spring:message code="map.Field-required"/>
+									style="top: 3px"><spring:message code="map.Must-be-a-number"/>
 									</span> 
 									
 									<span
@@ -508,7 +518,7 @@
 									<span
 									class="tooltip-validation"
 									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-									style="top: 3px"><spring:message code="map.Field-required"/>
+									style="top: 3px"><spring:message code="map.Must-be-a-number"/>
 									</span> 
 									
 									<span
