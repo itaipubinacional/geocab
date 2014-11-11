@@ -144,26 +144,26 @@
         <text>Nome%20ou%20endere%E7o</text>
       </controlProperties>
     </control>
-    <control controlID="25" controlTypeID="com.balsamiq.mockups::Button" x="637" y="200" w="-1" h="-1" measuredW="55" measuredH="24" zOrder="7" locked="false" isInGroup="-1">
+    <control controlID="25" controlTypeID="com.balsamiq.mockups::Button" x="637" y="200" w="-1" h="-1" measuredW="72" measuredH="24" zOrder="7" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>Filtrar</text>
+        <text>Procurar</text>
       </controlProperties>
     </control>
     <control controlID="26" controlTypeID="com.balsamiq.mockups::Button" x="1072" y="146" w="216" h="24" measuredW="217" measuredH="24" zOrder="8" locked="false" isInGroup="-1">
       <controlProperties>
         <color>2848996</color>
-        <href>mockup-cadastro-fonte-dados-geograficos%26bm%3Bmockup-cadastro-fonte-dados-geograficos.bmml%26bm%3Bmockup-cadastro-fonte-dados-geograficos.bmml%26bm%3Bmockup-cadastro-fonte-dados-geograficos.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22724%2C103%2C940%2C127%22%20href%3D%22mockup-cadastro-fonte-dados-geograficos.bmml%22%20alt%3D%22mockup-cadastro-fonte-dados-geograficos%22%20id%3D%2226%22/%3E</map>
+        <href>mockup-cadastro-fonte-dados-geograficos-interna%26bm%3Bmockup-cadastro-fonte-dados-geograficos-interna.bmml%26bm%3Bmockup-cadastro-fonte-dados-geograficos-interna.bmml%26bm%3Bmockup-cadastro-fonte-dados-geograficos-interna.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22724%2C103%2C940%2C127%22%20href%3D%22mockup-cadastro-fonte-dados-geograficos-interna.bmml%22%20alt%3D%22mockup-cadastro-fonte-dados-geograficos-interna%22%20id%3D%2226%22/%3E</map>
         <text>Nova%20fonte%20de%20dados%20geogr%E1ficos</text>
       </controlProperties>
     </control>
     <control controlID="27" controlTypeID="__group__" x="370" y="239" w="914" h="362" measuredW="914" measuredH="362" zOrder="9" locked="false" isInGroup="-1">
       <groupChildrenDescriptors>
-        <control controlID="0" controlTypeID="com.balsamiq.mockups::DataGrid" x="0" y="0" w="914" h="362" measuredW="654" measuredH="152" zOrder="0" locked="false" isInGroup="27">
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::DataGrid" x="0" y="0" w="914" h="362" measuredW="585" measuredH="152" zOrder="0" locked="false" isInGroup="27">
           <controlProperties>
             <borderStyle>square</borderStyle>
             <hasHeader>false</hasHeader>
-            <text>Nome%20%20%20%20%20%20%20%20%20%20%2C%20Tipo%20%20%20%20%20%20%20%20%2CEndere%E7o%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2C%20A%E7%F5es%20%20%0AFonte%20dados%20geo%20001%2C%20WMS%2C%20http%3A//itaipu.gov.br/fontes_de_dados_geograficos/fontegeo001%0AFonte%20dados%20geo%20002%2C%20WMS%2C%20http%3A//itaipu.gov.br/fontes_de_dados_geograficos/fontegeo002%0AFonte%20dados%20geo%20003%2C%20WFS%2C%20http%3A//itaipu.gov.br/fontes_de_dados_geograficos/fontegeo003%0AFonte%20dados%20geo%20004%2C%20INTERNA%2C%20</text>
+            <text>Nome%20%20%20%20%20%20%20%20%20%20%2C%20Endere%E7o%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2C%20A%E7%F5es%20%20%0AFonte%20dados%20Externa%2C%20%20http%3A//itaipu.gov.br/fontes_de_dados_geograficos/fontegeo001%0AFonte%20dados%20Externa%2C%20%20http%3A//itaipu.gov.br/fontes_de_dados_geograficos/fontegeo002%0AFonte%20dados%20Interna%2C%20%20%0A%20</text>
             <verticalScrollbar>false</verticalScrollbar>
             <vLines>true</vLines>
           </controlProperties>

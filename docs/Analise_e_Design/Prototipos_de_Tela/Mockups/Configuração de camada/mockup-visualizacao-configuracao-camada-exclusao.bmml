@@ -28,8 +28,8 @@
         </control>
         <control controlID="4" controlTypeID="com.balsamiq.mockups::Button" x="295" y="95" w="69" h="24" measuredW="61" measuredH="24" zOrder="4" locked="false" isInGroup="63">
           <controlProperties>
-            <href>mockup-visualizacao-configuracao-camada%26bm%3Bmockup-visualizacao-configuracao-camada.bmml%26bm%3Bmockup-visualizacao-configuracao-camada.bmml%26bm%3Bmockup-visualizacao-configuracao-camada.bmml</href>
-            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22550%2C425%2C619%2C449%22%20href%3D%22mockup-visualizacao-configuracao-camada.bmml%22%20alt%3D%22mockup-visualizacao-configuracao-camada%22%20id%3D%224%22/%3E</map>
+            <href>mockup-1-consulta-configuracao-camada%26bm%3Bmockup-1-consulta-configuracao-camada.bmml%26bm%3Bmockup-1-consulta-configuracao-camada.bmml%26bm%3Bmockup-1-consulta-configuracao-camada.bmml</href>
+            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22550%2C425%2C619%2C449%22%20href%3D%22mockup-1-consulta-configuracao-camada.bmml%22%20alt%3D%22mockup-1-consulta-configuracao-camada%22%20id%3D%224%22/%3E</map>
             <text>Excluir</text>
           </controlProperties>
         </control>
@@ -177,8 +177,8 @@
     <control controlID="70" controlTypeID="com.balsamiq.mockups::Button" x="1197" y="149" w="89" h="25" measuredW="56" measuredH="24" zOrder="6" locked="false" isInGroup="-1">
       <controlProperties>
         <color>15658734</color>
-        <href>mockup-consulta-configuracao-camada%26bm%3Bmockup-consulta-configuracao-camada.bmml%26bm%3Bmockup-consulta-configuracao-camada.bmml%26bm%3Bmockup-consulta-configuracao-camada.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22849%2C108%2C938%2C133%22%20href%3D%22mockup-consulta-configuracao-camada.bmml%22%20alt%3D%22mockup-consulta-configuracao-camada%22%20id%3D%2270%22/%3E</map>
+        <href>mockup-1-consulta-configuracao-camada%26bm%3Bmockup-1-consulta-configuracao-camada.bmml%26bm%3Bmockup-1-consulta-configuracao-camada.bmml%26bm%3Bmockup-1-consulta-configuracao-camada.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22849%2C108%2C938%2C133%22%20href%3D%22mockup-1-consulta-configuracao-camada.bmml%22%20alt%3D%22mockup-1-consulta-configuracao-camada%22%20id%3D%2270%22/%3E</map>
         <text>Voltar</text>
       </controlProperties>
     </control>

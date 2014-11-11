@@ -7,7 +7,8 @@
     <string name="email_address">Email address</string>
     <string name="password">Password</string>
     <string name="btn_login">LOGIN</string>
-    <string name="btn_logout">Logout</string>
+    <string name="btn_logout">LOGOUT</string>
+    <string name="fill_login">Fill the fields</string>
 
     <string name="btn_logout_from_google">Logout from Google</string>
     <string name="facebook_app_id">"1565690900310619"</string>
@@ -17,6 +18,7 @@
     <string name="search_layer">Search</string>
     <string name="of_layer">of</string>
     <string name="items_layer">items</string>
+    <string name="loading_layer">Loading layer attribute</string>
     <string name="click_exit">Please click again to exit the application</string>
 
     <!-- Account delegate -->

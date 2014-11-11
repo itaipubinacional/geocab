@@ -38,20 +38,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/button_refresh_layers"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_alignParentLeft="true"
-                    android:background="@android:color/transparent"
-                    android:drawableLeft="@drawable/refresh_button"/>
-
                 <EditText
                     android:id="@+id/edit_text_search_layer"
                     android:layout_width="fill_parent"
@@ -59,18 +45,15 @@
                     android:singleLine="true"
                     android:padding="10dp"
                     android:layout_margin="10dp"
-                    android:layout_toRightOf="@+id/button_refresh_layers"
                     android:background="@drawable/rect_round_edit_text"
                     android:hint="@string/search_layer"
                     android:inputType="textVisiblePassword"/>
-            </RelativeLayout>
 
             <Button
                 android:id="@+id/button_clear_edit_text"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:background="@drawable/custom_btn_clear_edit_text"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_gravity="right|center_vertical"
                 />
@@ -138,7 +121,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:textColor="@android:color/white"
+                android:textSize="12dp"
+                android:textColor="@android:color/darker_gray"
                 android:text="@string/btn_logout"
                 android:layout_alignParentBottom="true" />
         </RelativeLayout>/
