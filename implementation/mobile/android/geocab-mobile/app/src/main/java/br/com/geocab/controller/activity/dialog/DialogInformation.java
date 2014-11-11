@@ -24,6 +24,7 @@ import br.com.geocab.controller.adapter.ExpandableListAdapter;
 import br.com.geocab.controller.delegate.MarkerDelegate;
 import br.com.geocab.entity.AttributeType;
 import br.com.geocab.entity.GroupEntity;
+import br.com.geocab.entity.LayerType;
 import br.com.geocab.entity.Marker;
 import br.com.geocab.entity.MarkerAttribute;
 
@@ -42,15 +43,12 @@ public class DialogInformation{
     private boolean isLayerPropertiesEmpty;
     private boolean isMarkerAttributesEmpty;
 
-    public DialogInformation(Context context, Marker marker) {
+    public DialogInformation(Context context) {
         this.context = context;
-        this.marker = marker;
         this.mGroupCollection = new ArrayList<GroupEntity>();
 
         ReceiverThread r = new ReceiverThread();
         r.run();
-
-
     }
 
     public void childSectionView() {
@@ -83,6 +81,7 @@ public class DialogInformation{
 
             @Override
             public void onClick(View v) {
+                adapter.setmGroupCollection(new ArrayList<GroupEntity>());
                 dialog.dismiss();
             }
         });
@@ -90,13 +89,25 @@ public class DialogInformation{
         isLayerPropertiesEmpty = true;
         isMarkerAttributesEmpty = true;
 
-        this. progressDialog = new ProgressDialog(DialogInformation.this.context);
+    }
 
-        progressDialog.setTitle("Carregando");
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage("Carregando atributos da camada");
-        progressDialog.setIndeterminate(false);
-        progressDialog.show();
+    public void showLoadMarkers( final ProgressDialog progressDialog )
+    {
+        ((MapActivity)context).runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                if( !progressDialog.isShowing() )
+                {
+                    DialogInformation.this.progressDialog = progressDialog;
+                    progressDialog.setTitle(R.string.loading);
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.setMessage(DialogInformation.this.context.getString(R.string.loading_layer));
+                    progressDialog.setIndeterminate(false);
+                    progressDialog.show();
+                }
+            }
+        });
 
     }
 
@@ -120,8 +131,18 @@ public class DialogInformation{
         if( groupEntity.groupItemCollection.size() > 0)
         {
             isLayerPropertiesEmpty = false;
-            dialog.show();
-            adapter.setItemList(groupEntity);
+
+            groupEntity.layerType = LayerType.EXTERNAL;
+
+            if( !dialog.isShowing() )
+            {
+                dialog.show();
+                adapter.setItemList(groupEntity);
+            }
+            else
+            {
+                adapter.setItemList(groupEntity);
+            }
 
         }
         else
@@ -152,6 +173,8 @@ public class DialogInformation{
 
             GroupEntity.GroupItemEntity groupItemEntity = groupEntity.new GroupItemEntity();
             groupEntity.title = marker.getLayer().getName();
+            groupEntity.id = marker.getId();
+            groupEntity.layerType = LayerType.INTERNAL;
 
             groupItemEntity.title = null;
             groupItemEntity.value = null;
@@ -160,11 +183,21 @@ public class DialogInformation{
             groupItemEntity.image = marker.getImage();
             groupEntity.groupItemCollection.add(groupItemEntity);
 
-            adapter.setItemList(groupEntity);
+            if( !dialog.isShowing() )
+            {
+                dialog.show();
+                adapter.setItemList(groupEntity);
+            }
+            else
+            {
+                adapter.setItemList(groupEntity);
+            }
         }
         else
         {
             GroupEntity groupEntity = new GroupEntity();
+            groupEntity.id = marker.getId();
+            groupEntity.layerType = LayerType.INTERNAL;
             GroupEntity.GroupItemEntity groupItemEntity;
             boolean isHaveInformation = false;
 
@@ -211,9 +244,16 @@ public class DialogInformation{
             groupItemEntity.image = marker.getImage();
             groupEntity.groupItemCollection.add(groupItemEntity);
 
-            dialog.show();
+            if( !dialog.isShowing() )
+            {
+                dialog.show();
+                adapter.setItemList(groupEntity);
+            }
+            else
+            {
+                adapter.setItemList(groupEntity);
+            }
 
-            adapter.setItemList(groupEntity);
         }
 
 
@@ -225,6 +265,14 @@ public class DialogInformation{
                 adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    public List<GroupEntity> getmGroupCollection() {
+        return mGroupCollection;
+    }
+
+    public void setmGroupCollection(List<GroupEntity> mGroupCollection) {
+        this.mGroupCollection = mGroupCollection;
     }
 
     private void initPage(Dialog dialog) {
