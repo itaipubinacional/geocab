@@ -41,12 +41,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if( groupEntity != null )
         {
             this.mGroupCollection.add(groupEntity);
+
             groupStatus = new int[mGroupCollection.size()];
+            if( getGroupCount() > 0 )
+            {
+                mExpandableListView.expandGroup(0);
+            }
         }
     }
 
+    public void setmGroupCollection(List<GroupEntity> mGroupCollection) {
+        this.mGroupCollection = mGroupCollection;
+    }
 
-	private void setListEvent() {
+    private void setListEvent() {
 
 		mExpandableListView
 				.setOnGroupExpandListener(new OnGroupExpandListener() {
