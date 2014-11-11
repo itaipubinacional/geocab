@@ -531,12 +531,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	/* if click on the marker */
         	if( feature ){
         		if( typeof feature.getProperties().marker != "undefined" ) {
-        			$scope.currentCreatingInternalLayer = feature;
-	        		$scope.screen = 'detail';
-	        		
-					if( $scope.screenMarkerOpenned ) {
+        			if( $scope.screenMarkerOpenned ) {
 						$scope.clearFcMarker();
 					}
+        			
+        			$scope.currentCreatingInternalLayer = feature;
+	        		$scope.screen = 'detail';
 				        		
 	        		$scope.marker = feature.getProperties().marker;
 	        		$scope.features.push({"feature": $scope.marker, "type": "internal"});
