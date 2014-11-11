@@ -190,11 +190,21 @@ public class AccountService
 	 * @return
 	 * @throws Exception 
 	 */
-	@PreAuthorize("hasRole('"+UserRole.USER_VALUE+"')")
+	@PreAuthorize("permitAll")
 	public User getUserAuthenticated() throws Exception
 	{
-		User user = ContextHolder.getAuthenticatedUser();
-		return this.userRepository.findOne(user.getId());
+		User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
+		
+		User u =new User();
+		u.setCreated(user.getCreated());
+		u.setEmail(user.getEmail());
+		u.setEnabled(user.getEnabled());
+		u.setId(user.getId());
+		u.setName(user.getName());
+		u.setRole(user.getRole());
+		u.setUpdated(user.getUpdated());
+		
+		return u;
 	}
 	
 	/**
@@ -204,7 +214,7 @@ public class AccountService
 	 * @return
 	 * @throws Exception 
 	 */
-	@PreAuthorize("hasRole('"+UserRole.USER_VALUE+"')")
+	@PreAuthorize("permitAll")
 	public User updateUserAuthenticated( User u ) throws Exception
 	{
 		Assert.notNull( u );
@@ -214,11 +224,15 @@ public class AccountService
 		User user = this.findUserByEmail(userAuthencated.getEmail());
 		
 		if(user == null){
-			throw new Exception();
+			throw new Exception("Usuário inexistente!");
+		}
+		
+		if(!this.passwordEncoder.encodePassword( u.getPassword(), saltSource.getSalt( u ) ).equals(user.getPassword())) {
+			throw new Exception("A senha informada não é correspondente!");
 		}
 		
 		user.setName(u.getName());
-		user.setRole(UserRole.USER);
+		user.setRole(userAuthencated.getRole());
 		
 		if(u.getNewPassword() != null) {	
 			final String encodedPassword = this.passwordEncoder.encodePassword( u.getNewPassword(), saltSource.getSalt( u ) ); 

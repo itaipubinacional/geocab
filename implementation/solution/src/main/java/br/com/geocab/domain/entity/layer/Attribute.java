@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
@@ -43,6 +44,9 @@ public class Attribute extends AbstractEntity implements Serializable
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
 	
+	@Transient
+	private Long temporaryId;
+	
 	/**
 	 * Name {@link Attribute}
 	 * */
@@ -67,7 +71,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	@ManyToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
 	private Layer layer;
 	
-	@OneToMany(mappedBy="attribute", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@OneToMany(mappedBy="attribute", fetch=FetchType.EAGER, cascade={CascadeType.REMOVE})
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
 
 	public Attribute(){
@@ -81,6 +85,18 @@ public class Attribute extends AbstractEntity implements Serializable
 	
 	public Attribute(Long id, String name, AttributeType type, Boolean required){
 		super(id);
+		this.setType(type);
+		this.setName(name);
+		this.setRequired(required);
+	}
+	
+	public Attribute(String name){
+		//this.setTemporaryId(id);
+		this.setName(name);
+	}
+	
+	public Attribute(Long id, String name, Boolean required, AttributeType type){
+		this.setTemporaryId(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
@@ -167,5 +183,20 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		this.attributeDefault = attributeDefault;
 	}
-	
+
+	/**
+	 * @return the temporaryId
+	 */
+	public Long getTemporaryId()
+	{
+		return temporaryId;
+	}
+
+	/**
+	 * @param temporaryId the temporaryId to set
+	 */
+	public void setTemporaryId(Long temporaryId)
+	{
+		this.temporaryId = temporaryId;
+	}
 }

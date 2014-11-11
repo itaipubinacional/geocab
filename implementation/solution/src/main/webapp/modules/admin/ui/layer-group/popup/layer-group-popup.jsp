@@ -12,7 +12,7 @@
             <h3 class="modal-title"><spring:message code="layer-group-popup.Insert-a-name-for-the-layer-group"/></h3>
         </div>
         <div class="modal-body" ng-init="initialize();" style="overflow: visible">
-			<div class="msg"ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
+			<div class="msg" ng-include="'static/libs/eits-directives/alert/alert.html'" ></div>
 
 			<form novalidate name="form" default-button="buttonInsert"
 				style="margin-bottom: 10px; margin-top: 10px;">

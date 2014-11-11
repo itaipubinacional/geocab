@@ -297,8 +297,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         undefinedHTML: '&nbsp;'
     });
 
+    $scope.firstTime = true;
 
-	/*-------------------------------------------------------------------
+    /*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
@@ -307,19 +308,24 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		
-		$("#sidebar-marker-create, #sidebar-marker-detail-update").css("max-width", parseInt($(window).width()) - 68 );
-		
-		$("#sidebar-marker-create, #sidebar-marker-detail-update").resize(function() { 
-			$(".menu-sidebar-container").css("right",parseInt($(this).css("width")) + 5); 
-		});
+		/**
+		 * Ajuste do menu
+		 */
+			$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").css("max-width", parseInt($(window).width()) - 68 );
+			$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").resize(function() { 
+				if(!$scope.firstTime)
+					$(".menu-sidebar-container").css("right",parseInt($(this).css("width")) + 5); 
+				
+				$scope.firstTime = false;
+			});
 		
 		
 		/**
 		 * Caso não existe uma nav bar
 		 * */
-		/*if( !$("#navbar-administrator").length ) {
+		if( !$("#navbar-administrator").length && !$("#navbar-user").length ) {
 			$(".sidebar-style").css("top","60px");
-		}*/
+		}
 		
         /**
          * Configuração do mapa openlayers
@@ -341,7 +347,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             interactions: ol.interaction.defaults({
                 dragPan: false
             }).extend([
-                    $scope.dragRotateAndZoom,
+//                    $scope.dragRotateAndZoom,
                     dragAndDropInteraction,
                     new ol.interaction.DragPan({kinetic: null})
                 ]),
@@ -525,6 +531,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	/* if click on the marker */
         	if( feature ){
         		if( typeof feature.getProperties().marker != "undefined" ) {
+        			$scope.currentCreatingInternalLayer = feature;
 	        		$scope.screen = 'detail';
 	        		
 					if( $scope.screenMarkerOpenned ) {
@@ -545,9 +552,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
         	if($scope.features.length == 1) {
         		$timeout(function(){
-
+        			
             		$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
     	    	}, 100)
+    	    	
         	}
            
         	
@@ -1515,7 +1523,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param element Nome do elemento que está chamando a função.
      */
     $scope.toggleSidebarMenu = function (time, element){
-    	
+    	if($("#sidebar-marker-detail-update").css("display") == 'block') {
+    		$scope.clearDetailMarker();
+    		
+    		$timeout(function(){
+	    		$scope.toggleSidebar(time, element, '#sidebar-layers');
+	    	}, 400)
+    	}
     	/**
     	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
     	 * */
@@ -1567,7 +1581,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.toggleSidebarMarkerDetailUpdate = function (time, element){
     	$scope.currentEntity = $scope.marker;
     	
-    	
     	if(element == "closeButton") {
             $scope.screenMarkerOpenned = false;
             $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
@@ -1586,9 +1599,42 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 	          }
 		    	});
 	    	
+	    	$scope.attributesByLayer = [];
+			$scope.showNewAttributes = false;
+	    	
 	    	markerService.listAttributeByMarker($scope.marker.id, {
 			  callback : function(result) {
 				  $scope.attributesByMarker = result;   
+				  
+				  layerGroupService.listAttributesByLayer($scope.marker.layer.id,{
+		          		callback : function(result) {
+		          			$scope.attributesByLayer = [];
+		          			
+		          			angular.forEach(result, function(attribute, index){
+			          				
+		          					var exist = false;
+		          					
+		          					angular.forEach($scope.attributesByMarker, function(attributeByMarker, index){
+		          					
+			          					if(attributeByMarker.attribute.id == attribute.id){
+			          						exist = true;
+			          					}
+			          				});
+			          				
+			          				if( !exist ) {
+			          					$scope.attributesByLayer.push(attribute);
+			          					$scope.showNewAttributes = true;
+			          				}
+			          				
+			          			});
+		          			
+		                      $scope.$apply();
+		                  },
+		                  errorHandler : function(message, exception) {
+		                      $scope.message = {type:"error", text: message};
+		                      $scope.$apply();
+		                  }
+		          	});
 				  
 				  angular.forEach(result,function(markerAttribute,index){
 					if (markerAttribute.attribute.type == "NUMBER") {
@@ -1703,7 +1749,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        
 	        $(slide).toggle('slide', { direction: 'right' }, time);
 	        $('.menu-sidebar-container').animate({
-	            'right' : closed ? '20%' : '3px'
+	            'right' : closed ? $(slide).width() : '3px'
 	        }, time);
 	    } else {
 	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
@@ -1783,7 +1829,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.updateMarker = function(){
     	
     	if (!$scope.form('sidebarMarkerUpdate').$valid){
-    		 $scope.msg = {type: "danger", text: "preencha os campos obrigatorios", dismiss: true};
+    		 $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
     		return;
     	}
     	
@@ -1802,10 +1848,28 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		}
     		
     		i++;    		
-    	})
-    	
+    	});
+
     	$scope.currentEntity.markerAttribute = $scope.attributesByMarker;
+    	
+    	angular.forEach($scope.attributesByLayer, function(val,ind){
     		
+    		var attribute = new Attribute();
+    		attribute.id = val.id;
+
+    		var markerAttribute = new MarkerAttribute();
+    		if (val.value != "" && val.value != undefined){
+    			markerAttribute.value = val.value;
+    		} else {
+    			markerAttribute.value = "";
+    		}
+    		
+    		markerAttribute.attribute = attribute
+    		markerAttribute.marker = $scope.currentEntity;
+    		$scope.currentEntity.markerAttribute.push(markerAttribute);
+    		
+    	});
+    	
     	markerService.updateMarker($scope.currentEntity,{
       		callback : function(result) {
       		      			
@@ -1821,35 +1885,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
-            	  if(message == "Empty reply from the server") {
-	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-	      			  
-	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
-	      				   $scope.addInternalLayer(layerId);
-	      			  })
-
-          			  $scope.clearDetailMarker();
-        			  
-        			  $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
-        			  $("div.msgMap").show();
-        			  
-        			  setTimeout(function(){
-        				  $("div.msgMap").fadeOut();
-        			  }, 5000);
-          			  
-            	  } else {
-            		  $scope.message = {type:"error", text: message};
-                      $scope.$apply();
-            	  }
-            	  
-                  
+        		  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
               }
       	});
 
     }
     
     $scope.insertMarker = function(){    	
-    	
+    	if( !$scope.isBooleanValid() ) {
+    		return false;
+    	}
     	if (!$scope.form('sidebarMarker').$valid){
     		 
     		return;
@@ -1900,29 +1946,77 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                   $scope.$apply();
               },
               errorHandler : function(message, exception) {
-            	  if(message == "Empty reply from the server") {
-	      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-	      			  
-	      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
-	      				   $scope.addInternalLayer(layerId);
-	      			  })
-
-          			  $scope.clearFcMarker();
-        			  
-        			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
-        			  $("div.msgMap").show();
-        			  
-        			  setTimeout(function(){
-        				  $("div.msgMap").fadeOut();
-        			  }, 5000);
-          			  
-            	  } else {
-	                  $scope.message = {type:"error", text: message};
-	                  $scope.$apply();
-            	  }
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
               }
       	});
 
+    }
+    
+    $scope.showAttributesAlone = false;
+    $scope.showNewAttributes = false;
+    $scope.listAttributesByLayerUpdate = function(){
+    	
+    	var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+                anchor: [0.5, 1],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                src: $scope.currentEntity.layer.icon
+            }))
+        });
+    	$scope.currentCreatingInternalLayer.setStyle(iconStyle);
+    	
+    	$scope.showAttributesAlone = true;
+    	
+    	if($scope.attributesByMarker.length > 0) {
+	    	if($scope.attributesByMarker[0].marker.layer.id == $scope.currentEntity.layer.layerId) {
+	    		$scope.showAttributesAlone = false;
+	    		
+	    		layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
+	          		callback : function(result) {
+	          			$scope.attributesByLayer = [];
+	          			
+	          			angular.forEach(result, function(attribute, index){
+		          				
+	          					var exist = false;
+	          					
+	          					angular.forEach($scope.attributesByMarker, function(attributeByMarker, index){
+	          					
+		          					if(attributeByMarker.attribute.id == attribute.id){
+		          						exist = true;
+		          					}
+		          				});
+		          				
+		          				if( !exist ) {
+		          					$scope.attributesByLayer.push(attribute);
+		          					$scope.showNewAttributes = true;
+		          				}
+		          				
+		          			});
+	          			
+	                      $scope.$apply();
+	                  },
+	                  errorHandler : function(message, exception) {
+	                      $scope.message = {type:"error", text: message};
+	                      $scope.$apply();
+	                  }
+	          	});
+	    		
+	    		return false;
+	    	}
+    	}
+    	 
+    	  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
+      		callback : function(result) {
+                  $scope.attributesByLayer = result;
+                  $scope.$apply();
+              },
+              errorHandler : function(message, exception) {
+                  $scope.message = {type:"error", text: message};
+                  $scope.$apply();
+              }
+      	});
     }
     
     $scope.listAttributesByLayer = function(){
@@ -2202,7 +2296,35 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         });
     }
     
+    $scope.isBooleanValid = function(){
+    	
+    	$scope.ok = true;
+    	$.each($(".boolean").parent().parent(), function(index, value){  
+    		if( $(this).attr("required") ){  
+    			
+    			
+    			if( !$(this).find(".boolean-1").is(":checked") && !$(this).find(".boolean-2").is(":checked") ) {
+    				$scope.ok = false;
+    				
+    				$(this).find(".required-boolean").css("border", "1px solid red");
+    				$(this).prepend('<span class="tooltip-validation"style="top: 3px">Campo obrigatório </span>') ; 
+    			}
+    			
+    			  
+    			}   
+    		});
+    	
+    	return $scope.ok;
+    }
+    
+    
 };
+
+function isBooleanChecked(that){
+	$(that).parent().css("border", "0");
+	$(that).parent().parent().find("span.tooltip-validation").remove();
+}
+
 /**
  * Função responsável por carregar a foto do usuário na tela no momento em que foi selecionada
  */

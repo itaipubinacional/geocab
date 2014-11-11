@@ -476,14 +476,14 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 	 */
 	$scope.clearFields = function(){
 		if( ! $('#authenticationRequired').is(':checked')){
-			$scope.currentEntity.login = "";
-			$scope.currentEntity.password = "";
+			$scope.currentEntity.login = null;
+			$scope.currentEntity.password = null;
 		}
 	};
 	
 	$scope.clearFieldUrl= function(){
 		if(! $('#urlRequired').is(':checked')){
-			$scope.currentEntity.url="";
+			$scope.currentEntity.url=null;
 			$('#authenticationRequired').attr('checked',false);
 			$scope.clearFields();
 		}

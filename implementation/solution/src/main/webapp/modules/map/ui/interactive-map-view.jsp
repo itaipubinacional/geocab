@@ -21,7 +21,7 @@
 	<div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
 
 		<div>
-			<ul class="map-menu-items tool-items" id="menu-sidebar">
+			<ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
 				<li ng-click="aumentarZoom()" title="<spring:message code="map.Zoom-in" />"><a href="#tabs-2">
 						<div class="icon itaipu-icon-plus sidebar-icon"></div>
 				</a></li>
@@ -89,13 +89,13 @@
 										<span
 											style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
 											marker.layer.title }}</span> <br style="clear: both;"> <br> <span
-											style="float: left">Criado por: <b>{{ marker.user.name
+											style="float: left"><spring:message code="map.Created-by"/>: <b>{{ marker.user.name
 												}}</b></span> <span style="float: right">{{ marker.created |
 											date:'dd/MM/yyyy' }}</span>
 										<hr>
 				
 										<button
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
 											style="float: right;" 
 											class="btn btn-default"
 											title="<spring:message code="map.Delete"/>"
@@ -103,7 +103,7 @@
 											<i class="itaipu-icon-delete"></i>
 										</button>
 										<button		
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
 											style="float: right; margin-right: 5px" class="btn btn-default"
 											ng-click="changeToScreen('update')"
 											title="<spring:message code="map.Update"/>"
@@ -111,7 +111,7 @@
 											<i class="itaipu-icon-edit"></i>
 										</button>
 										<button
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')"
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')"
 											style="float: right; margin-right: 5px; color: red;"
 											ng-click="disableMarker()" class="btn btn-default"
 											title="<spring:message code="map.Disable"/>"
@@ -119,7 +119,7 @@
 											<i class="glyphicon glyphicon-ban-circle"></i>
 										</button>
 										<button
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') && (marker.status == 'REFUSED' || marker.status == 'PENDING')"
+											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') && (marker.status == 'REFUSED' || marker.status == 'PENDING')"
 											style="float: right; margin-right: 5px; color: #00981F"
 											ng-click="enableMarker()" 
 											class="btn btn-default"
@@ -127,8 +127,11 @@
 											>
 											<i class="glyphicon glyphicon-ok"></i>
 										</button>
-										<br> <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-											style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer"> <br>
+										<br> 
+										<div style="text-align:center">
+											<img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+												style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px"> <br>
+										</div>
 										<br>
 				
 										<div style=" overflow: auto;">
@@ -157,7 +160,7 @@
 															ng-model="markerAttribute.value" 
 															value="Yes"
 															>
-															<spring:message code="map.No" /> 
+															<spring:message code="map.Yes" /> 
 															
 														<input
 															ng-disabled="true" type="radio"
@@ -198,7 +201,7 @@
 						<!-- <div class="sidebar-coloredbar"></div> -->
 						<div>
 							<button
-								ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERADOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+								ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
 								style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
 								ng-click="changeToScreen('detail')"
 								title="<spring:message code="map.Back" />"						
@@ -211,26 +214,96 @@
 								title="<spring:message code="map.Close" />"></span>
 						</div>
 						<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="overflow:auto;height:95%; width: 100%; padding: 10px;">
-							<div class="sidebar-content-header">Editar postagem</div>
+							<div class="sidebar-content-header"><spring:message code="map.Edit-post"/></div>
 							
 							<br style="clear: both;"> <br> 
 							<label>Camada</label>
 							<div style="margin-bottom:5px;">
-								<select ng-change="listAttributesByLayer()"
+								<select ng-change="listAttributesByLayerUpdate()"
+									ng-disabled="selectLayerGroup"
 									data-placeholder="Selecione uma camada" name="camada"
 									ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
 									ng-model="currentEntity.layer" chosen class="form-control"
 									ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}"
-									required>
+									>
 									<option value=""></option>							
 								</select> 
 							</div>
 							<span class="tooltip-validation"
 								ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
-								style="top: -20px">Campo Obrigatório</span> <br>
+								style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
+							
+							<div ng-repeat="attribute in attributesByLayer"
+								ng-if="showAttributesAlone || showNewAttributes"
+								style="position: relative">
+								
+								<ng-form name="ngSideMarker" default-button="buttonInsert">
+								<label style="margin-top: 15px">{{ attribute.name }}</label> 
+								
+								<input type="number"
+									name="number1" ng-if="attribute.type == 'NUMBER'"
+									class="form-control" ng-model="attribute.value"
+									ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+									ng-required="attribute.required"
+									> 
+									
+								<input
+									type="date" name="date1" ng-if="attribute.type == 'DATE'"
+									class="form-control" ng-model="attribute.value"
+									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+									ng-required="attribute.required"
+									>
 	
+								<div ng-if="attribute.type == 'BOOLEAN'" id="radioBoolean" class="boolean-required" >
+	
+									<input type="radio" name="boolean" ng-model="attribute.value"
+										value="Yes" ng-required="attribute.required" ><spring:message code="map.Yes" /> 
+										
+									<input type="radio" name="boolean" ng-model="attribute.value" 
+										value="No" ng-required="attribute.required"><spring:message code="map.No" /> 
+								</div>
+	
+								<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
+									class="form-control" ng-model="attribute.value"
+									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+									ng-required="attribute.required"
+									> 
+									
+									<span
+									class="tooltip-validation"
+									ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
+									style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 
+									
+									<span
+									class="tooltip-validation"
+									ng-if=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
+									style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 								
+									
+									<span
+									class="tooltip-validation"
+									ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
+									style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 
+									
+									<span
+									class="tooltip-validation"
+									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
+									style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 
+									
+									<span
+									class="tooltip-validation"
+									ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
+									style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 
+									
+									<ng-form>
+							</div>
 							
 							<div ng-repeat="markerAttribute in attributesByMarker"
+								ng-if="!showAttributesAlone"
 								style="position: relative;margin-bottom:15px;">
 	
 								<ng-form name="ngSideMarker" default-button="buttonUpdate">
@@ -284,25 +357,25 @@
 									
 									<span class="tooltip-validation"
 										ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"
-										style="top: 3px"> Campo Obrigatório
+										style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 										class="tooltip-validation"
 										ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-										style="top: 3px" >Campo Obrigatório
+										style="top: 3px" ><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 										class="tooltip-validation"
 										ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-										style="top: 3px">Precisa ser um numero
+										style="top: 3px"><spring:message code="map.Must-be-a-number"/>
 									</span> 
 									
 									<span
 										class="tooltip-validation"
 										ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-										style="top: 3px">Campo Obrigatório
+										style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 								<ng-form>
 							
@@ -364,7 +437,7 @@
 						<div style="position: absolute; left: 0; right: 0; bottom: 0; top: 0">
 						<div id="tabs-2" ng-switch="LAYER_MENU_STATE" style="overflow:auto; width: auto" class="container">
 							<div class="sidebar-content-header"><spring:message code="map.New-post" /></div>
-							<br style="clear: both;"> <br> <label>Camada</label>
+							<br style="clear: both;"> <br> <label><spring:message code="map.Layer"/></label>
 	
 							<!-- no-results-text="Nenhum registro encontrado com" -->
 	
@@ -380,9 +453,9 @@
 							
 							<span class="tooltip-validation"
 								ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
-								style="top: -20px">Campo Obrigatório</span> <br>
+								style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
 	
-							<div ng-repeat="attribute in attributesByLayer"
+							<div ng-repeat="attribute in attributesByLayer track by $index"
 								style="position: relative">
 								
 								<ng-form name="ngSideMarker" default-button="buttonInsert">
@@ -402,13 +475,14 @@
 									ng-required="attribute.required"
 									>
 	
-								<div ng-if="attribute.type == 'BOOLEAN'">
-	
-									<input type="radio" name="boolean" ng-model="attribute.value"
-										value="Yes"><spring:message code="map.Yes" /> 
-										
-									<input type="radio" name="boolean" ng-model="attribute.value" 
-										value="No"><spring:message code="map.No" /> 
+								<div ng-if="attribute.type == 'BOOLEAN'" ng-required="attribute.required"  >
+									<div class="required-boolean" >
+										<input type="radio" name="boolean{{ $index }}" class="boolean-1 boolean" ng-model="attribute.value"
+											value="Yes" onClick="isBooleanChecked(this)" ><spring:message code="map.Yes" /> 
+											
+										<input type="radio" name="boolean{{ $index }}" class="boolean-2 boolean" ng-model="attribute.value" 
+											value="No" onClick="isBooleanChecked(this)"><spring:message code="map.No" /> 
+									</div>
 								</div>
 	
 								<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
@@ -417,28 +491,30 @@
 									ng-required="attribute.required"
 									> 
 									
+									
+									
 									<span
 									class="tooltip-validation"
 									ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 									class="tooltip-validation"
 									ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 									class="tooltip-validation"
 									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<span
 									class="tooltip-validation"
 									ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px">Campo Obrigatório
+									style="top: 3px"><spring:message code="map.Field-required"/>
 									</span> 
 									
 									<ng-form>
@@ -481,7 +557,7 @@
 		</div>
   
 		<div id="sidebar-tabs" style="float: left;">
-			<ul class="map-menu-items tab-flag" id="menu-sidebar-2">
+			<ul class="map-menu-items tab-flag" id="menu-sidebar-2" style="padding:6px">
 				<li id="menu-item-1"
 					title="<spring:message code="map.Layer-menu" />"
 					ng-click="toggleSidebarMenu(300, '#menu-item-1');"
@@ -497,92 +573,96 @@
                 </li>
 			</ul>
 
-			<div id="sidebar-layers" class="sidebar-style">
-				<div class="sidebar-coloredbar"></div>
-				<span ng-click="toggleSidebarMenu(300, 'closeButton')"
-					class="icon itaipu-icon-close sidebar-close"></span>
-
-				<div id="tabs-1" ng-switch="LAYER_MENU_STATE">
-					<div ng-switch-when="list">
-						<div id="layer-list">
-							<div>
-								<div class="sidebar-content-header">Camadas</div>
+			<div id="sidebar-layers" class="sidebar-style rui-resizable-left resizable-test-block" style="min-width: 384px" >
+				<!--  <div class="sidebar-coloredbar"></div> -->
+				
+					<div class='rui-resizable-content' style="position: static;">
+					
+						<span style="z-index: 1000;" ng-click="toggleSidebarMenu(300, 'closeButton')"
+						class="icon itaipu-icon-close sidebar-close"></span>
+	
+						<div id="tabs-1" ng-switch="LAYER_MENU_STATE" style="position: absolute; top:0; right:0; left:0; bottom:0">
+							<div ng-switch-when="list">
+								<div id="layer-list">
+									<div>
+										<div class="sidebar-content-header"><spring:message code="map.Layers"/></div>
+										<br style="clear: both;">
+										<div class="form-item-horizontal radio"
+											style="margin-left: 0; margin-top: 40px">
+											<input type="radio" id="osm" ng-model="mapConf.type"
+												value="osm" ng-click="initializeOSM()"> <label
+												class="radio-label" for="osm"> Open Street View </label>
+										</div>
+										<br />
+										<div class="form-item-horizontal radio" style="margin-left: 0;">
+											<input type="radio" id="googleMap" ng-model="mapConf.type"
+												value="gmap" ng-click="initializeGMAP()"> <label
+												class="radio-label" for="googleMap"> Google Maps </label>
+										</div>
+										<br />
+										<div class="form-item-horizontal radio" style="margin-left: 0;">
+											<input type="radio" id="mapQuest" ng-model="mapConf.type"
+												value="mapQuest" ng-click="initializeMapQuestOSM()"> <label
+												class="radio-label" for="mapQuest"> MapQuest </label>
+										</div>
+									</div>
+								</div>
+		
+								<div
+									style="overflow-x: auto; position: absolute; top: 210px; bottom: 0px; left: 20px; right: 0px;">
+		
+									<div ng-show="allLayers.length > 0">
+										<input type="text" ng-model="bagSearch"
+											placeholder="Grupo ou layer"
+											class="sidebar-content-search form-control" />
+									</div>
+		
+									<div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
+										ivh-treeview-label-attribute="'label'"
+										ivh-treeview-legend-attribute="'legenda'"
+										ivh-treeview-children-attribute="'children'"
+										ivh-treeview-filter="filter:bagSearch"></div>
+		
+		
+									<br />
+								</div>
+							</div>
+		
+							<div id="layer-legend-detail" ng-switch-when="legend_detail">
+								<div class="sidebar-content-header" ng-click="exitLegendDetail()"
+									style="cursor: pointer;">
+									<span style="font-size: 17px;">&#x2190;</span><spring:message code="map.Layers"/>
+								</div>
 								<br style="clear: both;">
-								<div class="form-item-horizontal radio"
-									style="margin-left: 0; margin-top: 40px">
-									<input type="radio" id="osm" ng-model="mapConf.type"
-										value="osm" ng-click="initializeOSM()"> <label
-										class="radio-label" for="osm"> Open Street View </label>
-								</div>
-								<br />
-								<div class="form-item-horizontal radio" style="margin-left: 0;">
-									<input type="radio" id="googleMap" ng-model="mapConf.type"
-										value="gmap" ng-click="initializeGMAP()"> <label
-										class="radio-label" for="googleMap"> Google Maps </label>
-								</div>
-								<br />
-								<div class="form-item-horizontal radio" style="margin-left: 0;">
-									<input type="radio" id="mapQuest" ng-model="mapConf.type"
-										value="mapQuest" ng-click="initializeMapQuestOSM()"> <label
-										class="radio-label" for="mapQuest"> MapQuest </label>
+								<div class="legend-detail-title">{{legendDetailTitle}}</div>
+								<hr>
+								<div class="legend-image-container">
+									<img ng-src="{{legendDetailImage}}" style="padding: 10px;">
 								</div>
 							</div>
+		
 						</div>
-
-						<div
-							style="overflow-x: auto; position: absolute; top: 210px; bottom: 0px; left: 20px; right: 0px;">
-
-							<div ng-show="allLayers.length > 0">
-								<input type="text" ng-model="bagSearch"
-									placeholder="Grupo ou layer"
-									class="sidebar-content-search form-control" />
-							</div>
-
-							<div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
-								ivh-treeview-label-attribute="'label'"
-								ivh-treeview-legend-attribute="'legenda'"
-								ivh-treeview-children-attribute="'children'"
-								ivh-treeview-filter="filter:bagSearch"></div>
-
-
-							<br />
-						</div>
-					</div>
-
-					<div id="layer-legend-detail" ng-switch-when="legend_detail">
-						<div class="sidebar-content-header" ng-click="exitLegendDetail()"
-							style="cursor: pointer;">
-							<span style="font-size: 17px;">&#x2190;</span> Camadas
-						</div>
-						<br style="clear: both;">
-						<div class="legend-detail-title">{{legendDetailTitle}}</div>
-						<hr>
-						<div class="legend-image-container">
-							<img ng-src="{{legendDetailImage}}" style="padding: 10px;">
-						</div>
-					</div>
-
-				</div>
-				<div id="tabs-3">
-
-                    <div class="sidebar-content-header">Arquivos KML</div>
-                    <br style="clear: both; ">
-
-                    <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
-                        Nenhum arquivo KML habilitado
-                    </div>
-
-                    <div style="overflow-x: auto;position: absolute;top: 110px;bottom: 0px;left: 20px;right: 0px;">
-                        <div id="tree-kml"
-                             ivh-treeview="allLayersKML"
-                             ivh-fn="getSelectedKMLNode"
-                             ivh-treeview-label-attribute="'label'"
-                             ivh-treeview-children-attribute="'children'">
-                        </div>
-                    </div>
-
-                </div>
-                
+						<div id="tabs-3" style="position: absolute; top:0; right:0; left:0; bottom:0">
+		
+		                    <div class="sidebar-content-header"><spring:message code="map.KML-files"/></div>
+		                    <br style="clear: both; ">
+		
+		                    <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
+		                    	<spring:message code="map.None-KML-file-enabled"/>
+		                    </div>
+		
+		                    <div style="overflow-x: auto;position: absolute;top: 110px;bottom: 0px;left: 20px;right: 0px;">
+		                        <div id="tree-kml"
+		                             ivh-treeview="allLayersKML"
+		                             ivh-fn="getSelectedKMLNode"
+		                             ivh-treeview-label-attribute="'label'"
+		                             ivh-treeview-children-attribute="'children'">
+		                        </div>
+		                    </div>
+		
+		                </div>
+	              </div>
+	              <div class='rui-resizable-handle' style="background: #0077bf; width: 3px"></div>
 			</div>
 		</div>
 

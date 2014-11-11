@@ -6,56 +6,87 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
+<style>
+</style>
 <!-- My account - Update -->
 <div>
 
+	
 	<!--Mensagens-->
-        <div class="msg" ng-include="'static/libs/eits-directives/alert/alert.html'" ></div>
-    <form>
+    <div class="alert" ng-class="{'alert-dismissable': msg.dismiss, 'danger' : (msg.type == 'danger'), 'info' : (msg.type == 'info'), 'warning' : (msg.type == 'warning'), 'success' : (msg.type == 'success')}" ng-show="msg != null">
+	    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button> 
+	    {{msg.text}}
+	</div>
+    <form name="form" novalidate default-button="buttonUpdate">
         <div class="content-tab">
-      
+      		
+      		
             <div class="form-item position-relative" style="width: 300px;">
-                <label class="detail-label" required><spring:message code="admin.users.Name"/></label>
+                <label class="detail-label" ><spring:message code="admin.users.Name"/></label>
                 <input name="name" type="text" class="form-control"
                        ng-model="currentEntity.name"
                        placeholder="<spring:message code="admin.users.Name"/>"
                        required maxlength="144" ng-minlength="1"
                        ng-class="{ ngInvalid: form.name.$error.required && (form.$submitted || form.name.$dirty) }"
                        autofocus
+                       autocomplete="off"
                        ng-hover>
 
                 <span ng-show="form.name.$error.required && (form.$submitted || form.name.$dirty)"
                       class="tooltip-validation"><spring:message code="admin.users.Name"/> <spring:message code="admin.users.required"/></span>
             </div>
-  			<br>
+            <br>
   			<div class="form-item position-relative" style="width: 300px;">
                 <label class="detail-label" required><spring:message code="admin.users.Password"/></label>
                 <input name="password" type="password" id="password" class="form-control"
+                       ng-model="currentEntity.password"
+                       maxlength="255"
+                       placeholder="<spring:message code="admin.users.Password"/>"
+                       ng-minlength="1"
+                       ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted) }"
+                       autocomplete="off"
+                      />
+                <span ng-show="form.password.$error.required && (form.$submitted)"
+                      class="tooltip-validation"><spring:message code="admin.users.Password"/> <spring:message code="Required"/></span>
+            </div>
+            
+  			<br>
+  			<div class="form-item position-relative" style="width: 300px;">
+                <label class="detail-label" required><spring:message code="admin.users.New-Password"/></label>
+                <input name="password" type="password" id="newPassword" class="form-control"
                        ng-model="currentEntity.newPassword"
                        maxlength="255"
                        placeholder="<spring:message code="admin.users.Password"/>"
-                       required ng-minlength="1"
-                       ng-class="{ ngInvalid: form.address.$error.required && (form.$submitted || form.address.$dirty) }"
-                       ng-hover
+                       ng-minlength="1"
+                       ng-class="{ ngInvalid: form.password.$error.required && (form.$submitted) }"
                        autocomplete="off"
                       />
-                <span ng-show="form.address.$error.required && (form.$submitted || form.address.$dirty)"
-                      class="tooltip-validation"><spring:message code="admin.users.E-mail"/> <spring:message code="admin.users.required"/></span>
+                <span ng-show="form.password.$error.required && (form.$submitted)"
+                      class="tooltip-validation"><spring:message code="admin.users.Password"/> <spring:message code="Required"/></span>
             </div>
+            
   			<br>
   			<div class="form-item position-relative" style="width: 300px;">
-                <label class="detail-label" required><spring:message code="admin.users.Repeat-The-Password"/></label>
-                <input name="password" type="password" id="password" class="form-control"
+                <label class="detail-label" required><spring:message code="admin.users.Repeat-The-New-Password"/></label>
+                <input name="rePassword" type="password" id="reNewPassword" class="form-control"
                        ng-model="currentEntity.repeatNewPassword"
                        maxlength="255"
-                       placeholder="<spring:message code="admin.users.Repeat-The-Password"/>"
-                       required ng-minlength="1"
-                       ng-class="{ ngInvalid: form.address.$error.required && (form.$submitted || form.address.$dirty) }"
+                       placeholder="<spring:message code="admin.users.Repeat-The-New-Password"/>"
+                       ng-required=" passwordRequired() "
+                       ng-minlength="1"
+                       ng-class="{ ngInvalid: (form.$submitted) && form.rePassword.$error.required }"
                        ng-hover
                        autocomplete="off"
                       />
-                <span ng-show="form.address.$error.required && (form.$submitted || form.address.$dirty)"
-                      class="tooltip-validation"><spring:message code="admin.users.E-mail"/> <spring:message code="admin.users.required"/></span>
+                <span ng-show="form.rePassword.$error.required && (form.$submitted)"
+                      class="tooltip-validation"><spring:message code="admin.users.New-Password"/> <spring:message code="Required"/></span>
+                
+                <span ng-show=" !( form.rePassword.$error.required && (form.$submitted) ) && (form.$submitted) && (currentEntity.newPassword != currentEntity.repeatNewPassword)" 
+												class="tooltip-validation create"><spring:message code="admin.user.The-password-fields-must-be-equal"/></span>
+                
+             
+               
+                
             </div>
   			<br>
             

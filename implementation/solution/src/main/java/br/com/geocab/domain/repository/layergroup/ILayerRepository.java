@@ -81,4 +81,15 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 			+ "LEFT OUTER JOIN layer.dataSource dataSource "
 			+ "WHERE ( dataSource.url = NULL ) " )
 	public List<Layer> listAllInternalLayers();
+	
+	/**
+	 * 
+	 * @param layerName
+	 * @param dataSourceId
+	 * @return
+	 */
+	@Query(value="SELECT COUNT (layer) " +
+			"FROM Layer layer " +
+			"WHERE ( layer.name = :layerName ) AND ( layer.dataSource.id = :dataSourceId )")
+	public int countLayersByNameAndDataSource( @Param("layerName") String layerName, @Param("dataSourceId") Long dataSourceId);
 }

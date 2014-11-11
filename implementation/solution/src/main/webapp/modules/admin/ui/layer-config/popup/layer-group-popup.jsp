@@ -9,7 +9,7 @@
 <div class="modal-content">
 	<div class="modal-header">
         <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-		<h3 class="modal-title">Associar grupo de camada</h3>
+		<h3 class="modal-title"><spring:message code="admin.layer-config.Associate-layer-group" /></h3>
 	</div>
 	<div class="modal-body" ng-init="initialize();"
 		style="overflow: visible">
@@ -38,8 +38,8 @@
 	</div>
 
 	<div class="modal-footer">
-		<button id="buttonClose" ng-disabled="currentEntity == null" class="btn btn-primary" ng-click="close(false)">Selecionar</button>
-        <button class="btn btn-default" ng-click="close(true)">Fechar</button>
+		<button id="buttonClose" ng-disabled="currentEntity == null" class="btn btn-primary" ng-click="close(false)"><spring:message code="admin.layer-config.Select"/></button>
+        <button class="btn btn-default" ng-click="close(true)"><spring:message code="map.Close"/></button>
 	</div>
 </div>
 

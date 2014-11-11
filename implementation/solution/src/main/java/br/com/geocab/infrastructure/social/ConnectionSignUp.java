@@ -6,7 +6,7 @@ import org.springframework.social.connect.UserProfile;
 
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
-import br.com.geocab.domain.service.AccountService;
+import br.com.geocab.domain.repository.account.IUserRepository;
 import br.com.geocab.domain.service.LoginService;
 
 /**
@@ -56,9 +56,10 @@ public class ConnectionSignUp implements org.springframework.social.connect.Conn
 			user = new User();
 			user.setEmail(profile.getEmail());
 			user.setName(name);
-			user.setPassword("none");
 			user.setRole(UserRole.USER);
-			user = this.loginService.insertUser( user );
+			user.setEnabled(true);
+			user = this.loginService.insertSocialUser(user);
+			
 		}else if( !user.isEnabled() ){//Disabled User
 			return null; 
 		}

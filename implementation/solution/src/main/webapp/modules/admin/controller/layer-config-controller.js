@@ -182,6 +182,18 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     '<a ng-if="!row.entity.attributeDefault" ng-click="removeAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
     '</div>';
     
+    var TYPE_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'DATE\'" >'+ $translate("admin.layer-config.DATE") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'BOOLEAN\'" >'+ $translate("admin.layer-config.BOOLEAN") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'TEXT\'" >'+ $translate("admin.layer-config.TEXT") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'NUMBER\'" >'+ $translate("admin.layer-config.NUMBER") +'</span>' +
+    '</div>';
+    
+    var REQUIRED_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == false" >'+ $translate("admin.layer-config.false") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == true" >'+ $translate("admin.layer-config.true") +'</span>' +
+    '</div>';
+    
     /**
      * Configurações gerais da ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
@@ -199,13 +211,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         },
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '30%'},
-            {displayName: $translate('Type'), field: 'type',  width: '30%'},
-            {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: '<div>' +
-                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
-                '</div>', width: '30%'},
+            {displayName: $translate('Type'), cellTemplate:TYPE_COLUMN ,  width: '30%'},
+            {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: REQUIRED_COLUMN}, 
+//            	'<div>' +
+//                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
+//                '</div>', width: '30%'},
             {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ATTRIBUTES_BUTTONS, width: '10%'}
         ]
     };
+    
     
     /**
      * Configurações gerais da ng-grid.
@@ -224,11 +238,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         },
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '33%'},
-            {displayName: $translate('Type'), field: 'type',  width: '33%'},
-            {displayName: $translate('Required'), field: 'required',  width: '33%'},
+            {displayName: $translate('Type'),  cellTemplate: TYPE_COLUMN ,  width: '33%'},
+            {displayName: $translate('Required'), cellTemplate: REQUIRED_COLUMN,  width: '33%'},
         ]
     };
 
+    
+    
     /**
      * Variável que armazena o estado da paginação
      * para renderizar o pager e também para fazer as requisições das
@@ -276,6 +292,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.initialize = function (toState, toParams, fromState, fromParams) {
         var state = $state.current.name;
+        
+        
+        
         /**
          * É necessario remover o atributo sortInfo pois o retorno de uma edição estava duplicando o valor do mesmo com o atributo Sort
          * impossibilitando as ordenações nas colunas da grid.
@@ -366,6 +385,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $scope.removeGroups = [];
 
         $scope.currentEntity = new Object();
+        
+        $scope.currentEntity.icon = 'static/icons/default_blue.png';
 
         $scope.currentState = $scope.INSERT_STATE;
 
@@ -548,9 +569,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     	layer.maximumScaleMap = 'UM'+$scope.layers.values[1].substring(2);
         
         if (!$scope.form().$valid) {
-            $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
+            $scope.msg = {type: "danger", text: $translate("admin.layer-config.The-highlighted-fields-are-required"), dismiss: true};
             $scope.fadeMsg();
             return;
+        }
+        
+        if( ($scope.currentEntity.dataSource.url == null) && ($scope.currentEntity.icon == undefined) ){
+        	$scope.msg = {type:"danger", text:$translate("admin.layer-config.Choose-an-icon"),dissmiss:true };
+        	$scope.fadeMsg();
+        	return;
         }
         
         if ( layer.legend == null ) {
@@ -801,6 +828,29 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         });
     }
     
+    $scope.moreIcons = function() {
+    	var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
+            controller: MorePopupController,
+            windowClass: 'xx-dialog',
+            resolve: {
+            	currentEntity: function () {
+                    return $scope.currentEntity;
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+
+            if (result) {
+                $scope.currentEntity.name = result.name;
+                $scope.currentEntity.title = result.title;
+                $scope.currentEntity.legend = result.legend;
+            }
+
+        });
+    }
+    
     /**
      * Remove attribute
      * */
@@ -815,11 +865,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 		  
     	setTimeout(function(){
 	  		$("div.msg").fadeOut();
-	  	}, 3000);
+	  	}, 5000);
     }
     
-    $(document).click(function() {
-    	$("div.msg").hide();
-    });
+//    $(document).click(function() {
+//    	$("div.msg").hide();
+//    });
     
 };
