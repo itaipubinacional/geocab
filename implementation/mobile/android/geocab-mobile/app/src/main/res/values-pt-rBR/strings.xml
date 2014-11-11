@@ -18,6 +18,7 @@
     <string name="search_layer">Pesquisar</string>
     <string name="of_layer">de</string>
     <string name="items_layer">itens</string>
+    <string name="loading_layer">Carregando atributos da camada</string>
     <string name="click_exit">Por favor clique novamente para sair da aplicação</string>
 
     <!-- Account delegate -->
