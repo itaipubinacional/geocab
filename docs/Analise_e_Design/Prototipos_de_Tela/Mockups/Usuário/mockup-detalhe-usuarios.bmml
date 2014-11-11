@@ -133,7 +133,7 @@
         </control>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="10" controlTypeID="com.balsamiq.mockups::Label" x="370" y="148" w="267" h="-1" measuredW="144" measuredH="21" zOrder="5" locked="false" isInGroup="-1">
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Label" x="414" y="151" w="267" h="-1" measuredW="144" measuredH="21" zOrder="5" locked="false" isInGroup="-1">
       <controlProperties>
         <bold>true</bold>
         <text>DETALHE%20DO%20USU%C1RIO</text>
@@ -172,74 +172,69 @@
         <control controlID="2" controlTypeID="com.balsamiq.mockups::VRule" x="136" y="0" w="-1" h="27" measuredW="10" measuredH="100" zOrder="2" locked="false" isInGroup="39"/>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="40" controlTypeID="com.balsamiq.mockups::Button" x="1197" y="149" w="89" h="25" measuredW="56" measuredH="24" zOrder="9" locked="false" isInGroup="-1">
+    <control controlID="40" controlTypeID="com.balsamiq.mockups::Button" x="370" y="149" w="36" h="25" measuredW="45" measuredH="24" zOrder="9" locked="false" isInGroup="-1">
       <controlProperties>
         <color>15658734</color>
         <href>mockup-consulta-usuarios%26bm%3Bmockup-consulta-usuarios.bmml%26bm%3Bmockup-consulta-usuarios.bmml%26bm%3Bmockup-consulta-usuarios.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22849%2C106%2C938%2C131%22%20href%3D%22mockup-consulta-usuarios.bmml%22%20alt%3D%22mockup-consulta-usuarios%22%20id%3D%2240%22/%3E</map>
-        <text>Voltar</text>
+        <icon>LeftTriangleIcon%7Csmall</icon>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2222%2C106%2C58%2C131%22%20href%3D%22mockup-consulta-usuarios.bmml%22%20alt%3D%22mockup-consulta-usuarios%22%20id%3D%2240%22/%3E</map>
+        <text/>
       </controlProperties>
     </control>
-    <control controlID="41" controlTypeID="com.balsamiq.mockups::Button" x="1099" y="149" w="89" h="25" measuredW="74" measuredH="24" zOrder="10" locked="false" isInGroup="-1">
-      <controlProperties>
-        <color>13576743</color>
-        <href>mockup-detalhe-exclusao-usuarios%26bm%3Bmockup-detalhe-exclusao-usuarios.bmml%26bm%3Bmockup-detalhe-exclusao-usuarios.bmml%26bm%3Bmockup-detalhe-exclusao-usuarios.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22751%2C106%2C840%2C131%22%20href%3D%22mockup-detalhe-exclusao-usuarios.bmml%22%20alt%3D%22mockup-detalhe-exclusao-usuarios%22%20id%3D%2241%22/%3E</map>
-        <text>Remover</text>
-      </controlProperties>
-    </control>
-    <control controlID="42" controlTypeID="com.balsamiq.mockups::Button" x="1001" y="149" w="89" h="25" measuredW="57" measuredH="24" zOrder="11" locked="false" isInGroup="-1">
+    <control controlID="42" controlTypeID="com.balsamiq.mockups::Button" x="1093" y="149" w="89" h="25" measuredW="57" measuredH="24" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <color>15658734</color>
         <text>Editar</text>
       </controlProperties>
     </control>
-    <control controlID="44" controlTypeID="com.balsamiq.mockups::Label" x="370" y="222" w="-1" h="-1" measuredW="36" measuredH="21" zOrder="12" locked="false" isInGroup="-1">
+    <control controlID="44" controlTypeID="com.balsamiq.mockups::Label" x="370" y="222" w="-1" h="-1" measuredW="36" measuredH="21" zOrder="11" locked="false" isInGroup="-1">
       <controlProperties>
         <bold>true</bold>
         <text>Nome</text>
       </controlProperties>
     </control>
-    <control controlID="45" controlTypeID="com.balsamiq.mockups::Label" x="370" y="279" w="-1" h="-1" measuredW="39" measuredH="21" zOrder="13" locked="false" isInGroup="-1">
+    <control controlID="45" controlTypeID="com.balsamiq.mockups::Label" x="370" y="279" w="-1" h="-1" measuredW="39" measuredH="21" zOrder="12" locked="false" isInGroup="-1">
       <controlProperties>
         <bold>true</bold>
         <text>E-mail</text>
       </controlProperties>
     </control>
-    <control controlID="46" controlTypeID="com.balsamiq.mockups::Label" x="370" y="243" w="-1" h="-1" measuredW="76" measuredH="21" zOrder="14" locked="false" isInGroup="-1">
+    <control controlID="46" controlTypeID="com.balsamiq.mockups::Label" x="370" y="243" w="-1" h="-1" measuredW="76" measuredH="21" zOrder="13" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Fulano%20de%20tal</text>
       </controlProperties>
     </control>
-    <control controlID="47" controlTypeID="com.balsamiq.mockups::Label" x="370" y="300" w="-1" h="-1" measuredW="137" measuredH="21" zOrder="15" locked="false" isInGroup="-1">
+    <control controlID="47" controlTypeID="com.balsamiq.mockups::Label" x="370" y="300" w="-1" h="-1" measuredW="137" measuredH="21" zOrder="14" locked="false" isInGroup="-1">
       <controlProperties>
         <text>fulanodetal@email.com</text>
       </controlProperties>
     </control>
-    <control controlID="48" controlTypeID="com.balsamiq.mockups::Label" x="370" y="336" w="-1" h="-1" measuredW="41" measuredH="21" zOrder="16" locked="false" isInGroup="-1">
+    <control controlID="48" controlTypeID="com.balsamiq.mockups::Label" x="370" y="336" w="-1" h="-1" measuredW="41" measuredH="21" zOrder="15" locked="false" isInGroup="-1">
       <controlProperties>
         <bold>true</bold>
         <text>Status</text>
       </controlProperties>
     </control>
-    <control controlID="49" controlTypeID="com.balsamiq.mockups::Label" x="370" y="357" w="-1" h="-1" measuredW="29" measuredH="21" zOrder="17" locked="false" isInGroup="-1">
+    <control controlID="49" controlTypeID="com.balsamiq.mockups::Label" x="370" y="357" w="-1" h="-1" measuredW="29" measuredH="21" zOrder="16" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Ativo</text>
       </controlProperties>
     </control>
-    <control controlID="50" controlTypeID="com.balsamiq.mockups::Button" x="897" y="149" w="89" h="25" measuredW="78" measuredH="24" zOrder="18" locked="false" isInGroup="-1">
+    <control controlID="50" controlTypeID="com.balsamiq.mockups::Button" x="1197" y="149" w="89" h="25" measuredW="78" measuredH="24" zOrder="17" locked="false" isInGroup="-1">
       <controlProperties>
         <color>15658734</color>
+        <href>mockup-consulta-usuarios-desativado%26bm%3Bmockup-consulta-usuarios-desativado.bmml%26bm%3Bmockup-consulta-usuarios-desativado.bmml%26bm%3Bmockup-consulta-usuarios-desativado.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22849%2C106%2C938%2C131%22%20href%3D%22mockup-consulta-usuarios-desativado.bmml%22%20alt%3D%22mockup-consulta-usuarios-desativado%22%20id%3D%2250%22/%3E</map>
         <text>Desativar</text>
       </controlProperties>
     </control>
-    <control controlID="51" controlTypeID="com.balsamiq.mockups::Label" x="1053" y="222" w="-1" h="-1" measuredW="102" measuredH="21" zOrder="19" locked="false" isInGroup="-1">
+    <control controlID="51" controlTypeID="com.balsamiq.mockups::Label" x="370" y="393" w="-1" h="-1" measuredW="102" measuredH="21" zOrder="18" locked="false" isInGroup="-1">
       <controlProperties>
         <bold>true</bold>
         <text>Perfil%20de%20acesso</text>
       </controlProperties>
     </control>
-    <control controlID="52" controlTypeID="com.balsamiq.mockups::Label" x="1053" y="243" w="-1" h="-1" measuredW="82" measuredH="21" zOrder="20" locked="false" isInGroup="-1">
+    <control controlID="52" controlTypeID="com.balsamiq.mockups::Label" x="370" y="414" w="-1" h="-1" measuredW="82" measuredH="21" zOrder="19" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Administrador</text>
       </controlProperties>

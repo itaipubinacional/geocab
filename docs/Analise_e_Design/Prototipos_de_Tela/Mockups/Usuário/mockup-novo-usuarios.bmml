@@ -209,20 +209,20 @@
         <text>Senha</text>
       </controlProperties>
     </control>
-    <control controlID="52" controlTypeID="com.balsamiq.mockups::Label" x="955" y="222" w="-1" h="-1" measuredW="102" measuredH="21" zOrder="17" locked="false" isInGroup="-1">
+    <control controlID="52" controlTypeID="com.balsamiq.mockups::Label" x="370" y="396" w="-1" h="-1" measuredW="102" measuredH="21" zOrder="17" locked="false" isInGroup="-1">
       <controlProperties>
         <bold>true</bold>
         <text>Perfil%20de%20acesso</text>
       </controlProperties>
     </control>
-    <control controlID="55" controlTypeID="com.balsamiq.mockups::RadioButton" x="955" y="249" w="-1" h="-1" measuredW="91" measuredH="23" zOrder="18" locked="false" isInGroup="-1">
+    <control controlID="55" controlTypeID="com.balsamiq.mockups::RadioButton" x="370" y="423" w="-1" h="-1" measuredW="91" measuredH="23" zOrder="18" locked="false" isInGroup="-1">
       <controlProperties>
         <size>12</size>
         <state>selected</state>
         <text>Administrador</text>
       </controlProperties>
     </control>
-    <control controlID="56" controlTypeID="com.balsamiq.mockups::RadioButton" x="955" y="277" w="-1" h="-1" measuredW="100" measuredH="23" zOrder="19" locked="false" isInGroup="-1">
+    <control controlID="56" controlTypeID="com.balsamiq.mockups::RadioButton" x="370" y="451" w="-1" h="-1" measuredW="100" measuredH="23" zOrder="19" locked="false" isInGroup="-1">
       <controlProperties>
         <size>12</size>
         <text>Usu%E1rio%20comum</text>
