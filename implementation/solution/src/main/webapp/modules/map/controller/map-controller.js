@@ -552,9 +552,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
         	if($scope.features.length == 1) {
         		$timeout(function(){
-
+        			
             		$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
     	    	}, 100)
+    	    	
         	}
            
         	
@@ -1892,7 +1893,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.insertMarker = function(){    	
-    	
+    	if( !$scope.isBooleanValid() ) {
+    		return false;
+    	}
     	if (!$scope.form('sidebarMarker').$valid){
     		 
     		return;
@@ -2293,7 +2296,35 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         });
     }
     
+    $scope.isBooleanValid = function(){
+    	
+    	$scope.ok = true;
+    	$.each($(".boolean").parent().parent(), function(index, value){  
+    		if( $(this).attr("required") ){  
+    			
+    			
+    			if( !$(this).find(".boolean-1").is(":checked") && !$(this).find(".boolean-2").is(":checked") ) {
+    				$scope.ok = false;
+    				
+    				$(this).find(".required-boolean").css("border", "1px solid red");
+    				$(this).prepend('<span class="tooltip-validation"style="top: 3px">Campo obrigatório </span>') ; 
+    			}
+    			
+    			  
+    			}   
+    		});
+    	
+    	return $scope.ok;
+    }
+    
+    
 };
+
+function isBooleanChecked(that){
+	$(that).parent().css("border", "0");
+	$(that).parent().parent().find("span.tooltip-validation").remove();
+}
+
 /**
  * Função responsável por carregar a foto do usuário na tela no momento em que foi selecionada
  */
