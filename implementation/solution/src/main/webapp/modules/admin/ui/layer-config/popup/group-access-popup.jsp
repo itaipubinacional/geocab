@@ -8,8 +8,8 @@
 <html>
 <div class="modal-content">
     <div class="modal-header">
-        <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h3 class="modal-title">Associar grupo de acesso</h3>
+        <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"><spring:message code="map.Close"/></span></button>
+        <h3 class="modal-title"><spring:message code="admin.layer-config.Associate-access-group"/></h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
         <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
@@ -36,13 +36,13 @@
         </div>
 
         <div class="grid-elements-count" ng-show="currentPage.totalElements > 0">
-            {{currentPage.numberOfElements}} de {{currentPage.totalElements}} itens
+            {{currentPage.numberOfElements}} <spring:message code="admin.layer-config.of"/> {{currentPage.totalElements}} itens
         </div>
 
     </div>
 
     <div class="modal-footer">
-        <button id="buttonClose" ng-disabled="gridOptions.selectedItems.length == 0" class="btn btn-primary" ng-click="close(false)">Selecionar</button>
+        <button id="buttonClose" ng-disabled="gridOptions.selectedItems.length == 0" class="btn btn-primary" ng-click="close(false)"><sprimg:message code="admin.layer-config.Select"/></button>
         <button class="btn btn-default" ng-click="close(true)">Fechar</button>
     </div>
 </div>

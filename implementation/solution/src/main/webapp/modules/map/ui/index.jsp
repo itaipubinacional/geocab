@@ -13,7 +13,7 @@
     
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Hello <sec:authentication property="principal.name"/></title>
+		<title>GeoCAB - Cultivando água boa </title>
 		
 		<!-- Styles -->
 		<jsp:include page="../../default-styles.jsp"/>
@@ -79,7 +79,12 @@
 			</security:authorize>
 			
 			<security:authorize ifAnyGranted="USER,MODERATOR">
-			    <div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
+				<sec:authorize access="principal.password != 'no password'">
+			    	<div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
+				</sec:authorize>
+				<sec:authorize access="principal.password == 'no password'">
+			    	<div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 60px; left: 0; right: 0;" ng-controller="MapController"></div>
+				</sec:authorize>
 			</security:authorize>
 		
 			<!-- /content -->

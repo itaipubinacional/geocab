@@ -92,8 +92,8 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 	 */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
 	'<a ui-sref="users.update({id:row.entity.id})" title="'+$translate("admin.users.Edit")+'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>'+
-	'<a ng-show="row.entity.enabled == true" ng-click="changeToDisable(row.entity)" title="'+$translate("admin.users.Disable")+'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
-	'<a ng-show="row.entity.enabled == false" ng-click="changeToEnable(row.entity)" title="'+$translate("admin.users.Enable")+'" class="btn btn-mini glyphicon glyphicon-ok"></a>'+
+	'<a ng-show="row.entity.enabled == true" ng-click="changeToDisable(row.entity)" title="'+$translate("admin.users.Disable")+'" style="color:red" class="btn btn-mini glyphicon glyphicon-ban-circle"></a>'+
+	'<a ng-show="row.entity.enabled == false" ng-click="changeToEnable(row.entity)" title="'+$translate("admin.users.Enable")+'"  style="color:green" class="btn btn-mini glyphicon glyphicon-ok"></a>'+
 	'</div>';
    
     var GRID_STATUS_FORMATER = ' <div class="ngCellText " ng-class="col.colIndex()"><span class="ng-binding" ng-cell-text="">'+

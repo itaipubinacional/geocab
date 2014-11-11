@@ -10,8 +10,8 @@
 <div class="modal-content">
 
 	<div class="modal-header">
-		<button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	    <h3 class="modal-title">Associar Fonte de Dados</h3>
+		<button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"><spring:message code="admin.layer-config.Close"/></span></button>
+	    <h3 class="modal-title"><spring:message code="admin.layer-config.Associate-data-source"/></h3>
 	</div>
 
 	<div class="modal-body" ng-init="initialize();" style="overflow: visible">
@@ -40,13 +40,13 @@
 		</div>
 		
 		<div class="grid-elements-count" ng-show="currentPage.totalElements > 0">
-			{{currentPage.numberOfElements}} de {{currentPage.totalElements}} itens
+			{{currentPage.numberOfElements}} <spring:message code="admin.layer-config.of"/> {{currentPage.totalElements}} itens
 		</div>
         
 	</div>
 	<div class="modal-footer">
-		<button id="buttonClose" ng-disabled="selectedEntity == null" class="btn btn-primary" ng-click="close(false)">Selecionar</button>
-        <button class="btn btn-default" ng-click="close(true)">Fechar</button>
+		<button id="buttonClose" ng-disabled="selectedEntity == null" class="btn btn-primary" ng-click="close(false)"><spring:message code="admin.layer-config.Select"/></button>
+        <button class="btn btn-default" ng-click="close(true)"><spring:message code="admin.layer-config.Close"/></button>
 	</div>
 
 </div>

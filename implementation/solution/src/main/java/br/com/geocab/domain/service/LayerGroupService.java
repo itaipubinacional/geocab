@@ -4,6 +4,7 @@
 package br.com.geocab.domain.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
@@ -36,6 +38,7 @@ import br.com.geocab.domain.entity.layer.FieldLayer;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
+import br.com.geocab.domain.repository.IFileRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
@@ -78,6 +81,12 @@ public class LayerGroupService
 	 * 
 	 */
 	@Autowired
+	private ServletContext servletContext;
+	
+	/**
+	 * 
+	 */
+	@Autowired
 	private ILayerRepository layerRepository;
 
 	/**
@@ -91,9 +100,32 @@ public class LayerGroupService
 	 */
 	protected RestTemplate template;
 	
+	//files
+	/**
+	 * 
+	 */
+	@Autowired
+	private IFileRepository fileRepository;
+	
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	public List<String> listLayersIcons()
+	{
+		final String path = this.servletContext.getRealPath("/static/icons");
+		
+		File[] files = this.fileRepository.listFilePath(path);
+
+		List<String> layers = new ArrayList<String>();
+		
+		for(File file : files) {
+			if(file.isFile()){
+				layers.add(file.getName());
+			}
+		}
+		
+		return layers;
+	}
 	
 	/**
 	 * Method to insert an {@link LayerGroup}
@@ -549,7 +581,21 @@ public class LayerGroupService
 	public List<ExternalLayer> listExternalLayersByFilters( DataSource dataSource )
 	{
 		GeoserverConnection geoserverConnection = new GeoserverConnection();
-		return geoserverConnection.listExternalLayersByFilters(dataSource);
+		List<ExternalLayer> externalLayers = geoserverConnection.listExternalLayersByFilters(dataSource);
+		
+		// rotina para retirar as camadas ja existentes no sistema da lista de camadas externas
+		List<ExternalLayer> layersToRemove = new ArrayList<ExternalLayer>();
+		for (ExternalLayer externalLayer : externalLayers)
+		{
+			if (layerRepository.countLayersByNameAndDataSource(externalLayer.getName(), dataSource.getId()) > 0)
+			{
+				layersToRemove.add(externalLayer);
+			}
+		}
+		
+		externalLayers.removeAll(layersToRemove);
+		
+		return externalLayers;
 	}
 	
 	
@@ -705,7 +751,8 @@ public class LayerGroupService
 			
 			for(Attribute attributeInLayer : layer.getAttributes()) 
 			{
-				if(	attributeInLayer.getId().equals(attribute.getId()) ) 
+				attributeInLayer.setId(attributeInLayer.getTemporaryId());
+				if(	attributeInLayer.getId().equals(attribute.getTemporaryId()) ) 
 				{
 					attributeDeleted = false;
 					break;
@@ -719,19 +766,23 @@ public class LayerGroupService
 			
 		}
 		
-		//List<MarkerAttribute> ma = this.markerAttributeRepository.listAttributeByMarker(140L);
+		for(Attribute attribute : attributesByLayerToDelete) {
+			List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listMarkerAttributeByAttribute(attribute.getTemporaryId());
+			
+			if( markerAttributes != null ) {
+				this.markerAttributeRepository.deleteInBatch(markerAttributes);	
+			}
+			
+		}
 		
-		
-		//for(Attribute attribute : attributesByLayerToDelete){
-			//List<MarkerAttribute> ma = this.markerAttributeRepository.listAttributeByMarker(140L);
-			//this.markerAttributeRepository.delete(ma);	
-		//}
+		final List<Attribute> attributesByLayerToDeleteTemporary = new ArrayList<Attribute>();
+		for(Attribute attribute : attributesByLayerToDelete) {
+			attributesByLayerToDeleteTemporary.add(this.attributeRepository.findOne(attribute.getTemporaryId()));
+		}
 		
 		if(attributesByLayerToDelete != null) {
-			this.attributeRepository.delete(attributesByLayerToDelete);
+			this.attributeRepository.deleteInBatch(attributesByLayerToDeleteTemporary);
 		}
-			
-		
 		
 		/* Na atualização não foi permitido modificar a fonte de dados, camada e títuulo, dessa forma, 
 		Os valores originais são mantidos. */
@@ -765,7 +816,7 @@ public class LayerGroupService
 	public Layer findLayerById( Long id )
 	{
 		final Layer layer = this.layerRepository.findOne(id);
-		layer.setAttributes(this.attributeRepository.listAttributeByLayer(id));
+		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));
 		
 		// traz a legenda da camada do GeoServer
 		if( layer.getDataSource().getUrl() != null ) {
@@ -864,4 +915,11 @@ public class LayerGroupService
 		
 		return this.attributeRepository.listAttributeByLayer(layerId);
 	}
+	/*
+	public List<File> listIcons(){
+		//File diretorio = new File(); 
+		//InputStream input = getClass().getResourceAsStream("/main/webapp/static/icons");
+		File folder = new File("/main/webapp/static/icons");
+		
+	}*/
 }

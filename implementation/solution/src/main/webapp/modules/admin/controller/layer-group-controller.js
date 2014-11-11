@@ -67,7 +67,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 	 * If the state is not found, it directs you to the list
      */
     $scope.initialize = function( toState, toParams, fromState, fromParams ) {
-    	$scope.removeclicked = 0;
+    	
     	var state = $state.current.name;
 
         $log.info("Starting the front controller.");
@@ -183,12 +183,9 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.removeItem = function(scope)
     {
-    	if($scope.removeclicked == 0){
-    		$scope.removeclicked = 1;
-    	}
     	
     	
-        if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 && scope.$modelValue.camadas && scope.$modelValue.camadas.length > 0)
+        if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 && scope.$modelValue.layers && scope.$modelValue.layers.length > 0)
         {
             $scope.msg = {type:"danger", text: $translate("layer-group-view.Is-not-possible-to-remove-layers-groups-that-have-layers"), dismiss:true};
             
@@ -492,14 +489,8 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 	  		$("div.msg").fadeOut();
 	  	}, 3000);
 	}
-    
-    $(document).click(function() {
-    	if($scope.removeclicked == 1){
-    		$scope.removeclicked = 0
-    	} else{
-    		$("div.msg").css("display","none");
-    	}
-    });
+			
+	
     
 };
 

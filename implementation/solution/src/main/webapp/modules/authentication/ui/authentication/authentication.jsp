@@ -22,9 +22,12 @@
 			</div>		
 		</div>
 		<div class="container-login">
-			<div class="login-logo"></div>
+			<div class="login-logo">
+				<div class="login-logo-geocab"></div>
+				<div class="login-logo-itaipu" ></div>
+			</div>
 			<div class="title-short-login"></div>
-			<div class="title-login">
+			<div class="title-login" style="display:none">
 			</div>
             <!--Message -->
             <div ng-include="'static/libs/eits-directives/alert/alert.html'"></div>

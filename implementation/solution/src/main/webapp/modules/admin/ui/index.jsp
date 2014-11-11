@@ -12,7 +12,7 @@
     
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Hello <sec:authentication property="principal.name"/></title>
+		<title>GeoCAB - Cultivando água boa </title>
 		
 		<!-- Styles -->
 		<jsp:include page="../../default-styles.jsp"/>
@@ -54,6 +54,7 @@
 	<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-access-group-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-layers-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/data-source-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/layer-group-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/layer-config-controller.js"></script>

@@ -54,7 +54,7 @@
                 title="<spring:message code="admin.datasource.Back" />"
                 ui-sref="data-source.list"><span class="icon itaipu-icon-arrow-left"></span>
             </button>
-			<button ng-if="currentState == (INSERT_STATE || currentState == UPDATE_STATE) && isUrlChecked()" style="float: right;"
+			<button ng-if="(currentState == INSERT_STATE || currentState ==  UPDATE_STATE) && isUrlChecked()" style="float: right;"
 				class="btn btn-warning"
 				title="<spring:message code="admin.datasource.Connection-test"/>"
 				ng-click="testDataSourceConnection(currentEntity)"><spring:message code="admin.datasource.Connection-test"/>

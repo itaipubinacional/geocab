@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**
@@ -30,7 +31,17 @@ public interface IAttributeRepository extends IDataRepository<Attribute, Long>
 	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.type, attribute.required ) " +
 				"FROM Attribute attribute " +
 				"LEFT OUTER JOIN attribute.layer layer " + 
-				"WHERE ( :layerId = layer.id ) ")
+				"WHERE ( layer.id = :layerId ) ")
 	public List<Attribute> listAttributeByLayer( @Param("layerId") Long layerId );
+	
+	/**
+	 * @param layerId
+	 * @return
+	 */
+	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.required, attribute.type ) " +
+				"FROM Attribute attribute " +
+				"LEFT OUTER JOIN attribute.layer layer " + 
+				"WHERE ( layer.id = :layerId ) ")
+	public List<Attribute> listAttributeByLayerMarker( @Param("layerId") Long layerId );
 
 }
