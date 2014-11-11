@@ -21,7 +21,7 @@
 	<div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
 
 		<div>
-			<ul class="map-menu-items tool-items" id="menu-sidebar">
+			<ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
 				<li ng-click="aumentarZoom()" title="<spring:message code="map.Zoom-in" />"><a href="#tabs-2">
 						<div class="icon itaipu-icon-plus sidebar-icon"></div>
 				</a></li>
@@ -548,7 +548,7 @@
 		</div>
   
 		<div id="sidebar-tabs" style="float: left;">
-			<ul class="map-menu-items tab-flag" id="menu-sidebar-2">
+			<ul class="map-menu-items tab-flag" id="menu-sidebar-2" style="padding:6px">
 				<li id="menu-item-1"
 					title="<spring:message code="map.Layer-menu" />"
 					ng-click="toggleSidebarMenu(300, '#menu-item-1');"

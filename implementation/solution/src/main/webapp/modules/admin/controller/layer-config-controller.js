@@ -385,6 +385,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $scope.removeGroups = [];
 
         $scope.currentEntity = new Object();
+        
+        $scope.currentEntity.icon = 'static/icons/default_blue.png';
 
         $scope.currentState = $scope.INSERT_STATE;
 
