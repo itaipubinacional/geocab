@@ -84,7 +84,7 @@
                 <b class="detail-label"><spring:message code="admin.layer-config.Symbology"/></b>
                 <br>
                 <img ng-if="currentEntity.dataSource.url"style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.legend}}"/>
-                <img style="border: 1px solid #000" ng-if="!currentEntity.dataSource.url && currentEntity.dataSource.id " src="<c:url value="/static/images/symbology.image"/>">
+                <img ng-if="!currentEntity.dataSource.url && currentEntity.dataSource.id " src="<c:url value="{{ currentEntity.icon }}"/>">
             </div>
             <br>
             
