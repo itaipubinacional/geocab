@@ -41,6 +41,14 @@
 		            			
 	            		</div>
             		</div>
+            		<div style="display: inline-block;" ng-if="currentState == INSERT_STATE"> 
+	            		<div  ng-repeat="icon in layerIcons" style="float: left; text-align: center; margin: 2px; width: 30px; height: 30px;" ng-style="currentEntity.iconTemporary == 'static/icons/' + icon ? {'border':'2px solid red'} : ''" >
+		            		<label for="{{ icon }}">
+		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="25" height="25" class="preview" title=""  > <br>
+		            			<input id="{{ icon }}" type="radio" value="static/icons/{{ icon }}" ng-checked="currentEntity.icon == 'static/icons/{{ icon }}'" name="layerIcon" style="display: none" ng-model="currentEntity.iconTemporary"> 
+		            		</label>
+	            		</div>
+            		</div>
             		<pagination style="text-align: center;"
 			                   total-items="currentPage.total" rotate="false"
 			                   items-per-page="currentPage.size"
