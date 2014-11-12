@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function MorePopupController($scope, $injector,$modalInstance, $state, currentEntity, $importService ) {
+function MorePopupController($scope, $injector,$modalInstance, $state, currentEntity, currentState, $importService ) {
 
     $importService("layerGroupService");
 
@@ -20,6 +20,28 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
     //STATES
+	  //STATES
+    /**
+     * Variável estática que representa
+     * o estado de listagem de registros.
+     */
+    $scope.LIST_STATE = "layer-config.list";
+    /**
+     * Variável estática que representa
+     * o estado de detalhe de um registro.
+     */
+    $scope.DETAIL_STATE = "layer-config.detail";
+    /**
+     * Variável estática que representa
+     * o estado para a criação de registros.
+     */
+    $scope.INSERT_STATE = "layer-config.create";
+    /**
+     * Variável estática que representa
+     * o estado para a edição de registros.
+     */
+    $scope.UPDATE_STATE = "layer-config.update";
+    
     /**
      *
      */
@@ -115,6 +137,7 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
             }
         });
 		
+		$scope.currentState = currentState;
 		$scope.currentEntity = currentEntity;
 		$scope.currentEntity.iconTemporary = $scope.currentEntity.icon;
 	};
