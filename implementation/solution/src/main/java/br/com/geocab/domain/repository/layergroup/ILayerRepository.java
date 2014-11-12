@@ -27,7 +27,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param pageable
 	 * @return
 	 */
-	@Query(value="SELECT new Layer( layer.id, layer.name, layer.title, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup ) " +
+	@Query(value="SELECT new Layer( layer.id, layer.name, layer.icon, layer.title, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup ) " +
 				"FROM Layer layer " +
 				"LEFT OUTER JOIN layer.dataSource dataSource " + 
 				"LEFT OUTER JOIN layer.layerGroup layerGroup " +

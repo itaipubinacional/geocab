@@ -242,6 +242,38 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
 	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param icon
+	 * @param title
+	 * @param startEnabled
+	 * @param startVisible
+	 * @param orderLayer
+	 * @param minimumMapScale
+	 * @param maximumMapScale
+	 * @param enabled
+	 * @param dataSource
+	 * @param layerGroup
+	 */
+	public Layer( Long id, String name, String icon, String title, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, DataSource dataSource,
+			LayerGroup layerGroup )
+	{
+		this.setId(id);
+		this.setName(name);
+		this.setTitle(title);
+		this.setStartEnabled(startEnabled);
+		this.setStartVisible(startVisible);
+		this.setOrderLayer(orderLayer);
+		this.setMinimumScaleMap(maximumMapScale);
+		this.setMaximumScaleMap(maximumMapScale);
+		this.setEnabled(enabled);
+		this.setDataSource(dataSource);
+		this.setLayerGroup(layerGroup);
+		this.setIcon(icon);
+	}
 
 	
 	/**
