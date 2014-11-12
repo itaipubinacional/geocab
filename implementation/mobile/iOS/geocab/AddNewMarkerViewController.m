@@ -89,7 +89,7 @@
 
 - (IBAction)saveMarker:(id)sender {
     if ([self validateForm]) {
-        NSLog(@"Marker: %@", _NewMarker);
+//        NSLog(@"Marker: %@", _NewMarker);
     }
 }
 
