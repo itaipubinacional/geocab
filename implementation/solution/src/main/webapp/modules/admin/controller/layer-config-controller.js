@@ -187,6 +187,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
     
     var GRID_ACTION_ATTRIBUTES_BUTTONS = '<div class="cell-centered">' +
+    '<a ng-if="!row.entity.attributeDefault" ng-click="updateAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Update" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
     '<a ng-if="!row.entity.attributeDefault" ng-click="removeAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
     '</div>';
     
@@ -810,17 +811,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         });
     };
     
-    /**
-     * Add attribute
-     * */
-    $scope.addAttribute = function() {
+  
+    $scope.moreIcons = function() {
     	var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/layer-config/popup/add-attribute-popup.jsp",
-            controller: AddAttributePopUpController,
+            templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
+            controller: MorePopupController,
             windowClass: 'xx-dialog',
             resolve: {
-                attributes: function () {
-                    return $scope.attributes;
+            	currentEntity: function () {
+                    return $scope.currentEntity;
                 }
             }
         });
@@ -836,14 +835,44 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         });
     }
     
-    $scope.moreIcons = function() {
+    /**
+     * Update attribute
+     * */
+    $scope.updateAttribute = function(attribute) {
+    	
     	var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
-            controller: MorePopupController,
+            templateUrl: "modules/admin/ui/layer-config/popup/update-attribute-popup.jsp",
+            controller: UpdateAttributePopUpController,
             windowClass: 'xx-dialog',
             resolve: {
-            	currentEntity: function () {
-                    return $scope.currentEntity;
+                attributes: function () {
+                    return {'many' : $scope.attributes, 'single': attribute};
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+
+            if (result) {
+                $scope.currentEntity.name = result.name;
+                $scope.currentEntity.title = result.title;
+                $scope.currentEntity.legend = result.legend;
+            }
+
+        });
+    }
+    
+    /**
+     * Add attribute
+     * */
+    $scope.addAttribute = function() {
+    	var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/layer-config/popup/add-attribute-popup.jsp",
+            controller: AddAttributePopUpController,
+            windowClass: 'xx-dialog',
+            resolve: {
+                attributes: function () {
+                    return $scope.attributes;
                 }
             }
         });

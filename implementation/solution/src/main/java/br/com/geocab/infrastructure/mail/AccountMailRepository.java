@@ -57,7 +57,7 @@ public class AccountMailRepository implements IAccountMailRepository
 	 * @param user
 	 */
 	@Async
-	public Future<Void> sendRecoveryPassword( User user )
+	public Future<Void> sendRecoveryPassword( final User user )
 	{
 		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
             public void prepare( MimeMessage mimeMessage ) throws Exception {
