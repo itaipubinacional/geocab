@@ -116,6 +116,7 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
         });
 		
 		$scope.currentEntity = currentEntity;
+		$scope.currentEntity.iconTemporary = $scope.currentEntity.icon;
 	};
 
 	/*-------------------------------------------------------------------
@@ -181,12 +182,21 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
         $scope.currentState = $scope.NORMAL_STATE;
     };
 
+    /**
+	 *
+	 */
+	$scope.save = function() 
+	{
+		$scope.currentEntity.icon = $scope.currentEntity.iconTemporary;
+		$scope.msg = null;
+		$modalInstance.close(null);
+	};
+    
 	/**
 	 *
 	 */
 	$scope.close = function() 
 	{
-		currentEntity = $scope.currentEntity;
 		$scope.msg = null;
 		$modalInstance.close(null);
 	};
