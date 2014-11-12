@@ -19,7 +19,7 @@
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
-        <h3 class="modal-title"><spring:message code="admin.layer-config.Add-attribute" /></h3>
+        <h3 class="modal-title"><spring:message code="admin.layer-config.Update-attributes" /></h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
         <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>
@@ -59,17 +59,13 @@
 			<spring:message code="Required" /> 
      
         </form>
-        
        
-        
-       
-        
         <br style="clear: both"/>
 
     </div>
 
     <div class="modal-footer">
-        <button id="buttonInsertAdd" ng-disabled="gridOptions.selectedItems.length == 0" title="<spring:message code="admin.layer-config.Register" />" class="btn btn-primary" ng-click="updateAttribute()"><spring:message code="admin.layer-config.Register" /></button>
+        <button id="buttonInsertAdd" ng-disabled="gridOptions.selectedItems.length == 0" title="<spring:message code="admin.layer-config.Register" />" class="btn btn-primary" ng-click="updateAttribute()"><spring:message code="admin.layer-config.Update" /></button>
         <button class="btn btn-default" title="<spring:message code="admin.layer-config.Close" />" ng-click="close(true)"><spring:message code="admin.layer-config.Close" /></button>
     </div>
 </div>
