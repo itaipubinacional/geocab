@@ -19,18 +19,26 @@
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
-        <h3 class="modal-title"><spring:message code="admin.layer-config.Choose-an-icon" /></h3>
+        <h3 ng-if="currentState == UPDATE_STATE" class="modal-title"><spring:message code="admin.layer-config.Choose-an-icon" /></h3>
+        <h3 ng-if="currentState == DETAIL_STATE" class="modal-title">Ícones</h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
         <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>     
 	            
            		<div style="text-align: center;">
-            		 <div style="display: inline-block;"> 
+            		 <div style="display: inline-block;" ng-if="currentState == UPDATE_STATE"> 
 	            		<div  ng-repeat="icon in layerIcons" style="float: left; text-align: center; margin: 2px; width: 30px; height: 30px;" ng-style="currentEntity.iconTemporary == 'static/icons/' + icon ? {'border':'2px solid red'} : ''" >
 		            		<label for="{{ icon }}">
 		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="25" height="25" class="preview" title=""  > <br>
 		            			<input id="{{ icon }}" type="radio" value="static/icons/{{ icon }}" ng-checked="currentEntity.icon == 'static/icons/{{ icon }}'" name="layerIcon" style="display: none" ng-model="currentEntity.iconTemporary"> 
 		            		</label>
+	            		</div>
+            		</div>
+            		<div style="display: inline-block;" ng-if="currentState == DETAIL_STATE"> 
+	            		<div  ng-repeat="icon in layerIcons" style="float: left; text-align: center; margin: 2px; width: 30px; height: 30px;" ng-style="currentEntity.iconTemporary == 'static/icons/' + icon ? {'border':'2px solid red'} : ''" >
+		            
+		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="25" height="25" class="preview" title=""  > <br>
+		            			
 	            		</div>
             		</div>
             		<pagination style="text-align: center;"
@@ -47,7 +55,7 @@
 
     <div class="modal-footer"> 
     	<div ><img src="static/images/autor_icones.gif" style="float:left"></div>   
-        <button class="btn btn-primary" title="<spring:message code="Save" />" ng-click="save()"><spring:message code="Save" /></button>
+        <button ng-if="currentState == UPDATE_STATE" class="btn btn-primary" title="<spring:message code="Save" />" ng-click="save()"><spring:message code="Save" /></button>
         <button class="btn btn-default" title="<spring:message code="admin.layer-config.Close" />" ng-click="close(true)"><spring:message code="admin.layer-config.Close" /></button>
     </div>
 </div>

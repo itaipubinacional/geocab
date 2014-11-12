@@ -818,6 +818,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             controller: MorePopupController,
             windowClass: 'xx-dialog',
             resolve: {
+            	currentState: function(){
+                	return $scope.currentState;
+                },
             	currentEntity: function () {
                     return $scope.currentEntity;
                 }
