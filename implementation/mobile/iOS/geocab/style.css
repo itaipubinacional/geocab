@@ -24,6 +24,14 @@ div.map {
 	padding: 0;
 }
 
+#map-loading-gif {
+    width:  100px;
+    height: 100px;
+    position: fixed;
+    bottom: 2px;
+    right: 2px;
+}
+
 .ui-collapsible-heading-toggle {
 	border: none!important;
 	font-size: 12px;

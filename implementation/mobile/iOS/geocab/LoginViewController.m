@@ -10,7 +10,6 @@
 #import "GTLPlusConstants.h"
 #import <GooglePlus/GooglePlus.h>
 #import <GoogleOpenSource/GoogleOpenSource.h>
-#import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "User.h"
 #import "ControllerUtil.h"
@@ -18,7 +17,6 @@
 
 @interface LoginViewController ()
 
-@property (retain, nonatomic) MFSideMenuContainerViewController *menuContainerViewController;
 @property (weak, nonatomic) IBOutlet UITextField *username;
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (copy) GPPSignIn *signIn;
@@ -36,9 +34,9 @@ extern User *loggedUser;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.menuContainerViewController.panMode = MFSideMenuPanModeNone;
-    
     _signIn = [GPPSignIn sharedInstance];
+    
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
     
     _signIn.clientID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"kClientId"];
     _signIn.scopes = [NSArray arrayWithObjects:kGTLAuthScopePlusLogin,

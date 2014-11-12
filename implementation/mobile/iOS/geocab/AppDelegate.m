@@ -60,7 +60,7 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    if ([[url scheme] caseInsensitiveCompare:@"fb865641123454882"] == NSOrderedSame) {
+    if ([[url scheme] caseInsensitiveCompare:@"fb1565690900310619"] == NSOrderedSame) {
         return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
     }
     
