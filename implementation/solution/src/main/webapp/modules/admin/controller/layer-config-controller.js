@@ -116,6 +116,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
     
+    var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
+    '<span ng-if="!row.entity.dataSource.url" ng-cell-text="" class="ng-binding">Camada interna</span>' +
+    '<span ng-if="row.entity.dataSource.url" ng-cell-text="" class="ng-binding">{{ row.entity.name }}</span>' +
+    '</div>';
+
+    
     var MARKER_BUTTONS = '<div  class="cell-centered">' +
     '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == false" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
     '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == true" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
@@ -123,7 +129,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     '</div>';
     
     var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
+	'<img ng-if="row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
+	'<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="/geocab/{{row.entity.icon}}"/>' +
 	'</div>';
 
     /**
@@ -145,7 +152,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             {displayName: 'Postagem', sortable: false, cellTemplate: MARKER_BUTTONS, width: '6%'},
             {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '6%', cellTemplate: IMAGE_LEGEND},
             {displayName: $translate('Title'), field: 'title', width: '19%'},
-            {displayName: $translate('Layer'), field: 'name', width: '19%'},
+            //{displayName: $translate('Layer'), field: 'name', width: '19%'},
+            {displayName: $translate('Layer'), cellTemplate: LAYER_TYPE_NAME, width: '19%'},
             {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name', width: '30%'},
             {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '13%'},
             {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '7%'}
