@@ -38,7 +38,7 @@ BOOL animating;
     //Navigation Bar
     self.navigationItem.title = NSLocalizedString(@"Layers", @"");
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 44)];
     [self.view addSubview:self.tableView];
     
     self.tableView.dataSource = self;
@@ -183,8 +183,8 @@ BOOL animating;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-//    return [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section]] count];
-    return 1;
+    return [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:section]] count];
+//    return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -235,11 +235,34 @@ BOOL animating;
     cell.layerTitle.text = layer.title;
     
     if (layer.legend != nil) {
-        cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+            NSURL *imageURL = [NSURL URLWithString:layer.legend];
+            NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+            UIImage *image = [UIImage imageWithData:imageData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cell.legendImage.image = image;
+            });
+        });
+        
+//        cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            cell.legendImage.image = [UIImage imageNamed:iconName];
+//        });
     } else {
         NSRange position = [layer.icon rangeOfString:@"/" options:NSBackwardsSearch];
         NSString *iconName = [layer.icon substringWithRange:NSMakeRange(position.location+1, layer.icon.length - (position.location + 1))];
-        cell.legendImage.image = [UIImage imageNamed:iconName];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cell.legendImage.image = [UIImage imageNamed:iconName];
+            });
+            
+        });
+        
+        
     }
     
     
