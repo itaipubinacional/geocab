@@ -2,14 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location for point&apos;s management</string>
-	<key>FacebookDisplayName</key>
-	<string>geocab-test</string>
-	<key>FacebookAppID</key>
-	<string>865641123454882</string>
-	<key>kClientId</key>
-	<string>426541276534-qp8rmrfpur7uihdhu8ukqatm2e7qoftd.apps.googleusercontent.com</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -17,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
-	<string>br.com.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>br.com.geocab</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -37,15 +29,21 @@
 			<string>br.com.geocab</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb865641123454882</string>
+				<string>fb1565690900310619</string>
 				<string>br.com.geocab</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.0.1</string>
+	<key>FacebookAppID</key>
+	<string>1565690900310619</string>
+	<key>FacebookDisplayName</key>
+	<string>itaipu - geocab</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location for point's management</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -54,11 +52,13 @@
 		<string>gps</string>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>kClientId</key>
+	<string>270304814139-a6lnic7muup0ptkf1p4160r56bcrhspv.apps.googleusercontent.com</string>
 </dict>
 </plist>

@@ -158,7 +158,7 @@
 
 -(void)menuStateEventOcurred:(NSNotification *)notification
 {
-    NSLog(@"Me chamaram");
+
 }
 
 /*
