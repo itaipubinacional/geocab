@@ -19,7 +19,7 @@
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
-        <h3 ng-if="currentState == UPDATE_STATE" class="modal-title"><spring:message code="admin.layer-config.Choose-an-icon" /></h3>
+        <h3 ng-if="currentState == UPDATE_STATE || currentState == INSERT_STATE" class="modal-title"><spring:message code="admin.layer-config.Choose-an-icon" /></h3>
         <h3 ng-if="currentState == DETAIL_STATE" class="modal-title">Ícones</h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
@@ -63,7 +63,7 @@
 
     <div class="modal-footer"> 
     	<div ><img src="static/images/autor_icones.gif" style="float:left"></div>   
-        <button ng-if="currentState == UPDATE_STATE" class="btn btn-primary" title="<spring:message code="Save" />" ng-click="save()"><spring:message code="Save" /></button>
+        <button ng-if="currentState == UPDATE_STATE || currentState == INSERT_STATE" class="btn btn-primary" title="<spring:message code="Save" />" ng-click="save()"><spring:message code="Save" /></button>
         <button class="btn btn-default" title="<spring:message code="admin.layer-config.Close" />" ng-click="close(true)"><spring:message code="admin.layer-config.Close" /></button>
     </div>
 </div>
