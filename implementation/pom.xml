@@ -53,6 +53,51 @@
 			<url>http://maven.eits.com.br/content/repositories/releases</url>
 		</repository>
 	</repositories>
+	
+
+	<!-- Profiles -->
+	<profiles>
+	
+		<profile>
+			<id>development</id>
+			<activation>
+          		<activeByDefault>true</activeByDefault>
+        	</activation>
+			<properties>
+				<!-- Database -->
+				<jdbc.jdbcUrl>jdbc:postgresql://127.0.0.1/geocab</jdbc.jdbcUrl>
+				<jdbc.username>geocab</jdbc.username>
+				<jdbc.password>geocab</jdbc.password>
+
+				<!-- Hibernate -->
+				<hibernate.hbm2ddl>update</hibernate.hbm2ddl>
+				<hibernate.showSql>true</hibernate.showSql>
+				<hibernate.formatSql>false</hibernate.formatSql>
+				<hibernate.default_schema>geocab</hibernate.default_schema>
+				<hibernate.envers.default_schema>geocab_auditoria</hibernate.envers.default_schema>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>sandbox</id>
+			<properties>
+				<!-- Database -->
+				<jdbc.jdbcUrl>jdbc:postgresql://127.0.0.1/geocab</jdbc.jdbcUrl>
+				<jdbc.username>geocab</jdbc.username>
+				<jdbc.password>geocab</jdbc.password>
+
+				<!-- Hibernate -->
+				<hibernate.hbm2ddl>update</hibernate.hbm2ddl>
+				<hibernate.showSql>true</hibernate.showSql>
+				<hibernate.formatSql>false</hibernate.formatSql>
+				<hibernate.default_schema>geocab</hibernate.default_schema>
+				<hibernate.envers.default_schema>geocab_auditoria</hibernate.envers.default_schema>
+			</properties>
+		</profile>
+		
+		
+	</profiles>
+
 		
 	<!-- Modules -->
 	<modules>
