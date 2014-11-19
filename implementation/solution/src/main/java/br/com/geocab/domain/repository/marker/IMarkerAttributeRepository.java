@@ -32,7 +32,8 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 				 " FROM MarkerAttribute markerAttribute "+ 
 				 " LEFT OUTER JOIN markerAttribute.marker marker " + 
 				 " LEFT OUTER JOIN markerAttribute.attribute attribute " + 
-				 " WHERE (markerAttribute.marker.id = :markerId)")
+				 " WHERE (markerAttribute.marker.id = :markerId)"+ 
+				 " ORDER BY markerAttribute.id ASC")
 	public List<MarkerAttribute> listAttributeByMarker( @Param("markerId") Long markerId );
 	
 	/**

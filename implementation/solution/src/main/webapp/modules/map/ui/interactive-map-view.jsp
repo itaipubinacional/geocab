@@ -233,85 +233,6 @@
 								ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
 								style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
 							
-							<div ng-repeat="attribute in attributesByLayer"
-								ng-if="showAttributesAlone || showNewAttributes"
-								style="position: relative">
-								
-								<ng-form name="ngSideMarker" default-button="buttonInsert">
-								<label style="margin-top: 15px">{{ attribute.name }}</label> 
-								
-								<input type="number"
-									name="number1" ng-if="attribute.type == 'NUMBER'"
-									class="form-control" ng-model="attribute.value"
-									ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-									ng-required="attribute.required"
-									> 
-									
-								<input
-									type="date" name="date1" ng-if="attribute.type == 'DATE'"
-									class="form-control" ng-model="attribute.value"
-									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
-									ng-required="attribute.required"
-									>
-	
-<!-- 								<div ng-if="attribute.type == 'BOOLEAN'" id="radioBoolean" class="boolean-required" > -->
-	
-<!-- 									<input type="radio" name="boolean" ng-model="attribute.value" -->
-<%-- 										value="Yes" ng-required="attribute.required" ><spring:message code="map.Yes" />  --%>
-										
-<!-- 									<input type="radio" name="boolean" ng-model="attribute.value"  -->
-<%-- 										value="No" ng-required="attribute.required"><spring:message code="map.No" />  --%>
-<!-- 								</div> -->
-								
-								<div ng-if="attribute.type == 'BOOLEAN'" ng-required="attribute.required"  >
-									<div class="required-boolean" >
-										<input type="radio" name="boolean{{ $index }}" class="boolean-1 boolean" ng-model="attribute.value"
-											value="Yes" onClick="isBooleanChecked(this)" ><spring:message code="map.Yes" /> 
-											
-										<input type="radio" name="boolean{{ $index }}" class="boolean-2 boolean" ng-model="attribute.value" 
-											value="No" onClick="isBooleanChecked(this)"><spring:message code="map.No" /> 
-									</div>
-								</div>
-	
-								<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
-									class="form-control" ng-model="attribute.value"
-									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-									ng-required="attribute.required"
-									> 
-									
-									<span
-									class="tooltip-validation"
-									ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
-									style="top: 3px"><spring:message code="map.Field-required"/>
-									</span> 
-									
-									<span
-									class="tooltip-validation"
-									ng-if=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
-									style="top: 3px"><spring:message code="map.Field-required"/>
-									</span> 								
-									
-									<span
-									class="tooltip-validation"
-									ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px"><spring:message code="map.Field-required"/>
-									</span> 
-									
-									<span
-									class="tooltip-validation"
-									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-									style="top: 3px"><spring:message code="map.Must-be-a-number"/>
-									</span> 
-									
-									<span
-									class="tooltip-validation"
-									ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-									style="top: 3px"><spring:message code="map.Field-required"/>
-									</span> 
-									
-									<ng-form>
-							</div>
-							
 							<div ng-repeat="markerAttribute in attributesByMarker"
 								ng-if="!showAttributesAlone"
 								style="position: relative;margin-bottom:15px;">
@@ -391,6 +312,84 @@
 							
 							</div>
 	
+							<div ng-repeat="attribute in attributesByLayer"
+								ng-if="showAttributesAlone || showNewAttributes"
+								style="position: relative">
+								
+								<ng-form name="ngSideMarker" default-button="buttonInsert">
+								<label style="margin-top: 15px">{{ attribute.name }}</label> 
+								
+								<input type="number"
+									name="number1" ng-if="attribute.type == 'NUMBER'"
+									class="form-control" ng-model="attribute.value"
+									ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+									ng-required="attribute.required"
+									> 
+									
+								<input
+									type="date" name="date1" ng-if="attribute.type == 'DATE'"
+									class="form-control" ng-model="attribute.value"
+									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+									ng-required="attribute.required"
+									>
+	
+<!-- 								<div ng-if="attribute.type == 'BOOLEAN'" id="radioBoolean" class="boolean-required" > -->
+	
+<!-- 									<input type="radio" name="boolean" ng-model="attribute.value" -->
+<%-- 										value="Yes" ng-required="attribute.required" ><spring:message code="map.Yes" />  --%>
+										
+<!-- 									<input type="radio" name="boolean" ng-model="attribute.value"  -->
+<%-- 										value="No" ng-required="attribute.required"><spring:message code="map.No" />  --%>
+<!-- 								</div> -->
+								
+								<div ng-if="attribute.type == 'BOOLEAN'" ng-required="attribute.required"  >
+									<div class="required-boolean" >
+										<input type="radio" name="boolean{{ $index }}" class="boolean-1 boolean" ng-model="attribute.value"
+											value="Yes" onClick="isBooleanChecked(this)" ><spring:message code="map.Yes" /> 
+											
+										<input type="radio" name="boolean{{ $index }}" class="boolean-2 boolean" ng-model="attribute.value" 
+											value="No" onClick="isBooleanChecked(this)"><spring:message code="map.No" /> 
+									</div>
+								</div>
+	
+								<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
+									class="form-control" ng-model="attribute.value"
+									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+									ng-required="attribute.required"
+									> 
+									
+									<span
+									class="tooltip-validation"
+									ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
+									style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 
+									
+									<span
+									class="tooltip-validation"
+									ng-if=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
+									style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 								
+									
+									<span
+									class="tooltip-validation"
+									ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
+									style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 
+									
+									<span
+									class="tooltip-validation"
+									ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
+									style="top: 3px"><spring:message code="map.Must-be-a-number"/>
+									</span> 
+									
+									<span
+									class="tooltip-validation"
+									ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
+									style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 
+									
+									<ng-form>
+							</div>
 							<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
 							<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 	
