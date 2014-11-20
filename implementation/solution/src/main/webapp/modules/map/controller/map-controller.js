@@ -69,6 +69,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @type {string}
      */
     $scope.LAYER_MENU_LEGEND_DETAIL = 'legend_detail';
+    
+    /**
+     * */
+    $scope.attributesByLayer = [];
 
     /*
     *
@@ -308,6 +312,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		
+		
 		/**
 		 * Ajuste do menu
 		 */
@@ -531,12 +536,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	/* if click on the marker */
         	if( feature ){
         		if( typeof feature.getProperties().marker != "undefined" ) {
-        			$scope.currentCreatingInternalLayer = feature;
-	        		$scope.screen = 'detail';
-	        		
-					if( $scope.screenMarkerOpenned ) {
+        			if( $scope.screenMarkerOpenned ) {
 						$scope.clearFcMarker();
 					}
+        			
+        			$scope.currentCreatingInternalLayer = feature;
+	        		$scope.screen = 'detail';
 				        		
 	        		$scope.marker = feature.getProperties().marker;
 	        		$scope.features.push({"feature": $scope.marker, "type": "internal"});
@@ -1576,6 +1581,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		$scope.toggleSidebar(time, element, '#sidebar-marker-create');
     	}
     	
+    	$scope.resolveDatepicker();
+    	
     };
     
     $scope.toggleSidebarMarkerDetailUpdate = function (time, element){
@@ -1723,6 +1730,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	if ( $('#sidebar-marker-detail').css("display") == 'none' ){
     		
     	}*/
+    	$scope.resolveDatepicker();
     	
     };
     
@@ -2316,6 +2324,43 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		});
     	
     	return $scope.ok;
+    }
+    
+    $scope.resolveDatepicker = function(){
+    	
+		$scope.$watch('attributesByLayer', function(oldValue, newValue){
+			$timeout(function(){
+				$('.datepicker').datepicker({ 
+					dateFormat: 'dd/mm/yy',
+					dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+				    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+				    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+				    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+				    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+				    nextText: 'Próximo',
+				    prevText: 'Anterior'
+				});	
+
+				$('.datepicker').mask("99/99/9999");
+			}, 200);
+		})
+		$scope.$watch('screen', function(oldValue, newValue){
+			$timeout(function(){
+				$('.datepicker').datepicker({ 
+					dateFormat: 'dd/mm/yy',
+					dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+				    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+				    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+				    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+				    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+				    nextText: 'Próximo',
+				    prevText: 'Anterior'
+				});		
+
+				$('.datepicker').mask("99/99/9999");
+			}, 200);
+		})
+	
     }
     
     

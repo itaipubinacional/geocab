@@ -13,7 +13,7 @@ import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
 
 /**
- * Classe responsável por definir o comportamento de um histórico
+ * Classe responsï¿½vel por definir o comportamento de um histï¿½rico
  * 
  * 
  * @author Rodrigo P. Fraga
@@ -22,7 +22,7 @@ import org.hibernate.envers.RevisionTimestamp;
  * @category Entity
  */
 @Entity
-@Table(schema="geocab_audit")
+@Table(schema="geocab_auditoria")
 @org.hibernate.envers.RevisionEntity(EntityTrackingRevisionListener.class)
 public class Revision<T extends IEntity<ID>, ID extends Serializable> implements Serializable
 {
@@ -47,7 +47,7 @@ public class Revision<T extends IEntity<ID>, ID extends Serializable> implements
 	@RevisionTimestamp
 	private long timestamp;
 	/**
-	 * id do usuário da {@link Revision}
+	 * id do usuï¿½rio da {@link Revision}
 	 */
 	private Long userId;
 	
