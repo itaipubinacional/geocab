@@ -527,6 +527,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     listUrls.push(decodeURIComponent(url));
                 }
 
+                if( $scope.screenMarkerOpenned ) {
+					$scope.clearFcMarker();
+				}
+                
                 listAllFeatures(listUrls);
                 
                 $scope.screen = 'detail';
