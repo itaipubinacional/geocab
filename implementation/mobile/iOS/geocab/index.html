@@ -19,6 +19,8 @@
 	<div id="map" class="map">
 	</div>
     
+    <img id="map-loading-gif" src="ajax-loader.gif" alt="" style="display:none;">
+    
     <script src="jquery-2.1.1.min.js"></script>
     <script src="ol.js"></script>
     <script src="jquery.mobile-1.4.4.js"></script>
@@ -30,17 +32,9 @@
           zoom: 7
 		});
 
-		var wmsSource = new ol.source.TileWMS({
-			url: 'http://172.17.6.112/geoserver/sls-sls/wms',
-			params: {'LAYERS': 'sls-sls:vslsgeoregiao'},
-		});
-
-		var wmsLayer = new ol.layer.Tile({
-			source: wmsSource
-		});
-
 		var layersAdd = [];
 		var markersAdd = [];
+        var loadingFeature = false;
 		
 		var map = new ol.Map({
 			target: 'map',
@@ -64,41 +58,47 @@
 		
 		// display popup on click
 		map.on('click', function(evt) {
-			features = [];
-			features.push(map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-				return feature;
-			}))
+			if (!loadingFeature) {
+				features = [];
+				features.push(map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+					return feature;
+				}))
 
-            var listUrls = [];
-            var listTitles = [];
-               
-			if (layersAdd.length > 0){
+	            var listUrls = [];
+	            var listTitles = [];
+	               
+				if (layersAdd.length > 0){
 
-                for(var i in layersAdd)
-                {
-                    var url = layersAdd[i].wmsSource.getGetFeatureInfoUrl(
-                        evt.coordinate, view.getResolution(), view.getProjection(),
-                        {'INFO_FORMAT': 'application/json'});
+	                for(var i in layersAdd)
+	                {
+	                    var url = layersAdd[i].wmsSource.getGetFeatureInfoUrl(
+	                        evt.coordinate, view.getResolution(), view.getProjection(),
+	                        {'INFO_FORMAT': 'application/json'});
 
-                    listUrls.push(decodeURIComponent(url));
-                    listTitles.push(layersAdd[i].title);
-                }
+	                    listUrls.push(decodeURIComponent(url));
+	                    listTitles.push(layersAdd[i].title);
+	                }
 
-            }
-            var collapsed = false;
-			if (features.length > 0 && features[0] != undefined) {
-				var html = '';
-				for ( var i = 0; i < features.length; i++) {
-					getMarkerAtributes(features[i].get('markerId'), features[i].get('name'), features[i].get('user'), features[i].get('created'));
-					collapsed = true;
+	            }
+	            var collapsed = false;
+				if (features.length > 0 && features[0] != undefined) {
+					var html = '';
+					loadingFeature = true;
+					$("#map-loading-gif").show();
+					for ( var i = 0; i < features.length; i++) {
+						getMarkerAtributes(features[i].get('markerId'), features[i].get('name'), features[i].get('user'), features[i].get('created'));
+						collapsed = true;
+					}
 				}
-			}
 
-			if (listUrls.length > 0) {
-				var collapsed = true;
-				for (var i in listUrls) {
-					getExternalLayerAttributes(listUrls[i], listTitles[i], collapsed);
-					collapsed = true;
+				if (listUrls.length > 0) {
+					var collapsed = true;
+                    loadingFeature = true;
+                    $("#map-loading-gif").show();
+					for (var i in listUrls) {
+						getExternalLayerAttributes(listUrls[i], listTitles[i], collapsed);
+						collapsed = true;
+					}
 				}
 			}
 		});
@@ -167,7 +167,7 @@
 				for( var i in markersAdd ) {
 				   if( markersAdd[i].name == name ) {
 					   map.removeLayer(markersAdd[i].vectorLayer);
-					   // markersAdd.splice(i,1);  /* removed to prevent an error, the splice is called before the map.removeLayer finish the execution */
+					   markersAdd.splice(i,1);  /* removed to prevent an error, the splice is called before the map.removeLayer finish the execution */
 				   }
 			   }
 			}
@@ -202,6 +202,12 @@
         function loadPopupContent (html) {
         	$('#popupCloseLeft').popup('open');
         	$('#collapsible-content').append(html).trigger("create");
+            cancelLoading();
+        }
+    
+        function cancelLoading() {
+            loadingFeature = false;
+            $("#map-loading-gif").hide();
         }
 
         function loadImageContent(id, html){

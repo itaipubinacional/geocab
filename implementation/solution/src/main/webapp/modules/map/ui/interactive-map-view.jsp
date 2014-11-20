@@ -145,10 +145,10 @@
 														required ng-disabled="true"
 														> 
 																						
-														<input type="date"
+														<input 
 														name="date1" 
 														ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
-														class="form-control" ng-model="markerAttribute.value"									
+														class="form-control datepicker" ng-model="markerAttribute.value"									
 														required 
 														ng-disabled="true"
 														>
@@ -197,6 +197,7 @@
 				
 				<form name="sidebarMarkerUpdate" method="post" ng-show="screen == 'update'"
 					default-button="buttonInsert" novalidate >
+					
 					<div style="position: absolute; top:0; right:0; left:0; bottom:0">
 						<!-- <div class="sidebar-coloredbar"></div> -->
 						<div>
@@ -233,6 +234,85 @@
 								ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
 								style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
 							
+							<div ng-repeat="markerAttribute in attributesByMarker"
+								ng-if="!showAttributesAlone"
+								style="position: relative;margin-bottom:15px;">
+	
+								<ng-form name="ngSideMarker" default-button="buttonUpdate">
+								<label  ng-style="$index > 0 ? {'margin-top':'15px'} : '' ">{{ markerAttribute.attribute.name }}</label> 
+								
+									<input
+										type="number" 
+										name="number1"
+										ng-if="markerAttribute.attribute.type == 'NUMBER'"
+										class="form-control"
+										ng-model="markerAttribute.value"
+										ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+										ng-required="markerAttribute.attribute.required"
+										> 
+									
+									<input								
+										name="date1"
+										ng-if="markerAttribute.attribute.type == 'DATE'"
+										class="form-control datepicker" ng-model="markerAttribute.value"
+										ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+										required
+										ng-required="markerAttribute.attribute.required"
+										>								
+	
+								<div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
+	
+									<input 
+										type="radio" 
+										ng-checked="markerAttribute.value == 'Yes'"
+										ng-model="markerAttribute.value" 
+										value="Yes"
+										>
+										<spring:message code="map.Yes" /> 
+										
+									<input
+										type="radio" 
+										ng-checked="markerAttribute.value == 'No'"
+										ng-model="markerAttribute.value" 
+										value="No"
+										>
+										<spring:message code="map.No" />
+										
+								</div>
+	
+								<input type="text"
+									ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
+									class="form-control" ng-model="markerAttribute.value"
+									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+									ng-required="markerAttribute.attribute.required"
+									> 
+									
+									<span class="tooltip-validation"
+										ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"
+										style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 
+									
+									<span
+										class="tooltip-validation"
+										ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
+										style="top: 3px" ><spring:message code="map.Field-required"/>
+									</span> 
+									
+									<span
+										class="tooltip-validation"
+										ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
+										style="top: 3px"><spring:message code="map.Must-be-a-number"/>
+									</span> 
+									
+									<span
+										class="tooltip-validation"
+										ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
+										style="top: 3px"><spring:message code="map.Field-required"/>
+									</span> 
+								<ng-form>
+							
+							</div>
+	
 							<div ng-repeat="attribute in attributesByLayer"
 								ng-if="showAttributesAlone || showNewAttributes"
 								style="position: relative">
@@ -248,8 +328,8 @@
 									> 
 									
 								<input
-									type="date" name="date1" ng-if="attribute.type == 'DATE'"
-									class="form-control" ng-model="attribute.value"
+									name="date1" ng-if="attribute.type == 'DATE'"
+									class="form-control datepicker" ng-model="attribute.value"
 									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
 									ng-required="attribute.required"
 									>
@@ -311,86 +391,6 @@
 									
 									<ng-form>
 							</div>
-							
-							<div ng-repeat="markerAttribute in attributesByMarker"
-								ng-if="!showAttributesAlone"
-								style="position: relative;margin-bottom:15px;">
-	
-								<ng-form name="ngSideMarker" default-button="buttonUpdate">
-								<label  ng-style="$index > 0 ? {'margin-top':'15px'} : '' ">{{ markerAttribute.attribute.name }}</label> 
-								
-									<input
-										type="number" 
-										name="number1"
-										ng-if="markerAttribute.attribute.type == 'NUMBER'"
-										class="form-control"
-										ng-model="markerAttribute.value"
-										ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-										ng-required="markerAttribute.attribute.required"
-										> 
-									
-									<input								
-										type="date" name="date1"
-										ng-if="markerAttribute.attribute.type == 'DATE'"
-										class="form-control" ng-model="markerAttribute.value"
-										ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
-										required
-										ng-required="markerAttribute.attribute.required"
-										>								
-	
-								<div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
-	
-									<input 
-										type="radio" 
-										ng-checked="markerAttribute.value == 'Yes'"
-										ng-model="markerAttribute.value" 
-										value="Yes"
-										>
-										<spring:message code="map.Yes" /> 
-										
-									<input
-										type="radio" 
-										ng-checked="markerAttribute.value == 'No'"
-										ng-model="markerAttribute.value" 
-										value="No"
-										>
-										<spring:message code="map.No" />
-										
-								</div>
-	
-								<input type="text"
-									ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
-									class="form-control" ng-model="markerAttribute.value"
-									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-									ng-required="markerAttribute.attribute.required"
-									> 
-									
-									<span class="tooltip-validation"
-										ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"
-										style="top: 3px"><spring:message code="map.Field-required"/>
-									</span> 
-									
-									<span
-										class="tooltip-validation"
-										ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
-										style="top: 3px" ><spring:message code="map.Field-required"/>
-									</span> 
-									
-									<span
-										class="tooltip-validation"
-										ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
-										style="top: 3px"><spring:message code="map.Must-be-a-number"/>
-									</span> 
-									
-									<span
-										class="tooltip-validation"
-										ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
-										style="top: 3px"><spring:message code="map.Field-required"/>
-									</span> 
-								<ng-form>
-							
-							</div>
-	
 							<!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
 							<!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 	
@@ -479,8 +479,8 @@
 									> 
 									
 								<input
-									type="date" name="date1" ng-if="attribute.type == 'DATE'"
-									class="form-control" ng-model="attribute.value"
+									name="date1" ng-if="attribute.type == 'DATE'"
+									class="form-control datepicker" ng-model="attribute.value"
 									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
 									ng-required="attribute.required"
 									>

@@ -116,6 +116,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
     
+    var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
+    '<span ng-if="!row.entity.dataSource.url" ng-cell-text="" class="ng-binding">Camada interna</span>' +
+    '<span ng-if="row.entity.dataSource.url" ng-cell-text="" class="ng-binding">{{ row.entity.name }}</span>' +
+    '</div>';
+
+    
     var MARKER_BUTTONS = '<div  class="cell-centered">' +
     '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == false" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
     '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == true" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
@@ -123,7 +129,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     '</div>';
     
     var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
+	'<img ng-if="row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
+	'<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.icon}}"/>' +
 	'</div>';
 
     /**
@@ -145,7 +152,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             {displayName: 'Postagem', sortable: false, cellTemplate: MARKER_BUTTONS, width: '6%'},
             {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '6%', cellTemplate: IMAGE_LEGEND},
             {displayName: $translate('Title'), field: 'title', width: '19%'},
-            {displayName: $translate('Layer'), field: 'name', width: '19%'},
+            //{displayName: $translate('Layer'), field: 'name', width: '19%'},
+            {displayName: $translate('Layer'), cellTemplate: LAYER_TYPE_NAME, width: '19%'},
             {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name', width: '30%'},
             {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '13%'},
             {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '7%'}
@@ -179,6 +187,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
     
     var GRID_ACTION_ATTRIBUTES_BUTTONS = '<div class="cell-centered">' +
+    '<a ng-if="!row.entity.attributeDefault" ng-click="updateAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Update" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
     '<a ng-if="!row.entity.attributeDefault" ng-click="removeAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
     '</div>';
     
@@ -802,17 +811,18 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         });
     };
     
-    /**
-     * Add attribute
-     * */
-    $scope.addAttribute = function() {
+  
+    $scope.moreIcons = function() {
     	var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/layer-config/popup/add-attribute-popup.jsp",
-            controller: AddAttributePopUpController,
+            templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
+            controller: MorePopupController,
             windowClass: 'xx-dialog',
             resolve: {
-                attributes: function () {
-                    return $scope.attributes;
+            	currentState: function(){
+                	return $scope.currentState;
+                },
+            	currentEntity: function () {
+                    return $scope.currentEntity;
                 }
             }
         });
@@ -828,14 +838,44 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         });
     }
     
-    $scope.moreIcons = function() {
+    /**
+     * Update attribute
+     * */
+    $scope.updateAttribute = function(attribute) {
+    	
     	var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
-            controller: MorePopupController,
+            templateUrl: "modules/admin/ui/layer-config/popup/update-attribute-popup.jsp",
+            controller: UpdateAttributePopUpController,
             windowClass: 'xx-dialog',
             resolve: {
-            	currentEntity: function () {
-                    return $scope.currentEntity;
+                attributes: function () {
+                    return {'many' : $scope.attributes, 'single': attribute};
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+
+            if (result) {
+                $scope.currentEntity.name = result.name;
+                $scope.currentEntity.title = result.title;
+                $scope.currentEntity.legend = result.legend;
+            }
+
+        });
+    }
+    
+    /**
+     * Add attribute
+     * */
+    $scope.addAttribute = function() {
+    	var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/layer-config/popup/add-attribute-popup.jsp",
+            controller: AddAttributePopUpController,
+            windowClass: 'xx-dialog',
+            resolve: {
+                attributes: function () {
+                    return $scope.attributes;
                 }
             }
         });

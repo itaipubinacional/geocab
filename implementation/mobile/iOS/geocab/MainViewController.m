@@ -28,7 +28,7 @@ extern User *loggedUser;
         loggedUser.name = [defaults objectForKey:@"name"];
         loggedUser.email = [defaults objectForKey:@"email"];
         loggedUser.password = [defaults objectForKey:@"password"];
-        [self performSegueWithIdentifier:@"mainSegue" sender:nil];
+        [self performSegueWithIdentifier:@"mainSegue" sender:self];
     }
     else
     {

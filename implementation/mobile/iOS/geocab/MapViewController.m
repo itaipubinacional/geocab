@@ -32,7 +32,6 @@
 
 @property (retain, nonatomic) UIActionSheet *actionSheet;
 
-@property (weak, nonatomic) MFSideMenuContainerViewController *sideMenu;
 @property (strong, nonatomic) SelectLayerViewController *layerSelector;
 @property (strong, nonatomic) UINavigationController *layerSelectorNavigator;
 @property (strong, nonatomic) NSMutableArray *items;
@@ -46,6 +45,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *cancelMarkerButton;
 @property (weak, nonatomic) IBOutlet UIButton *showMarkerOptionsButton;
 @property (weak, nonatomic) IBOutlet UIView *markerOptionsOverlay;
+
+@property (weak, nonatomic) IBOutlet UIButton *menuButton;
 
 @property (weak, nonatomic) IBOutlet UILabel *hintLabel;
 
@@ -86,10 +87,8 @@ extern NSUserDefaults *defaults;
         _actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil otherButtonTitles:@"Adicionar minha localização", @"Adicionar outra localização",nil];
     [_actionSheet setTintColor:[UIColor blackColor]];
     
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    _sideMenu = delegate.container;
     
-    [self.navigationController.navigationItem.leftBarButtonItem setImage:[UIImage imageNamed:@"inc_menu_20.png"]];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
     _selectedLayers = [NSMutableArray array];
     
@@ -109,6 +108,10 @@ extern NSUserDefaults *defaults;
     [_changeMarkerButton setBackgroundColor:[ControllerUtil colorWithHexString:@"828282"]];
     _changeMarkerButton.layer.cornerRadius = 3;
     
+    [_menuButton.layer setShadowOffset:CGSizeMake(2, 2)];
+    [_menuButton.layer setShadowColor:[[UIColor blackColor] CGColor]];
+    [_menuButton.layer setShadowOpacity:0.5];
+    
     _confirmMarkerButton.layer.borderWidth = 0.3;
     _confirmMarkerButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     [_confirmMarkerButton setBackgroundColor:[ControllerUtil colorWithHexString:@"00b7cd"]];
@@ -126,13 +129,12 @@ extern NSUserDefaults *defaults;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
     [super viewWillAppear:animated];
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 - (void) didEndMultipleSelecting:(NSArray *)selectedLayers {
@@ -227,7 +229,13 @@ extern NSUserDefaults *defaults;
             html = [html stringByAppendingString:@"</div>"];
             html = [html stringByAppendingString:@"</div>"];
             
+            html = [html stringByReplacingOccurrencesOfString:@"\'" withString:@"\\'"];
+        
+            NSLog(@"%@",html);
+            
             [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadPopupContent('%@')", html]];
+        } else {
+            [_webView stringByEvaluatingJavaScriptFromString:@"cancelLoading()"];
         }
     };
 }
@@ -305,15 +313,12 @@ extern NSUserDefaults *defaults;
     CATransition *transition = [CATransition animation];
     transition.duration = 0.3;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//    transition.type = kCATransitionPush;
     transition.type = kCATransitionFromLeft;
     transition.fillMode = kCAFillModeBoth;
     [self.view.window.layer addAnimation:transition forKey:nil];
 
     
-    [self presentViewController:_layerSelectorNavigator animated:NO completion:^{
-
-    }];
+    [self presentViewController:_layerSelectorNavigator animated:NO completion:nil];
 }
 
 -(IBAction)addNewPoint:(id)sender {
@@ -426,7 +431,7 @@ extern NSUserDefaults *defaults;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"addNewMarkerSegue"]) {
         
-        NSLog(@"%.5f  %.5f", _locationManager.location.coordinate.latitude, _locationManager.location.coordinate.longitude);
+//        NSLog(@"%.5f  %.5f", _locationManager.location.coordinate.latitude, _locationManager.location.coordinate.longitude);
         
         AddNewMarkerViewController *addNewMarkerViewController = (AddNewMarkerViewController*) segue.destinationViewController;
         addNewMarkerViewController.latitude = _location.x;
@@ -506,8 +511,8 @@ extern NSUserDefaults *defaults;
         case 0:
             break;
         case 1: {
-            UINavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"navigationController"];
-            [[[[UIApplication sharedApplication] delegate] window] setRootViewController:navigationController];
+//            UINavigationController *navigationController = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"navigationController"];
+//            [[[[UIApplication sharedApplication] delegate] window] setRootViewController:navigationController];
             
             defaults = [NSUserDefaults standardUserDefaults];
             NSDictionary * dict = [defaults dictionaryRepresentation];
@@ -521,6 +526,10 @@ extern NSUserDefaults *defaults;
             if ([[FBSession activeSession] isOpen]) {
                 [[FBSession activeSession] closeAndClearTokenInformation];
             }
+            
+            [_layerSelectorNavigator dismissViewControllerAnimated:NO completion:^{
+               [self performSegueWithIdentifier:@"logoutSegue" sender:nil];
+            }];
             break;
         }
     }

@@ -1,9 +1,9 @@
 
 /* Class = "IBUILabel"; text = "Choose a location by pressing and holding at the map."; ObjectID = "0xi-DB-hia"; */
-"0xi-DB-hia.text" = "Escolha uma localização pressionando a área desejada.";
+"0xi-DB-hia.text" = "Choose a location by pressing and holding at the map.";
 
 /* Class = "IBUIButton"; normalTitle = "Photo"; ObjectID = "7OT-jg-oVn"; */
-"7OT-jg-oVn.normalTitle" = "Foto";
+"7OT-jg-oVn.normalTitle" = "Photo";
 
 /* Class = "IBUIButton"; normalTitle = "Google"; ObjectID = "7bM-OH-vdc"; */
 "7bM-OH-vdc.normalTitle" = "Google";
@@ -26,9 +26,6 @@
 /* Class = "IBUILabel"; text = "Login with"; ObjectID = "V2k-dr-ftR"; */
 "V2k-dr-ftR.text" = "Login com";
 
-/* Class = "IBUINavigationItem"; title = "Geocab"; ObjectID = "WK3-8O-z0J"; */
-"WK3-8O-z0J.title" = "Geocab";
-
 /* Class = "IBUIButton"; normalTitle = "Confirm"; ObjectID = "Wd8-B2-hyq"; */
 "Wd8-B2-hyq.normalTitle" = "Confirmar";
 
@@ -49,9 +46,6 @@
 
 /* Class = "IBUIButton"; normalTitle = "Add my location"; ObjectID = "lJz-Lm-QPe"; */
 "lJz-Lm-QPe.normalTitle" = "Adicionar minha localização";
-
-/* Class = "IBUIButton"; normalTitle = "X"; ObjectID = "nb1-xJ-Rjg"; */
-"nb1-xJ-Rjg.normalTitle" = "X";
 
 /* Class = "IBUITextField"; placeholder = "Email"; ObjectID = "zqD-Fc-n4X"; */
 "zqD-Fc-n4X.placeholder" = "Email";
