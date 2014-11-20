@@ -145,10 +145,10 @@
 														required ng-disabled="true"
 														> 
 																						
-														<input type="date"
+														<input 
 														name="date1" 
 														ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
-														class="form-control" ng-model="markerAttribute.value"									
+														class="form-control datepicker" ng-model="markerAttribute.value"									
 														required 
 														ng-disabled="true"
 														>
@@ -197,6 +197,7 @@
 				
 				<form name="sidebarMarkerUpdate" method="post" ng-show="screen == 'update'"
 					default-button="buttonInsert" novalidate >
+					
 					<div style="position: absolute; top:0; right:0; left:0; bottom:0">
 						<!-- <div class="sidebar-coloredbar"></div> -->
 						<div>
@@ -251,9 +252,9 @@
 										> 
 									
 									<input								
-										type="date" name="date1"
+										name="date1"
 										ng-if="markerAttribute.attribute.type == 'DATE'"
-										class="form-control" ng-model="markerAttribute.value"
+										class="form-control datepicker" ng-model="markerAttribute.value"
 										ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
 										required
 										ng-required="markerAttribute.attribute.required"
@@ -327,8 +328,8 @@
 									> 
 									
 								<input
-									type="date" name="date1" ng-if="attribute.type == 'DATE'"
-									class="form-control" ng-model="attribute.value"
+									name="date1" ng-if="attribute.type == 'DATE'"
+									class="form-control datepicker" ng-model="attribute.value"
 									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
 									ng-required="attribute.required"
 									>
@@ -478,8 +479,8 @@
 									> 
 									
 								<input
-									type="date" name="date1" ng-if="attribute.type == 'DATE'"
-									class="form-control" ng-model="attribute.value"
+									name="date1" ng-if="attribute.type == 'DATE'"
+									class="form-control datepicker" ng-model="attribute.value"
 									ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
 									ng-required="attribute.required"
 									>
