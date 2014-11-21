@@ -16,7 +16,8 @@
 <script type="text/javascript" src="<c:url value="/webjars/jquery/2.1.1/jquery.min.js"/>"></script> <!-- FIXME Tirar as versoes -->
 <script type="text/javascript" src="<c:url value="/static/libs/jquery-resize/jquery.resize.js"/>"></script>
 
- 
+<!-- JQuery Mask -->
+<script type="text/javascript" src="<c:url value="/static/libs/jquery-mask/jquery.mask.min.js"/>"></script>
 
 
 <!-- JQuery UI -->
@@ -28,6 +29,9 @@
 <script type="text/javascript" src="<c:url value="/webjars/ng-grid/2.0.11/ng-grid.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/webjars/angular-ui-bootstrap/0.11.0/ui-bootstrap-tpls.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/static/js/eits/angular-translate/angular-translate.js"/>"></script>
+
+<!-- ui date -->
+<script src="<c:url value="/static/libs/eits-directives/ui-date/ui-date.js"/>"></script> 
 
 <!-- chosen -->
 <script type="text/javascript" src="<c:url value="/static/libs/angular-chosen/chosen.js"/>"></script>

@@ -61,6 +61,9 @@ public class Marker extends AbstractEntity implements Serializable
 	@Transient
 	private FileTransfer image;
 	
+	@Transient
+	private Boolean imageToDelete;
+	
 	@NotNull
 	private String latitude;
 
@@ -260,6 +263,22 @@ public class Marker extends AbstractEntity implements Serializable
 	public void setDeleted(Boolean deleted)
 	{
 		this.deleted = deleted;
+	}
+
+	/**
+	 * @return the imageToDelete
+	 */
+	public Boolean getImageToDelete()
+	{
+		return imageToDelete;
+	}
+
+	/**
+	 * @param imageToDelete the imageToDelete to set
+	 */
+	public void setImageToDelete(Boolean imageToDelete)
+	{
+		this.imageToDelete = imageToDelete;
 	}
 	
 }

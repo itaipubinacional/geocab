@@ -17,7 +17,7 @@ public interface IEntity<ID extends Serializable> extends Serializable
 	/**
 	 * Audit schema
 	 */
-	public static final String AUDIT_SCHEMA = "geocab_audit";
+	public static final String AUDIT_SCHEMA = "geocab_auditoria";
 	
 	/*-------------------------------------------------------------------
 	 * 		 				GETTERS AND SETTERS
