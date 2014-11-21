@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
 		<!-- Java -->
-		<java.version>1.8</java.version>
+		<java.version>1.7</java.version>
 		
 		<!-- SpringFramework -->
 		<springframework.version>4.0.6.RELEASE</springframework.version>
@@ -36,7 +36,7 @@
 		<!-- Others -->
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<aspectj.version>1.8.1</aspectj.version>
-		<dwr.version>3.0.0-rc3-SNAPSHOT</dwr.version>
+		<dwr.version>3.0.1-RELEASE</dwr.version>
 
 		<!-- Default Environment -->
 		<environment>development</environment>
@@ -53,6 +53,51 @@
 			<url>http://maven.eits.com.br/content/repositories/releases</url>
 		</repository>
 	</repositories>
+	
+
+	<!-- Profiles -->
+	<profiles>
+	
+		<profile>
+			<id>development</id>
+			<activation>
+          		<activeByDefault>true</activeByDefault>
+        	</activation>
+			<properties>
+				<!-- Database -->
+				<jdbc.jdbcUrl>jdbc:postgresql://127.0.0.1/geocab</jdbc.jdbcUrl>
+				<jdbc.username>geocab</jdbc.username>
+				<jdbc.password>geocab</jdbc.password>
+
+				<!-- Hibernate -->
+				<hibernate.hbm2ddl>update</hibernate.hbm2ddl>
+				<hibernate.showSql>true</hibernate.showSql>
+				<hibernate.formatSql>false</hibernate.formatSql>
+				<hibernate.default_schema>geocab</hibernate.default_schema>
+				<hibernate.envers.default_schema>geocab_auditoria</hibernate.envers.default_schema>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>sandbox</id>
+			<properties>
+				<!-- Database -->
+				<jdbc.jdbcUrl>jdbc:postgresql://127.0.0.1/geocab</jdbc.jdbcUrl>
+				<jdbc.username>geocab</jdbc.username>
+				<jdbc.password>geocab</jdbc.password>
+
+				<!-- Hibernate -->
+				<hibernate.hbm2ddl>update</hibernate.hbm2ddl>
+				<hibernate.showSql>true</hibernate.showSql>
+				<hibernate.formatSql>false</hibernate.formatSql>
+				<hibernate.default_schema>geocab</hibernate.default_schema>
+				<hibernate.envers.default_schema>geocab_auditoria</hibernate.envers.default_schema>
+			</properties>
+		</profile>
+		
+		
+	</profiles>
+
 		
 	<!-- Modules -->
 	<modules>
@@ -214,7 +259,7 @@
 		<dependency>
     		<groupId>org.directwebremoting</groupId>
     		<artifactId>dwr</artifactId>
-    		<version>3.0.0-RELEASE</version>
+    		<version>${dwr.version}</version>
   		</dependency>
 		
 		<!-- Testing -->
