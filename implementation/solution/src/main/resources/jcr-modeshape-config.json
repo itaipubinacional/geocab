@@ -15,7 +15,7 @@
         "cacheName" : "geocab-repository-cache",
         "binaryStorage" : {
             "type" : "file",
-            "directory": "/sistemas/geocab/upload",
+            "directory": "/sistemas/geocab/upload2",
             "minimumBinarySizeInBytes" : 40
         }
     },
