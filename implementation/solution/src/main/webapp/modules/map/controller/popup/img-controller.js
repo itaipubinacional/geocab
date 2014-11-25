@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- *.
+ *
  * @param $scope
  * @param $log
  * @param $location
