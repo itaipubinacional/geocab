@@ -705,6 +705,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     item.value = node.id;
                     item.type = !!node.nodes ? 'grupo' : 'camada';
 
+                    item.maximumScaleMap = !!node.nodes ? '' : node.maximumScaleMap;
+                    item.minimumScaleMap= !!node.nodes ? '' : node.minimumScaleMap;
+                    
                     if( item.selected ){
                         $scope.getSelectedNode(item);
                     }
@@ -823,7 +826,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 });
 
                 var wmsLayer = new ol.layer.Tile({
-                    source: wmsSource
+                	 source: wmsSource,
+                     maxResolution: minEscalaToMaxResolutionn(node.minimumScaleMap),
+                     minResolution: maxEscalaToMinResolutionn(node.maximumScaleMap)
                 });
 
                 var isAdded = false;
@@ -896,6 +901,85 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             }
         }
 
+    }
+    
+
+    /**
+       Converte o valor escala armazenado no banco para o formato open layes de zoom
+     */
+    var minEscalaToMaxResolutionn = function ( minEscalaMapa ){
+ 
+        switch (minEscalaMapa){
+            case 'UM500km':
+                return 78271.51696402048;
+            case 'UM200km':
+                return 78271.51696402048;
+            case 'UM100km':
+                return 4891.96981025128;
+            case 'UM50km':
+                return 2445.98490512564;
+            case 'UM20km':
+                return 1222.99245256282;
+            case 'UM10km':
+                return 611.49622628141;
+            case 'UM5km':
+                return 152.8740565703525;
+            case 'UM2km':
+                return 76.43702828517625;
+            case 'UM1km':
+                return 38.21851414258813;
+            case 'UM500m':
+                return 19.109257071294063;
+            case 'UM200m':
+                return 9.554628535647032;
+            case 'UM100m':
+                return 4.777314267823516;
+            case 'UM50m':
+                return 2.388657133911758;
+            case 'UM20m':
+                return 1.194328566955879;
+            default :
+                return 78271.51696402048;
+        }
+    }
+ 
+    /**
+     Converte o valor escala armazenado no banco para o formato open layes de zoom
+     */
+    var maxEscalaToMinResolutionn = function ( maxEscalaMapa ){
+ 
+        switch (maxEscalaMapa){
+            case 'UM500km':
+                return 19567.87924100512;
+            case 'UM200km':
+                return 4891.96981025128;
+            case 'UM100km':
+                return 2445.98490512564;
+            case 'UM50km':
+                return 1222.99245256282;
+            case 'UM20km':
+                return 305.748113140705;
+            case 'UM10km':
+                return 152.8740565703525;
+            case 'UM5km':
+                return 76.43702828517625;
+            case 'UM2km':
+                return 38.21851414258813;
+            case 'UM1km':
+                return 19.109257071294063;
+            case 'UM500m':
+                return 9.554628535647032;
+            case 'UM200m':
+                return 4.777314267823516;
+            case 'UM100m':
+                return 2.388657133911758;
+            case 'UM50m':
+                return 1.194328566955879;
+            case 'UM20m':
+                return 0.0005831682455839253;
+            default :
+                return 0.0005831682455839253;
+        }
     }
 
     /*-------------------------------------------------------------------
@@ -2104,7 +2188,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 		                  
 		                   
 		                   var layer = new ol.layer.Vector({
-			                   source: new ol.source.Vector({ features: [iconFeature] })
+			                   source: new ol.source.Vector({ features: [iconFeature] }),
+			                   
+			                   maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
+			                   minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
 			               });
 			
 			               layer.setStyle(iconStyle);
