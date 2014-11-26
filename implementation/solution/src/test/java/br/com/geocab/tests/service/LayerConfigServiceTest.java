@@ -59,9 +59,9 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 		layer.setLayerGroup(layerGroup);
 		layer.setName("bdgeo:v_ag_demandantes2");
 		layer.setTitle("Demandantes2");
-		layer.setMaximumScaleMap(MapScale.UM2140);
+		layer.setMaximumScaleMap(MapScale.UM100km);
 		layer.setOrderLayer(1);
-		layer.setMinimumScaleMap(MapScale.UM70M);
+		layer.setMinimumScaleMap(MapScale.UM10km);
 		layer.setLegend("http://172.17.6.112:80/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=v_ag_demandantes");
 		
 		layer = layerGroupService.insertLayer(layer);
@@ -73,8 +73,8 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals(layerGroup, layer.getLayerGroup());
 		Assert.assertEquals("bdgeo:v_ag_demandantes2", layer.getName());
 		Assert.assertEquals("Demandantes2", layer.getTitle());
-		Assert.assertEquals(MapScale.UM2140, layer.getMaximumScaleMap());
-		Assert.assertEquals(MapScale.UM70M, layer.getMinimumScaleMap());
+		Assert.assertEquals(MapScale.UM1km, layer.getMaximumScaleMap());
+		Assert.assertEquals(MapScale.UM20m, layer.getMinimumScaleMap());
 		Assert.assertEquals("http://172.17.6.112:80/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=v_ag_demandantes", layer.getLegend());
 	}
 	/**
@@ -91,8 +91,8 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 		
 		layer.setName("bdgeo:v_ag_demandantes2");
 		layer.setTitle("Demandantes2");
-		layer.setMaximumScaleMap(MapScale.UM2140);
-		layer.setMinimumScaleMap(MapScale.UM70M);
+		layer.setMaximumScaleMap(MapScale.UM100m);
+		layer.setMinimumScaleMap(MapScale.UM200m);
 		layer.setOrderLayer(1);
 		
 		layer = layerGroupService.updateLayer(layer);
@@ -100,8 +100,8 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 		Assert.assertNotNull(layer);
 		Assert.assertEquals("bdgeo:v_ag_demandantes", layer.getName());
 		Assert.assertEquals("Demandantes2", layer.getTitle());
-		Assert.assertEquals(MapScale.UM2140, layer.getMaximumScaleMap());
-		Assert.assertEquals(MapScale.UM70M, layer.getMinimumScaleMap());
+		Assert.assertEquals(MapScale.UM10km, layer.getMaximumScaleMap());
+		Assert.assertEquals(MapScale.UM2km, layer.getMinimumScaleMap());
 		
 	}
 	/**

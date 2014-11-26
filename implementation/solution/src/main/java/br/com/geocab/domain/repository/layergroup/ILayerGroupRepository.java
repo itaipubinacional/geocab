@@ -87,5 +87,16 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 			"WHERE ( LOWER(layerGroup.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " )
 	public Page<LayerGroup> listByFilter( @Param("filter") String filter, Pageable pageable );
 	
+	/**
+	 * 
+	 * @return
+	 */
+	@Query(value="FROM LayerGroup layerGroup " 
+			+ "WHERE ( layerGroup.layerGroupUpper = NULL "
+			+ "AND layerGroup.draft = null "
+			+ "AND layerGroup.published = false ) "
+			+ "AND layerGroup.id NOT IN (:layerGroupIds)"
+			+ "ORDER BY orderLayerGroup" )
+	public List<LayerGroup> listSupervisorsFilter(  @Param("layerGroupIds")  List<Long> LayerGroupIds );
 	
 }

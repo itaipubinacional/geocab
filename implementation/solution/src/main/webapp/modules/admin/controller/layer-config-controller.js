@@ -660,7 +660,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.selectLayerGroup = function () {
 
-        layerGroupService.listLayersGroupUpper({
+        //layerGroupService.listLayersGroupUpper({
+    	layerGroupService.listSupervisorsFilter($scope.currentEntity.name, $scope.currentEntity.dataSource.id, {
             callback: function (result) {
 
                 var dialog = $modal.open({
