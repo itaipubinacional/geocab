@@ -396,7 +396,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
             for( var i= 0; i < destNodes.$modelValue.length; i++)
             {
-                if( destNodes.$modelValue[i].nodes && destNodes.$modelValue[i].name == sourceNode.$modelValue.name && destNodes.$modelValue[i].id != sourceNode.$modelValue.id )
+                if( !destNodes.$modelValue[i].nodes && destNodes.$modelValue[i].name == sourceNode.$modelValue.name && destNodes.$modelValue[i].id != sourceNode.$modelValue.id )
                 {
                     $scope.msg = {type:"danger", text: $translate("layer-group-popup.Already-have-a-group-with-this-name-at-the-same-level"), dismiss:true};
                     $scope.fadeMsg();

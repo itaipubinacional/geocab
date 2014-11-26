@@ -581,22 +581,29 @@ public class LayerGroupService
 	public List<ExternalLayer> listExternalLayersByFilters( DataSource dataSource )
 	{
 		GeoserverConnection geoserverConnection = new GeoserverConnection();
-		List<ExternalLayer> externalLayers = geoserverConnection.listExternalLayersByFilters(dataSource);
+		return geoserverConnection.listExternalLayersByFilters(dataSource);
 		
-		// rotina para retirar as camadas ja existentes no sistema da lista de camadas externas
-		List<ExternalLayer> layersToRemove = new ArrayList<ExternalLayer>();
-		for (ExternalLayer externalLayer : externalLayers)
-		{
-			if (layerRepository.countLayersByNameAndDataSource(externalLayer.getName(), dataSource.getId()) > 0)
-			{
-				layersToRemove.add(externalLayer);
-			}
-		}
-		
-		externalLayers.removeAll(layersToRemove);
-		
-		return externalLayers;
 	}
+	
+	 /**
+	  * 
+	  * @param layer
+	  * @param dataSource
+	  * @return
+	  */
+    @Transactional(readOnly=true)
+    public List<LayerGroup> listSupervisorsFilter(String layer, Long dataSource)
+    {
+        /* Retorna lista de ids dos grupos de camadas para não cadastramento de camadas repetidos no grupo */
+        List<Long> layerGroupIds = this.layerRepository.listLayerGroupIdsByNameAndDataSource(layer, dataSource);
+         
+        List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layerGroupIds);
+         
+        this.setLegendsLayers(layersGroup);
+         
+        return layersGroup;
+         
+    }
 	
 	
 	/**
