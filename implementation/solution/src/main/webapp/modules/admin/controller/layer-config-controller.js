@@ -660,39 +660,45 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.selectLayerGroup = function () {
 
-        //layerGroupService.listLayersGroupUpper({
-    	layerGroupService.listSupervisorsFilter($scope.currentEntity.name, $scope.currentEntity.dataSource.id, {
-            callback: function (result) {
-
-                var dialog = $modal.open({
-                    templateUrl: "modules/admin/ui/layer-config/popup/layer-group-popup.jsp",
-                    controller: SelectLayerGroupPopUpController,
-                    windowClass: 'xx-dialog grupo-camada-dialog',
-                    resolve: {
-                    	layerGroups: function () {
-                            return result;
-                        },
-                        currentLayerGroup: function () {
-                            return $scope.currentEntity.layerGroup;
-                        }
-                    }
-                });
-
-                dialog.result.then(function (result) {
-
-                    if (result) {
-                        $scope.currentEntity.layerGroup = result;
-                        $scope.currentEntity.layerGroup.name = result.label;
-                    }
-
-                });
-
-            },
-            errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
-                $scope.$apply();
-            }
-        });
+    	var request = {
+	            callback: function (result) {
+	
+	                var dialog = $modal.open({
+	                    templateUrl: "modules/admin/ui/layer-config/popup/layer-group-popup.jsp",
+	                    controller: SelectLayerGroupPopUpController,
+	                    windowClass: 'xx-dialog grupo-camada-dialog',
+	                    resolve: {
+	                    	layerGroups: function () {
+	                            return result;
+	                        },
+	                        currentLayerGroup: function () {
+	                            return $scope.currentEntity.layerGroup;
+	                        }
+	                    }
+	                });
+	
+	                dialog.result.then(function (result) {
+	
+	                    if (result) {
+	                        $scope.currentEntity.layerGroup = result;
+	                        $scope.currentEntity.layerGroup.name = result.label;
+	                    }
+	
+	                });
+	
+	            },
+	            errorHandler: function (message, exception) {
+	                $scope.message = {type: "error", text: message};
+	                $scope.$apply();
+	            }
+	        };
+    	
+    	// verifica se é camada interna
+    	if($scope.currentEntity.dataSource.url == null){
+    		layerGroupService.listLayersGroupUpper(request);
+    	} else {
+	    	layerGroupService.listSupervisorsFilter($scope.currentEntity.name, $scope.currentEntity.dataSource.id, request);
+    	}
     };
 
     /**
