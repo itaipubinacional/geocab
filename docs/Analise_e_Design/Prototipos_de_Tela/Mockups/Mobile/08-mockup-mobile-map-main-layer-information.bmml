@@ -1,0 +1,55 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1086" measuredH="628" mockupW="324" mockupH="573">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::iPhone" x="762" y="55" w="324" h="573" measuredW="282" measuredH="573" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <model>IPhone5</model>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Icon" x="838" y="461" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <icon>ListIcon%7Cxsmall</icon>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Map" x="810" y="139" w="227" h="401" measuredW="252" measuredH="222" zOrder="2" locked="false" isInGroup="-1"/>
+    <control controlID="118" controlTypeID="com.balsamiq.mockups::Icon" x="912" y="351" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>13576743</color>
+        <icon>GeoLocationIcon%7Cxsmall</icon>
+      </controlProperties>
+    </control>
+    <control controlID="158" controlTypeID="com.balsamiq.mockups::Canvas" x="810" y="470" w="30" h="40" measuredW="100" measuredH="70" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderColor>16777215</borderColor>
+        <href>03-mockup-mobile-map-menu%26bm%3B03-mockup-mobile-map-menu.bmml%26bm%3B03-mockup-mobile-map-menu.bmml%26bm%3B03-mockup-mobile-map-menu.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2248%2C415%2C78%2C455%22%20href%3D%2203-mockup-mobile-map-menu.bmml%22%20alt%3D%2203-mockup-mobile-map-menu%22%20id%3D%22158%22/%3E</map>
+      </controlProperties>
+    </control>
+    <control controlID="159" controlTypeID="com.balsamiq.mockups::Icon" x="810" y="477" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <icon>ListIcon%7Csmall</icon>
+      </controlProperties>
+    </control>
+    <control controlID="161" controlTypeID="com.balsamiq.mockups::Accordion" x="817" y="153" w="211" h="376" measuredW="238" measuredH="167" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Interna%201%0A-%20Campo%20%3A%20Campo%20da%20camada%20interna%201%0A-%20Data%20%3A%2020/10/2014</text>
+      </controlProperties>
+    </control>
+    <control controlID="163" controlTypeID="com.balsamiq.mockups::RoundButton" x="1003" y="142" w="-1" h="-1" measuredW="32" measuredH="32" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderColor>16777215</borderColor>
+        <color>13576743</color>
+        <href>07-mockup-mobile-map-main-with-layer%26bm%3B07-mockup-mobile-map-main-with-layer.bmml%26bm%3B07-mockup-mobile-map-main-with-layer.bmml%26bm%3B07-mockup-mobile-map-main-with-layer.bmml</href>
+        <icon>XIcon%7Csmall</icon>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22241%2C87%2C273%2C119%22%20href%3D%2207-mockup-mobile-map-main-with-layer.bmml%22%20alt%3D%2207-mockup-mobile-map-main-with-layer%22%20id%3D%22163%22/%3E</map>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="167" controlTypeID="com.balsamiq.mockups::Image" x="827" y="243" w="195" h="124" measuredW="800" measuredH="600" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+        <src>./assets/forest.jpg</src>
+        <text/>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
