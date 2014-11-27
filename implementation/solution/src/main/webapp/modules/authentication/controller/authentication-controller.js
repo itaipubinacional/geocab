@@ -56,7 +56,6 @@ function AuthenticationController( $scope, $injector, $log, $state, $timeout, $m
         if ( !$scope.form_login.$valid )
            return;
 
-
         $('form[name="form_login"]').submit();
     }
 
