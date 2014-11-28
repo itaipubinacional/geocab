@@ -62,7 +62,7 @@
     </div>
 
     <div class="modal-footer"> 
-    	<div ><img src="static/images/autor_icones.gif" style="float:left"></div>   
+    	<div ><a href="http://mapicons.nicolasmollet.com/" target="_blank"><img src="static/images/autor_icones.gif" style="float:left"></a></div>   
         <button ng-if="currentState == UPDATE_STATE || currentState == INSERT_STATE" class="btn btn-primary" title="<spring:message code="Save" />" ng-click="save()"><spring:message code="Save" /></button>
         <button class="btn btn-default" title="<spring:message code="admin.layer-config.Close" />" ng-click="close(true)"><spring:message code="admin.layer-config.Close" /></button>
     </div>
