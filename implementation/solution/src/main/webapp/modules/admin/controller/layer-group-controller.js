@@ -72,8 +72,8 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
         $log.info("Starting the front controller.");
         
-        /* Na inicialização do menu de camadas não é necessário validar
-         * se a ordenação foi salva, pois os campos não foram ordenados*/
+        /* At startup of the layers menu is not necessary to validate
+         * If the ordering was saved because the fields were not ordered */
     	isNeedSave = false;
     	
     	$scope.currentState = $scope.LIST_STATE;

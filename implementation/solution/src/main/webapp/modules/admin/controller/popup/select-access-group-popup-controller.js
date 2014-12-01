@@ -14,9 +14,9 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
 
 
     /**
-     *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
-     *  Quando o evento é disparado, configuramos o pager do spring-data
-     *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
+     *  Handler that listens to each time the user makes the sorting in tables programmatically/ng-grid.
+     *  When the event is fired, we configure the pager of the spring-date
+     *  and we call again the query, considering also the filter State (@see $scope. date. filter)
      */
     $scope.$on('ngGridEventSorted', function (event, sort) {
 
@@ -49,9 +49,9 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
 
 
     /**
-     * Variável para armazenar atributos do formulário que
-     * não cabem em uma entidade. Ex.:
-     * @filter - Filtro da consulta
+     * Variable to store the form attributes
+     * not fit on an entity. Ex.:
+     * @filter - Query filterv
      */
     $scope.data = { filter:null };
 
@@ -89,14 +89,14 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Método principal que faz o papel de front-controller da tela.
-	 * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-	 * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
+	 * Main method that makes the role of front-controller of the screen.
+	 * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+	 * When this occurs, gets the State via the $state and calls the initial method of that State.
 	 * Ex.: /list -> changeToList()
-	 *      /criar -> changeToInsert()
+	 *      /create -> changeToInsert()
 	 *
-	 * Caso o estado não for encontrado, ele direciona para a listagem,
-	 * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+	 * If the State is not found, he directs to the listing,
+	 * Although the front controller of angle won't let enter an invalid URL.
 	 */
 	$scope.initialize = function() 
 	{
@@ -110,8 +110,8 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
     };
 
     /**
-     * Configura o pageRequest conforme o componente visual pager
-     * e chama o serviço de listagem, considerando o filtro corrente na tela.
+     * Configures the pageRequest as the visual component pager
+     * and calls the listing service, considering the current filter on the screen.
      *
      * @see currentPage
      * @see data.filter
@@ -140,8 +140,8 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
     }
 
 	/**
-	 * Realiza a consulta de registros, consirando filtro, paginação e sorting.
-	 * Quando ok, muda o estado da tela para list.
+	 * Performs the query records, considering  filter, paging and sorting.
+	 * When ok, change the screen state to list
 	 *
 	 * @see data.filter
 	 * @see currentPage
@@ -151,12 +151,12 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
         grupoAcessoService.listGrupoAcessoByFilters( filtro, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
-				$scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
+				$scope.currentPage.pageable.pageNumber++;
                 $scope.$apply();
 
                 $scope.showLoading = false;
 
-                //Função responsável por retirar os registros que já estavam marcados antes da abertura da pop-up
+                
                 if (gruposSelecionados) {
                     angular.forEach( gruposSelecionados, function(data, index) {
                         var i = $scope.findName(data.nome, $scope.currentPage.content);

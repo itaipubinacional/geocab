@@ -42,14 +42,14 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Método principal que faz o papel de front-controller da tela.
-	 * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-	 * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
+	 * Main method that makes the role of front-controller of the screen.
+	 * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+	 * When this occurs, gets the State via the $state and calls the initial method of that State.
 	 * Ex.: /list -> changeToList()
-	 *      /criar -> changeToInsert()
+	 *      /create -> changeToInsert()
 	 *
-	 * Caso o estado não for encontrado, ele direciona para a listagem,
-	 * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+	 * If the State is not found, he directs to the listing,
+	 * Although the front controller of angle won't let enter an invalid URL.
 	 */
 	$scope.initialize = function() 
 	{
@@ -62,8 +62,8 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
 	 *-------------------------------------------------------------------*/
 	
 	/**
-     * Realiza a consulta de registros, consirando filtro, paginação e sorting.
-     * Quando ok, muda o estado da tela para list.
+     * Performs the query records, considering filter, paging and sorting.
+     * When ok, change the State of the screen to list.
      *
      * @see data.filter
      * @see currentPage
@@ -77,7 +77,7 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
             	$scope.usuarios = result;
                 $scope.showLoading = false;
 
-                //Função responsável por marcar os registros que já estavam marcados antes da abertura da pop-up
+                //Function responsible for marking the records that were already tagged prior to the opening of pop-up
                 if ($scope.usuariosSelecionados) {
                     angular.forEach( $scope.usuariosSelecionados, function(data, index) {
                         var i = $scope.findUsername(data.username, $scope.usuarios);
@@ -109,7 +109,7 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
     };
 
 	/**
-	 * Sai da popup
+	 * Close popup
 	 */
 	$scope.fechaPopup = function () 
 	{
@@ -139,7 +139,7 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
 	'</div>';
 
 	/**
-     * Handler que captura os eventos de marcação
+     * Handler that captures the events marking
      * da grid
      * @param rows
      */
@@ -172,7 +172,7 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
 	{
 		$scope.msg = null;
 
-        // verifica se o usuário selecionou a opção de fechar ou selecionar na pop up
+        // checks whether the user has selected the option to close or select from the pop up
         if (fechar){
             $modalInstance.close();
         } else {

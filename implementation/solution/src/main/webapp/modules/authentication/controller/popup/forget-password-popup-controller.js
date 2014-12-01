@@ -29,14 +29,12 @@ function ForgetPasswordPopUpController( $scope, $modalInstance, $state, $importS
      * 		 				 	  NAVIGATIONS
      *-------------------------------------------------------------------*/
     /**
-     * Método principal que faz o papel de front-controller da tela.
-     * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-     * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
-     * Ex.: /list -> changeToList()
-     *      /criar -> changeToInsert()
+     * Main method that makes the role of front-controller of the screen.
+     * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+     * When this occurs, gets the State via the $state and calls the initial method of that State.
      *
-     * Caso o estado não for encontrado, ele direciona para a listagem,
-     * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+     * If the State is not found, he directs to the listing,
+     * Although the front controller of Angular won't let enter an invalid URL.
      */
     $scope.initialize = function()
     {
@@ -75,7 +73,7 @@ function ForgetPasswordPopUpController( $scope, $modalInstance, $state, $importS
     }
 
     /**
-     * Sai da popup
+     * Close popup
      */
     $scope.fechaPopup = function ()
     {
@@ -100,30 +98,7 @@ function ForgetPasswordPopUpController( $scope, $modalInstance, $state, $importS
     {
 
     	$scope.msg = null;
-        /*if (fechar)
-        {
-            $modalInstance.close();
-
-        } else
-        {
-            var selectedItems = $scope.gridOptions.selectedItems;
-
-            for(var i=0; i< selectedItems.length; i++)
-            {
-                if( selectedItems[i].ordem == null )
-                {
-                    selectedItems[i].ordem = camposCamadaExistentes.length;
-                    camposCamadaExistentes.push(selectedItems[i])
-                }
-            }
-
-            selectedItems.sort(function(a, b)
-            {
-                return a.ordem - b.ordem;
-            });
-
-            $modalInstance.close(selectedItems);
-        }*/
+        
 
     };
    

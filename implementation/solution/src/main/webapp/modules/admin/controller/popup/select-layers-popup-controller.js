@@ -42,14 +42,14 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Método principal que faz o papel de front-controller da tela.
-	 * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-	 * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
+	 * Main method that makes the role of front-controller of the screen.
+	 * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+	 * When this occurs, gets the State via the $state and calls the initial method of that State.
 	 * Ex.: /list -> changeToList()
 	 *      /criar -> changeToInsert()
 	 *
-	 * Caso o estado não for encontrado, ele direciona para a listagem,
-	 * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+	 * If the State is not found, he directs to the listing,
+	 * Although the front controller of angle won't let enter an invalid URL.a.
 	 */
 	$scope.initialize = function() 
 	{
@@ -68,8 +68,8 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
 	 *-------------------------------------------------------------------*/
 	
 	/**
-     * Realiza a consulta de registros, consirando filtro, paginação e sorting.
-     * Quando ok, muda o estado da tela para list.
+     * Performs the query records, consirando filter, paging and sorting.
+     * When ok, change the State of the screen to list.
      *
      * @see data.filter
      * @see currentPage
@@ -83,7 +83,7 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
                 $scope.showLoading = false;
                 $scope.$apply();
 
-                //Função responsável por marcar os registros que já estavam marcados antes da abertura da pop-up
+                //Function responsible for marking the records that were already tagged prior to the opening of pop-up
 
                 if (currentEntity.name) {
                     angular.forEach( $scope.layers, function(data, index) {
@@ -105,7 +105,7 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
 
 
 	/**
-	 * Sai da popup
+	 * Close popup
 	 */
 	$scope.fechaPopup = function () 
 	{
@@ -130,8 +130,8 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
 	'</div>';
 
 	/**
-     * Handler que captura os eventos de marcação
-     * da grid
+     * Handler that captures the events marking
+     * the grid
      * @param rows
      */
     $scope.toogleSelection = function(row, event) {

@@ -92,7 +92,7 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	 * Main method that makes the role of front-controller screen.
 	 * It is invoked whenever there is a change of URL (@see $stateChangeSuccess),
 	 * Ex.: /list -> changeToList()
-	 *      /criar -> changeToInsert()
+	 *      /create -> changeToInsert()
 	 *      
 	 * If the state is not found, it directs you to the list
 	 */
