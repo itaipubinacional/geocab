@@ -22,11 +22,11 @@ function AbstractCRUDController( $scope, $log, $state, $rootScope, $timeout ) {
 	 * 		 				 	EVENT HANDLERS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Handler que escuta as mudanças de URLs pertecentes ao estado da tela.
-	 * Ex.: listar, criar, detalhe, editar
+	 * Handler that listens to changes in URLs belonging to the State of the screen.
+	 * Ex.: list, create, detail, edit
 	 * 
-	 * Toda vez que ocorre uma mudança de URL se via botão, troca de URL manual, ou ainda 
-	 * ao vançar e voltar do browser, este evento é chamado e chama o initilize() que faz o papel de front-controller.
+	 * Whenever there is a change of URL if via button, manual URL Exchange, or 
+	 * the advancing and back browser, this event is called and calls the initilize () that plays the role of front controller.
 	 * 
 	 */
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
@@ -44,7 +44,7 @@ function AbstractCRUDController( $scope, $log, $state, $rootScope, $timeout ) {
     });
     
     /**
-     * Retorna a instancia do form no escopo do angular.
+     * Returns the instance of the form in the angular scope.
      * @param formName
      * @returns {*|Function|$scope.form|$scope.form|$scope.form|jQuery}
      */
@@ -78,16 +78,16 @@ function AbstractCRUDController( $scope, $log, $state, $rootScope, $timeout ) {
     }
 
     /**
-     * Removemos as mensagens por este método
+     * Remove messages by this method
      */
     $scope.close = function() {
         $scope.msg = null;
     };
     
     /**
-     * Aqui verificamos se existem mensagens para exibição,
-     * Caso houver incluimos evento de clique em toda a tela para que
-     * a mensagem seja fechada clicando em qualquer lugar da tela.
+     * Here we check if there are no messages to display,
+     * If there is we include click event across the screen so that
+     * the message is closed by clicking anywhere on the screen.
      */
     $scope.$watch('msg', function( newValue, oldValue ){
     	$timeout(function(){

@@ -22,23 +22,23 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
     //STATES
 	  //STATES
     /**
-     * Variável estática que representa
-     * o estado de listagem de registros.
+     * Static variable that represents
+     * the State records list.
      */
     $scope.LIST_STATE = "layer-config.list";
     /**
-     * Variável estática que representa
-     * o estado de detalhe de um registro.
+     * Static variable that represents
+     * detail of a State record.
      */
     $scope.DETAIL_STATE = "layer-config.detail";
     /**
-     * Variável estática que representa
-     * o estado para a criação de registros.
+     * Static variable that represents
+     * the State for the creation of records.
      */
     $scope.INSERT_STATE = "layer-config.create";
     /**
-     * Variável estática que representa
-     * o estado para a edição de registros.
+     * Static variable that represents
+     * the rule for editing records.
      */
     $scope.UPDATE_STATE = "layer-config.update";
     
@@ -71,14 +71,14 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Método principal que faz o papel de front-controller da tela.
-	 * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-	 * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
+	 * Main method that makes the role of front-controller of the screen.
+	 * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+	 * When this occurs, gets the State via the $state and calls the initial method of that State.
 	 * Ex.: /list -> changeToList()
-	 *      /criar -> changeToInsert()
+	 *      /create -> changeToInsert()
 	 *
-	 * Caso o estado não for encontrado, ele direciona para a listagem,
-	 * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+	 * If the State is not found, he directs to the listing,
+	 * Although the front controller of angle won't let enter an invalid URL.
 	 */
 	$scope.initialize = function() 
 	{

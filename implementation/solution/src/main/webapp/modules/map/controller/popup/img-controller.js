@@ -33,12 +33,12 @@ function ImgPopUpController($scope, $modalInstance, $log, img) {
      * 		 				 	  NAVIGATIONS
      *-------------------------------------------------------------------*/
     /**
-     * Método principal que faz o papel de front-controller da tela.
-     * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-     * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
+     * Main method that makes the role of front-controller of the screen.
+     * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+     * When this occurs, gets the State via the $state and calls the initial method of that State.
      *
-     * Caso o estado não for encontrado, ele direciona para a listagem,
-     * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+     * If the State is not found, he directs to the listing,
+     * Although the front controller of Angular won't let enter an invalid URL.
      */
     $scope.initialize = function()
     {
