@@ -88,8 +88,8 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param dataSourceId
 	 * @return
 	 */
-	@Query(value="SELECT COUNT (layer) " +
-			"FROM Layer layer " +
-			"WHERE ( layer.name = :layerName ) AND ( layer.dataSource.id = :dataSourceId )")
-	public int countLayersByNameAndDataSource( @Param("layerName") String layerName, @Param("dataSourceId") Long dataSourceId);
+    @Query(value="SELECT layer.layerGroup.id " +
+            "FROM Layer layer " +
+            "WHERE ( layer.name = :layerName) AND ( layer.dataSource.id = :dataSourceId )")
+    public List<Long> listLayerGroupIdsByNameAndDataSource( @Param("layerName") String layerName, @Param("dataSourceId") Long dataSourceId);
 }

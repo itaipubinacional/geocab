@@ -50,29 +50,29 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      *-------------------------------------------------------------------*/
     //STATES
     /**
-     * Variável estática que representa
-     * o estado de listagem de registros.
+     * Static variable that represents
+     * the State records list.
      */
     $scope.LIST_STATE = "layer-config.list";
     /**
-     * Variável estática que representa
-     * o estado de detalhe de um registro.
+     * Static variable that represents
+     * detail of a State record.
      */
     $scope.DETAIL_STATE = "layer-config.detail";
     /**
-     * Variável estática que representa
-     * o estado para a criação de registros.
+     * Static variable that represents
+     * the State for the creation of records.
      */
     $scope.INSERT_STATE = "layer-config.create";
     /**
-     * Variável estática que representa
-     * o estado para a edição de registros.
+     * Static variable that represents
+     * the rule for editing records.
      */
     $scope.UPDATE_STATE = "layer-config.update";
     /**
-     * Variável que armazena o estado corrente da tela.
-     * Esta variável deve SEMPRE estar de acordo com a URL
-     * que está no browser.
+     * Variable that stores the current state of the screen.
+     * This variable shall ALWAYS conform to the URL
+     * that is in the browser.
      */
     $scope.currentState;
 
@@ -107,9 +107,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
     //DATA GRID
     /**
-     * Variável estática coms os botões de ações da grid
-     * O botão de editar navega via URL (sref) por que a edição é feita em outra página,
-     * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
+     * Static variable coms stock grid buttons
+     * The Edit button navigates via URL (sref) why editing is done in another page,
+     * Since the delete button calls a method directly via ng-click why does not have a specific screen state.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
         '<a ui-sref="layer-config.update({id:row.entity.id})"  " title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
@@ -134,7 +134,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 	'</div>';
 
     /**
-     * Configurações gerais da ng-grid.
+     * General settings in the ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
     $scope.gridOptions = {
@@ -144,7 +144,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         headerRowHeight: 45,
         rowHeight: 45,
         beforeSelectionChange: function (row, event) {
-            //evita chamar a selecao, quando clicado em um action button.
+            //avoids calling the selecao, when clicked in an action button.
             if ($(event.target).is("a") || $(event.target).is("i")) return false;
             $state.go($scope.DETAIL_STATE, {id: row.entity.id});
         },
@@ -165,7 +165,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         '</div>';
 
     /**
-     * Configurações gerais da ng-grid.
+     * General settings of ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
     $scope.gridAcessoOptions = {
@@ -255,9 +255,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     
     
     /**
-     * Variável que armazena o estado da paginação
-     * para renderizar o pager e também para fazer as requisições das
-     * novas páginas, contendo o estado do Sort incluído.
+     * Variable that stores the State of the paging
+     * to render the pager and also to make requisitions of
+     * new pages, containing the State of the Sort included.
      *
      * @type PageRequest
      */
@@ -270,8 +270,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
     //FORM
     /**
-     * Variável para armazenar atributos do formulário que
-     * não cabem em uma entidade. Ex.:
+     * Variable to store the form attributes that
+     * not fit on an entity. Ex.:
      * @filter - Filtro da consulta
      */
     $scope.data =
@@ -282,7 +282,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         selects: { fontesDados: null }
     };
     /**
-     * Armazena a entitidade corrente para edição ou detalhe.
+     * Stores the current entity for editing or detail.
      */
     $scope.currentEntity = {sistema: false, habilitada: false};
 
@@ -290,14 +290,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * 		 				 	  NAVIGATIONS
      *-------------------------------------------------------------------*/
     /**
-     * Método principal que faz o papel de front-controller da tela.
-     * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-     * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
-     * Ex.: /list -> changeToList()
-     *      /criar -> changeToInsert()
-     *
-     * Caso o estado não for encontrado, ele direciona para a listagem,
-     * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+     * Main method that makes the role of front-controller of the screen.
+	 * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+	 * When this occurs, gets the State via the $state and calls the initial method of that State.
+	 * Ex.: /list -> changeToList()
+	 *      /criar -> changeToInsert()
+	 *
+	 * If the State is not found, he directs to the listing,
+	 * Although the front controller of angle won't let enter an invalid URL.
      */
     $scope.initialize = function (toState, toParams, fromState, fromParams) {
         var state = $state.current.name;
@@ -305,8 +305,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         
         
         /**
-         * É necessario remover o atributo sortInfo pois o retorno de uma edição estava duplicando o valor do mesmo com o atributo Sort
-         * impossibilitando as ordenações nas colunas da grid.
+         * It is necessary to remove the sortInfo attribute because the return of an edition was doubling the value of the same with the Sort attribute
+         * preventing the ordinations in the columns of the grid.
          */
         if ($scope.gridOptions.sortInfo) {
             delete $scope.gridOptions.sortInfo;
@@ -343,12 +343,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Realiza os procedimentos iniciais (prepara o estado)
-     * para a tela de consulta e após isso, muda o estado para list.
+     * Performs initial procedures (prepares the State)
+     * for the query screen and after that, change the State to list.
      * @see LIST_STATE
      * @see $stateChangeSuccess
      *
-     * Para mudar para este estado, deve-se primeiro carregar os dados da consulta.
+     * To change to this State, one must first load the data from the query.
      */
     $scope.changeToList = function () {
         $log.info("changeToList");
@@ -363,13 +363,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Realiza os procedimentos iniciais (prepara o estado)
-     * para a tela de inserção e após isso, muda o estado para insert.
+     * Performs initial procedures (prepares the State)
+     * for screen and after that, change the State to insert.
      * @see INSERT_STATE
      * @see $stateChangeSuccess
      *
-     * Para mudar para este estado, deve-se primeiro instanciar um novo currentEntity,
-     * para limpar os campos e configurar valores defaults.
+     * To change to this State, you must first instantiate a new currentEntity,
+     * to clear fields and configure defaults values.
      */
     $scope.changeToInsert = function () {
         $log.info("changeToInsert");
@@ -402,13 +402,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Realiza os procedimentos iniciais (prepara o estado)
-     * para a tela de edição e após isso, muda o estado para update.
+     * Performs initial procedures (prepares the State)
+     * to the Edit screen and after that, change the State to update.
      * @see UPDATE_STATE
      * @see $stateChangeSuccess
      *
-     * Para mudar para este estado, deve-se primeiro obter via id
-     * o registro pelo serviço de consulta e só então mudar o estado da tela.
+     * To change to this State, must first obtain via id
+     * the query service record and only then change the State of the screen.
      */
     $scope.changeToUpdate = function (id) {
 
@@ -433,14 +433,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Realiza os procedimentos iniciais (prepara o estado)
-     * para a tela de detalhe e após isso, muda o estado para detail.
+     * Performs initial procedures (prepares the State)
+     * to the detail screen and after that, change the State to detail.
      * @see DETAIL_STATE
      * @see $stateChangeSuccess
      *
-     * Para mudar para este estado, deve-se primeiro obter via id
-     * o registro atualizado pelo serviço de consulta e só então mudar o estado da tela.
-     * Caso o indentificador esteja inválido, retorna para o estado de listagem.
+     * To change to this State, must first obtain via id
+     * the updated record query service, and then change the State of the screen.
+     * If the modifier is not valid, returns to the State of the listing.
      */
     $scope.changeToDetail = function (id) {
         $log.info("changeToDetail", id);
@@ -471,12 +471,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Realiza os procedimentos iniciais (prepara o estado)
-     * para a tela de exclusão.
+     * Performs initial procedures (prepares the State)
+     * for the delete screen.
      *
-     * Antes de excluir, o usuário notificado para confirmação
-     * e só então o registro é excluido.
-     * Após excluído, atualizamos a grid com estado de filtro, paginação e sorting.
+     * Before deleting the user notified for confirmation
+     * and just so the record is deleted.
+     * After deleted, update the grid with filter State, paging and sorting.
      */
     $scope.changeToRemove = function (layer) {
         $log.info("changeToRemove", layer);
@@ -529,8 +529,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Configura o pageRequest conforme o coponente visual pager
-     * e chama o serviçoe de listagem, considerando o filtro corrente na tela.
+     * Configures the pageRequest as visual coponente pager
+     * and calls the service of listing, considering the current filter on the screen.
      *
      * @see currentPage
      * @see data.filter
@@ -545,8 +545,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      *-------------------------------------------------------------------*/
 
     /**
-     * Realiza a consulta de registros, consirando filtro, paginação e sorting.
-     * Quando ok, muda o estado da tela para list.
+     * Performs the query records, consirando filter, paging and sorting.
+     * When ok, change the State of the screen to list.
      *
      * @see data.filter
      * @see currentPage
@@ -569,8 +569,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Realiza a inserção de um novo registro
-     * e no suscesso, modifica o estado da tela para o detail.
+     * Performs the insertion of a new record
+     * and in the success, modifies the State of the screen for the detail.
      */
     $scope.insertLayer = function (layer) {
 
@@ -618,8 +618,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Realiza a atualiza de um registro
-     * e no suscesso, modifica o estado da tela para o detail.
+     * Performs the update of a record
+     * and success, change the display state to the detail.
      */
     $scope.updateLayer = function (layer) {
 
@@ -660,38 +660,45 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.selectLayerGroup = function () {
 
-        layerGroupService.listLayersGroupUpper({
-            callback: function (result) {
-
-                var dialog = $modal.open({
-                    templateUrl: "modules/admin/ui/layer-config/popup/layer-group-popup.jsp",
-                    controller: SelectLayerGroupPopUpController,
-                    windowClass: 'xx-dialog grupo-camada-dialog',
-                    resolve: {
-                    	layerGroups: function () {
-                            return result;
-                        },
-                        currentLayerGroup: function () {
-                            return $scope.currentEntity.layerGroup;
-                        }
-                    }
-                });
-
-                dialog.result.then(function (result) {
-
-                    if (result) {
-                        $scope.currentEntity.layerGroup = result;
-                        $scope.currentEntity.layerGroup.name = result.label;
-                    }
-
-                });
-
-            },
-            errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
-                $scope.$apply();
-            }
-        });
+    	var request = {
+	            callback: function (result) {
+	
+	                var dialog = $modal.open({
+	                    templateUrl: "modules/admin/ui/layer-config/popup/layer-group-popup.jsp",
+	                    controller: SelectLayerGroupPopUpController,
+	                    windowClass: 'xx-dialog grupo-camada-dialog',
+	                    resolve: {
+	                    	layerGroups: function () {
+	                            return result;
+	                        },
+	                        currentLayerGroup: function () {
+	                            return $scope.currentEntity.layerGroup;
+	                        }
+	                    }
+	                });
+	
+	                dialog.result.then(function (result) {
+	
+	                    if (result) {
+	                        $scope.currentEntity.layerGroup = result;
+	                        $scope.currentEntity.layerGroup.name = result.label;
+	                    }
+	
+	                });
+	
+	            },
+	            errorHandler: function (message, exception) {
+	                $scope.message = {type: "error", text: message};
+	                $scope.$apply();
+	            }
+	        };
+    	
+    	// checks if is internal layer
+    	if($scope.currentEntity.dataSource.url == null){
+    		layerGroupService.listLayersGroupUpper(request);
+    	} else {
+	    	layerGroupService.listSupervisorsFilter($scope.currentEntity.name, $scope.currentEntity.dataSource.id, request);
+    	}
     };
 
     /**
@@ -710,7 +717,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         dialog.result.then(function (result) {
 
-            // atribui os dados selecionados
+            // assigns the selected data
 
             if( $scope.currentEntity.dataSource && $scope.currentEntity.dataSource.id != result.id )
             {

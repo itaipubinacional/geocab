@@ -77,7 +77,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 
 	//DATA GRID
 	/**
-	 * Static variable coms buttons shares of grid
+	 * Static variable with buttons shares of grid
 	 * The edit button navigates via URL (SREF) why the editing is done on another page
 	 * now the delete button a direct method calls via click-ng why not have a specific status screen.
 	 */
@@ -219,7 +219,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 		/*
 		$scope.currentEntity = new FonteDados();
 		
-		//Para funcionar com o ng-model no radio button
+		//To operate ng-model no radio button
 		$scope.currentEntity.tipoFonteDados = 'WMS';*/
 
 		$scope.currentState = $scope.INSERT_STATE;

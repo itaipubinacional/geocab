@@ -17,9 +17,9 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
      *-------------------------------------------------------------------*/
 
     /**
-     *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
-     *  Quando o evento é disparado, configuramos o pager do spring-data
-     *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
+     *  Handler that listens to each time the user makes the sorting in tables programmatically/ng-grid.
+     *  When the event is fired, we configure the pager of the spring-date
+     *  and we call again the query, considering also the filter State (@see $scope. date. filter)
      */
     $scope.$on('ngGridEventSorted', function(event, sort) {
 
@@ -76,7 +76,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
     /**
-     * Configurações gerais da ng-grid.
+     * General Settings da ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
     $scope.gridOptions = {
@@ -95,18 +95,18 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
     };
 
     /**
-    * Variável que armazena o estado da paginação
-    * para renderizar o pager e também para fazer as requisições das
-    * novas páginas, contendo o estado do Sort incluído.
+    * Variable that stores the state of paging
+    * to render the pager and also to make requisitions of
+    * new pages, containing the State of the Sort included
     *
     * @type PageRequest
     */
     $scope.currentPage;
 
     /**
-     * Variável para armazenar atributos do formulário que
-     * não cabem em uma entidade. Ex.:
-     * @filter - Filtro da consulta
+     * Variable to store the form attributes that
+     * not fit on an entity. Ex.:
+     * @filter - Query filter
      */
     $scope.data = { filter:null };
     
@@ -125,7 +125,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
      * 		 				 	  BEHAVIORS
      *-------------------------------------------------------------------*/
     /**
-     * Realiza a consulta ao exibir a pop-up
+     * Performs the query when displaying a pop-up
      */
     $scope.initialize = function() {
 
@@ -144,8 +144,8 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
     };
 
     /**
-     * Configura o pageRequest conforme o componente visual pager
-     * e chama o serviço de listagem, considerando o filtro corrente na tela.
+     * Configures the pageRequest as the visual component pager
+     * and calls the listing service, considering the current filter on the screen.
      *
      * @see currentPage
      * @see data.filter
@@ -157,7 +157,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
     };
 
     /**
-     * Função responsável por fechar a pop sem executar outras ações
+     * Function responsible for closing the pop without performing other actions
      */
     $scope.close = function ( fechar ) {
 
@@ -171,8 +171,8 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
     };
     
     /**
-	 * Realiza a consulta de registros, consirando filtro, paginação e sorting.
-	 * Quando ok, muda o estado da tela para list.
+	 * Performs the query records, consirando filter, paging and sorting.
+	 * When ok, change the State of the screen to list.
 	 * 
 	 * @see data.filter
 	 * @see currentPage
@@ -189,7 +189,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
 				
 				$scope.showLoading = false;
 
-                //Função responsável por marcar os registros que já estavam marcados antes da abertura da pop-up
+                //Function responsible for marking the records that were already tagged prior to the opening of pop-up
                 var item = fonteDadoSelecionado;
                 if (item) {
                     angular.forEach( $scope.currentPage.content, function(data, index) {
@@ -199,7 +199,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
                     });
                 }
 
-                //Função responsável por marcar os items que já estavam marcados antes do método $scope.listGruposAcessosByFilter ser chamado
+                //Function responsible for mark the items that were already marked before the method $scope. listGruposAcessosByFilter be called
                 if ($scope.itensMarcados) {
                     angular.forEach( $scope.itensMarcados, function(data, index) {
                         var i = $scope.findByIdInArray($scope.currentPage.content, data);

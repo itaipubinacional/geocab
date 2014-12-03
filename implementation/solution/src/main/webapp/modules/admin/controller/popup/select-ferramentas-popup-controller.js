@@ -13,22 +13,22 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
      *-------------------------------------------------------------------*/
 
     /**
-     *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
-     *  Quando o evento é disparado, configuramos o pager do spring-data
-     *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
+     *  Handler that listens to each time the user makes the sorting in tables programmatically/ng-grid.
+     *  When the event is fired, we configure the pager of the spring-date
+     *  and we call again the query, considering also the filter State (@see $scope. date. filter)
      */
     $scope.$on('ngGridEventSorted', function(event, sort) {
 
-        // compara os objetos para garantir que o evento seja executado somente uma vez que não entre em loop
+        // compares the objects to ensure that the event is run only once does not loop
         if ( !angular.equals(sort, $scope.gridOptions.sortInfo) ) {
             $scope.gridOptions.sortInfo = angular.copy(sort);
 
-            //Order do spring-data
+            //Order of spring-data
             var order = new Order();
             order.direction = sort.directions[0].toUpperCase();
             order.property = sort.fields[0];
 
-            //Sort do spring-data
+            //Sort of spring-data
 //            $scope.currentPage.pageable.sort = new Sort();
 //            $scope.currentPage.pageable.sort.orders = [ order ];
 
@@ -45,7 +45,7 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
     $scope.gridSelectedItems = [];
 
     /**
-     * Handler que captura os eventos de marcação
+     * Handler that captures the events marking
      * da grid
      * @param rows
      */
@@ -59,7 +59,7 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
         '</div>';
 
     /**
-     * Configurações gerais da ng-grid.
+     * General Settings da ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
     $scope.gridOptions = {
@@ -82,18 +82,18 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
     };
 
     /**
-     * Variável que armazena o estado da paginação
-     * para renderizar o pager e também para fazer as requisições das
-     * novas páginas, contendo o estado do Sort incluído.
+     * Variable that stores the State of the paging
+     * to render the pager and also to make requisitions of
+     * new pages, containing the State of the Sort included.
      *
      * @type PageRequest
      */
     $scope.currentPage;
 
     /**
-     * Variável para armazenar atributos do formulário que
-     * não cabem em uma entidade. Ex.:
-     * @filter - Filtro da consulta
+     * Variable to store the form attributes that
+     * not fit on an entity. Ex.:
+     * @filter - Query Filter
      */
     $scope.data = {
         filterText : ''
@@ -114,7 +114,7 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
      * 		 				 	  BEHAVIORS
      *-------------------------------------------------------------------*/
     /**
-     * Realiza a consulta ao exibir a pop-up
+     * Performs the query when displaying a pop-up
      */
     $scope.initialize = function() {
 
@@ -137,8 +137,8 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
     };
 
     /**
-     * Configura o pageRequest conforme o componente visual pager
-     * e chama o serviço de listagem, considerando o filtro corrente na tela.
+     * Configures the pageRequest as the visual component pager
+     * and calls the listing service, considering the current filter on the screen.
      *
      * @see currentPage
      * @see data.filter
@@ -150,7 +150,7 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
     };
 
     /**
-     * Função responsável por fechar a pop sem executar outras ações
+     * Function responsible for closing the pop without performing other actions
      */
     $scope.close = function( fechar )
     {
@@ -168,8 +168,8 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
     };
 
     /**
-     * Realiza a consulta de registros, considerando filtro, paginação e sorting.
-     * Quando ok, muda o estado da tela para list.
+     * Performs the query records, whereas filter, paging and sorting.
+     * When ok, change the State of the screen to list.
      *
      * @see data.filter
      * @see currentPage
@@ -184,7 +184,7 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
                 $scope.showLoading = false;
                 $scope.$apply();
 
-                //Função responsável por marcar os registros que já estavam marcados antes da abertura da pop-up
+                //Function responsible for marking the records that were already tagged prior to the opening of pop-up
 
                 if (ferramentasSelecionadas != null) {
                     var items = ferramentasSelecionadas;

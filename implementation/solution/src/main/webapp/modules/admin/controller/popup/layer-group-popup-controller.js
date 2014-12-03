@@ -48,14 +48,14 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Método principal que faz o papel de front-controller da tela.
-	 * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
-	 * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
+	 * Main method that makes the role of front-controller of the screen.
+	 * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+	 * When this occurs, gets the State via the $state and calls the initial method of that State.
 	 * Ex.: /list -> changeToList()
-	 *      /criar -> changeToInsert()
+	 *      /create -> changeToInsert()
 	 *
-	 * Caso o estado não for encontrado, ele direciona para a listagem,
-	 * apesar que o front-controller do angular não deixa digitar uma URL inválida.
+	 * If the State is not found, he directs to the listing,
+	 * Although the front controller of angle won't let enter an invalid URL.
 	 */
 	$scope.initialize = function() 
 	{
@@ -112,7 +112,7 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
 
 
 	/**
-	 * Sai da popup
+	 * Close popup
 	 */
 	$scope.closePopup = function () 
 	{
@@ -151,7 +151,7 @@ function LayerGroupPopUpController($scope, $injector,$modalInstance, layerGroups
 	};
 
     /**
-     * Confirma o nome do grupo e fecha popup
+     * Confirms the name of the Group and close popup
      */
     $scope.closePopupConfirm = function ()
     {

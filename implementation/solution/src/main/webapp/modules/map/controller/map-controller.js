@@ -9,7 +9,8 @@
 function MapController( $scope, $injector, $log, $state, $timeout, $modal, $location, $http , $importService, $translate) {
 	
 	/**
-	 * Injeta os métodos, atributos e seus estados herdados de AbstractCRUDController.
+	 * 
+	 * Injects the methods, attributes and inherited states of AbstractCRUDController States.
 	 * @see AbstractCRUDController
 	 */
 	$injector.invoke(AbstractCRUDController, this, {$scope: $scope});
@@ -48,7 +49,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.MAP_TYPE_MAPQUEST_OSM = 'mapQuest_osm'
 
     /**
-     * MapQuest SATÉLITE
+     * MapQuest SATELITE
      */
 	 $scope.MAP_TYPE_MAPQUEST_SAT = 'mapQuest_sat'
 
@@ -87,8 +88,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.userMe;
 
     /**
-     * Variável que armazena o tipo do mapa selecionado pelo usuário - GMAP ou OSM
-     * Irá conter também o módulo selecionado - Terreno, Satélite, Híbrido, etc.
+     * Variable that stores the type of the map selected by the user - GMAP ou OSM
+     * Will also contain the selected module - Warren, Satellite, Hybrid, etc.
      */
     $scope.mapConf = {
         type : $scope.MAP_TYPE_OSM,
@@ -98,22 +99,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /**
-     * Variável que armazena as configurações do google map
+     * Variable that stores the settings from google map
      */
     $scope.mapGoogleOptions = {};
 
     /**
-     * Variável que representa o google map
+     * Variable that represents o google map
      */
     $scope.mapGoogle = {};
 
     /**
-     * Variável que representa o mapa openlayers
+     * Variable representing the openlayers map
      */
     $scope.map = {};
 
     /**
-     * Variável responsável por controlar se as funcionalidades estão ativas ou não
+     * Responsible for controlling variable if the functionalities are active or not
      */
     $scope.menu = {
         fcDistancia : false,
@@ -123,24 +124,24 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     };
 
     /**
-     * Variável que armazena a lista dos grupos de camadas com o perfil de acesso do usuário
+     * Variable that stores the list of layer groups with user access profile
      * @type {Array}
      */
     $scope.allLayers = [];
 
     /**
-     * Variável que armazena todas as camadas selecionada pelo usuário
+     * Variable that stores all layers selected by the user
      * @type {Array}
      */
     $scope.layers = [];
     
     /**
-     * Variável que armazena as camadas kml ativas no mapa
+     * Variable that stores the active kml layers on a map
      */
     $scope.kmlLayers = [];
 
     /**
-     * Variável que armazena todas as camadas internas selecionada pelo usuário
+     * Variable that stores all the inner layers selected by the user
      * @type {Array}
      */
     $scope.internalLayers = [];
@@ -151,13 +152,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.allLayersKML = []
     
     /**
-     * Variável que armazena a camada interna que está sendo criada
+     * Variable that stores the inner layer being created
      * @type {Array}
      */
     $scope.currentCreatingInternalLayer;
     
     /**
-     * Variável que armazena a o slider que está ativo
+     * Variable that stores the slider that is active
      * @type {Array}
      */
     $scope.slideActived;
@@ -184,10 +185,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.features = [];
 
     /*-------------------------------------------------------------------
-     * 		            PERMISSÕES PARA AS FERRAMENTAS
+     * 		            PERMISSIONS FOR THE TOOLS
      *-------------------------------------------------------------------*/
 
-    //Permissão cálculo distância
+    //Allowed distance calculation
     /**
      *
      * @type {boolean}
@@ -199,7 +200,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.PERMISSION_CALCULO_DISTANCIA = 1;
     
-    //Permissão cálculo área
+    //Permission area calculation
     /**
      *
      * @type {boolean}
@@ -211,7 +212,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.PERMISSION_CALCULO_AREA = 2;
 
-    //Permissão cálculo área
+    //Permission area calculation
     /**
      *
      * @type {boolean}
@@ -227,12 +228,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /*-------------------------------------------------------------------
-     * 		 				 	 VARIÁVEIS DE CONFIGURAÇÃO MAPA
+     * 		 				 	 CONFIGURATION VARIABLES MAP
      *-------------------------------------------------------------------*/
 
 
     /**
-     * Configuração da view do mapa
+     * The configuration view of the map
      */
     $scope.view = new ol.View({
         center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
@@ -240,10 +241,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         minZoom: 3
     })
 
-    // eventos da view
+    // view events
     $scope.view.on('change:center', function() {
 
-        // Muda a view do google map se o mapa ativo for o gmap
+        // Changes the view of the google map if the map is active the gmap
         if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
             var center = ol.proj.transform($scope.view.getCenter(), 'EPSG:3857', 'EPSG:4326');
             $scope.mapGoogle.setCenter(new google.maps.LatLng(center[1], center[0]));
@@ -253,7 +254,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.view.on('change:resolution', function() {
 
-        // Muda a view do google map se o mapa ativo for o gmap
+        //Changes the view of the google map if the map is active the gmap
         if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
             $scope.mapGoogle.setZoom($scope.view.getZoom());
         }
@@ -262,7 +263,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /**
-     * Configuração da camada de fundo - OSM
+     * Setting the background layer - OSM
      */
     $scope.rasterOSM = new ol.layer.Tile({
         source: new ol.source.OSM()
@@ -270,26 +271,26 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     });
 
     /**
-     * Configuração da camada de fundo - MAPQUEST OSM
+     * Setting the background layer - MAPQUEST OSM
      */
     $scope.rasterMapQuestOSM = new ol.layer.Tile({
         source: new ol.source.MapQuest({layer: 'osm'})
     });
 
     /**mapConf.type
-     * Configuração da camada de fundo - MAPQUEST SAT
+     * Setting the background layer - MAPQUEST SAT
      */
     $scope.rasterMapQuestSAT = new ol.layer.Tile({
         source: new ol.source.MapQuest({layer: 'sat'})
     });
 
 
-    // Interação de rotate
+    // Rotate Interaction
     $scope.dragRotateAndZoom = new ol.interaction.DragRotateAndZoom();
 
 
     /**
-     * Configuração de controle de posição de mouse
+     * Setting the mouse position control
      */
     $scope.mousePositionControl = new ol.control.MousePosition({
         coordinateFormat: ol.coordinate.createStringXY(4),
@@ -307,14 +308,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
-     * Método executado ao entrar na controller, apór carregar o DOM da página
+     * Method executed upon entering the controller, apór load the DOM of the page
      *
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		
 		
 		/**
-		 * Ajuste do menu
+		 * Menu setting
 		 */
 			$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").css("max-width", parseInt($(window).width()) - 68 );
 			$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").resize(function() { 
@@ -326,14 +327,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 		
 		
 		/**
-		 * Caso não existe uma nav bar
+		 * If doesn't have a nav bar
 		 * */
 		if( !$("#navbar-administrator").length && !$("#navbar-user").length ) {
 			$(".sidebar-style").css("top","60px");
 		}
 		
         /**
-         * Configuração do mapa openlayers
+         * Openlayers map configuration
          */
         $scope.olMapDiv = document.getElementById('olmap');
         $scope.map = new ol.Map({
@@ -348,7 +349,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.mousePositionControl
             ],
 
-            // rotação
+            // rotation
             interactions: ol.interaction.defaults({
                 dragPan: false
             }).extend([
@@ -363,23 +364,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         
         
-        // adiciona layer do OSM
+        // add OSM layer
         $scope.map.addLayer($scope.rasterOSM);
         $scope.rasterOSM.setVisible(false);
 
-        // adiciona layer do MapQuest OSM
+        // add  MapQuest OSM layer
         $scope.map.addLayer($scope.rasterMapQuestOSM);
         $scope.rasterMapQuestOSM.setVisible(false);
 
-        // adiciona layer do MapQuest OSM
+        // add MapQuest layer OSM
         $scope.map.addLayer($scope.rasterMapQuestSAT);
         $scope.rasterMapQuestSAT.setVisible(false);
         
-        // Registra as postagens no mapa
+        // Registers the posts on a map
         //$scope.loadMarkers();
 
         /**
-         * Configuração do mapa GMAP
+         * Map configuration GMAP
          */
         $scope.mapGoogleOptions = {
             mapTypeControlOptions: {
@@ -400,10 +401,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             heading: 90
         };
 
-//        // setar o mapGoogleOptions
+//        set the mapGoogleOptions
 //        $scope.mapGoogle = new google.maps.Map(document.getElementById("gmap"), $scope.mapGoogleOptions);
 
-        // exibe coordenadas do mouse
+        // Displays mouse coordinates
         enableMouseCoordinates();
 
 
@@ -413,7 +414,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         $scope.listPublishedLayersGroup();
 
-        // inicializa mapa
+        // Initializes map
         if ( $scope.mapConf.type == $scope.MAP_TYPE_OSM ){
             $scope.initializeOSM();
         } else if ( $scope.mapConf.type == $scope.MAP_TYPE_GMAP ){
@@ -430,7 +431,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
         /**
-         * Evento de click para solicitar ao geoserver as informações das camadas da coordenada clicada
+         * Click event to prompt the geoserver the information layer of the clicked coordinat
          */
         $scope.map.on('click', function(evt) {
         	
@@ -591,7 +592,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
 
     /**
-     * Funcão que faz requisição ao geo server para trazer as features
+     * Function that makes request to geo server to bring the features
      * @param url
      * @param posicao
      */
@@ -690,7 +691,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.listPublishedLayersGroup = function(){
 
-        //Lista os os grupos de camadas e camadas publicados de acordo com o perfil de acesso do usuário
+        //Lists the groups of layers and layers published according to user access profile
         layerGroupService.listLayerGroupUpperPublished( {
             callback: function (result) {
 
@@ -705,6 +706,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     item.value = node.id;
                     item.type = !!node.nodes ? 'grupo' : 'camada';
 
+                    item.maximumScaleMap = !!node.nodes ? '' : node.maximumScaleMap;
+                    item.minimumScaleMap= !!node.nodes ? '' : node.minimumScaleMap;
+                    
                     if( item.selected ){
                         $scope.getSelectedNode(item);
                     }
@@ -747,12 +751,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     }
                 }
 
-                //$scope.toggleSidebar(300, '#menu-item-1');
-
-                // Abre a tree de camadas
-//                $timeout(function(){
-//                    $('#tree').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
-//                });
 
                 $scope.$apply();
             },
@@ -765,7 +763,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
 
     /**
-     * Formata a url com o nome da camada para cada fonte de dados
+     * Formats the url with the name of the layer for each data source
      * @param node
      * @returns {{name: string, url: string}}
      */
@@ -795,7 +793,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
   
 
     /**
-     * Trata a seleção e desseleção de uma cada da tree
+     * Treat the selection and deselection of each of the tree
      * @param node
      */
     $scope.getSelectedNode = function(node){
@@ -823,7 +821,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 });
 
                 var wmsLayer = new ol.layer.Tile({
-                    source: wmsSource
+                	 source: wmsSource,
+                     maxResolution: minEscalaToMaxResolutionn(node.minimumScaleMap),
+                     minResolution: maxEscalaToMinResolutionn(node.maximumScaleMap)
                 });
 
                 var isAdded = false;
@@ -838,10 +838,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
                 if( !isAdded )
                 {
-                    //Adiciona na lista cada camada selecionada
+                    //Add in the list each selected layer
                     $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":node.name, "titulo":node.label});
 
-                    //Adiciona as camadas selecionadas no mapa
+                    //Adds the selected layers in the map
                     $scope.map.addLayer(wmsLayer);
                 }
             }
@@ -851,7 +851,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 {
                     if( $scope.layers[i].name == node.name )
                     {
-                        //Remove as camadas desselecionadas pelo usuário
+                        //Removes the user-desselecionadas layers
                         $scope.map.removeLayer($scope.layers[i].wmsLayer);
                         $scope.layers.splice(i,1);
                     }
@@ -863,7 +863,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     /**
-     * Trata a seleção e desseleção da tree de camadas kml
+     * Treat the selection and deselection of each of the kml tree
      * @param node
      */
     $scope.getSelectedKMLNode = function(node){
@@ -897,55 +897,134 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         }
 
     }
+    
+
+    /**
+       Converts the value scale stored in the db to open layes zoom format
+     */
+    var minEscalaToMaxResolutionn = function ( minEscalaMapa ){
+ 
+        switch (minEscalaMapa){
+            case 'UM500km':
+                return 78271.51696402048;
+            case 'UM200km':
+                return 78271.51696402048;
+            case 'UM100km':
+                return 4891.96981025128;
+            case 'UM50km':
+                return 2445.98490512564;
+            case 'UM20km':
+                return 1222.99245256282;
+            case 'UM10km':
+                return 611.49622628141;
+            case 'UM5km':
+                return 152.8740565703525;
+            case 'UM2km':
+                return 76.43702828517625;
+            case 'UM1km':
+                return 38.21851414258813;
+            case 'UM500m':
+                return 19.109257071294063;
+            case 'UM200m':
+                return 9.554628535647032;
+            case 'UM100m':
+                return 4.777314267823516;
+            case 'UM50m':
+                return 2.388657133911758;
+            case 'UM20m':
+                return 1.194328566955879;
+            default :
+                return 78271.51696402048;
+        }
+    }
+ 
+    /**
+     Converts the value scale stored in the db to open layes zoom forma
+     */
+    var maxEscalaToMinResolutionn = function ( maxEscalaMapa ){
+ 
+        switch (maxEscalaMapa){
+            case 'UM500km':
+                return 19567.87924100512;
+            case 'UM200km':
+                return 4891.96981025128;
+            case 'UM100km':
+                return 2445.98490512564;
+            case 'UM50km':
+                return 1222.99245256282;
+            case 'UM20km':
+                return 305.748113140705;
+            case 'UM10km':
+                return 152.8740565703525;
+            case 'UM5km':
+                return 76.43702828517625;
+            case 'UM2km':
+                return 38.21851414258813;
+            case 'UM1km':
+                return 19.109257071294063;
+            case 'UM500m':
+                return 9.554628535647032;
+            case 'UM200m':
+                return 4.777314267823516;
+            case 'UM100m':
+                return 2.388657133911758;
+            case 'UM50m':
+                return 1.194328566955879;
+            case 'UM20m':
+                return 0.0005831682455839253;
+            default :
+                return 0.0005831682455839253;
+        }
+    }
 
     /*-------------------------------------------------------------------
-     * 		 			CONFIGURAÇÃO DO GOOGLE MAP
+     * 		 			GOOGLE MAPS CONFIGURATION
      *-------------------------------------------------------------------*/
 
     /**
-     * Método que inicializa o mapa Google Maps e suas configurações
+     * Method that initializes the Google Maps map and its settings
      */
     $scope.initializeGMAP = function initializeGMAP() {
 
-        // só executa se o mata ativo no momento não for o google maps
+        // only runs if the currently active forest is not google maps
         if ( $scope.mapConf.active != $scope.MAP_TYPE_GMAP ){
 
 
-            // caso mapa ativo for MAP QUEST OSM
+            // case map active MAP QUEST OSM
             if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM ){
                 $scope.rasterMapQuestOSM.setVisible(false);
             }
 
-            // caso mapa ativo for MAP QUEST SAT
+            // If map QUEST MAP SAT active
             if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_SAT ){
                 $scope.rasterMapQuestSAT.setVisible(false);
             }
 
-            // caso mapa ativo for MAP QUEST OSM
+            // case map active MAP QUEST OSM
             if ( $scope.mapConf.active == $scope.MAP_TYPE_OSM ){
                 $scope.rasterOSM.setVisible(false);
             }
 
-            //ajusta css da div gmap - para mostra-la
+            //adjust div css gmap-to show it
             $("#gmap").css({"width":"100%","height":"100%"})
 
-            // setar o mapGoogleOptions
+            // set the mapGoogleOptions
             $scope.mapGoogle = new google.maps.Map(document.getElementById("gmap"), $scope.mapGoogleOptions);
 
 
             $scope.olMapDiv.parentNode.removeChild($scope.olMapDiv);
             $scope.mapGoogle.controls[google.maps.ControlPosition.RIGHT_TOP].push($scope.olMapDiv)
 
-            // remove a interação de rotate
+            // Removes the interaction of rotate
             $scope.map.removeInteraction($scope.dragRotateAndZoom);
 
-            // tira a rotação
+            // Remove the rotation
             $scope.map.getView().setRotation(0);
 
 
             $scope.mapConf.active = $scope.MAP_TYPE_GMAP;
 
-            // setar view do google maps
+            // set the view from google maps
             $scope.view.setCenter($scope.view.getCenter());
             $scope.view.setZoom($scope.view.getZoom());
 
@@ -956,34 +1035,34 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /**
-     * Método que inicializa o mapa Open Street Map e suas configurações
+     * Method that initializes the Open Street Map map and its settings
      */
     $scope.initializeOSM = function initializeOSM() {
 
-        // só executa se o mapa ativo no memento não for o OSM
+        // only runs if the map currently active is not the OSM
         if ( $scope.mapConf.active != $scope.MAP_TYPE_OSM ){
 
            if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
 
-               //ajusta css da div gmap - para não mostra-la
+               //adjust div css gmap-not to show it
                $("#gmap").css({"width":"0","height":"0"})
 
-               // Retira o elemento olmap da div do google maps
+               // Removes the element from the olmap div of google maps
                var element = document.getElementById("main-content");
                $scope.olMapDiv.style.position = "relative";
                $scope.olMapDiv.style.top = "0";
                element.appendChild($scope.olMapDiv);
 
-               // adiciona interação de rotate
+               // Adds interaction to rotate
                $scope.map.addInteraction($scope.dragRotateAndZoom);
            }
 
-            // caso mapa ativo for MAP QUEST OSM
+            // case map active MAP QUEST OSM
             if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM ){
                 $scope.rasterMapQuestOSM.setVisible(false);
             }
 
-            // caso mapa ativo for MAP QUEST SAT
+            // If map QUEST MAP SAT active
             if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_SAT ){
                 $scope.rasterMapQuestSAT.setVisible(false);
             }
@@ -1004,36 +1083,36 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.initializeMapQuestOSM = function() {
 
-        // só executa se o mapa ativo no memento não for o OSM
+        // only runs if the map active in memento is not the OSM
         if ( $scope.mapConf.active != $scope.MAP_TYPE_MAPQUEST_OSM ){
 
-            // caso mapa ativo for google maps
+            // If active map for google maps
             if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
 
-                //ajusta css da div gmap - para não mostra-la
+                //adjust div css gmap-not to show it
                 $("#gmap").css({"width":"0","height":"0"})
 
-                // Retira o elemento olmap da div do google maps
+                // Removes the element from the olmap div of google maps
                 var element = document.getElementById("main-content");
                 $scope.olMapDiv.style.position = "relative";
                 $scope.olMapDiv.style.top = "0";
                 element.appendChild($scope.olMapDiv);
 
-                // adiciona interação de rotate
+                // Adds interaction to rotate
                 $scope.map.addInteraction($scope.dragRotateAndZoom);
             }
 
-            // caso mapa ativo for OSM
+            // If active map for OSM
             if ( $scope.mapConf.active == $scope.MAP_TYPE_OSM ){
                 $scope.rasterOSM.setVisible(false);
             }
 
-            // caso mapa ativo for MAPQUEST SAT
+            // If active map for MAPQUEST SAT
             if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_SAT ){
                 $scope.rasterMapQuestSAT.setVisible(false);
             }
 
-            // seta o mapa do map quest osm
+            // sets the map map quest osm
             $scope.rasterMapQuestOSM.setVisible(true);
 
             $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_OSM;
@@ -1047,37 +1126,37 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.initializeMapQuestSAT = function() {
 
-        // só executa se o mapa ativo no memento não for o OSM
+        // only runs if the map active in memento is not the OSM
         if ( $scope.mapConf.active != $scope.MAP_TYPE_MAPQUEST_SAT ){
 
-            // caso mapa ativo for google maps
+            // If active map is google maps
             if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
 
-                //ajusta css da div gmap - para não mostra-la
+                //adjust div css gmap-not to show it
                 $("#gmap").css({"width":"0","height":"0"})
 
-                // Retira o elemento olmap da div do google maps
+                // Removes the element from the olmap div of google maps
                 var element = document.getElementById("main-content");
                 $scope.olMapDiv.style.position = "relative";
                 $scope.olMapDiv.style.top = "0";
                 element.appendChild($scope.olMapDiv);
 
-                // adiciona interação de rotate
+                // Adds interaction to rotate
                 $scope.map.addInteraction($scope.dragRotateAndZoom);
             }
 
-            // caso mapa ativo for OSM
+            // If active map is OSM
             if ( $scope.mapConf.active == $scope.MAP_TYPE_OSM ){
                 $scope.rasterOSM.setVisible(false);
             }
 
-            // caso mapa ativo for MAP QUEST OSM
+            // case map active is MAP QUEST OSM
             if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM ){
                 $scope.rasterMapQuestOSM.setVisible(false);
             }
 
 
-            // seta o mapa do map quest osm
+            // set the map to map quest osm
             $scope.rasterMapQuestSAT.setVisible(true);
 
             $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_SAT;
@@ -1088,22 +1167,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /*-------------------------------------------------------------------
-     * 		 		FUNCIONALIDADE EXIBIR COORDENADAS DO MOUSE
+     * 		 		FUNCTIONALITY VIEW MOUSE COORDINATESE
      *-------------------------------------------------------------------*/
 
 
     /**
-     * Método responsável por exibir no mapa as coordenadas do ponteiro do mouse
+     * Responsible method to display on the map the mouse pointer coordinates
      */
     function enableMouseCoordinates() {
 
         /**
-         * Variável que possui o elemento que contém o tooltip
+         * Variable that has the element that contains the tooltip
          */
         var info = $('#info');
 
         /**
-         * Método que mostra as coordenadas do mouse no mapa
+         * Method that shows the mouse coordinates on the map
          */
         var displayCoordinateMouse = function(pixel) {
 
@@ -1113,7 +1192,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         };
         
         /**
-         * Método que formata a coordenada do mouse
+         * Method that formats the coordinate of the mouse
          */
         var formatCoordinate = function( coord ){
 
@@ -1133,7 +1212,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         }
         
         /**
-         * Evento para exibir coordenada do mouse
+         * Events to display coordinate of the mouse
          */
         $($scope.map.getViewport()).on('mousemove', function(evt) {
         	displayCoordinateMouse($scope.map.getEventPixel(evt.originalEvent));
@@ -1142,7 +1221,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /**
-     * Função que esconde a posição do mouse
+     * Function that hides the mouse position
      */
     $scope.hideMousePosition = function (){
         var info = $('#info');
@@ -1151,12 +1230,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /*-------------------------------------------------------------------
-     * 		 	    FUNCIONALIDADE CALCULAR DISTÂNCIA E ÁREA
+     * 		 	    FUNCTIONALITY TO CALCULATE DISTANCE AND AREA
      *-------------------------------------------------------------------*/
 
 
     /**
-     * Método que calcula a distância de pontos no mapa interativo
+     * Method that calculates the distance of points on interactive map
      */
     $scope.initializeDistanceCalc = function () {
 
@@ -1164,10 +1243,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		$scope.clearFcMarker();
     	}
     	
-        // verifica se alguma funcionalidade ja está ativa
+        // checks whether any functionality is already active
         if ($scope.menu.fcDistancia || $scope.menu.fcArea){
 
-            // se funcionalidade esta ativa é necessário sair da funcionalidade
+            // If this functionality is active is necessary to leave the funcionality
             $scope.map.removeInteraction(draw);
             source.clear();
             $scope.map.removeLayer(vector);
@@ -1177,7 +1256,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         }
 
-        // se funcionalidade esta ativa : desativa e sai
+        //If this functionality is active: deactivates and leavecaso mapa ativo for o google maps
         if ($scope.menu.fcDistancia){
 
             $scope.menu.fcDistancia = false;
@@ -1185,7 +1264,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         } else {
 
-            // ativa funcionalidade e desativa as outras para só ter uma ativa por vez
+        	// active functionality and disables the other to only have one active at a time
             $scope.menu = {
                 fcDistancia : true,
                 fcArea : false,
@@ -1193,13 +1272,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 fcMarker: false
             };
 
-            // adiciona a camada de medição no mapa
+            // add the measuring layer on a map
             $scope.map.addLayer(vector);
 
-            // adiciona o evento no mapa
+            // adds the event on the map
             $($scope.map.getViewport()).on('mousemove', mouseMoveHandler);
 
-            // inicializa a a interação
+            // initializes the interaction
             addInteraction( 'LineString' );
         }
     }
@@ -1229,7 +1308,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	//$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
         	$scope.currentEntity = new Marker();
         	
-            // ativa funcionalidade e desativa as outras para só ter uma ativa por vez
+            // active functionality and disables the other to only have one active at a time
             $scope.menu = {
                 fcDistancia : false,
                 fcArea : false,
@@ -1241,7 +1320,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     /**
-     * Método que calcula a área de pontos no mapa interativo
+     * Method that calculates the area of points on interactive map
      */
     $scope.initializeAreaCalc = function () {
 
@@ -1249,10 +1328,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		$scope.clearFcMarker();
     	}
 
-        // verifica se alguma funcionalidade ja está ativa
+        // checks whether any functionality is already active
         if ($scope.menu.fcArea || $scope.menu.fcDistancia || $scope.menu.fcMarker){
 
-            // se funcionalidade esta ativa é necessário sair da funcionalidade
+            // If this functionality is necessary to leave the active functionality
             $scope.map.removeInteraction(draw);
             source.clear();
             $scope.map.removeLayer(vector);
@@ -1261,7 +1340,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         }
 
-        // se funcionalidade esta ativa : desativa e sai
+        // If this functionality turns on: deactivates and goes out
         if ($scope.menu.fcArea){
 
             $scope.menu.fcArea = false;
@@ -1269,7 +1348,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         } else {
 
-            // ativa funcionalidade e desativa as outras para só ter uma ativa por vez
+            // activates and deactivates the other functionality to just have an active at a time
             $scope.menu = {
                 fcDistancia : false,
                 fcArea : true,
@@ -1277,26 +1356,26 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 fcMarker: false
             };
 
-            // adiciona a camada de medição no mapa
+            // Add the layer of measurement on the map
             $scope.map.addLayer(vector);
 
-            // adiciona o evento no mapa
+            // Add event on a map
             $($scope.map.getViewport()).on('mousemove', mouseMoveHandler);
 
-            // inicializa a a interação
+            // Initializes the interaction
             addInteraction( 'Polygon' );
         }
 
     }
 
-    // VARIÁVEIS
+  
     /**
-     * Source da camada de medição
+     * Source of measuring layer
      */
     var source = new ol.source.Vector();
 
     /**
-     * Configuração da camada de medição
+     * Measuring layer configuration
      */
     var vector = new ol.layer.Vector({
         source: source,
@@ -1325,12 +1404,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     var sketch;
 
     /**
-     * Variável que conterá a instância do ol.interaction.Draw
+     * Variable that will contain the instance of ol.interaction.Draw
      */
     var draw;
 
 
-    // EVENTOS
+    // EVENTS
     /**
      * handle pointer move
      * @param {Event} evt
@@ -1352,9 +1431,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     };
 
 
-    // FUNÇÕES
+
     /**
-     * Método que adiciona uma interação do usuário no mapa
+     * Method that adds a user interaction on a map
      */
     function addInteraction( type ) {
         // tipos : 'Polygon' e 'LineString'
@@ -1369,7 +1448,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 // set sketch
                 sketch = evt.feature;
 
-                // limpa as marcações antigas
+                // clean the ancient markings
                 source.clear();
 
             }, this);
@@ -1384,7 +1463,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /**
-     * Método que gera o formato de saída de medição da distância
+     * Method that generates the output format of distance measurement
      */
     var formatLength = function(line) {
         var length = Math.round(line.getLength() * 100) / 100;
@@ -1401,7 +1480,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /**
-     * Método que gera o formato de entrada de medição da área
+     * Method that generates the input format of measuring area
      */
     var formatArea = function(polygon) {
         var area = polygon.getArea();
@@ -1417,12 +1496,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     };
 
     /*-------------------------------------------------------------------
-     * 		 			FUNCIONALIDADE KML
+     * 		 			KML FUNCTIONALITY
      *-------------------------------------------------------------------*/
 
 
     /**
-     * Método que permiti arrastar um arquivo KML para o mapa interativo
+     * Method that allowed drag a KML file to the interactive map
      */
 //    function enableFileKML()
 //    {
@@ -1445,10 +1524,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 //    }
     
     /*-------------------------------------------------------------------
-     * 		 			FUNCIONALIDADE KML
+     * 		 			KML FUNCTIONALITY
      *-------------------------------------------------------------------*/
 
-    //Formatos permitidos a serem arrastados no mapa
+    //Allowed formats to be dragged on a map
     var dragAndDropInteraction = new ol.interaction.DragAndDrop({
         formatConstructors: [
             ol.format.KML
@@ -1457,11 +1536,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /**
-     * Método que permiti arrastar um arquivo KML para o mapa interativo
+     * Method that allowed drag a KML file to the interactive map
      */
     function enableFileKML()
     {
-        //Controla o drag and drop do arquivo KML no mapa
+        //Controls the drag and drop the KML file on a map
         dragAndDropInteraction.on('addfeatures', function(event) {
             var vectorSource = new ol.source.Vector({
                 features: event.features,
@@ -1476,7 +1555,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
             $scope.map.getLayers().push(kmlLayer);
 
-            //Redireciona para o ponto que o arquivo KML é arrastado
+            //Redirects to the point that the KML file is dragged
             var view = $scope.map.getView();
             view.fitExtent(
                 vectorSource.getExtent(), ($scope.map.getSize()));
@@ -1497,10 +1576,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 item.children.push($scope.kmlLayers[i]);
             }
 
-            // seleciona a ultima pesquisa
+            // selects the last search
             item.children[item.children.length-1].selected = true;
 
-            // seleciona o grupo pai
+            // Select the parent group
             var selectItemPai = true;
             for( var i in item.children )
             {
@@ -1509,7 +1588,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 }
             }
 
-            // seleciona o grupo pai
+            // Select the parent group
             if (selectItemPai) item.selected = true;
 
             $scope.allLayersKML = [];
@@ -1523,13 +1602,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
 
     /*-------------------------------------------------------------------
-     * 		 			COMPORTAMENTO DA SIDEBAR
+     * 		 			BEHAVIOR OF THE SIDEBAR
      *-------------------------------------------------------------------*/
 
     /**
-     * Função que gerencia a Sidebar
-     * @param time Tempo execução da animação.
-     * @param element Nome do elemento que está chamando a função.
+     * Function that manages the Sidebar
+     * @param time Time animation plays.
+     * @param element Element name that is calling the function.
      */
     $scope.toggleSidebarMenu = function (time, element){
     	if($("#sidebar-marker-detail-update").css("display") == 'block') {
@@ -1540,7 +1619,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    	}, 400)
     	}
     	/**
-    	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
+    	 * If the marker tab is open, close it and wait to open the new.
     	 * */
     	if( $scope.menu.fcMarker ) {
     		$scope.clearFcMarker();
@@ -1559,9 +1638,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 
     /**
-     * Função que gerencia a Sidebar
-     * @param time Tempo execução da animação.
-     * @param element Nome do elemento que está chamando a função.
+     * Function that manages the Sidebar
+     * @param time Execution time of the animation.
+     * @param element Name of the element that is calling the function.
      */
     $scope.toggleSidebarMarkerCreate = function (time, element){
     	$scope.imgResult = "";
@@ -1572,7 +1651,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         }
     	
     	/**
-    	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
+    	 * If the marker tab is open, close it and wait to open the new.
     	 * */
     	if($scope.slideActived == '#sidebar-layers') {
     		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
@@ -1663,7 +1742,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	          }
 	    	});
     	}
-    	/* Lista para o edit*/
+    	/* List for the edit */
     	layerGroupService.listAllInternalLayerGroups({
     		callback : function(result) {
                // $scope.layersGroups = result;
@@ -1715,7 +1794,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	});    	
     	
     	/**
-    	 * Caso a aba do marker estiver aberta, feche ele e espere para abrir a nova.
+    	 * If the marker tab is open, close it and wait to open the new.
     	 * */
     	
     	if($scope.slideActived == '#sidebar-marker-detail-update') return;
@@ -1745,19 +1824,19 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.toggleSidebar = function (time, element, slide){
 	    time = time != null ? 300 : time;
 	    
-	    //Verifica se a animação é para abrir ou fechar a sidebar pela posição atual dela.
+	    //Checks whether the animation is to open or close the sidebar by her current position.
 	    var closed = $('.menu-sidebar-container').css('right') == '3px';
 	
-	    //Verifica se o usuário clicou num botão que está ativo e a barra está amostra, se é para abrir ou se o clique partiu do botão de fechar.
+	    // Checks whether the user has clicked a button that is active and the bar's sample, if it is open or if the click left of the close button.
 	    if ((element == $scope.lastActive && !closed) || (closed) || (element == "closeButton")) {
 	
-	        //Gerencia a classe 'bg-inactive' que ativa e desativa os botões.
+	        //Manages the class ' bg-inactive ' which activates and deactivates the buttons.
 	        if (closed) {
 	            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
 	        } else {
 	            $(".menu-item").addClass("bg-inactive");
 	        }
-	        //Executa a animação.
+	        //Performs the animation
 	        
 	        $(slide).toggle('slide', { direction: 'right' }, time);
 	        $('.menu-sidebar-container').animate({
@@ -1777,18 +1856,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
 
     /*-------------------------------------------------------------------
-     * 		 			MENU LATERAL DO MAPA
+     * 		 			SIDE MENU MAP
      *-------------------------------------------------------------------*/
 
     /**
-     * Função que diminui zoom do mapa
+     * Function that decreases the zoom map
      */
     $scope.diminuirZoom = function (){
         $scope.map.getView().setZoom($scope.map.getView().getZoom() - 1);
     }
 
     /**
-     * Função que aumenta zoom do mapa
+     * Function that increases the zoom map
      */
     $scope.aumentarZoom = function (){
         $scope.map.getView().setZoom($scope.map.getView().getZoom() + 1);
@@ -2104,7 +2183,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 		                  
 		                   
 		                   var layer = new ol.layer.Vector({
-			                   source: new ol.source.Vector({ features: [iconFeature] })
+			                   source: new ol.source.Vector({ features: [iconFeature] }),
+			                   
+			                   maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
+			                   minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
 			               });
 			
 			               layer.setStyle(iconStyle);
@@ -2115,27 +2197,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 		     			});
 		
 		     			
-		              
-	/*
-	     			angular.forEach(result, function(marker, index){
-	                   var iconFeature = new ol.Feature({
-	                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
-	                       marker: marker,
-	                   });	
-	                  
-	                   icons.push(iconFeature);
-	     			});
-	
-	     			
-	               var layer = new ol.layer.Vector({
-	                   source: new ol.source.Vector({ features: icons })
-	               });
-	
-	               layer.setStyle(iconStyle);
-	
-	               $scope.map.addLayer(layer);
-	               $scope.internalLayers.push({"layer": layer, "id": layerId});
-	               */
+
 	               
 	               
 	               
@@ -2376,7 +2438,7 @@ function isBooleanChecked(that){
 }
 
 /**
- * Função responsável por carregar a foto do usuário na tela no momento em que foi selecionada
+ * Function responsible for loading the user photo on the screen at the time it was selected
  */
 
 
