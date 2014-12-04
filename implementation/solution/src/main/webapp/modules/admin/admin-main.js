@@ -121,6 +121,17 @@
             menu: "custom-search"
         });
 		
+		//ACCESS GROUP
+		$stateProvider.state('access-group', {
+            url : "/access-group",
+            templateUrl : "modules/admin/ui/access-group/access-group-view.jsp",
+            controller : AccessGroupController
+        })
+        .state('access-group.list', {
+                    url: "/list",
+                    menu: "access-group"
+        })
+		
 	});
 	
 	projectModule.run( function( $rootScope, $state, $stateParams, $translate ) {

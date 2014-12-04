@@ -17,16 +17,16 @@
         <div class="navbar-inner navbar-container">
             <div ng-switch on="currentState" class="navbar-title">
                 <span ng-switch-when="custom-search.list"><spring:message code="admin.custom-search.Custom-search-list"/></span>
-                <span ng-switch-when="pesquisa-personalizada.detalhe">DETALHE DE PESQUISA PERSONALIZADA</span>
-                <span ng-switch-when="pesquisa-personalizada.criar">NOVA PESQUISA PERSONALIZADA</span>
-                <span ng-switch-when="pesquisa-personalizada.editar">ALTERAÃ‡ÃƒO DE PESQUISA PERSONALIZADA</span>
+                <span ng-switch-when="pesquisa-personalizada.detalhe"><spring:message code="admin.custom-search.Custom-search-detail"/></span>
+                <span ng-switch-when="pesquisa-personalizada.criar"><spring:message code="admin.custom-search.New-custom-search"/></span>
+                <span ng-switch-when="pesquisa-personalizada.editar"><spring:message code="admin.custom-search.Update-custom-search"/></span>
                 <span ng-switch-default>PESQUISAS PERSONALIZADAS - Carregando...</span>
             </div>
 
             <!-- State Listar -->
             <button ng-show="currentState == LIST_STATE" style="float: right;"
                 class="btn btn-primary"
-                ui-sref="pesquisa-personalizada.criar">Nova pesquisa personalizada
+                ui-sref="pesquisa-personalizada.criar"><spring:message code="admin.custom-search.New-custom-search"/>
             </button>
 
             <!-- State Detalhe -->
@@ -37,11 +37,11 @@
             
             <button ng-show="currentState == DETAIL_STATE" style="float: right;"
                 class="btn btn-danger"
-                ng-click="changeToRemove(currentEntity)">Excluir
+                ng-click="changeToRemove(currentEntity)"><spring:message code="admin.custom-search.Delete"/>
             </button>
             <button ng-show="currentState == DETAIL_STATE" style="float: right;"
                 class="btn btn-primary"
-                ui-sref="pesquisa-personalizada.editar( {id:currentEntity.id} )">Alterar
+                ui-sref="pesquisa-personalizada.editar( {id:currentEntity.id} )"><spring:message code="admin.custom-search.Update"/>
             </button>
 
             <!-- State Criar | Editar -->
@@ -54,13 +54,13 @@
             <button ng-show="currentState == INSERT_STATE" style="float: right;"
                 class="btn btn-success"
                 id="buttonInsert"
-                ng-click="insertPesquisaPersonalizada(currentEntity)">Salvar
+                ng-click="insertPesquisaPersonalizada(currentEntity)"><spring:message code="admin.custom-search.Save"/>
             </button>
             <!-- State Editar -->
             <button ng-show="currentState == UPDATE_STATE" style="float: right;"
                 class="btn btn-success"
                 id="buttonUpdate"
-                ng-click="updatePesquisaPersonalizada(currentEntity)">Salvar
+                ng-click="updatePesquisaPersonalizada(currentEntity)"><spring:message code="admin.custom-search.Save"/>
             </button>
         </div>
     </div>
@@ -80,7 +80,7 @@
         	<div ng-include="modules/admin/ui/custom-search/custom-search-form.jsp'"></div>
         </div>
         <div ng-switch-default>
-        	<div ng-include="'modules/loading.html'"></div>
+        	<div ng-include="'modules/common/loading.jsp'"></div>
         </div>
     </div>
 </div>
