@@ -32,7 +32,7 @@ public interface IAccessGroupCustomSearchRepository extends IDataRepository<Acce
 	@Query(value="SELECT new AccessGroupCustomSearch( accessGroupCustomSearch.id, accessGroupCustomSearch.accessGroup, accessGroupCustomSearch.customSearch ) " +
 				"FROM AccessGroupCustomSearch accessGroupCustomSearch " +
 				"WHERE  accessGroupCustomSearch.customSearch.id = :searchId " )
-	public List<AccessGroupCustomSearch> listByCustemSearchId( @Param("searchId") Long searchId );
+	public List<AccessGroupCustomSearch> listByCustomSearchId( @Param("searchId") Long searchId );
 	
 	/**
 	 * 
