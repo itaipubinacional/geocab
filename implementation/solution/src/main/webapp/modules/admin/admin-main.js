@@ -98,6 +98,28 @@
 			menu: "layer-config"
 		});
 
+		//Custom Search
+		$stateProvider.state('custom-search', {
+            url : "/custom-search",
+            templateUrl : "modules/admin/ui/custom-search/custom-search-view.jsp",
+            controller : CustomSearchController
+        })
+        .state('custom-search.list', {
+                    url: "/list",
+                    menu: "custom-search"
+        })
+        .state('custom-search.detail', {
+                    url: "/detail/:id",
+                    menu: "custom-search"
+        })
+        .state('custom-search.create', {
+            url : "/create",
+            menu: "custom-search"
+        })
+        .state('custom-search.update', {
+            url : "/update/:id",
+            menu: "custom-search"
+        });
 		
 	});
 	

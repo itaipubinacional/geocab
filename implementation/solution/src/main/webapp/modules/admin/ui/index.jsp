@@ -55,10 +55,12 @@
 	<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-access-group-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-layers-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/select-custom-search-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/data-source-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/layer-group-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/layer-config-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/custom-search-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/layer-group-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/users-controller.js"></script>
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
