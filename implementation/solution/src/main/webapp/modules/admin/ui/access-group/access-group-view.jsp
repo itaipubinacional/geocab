@@ -16,17 +16,17 @@
     	<!-- Control Bar -->
         <div class="navbar-inner navbar-container">
             <div ng-switch on="currentState" class="navbar-title">
-                <span ng-switch-when="access-group.listar"><spring:message code="admin.access-group.List-Access-Group"/></span>
-                <span ng-switch-when="access-group.detalhe"><spring:message code="admin.access-group.Access-Group-detail"/></span>
-                <span ng-switch-when="access-group.criar"><spring:message code="admin.access-group.New-Access-Group"/></span>
-                <span ng-switch-when="access-group.editar"><spring:message code="admin.access-group.Change-Access-Group"/></span>
+                <span ng-switch-when="access-group.list"><spring:message code="admin.access-group.List-Access-Group"/></span>
+                <span ng-switch-when="access-group.detail"><spring:message code="admin.access-group.Access-Group-detail"/></span>
+                <span ng-switch-when="access-group.create"><spring:message code="admin.access-group.New-Access-Group"/></span>
+                <span ng-switch-when="access-group.update"><spring:message code="admin.access-group.Change-Access-Group"/></span>
                 <span ng-switch-default><spring:message code="admin.access-group.ACCESS-GROUP-Loading"/></span>
             </div>
 
             <!-- State Listar -->
             <button ng-show="currentState == LIST_STATE" style="float: right;"
                 class="btn btn-primary"
-                ui-sref="access-group.criar"><spring:message code="admin.access-group.New-Access-Group"/>
+                ui-sref="access-group.create"><spring:message code="admin.access-group.New-Access-Group"/>
             </button>
 
             <!-- State Detalhe -->
@@ -53,7 +53,7 @@
     
     <!-- Partial views dos states -->
 	<div ng-switch on="currentState">
-        <div ng-switch-when="access-group.lisr">
+        <div ng-switch-when="access-group.list">
         	<div ng-include="'modules/admin/ui/access-group/access-group-list.jsp'"></div>
         </div>
         <div ng-switch-when="access-group.detail">
@@ -62,7 +62,7 @@
         <div ng-switch-when="access-group.create">
         	<div ng-include="'modules/admin/ui/access-group/access-group-form.jsp'"></div>	
         </div> 
-        <div ng-switch-when="access-group.edit">
+        <div ng-switch-when="access-group.update">
         	<div ng-include="'modules/admin/ui/access-group/access-group-form.jsp'"></div>
         </div>
         <div ng-switch-default>

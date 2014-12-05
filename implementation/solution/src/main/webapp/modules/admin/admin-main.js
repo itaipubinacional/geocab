@@ -127,10 +127,22 @@
             templateUrl : "modules/admin/ui/access-group/access-group-view.jsp",
             controller : AccessGroupController
         })
-        .state('access-group.list', {
-                    url: "/list",
-                    menu: "access-group"
+        .state('access-group.detail', {
+            url: "/detail/:id",
+            menu: "access-group"
         })
+        .state('access-group.list', {
+            url: "/list",
+            menu: "access-group"
+        })
+        .state('access-group.create', {
+            url : "/create",
+            menu: "access-group"
+        })
+        .state('access-group.update', {
+            url : "/update/:id",
+            menu: "access-group"
+        });
 		
 	});
 	

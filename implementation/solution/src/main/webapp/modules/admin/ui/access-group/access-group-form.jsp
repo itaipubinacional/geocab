@@ -46,13 +46,13 @@
                             <!-- State Create -->
                             <button ng-show="currentState == INSERT_STATE"
                                     class="btn btn-success top-space"
-                                    ng-click="insertGrupoAcesso(currentEntity)"><spring:message code="admin.access-group.Save-and-continue"/>
+                                    ng-click="insertAccessGroup()"><spring:message code="admin.access-group.Save-and-continue"/>
                             </button>
                             
                             <!-- State Edit -->
                             <button ng-show="currentState == UPDATE_STATE"
                                     class="btn btn-success top-space"
-                                    ng-click="updateGrupoAcesso(currentEntity)"><spring:message code="admin.access-group.Save"/>
+                                    ng-click="updateAccessGroup()"><spring:message code="admin.access-group.Save"/>
                             </button>
 
                             <button ng-show="currentState == INSERT_STATE || currentState == UPDATE_STATE"
