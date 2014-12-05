@@ -219,7 +219,7 @@ public class CustomSearchService
 	public List<CustomSearch> listCustomSearchsByUser()
 	{
 		//List of all access groups of user
-		List<AccessGroup> accessGroupUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getUsername());
+		List<AccessGroup> accessGroupUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
 		
 		List<CustomSearch> customsSearchUser = new ArrayList<CustomSearch>();
 		

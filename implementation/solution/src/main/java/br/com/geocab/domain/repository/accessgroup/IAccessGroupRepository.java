@@ -31,18 +31,18 @@ public interface IAccessGroupRepository extends IDataRepository<AccessGroup, Lon
 	 * @param filter
 	 * @param pageable
 	 * @return
-	 * @TODO Adicionar demais filtros que faltam: Grupo, usuário, camada, pesquisa personalizada e ferramenta quando desenvolver esta funcionalidade
+	 * @TODO Adicionar demais filtros que faltam: Grupo, usuï¿½rio, camada, pesquisa personalizada e ferramenta quando desenvolver esta funcionalidade
 	 */
 	@Query(value="SELECT DISTINCT new AccessGroup ( accessGroup.id, accessGroup.name, accessGroup.description ) " +
 				"FROM AccessGroup accessGroup " +
 				"LEFT JOIN accessGroup.users user " +
 				"LEFT JOIN accessGroup.tools tool " +
-				"LEFT JOIN accessGroup.accessGroupLayer accessGroupLayer" +
+				"LEFT JOIN accessGroup.accessGroupLayer accessGroupLayer " +
 				"LEFT JOIN accessGroupLayer.layer layer " +
-				"LEFT JOIN accessGroup.accessGroupCustemSearch accessGroupSearch " +
-				"LEFT JOIN grupoAcessoPesquisa.customSearch search " +
+				"LEFT JOIN accessGroup.accessGroupCustomSearch accessGroupSearch " +
+				"LEFT JOIN accessGroupSearch.customSearch search " +
 				"WHERE  ( ( LOWER(accessGroup.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " +
-					"OR ( LOWER(user.nomeCompleto) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL )" +
+					"OR ( LOWER(user.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL )" +
 					"OR ( LOWER(tool.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL )" +
 					"OR ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL)" +
 					"OR ( LOWER(search.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL)" +
@@ -57,7 +57,7 @@ public interface IAccessGroupRepository extends IDataRepository<AccessGroup, Lon
 	@Query(value="SELECT new AccessGroup ( accessGroup.id, accessGroup.name, accessGroup.description ) " +
 				"FROM AccessGroup accessGroup " +
 				"INNER JOIN accessGroup.users user " +
-				"WHERE user.username = :username" )
-	public List<AccessGroup> listByUser( @Param("username") String username );
+				"WHERE user.email = :email" )
+	public List<AccessGroup> listByUser( @Param("email") String email );
 	
 }
