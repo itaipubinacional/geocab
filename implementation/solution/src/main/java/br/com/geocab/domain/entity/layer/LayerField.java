@@ -69,7 +69,7 @@ public class LayerField extends AbstractEntity implements Serializable
 	 * order of {@link LayerField}
 	 */
 	@Column
-	private int order;
+	private int orderLayer;
 	
 	
 	/*-------------------------------------------------------------------
@@ -101,7 +101,7 @@ public class LayerField extends AbstractEntity implements Serializable
 		this.setId(id);
 		this.setName(name);
 		this.setLabel(label);
-		this.setOrder(order);
+		this.setOrderLayer(order);
 	}
 	
 	/*-------------------------------------------------------------------
@@ -119,7 +119,7 @@ public class LayerField extends AbstractEntity implements Serializable
 		result = prime * result
 				+ ((typeGeoServer == null) ? 0 : typeGeoServer.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + order;
+		result = prime * result + orderLayer;
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
@@ -144,7 +144,7 @@ public class LayerField extends AbstractEntity implements Serializable
 			if (other.name != null) return false;
 		}
 		else if (!name.equals(other.name)) return false;
-		if (order != other.order) return false;
+		if (orderLayer != other.orderLayer) return false;
 		if (label == null)
 		{
 			if (other.label != null) return false;
@@ -286,18 +286,18 @@ public class LayerField extends AbstractEntity implements Serializable
 		this.label = label;
 	}
 	/**
-	 * @return the order
+	 * @return the orderLayer
 	 */
-	public int getOrder()
+	public int getOrderLayer()
 	{
-		return order;
+		return orderLayer;
 	}
 	/**
-	 * @param order the order to set
+	 * @param orderLayer the orderLayer to set
 	 */
-	public void setOrder(int order)
+	public void setOrderLayer(int orderLayer)
 	{
-		this.order = order;
+		this.orderLayer = orderLayer;
 	}
 	
 }
