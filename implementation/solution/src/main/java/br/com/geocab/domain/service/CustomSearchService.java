@@ -215,7 +215,7 @@ public class CustomSearchService
 	/**
 	 * Method that return an list of custom searchs according the access group of user
 	 */
-	@PreAuthorize("hasRole('"+UserRole.USER_VALUE+"')")
+	@PreAuthorize("hasAnyRole('"+UserRole.USER_VALUE+"', '"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public List<CustomSearch> listCustomSearchsByUser()
 	{
 		//List of all access groups of user
