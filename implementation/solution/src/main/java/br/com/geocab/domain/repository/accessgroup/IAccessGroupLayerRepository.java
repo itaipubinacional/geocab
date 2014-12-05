@@ -31,7 +31,7 @@ public interface IAccessGroupLayerRepository extends IDataRepository<AccessGroup
 	 */
 	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup, accessGroupLayer.layer ) " +
 				"FROM AccessGroupLayer accessGroupLayer " +
-				"WHERE  AccessGroupLayer.layer.id = :layerId " )
+				"WHERE  accessGroupLayer.layer.id = :layerId " )
 	public List<AccessGroupLayer> listByLayerId( @Param("layerId") Long layer );
 	
 	/**
