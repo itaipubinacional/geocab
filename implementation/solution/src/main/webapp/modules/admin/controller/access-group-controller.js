@@ -14,7 +14,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      */
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
     
-    //$importService("accessGroupService");
+    $importService("accessGroupService");
 
     /*-------------------------------------------------------------------
      * 		 				 	EVENT HANDLERS
@@ -79,55 +79,55 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @type {Array}
      */
-    $scope.removerCamadas = [];
+    $scope.removeLayers = [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.adicionarCamadas = [];
+    $scope.addLayers = [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.camadasSelecionadas = [];
+    $scope.selectedLayers = [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.camadasOriginais = [];
+    $scope.originalLayers= [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.removerPesquisas = [];
+    $scope.removeSearchs = [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.adicionarPesquisas = [];
+    $scope.addSearchs = [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.pesquisasSelecionadas = [];
+    $scope.selectedSearchs = [];
 
     /**
      *
      * @type {Array}
      */
-    $scope.pesquisasOriginais = [];
+    $scope.originalSearchs = [];
 
     /**
      *
      * @type {boolean}
      */
-    $scope.usuarioTab = false;
+    $scope.userTab = false;
 
     //DATA GRID
     /**
@@ -156,34 +156,30 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             $state.go($scope.DETAIL_STATE, {id: row.entity.id});
         },
         columnDefs: [
-            {displayName: 'Nome', field: 'nome'},
-            {displayName: 'Descrição', field: 'descricao', width: '55%'},
-            {displayName: 'Ações', sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
+            {displayName: 'Name', field: 'name'},
+            {displayName: 'Description', field: 'description', width: '55%'},
+            {displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
         ]
     };
 
-    var IMAGE_LEGENDA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-        '<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legenda}}"/>' +
+    var IMAGE_SUBTITLE = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+        '<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.subtitle}}"/>' +
         '</div>';
 
-    var GRID_ACTION_CAMADAS_BUTTONS = '<div class="cell-centered">' +
-        '<a ng-click="removeCamada(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    var GRID_ACTION_LAYER_BUTTONS = '<div class="cell-centered">' +
+        '<a ng-click="removeLayer(row.entity)" ng-if="currentState != DETAIL_STATE" title="Delete" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
 
-    var GRID_ACTION_PESQUISAS_BUTTONS = '<div class="cell-centered">' +
-        '<a ng-click="removePesquisa(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    var GRID_ACTION_SEARCH_BUTTONS = '<div class="cell-centered">' +
+        '<a ng-click="removeSearch(row.entity)" ng-if="currentState != DETAIL_STATE" title="Delete" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
 
-    var GRID_ACTION_FERRAMENTAS_BUTTONS = '<div class="cell-centered">' +
-        '<a ng-click="removeFerramenta(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
-        '</div>';
-
-    var GRID_ACTION_USUARIOS_BUTTONS = '<div class="cell-centered">' +
-        '<a ng-click="removeUsuario(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    var GRID_ACTION_USER_BUTTONS = '<div class="cell-centered">' +
+        '<a ng-click="removeUser(row.entity)" ng-if="currentState != DETAIL_STATE" title="Delete" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
 
     $scope.gridCamadas = {
-        data: 'camadasSelecionadas',
+        data: 'selectedSearch',
         multiSelect: false,
         useExternalSorting: false,
         headerRowHeight: 45,
@@ -191,17 +187,17 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         beforeSelectionChange: function (row, event) {
         },
         columnDefs: [
-            {displayName: 'Simbologia', field: 'legenda', sortable: false, width: '120px', cellTemplate: IMAGE_LEGENDA},
-            {displayName: 'Título', field: 'titulo'},
-            {displayName: 'Nome', field: 'nome', width: '40%'},
-            {displayName: 'Fonte de dados', field: 'fonteDados.nome'},
-            {displayName: 'Grupo de camadas', field: 'grupoCamadas.nome'},
-            {displayName: 'Ações', sortable: false, cellTemplate: GRID_ACTION_CAMADAS_BUTTONS, width: '100px'}
+            {displayName: 'Symbology', field: 'subtitle', sortable: false, width: '120px', cellTemplate: IMAGE_LEGENDA},
+            {displayName: 'Title', field: 'title'},
+            {displayName: 'Name', field: 'name', width: '40%'},
+            {displayName: 'Data source', field: 'dataSource.name'},
+            {displayName: 'Layer group', field: 'layerGroup.name'},
+            {displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_CAMADAS_BUTTONS, width: '100px'}
         ]
     };
 
-    $scope.gridPesquisasPersonalizadas = {
-        data: 'pesquisasSelecionadas',
+    $scope.gridCustomSearch = {
+        data: 'selectedSearch',
         multiSelect: false,
         useExternalSorting: false,
         headerRowHeight: 45,
@@ -209,38 +205,22 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         beforeSelectionChange: function (row, event) {
         },
         columnDefs: [
-            {displayName: 'Nome', field: 'nome'},
-            {displayName: 'Camada', field: 'camada.nome', width: '55%'},
-            {displayName: 'Ações', sortable: false, cellTemplate: GRID_ACTION_PESQUISAS_BUTTONS, width: '100px'}
+            {displayName: 'Name', field: 'name'},
+            {displayName: 'Layer', field: 'layer.name', width: '55%'},
+            {displayName: 'Action', sortable: false, cellTemplate: GRID_ACTION_PESQUISAS_BUTTONS, width: '100px'}
         ]
-    };
+    };  
 
-    $scope.gridFerramentas = {
-        data: 'currentEntity.ferramentas',
-        multiSelect: false,
-        useExternalSorting: false,
-        headerRowHeight: 45,
-        rowHeight: 45,
-        beforeSelectionChange: function (row, event) {
-        },
-        columnDefs: [
-            {displayName: 'Descrição', field: 'descricao'},
-            {displayName: 'Nome', field: 'nome', width: '55%'},
-            {displayName: 'Ações', sortable: false, cellTemplate: GRID_ACTION_FERRAMENTAS_BUTTONS, width: '100px'}
-        ]
-    };
-
-    $scope.gridUsuarios = {
-        data: 'currentEntity.usuarios',
+    $scope.gridUser = {
+        data: 'currentEntity.user',
         multiSelect: false,
         useExternalSorting: false,
         headerRowHeight: 45,
         rowHeight: 45,
         columnDefs: [
-            {displayName: 'Nome Completo', field: 'nomeCompleto', width: '35%'},
-            {displayName: 'Nome de Usuário', field: 'username'},
-            {displayName: 'E-mail', field: 'email' },
-            {displayName: 'Ações', sortable: false, cellTemplate: GRID_ACTION_USUARIOS_BUTTONS, width: '100px'}
+            {displayName: 'Full name', field: 'fullName', width: '35%'},
+            {displayName: 'User Name', field: 'username'},
+            {displayName: 'Action', sortable: false, cellTemplate: GRID_ACTION_USUARIOS_BUTTONS, width: '100px'}
         ]
     };
 
