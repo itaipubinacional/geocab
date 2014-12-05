@@ -64,7 +64,7 @@
                 </tab>
                 <tab heading="<spring:message code="admin.access-group.User"/>" active="usuarioTab" ng-if="currentEntity.id != 1 && currentEntity.id != null">
                     <div style="margin-bottom: 20px; float: right;">
-                        <button class="btn btn-primary" type="button" ng-click="associarUsuarios()"><spring:message code="admin.access-group.Associate-user"/></button>
+                        <button class="btn btn-primary" type="button" ng-click="associateUsers()"><spring:message code="admin.access-group.Associate-user"/></button>
                         <button class="btn btn-success larger-btn" ng-click="salvarAssociacoes()"><spring:message code="admin.access-group.Save"/></button>
                     </div>
                     <br style="clear: both">
