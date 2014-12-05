@@ -773,14 +773,14 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     /**
      * Abre uma popup para selecionar as ferramentas a serem associadas.
      */
-    $scope.associarUsuarios = function () {
+    $scope.associateUsers = function () {
         //Função responsável por chamar a popup de usuários para associação.
         var dialog = $modal.open({
-            templateUrl: 'modules/administrativo/ui/grupo-acesso/popup/usuarios-ldap-popup.html',
-            controller: SelectUsuariosPopUpController,
+            templateUrl: 'modules/admin/ui/access-group/popup/users-popup.jsp',
+            controller: SelectUsersPopUpController,
             windowClass: 'xx-dialog',
             resolve: {
-                usuariosSelecionados: function () {
+                usersSelected: function () {
                     return $scope.currentEntity.usuarios;
                 }
             }
