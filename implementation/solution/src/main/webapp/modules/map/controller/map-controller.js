@@ -20,6 +20,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$importService("layerGroupService");
 	$importService("markerService");
+	$importService("customSearchService");
 	
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
@@ -1494,6 +1495,234 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         }
         return output;
     };
+    
+    /*-------------------------------------------------------------------
+     * 		 			CUSTOM SEARCH FUNCTIONALITY
+     *-------------------------------------------------------------------*/
+    $scope.listCustomSearchByUser = function(){
+
+        // resets the fields of the last selected search
+        $scope.currentCustomSearch.layer = null;
+        $scope.currentCustomSearch.layerFields = {};
+        $scope.searchMsg = null;
+
+        // List custom searches based on user access profile
+        customSearchService.listCustomSearchsByUser( {
+            callback: function (result) {
+
+                $scope.customSearchs = result;
+
+                $scope.toggleSidebarMenu(300, '#menu-item-2');
+
+                $scope.$apply();
+
+            },
+            errorHandler: function (message, exception) {
+
+                $scope.toggleSidebarMenu(300, '#menu-item-2');
+
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.$apply();
+            }
+        });
+    }
+    
+    /**
+     * The custom search receive the selected value
+     * @param customSearch
+     */
+     $scope.selectCustomSearch = function(customSearch) {
+         $scope.currentCustomSearch = customSearch;
+    };
+    
+    /**
+     *  List the layers of custom search fields
+     */
+    $scope.listFieldsLayersSearch = function(){
+
+        // deselect the old research and remove the map
+        for( var i = 0; i < $scope.pesquisas.length; i++ )
+        {
+            $scope.map.removeLayer($scope.pesquisas[i].wmsLayer);
+            $scope.allPesquisas[0].children[i].selected = false;
+        }
+
+        var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
+
+        var wmsSource = new ol.source.TileWMS({
+            url: item.url,
+            params:{
+                'LAYERS': $scope.currentCustomSearch.layer.nome
+            }
+        });
+
+        var wmsLayer = new ol.layer.Tile({
+            source: wmsSource
+        });
+
+        $scope.map.addLayer(wmsLayer);
+
+        var filterParams = {'CQL_FILTER' : null};
+        var filterList = '';
+        var firstTime = true;
+
+        var campos = $scope.currentCustomSearch.layerFields;
+
+        var formatDate = function(date) {
+            var date = date.split('/');
+            return date.reverse().join('-');
+        }
+
+        var conectorLike;
+        for (var i = 0; i < campos.length; i++)
+        {
+            campos[i].valorPesquisa = '';
+
+            if( firstTime ) {
+                if ($("#item_" + i).val() != '' && campos[i].tipo == 'INT') {
+
+                    campos[i].valorPesquisa = $("#item_" + i).val();
+                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+
+                }
+
+                if (campos[i].tipo == 'NUMBER') {
+
+                    campos[i].valorPesquisa = $("#item_" + i).val();
+
+                    var operatorType = $("#item_" + i + " select").val();
+                    var valueNumber = $("#item_" + i + " input").val();
+
+                    if ( operatorType == 'entre' ) {
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') > ' + valueNumber + "'");
+                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') <' + valueNumber + "'");
+                    } else if ( operatorType == 'somente' ) {
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') IN (' + valueNumber + ")'");
+                    } else {
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+                    }
+
+                }
+
+                if ($("#item_" + i).val() != '' && campos[i].tipo == 'STRING') {
+
+                    campos[i].valorPesquisa = $("#item_" + i).val();
+                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+
+                }
+
+                if (campos[i].tipo == "DATETIME") {
+
+                    var startDate = $("#item_" + i + " input[name=startDate]").val();
+                    var endDate = $("#item_" + i + " input[name=endDate]").val();
+
+                    if(startDate != '')
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+                    if(endDate != '')
+                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+                }
+
+                firstTime = false;
+
+            } else {
+
+                if ($("#item_" + i).val() != '' && campos[i].tipo == 'INT') {
+
+                    campos[i].valorPesquisa = $("#item_" + i).val();
+                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+
+                }
+
+                if (campos[i].tipo == 'NUMBER') {
+
+                    campos[i].valorPesquisa = $("#item_" + i).val();
+
+                    var operatorType = $("#item_" + i + " select").val();
+                    var valueNumber = $("#item_" + i + " input").val();
+
+                    if ( operatorType == 'entre' ) {
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') > ' + valueNumber + "'");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') <' + valueNumber + "'");
+                    } else if ( operatorType == 'somente' ) {
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') IN (' + valueNumber + ")'");
+                    } else {
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+                    }
+
+                }
+
+                if ($("#item_" + i).val() != '' && campos[i].tipo == 'STRING') {
+
+                    campos[i].valorPesquisa = $("#item_" + i).val();
+                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+
+                }
+
+                if (campos[i].tipo == "DATETIME") {
+
+                    var startDate = $("#item_" + i + " input[name=startDate]").val();
+                    var endDate = $("#item_" + i + " input[name=endDate]").val();
+
+                    if(startDate != '')
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+                    if(endDate != '')
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+                }
+
+            }
+
+        }
+
+        filterParams.CQL_FILTER = filterList;
+
+        if( filterList != '' )
+        {
+            wmsSource.updateParams(filterParams);
+        }
+
+        $scope.pesquisas.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'pesquisa': $scope.currentCustomSearch});
+
+        var item = {};
+        item.label = 'Resultado pesquisas';
+        item.type = 'grupo'
+
+        item.children = [];
+
+        var lastSearchName;
+        for(var i =0; i < $scope.pesquisas.length ; ++i)
+        {
+
+            $scope.pesquisas[i].label = "Pesquisa "+ (i+1);
+            $scope.pesquisas[i].type = 'camada';
+            $scope.pesquisas[i].name = "pesquisa"+ (i+1);
+
+            item.children.push($scope.pesquisas[i]);
+            lastSearchName = "Pesquisa "+ (i+1);
+        }
+
+        // seleciona a ultima pesquisa
+        item.children[item.children.length-1].selected = true;
+
+        // seleciona o grupo pai caso so tenha uma pesquisa
+        if (item.children.length == 1) item.selected = true;
+
+        // Abre a tree de pesquisas
+        $timeout(function(){
+            $('#tree-pesquisas').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
+        });
+
+        $scope.allPesquisas = [];
+        $scope.allPesquisas.push(item);
+        $scope.searchMsg = lastSearchName + ' - Realizada com sucesso'
+
+        $("#alertPesquisa").show();
+
+        setTimeout(function(){
+            $("#alertPesquisa").fadeOut();
+        }, 2000)
+
+
+    }
 
     /*-------------------------------------------------------------------
      * 		 			KML FUNCTIONALITY
