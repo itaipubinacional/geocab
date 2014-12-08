@@ -595,9 +595,11 @@ public class LayerGroupService
     public List<LayerGroup> listSupervisorsFilter(String layer, Long dataSource)
     {
         /* Retorna lista de ids dos grupos de camadas para não cadastramento de camadas repetidos no grupo */
-        List<Long> layerGroupIds = this.layerRepository.listLayerGroupIdsByNameAndDataSource(layer, dataSource);
+        //List<Long> layerGroupIds = this.layerRepository.listLayerGroupIdsByNameAndDataSource(layer, dataSource);
          
-        List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layerGroupIds);
+        //List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layerGroupIds);
+    	
+    	List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layer, dataSource);
          
         this.setLegendsLayers(layersGroup);
          
