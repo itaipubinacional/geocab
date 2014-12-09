@@ -37,6 +37,10 @@
                     <div ng-grid="gridCustomSearchss" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212); margin-top: 20px;">
                     </div>
                 </tab>
+                <tab heading="Ferramentas">
+                    <div ng-grid="gridFerramentas" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212); margin-top: 20px;">
+                    </div>
+                </tab>
                 
             </tabset>
         </div>

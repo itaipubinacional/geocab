@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -30,6 +31,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.geocab.application.security.ContextHolder;
+import br.com.geocab.domain.entity.accessgroup.AccessGroup;
+import br.com.geocab.domain.entity.accessgroup.AccessGroupLayer;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
@@ -40,6 +44,8 @@ import br.com.geocab.domain.entity.layer.LayerField;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.repository.IFileRepository;
+import br.com.geocab.domain.repository.accessgroup.IAccessGroupLayerRepository;
+import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
@@ -89,6 +95,18 @@ public class LayerGroupService
 	 */
 	@Autowired
 	private ILayerRepository layerRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAccessGroupLayerRepository accessGroupLayerRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAccessGroupRepository accessGroupRepository;
 
 	/**
 	 * 
@@ -488,7 +506,127 @@ public class LayerGroupService
 		
 		setLegendsLayers(layersGroupUpperPublished);
 		
+		List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
+		
+		for (AccessGroup accessGroup : accessGroupsUser)
+		{
+			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
+		}
+		
+		if ( !layersGroupUpperPublished.isEmpty() )
+		{
+			verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
+		}
+		
+		List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
+		
+		for ( LayerGroup layerGroup : layersGroupUpperPublished )
+		{
+			this.removeLayerGroupEmptyPublished(layerGroup);
+			
+			if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
+			{
+				layerGroupToDelete.add(layerGroup);
+			}
+		}
+		layersGroupUpperPublished.removeAll(layerGroupToDelete);
+		
 		return layersGroupUpperPublished;
+		
+	}
+	
+	/**
+	 * 
+	 * @param gruposCamadas
+	 * @param gruposAcessosUsuario
+	 */
+	private void verifyLayerPermission( List<LayerGroup> layerGroups, List<AccessGroup> accessGroupUser )
+	{
+		boolean hasAccess = false;
+		
+		if ( layerGroups != null )
+		{ 
+			if ( !layerGroups.isEmpty() )
+			{
+				for (LayerGroup group: layerGroups)
+				{
+					if( group.getLayers() != null )
+					{					
+						if( group.getLayers().size() > 0 )
+						{
+							List<Layer> layersToDelete = new ArrayList<Layer>();
+							for(Layer layer : group.getLayers())
+							{
+								if ( !accessGroupUser.isEmpty() )
+								{
+									for (AccessGroup accessGroup: accessGroupUser)
+									{
+										if ( !accessGroup.getAccessGroupLayer().isEmpty() )
+										{
+											for (AccessGroupLayer accessGroupLayer : accessGroup.getAccessGroupLayer())
+											{
+												if(layer.getId().equals(accessGroupLayer.getLayer().getId()) && layer.isStartVisible())
+												{
+													hasAccess = true;
+													break;
+												}
+												else
+												{
+													hasAccess = false;
+												}
+											}
+										}
+										
+										if (hasAccess)
+										{
+											break;
+										}
+									}
+								}
+								
+								if( !hasAccess )
+								{
+									layersToDelete.add(layer);
+								} else {
+									hasAccess = false;
+								}
+							}
+							group.getLayers().removeAll(layersToDelete);
+						}
+					}
+					
+					verifyLayerPermission(group.getLayersGroup(), accessGroupUser);
+				}
+				
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param grupoCamadas
+	 */
+	private void removeLayerGroupEmptyPublished( LayerGroup layerGroups )
+	{
+		if ( layerGroups.getLayersGroup() != null )
+		{
+			List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
+			
+			for (LayerGroup layerGroupChildren: layerGroups.getLayersGroup())
+			{
+				
+				removeLayerGroupEmptyPublished(layerGroupChildren);
+				
+				// remove o grupo de camada publicado superior vazio
+				if (layerGroupChildren.getLayersGroup().isEmpty() & layerGroupChildren.getLayers().isEmpty())
+				{
+					layerGroupToDelete.add(layerGroupChildren);
+				}
+				
+			}
+			
+			layerGroups.getLayersGroup().removeAll(layerGroupToDelete);
+		}
 		
 	}
 	

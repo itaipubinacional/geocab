@@ -45,6 +45,12 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
     $scope.selectedEntity = null;
 
     $scope.gridSelectedItems = [];
+    
+    /**
+    *
+    * @type {null}
+    */
+   $scope.itensMarcados = [];
 
     /**
      * Handler que captura os eventos de marcação
@@ -74,6 +80,33 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
         rowHeight: 50,
         afterSelectionChange: function(row, event){
             $scope.selectedEntity = row.entity;
+            
+            
+            if (rowItem.length > 0) {
+                var i;
+                for (var rowItemIndex = 0; rowItemIndex < rowItem.length; rowItemIndex++) {
+                    if (rowItem[rowItemIndex].selected){
+                        i = $scope.findByIdInArray($scope.itensMarcados, rowItem[rowItemIndex].entity);
+                        if (i == -1)
+                            $scope.itensMarcados.push(rowItem[rowItemIndex].entity);
+                    } else {
+                        i = $scope.findByIdInArray($scope.itensMarcados, rowItem[rowItemIndex].entity);
+                        if (i > -1)
+                            $scope.itensMarcados.splice(i, 1);
+                    }
+                }
+            } else {
+                var i;
+                if (rowItem.selected){
+                    i = $scope.findByIdInArray($scope.itensMarcados, rowItem.entity);
+                    if (i == -1)
+                        $scope.itensMarcados.push(rowItem.entity);
+                } else {
+                    i = $scope.findByIdInArray($scope.itensMarcados, rowItem.entity);
+                    if (i > -1)
+                        $scope.itensMarcados.splice(i, 1);
+                }
+            }
         },
         columnDefs: [
             {displayName:'Simbologia', field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGENDA},
@@ -204,6 +237,16 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
                         var i = $scope.findName(data.nome, $scope.currentPage.content);
                         if (i > -1) {
                             $scope.currentPage.content.splice(i, 1);
+                        }
+                    });
+                };
+                
+              //Função responsável por marcar os registros na grid que já estavam marcados
+                if ($scope.itensMarcados) {
+                    angular.forEach( $scope.itensMarcados, function(data, index) {
+                        var i = $scope.findByIdInArray($scope.currentPage.content, data);
+                        if (i > -1) {
+                            $scope.gridOptions.selectItem(i, true);
                         }
                     });
                 };

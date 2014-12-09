@@ -232,9 +232,9 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             beforeSelectionChange: function (row, event) {
             },
             columnDefs: [
-                {displayName: 'Descrição', field: 'description'},
-                {displayName: 'Nome', field: 'name', width: '55%'},
-                {displayName: 'Ações', sortable: false, cellTemplate: GRID_ACTION_TOOLS_BUTTONS, width: '100px'}
+                {displayName: 'Description', field: 'description'},
+                {displayName: 'Name', field: 'name', width: '55%'},
+                {displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_TOOLS_BUTTONS, width: '100px'}
             ]
         };
     
@@ -744,11 +744,11 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.associateTools = function () {
         //Função responsável por chamar a popup de ferramentas para associação.
         var dialog = $modal.open({
-            templateUrl: 'modules/admin/ui/access-group/popup/tools-popup.html',
+            templateUrl: 'modules/admin/ui/access-group/popup/tools-popup.jsp',
             controller: SelectToolsPopUpController,
             windowClass: 'xx-dialog',
             resolve: {
-                selectedTools: function () {
+            	selectedTools: function () {
                     return $scope.currentEntity.tools;
                 }
             }
