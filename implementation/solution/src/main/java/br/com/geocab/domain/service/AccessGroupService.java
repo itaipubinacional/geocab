@@ -220,7 +220,10 @@ public class AccessGroupService
 		
 		for (AccessGroupLayer accessGroupLayer : accessGroupLayers)
 		{
-			accessGroupLayer.getLayer().setLegend(layerGroupService.getLegendLayerFromGeoServer(accessGroupLayer.getLayer()));
+			if(accessGroupLayer.getLayer().getDataSource().getUrl() != null) {
+				accessGroupLayer.getLayer().setLegend(layerGroupService.getLegendLayerFromGeoServer(accessGroupLayer.getLayer()));
+			}
+			
 			layers.add(accessGroupLayer.getLayer());
 		}
 		
