@@ -19,8 +19,8 @@
 		<div ng-include="assets/libs/eits-directives/alert/alert.html"></div>
 		
         <form novalidate name="form" default-button="{{buttonInsert}}">
-            <input type="text" class="form-control" autofocus ng-model="data.filter" placeholder="Pesquisar por nome ou tÃ­tulo" style="width: 300px; float: left; margin-bottom: 10px;"/>
-            <input type="submit" class="btn btn-default" style="margin-left: 5px" value="Pesquisar" ng-disabled="currentPage == null" ng-click="listByFilters(data.filter, data.fonteDados.id, currentPage.pageable )"/>
+            <input type="text" class="form-control" autofocus ng-model="data.filter" placeholder="<spring:message code="admin.custom-search.Search-by-name-or-title" />" style="width: 300px; float: left; margin-bottom: 10px;"/>
+            <input type="submit" class="btn btn-default" style="margin-left: 5px" value="<spring:message code="Search" />" ng-disabled="currentPage == null" ng-click="listByFilters(data.filter, data.fonteDados.id, currentPage.pageable )"/>
         </form>
 
 		<br style="clear: both"/>
