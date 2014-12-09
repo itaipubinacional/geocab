@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿﻿'use strict';
 
 /**
  *
@@ -6,7 +6,7 @@
  * @param $modalInstance
  * @constructor
  */
-function SelectCustomSearchPopUpController($scope, $modalInstance, pesquisasSelecionadas, $log, $importService) {
+function SelectCustomSearchPopUpController($scope, $modalInstance, selectedSearchs, $log, $importService) {
 
 	$importService("customSearchService");
 	
@@ -76,8 +76,8 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, pesquisasSele
             $scope.selectedEntity = row.entity;
         },
         columnDefs: [
-            {displayName: 'Nome', field: 'nome'},
-            {displayName: 'Camada', field: 'camada.nome'}
+            {displayName: 'Nome', field: 'name'},
+            {displayName: 'Camada', field: 'layer.name'}
 
         ]
     };
@@ -193,8 +193,8 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, pesquisasSele
                 $scope.$apply();
 
                 //Function responsible for removing the records that were already tagged prior to the opening of pop-up
-                if (pesquisasSelecionadas) {
-                    angular.forEach( pesquisasSelecionadas, function(data, index) {
+                if (selectedSearchs) {
+                    angular.forEach( selectedSearchs, function(data, index) {
                         var i = $scope.findName(data.nome, $scope.currentPage.content);
                         if (i > -1) {
                             $scope.currentPage.content.splice(i, 1);
