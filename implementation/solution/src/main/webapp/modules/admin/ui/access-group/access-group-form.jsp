@@ -57,7 +57,7 @@
 
                             <button ng-show="currentState == INSERT_STATE || currentState == UPDATE_STATE"
                                     class="btn btn-default top-space"
-                                    ui-sref="grupo-acesso.listar"><spring:message code="admin.access-group.Cancel"/>
+                                    ui-sref="access-group.list"><spring:message code="admin.access-group.Cancel"/>
                             </button>
                         </div>
                     </div>
@@ -65,10 +65,10 @@
                 <tab heading="<spring:message code="admin.access-group.User"/>" active="usuarioTab" ng-if="currentEntity.id != 1 && currentEntity.id != null">
                     <div style="margin-bottom: 20px; float: right;">
                         <button class="btn btn-primary" type="button" ng-click="associateUsers()"><spring:message code="admin.access-group.Associate-user"/></button>
-                        <button class="btn btn-success larger-btn" ng-click="salvarAssociacoes()"><spring:message code="admin.access-group.Save"/></button>
+                        <button class="btn btn-success larger-btn" ng-click="saveAssotiations()"><spring:message code="admin.access-group.Save"/></button>
                     </div>
                     <br style="clear: both">
-                    <div ng-grid="gridUsuarios" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
+                    <div ng-grid="gridUsers" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
                     </div>
                     <div>
                         <!-- State Criar -->
@@ -77,20 +77,20 @@
                 </tab>
                 <tab heading="Camadas" ng-if="currentEntity.id != null">
                     <div style="margin-bottom: 20px; float: right;">
-                        <button class="btn btn-primary" type="button" ng-click="associarCamada()"><spring:message code="admin.access-group.Associate-layer"/></button>
-                        <button class="btn btn-success larger-btn" ng-click="salvarAssociacoes()"><spring:message code="admin.access-group.Save"/></button>
+                        <button class="btn btn-primary" type="button" ng-click="associateLayer()"><spring:message code="admin.access-group.Associate-layer"/></button>
+                        <button class="btn btn-success larger-btn" ng-click="saveAssotiations()"><spring:message code="admin.access-group.Save"/></button>
                     </div>
                     <br style="clear: both">
-                    <div ng-grid="gridCamadas" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
+                    <div ng-grid="gridLayers" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
                     </div>
                 </tab>
                 <tab heading="Pesquisas Personalizadas" ng-if="currentEntity.id != null">
                     <div style="margin-bottom: 20px; float: right;">
-                        <button class="btn btn-primary" ng-click="associarPesquisas()" type="button"><spring:message code="admin.access-group.Associate-custom-search"/></button>
-                        <button class="btn btn-success larger-btn" ng-click="salvarAssociacoes()"><spring:message code="admin.access-group.Save"/></button>
+                        <button class="btn btn-primary" ng-click="associateSearch()" type="button"><spring:message code="admin.access-group.Associate-custom-search"/></button>
+                        <button class="btn btn-success larger-btn" ng-click="saveAssotiations()"><spring:message code="admin.access-group.Save"/></button>
                     </div>
                     <br style="clear: both">
-                    <div ng-grid="gridPesquisasPersonalizadas" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
+                    <div ng-grid="gridCustomSearch" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
                     </div>
                 </tab>
                 

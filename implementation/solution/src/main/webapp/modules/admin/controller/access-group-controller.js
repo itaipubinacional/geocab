@@ -186,7 +186,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         '<a ng-click="removeUser(row.entity)" ng-if="currentState != DETAIL_STATE" title="Delete" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
 
-    $scope.gridCamadas = {
+    $scope.gridLayers = {
         data: 'selectedLayers',
         multiSelect: false,
         useExternalSorting: false,
@@ -213,17 +213,17 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         beforeSelectionChange: function (row, event) {
         },
         columnDefs: [
-			{displayName: 'Symbology', field: 'subtitle', sortable: false, width: '120px', cellTemplate: IMAGE_SUBTITLE_SEARCH},
-			{displayName: 'Name', field: 'name', width: '40%'},
-			{displayName: 'Layer\'s Title', field: 'title'},
-			{displayName: 'Layer\'s Name', field: 'layer.name', width: '55%'},
-			{displayName: 'Data source', field: 'dataSource.name'},
-			{displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '100px'}
+			{displayName: 'Symbology', field: 'subtitle', sortable: false, width: '10%', cellTemplate: IMAGE_SUBTITLE_SEARCH},
+			{displayName: 'Name', field: 'name', width: '20%'},
+			{displayName: 'Layer\'s Title', field: 'title', width: '20%'},
+			{displayName: 'Layer\'s Name', field: 'layer.name', width: '20%'},
+			{displayName: 'Data source', field: 'dataSource.name', width: '20%'},
+			{displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'}
         ]
     };  
 
-    $scope.gridFerramentas = {
-            data: 'currentEntity.ferramentas',
+    $scope.gridTools = {
+            data: 'currentEntity.tools',
             multiSelect: false,
             useExternalSorting: false,
             enableSorting: true,
@@ -232,20 +232,20 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             beforeSelectionChange: function (row, event) {
             },
             columnDefs: [
-                {displayName: 'DescriÁ„o', field: 'descricao'},
-                {displayName: 'Nome', field: 'nome', width: '55%'},
+                {displayName: 'DescriÁ„o', field: 'description'},
+                {displayName: 'Nome', field: 'name', width: '55%'},
                 {displayName: 'AÁıes', sortable: false, cellTemplate: GRID_ACTION_TOOLS_BUTTONS, width: '100px'}
             ]
         };
     
-    $scope.gridUser = {
-        data: 'currentEntity.user',
+    $scope.gridUsers = {
+        data: 'currentEntity.users',
         multiSelect: false,
         useExternalSorting: false,
         headerRowHeight: 45,
         rowHeight: 45,
         columnDefs: [
-            {displayName: 'Full name', field: 'fullName', width: '35%'},
+            {displayName: 'Full name', field: 'name', width: '35%'},
             {displayName: 'User Name', field: 'username'},
             {displayName: 'Action', sortable: false, cellTemplate: GRID_ACTION_USER_BUTTONS, width: '100px'}
         ]
@@ -266,7 +266,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * n√£o cabem em uma entidade. Ex.:
      * @filter - Filtro da consulta
      */
-    $scope.data = { filter: null, showFields: true, tipoGrupoAcesso: 'WMS' };
+    $scope.data = { filter: null, showFields: true, accessGroupType: 'WMS' };
     /**
      * Armazena a entitidade corrente para edi√ß√£o ou detalhe.
      */
@@ -362,17 +362,17 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
 
         $scope.currentEntity.usuarios = [];
 
-        $scope.removerCamadas = [];
-        $scope.adicionarCamadas = [];
-        $scope.camadasSelecionadas = [];
-        $scope.camadasOriginais = [];
-        $scope.removerPesquisas = [];
-        $scope.adicionarPesquisas = [];
-        $scope.pesquisasSelecionadas = [];
-        $scope.pesquisasOriginais = [];
+        $scope.removeLayers= [];
+        $scope.addLayers = [];
+        $scope.selectedLayers = [];
+        $scope.originalLayers = [];
+        $scope.removeSearchs = [];
+        $scope.addSearchs = [];
+        $scope.selectedSearchs = [];
+        $scope.originalSearchs = [];
 
         //Para funcionar com o ng-model no radio button
-        $scope.currentEntity.tipoGrupoAcesso = 'WMS';
+        $scope.currentEntity.accessGroupType = 'WMS';
 
         $scope.currentState = $scope.INSERT_STATE;
 
@@ -397,8 +397,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
                 $state.go($scope.UPDATE_STATE);
                 $scope.$apply();
 
-                $scope.loadCamadasById(result.id);
-                $scope.loadPesquisasById(result.id);
+                $scope.loadLayersById(result.id);
+                $scope.loadSearchsById(result.id);
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -434,8 +434,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
                 $state.go($scope.DETAIL_STATE, {id: id});
                 $scope.$apply();
 
-                $scope.loadCamadasById(result.id);
-                $scope.loadPesquisasById(result.id);
+                $scope.loadLayersById(result.id);
+                $scope.loadSearchsById(result.id);
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -452,11 +452,11 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * e s√≥ ent√£o o registro √© excluido.
      * Ap√≥s exclu√≠do, atualizamos a grid com estado de filtro, pagina√ß√£o e sorting.
      */
-    $scope.changeToRemove = function (grupoAcesso) {
-        $log.info("changeToRemove", grupoAcesso);
+    $scope.changeToRemove = function (accessGroup) {
+        $log.info("changeToRemove", accessGroup);
 
         var dialog = $modal.open({
-            templateUrl: "assets/libs/eits-directives/dialog/dialog-template.html",
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
             controller: DialogController,
             windowClass: 'dialog-delete',
             resolve: {
@@ -464,7 +464,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
                     return "Exclus√£o de grupo de acesso";
                 },
                 message: function () {
-                    return 'Tem certeza que deseja excluir o grupo de acesso "' + grupoAcesso.nome + '"? <br/>Esta opera√ß√£o n√£o poder√° mais ser desfeita.';
+                    return 'Tem certeza que deseja excluir o grupo de acesso "' + accessGroup.name + '"? <br/>Esta opera√ß√£o n√£o poder√° mais ser desfeita.';
                 },
                 buttons: function () {
                     return [
@@ -477,23 +477,23 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
 
         dialog.result.then(function (result) {
 
-//            accessGroupService.removeGrupoAcesso(grupoAcesso.id, {
-//                callback: function (result) {
-//                    //caso o currentPage esteja null, configura o pager default
-//                    if ($scope.currentPage == null) {
-//                        $scope.changeToList();
-//                        //caso n√£o, usa o mesmo estado para carregar a listagem
-//                    } else {
-//                        $scope.listGruposAcessoByFilters($scope.data.filter, $scope.currentPage.pageable);
-//                    }
-//
-//                    $scope.msg = {type: "success", text: 'O registro "' + grupoAcesso.nome + '" foi exclu√≠do com sucesso.', dismiss: true};
-//                },
-//                errorHandler: function (message, exception) {
-//                    $scope.msg = {type: "danger", text: message, dismiss: true};
-//                    $scope.$apply();
-//                }
-//            });
+            accessGroupService.removeAccessGroup(accessGroup.id, {
+                callback: function (result) {
+                    //caso o currentPage esteja null, configura o pager default
+                    if ($scope.currentPage == null) {
+                        $scope.changeToList();
+                        //caso n√£o, usa o mesmo estado para carregar a listagem
+                    } else {
+                        $scope.listAccessGroupByFilters($scope.data.filter, $scope.currentPage.pageable);
+                    }
+
+                    $scope.msg = {type: "success", text: 'O registro "' + accessGroup.name + '" foi exclu√≠do com sucesso.', dismiss: true};
+                },
+                errorHandler: function (message, exception) {
+                    $scope.msg = {type: "danger", text: message, dismiss: true};
+                    $scope.$apply();
+                }
+            });
         });
     };
 
@@ -506,7 +506,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.changeToPage = function (filter, pageNumber) {
         $scope.currentPage.pageable.page = pageNumber - 1;
-        $scope.listGruposAcessoByFilters(filter, $scope.currentPage.pageable);
+        $scope.listAccessGroupByFilters(filter, $scope.currentPage.pageable);
     };
 
     /*-------------------------------------------------------------------
@@ -593,14 +593,14 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     /**
      * Testa conex„o se È WMS ou WFS
      */
-    $scope.testaConexaoGrupoAcesso = function (grupoAcesso) {
+    $scope.testAccessGroupConnection = function (accessGroup) {
 
         if (!$scope.form().endereco.$valid) {
             $scope.msg = {type: "danger", text: $scope.INVALID_FORM_MESSAGE, dismiss: true};
             return;
         }
 
-        accessGroupService.testaConexao(grupoAcesso.endereco, grupoAcesso.tipoGrupoAcesso, {
+        accessGroupService.testaConexao(accessGroup.url, accessGroup.accessGroupType, {
             callback: function (result) {
                 if (result) {
                     $scope.msg = {type: "success", text: "Conex„o estabelecida com Íxito.", dismiss: true};
@@ -621,15 +621,15 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     /**
      * Abre uma popup para selecionar a camada a ser associada.
      */
-    $scope.associarCamada = function () {
+    $scope.associateLayer = function () {
         //FunÁ„o respons·vel por chamar a popup de configuraÁıes de camada para associaÁ„o.
         var dialog = $modal.open({
-            templateUrl: 'modules/administrativo/ui/pesquisa-personalizada/popup/configuracoes-camadas-popup.html',
-            controller: SelectConfiguracoesCamadasGrupoAcessoPopUpController,
+            templateUrl: 'modules/admin/ui/custom-search/popup/layer-config-popup.jsp',
+            controller: SelectConfigLayerAccessGroupPopUpController,
             windowClass: 'xx-dialog',
             resolve: {
-                camadasSelecionadas: function () {
-                    return $scope.camadasSelecionadas;
+                selectedLayers: function () {
+                    return $scope.selectedLayers;
                 }
             }
         });
@@ -637,43 +637,43 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         dialog.result.then(function (result) {
             if (result) {
                 for (var i = 0; i < result.length; i++) {
-                    var index = $scope.findByIdInArray($scope.camadasSelecionadas, result[i]);
-                    var index2 = $scope.findByIdInArray($scope.camadasOriginais, result[i]);
-                    var index3 = $scope.findByIdInArray($scope.removerCamadas, result[i]);
+                    var index = $scope.findByIdInArray($scope.selectedLayers, result[i]);
+                    var index2 = $scope.findByIdInArray($scope.originalLayers, result[i]);
+                    var index3 = $scope.findByIdInArray($scope.removeLayers, result[i]);
 
                     //Identifica se marcou novos registros
                     if (index == -1 && index2 == -1) {
-                        var indexAdd = $scope.findByIdInArray($scope.adicionarCamadas, result[i]);
+                        var indexAdd = $scope.findByIdInArray($scope.addLayers, result[i]);
                         if (indexAdd == -1)
-                            $scope.adicionarCamadas.push(result[i]);
+                            $scope.addLayers.push(result[i]);
                     }
 
                     if (index3 > -1) {
-                        $scope.removerCamadas.splice(index3, 1);
+                        $scope.removeLayer.splice(index3, 1);
                     }
 
                 }
-                for (var i = 0; i < $scope.camadasSelecionadas.length; i++) {
+                for (var i = 0; i < $scope.selectedLayers.length; i++) {
 
-                    var index = $scope.findByIdInArray(result, $scope.camadasSelecionadas[i]);
+                    var index = $scope.findByIdInArray(result, $scope.selectedLayers[i]);
 
                     if (index == -1) {
-                        var index2 = $scope.findByIdInArray($scope.adicionarCamadas, $scope.camadasSelecionadas[i]);
-                        var index3 = $scope.findByIdInArray($scope.removerCamadas, $scope.camadasSelecionadas[i]);
-                        var index4 = $scope.findByIdInArray($scope.camadasOriginais, $scope.camadasSelecionadas[i]);
+                        var index2 = $scope.findByIdInArray($scope.addLayers, $scope.selectedLayers[i]);
+                        var index3 = $scope.findByIdInArray($scope.removeLayers, $scope.selectedLayers[i]);
+                        var index4 = $scope.findByIdInArray($scope.originalLayers, $scope.selectedLayers[i]);
 
                         if (index2 > -1){
-                            var indexAdd = $scope.findByIdInArray($scope.removerCamadas, $scope.camadasSelecionadas[i]);
+                            var indexAdd = $scope.findByIdInArray($scope.removeLayers, $scope.selectedLayers[i]);
                             if (indexAdd > -1)
-                                $scope.adicionarCamadas.splice(indexAdd, 1);
+                                $scope.addLayers.splice(indexAdd, 1);
                         }
                         if (index3 == -1 && index4 > -1) {
-                            $scope.removerCamadas.push($scope.camadasSelecionadas[i]);
+                            $scope.removeLayers.push($scope.selectedLayers[i]);
                         }
 
                     }
                 }
-                $scope.camadasSelecionadas = result;
+                $scope.selectedLayers = result;
             }
         });
     };
@@ -681,15 +681,15 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     /**
      * Abre uma popup para selecionar as pesquisas personalizadas a serem associadas.
      */
-    $scope.associarPesquisas = function () {
+    $scope.associateSearch = function () {
         //FunÁ„o respons·vel por chamar a popup de configuraÁıes de camada para associaÁ„o.
         var dialog = $modal.open({
-            templateUrl: 'modules/administrativo/ui/grupo-acesso/popup/pesquisas-personalizadas-popup.html',
-            controller: SelectPesquisasPersonalizadasPopUpController,
+            templateUrl: 'modules/admin/ui/access-group/popup/custom-search-popup.jsp',
+            controller: SelectCustomSearchPopUpController,
             windowClass: 'xx-dialog',
             resolve: {
-                pesquisasSelecionadas: function () {
-                    return $scope.pesquisasSelecionadas;
+                selectedSearchs: function () {
+                    return $scope.selectedSearchs;
                 }
             }
         });
@@ -697,43 +697,43 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         dialog.result.then(function (result) {
             if (result) {
                 for (var i = 0; i < result.length; i++) {
-                    var index = $scope.findByIdInArray($scope.pesquisasSelecionadas, result[i]);
-                    var index2 = $scope.findByIdInArray($scope.pesquisasOriginais, result[i]);
-                    var index3 = $scope.findByIdInArray($scope.removerPesquisas, result[i]);
+                    var index = $scope.findByIdInArray($scope.selectedSearchs, result[i]);
+                    var index2 = $scope.findByIdInArray($scope.originalSearchs, result[i]);
+                    var index3 = $scope.findByIdInArray($scope.removeSearchs, result[i]);
 
                     //Identifica se marcou novos registros
                     if (index == -1 && index2 == -1) {
-                        var indexAdd = $scope.findByIdInArray($scope.adicionarPesquisas, result[i]);
+                        var indexAdd = $scope.findByIdInArray($scope.addSearchs, result[i]);
                         if (indexAdd == -1)
-                            $scope.adicionarPesquisas.push(result[i]);
+                            $scope.addSearchs.push(result[i]);
                     }
 
                     if (index3 > -1) {
-                        $scope.removerPesquisas.splice(index3, 1);
+                        $scope.removeSearchs.splice(index3, 1);
                     }
                 }
 
-                for (var i = 0; i < $scope.pesquisasSelecionadas.length; i++) {
+                for (var i = 0; i < $scope.selectedSearchs.length; i++) {
 
-                    var index = $scope.findByIdInArray(result, $scope.pesquisasSelecionadas[i]);
+                    var index = $scope.findByIdInArray(result, $scope.selectedSearchs[i]);
 
                     if (index == -1) {
-                        var index2 = $scope.findByIdInArray($scope.adicionarPesquisas, $scope.pesquisasSelecionadas[i]);
-                        var index3 = $scope.findByIdInArray($scope.removerPesquisas, $scope.pesquisasSelecionadas[i]);
-                        var index4 = $scope.findByIdInArray($scope.pesquisasOriginais, $scope.pesquisasSelecionadas[i]);
+                        var index2 = $scope.findByIdInArray($scope.addSearchs, $scope.selectedSearchs[i]);
+                        var index3 = $scope.findByIdInArray($scope.removeSearchs, $scope.selectedSearchs[i]);
+                        var index4 = $scope.findByIdInArray($scope.originalSearchs, $scope.selectedSearchs[i]);
 
                         if (index2 > -1){
-                            var indexAdd = $scope.findByIdInArray($scope.removerPesquisas, $scope.pesquisasSelecionadas[i]);
+                            var indexAdd = $scope.findByIdInArray($scope.removeSearchs, $scope.selectedSearchs[i]);
                             if (indexAdd > -1)
-                                $scope.adicionarPesquisas.splice(indexAdd, 1);
+                                $scope.addSearchs.splice(indexAdd, 1);
                         }
                         if (index3 == -1 && index4 > -1) {
-                            $scope.removerPesquisas.push($scope.pesquisasSelecionadas[i]);
+                            $scope.removeSearchs.push($scope.selectedSearchs[i]);
                         }
 
                     }
                 }
-                $scope.pesquisasSelecionadas = result;
+                $scope.selectedSearchs = result;
             }
         });
     };
@@ -741,15 +741,15 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     /**
      * Abre uma popup para selecionar as ferramentas a serem associadas.
      */
-    $scope.associarFerramentas = function () {
+    $scope.associateTools = function () {
         //FunÁ„o respons·vel por chamar a popup de ferramentas para associaÁ„o.
         var dialog = $modal.open({
-            templateUrl: 'modules/administrativo/ui/grupo-acesso/popup/ferramentas-popup.html',
-            controller: SelectFerramentasPopUpController,
+            templateUrl: 'modules/admin/ui/access-group/popup/tools-popup.html',
+            controller: SelectToolsPopUpController,
             windowClass: 'xx-dialog',
             resolve: {
-                ferramentasSelecionadas: function () {
-                    return $scope.currentEntity.ferramentas;
+                selectedTools: function () {
+                    return $scope.currentEntity.tools;
                 }
             }
         });
@@ -758,13 +758,13 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
 
             if (result != null) {
 
-                $scope.ferramentasSelecionadas = result;
+                $scope.selectedTools = result;
 
-                for (var i = 0; i < $scope.ferramentasSelecionadas.length; i++) {
-                    $scope.ferramentasSelecionadas[i].ordem = i;
+                for (var i = 0; i < $scope.selectedTools.length; i++) {
+                    $scope.selectedTools[i].orderLayer = i;
                 }
 
-                $scope.currentEntity.ferramentas = $scope.ferramentasSelecionadas;
+                $scope.currentEntity.tools = $scope.selectedTools;
             }
 
         });
@@ -781,7 +781,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             windowClass: 'xx-dialog',
             resolve: {
                 usersSelected: function () {
-                    return $scope.currentEntity.usuarios;
+                    return $scope.currentEntity.users;
                 }
             }
         });
@@ -789,13 +789,13 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         dialog.result.then(function (result) {
 
             if (result != null) {
-                $scope.currentEntity.usuarios.push(result);
+                $scope.currentEntity.users.push(result);
             }
         });
     };
 
     /**
-     * Limpa os campos
+     * Clear fields
      */
     $scope.clearFields = function () {
         if (!$scope.data.showFields) {
@@ -808,18 +808,18 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @param entity
      */
-    $scope.removeCamada = function (entity) {
-        var index = $scope.findByIdInArray($scope.camadasSelecionadas, entity);
-        var index2 = $scope.findByIdInArray($scope.adicionarCamadas, entity);
-        var index3 = $scope.findByIdInArray($scope.camadasOriginais, entity);
+    $scope.removeLayer = function (entity) {
+        var index = $scope.findByIdInArray($scope.selectedLayers, entity);
+        var index2 = $scope.findByIdInArray($scope.addLayers, entity);
+        var index3 = $scope.findByIdInArray($scope.originalLayers, entity);
         if (index > -1) {
-            $scope.camadasSelecionadas.splice(index, 1);
+            $scope.selectedLayers.splice(index, 1);
         }
         if (index2 > -1) {
-            $scope.adicionarCamadas.splice(index2, 1);
+            $scope.addLayers.splice(index2, 1);
         }
         if (index3 > -1) {
-            $scope.removerCamadas.push(entity);
+            $scope.removeLayers.push(entity);
         }
     };
 
@@ -827,18 +827,18 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @param entity
      */
-    $scope.removePesquisa = function (entity) {
-        var index = $scope.pesquisasSelecionadas.indexOf(entity);
-        var index2 = $scope.adicionarPesquisas.indexOf(entity);
-        var index3 = $scope.pesquisasOriginais.indexOf(entity);
+    $scope.removeSearch = function (entity) {
+        var index = $scope.selectedSearchs.indexOf(entity);
+        var index2 = $scope.addSearchs.indexOf(entity);
+        var index3 = $scope.originalSearchs.indexOf(entity);
         if (index > -1) {
-            $scope.pesquisasSelecionadas.splice(index, 1);
+            $scope.selectedSearchs.splice(index, 1);
         }
         if (index2 > -1) {
-            $scope.adicionarPesquisas.splice(index2, 1);
+            $scope.addSearchs.splice(index2, 1);
         }
         if (index3 > -1) {
-            $scope.removerPesquisas.push(entity);
+            $scope.removeSearchs.push(entity);
         }
     };
 
@@ -846,10 +846,10 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @param entity
      */
-    $scope.removeFerramenta = function (entity) {
-        var index = $scope.currentEntity.ferramentas.indexOf(entity);
+    $scope.removeTool = function (entity) {
+        var index = $scope.currentEntity.tools.indexOf(entity);
         if (index > -1) {
-            $scope.currentEntity.ferramentas.splice(index, 1);
+            $scope.currentEntity.tools.splice(index, 1);
         };
     };
 
@@ -857,10 +857,10 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @param entity
      */
-    $scope.removeUsuario = function (entity) {
-        var index = $scope.currentEntity.usuarios.indexOf(entity);
+    $scope.removeUser = function (entity) {
+        var index = $scope.currentEntity.users.indexOf(entity);
         if (index > -1) {
-            $scope.currentEntity.usuarios.splice(index, 1);
+            $scope.currentEntity.users.splice(index, 1);
         };
     };
 
@@ -868,11 +868,11 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @param camadas
      */
-    $scope.linkCamadas = function() {
-        accessGroupService.linkCamada($scope.adicionarCamadas, $scope.currentEntity.id, {
+    $scope.linkLayers = function() {
+        accessGroupService.linkLayer($scope.addLayers, $scope.currentEntity.id, {
             callback: function(result){
                 $scope.msg = {type: "success", text: "AlteraÁıes efetuadas com sucesso", dismiss: true};
-                $scope.adicionarCamadas = [];
+                $scope.addLayers = [];
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -885,11 +885,11 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @param pesquisas
      */
-    $scope.linkPesquisasPersonalizadas = function() {
-        accessGroupService.linkPesquisaPersonalizada($scope.adicionarPesquisas, $scope.currentEntity.id, {
+    $scope.linkCustomSearch = function() {
+        accessGroupService.linkCustomSearch($scope.addSearchs, $scope.currentEntity.id, {
             callback: function(result){
                 $scope.msg = {type: "success", text: "AlteraÁıes efetuadas com sucesso", dismiss: true};
-                $scope.adicionarPesquisas = [];
+                $scope.addSearchs = [];
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -899,15 +899,13 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     }
 
     /**
-     *
-     * @param camada
-     * @param grupoAcesso
-     */
-    $scope.unlinkCamadas = function() {
-        accessGroupService.unlinkCamada($scope.removerCamadas, $scope.currentEntity.id, {
+	*
+	*/
+    $scope.unlinkLayers = function() {
+        accessGroupService.unlinkLayer($scope.removeLayers, $scope.currentEntity.id, {
             callback: function(result){
                 $scope.msg = {type: "success", text: "AlteraÁıes efetuadas com sucesso", dismiss: true};
-                $scope.removerCamadas = [];
+                $scope.removeLayers = [];
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -921,11 +919,11 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * @param pesquisa
      * @param grupoAcesso
      */
-    $scope.unlinkPesquisaPersonalizada = function() {
-        accessGroupService.unlinkPesquisaPersonalizada($scope.removerPesquisas, $scope.currentEntity.id, {
+    $scope.unlinkCustomSearch = function() {
+        accessGroupService.unlinkCustomSearch($scope.removerPesquisas, $scope.currentEntity.id, {
             callback: function(result){
                 $scope.msg = {type: "success", text: "AlteraÁıes efetuadas com sucesso", dismiss: true};
-                $scope.removerPesquisas = [];
+                $scope.removeSearchs = [];
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -937,24 +935,24 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     /**
      *
      */
-    $scope.salvarCamadas = function () {
-        if ($scope.adicionarCamadas.length > 0) {
-            $scope.linkCamadas();
+    $scope.saveLayers = function () {
+        if ($scope.addLayers.length > 0) {
+            $scope.linkLayers();
         }
-        if ($scope.removerCamadas.length > 0) {
-            $scope.unlinkCamadas();
+        if ($scope.removeLayers.length > 0) {
+            $scope.unlinkLayers();
         }
     }
 
     /**
      *
      */
-    $scope.salvarPesquisas = function () {
-        if ($scope.adicionarPesquisas.length > 0) {
-            $scope.linkPesquisasPersonalizadas();
+    $scope.saveSearchs = function () {
+        if ($scope.addSearchs.length > 0) {
+            $scope.linkCustomSearch();
         }
-        if ($scope.removerPesquisas.length > 0) {
-            $scope.unlinkPesquisaPersonalizada();
+        if ($scope.removeSearchs.length > 0) {
+            $scope.unlinkCustomSearch();
         }
     }
 
@@ -962,11 +960,11 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @param grupoId
      */
-    $scope.loadCamadasById = function(grupoId){
-        accessGroupService.listCamadaByGrupoAcessoId(grupoId, {
+    $scope.loadLayersById = function(grupoId){
+        accessGroupService.listLayerByAccessGroupId(grupoId, {
             callback: function(result){
-                $scope.camadasSelecionadas = result;
-                $scope.camadasOriginais = result.slice(0);
+                $scope.selectedLayers = result;
+                $scope.originalLayers = result.slice(0);
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -979,8 +977,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *
      * @param grupoId
      */
-    $scope.loadPesquisasById = function(grupoId){
-        accessGroupService.listPesquisaPersonalizadaByGrupoAcessoId(grupoId, {
+    $scope.loadSearchsById = function(grupoId){
+        accessGroupService.listCustomSearchByAccessGroupId(grupoId, {
             callback: function(result){
                 $scope.pesquisasSelecionadas = result;
                 $scope.pesquisasOriginais = result.slice(0);
@@ -995,8 +993,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     /**
      *
      */
-    $scope.updateUsuarios = function() {
-        accessGroupService.updateGrupoAcessoUsuarios($scope.currentEntity.id, $scope.currentEntity.usuarios, {
+    $scope.updateUsers = function() {
+        accessGroupService.updateAccessGroupUsers($scope.currentEntity.id, $scope.currentEntity.users, {
             callback: function(result){
                 $scope.msg = {type: "success", text: "AlteraÁıes efetuadas com sucesso", dismiss: true};
                 $scope.$apply();
@@ -1010,8 +1008,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     /**
      *
      */
-    $scope.updateFerramentas = function() {
-        accessGroupService.updateGrupoAcessoFerramentas($scope.currentEntity.id, $scope.currentEntity.ferramentas, {
+    $scope.updateTools = function() {
+        accessGroupService.updateAccessGroupTools($scope.currentEntity.id, $scope.currentEntity.tools, {
             callback: function(result){
                 $scope.msg = {type: "success", text: "AlteraÁıes efetuadas com sucesso", dismiss: true};
                 $scope.$apply();
@@ -1036,11 +1034,11 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     /**
      *
      */
-    $scope.salvarAssociacoes = function(){
-        $scope.salvarCamadas();
-        $scope.salvarPesquisas();
-        $scope.updateFerramentas();
-        $scope.updateUsuarios();
+    $scope.saveAssotiations= function(){
+        $scope.saveLayers();
+        $scope.saveSearchs();
+        $scope.updateTools();
+        $scope.updateUsers();
     }
 
 };

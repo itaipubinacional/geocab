@@ -74,9 +74,9 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
 
         $scope.showLoading = true;
 
-        userService.listUsersByFilters( filter, {
+        accountService.listUsersByFilters( filter, {
             callback : function(result) {
-            	$scope.usuarios = result;
+            	$scope.users = result;
                 $scope.showLoading = false;
 
                 //Function responsible for marking the records that were already tagged prior to the opening of pop-up
@@ -84,7 +84,7 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
                     angular.forEach( $scope.usersSelected, function(data, index) {
                         var i = $scope.findUsername(data.username, $scope.usuarios);
                         if (i > -1) {
-                            $scope.usuarios.splice(i, 1);
+                            $scope.users.splice(i, 1);
                         }
                     });
                 }
@@ -151,7 +151,7 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
     };
 
     $scope.gridOptions = {
-        data: 'usuarios',
+        data: 'users.content',
         multiSelect: false,
         headerRowHeight: 45,
         filterOptions: $scope.filterOptions,
@@ -161,11 +161,13 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
             $scope.toogleSelection(row, event);
         },
         columnDefs: [
-            {displayName:'Nome Completo', field:'nomeCompleto', width: '30%'},
+            {displayName:'Nome Completo', field:'name', width: '30%'},
             {displayName:'Nome de usuário', field:'username', width: '30%'},
             {displayName:'E-mail', field: 'email', width:'40%'}
         ]
     };
+    
+   
 
     /**
 	 *

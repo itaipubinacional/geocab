@@ -852,7 +852,10 @@ public class LayerGroupService
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
-			layer.setLegend(getLegendLayerFromGeoServer(layer));
+			if( layer.getDataSource().getUrl() != null) {
+				layer.setLegend(getLegendLayerFromGeoServer(layer));
+			}
+			
 		}
 		
 		return layers;

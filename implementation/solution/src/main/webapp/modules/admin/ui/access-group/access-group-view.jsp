@@ -40,7 +40,7 @@
             </button>
             <button ng-show="currentState == DETAIL_STATE" style="float: right;"
                 class="btn btn-primary"
-                ui-sref="access-group.edit( {id:currentEntity.id} )"><spring:message code="admin.access-group.Update"/>
+                ui-sref="access-group.update( {id:currentEntity.id} )"><spring:message code="admin.access-group.Update"/>
             </button>
 
             <!-- State Criar | Editar -->
