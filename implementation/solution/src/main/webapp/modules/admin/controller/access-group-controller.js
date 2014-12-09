@@ -136,8 +136,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * jÃ¡ o botÃ£o de excluir chama um mÃ©todo direto via ng-click por que nÃ£o tem um estado da tela especÃ­fico.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
-        '<a ui-sref="access-group.update({id:row.entity.id})" title="Editar" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
-        '<a ng-if="row.entity.id != 1" ng-click="changeToRemove(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+        '<a ui-sref="access-group.update({id:row.entity.id})" title="'+$translate('admin.access-group.Update')+'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ng-if="row.entity.id != 1" ng-click="changeToRemove(row.entity)" title="'+$translate('admin.access-group.Delete')+'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
 
     /**
@@ -156,9 +156,9 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             $state.go($scope.DETAIL_STATE, {id: row.entity.id});
         },
         columnDefs: [
-            {displayName: 'Name', field: 'name'},
-            {displayName: 'Description', field: 'description', width: '55%'},
-            {displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
+            {displayName: $translate('admin.access-group.Name'), field: 'name'},
+            {displayName: $translate('admin.access-group.Description'), field: 'description', width: '55%'},
+            {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
         ]
     };
 
@@ -171,19 +171,19 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     '</div>';
 
     var GRID_ACTION_LAYER_BUTTONS = '<div class="cell-centered">' +
-        '<a ng-click="removeLayer(row.entity)" ng-if="currentState != DETAIL_STATE" title="Delete" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+        '<a ng-click="removeLayer(row.entity)" ng-if="currentState != DETAIL_STATE" title="'+$translate('admin.access-group.Delete')+'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
 
     var GRID_ACTION_SEARCH_BUTTONS = '<div class="cell-centered">' +
-        '<a ng-click="removeSearch(row.entity)" ng-if="currentState != DETAIL_STATE" title="Delete" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+        '<a ng-click="removeSearch(row.entity)" ng-if="currentState != DETAIL_STATE" title="'+$translate('admin.access-group.Delete')+'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
     
     var GRID_ACTION_TOOLS_BUTTONS = '<div class="cell-centered">' +
-    '<a ng-click="removeFerramenta(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    '<a ng-click="removeFerramenta(row.entity)" ng-if="currentState != DETAIL_STATE" title="'+$translate('admin.access-group.Delete')+'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
     '</div>';
 
     var GRID_ACTION_USER_BUTTONS = '<div class="cell-centered">' +
-        '<a ng-click="removeUser(row.entity)" ng-if="currentState != DETAIL_STATE" title="Delete" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+        '<a ng-click="removeUser(row.entity)" ng-if="currentState != DETAIL_STATE" title="'+$translate('admin.access-group.Delete')+'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
 
     $scope.gridLayers = {
@@ -195,12 +195,12 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         beforeSelectionChange: function (row, event) {
         },
         columnDefs: [
-            {displayName: 'Symbology', field: 'subtitle', sortable: false, width: '120px', cellTemplate: IMAGE_SUBTITLE},
-            {displayName: 'Title', field: 'title'},
-            {displayName: 'Name', field: 'name', width: '40%'},
-            {displayName: 'Data source', field: 'dataSource.name'},
-            {displayName: 'Layer group', field: 'layerGroup.name'},
-            {displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_LAYER_BUTTONS, width: '100px'}
+            {displayName: $translate('admin.access-group.Symbology'), field: 'subtitle', sortable: false, width: '120px', cellTemplate: IMAGE_SUBTITLE},
+            {displayName: $translate('admin.access-group.Title'), field: 'title'},
+            {displayName: $translate('admin.access-group.Name'), field: 'name', width: '40%'},
+            {displayName: $translate('admin.access-group.Data-source'), field: 'dataSource.name'},
+            {displayName: $translate('admin.access-group.Layer-group'), field: 'layerGroup.name'},
+            {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_LAYER_BUTTONS, width: '100px'}
         ]
     };
 
@@ -213,12 +213,12 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         beforeSelectionChange: function (row, event) {
         },
         columnDefs: [
-			{displayName: 'Symbology', field: 'subtitle', sortable: false, width: '10%', cellTemplate: IMAGE_SUBTITLE_SEARCH},
-			{displayName: 'Name', field: 'name', width: '20%'},
-			{displayName: 'Layer\'s Title', field: 'layer.title', width: '20%'},
-			{displayName: 'Layer\'s Name', field: 'layer.name', width: '20%'},
-			{displayName: 'Data source', field: 'layer.dataSource.name', width: '20%'},
-			{displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'}
+			{displayName: $translate('admin.access-group.Symbology'), field: 'subtitle', sortable: false, width: '10%', cellTemplate: IMAGE_SUBTITLE_SEARCH},
+			{displayName: $translate('admin.access-group.Name'), field: 'name', width: '20%'},
+			{displayName: $translate('admin.access-group.Layer-title'), field: 'layer.title', width: '20%'},
+			{displayName: $translate('admin.access-group.Layer-name'), field: 'layer.name', width: '20%'},
+			{displayName: $translate('admin.access-group.Data-source'), field: 'layer.dataSource.name', width: '20%'},
+			{displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'}
         ]
     };  
 
@@ -232,9 +232,9 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             beforeSelectionChange: function (row, event) {
             },
             columnDefs: [
-                {displayName: 'Description', field: 'description'},
-                {displayName: 'Name', field: 'name', width: '55%'},
-                {displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_TOOLS_BUTTONS, width: '100px'}
+                {displayName: $translate('admin.access-group.Description'), field: 'description'},
+                {displayName: $translate('admin.access-group.Name'), field: 'name', width: '55%'},
+                {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_TOOLS_BUTTONS, width: '100px'}
             ]
         };
     
@@ -245,9 +245,9 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         headerRowHeight: 45,
         rowHeight: 45,
         columnDefs: [
-            {displayName: 'Full name', field: 'name', width: '35%'},
-            {displayName: 'User Name', field: 'username'},
-            {displayName: 'Action', sortable: false, cellTemplate: GRID_ACTION_USER_BUTTONS, width: '100px'}
+            {displayName: $translate('admin.access-group.Full-name'), field: 'name', width: '35%'},
+            {displayName: $translate('admin.access-group.User-name'), field: 'username'},
+            {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_USER_BUTTONS, width: '100px'}
         ]
     };
 
@@ -514,7 +514,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *-------------------------------------------------------------------*/
 
     /**
-     * Realiza a consulta de registros, consirando filtro, paginação e sorting.
+     * Realiza a consulta de registros, consirando filtro, paginaï¿½ï¿½o e sorting.
      * Quando ok, muda o estado da tela para list.
      *
      * @see data.filter
@@ -538,7 +538,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Realiza a inserção de um novo registro
+     * Realiza a inserï¿½ï¿½o de um novo registro
      * e no suscesso, modifica o estado da tela para o detail.
      */
     $scope.insertAccessGroup = function () {
@@ -582,7 +582,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             },
             errorHandler: function (message, exception) {
                 if (exception.message.indexOf("ConstraintViolationException") > -1) {
-                    message = "O campo Nome ou Endereço informado já existe, altere e tente novamente.";
+                    message = "O campo Nome ou Endereï¿½o informado jï¿½ existe, altere e tente novamente.";
                 }
                 $scope.msg = {type: "danger", text: message, dismiss: true};
                 $scope.$apply();
@@ -591,7 +591,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Testa conexão se é WMS ou WFS
+     * Testa conexï¿½o se ï¿½ WMS ou WFS
      */
     $scope.testAccessGroupConnection = function (accessGroup) {
 
@@ -603,10 +603,10 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         accessGroupService.testaConexao(accessGroup.url, accessGroup.accessGroupType, {
             callback: function (result) {
                 if (result) {
-                    $scope.msg = {type: "success", text: "Conexão estabelecida com êxito.", dismiss: true};
+                    $scope.msg = {type: "success", text: "Conexï¿½o estabelecida com ï¿½xito.", dismiss: true};
                 }
                 else {
-                    $scope.msg = {type: "danger", text: "Não foi possível estabelecer conexão com o grupo de acesso geográficos.", dismiss: true};
+                    $scope.msg = {type: "danger", text: "Nï¿½o foi possï¿½vel estabelecer conexï¿½o com o grupo de acesso geogrï¿½ficos.", dismiss: true};
                 }
                 $scope.$apply();
             },
@@ -622,7 +622,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * Abre uma popup para selecionar a camada a ser associada.
      */
     $scope.associateLayer = function () {
-        //Função responsável por chamar a popup de configurações de camada para associação.
+        //Funï¿½ï¿½o responsï¿½vel por chamar a popup de configuraï¿½ï¿½es de camada para associaï¿½ï¿½o.
         var dialog = $modal.open({
             templateUrl: 'modules/admin/ui/custom-search/popup/layer-config-popup.jsp',
             controller: SelectConfigLayerAccessGroupPopUpController,
@@ -682,7 +682,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * Abre uma popup para selecionar as pesquisas personalizadas a serem associadas.
      */
     $scope.associateSearch = function () {
-        //Função responsável por chamar a popup de configurações de camada para associação.
+        //Funï¿½ï¿½o responsï¿½vel por chamar a popup de configuraï¿½ï¿½es de camada para associaï¿½ï¿½o.
         var dialog = $modal.open({
             templateUrl: 'modules/admin/ui/access-group/popup/custom-search-popup.jsp',
             controller: SelectCustomSearchPopUpController,
@@ -742,7 +742,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * Abre uma popup para selecionar as ferramentas a serem associadas.
      */
     $scope.associateTools = function () {
-        //Função responsável por chamar a popup de ferramentas para associação.
+        //Funï¿½ï¿½o responsï¿½vel por chamar a popup de ferramentas para associaï¿½ï¿½o.
         var dialog = $modal.open({
             templateUrl: 'modules/admin/ui/access-group/popup/tools-popup.jsp',
             controller: SelectToolsPopUpController,
@@ -774,7 +774,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * Abre uma popup para selecionar as ferramentas a serem associadas.
      */
     $scope.associateUsers = function () {
-        //Função responsável por chamar a popup de usuários para associação.
+        //Funï¿½ï¿½o responsï¿½vel por chamar a popup de usuï¿½rios para associaï¿½ï¿½o.
         var dialog = $modal.open({
             templateUrl: 'modules/admin/ui/access-group/popup/users-popup.jsp',
             controller: SelectUsersPopUpController,
@@ -871,7 +871,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.linkLayers = function() {
         accessGroupService.linkLayer($scope.addLayers, $scope.currentEntity.id, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Alterações efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: "Alteraï¿½ï¿½es efetuadas com sucesso", dismiss: true};
                 $scope.addLayers = [];
                 $scope.$apply();
             },
@@ -888,7 +888,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.linkCustomSearch = function() {
         accessGroupService.linkCustomSearch($scope.addSearchs, $scope.currentEntity.id, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Alterações efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: "Alteraï¿½ï¿½es efetuadas com sucesso", dismiss: true};
                 $scope.addSearchs = [];
                 $scope.$apply();
             },
@@ -904,7 +904,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.unlinkLayers = function() {
         accessGroupService.unlinkLayer($scope.removeLayers, $scope.currentEntity.id, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Alterações efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: "Alteraï¿½ï¿½es efetuadas com sucesso", dismiss: true};
                 $scope.removeLayers = [];
                 $scope.$apply();
             },
@@ -922,7 +922,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.unlinkCustomSearch = function() {
         accessGroupService.unlinkCustomSearch($scope.removeSearchs, $scope.currentEntity.id, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Alterações efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: "Alteraï¿½ï¿½es efetuadas com sucesso", dismiss: true};
                 $scope.removeSearchs = [];
                 $scope.$apply();
             },
@@ -996,7 +996,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.updateUsers = function() {
         accessGroupService.updateAccessGroupUsers($scope.currentEntity.id, $scope.currentEntity.users, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Alterações efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: "Alteraï¿½ï¿½es efetuadas com sucesso", dismiss: true};
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -1011,7 +1011,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.updateTools = function() {
         accessGroupService.updateAccessGroupTools($scope.currentEntity.id, $scope.currentEntity.tools, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Alterações efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: "Alteraï¿½ï¿½es efetuadas com sucesso", dismiss: true};
                 $scope.$apply();
             },
             errorHandler: function(error){
