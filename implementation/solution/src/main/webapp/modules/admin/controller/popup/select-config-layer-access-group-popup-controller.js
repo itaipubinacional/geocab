@@ -6,20 +6,27 @@
  * @param $modalInstance
  * @constructor
  */
-function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, selectedLayers, $log, $importService ) {
+function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, selectedLayers, $log, $injector, $importService ) {
+
+    $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 
     /*-------------------------------------------------------------------
      * 		 				 	EVENTS
      *-------------------------------------------------------------------*/
 
-	$importService("layerGroupService");
-	
+    $importService("layerGroupService");
+    
     /**
      *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
      *  Quando o evento é disparado, configuramos o pager do spring-data
      *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
      */
     $scope.$on('ngGridEventSorted', function(event, sort) {
+
+        if(event.targetScope.gridId != $scope.gridOptions.gridId)
+        {
+            return;
+        }
 
         // compara os objetos para garantir que o evento seja executado somente uma vez que não entre em loop
         if ( !angular.equals(sort, $scope.gridOptions.sortInfo) ) {
@@ -34,7 +41,7 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
-            $scope.listByFilters( $scope.data.filter, $scope.data.fonteDados.id, $scope.currentPage.pageable );
+            $scope.listByFilters( $scope.data.filter, null, $scope.currentPage.pageable );
         }
     });
 
@@ -42,15 +49,23 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
 
+    /**
+     *
+     * @type {null}
+     */
     $scope.selectedEntity = null;
 
-    $scope.gridSelectedItems = [];
-    
     /**
-    *
-    * @type {null}
-    */
-   $scope.itensMarcados = [];
+     *
+     * @type {Array}
+     */
+    $scope.gridSelectedItems = [];
+
+    /**
+     *
+     * @type {null}
+     */
+    $scope.itensMarcados = [];
 
     /**
      * Handler que captura os eventos de marcação
@@ -78,10 +93,7 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
         showSelectionCheckbox: true,
         selectedItems: $scope.gridSelectedItems,
         rowHeight: 50,
-        afterSelectionChange: function(row, event){
-            $scope.selectedEntity = row.entity;
-            
-            
+        afterSelectionChange: function(rowItem){
             if (rowItem.length > 0) {
                 var i;
                 for (var rowItemIndex = 0; rowItemIndex < rowItem.length; rowItemIndex++) {
@@ -152,6 +164,8 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
      */
     $scope.initialize = function() {
 
+        $scope.itensMarcados = selectedLayers.slice(0);
+
         var pageRequest = new PageRequest();
         pageRequest.size = 6;
         $scope.pageRequest = pageRequest;
@@ -163,7 +177,7 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
         $scope.pageRequest.sort = new Sort();
         $scope.pageRequest.sort.orders = [ order ];
 
-        $scope.listByFilters( null, pageRequest );
+        $scope.listByFilters( null, null, $scope.pageRequest );
     };
 
     /**
@@ -175,7 +189,7 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
      */
     $scope.changeToPage = function( filter, pageNumber ) {
         $scope.currentPage.pageable.page = pageNumber-1;
-        $scope.listByFilters( filter, $scope.currentPage.pageable );
+        $scope.listByFilters( filter, null, $scope.currentPage.pageable );
         $scope.showLoading = false;
     };
 
@@ -186,13 +200,13 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
     {
         $scope.msg = null;
 
-        if (fechar)
+        if (fechar != null)
         {
-            $modalInstance.close();
+            $modalInstance.close(fechar);
 
         } else
         {
-            $modalInstance.close($scope.gridOptions.selectedItems);
+            $modalInstance.close($scope.itensMarcados);
         }
 
     };
@@ -217,7 +231,7 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
      * @see data.filter
      * @see currentPage
      */
-    $scope.listByFilters = function( filter, pageRequest ) {
+    $scope.listByFilters = function( filter, fonteDadosId, pageRequest ) {
 
         $scope.showLoading = true;
 
@@ -228,20 +242,7 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
                 $scope.showLoading = false;
                 $scope.$apply();
 
-                //Função responsável por marcar os registros que já estavam marcados antes da abertura da pop-up
-
-
-                //Função responsável por retirar os registros que já estavam marcados antes da abertura da pop-up
-                if (selectedLayers) {
-                    angular.forEach( selectedLayers, function(data, index) {
-                        var i = $scope.findName(data.nome, $scope.currentPage.content);
-                        if (i > -1) {
-                            $scope.currentPage.content.splice(i, 1);
-                        }
-                    });
-                };
-                
-              //Função responsável por marcar os registros na grid que já estavam marcados
+                //Função responsável por marcar os registros na grid que já estavam marcados
                 if ($scope.itensMarcados) {
                     angular.forEach( $scope.itensMarcados, function(data, index) {
                         var i = $scope.findByIdInArray($scope.currentPage.content, data);
