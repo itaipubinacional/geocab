@@ -61,7 +61,7 @@
                            maxlength="144" ng-minlength="1"
                            ng-hover>
                     <span class="input-group-btn">
-                        <button ng-click="selectConfiguracaoCamada()" class="btn btn-default" type="button"
+                        <button ng-click="selectLayerConfig()" class="btn btn-default" type="button"
                                 ng-disabled="data.dataSource == null || currentEntity.id != null">
                             <i class="icon-plus-sign icon-large"></i>
                         </button>
@@ -108,23 +108,23 @@
 
                     </div>
 
-                    <button type="button" ng-click="adicionarCampos()" ng-disabled="currentEntity.camada.name == null"
+                    <button type="button" ng-click="addFields()" ng-disabled="currentEntity.layer.name == null"
                             style="float: right;" class="btn btn-primary"><spring:message code="admin.custom-search.Add-fields"/>
                     </button>
                     <br>
 
-                    <div ng-grid="gridCamadasOptions" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212); margin-top: 40px;">
+                    <div ng-grid="gridlayersOptions" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212); margin-top: 40px;">
 
                     </div>
                 </tab>
                 <tab heading="<spring:message code="admin.custom-search.Access"/>">
 
-                    <button ng-click="selectGrupoAcesso()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary"><spring:message code="admin.custom-search.Associate-group"/></button>
+                    <button ng-click="selectAccessGroup()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary"><spring:message code="admin.custom-search.Associate-group"/></button>
 
                     <br/>
 
                     <div class="form-item position-relative" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
-                        <div ng-grid="gridGruposOptions"
+                        <div ng-grid="gridGroupOptions"
                              style="height: 300px; width:100%; border: 1px solid rgb(212, 212, 212);"></div>
                     </div>
 

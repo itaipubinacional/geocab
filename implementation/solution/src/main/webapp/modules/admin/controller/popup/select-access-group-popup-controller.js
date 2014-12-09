@@ -6,13 +6,13 @@
  * @param $log
  * @param $location
  */
-function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSelecionados) {
+function SelectAccessGroupPopUpController($scope, $modalInstance, $log, selectedGroups, $importService) {
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
 	 *-------------------------------------------------------------------*/
 
-
+	$importService("accessGroupService")
     /**
      *  Handler that listens to each time the user makes the sorting in tables programmatically/ng-grid.
      *  When the event is fired, we configure the pager of the spring-date
@@ -38,7 +38,7 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
-            $scope.listGruposAcessosByFilter($scope.data.filter, $scope.currentPage.pageable);
+            $scope.listaccessGroupsByFilter($scope.data.filter, $scope.currentPage.pageable);
         }
     });
 
@@ -80,8 +80,8 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
         selectedItems: [],
         enableRowSelection: true,
         columnDefs: [
-            {displayName: 'Nome', field: 'nome'},
-            {displayName: 'Descrição', field: 'descricao'}
+            {displayName: 'Nome', field: 'name'},
+            {displayName: 'Descrição', field: 'description'}
         ]
     };
 
@@ -104,7 +104,7 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
         pageRequest.size = 6;
         $scope.pageRequest = pageRequest;
 
-		$scope.listGruposAcessosByFilter($scope.data.filter, $scope.pageRequest);
+		$scope.listaccessGroupsByFilter($scope.data.filter, $scope.pageRequest);
 
 
     };
@@ -118,7 +118,7 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
      */
     $scope.changeToPage = function( filter, pageNumber ) {
         $scope.currentPage.pageable.page = pageNumber-1;
-        $scope.listGruposAcessosByFilter( filter, $scope.currentPage.pageable );
+        $scope.listaccessGroupsByFilter( filter, $scope.currentPage.pageable );
         $scope.showLoading = false;
     };
 
@@ -146,9 +146,9 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
 	 * @see data.filter
 	 * @see currentPage
 	 */
-	$scope.listGruposAcessosByFilter = function( filtro, pageRequest ) {
+	$scope.listaccessGroupsByFilter = function( filter, pageRequest ) {
 
-        grupoAcessoService.listGrupoAcessoByFilters( filtro, pageRequest, {
+        accessGroupService.listAccessGroupByFilters( filter, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;
@@ -157,8 +157,8 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
                 $scope.showLoading = false;
 
                 
-                if (gruposSelecionados) {
-                    angular.forEach( gruposSelecionados, function(data, index) {
+                if (selectedGroups) {
+                    angular.forEach( selectedGroups, function(data, index) {
                         var i = $scope.findName(data.nome, $scope.currentPage.content);
                         if (i > -1) {
                             $scope.currentPage.content.splice(i, 1);

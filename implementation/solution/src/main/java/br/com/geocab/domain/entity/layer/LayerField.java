@@ -270,6 +270,7 @@ public class LayerField extends AbstractEntity implements Serializable
 	public void setTypeGeoServer(String typeGeoServer)
 	{
 		this.typeGeoServer = typeGeoServer;
+		
 	}
 	/**
 	 * @return the label

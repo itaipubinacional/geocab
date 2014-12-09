@@ -1,42 +1,46 @@
 'use strict';
 
 /**
- * 
+ *
  * @param $scope
  * @param $log
  * @param $location
  */
-function CustomSearchController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate ) {
-	
+	function CustomSearchController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate ) {
 	/**
-	 * Injects methods, attributes and their inherited state of AbstractCRUDController.
+	 * Injeta os métodos, atributos e seus estados herdados de AbstractCRUDController.
 	 * @see AbstractCRUDController
 	 */
 	$injector.invoke(AbstractCRUDController, this, {$scope: $scope});
-	
-	$importService("customSearchService");
 
+	 $importService("customSearchService");
+	
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
 	 *-------------------------------------------------------------------*/
 
 	/**
-	 * Handler listening whenever the user / programmatically does the sorting in grid-ng. 
-     * When the event is fired, we set the pager's spring-data 
-     * and call the query again, also considering the state of the filter(@see $scope.data.filter)
+	 *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
+	 *  Quando o evento é disparado, configuramos o pager do spring-data
+	 *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
 	 */
 	$scope.$on('ngGridEventSorted', function(event, sort) {
 
-		// compares the objects to ensure that the event runs only once not enter a loop
+        if(event.targetScope.gridId != $scope.gridOptions.gridId)
+        {
+            return;
+        }
+
+		// compara os objetos para garantir que o evento seja executado somente uma vez q não entre em loop
 		if ( !angular.equals(sort, $scope.gridOptions.sortInfo) ) {
 			$scope.gridOptions.sortInfo = angular.copy(sort);
 
-			//Order spring-data
+			//Order do spring-data
 			var order = new Order();
 			order.direction = sort.directions[0].toUpperCase();
 			order.property = sort.fields[0];
 
-			//Sort spring-data
+			//Sort do spring-data
 			$scope.currentPage.pageable.sort = new Sort();
 			$scope.currentPage.pageable.sort.orders = [ order ];
 
@@ -49,112 +53,246 @@ function CustomSearchController( $scope, $injector, $log, $state, $timeout, $mod
 	 *-------------------------------------------------------------------*/
 	//STATES
 	/**
-	 * Static variable that represents 
-	 * the state list of records.
+	 * Variável estática que representa
+	 * o estado de listagem de registros.
 	 */
 	$scope.LIST_STATE = "custom-search.list";
 	/**
-	 * Static variable that represents
-	 * detail the state of a record.
+	 * Variável estática que representa
+	 * o estado de detalhe de um registro.
 	 */
 	$scope.DETAIL_STATE = "custom-search.detail";
 	/**
-	 * Static variable that represents
-	 * the state for the creation of records.
+	 * Variável estática que representa
+	 * o estado para a criação de registros.
 	 */
 	$scope.INSERT_STATE = "custom-search.create";
 	/**
-	 * Static variable that represents
-	 * the state for editing records.
+	 * Variável estática que representa
+	 * o estado para a edição de registros.
 	 */
 	$scope.UPDATE_STATE = "custom-search.update";
 	/**
-	 * Variable that stores the current state of the screen
-	 * This variable should ALWAYS be in agreement with the URL
-	 * that is in the browser.
+	 * Variável que armazena o estado corrente da tela.
+	 * Esta variável deve SEMPRE estar de acordo com a URL
+	 * que está no browser.
 	 */
 	$scope.currentState;
 
-	//DATA GRID
+    /**
+     * Variável auxiliar
+     * @type {{dataSource: null}}
+     */
+    $scope.data = {
+        dataSource : null
+    }
+
+    /**
+     *
+     * @type {Array}
+     */
+    $scope.removeGroups = [];
+
+    /**
+     *
+     * @type {Array}
+     */
+    $scope.addGroups = [];
+
+    /**
+     *
+     * @type {Array}
+     */
+    $scope.selectedGroups = [];
+
+    /**
+     *
+     * @type {Array}
+     */
+    $scope.originalGroups = [];
+
+    /**
+     *
+     */
+    $scope.selectedFields = {};
+
+    /**
+     *
+     * @type {{filterText: string}}
+     */
+    $scope.filterOptions = {
+        filterText: ''
+    };
 	/**
-	 * Static variable with buttons shares of grid
-	 * The edit button navigates via URL (SREF) why the editing is done on another page
-	 * now the delete button a direct method calls via click-ng why not have a specific status screen.
+	 * Variável estática coms os botões de ações da grid
+	 * O botão de editar navega via URL (sref) por que a edição é feita em outra página,
+	 * já o botão de excluir chama um método direto via ng-click por que não tem um estado da tela específico.
 	 */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered">' +
-	'<a ui-sref="data-source.update({id:row.entity.id})" title="'+ $translate('admin.datasource.Update') +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>'+
-	'<a ng-click="changeToRemove(row.entity)" title="'+ $translate('admin.datasource.Delete') +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
+	'<a ui-sref="custom-search.update({id:row.entity.id})" title="'+ $translate('admin.custom-search.Update') +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>'+
+	'<a ng-click="changeToRemove(row.entity)" title="'+ $translate('admin.custom-search.Delete') +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
+	'</div>';
+    
+    var IMAGE_LEGENDA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.camada.legenda}}"/>' +
 	'</div>';
 
 	/**
-	 * Settings of ng-grid
+	 * Configurações gerais da ng-grid.
 	 * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
 	 */
-	$scope.gridOptions = { 
+	$scope.gridOptions = {
 			data: 'currentPage.content',
 			multiSelect: false,
 			useExternalSorting: true,
             headerRowHeight: 45,
+
             rowHeight: 45,
 			beforeSelectionChange: function (row, event) {
-				//avoids calling include selecting, when clicked on a button action.
+				//evita chamar a selecao, quando clicado em um action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
 				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
 			},
 			columnDefs: [
-			             {displayName: $translate('Name'), field:'name'},
-			             {displayName: $translate('Address'), field:'url',  width:'55%'},
-			             {displayName: $translate('Actions'), sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}
+			             {displayName: $translate('admin.custom-search.Symbology') , field:'layer.subtitle', sortable:false, width: '120px', cellTemplate: IMAGE_LEGENDA},
+			             {displayName: $translate('admin.custom-search.Custom-search'), field:'name'}, 
+			             {displayName: $translate('admin.custom-search.Layer-title'), field:'layer.title'},
+			             {displayName: $translate('admin.custom-search.Layer-name'), field:'layer.name'},
+			             {displayName: $translate('admin.custom-search.Data-source'), field:'layer.dataSource.name'},
+			             {displayName: $translate('admin.custom-search.Actions'), sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}
 			             ]
 	};
 
+	var GRID_ACTION_ACCESS_BUTTONS = '<div class="cell-centered">' +
+	'<a ng-click="removeAccessGroup(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
+	'</div>';
+
+    var GRID_CAMPOS_INPUT = '<div class="cell-centered">' +
+        '<input class="form-control" maxlength="144" ng-disabled="currentState == DETAIL_STATE" style="width: 70%; margin-top: -3px;" type="text" ng-model="row.entity.rotulo" placeholder="Label">'+
+        '</div>';
+
+    var GRID_ACTION_CAMPOS_BUTTONS = '<div class="cell-centered">' +
+        '<a ng-click="removeCampo(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+        '</div>';
+
+    /**
+     *
+     * @type {{data: string, multiSelect: boolean, useExternalSorting: boolean, headerRowHeight: number, rowHeight: number, beforeSelectionChange: beforeSelectionChange, columnDefs: {displayName: string, field: string}[]}}
+     */
+	$scope.gridAccessOptions = {
+			data: 'selectedGroups',
+			multiSelect: false,
+            headerRowHeight: 45,
+            rowHeight: 45,
+			beforeSelectionChange: function (row, event) {
+            return false;
+        },
+			columnDefs: [
+				 {displayName:'Nome', field:'name'},
+				 {displayName:'Descrição', field:'descricao'}
+			]
+	};
+
+    /**
+     *
+     * @type {{data: string, multiSelect: boolean, useExternalSorting: boolean, headerRowHeight: number, rowHeight: number, beforeSelectionChange: beforeSelectionChange, columnDefs: *[]}}
+     */
+    $scope.gridlayersOptions = {
+        data: 'selectedFields',
+        multiSelect: false,
+        headerRowHeight: 45,
+        rowHeight: 45,
+        beforeSelectionChange: function(row) {
+            row.changed = true;
+            return true;
+        },
+        afterSelectionChange: function (row, event) {
+            if (row.changed){
+                $scope.currentlayerField = row.entity;
+                row.changed = false;
+            }
+        },
+        columnDefs: [
+            {displayName:'Campo', field: 'name'},
+            {displayName:'Tipo', field: 'type'},
+            {displayName:'Rótulo', sortable:false, cellTemplate: GRID_CAMPOS_INPUT},
+            {displayName:'', sortable:false, cellTemplate: GRID_ACTION_CAMPOS_BUTTONS, width:'100px'}
+        ]
+    };
+
+    /**
+     *
+     * @type {{data: string, multiSelect: boolean, useExternalSorting: boolean, headerRowHeight: number, rowHeight: number, beforeSelectionChange: beforeSelectionChange, columnDefs: *[]}}
+     */
+    $scope.gridGroupOptions = {
+        data: 'selectedGroups',
+        multiSelect: false,
+        headerRowHeight: 45,
+        rowHeight: 45,
+        beforeSelectionChange: function (row, event) {
+            return false;
+        },
+        columnDefs: [
+            {displayName: 'Nome', field: 'name'},
+            {displayName: 'Descrição', field: 'description'},
+            {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ACCESS_BUTTONS, width: '100px'}
+        ]
+    };
+
 	/**
-	 * 
-	 * Store the state of paging
-	 * to render the pager and to make requisitions of new pages containing the state Sort included.
-	 * @type PageRequest
-	 * 
+	 * Variável que armazena o estado da paginação
+	 * para renderizar o pager e também para fazer as requisições das
+	 * novas páginas, contendo o estado do Sort incluído.
+	 *
 	 * @type PageRequest
 	 */
 	$scope.currentPage;
 
 	//FORM
 	/**
-	 * 
-	 * Store auxiliary information that dont't fit in an entity Ex:
-	 * @filter - Search filter
-	 * 
+	 * Variável para armazenar atributos do formulário que
+	 * não cabem em uma entidade. Ex.:
+	 * @filter - Filtro da consulta
 	 */
-	$scope.data = { filter:null, showFields: false };
+	$scope.data =
+	{
+		filter:null,
+		selects : { CustomSearch: null }
+	};
 	/**
-	 * Store current User entity for update
+	 * Armazena a entitidade corrente para edição ou detalhe.
 	 */
 	$scope.currentEntity;
-	
-	
+
+    /**
+     *
+     */
+    $scope.currentLayerField = null;
+
 	/*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * 
-	 * Main method that makes the role of front-controller screen.
-	 * It is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+	 * Método principal que faz o papel de front-controller da tela.
+	 * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
+	 * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
 	 * Ex.: /list -> changeToList()
-	 *      /create -> changeToInsert()
-	 *      
-	 * If the state is not found, it directs you to the list
-	 * 
+	 *      /criar -> changeToInsert()
+	 *
+	 * Caso o estado não for encontrado, ele direciona para a listagem,
+	 * apesar que o front-controller do angular não deixa digitar uma URL inválida.
 	 */
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		var state = $state.current.name;
-	
 		/**
-		 * It is necessary to remove the SortInfo attribute for the return of an issue was doubling the value of the same attribute with the Sort 
-		 * Preventing the ordinations in the columns of the grid.
+		 * É necessario remover o atributo sortInfo pois o retorno de uma edição estava duplicando o valor do mesmo com o atributo Sort
+		 * impossibilitando as ordenações nas colunas da grid.
 		 */
 		if( $scope.gridOptions.sortInfo ){
 			delete $scope.gridOptions.sortInfo;
 		}
+
+        $scope.currentCampoCamada = null;
 
 		$log.info("Starting the front controller.");
 
@@ -182,106 +320,109 @@ function CustomSearchController( $scope, $injector, $log, $state, $timeout, $mod
 	};
 
 	/**
-	 * 
-	 * Boot the state users.list
+	 * Realiza os procedimentos iniciais (prepara o estado)
+	 * para a tela de consulta e após isso, muda o estado para list.
 	 * @see LIST_STATE
 	 * @see $stateChangeSuccess
-	 * 
-	 * To switch to this state, you must first load the data from the query.
-	 * 
+	 *
+	 * Para mudar para este estado, deve-se primeiro carregar os dados da consulta.
 	 */
 	$scope.changeToList = function() {
 		$log.info("changeToList");
-		
+
 		var pageRequest = new PageRequest();
-		pageRequest.size = 6;
+		pageRequest.size = 10;
 		$scope.pageRequest = pageRequest;
 
 		$scope.listCustomSearchByFilters( null, pageRequest );
-		
-		$scope.currentState = $scope.LIST_STATE;
 	};
 
 	/**
-	 * 
-	 * Boot the state users.insert 
+	 * Realiza os procedimentos iniciais (prepara o estado)
+	 * para a tela de inserção e após isso, muda o estado para insert.
 	 * @see INSERT_STATE
 	 * @see $stateChangeSuccess
-	 * 
-	 * To switch to this state, you must first instantiate a new currentEntity, 
-	 * To clear the fields and set default values​​.	
-	 * 
+	 *
+	 * Para mudar para este estado, deve-se primeiro instanciar um novo currentEntity,
+	 * para limpar os campos e configurar valores defaults.
 	 */
 	$scope.changeToInsert = function() {
 		$log.info("changeToInsert");
 
-		$scope.currentEntity = new DataSource();
-		/*
-		$scope.currentEntity = new FonteDados();
-		
-		//To operate ng-model no radio button
-		$scope.currentEntity.tipoFonteDados = 'WMS';*/
+		$scope.currentEntity = new Object();
+
+        $scope.data.dataSource = null;
+
+        $scope.originalGroups = [];
+        $scope.selectedGroups = [];
+        $scope.addGroups = [];
+        $scope.removeGroups = [];
+	   
+	    $scope.selectedFields = [];
 
 		$scope.currentState = $scope.INSERT_STATE;
 
 	};
 
 	/**
-	 * Boot the state users.update
+	 * Realiza os procedimentos iniciais (prepara o estado)
+	 * para a tela de edição e após isso, muda o estado para update.
 	 * @see UPDATE_STATE
-	 * @see $stateChangeSuccess 
+	 * @see $stateChangeSuccess
 	 *
-	 * To move to this state, must first obtain the ID 
-	 * The record of the consultation service and only then change the state of the screen.
-	 *
-	 *
+	 * Para mudar para este estado, deve-se primeiro obter via id
+	 * o registro pelo serviço de consulta e só então mudar o estado da tela.
 	 */
 	$scope.changeToUpdate = function( id ) {
 		$log.info("changeToUpdate", id);
 
-		customSearchService.findDataSourceById( $state.params.id, {
+		customSearchService.findCustomSearchById( $state.params.id, {
 			callback : function(result) {
 				$scope.currentEntity = result;
+                $scope.selectedFields = result.layerFields;
+                $scope.data.dataSource = $scope.currentEntity.layer.dataSource;
 				$scope.currentState = $scope.UPDATE_STATE;
 				$state.go($scope.UPDATE_STATE);
 				$scope.$apply();
+
+                $scope.loadlayerGroups(result.id);
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
-				$scope.fadeMsg();
 				$scope.$apply();
 			}
-		}); 
+		});
 	};
 
 	/**
-	 * 
-	 * Boot the state users.detail 
+	 * Realiza os procedimentos iniciais (prepara o estado)
+	 * para a tela de detalhe e após isso, muda o estado para detail.
 	 * @see DETAIL_STATE
 	 * @see $stateChangeSuccess
-	 * 
-	 * To switch to this state, one must first get through the 
-	 * registration id updated by the consultation service and only then change the state of the screen. 
-	 * If the identifier is invalid, returns to the state list.
-	 * 
+	 *
+	 * Para mudar para este estado, deve-se primeiro obter via id
+	 * o registro atualizado pelo serviço de consulta e só então mudar o estado da tela.
+	 * Caso o indentificador esteja inválido, retorna para o estado de listagem.
 	 */
 	$scope.changeToDetail = function( id ) {
 		$log.info("changeToDetail", id);
 
 		if ( id == null || id == "" || id == 0 ) {
 			$scope.msg = {type:"error", text: $scope.INVALID_ID_MESSAGE, dismiss:true};
-			
 			$scope.currentState = $scope.LIST_STATE;
 			$state.go($scope.LIST_STATE);
 			return;
 		}
 
-		customSearchService.findDataSourceById( id, {
+		customSearchService.findCustomSearchById( id, {
 			callback : function(result) {
 				$scope.currentEntity = result;
+                $scope.selectedFields = result.layerFields;
 				$scope.currentState = $scope.DETAIL_STATE;
 				$state.go($scope.DETAIL_STATE, {id:id});
 				$scope.$apply();
+
+                $scope.loadlayerGroups(result.id);
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
@@ -291,46 +432,45 @@ function CustomSearchController( $scope, $injector, $log, $state, $timeout, $mod
 	};
 
 	/**
-	 * Boot the state users.remove
-	 * 
-	 * Before deleting the user notified for confirmation
-	 * and then the record is excluded.
-	 * Once deleted, update the grid with state filter, paging and sorting.
+	 * Realiza os procedimentos iniciais (prepara o estado)
+	 * para a tela de exclusão.
+	 *
+	 * Antes de excluir, o usuário notificado para confirmação
+	 * e só então o registro é excluido.
+	 * Após excluído, atualizamos a grid com estado de filtro, paginação e sorting.
 	 */
-	$scope.changeToRemove = function( dataSource ) {
-		$log.info("changeToRemove", dataSource);
+	$scope.changeToRemove = function( CustomSearch ) {
+		$log.info("changeToRemove", CustomSearch);
 
 		var dialog = $modal.open( {
 			templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
 			controller: DialogController,
 			windowClass: 'dialog-delete',
 			resolve: {
-				title: function(){return $translate("admin.datasource.Deleting-data-source"); },
-				message: function(){return $translate("admin.datasource.Are-you-sure-you-want-to-delete-the-data-source")+' "'+dataSource.name+'"? <br/>'+$translate("admin.datasource.This-operation-can-not-be-undone")+'.'; },
-				buttons: function(){return [ {label: $translate("Remove") , css:'btn btn-danger'}, {label: $translate('admin.datasource.Cancel') , css:'btn btn-default', dismiss:true} ];}
+				title: function(){return "Exclusão de pesquisa personalizada";},
+				message: function(){return 'Tem certeza que deseja excluir a pesquisa personalizada "'+CustomSearch.name+'"? <br/>Esta operação não poderá mais ser desfeita.';},
+				buttons: function(){return [ {label:'Excluir', css:'btn btn-danger'}, {label:'Cancelar', css:'btn btn-default', dismiss:true} ];}
 			}
 		});
 
+
+
         dialog.result.then( function(result) {
 
-			customSearchService.removeDataSource( dataSource.id, {
+			customSearchService.removeCustomSearch( CustomSearch.id, {
 				callback : function(result) {
-					//if the currentPage is null, configure the pager default
+					//caso o currentPage esteja null, configura o pager default
 					if ( $scope.currentPage == null ) {
 						$scope.changeToList();
-						//else, use the same state to load the listing
+						//caso não, usa o mesmo estado para carregar a listagem
 					} else {
 						$scope.listCustomSearchByFilters($scope.data.filter, $scope.currentPage.pageable);
 					}
 
-					$scope.msg = {type: "success", text: $translate("admin.datasource.The-register") + ' "'+dataSource.name+'" '+$translate("admin.datasource.was-successfully-deleted")+'.', dismiss:true};
-					
-					$scope.fadeMsg();
-					
+					$scope.msg = {type: "success", text: 'O registro "'+CustomSearch.name+'" foi excluído com sucesso.', dismiss:true};
 				},
 				errorHandler : function(message, exception) {
 					$scope.msg = {type:"danger", text: message, dismiss:true};
-					$scope.fadeMsg();
 					$scope.$apply();
 				}
 			});
@@ -338,11 +478,11 @@ function CustomSearchController( $scope, $injector, $log, $state, $timeout, $mod
 	};
 
 	/**
-	 * Sets the pageRequest as the visual component and calls the pager listing service, 
-	 * considering the current filter on the screen.
-	 * 
+	 * Configura o pageRequest conforme o componente visual pager
+	 * e chama o serviçoe de listagem, considerando o filtro corrente na tela.
+	 *
 	 * @see currentPage
-	 * @see data.filter 
+	 * @see data.filter
 	 */
 	$scope.changeToPage = function( filter, pageNumber ) {
 		$scope.currentPage.pageable.page = pageNumber-1;
@@ -354,9 +494,9 @@ function CustomSearchController( $scope, $injector, $log, $state, $timeout, $mod
 	 *-------------------------------------------------------------------*/
 
 	/**
-	 * Performs the query logs, considering filter, paging and sorting. 
-	 * When ok, change the state of the screen to list.
-	 * 
+	 * Realiza a consulta de registros, consirando filtro, paginação e sorting.
+	 * Quando ok, muda o estado da tela para list.
+	 *
 	 * @see data.filter
 	 * @see currentPage
 	 */
@@ -365,209 +505,239 @@ function CustomSearchController( $scope, $injector, $log, $state, $timeout, $mod
 		customSearchService.listCustomSearchByFilters( filter, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
-				$scope.currentPage.pageable.pageNumber++;
+				$scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go( $scope.LIST_STATE );
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
-				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		});
 	};
 
 	/**
-	 * Insert a new Data Source
-	 * If success, change to detail state.
+	 * Realiza a inserção de um novo registro
+	 * e no suscesso, modifica o estado da tela para o detail.
 	 */
-	$scope.insertDataSource = function() {
+	$scope.insertCustomSearch = function( CustomSearch ) {
 
 		if ( !$scope.form().$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
-			$scope.fadeMsg();
 			return;
 		}
 
-		customSearchService.insertDataSource( $scope.currentEntity, {
+        CustomSearch.layerFields = $scope.selectedFields;
+
+		customSearchService.insertCustomSearch( CustomSearch, {
 			callback : function() {
+                $scope.saveGroups();
+                console.log("hu1");
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
-				$scope.msg = {type:"success", text: $translate("admin.datasource.Geographic-data-source-successfully-inserted")+"!", dismiss:true};
-				$scope.fadeMsg();
+				$scope.msg = {type:"success", text: "Pesquisa personalizada inserida com sucesso!", dismiss:true};
 				$scope.$apply();
-				$scope.data.showFieldUrl = null;
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
-				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		});
 	};
 
 	/**
-	 *Performs updates a record 
-	 *and successfully modifies the state of the screen to state detail
+	 * Realiza a atualiza de um registro
+	 * e no suscesso, modifica o estado da tela para o detail.
 	 */
-	$scope.updateDataSource = function() {
+	$scope.updateCustomSearch = function( CustomSearch ) {
 
 		if ( !$scope.form().$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
-			$scope.fadeMsg();
 			return;
 		}
 
-		customSearchService.updateDataSource( $scope.currentEntity , {
+        CustomSearch.layerGroups = $scope.selectedGroups;
+        CustomSearch.layerFields = $scope.selectedFields;
+
+		customSearchService.updateCustomSearch( CustomSearch, {
 			callback : function() {
-			
+                $scope.saveGroups();
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
-				$scope.msg = {type:"success", text: $translate("admin.datasource.Geographic-data-source-successfully-updated")+"!", dismiss:true};
-				$scope.fadeMsg();
+				$scope.msg = {type:"success", text: "Pesquisa personalizada atualizada com sucesso!", dismiss:true};
+
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
 				if (exception.message.indexOf("ConstraintViolationException") > -1){
-					message = $translate("admin.datasource.The-name-or-address-entered-field-already-exists,-change-and-try-again")+".";
+					message = "O campo Nome informado já existe, altere e tente novamente.";
 				}
 				$scope.msg = {type:"danger", text: message, dismiss:true};
-				$scope.fadeMsg();
 				$scope.$apply();
 			}
 		});
 	};
-	
-	/**
-	 * Test the connection
-	 */
-	$scope.testDataSourceConnection = function() {
-		
-		
-		if ( $scope.currentState != $scope.DETAIL_STATE && !$scope.form().url.$valid ) {
-			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
-			$scope.fadeMsg();
-			return;
-		}
 
-		customSearchService.testConnection( $scope.currentEntity.url, {
-			callback : function(result) {
-				if(result){
-					$scope.msg = {type:"success", text: $translate("admin.datasource.Connection-successfully-established"), dismiss:true};	
-					$scope.fadeMsg();
-				}
-				else{
-					$scope.msg = {type:"danger", text: $translate("admin.datasource.Could-not-connect-to-the-geographic-data-source")+".", dismiss:true};
-					$scope.fadeMsg();
-				}
-				$scope.$apply();
-			},
-			errorHandler : function(message, exception) {
-				$scope.msg = {type:"danger", text: message, dismiss:true};
-				$scope.fadeMsg();
-				$scope.$apply();
-			}
-		});
-	};
-	
-	/**
-	 * Clear the fields
-	 */
-	$scope.clearFields = function(){
-		if( ! $('#authenticationRequired').is(':checked')){
-			$scope.currentEntity.login = null;
-			$scope.currentEntity.password = null;
-		}
-	};
-	
-	$scope.clearFieldUrl= function(){
-		if(! $('#urlRequired').is(':checked')){
-			$scope.currentEntity.url=null;
-			$('#authenticationRequired').attr('checked',false);
-			$scope.clearFields();
-		}
-	};
-
-	$scope.externalDataSource;
-	
-	$scope.isUrlChecked = function(){
-		if ( $('#urlRequired').is(':checked')  ) {
-			return true;
-		}
-	}
-	
-	$scope.isUserChecked = function(){
-		if( $('#authenticationRequired').is(':checked') ){
-			return true;
-		}
-	}
-	
-	
-	$scope.fadeMsg = function(){
-		$("div.msg").show();
-		  
-		  	setTimeout(function(){
-		  		$("div.msg").fadeOut();
-		  	}, 3000);
-	}
-	
-	$(document).click(function() {
-		$("div.msg").css("display","none");
-    });
-	
-	
-	
-	
-	
-	
-	 /*-------------------------------------------------------------------
-     *                 POPUP - DATA SOURCE
-     *-------------------------------------------------------------------*/
-	$scope.selectDataSource = function () {
+    /**
+     *
+     */
+    $scope.selectAccessGroup = function () {
         var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/layer-config/popup/data-source-popup.jsp",
-            controller: SelectDataSourcePopUpController,
+            templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
+            controller: SelectAccessGroupPopUpController,
             resolve: {
-                dataSourceSelected: function () {
-                    return $scope.currentEntity.dataSource;
+                selectedGroups : function () {
+                    return $scope.selectedGroups;
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+            $log.log(result);
+
+            if (result != null && result.length > 0) {
+                $scope.selectedGroups = $scope.selectedGroups.concat(result);
+                for (var i = 0; i < result.length; i++) {
+                    var index = $scope.findByIdInArray($scope.originalGroups, result[i]);
+                    if (index == -1) {
+                        $scope.addGroups.push(result[i]);
+                    }
+                    var index2 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+                    if (index2 > -1) {
+                        $scope.removeGroups.splice(index2, 1);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     * @param entity
+     */
+    $scope.removeAccessGroup = function (entity) {
+        var index = $scope.selectedGroups.indexOf(entity);
+        var index2 = $scope.addGroups.indexOf(entity);
+        var index3 = $scope.originalGroups.indexOf(entity);
+        if (index > -1) {
+            $scope.selectedGroups.splice(index, 1);
+        }
+        if (index2 > -1) {
+            $scope.addGroups.splice(index2, 1);
+        }
+        if (index3 > -1) {
+            $scope.removeGroups.push(entity);
+        }
+    };
+
+    /**
+     *
+     * @param entity
+     */
+    $scope.removeCampo = function (entity) {
+        var index = $scope.selectedFields.indexOf(entity);
+        if (index > -1) {
+            $scope.selectedFields.splice(index, 1);
+        }
+
+        for(var i = 0; i < $scope.selectedFields.length; i++)
+        {
+            $scope.selectedFields[i].order = i;
+        }
+    }
+
+    /**
+     *
+     */
+    $scope.linkGroups = function() {
+        customSearchService.linkAccessGroup($scope.addGroups, $scope.currentEntity.id, {
+            callback: function(){
+                $scope.addGroups = [];
+                $scope.$apply();
+            },
+            errorHandler: function(error){
+                $log.error(error);
+            }
+        })
+    };
+
+    /**
+     *
+     * @param pesquisa
+     * @param grupoAcesso
+     */
+    $scope.unlinkGroups = function() {
+        customSearchService.unlinkAccessGroup($scope.removeGroups, $scope.currentEntity.id, {
+            callback: function(result){
+                $scope.removeGroups = [];
+                $scope.$apply();
+            },
+            errorHandler: function(error){
+                $log.error(error);
+            }
+        });
+    };
+
+    /*-------------------------------------------------------------------
+     *                 POPUP - CONFIGURAÇÕES DE CAMADA
+     *-------------------------------------------------------------------*/
+    $scope.selectLayerConfig = function () {
+
+        //Função responsável por chamar a popup de configurações de camada para associação.
+        var dialog = $modal.open({
+            templateUrl: 'modules/admin/ui/custom-search/popup/layer-config-popup.jsp',
+            controller: SelectLayerConfigPopUpController,
+            windowClass: 'xx-dialog',
+            resolve: {
+                dataSource : function () {
+                    return $scope.data.dataSource;
+                },
+                selectedLayer : function () {
+                    return $scope.currentEntity.layer;
                 }
             }
         });
 
         dialog.result.then(function (result) {
 
-            // assigns the selected data
-
-            if( $scope.currentEntity.dataSource && $scope.currentEntity.dataSource.id != result.id )
-            {
-                $scope.currentEntity.dataSource = result;
-                $scope.currentEntity.title = null;
-                $scope.currentEntity.name = null;
-            }
-            else
-            {
-                $scope.currentEntity.dataSource = result;
+            if (result) {
+                $scope.currentEntity.layer = result;
             }
 
         });
+
     };
-	
-//        dialog.result.then(function (result) {
-//            if (result != null) {
-//                $scope.data.fonteDados = result;
-//                if ($scope.currentEntity.camada != null && $scope.currentEntity.camada.fonteDados.id != result.id){
-//                    $scope.currentEntity.camada = null;
-//                }
-//                $scope.$apply;
-//            }
-//        });
-//    };
+
+    /*-------------------------------------------------------------------
+     *                 POPUP - FONTE DE DADOS
+     *-------------------------------------------------------------------*/
+    $scope.selectDataSource = function () {
+        var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/layer-config/popup/data-source-popup.jsp",
+            controller: SelectDataSourcePopUpController,
+            resolve: {
+                dataSourceSelected : function () {
+                    return $scope.currentEntity.dataSource;
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+            if (result != null) {
+                $scope.data.dataSource = result;
+                if ($scope.currentEntity.layer != null && $scope.currentEntity.layer.dataSource.id != result.id){
+                    $scope.currentEntity.layer = null;
+                }
+                $scope.$apply;
+            }
+        });
+    };
 
     /**
      *
      */
-    $scope.levelUp = function() {
+    $scope.subirNivel = function() {
 
         var rows = $scope.gridCamadasOptions.ngGrid.data;
 
@@ -575,15 +745,15 @@ function CustomSearchController( $scope, $injector, $log, $state, $timeout, $mod
         {
             if( rows[i].nome == $scope.currentCampoCamada.nome && rows[i].tipo ==  $scope.currentCampoCamada.tipo )
             {
-                if( rows[i].ordem > 0 )
+                if( rows[i].order > 0 )
                 {
                     var currentRow = rows[i];
                     rows[i] = rows[i-1];
                     rows[i-1] = currentRow;
-                    rows[i].ordem = i;
-                    rows[i-1].ordem = i - 1;
+                    rows[i].order = i;
+                    rows[i-1].order = i - 1;
 
-                    $scope.camposSelecionados = rows;
+                    $scope.selectedFields = rows;
 
                 }
             }
@@ -600,52 +770,83 @@ function CustomSearchController( $scope, $injector, $log, $state, $timeout, $mod
         {
             if( rows[i].nome == $scope.currentCampoCamada.nome && rows[i].tipo ==  $scope.currentCampoCamada.tipo )
             {
-                if( rows[i].ordem < rows.length - 1 )
+                if( rows[i].order < rows.length - 1 )
                 {
                     var currentRow = rows[i];
                     rows[i] = rows[i+1];
                     rows[i+1] = currentRow;
-                    rows[i].ordem = i;
-                    rows[i+1].ordem = i + 1;
-                    $scope.camposSelecionados = rows;
+                    rows[i].order = i;
+                    rows[i+1].order = i + 1;
+                    $scope.selectedFields = rows;
                     return;
                 }
             }
         }
         $scope.apply;
     }
-    
-    /*-------------------------------------------------------------------
-     *                 POPUP - LAYER CONFIG
-     *-------------------------------------------------------------------*/
-    
-    
-    $scope.selectConfiguracaoCamada = function () {
 
+    /*-------------------------------------------------------------------
+     *                 POPUP - CAMPOS DE CAMADA
+     *-------------------------------------------------------------------*/
+    $scope.addFields = function () {
         //Função responsável por chamar a popup de configurações de camada para associação.
         var dialog = $modal.open({
-            templateUrl: 'modules/administrativo/ui/pesquisa-personalizada/popup/configuracoes-camadas-popup.html',
-            controller: SelectConfiguracoesCamadasPopUpController,
-            windowClass: 'xx-dialog',
+            templateUrl: 'modules/admin/ui/custom-search/popup/add-fields-popup.jsp',
+            controller: AddFieldsPopupController,
             resolve: {
-                fonteDados : function () {
-                    return $scope.data.fonteDados;
+                layer: function () {
+                    return $scope.currentEntity.layer;
                 },
-                camadaSelecionada : function () {
-                    return $scope.currentEntity.camada;
+                layerExistingFields: function () {
+                    return $scope.selectedFields;
                 }
             }
         });
 
         dialog.result.then(function (result) {
 
-            if (result) {
-                $scope.currentEntity.camada = result;
+            if (result != null) {
+
+                $scope.currentLayerField = null;
+
+                $scope.selectedFields = result;
+
+                for(var i = 0; i < $scope.selectedFields.length; i++)
+                {
+                    $scope.selectedFields[i].order = i;
+                }
             }
-
         });
-
     };
-	
+
+    /**
+     *
+     * @param pesquisaId
+     */
+    $scope.loadlayerGroups = function(pesquisaId) {
+        customSearchService.listAccessGroupBySearchId(pesquisaId, {
+            callback: function(result) {
+                $scope.selectedGroups = result;
+                $scope.originalGroups = result.slice(0);
+
+                $scope.$apply();
+            },
+            errorHandler: function(error) {
+                $log.error(error);
+            }
+        })
+    };
+
+    /**
+     *
+     */
+    $scope.saveGroups = function() {
+        if ($scope.addGroups.length > 0) {
+            $scope.linkGroups();
+        }
+        if ($scope.removeGroups.length > 0) {
+            $scope.unlinkGroups();
+        }
+    }
 };
 
