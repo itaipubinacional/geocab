@@ -34,11 +34,11 @@
                     </div>
                 </tab>
                 <tab heading="<spring:message code="admin.access-group.Custom-Searchs"/>">
-                    <div ng-grid="gridCustomSearchss" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212); margin-top: 20px;">
+                    <div ng-grid="gridCustomSearch" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212); margin-top: 20px;">
                     </div>
                 </tab>
                 <tab heading="Ferramentas">
-                    <div ng-grid="gridFerramentas" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212); margin-top: 20px;">
+                    <div ng-grid="gridTools" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212); margin-top: 20px;">
                     </div>
                 </tab>
                 
