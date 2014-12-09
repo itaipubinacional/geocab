@@ -1,5 +1,7 @@
 package br.com.geocab.domain.service;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.directwebremoting.annotations.RemoteProxy;
@@ -16,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
+import br.com.geocab.domain.entity.accessgroup.AccessGroup;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.account.IUserRepository;
 
 /**
@@ -59,6 +63,12 @@ public class AccountService
 	 */
 	@Autowired
 	private SaltSource saltSource;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAccessGroupRepository accessGroupRepository;
 
 	
 	/*-------------------------------------------------------------------
@@ -80,7 +90,15 @@ public class AccountService
 		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); 
 		user.setPassword( encodedPassword );
 		
-		return this.userRepository.save( user );
+		User u = this.userRepository.save( user );
+		
+		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(1L);
+		
+		publicAccessGroup.getUsers().add(u);
+		
+		this.accessGroupRepository.save(publicAccessGroup);
+		
+		return u;
 	}
 		
 	/**
