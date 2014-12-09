@@ -920,7 +920,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * @param grupoAcesso
      */
     $scope.unlinkCustomSearch = function() {
-        accessGroupService.unlinkCustomSearch($scope.removerPesquisas, $scope.currentEntity.id, {
+        accessGroupService.unlinkCustomSearch($scope.removeSearchs, $scope.currentEntity.id, {
             callback: function(result){
                 $scope.msg = {type: "success", text: "Alterações efetuadas com sucesso", dismiss: true};
                 $scope.removeSearchs = [];
@@ -980,8 +980,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.loadSearchsById = function(grupoId){
         accessGroupService.listCustomSearchByAccessGroupId(grupoId, {
             callback: function(result){
-                $scope.pesquisasSelecionadas = result;
-                $scope.pesquisasOriginais = result.slice(0);
+                $scope.selectedSearchs = result;
+                $scope.originalSearchs = result.slice(0);
                 $scope.$apply();
             },
             errorHandler: function(error){
