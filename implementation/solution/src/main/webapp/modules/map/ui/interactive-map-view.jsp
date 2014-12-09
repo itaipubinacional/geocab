@@ -661,9 +661,9 @@
                             <br style="clear: both; ">
                             <div class="form-item position-relative" style="width: 100%; margin-top: 30px; margin-bottom: 5px">
                                 <select class="sidebar-content-search form-control" style="margin-bottom: 0; margin-top: 0"
-                                        ng-model="currentPesquisaPersonalizada"
-                                        ng-change="selectCustomSearch(currentPesquisaPersonalizada)"
-                                        ng-options="pesquisa.nome for pesquisa in customSearchs"
+                                        ng-model="currentCustomSearch"
+                                        ng-change="selectCustomSearch(currentCustomSearch)"
+                                        ng-options="search.name for search in customSearchs"
                                         ng-required="true" ng-hover>
                                     <option value="">Selecione...</option>
                                 </select>
@@ -674,21 +674,21 @@
                             </div>
                             <hr style="border-color: #d9d9d9; position: absolute;top: 155px;right: 15px;left: 15px;"/>
 
-                            <button class="btn btn-primary" ng-disabled="currentPesquisaPersonalizada == null || currentPesquisaPersonalizada.camada == null"
+                            <button class="btn btn-primary" ng-disabled="currentCustomSearch == null || currentCustomSearch.layer == null"
                                     style="width: 90px; height: 30px; position: absolute;top: 190px;" ng-click="listFieldsLayersSearch()">Pesquisa</button>
                             <br/>
                             <div style="overflow-y: auto;position: absolute;top: 250px;bottom: 0px;left: 20px;right: 0px;">
-                                <div ng-repeat="pesquisa in currentPesquisaPersonalizada.camposCamada" style="width: 90%;">
-                                    <div class="form-group" ng-if="pesquisa.tipo == 'DATETIME'">
-                                        <label>{{ pesquisa.rotulo ? pesquisa.rotulo : pesquisa.nome }}</label>
+                                <div ng-repeat="search in currentCustomSearch.layerField" style="width: 90%;">
+                                    <div class="form-group" ng-if="search.type == 'DATETIME'">
+                                        <label>{{ search.label ? search.label : search.name }}</label>
                                         <div class="input-group input-daterange" id="item_{{$index}}" date-picker>
                                             <input type="text" class="form-control" name="start" />
                                             <span class="input-group-addon">-</span>
                                             <input type="text" class="form-control" name="end" />
                                         </div>
                                     </div>
-                                    <input ng-if="pesquisa.tipo == 'STRING'" id="item_{{$index}}" placeholder="{{pesquisa.rotulo ? pesquisa.rotulo : pesquisa.nome}}" type="text" class="form-control" maxlength="40">
-                                    <div class="form-group row" ng-if="pesquisa.tipo == 'NUMBER'" id="item_{{$index}}">
+                                    <input ng-if="search.type == 'STRING'" id="item_{{$index}}" placeholder="{{search.label ? search.label : search.name}}" type="text" class="form-control" maxlength="40">
+                                    <div class="form-group row" ng-if="search.type == 'NUMBER'" id="item_{{$index}}">
                                         <div class="col-sm-5">
                                             <select class="form-control" style="padding: 4px">
                                                 <option value="=">=</option>
@@ -702,7 +702,7 @@
                                             </select>
                                         </div>
                                         <div class="col-sm-7">
-                                            <input placeholder="{{pesquisa.rotulo ? pesquisa.rotulo : pesquisa.nome}}" type="text" class="form-control" maxlength="40">
+                                            <input placeholder="{{search.label ? search.label : search.name}}" type="text" class="form-control" maxlength="40">
                                         </div>
                                     </div>
                                     </br>

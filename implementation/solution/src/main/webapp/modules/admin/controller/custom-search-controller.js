@@ -737,13 +737,13 @@
     /**
      *
      */
-    $scope.subirNivel = function() {
+    $scope.levelUp = function() {
 
-        var rows = $scope.gridCamadasOptions.ngGrid.data;
+        var rows = $scope.gridlayersOptions.ngGrid.data;
 
         for(var i = 0; i < rows.length; i++)
         {
-            if( rows[i].nome == $scope.currentCampoCamada.nome && rows[i].tipo ==  $scope.currentCampoCamada.tipo )
+            if( rows[i].name == $scope.currentLayerField.name && rows[i].type ==  $scope.currentLayerField.type )
             {
                 if( rows[i].order > 0 )
                 {
@@ -764,11 +764,11 @@
     /**
      *
      */
-    $scope.descerNivel = function() {
-        var rows = $scope.gridCamadasOptions.ngGrid.data;
+    $scope.levelDown = function() {
+        var rows = $scope.gridlayersOptions.ngGrid.data;
         for(var i = 0; i < rows.length; i++)
         {
-            if( rows[i].nome == $scope.currentCampoCamada.nome && rows[i].tipo ==  $scope.currentCampoCamada.tipo )
+            if( rows[i].name == $scope.currentLayerField.name && rows[i].type ==  $scope.currentLayerField.type )
             {
                 if( rows[i].order < rows.length - 1 )
                 {
