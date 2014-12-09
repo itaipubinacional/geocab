@@ -41,7 +41,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
-            $scope.listLayersByFilters($scope.data.filter, $scope.currentPage.pageable);
+            $scope.listLayersByFilters($scope.data.filter,$scope.currentPage.pageable);
         }
     });
 

@@ -56,6 +56,8 @@
 	<script type="text/javascript" src="modules/admin/controller/popup/select-layer-group-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-access-group-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/select-layer-config-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/add-fields-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-layers-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-custom-search-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>

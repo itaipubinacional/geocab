@@ -244,7 +244,7 @@ public class CustomSearchService
 	 * @param customSearch (Survey List customized to be associated with the access group).
 	 * @param AccessGroup (Access group to be associated).
 	 */
-	public void linkAccessGroupGrupoAcesso( List<AccessGroup> accessGroups, Long customSearchId )
+	public void linkAccessGroup( List<AccessGroup> accessGroups, Long customSearchId )
 	{
 		CustomSearch customSearch = new CustomSearch(customSearchId);
 		for (AccessGroup accessGroup : accessGroups)
