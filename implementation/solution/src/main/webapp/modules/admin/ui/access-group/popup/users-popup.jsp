@@ -26,7 +26,6 @@
 
 		<br style="clear: both"/>
 
-
 		<div ng-grid="gridOptions" style="height: 350px; border: 1px solid rgb(212,212,212);"></div>
 
 		<div class="grid-elements-count" ng-show="currentPage.totalElements > 0">

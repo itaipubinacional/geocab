@@ -1,6 +1,7 @@
 package br.com.geocab.domain.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -259,32 +260,38 @@ public class AccessGroupService
 	
 	/**
 	 * 
-	 * @param grupoAcessoId
-	 * @param usuarios
+	 * @param accessGroupId
+	 * @param users
 	 */
-	@Transactional(readOnly=false)
 	public void updateAccessGroupUsers(Long accessGroupId, Set<User> users)
 	{
 		// Access Group isn't allow to insert/remove users
 		Assert.isTrue(accessGroupId != 1);
-	 
-		// put users on public access group 
-		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(1L);
-		
-		for (User user: users) 
-		{
-			user = this.userRepository.save(user);
-			
-			//Add the user on public group
-			if (!publicAccessGroup.getUsers().contains(user))
-			{
-				publicAccessGroup.getUsers().add(user);
-			}
-		}
-		this.accessGroupRepository.save(publicAccessGroup);
+//	 
+//		// put users on public access group 
+//		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(1L);
+//		
+//		for (User user: users) 
+//		{
+//			user = this.userRepository.save(user);
+//			
+//			//Add the user on public group
+//			if (!publicAccessGroup.getUsers().contains(user))
+//			{
+//				publicAccessGroup.getUsers().add(user);
+//			}
+//		}
+//		this.accessGroupRepository.save(publicAccessGroup);
 		
 		AccessGroup accessGroup = this.accessGroupRepository.findOne(accessGroupId);
-		accessGroup.setUsers(users);
+		
+		Set<User> usersDB = new HashSet<User>();
+		for(User user : users) {
+			User userDB = userRepository.findOne(user.getId());
+			usersDB.add(userDB);
+		}
+		
+		accessGroup.setUsers(usersDB);
 		this.accessGroupRepository.save(accessGroup);
 	}
 	

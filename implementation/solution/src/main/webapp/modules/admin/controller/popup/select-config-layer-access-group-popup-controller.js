@@ -6,12 +6,14 @@
  * @param $modalInstance
  * @constructor
  */
-function SelectConfiguracoesCamadasGrupoAcessoPopUpController( $scope, $modalInstance, camadasSelecionadas, $log ) {
+function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, selectedLayers, $log, $importService ) {
 
     /*-------------------------------------------------------------------
      * 		 				 	EVENTS
      *-------------------------------------------------------------------*/
 
+	$importService("layerGroupService");
+	
     /**
      *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
      *  Quando o evento é disparado, configuramos o pager do spring-data
@@ -74,9 +76,9 @@ function SelectConfiguracoesCamadasGrupoAcessoPopUpController( $scope, $modalIns
             $scope.selectedEntity = row.entity;
         },
         columnDefs: [
-            {displayName:'Simbologia', field:'legenda', sortable:false, width: '120px', cellTemplate: IMAGE_LEGENDA},
-            {displayName:'Título', field: 'titulo'},
-            {displayName:'Nome', field:'nome'}
+            {displayName:'Simbologia', field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGENDA},
+            {displayName:'Título', field: 'title'},
+            {displayName:'Nome', field:'name'}
         ]
     };
 
@@ -186,7 +188,7 @@ function SelectConfiguracoesCamadasGrupoAcessoPopUpController( $scope, $modalIns
 
         $scope.showLoading = true;
 
-        grupoCamadasService.listConfiguracoesCamadasByFilter( filter, null, pageRequest, {
+        layerGroupService.listLayersConfigurationByFilter( filter, null, pageRequest, {
             callback : function(result) {
                 $scope.currentPage = result;
                 $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
@@ -197,8 +199,8 @@ function SelectConfiguracoesCamadasGrupoAcessoPopUpController( $scope, $modalIns
 
 
                 //Função responsável por retirar os registros que já estavam marcados antes da abertura da pop-up
-                if (camadasSelecionadas) {
-                    angular.forEach( camadasSelecionadas, function(data, index) {
+                if (selectedLayers) {
+                    angular.forEach( selectedLayers, function(data, index) {
                         var i = $scope.findName(data.nome, $scope.currentPage.content);
                         if (i > -1) {
                             $scope.currentPage.content.splice(i, 1);
