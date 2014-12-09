@@ -71,7 +71,7 @@ public class CustomSearch extends AbstractEntity implements Serializable
 	 */
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval=true)
 	@JoinColumn(referencedColumnName="id", name="pesquisa_id")
-	@OrderBy(value = "ordem") 
+	@OrderBy(value = "orderLayer") 
 	private Set<LayerField> layerFields = new HashSet<LayerField>();
 	
 	

@@ -40,17 +40,17 @@ public class FieldLayer extends AbstractEntity implements Serializable
 	 */
 	private static final long serialVersionUID = -5049878026364017108L;
 	/**
-	 * nome do {@link FieldLayer}
+	 * name do {@link FieldLayer}
 	 */
 	@NotEmpty
 	@Column(nullable=false, length=144)
-	private String nome;
+	private String name;
 	/**
-	 * tipo do {@link FieldLayer}
+	 * type do {@link FieldLayer}
 	 */
 	@NotNull
 	@Enumerated(EnumType.ORDINAL)
-	private TypeFieldLayer tipo;
+	private TypeFieldLayer type;
 	/**
 	 * rótulo do {@link FieldLayer}
 	 */
@@ -60,7 +60,7 @@ public class FieldLayer extends AbstractEntity implements Serializable
 	 * ordem do {@link FieldLayer}
 	 */
 	@Column
-	private int orderCampoCamada;
+	private int orderLayerField;
 	
 	
 	/*-------------------------------------------------------------------
@@ -82,15 +82,15 @@ public class FieldLayer extends AbstractEntity implements Serializable
 	}
 	/**
 	 * @param id
-	 * @param nome
+	 * @param name
 	 * @param rotulo
 	 */
-	public FieldLayer( Long id, String nome, String label, int orderCampoCamada )
+	public FieldLayer( Long id, String name, String label, int orderLayerField )
 	{
 		this.setId(id);
-		this.setNome(nome);
+		this.setName(name);
 		this.setLabel(label);
-		this.setOrderCampoCamada(orderCampoCamada);
+		this.setOrderLayerField(orderLayerField);
 	}
 	
 	/*-------------------------------------------------------------------
@@ -106,9 +106,9 @@ public class FieldLayer extends AbstractEntity implements Serializable
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + orderCampoCamada;
-		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + orderLayerField;
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 	/* (non-Javadoc)
@@ -126,13 +126,13 @@ public class FieldLayer extends AbstractEntity implements Serializable
 			if (other.label != null) return false;
 		}
 		else if (!label.equals(other.label)) return false;
-		if (nome == null)
+		if (name == null)
 		{
-			if (other.nome != null) return false;
+			if (other.name != null) return false;
 		}
-		else if (!nome.equals(other.nome)) return false;
-		if (orderCampoCamada != other.orderCampoCamada) return false;
-		if (tipo != other.tipo) return false;
+		else if (!name.equals(other.name)) return false;
+		if (orderLayerField != other.orderLayerField) return false;
+		if (type != other.type) return false;
 		return true;
 	}
 	
@@ -141,32 +141,32 @@ public class FieldLayer extends AbstractEntity implements Serializable
 	 *-------------------------------------------------------------------*/
 	
 	/**
-	 * @return the nome
+	 * @return the name
 	 */
-	public String getNome()
+	public String getName()
 	{
-		return nome;
+		return name;
 	}
 	/**
-	 * @param nome the nome to set
+	 * @param name the name to set
 	 */
-	public void setNome(String nome)
+	public void setName(String name)
 	{
-		this.nome = nome;
+		this.name = name;
 	}
 	/**
-	 * @return the tipo
+	 * @return the type
 	 */
-	public TypeFieldLayer getTipo()
+	public TypeFieldLayer getType()
 	{
-		return tipo;
+		return type;
 	}
 	/**
-	 * @param tipo the tipo to set
+	 * @param type the type to set
 	 */
-	public void setTipo(TypeFieldLayer tipo)
+	public void setType(TypeFieldLayer type)
 	{
-		this.tipo = tipo;
+		this.type = type;
 	}
 	/**
 	 * @return the label
@@ -183,18 +183,18 @@ public class FieldLayer extends AbstractEntity implements Serializable
 		this.label = label;
 	}
 	/**
-	 * @return the orderCampoCamada
+	 * @return the orderLayerField
 	 */
-	public int getOrderCampoCamada()
+	public int getOrderLayerField()
 	{
-		return orderCampoCamada;
+		return orderLayerField;
 	}
 	/**
-	 * @param orderCampoCamada the orderCampoCamada to set
+	 * @param orderLayerField the orderLayerField to set
 	 */
-	public void setOrderCampoCamada(int orderCampoCamada)
+	public void setOrderLayerField(int orderLayerField)
 	{
-		this.orderCampoCamada = orderCampoCamada;
+		this.orderLayerField = orderLayerField;
 	}
 	
 }

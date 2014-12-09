@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log, $location) {
+function SelectLayersPopUpController($scope, $modalInstance ,currentEntity, $log, $location) {
 
 
 	$scope.msg = null;
@@ -57,8 +57,8 @@ function SelectLayersPopUpController($scope, $modalInstance, currentEntity, $log
 
         $scope.currentEntity = currentEntity;
         $scope.selectedItemsGrid = [{
-            nome:currentEntity.nome,
-            titulo:currentEntity.titulo
+            name:currentEntity.name,
+            title:currentEntity.title
         }]
 		$scope.listExternalLayerByFilters(currentEntity.dataSource);
 	};

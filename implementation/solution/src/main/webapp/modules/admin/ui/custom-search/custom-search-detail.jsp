@@ -15,35 +15,35 @@
         <div class="content-tab">
 
             <div class="form-item position-relative" style="width: 250px; margin-bottom: 15px;">
-                <b class="detail-label"><spring:mesage code="admin.custom-search.Name" /></b>
+                <b class="detail-label"><spring:message code="admin.custom-search.Name" /></b>
                 <br>
                 <span class="detail-value">{{currentEntity.name}}</span>
             </div>
             <br/>
 
             <div class="form-item position-relative" style="width: 250px; margin-bottom: 15px;">
-                <b class="detail-label"><spring:mesage code="admin.custom-search.Data-source" /></b>
+                <b class="detail-label"><spring:message code="admin.custom-search.Data-source" /></b>
                 <br>
-                <span class="detail-value">{{currentEntity.layer.fonteDados.name}}</span>
+                <span class="detail-value">{{currentEntity.layer.dataSource.name}}</span>
             </div>
             <br/>
 
             <div class="form-item position-relative">
-                <b class="detail-label"><spring:mesage code="admin.custom-search.Layer-name" /></b>
+                <b class="detail-label"><spring:message code="admin.custom-search.Layer-name" /></b>
                 <br>
                 <span class="detail-value">{{currentEntity.layer.name}}</span>
             </div>
             <br/>
 
             <div class="form-item position-relative">
-                <b class="detail-label"><spring:mesage code="admin.custom-search.Layer-title" /></b>
+                <b class="detail-label"><spring:message code="admin.custom-search.Layer-title" /></b>
                 <br>
-                <span class="detail-value">{{currentEntity.layer.titulo}}</span>
+                <span class="detail-value">{{currentEntity.layer.title}}</span>
             </div>
             <br/>
 
             <div class="form-item position-relative">
-                <b class="detail-label"><spring:mesage code="admin.custom-search.Symbology" /></b>
+                <b class="detail-label"><spring:message code="admin.custom-search.Symbology" /></b>
                 <br>
                 <img style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.layer.legenda}}"/>
             </div>
@@ -58,7 +58,8 @@
                 <tab heading="Acess">
 
                     <div class="form-item position-relative" style="width: 100%;">
-                        <div ng-grid="gridAcessOptions" style="height: 300px; border: 1px solid rgb(212,212,212); margin-top: 40px;">
+                        <div ng-grid="gridGroupOptions" style="height: 300px; border: 1px solid rgb(212,212,212); margin-top: 40px;">
+                   
                         </div>
                     </div>
 

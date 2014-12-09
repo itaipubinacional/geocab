@@ -190,7 +190,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
 				$scope.showLoading = false;
 
                 //Function responsible for marking the records that were already tagged prior to the opening of pop-up
-                var item = fonteDadoSelecionado;
+                var item = dataSourceSelected;
                 if (item) {
                     angular.forEach( $scope.currentPage.content, function(data, index) {
                         if ( data.id == item.id ){
