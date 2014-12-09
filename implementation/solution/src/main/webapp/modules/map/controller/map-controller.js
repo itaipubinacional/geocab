@@ -178,6 +178,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      *
      */
     $scope.currentLayerField = {};
+    
+    /**
+    *
+    * @type {Array}
+    */
+   $scope.searchs = [];
+
+   /**
+    *
+    * @type {Array}
+    */
+   $scope.allSearchs = [];
 
     /**
      *
@@ -772,22 +784,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         if( isPesquisa )
         {
-            var index = node.nome.indexOf(":");
-            var enderecoFonteDados = node.fonteDados.endereco.lastIndexOf("geoserver/");
-            var tipoCamada = node.nome.substring(0,index);
-            var nomeCamada = node.nome.substring(index+1,node.nome.length);
-            var urlFormatada = node.fonteDados.endereco.substring(0, enderecoFonteDados+10)+tipoCamada+'/wms';
+            var index = node.name.indexOf(":");
+            var dataSourceAddress = node.dataSource.url.lastIndexOf("geoserver/");
+            var layerType = node.name.substring(0,index);
+            var layerName = node.name.substring(index+1,node.name.length);
+            var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress+10)+layerType+'/wms';
         }
         else
         {
             var index = node.name.indexOf(":");
-            var enderecoFonteDados = node.fonteDadosEndereco.lastIndexOf("geoserver/");
-            var tipoCamada = node.name.substring(0,index);
-            var nomeCamada = node.name.substring(index+1,node.name.length);
-            var urlFormatada = node.fonteDadosEndereco.substring(0, enderecoFonteDados+10)+tipoCamada+'/wms';
+            var dataSourceAddress = node.fonteDadosEndereco.lastIndexOf("geoserver/");
+            var layerType = node.name.substring(0,index);
+            var layerName = node.name.substring(index+1,node.name.length);
+            var formattedUrl = node.dataSource.substring(0, dataSourceAddress+10)+layerType+'/wms';
         }
 
-        return {'name': nomeCamada, 'url': urlFormatada};
+        return {'name': layerName, 'url': formattedUrl};
 
     }
 
@@ -1541,9 +1553,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.listFieldsLayersSearch = function(){
 
         // deselect the old research and remove the map
-        for( var i = 0; i < $scope.pesquisas.length; i++ )
+        for( var i = 0; i < $scope.searchs.length; i++ )
         {
-            $scope.map.removeLayer($scope.pesquisas[i].wmsLayer);
+            $scope.map.removeLayer($scope.searchs[i].wmsLayer);
             $scope.allPesquisas[0].children[i].selected = false;
         }
 
@@ -1552,7 +1564,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         var wmsSource = new ol.source.TileWMS({
             url: item.url,
             params:{
-                'LAYERS': $scope.currentCustomSearch.layer.nome
+                'LAYERS': $scope.currentCustomSearch.layer.name
             }
         });
 
@@ -1575,7 +1587,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         var conectorLike;
         for (var i = 0; i < campos.length; i++)
-        {
+        { 
+        	//estou aqui
             campos[i].valorPesquisa = '';
 
             if( firstTime ) {
@@ -1680,23 +1693,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             wmsSource.updateParams(filterParams);
         }
 
-        $scope.pesquisas.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'pesquisa': $scope.currentCustomSearch});
+        $scope.searchs.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'pesquisa': $scope.currentCustomSearch});
 
         var item = {};
-        item.label = 'Resultado pesquisas';
+        item.label = 'Resultado searchs';
         item.type = 'grupo'
 
         item.children = [];
 
         var lastSearchName;
-        for(var i =0; i < $scope.pesquisas.length ; ++i)
+        for(var i =0; i < $scope.searchs.length ; ++i)
         {
 
-            $scope.pesquisas[i].label = "Pesquisa "+ (i+1);
-            $scope.pesquisas[i].type = 'camada';
-            $scope.pesquisas[i].name = "pesquisa"+ (i+1);
+            $scope.searchs[i].label = "Pesquisa "+ (i+1);
+            $scope.searchs[i].type = 'camada';
+            $scope.searchs[i].name = "pesquisa"+ (i+1);
 
-            item.children.push($scope.pesquisas[i]);
+            item.children.push($scope.searchs[i]);
             lastSearchName = "Pesquisa "+ (i+1);
         }
 
