@@ -58,7 +58,7 @@ function SelectLayerConfigPopUpController( $scope, $modalInstance, dataSource, s
         '</div>';
 
     /**
-     * Configuraï¿½ï¿½es gerais da ng-grid.
+     * Configurações gerais da ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
     $scope.gridOptions = {

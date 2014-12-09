@@ -6,35 +6,45 @@
  * @param $modalInstance
  * @constructor
  */
-function SelectCustomSearchPopUpController($scope, $modalInstance, selectedSearchs, $log, $importService) {
+function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  selectedSearchs, $log, $importService) {
 
-	$importService("customSearchService");
-	
+    $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
+
     /*-------------------------------------------------------------------
      * 		 				 	EVENTS
      *-------------------------------------------------------------------*/
 
+    $importService("customSearchService");
+    
     /**
-     *  Handler that listens to each time the user makes the sorting in tables programmatically/ng-grid.
-     *  When the event is fired, we configure the pager of the spring-date
-     *  and we call again the query, considering also the filter State (@see $scope. date. filter)
+     *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
+     *  Quando o evento é disparado, configuramos o pager do spring-data
+     *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
      */
     $scope.$on('ngGridEventSorted', function (event, sort) {
 
-        // ccompares the objects to ensure that the event is run only once does not loop
+        if(event.targetScope.gridId != $scope.gridOptions.gridId)
+        {
+            return;
+        }
+
+        // compara os objetos para garantir que o evento seja executado somente uma vez que não entre em loop
         if (!angular.equals(sort, $scope.gridOptions.sortInfo)) {
             $scope.gridOptions.sortInfo = angular.copy(sort);
 
-            //Order of spring-data
+            //Order do spring-data
             var order = new Order();
             order.direction = sort.directions[0].toUpperCase();
             order.property = sort.fields[0];
 
-            //Sort of spring-data
+            //Sort do spring-data
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
-            $scope.listByFilters($scope.data.filter, $scope.data.fonteDados.id, $scope.currentPage.pageable);
+            $scope.itensMarcados = $scope.gridOptions.selectedItems.slice(0);
+            $scope.gridOptions.selectedItems.length = 0;
+
+            $scope.listByFilters($scope.data.filter, $scope.currentPage.pageable);
         }
     });
 
@@ -42,13 +52,27 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, selectedSearc
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
 
+    /**
+     *
+     * @type {null}
+     */
     $scope.selectedEntity = null;
 
+    /**
+     *
+     * @type {Array}
+     */
     $scope.gridSelectedItems = [];
 
     /**
-     * Handler that captures the events marking
-     * of grid
+     *
+     * @type {null}
+     */
+    $scope.itensMarcados = [];
+
+    /**
+     * Handler que captura os eventos de marcação
+     * da grid
      * @param rows
      */
 //    function toogleSelection (row) {
@@ -56,8 +80,8 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, selectedSearc
 //        $scope.close();
 //    };
 
-    var IMAGE_LEGENDA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-        '<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legenda}}"/>' +
+    var IMAGE_LEGENDA_PESQUISA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+        '<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.camada.legenda}}"/>' +
         '</div>';
 
     /**
@@ -72,29 +96,54 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, selectedSearc
         showSelectionCheckbox: true,
         selectedItems: $scope.gridSelectedItems,
         rowHeight: 50,
-        afterSelectionChange: function (row, event) {
-            $scope.selectedEntity = row.entity;
+        afterSelectionChange: function (rowItem, event){
+            if (rowItem.length > 0) {
+                var i;
+                for (var rowItemIndex = 0; rowItemIndex < rowItem.length; rowItemIndex++) {
+                    if (rowItem[rowItemIndex].selected){
+                        i = $scope.findByIdInArray($scope.itensMarcados, rowItem[rowItemIndex].entity);
+                        if (i == -1)
+                            $scope.itensMarcados.push(rowItem[rowItemIndex].entity);
+                    } else {
+                        i = $scope.findByIdInArray($scope.itensMarcados, rowItem[rowItemIndex].entity);
+                        if (i > -1)
+                            $scope.itensMarcados.splice(i, 1);
+                    }
+                }
+            } else {
+                var i;
+                if (rowItem.selected){
+                    i = $scope.findByIdInArray($scope.itensMarcados, rowItem.entity);
+                    if (i == -1)
+                        $scope.itensMarcados.push(rowItem.entity);
+                } else {
+                    i = $scope.findByIdInArray($scope.itensMarcados, rowItem.entity);
+                    if (i > -1)
+                        $scope.itensMarcados.splice(i, 1);
+                }
+            }
         },
         columnDefs: [
+            {displayName: 'Simbologia', field: 'layer.legend', sortable: false, width: '95px', cellTemplate: IMAGE_LEGENDA_PESQUISA},
             {displayName: 'Nome', field: 'name'},
-            {displayName: 'Camada', field: 'layer.name'}
+            {displayName: 'Camada', field: 'layer.title'}
 
         ]
     };
 
     /**
-     * Variable that stores the State of the paging
-     * to render the pager and also to make requisitions of
-     * new pages, containing the State of the Sort included.
+     * Variável que armazena o estado da paginação
+     * para renderizar o pager e também para fazer as requisições das
+     * novas páginas, contendo o estado do Sort incluído.
      *
      * @type PageRequest
      */
     $scope.currentPage;
 
     /**
-     * Variable to store the form attributes
-     * not fit on an entity. Ex.:
-     * @filter - Query filter
+     * Variável para armazenar atributos do formulário que
+     * não cabem em uma entidade. Ex.:
+     * @filter - Filtro da consulta
      */
     $scope.data = {
         filter: null
@@ -115,9 +164,11 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, selectedSearc
      * 		 				 	  BEHAVIORS
      *-------------------------------------------------------------------*/
     /**
-     * Performs the query when displaying a pop-up
+     * Realiza a consulta ao exibir a pop-up
      */
     $scope.initialize = function () {
+
+        $scope.itensMarcados = pesquisasSelecionadas.slice(0);
 
         var pageRequest = new PageRequest();
         pageRequest.size = 6;
@@ -130,12 +181,12 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, selectedSearc
         $scope.pageRequest.sort = new Sort();
         $scope.pageRequest.sort.orders = [ order ];
 
-        $scope.listByFilters(null, pageRequest);
+        $scope.listByFilters(null, $scope.pageRequest);
     };
 
     /**
-     * Configures the pageRequest as the visual component pager
-     * and calls the listing service, considering the current filter on the screen.
+     * Configura o pageRequest conforme o componente visual pager
+     * e chama o serviço de listagem, considerando o filtro corrente na tela.
      *
      * @see currentPage
      * @see data.filter
@@ -147,16 +198,16 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, selectedSearc
     };
 
     /**
-     * Function responsible for closing the pop without performing other actions
+     * Função responsável por fechar a pop sem executar outras ações
      */
     $scope.close = function (fechar) {
         $scope.msg = null;
 
-        if (fechar) {
-            $modalInstance.close();
+        if (fechar == false) {
+            $modalInstance.close(false);
 
         } else {
-            $modalInstance.close($scope.gridOptions.selectedItems);
+            $modalInstance.close($scope.itensMarcados);
         }
 
     };
@@ -169,39 +220,41 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, selectedSearc
      */
     $scope.findName = function(string, list) {
         for (var index = 0; index < list.length; index++) {
-            if (list[index].nome == string) return index
+            if (list[index].nome == string) return index;
         }
         return -1;
     }
 
     /**
-     * Performs the query records, whereas filter, paging and sorting.
-     * When ok, change the State of the screen to list.
+     * Realiza a consulta de registros, considerando filtro, paginação e sorting.
+     * Quando ok, muda o estado da tela para list.
      *
      * @see data.filter
      * @see currentPage
      */
     $scope.listByFilters = function (filter, pageRequest) {
 
+        $scope.itensMarcados = $scope.gridOptions.selectedItems.length > 0 ? $scope.gridOptions.selectedItems.slice(0): $scope.itensMarcados;
+        $scope.gridOptions.selectedItems.length = 0;
+
         $scope.showLoading = true;
 
-        customSearchService.listCustomSearchByFilters(filter, pageRequest, {
+        pesquisaPersonalizadaService.listPesquisaPersonalizadaByFilters(filter, pageRequest, {
             callback: function (result) {
                 $scope.currentPage = result;
-                $scope.currentPage.pageable.pageNumber++;//To do the bind with the pagination
+                $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
                 $scope.showLoading = false;
                 $scope.$apply();
 
-                //Function responsible for removing the records that were already tagged prior to the opening of pop-up
-                if (selectedSearchs) {
-                    angular.forEach( selectedSearchs, function(data, index) {
-                        var i = $scope.findName(data.nome, $scope.currentPage.content);
+                //Função responsável por marcar os registros na grid que já estavam marcados
+                if ($scope.itensMarcados) {
+                    angular.forEach( $scope.itensMarcados, function(data, index) {
+                        var i = $scope.findByIdInArray($scope.currentPage.content, data);
                         if (i > -1) {
-                            $scope.currentPage.content.splice(i, 1);
+                            $scope.gridOptions.selectItem(i, true);
                         }
                     });
                 };
-
 
                 $scope.showLoading = false;
                 $scope.$apply();
