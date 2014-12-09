@@ -93,7 +93,16 @@
                     <div ng-grid="gridCustomSearch" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
                     </div>
                 </tab>
-                
+                 <tab heading="Ferramentas" ng-if="currentEntity.id != null">
+                    <div style="margin-bottom: 20px; float: right;">
+                        <button class="btn btn-primary" ng-click="associateTools()" type="button">Associar ferramentas</button>
+                        <button class="btn btn-success larger-btn" ng-click="saveAssotiations()"><spring:message code="admin.access-group.Save"/></button>
+                    </div>
+                    <br style="celear: both">
+                    
+                    <div ng-grid="gridTools" style=" margin-top: 35px; height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
+                    </div>
+                </tab>
             </tabset>
         </div>
     </form>

@@ -6,12 +6,14 @@
  * @param $modalInstance
  * @constructor
  */
-function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSelecionadas, $log ) {
+function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log, $importService ) {
 
     /*-------------------------------------------------------------------
      * 		 				 	EVENTS
      *-------------------------------------------------------------------*/
 
+	$importService("accessGroupService");
+	
     /**
      *  Handler that listens to each time the user makes the sorting in tables programmatically/ng-grid.
      *  When the event is fired, we configure the pager of the spring-date
@@ -63,7 +65,7 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
     $scope.gridOptions = {
-        data: 'ferramentas',
+        data: 'tools',
         multiSelect: true,
         useExternalSorting: true,
         headerRowHeight: 45,
@@ -75,9 +77,8 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
             $scope.selectedEntity = row.entity;
         },
         columnDefs: [
-            {displayName:'Descrição', field:'descricao'},
-            {displayName:'Nome', field: 'nome'}
-
+            {displayName:'Descrição', field:'description'},
+            {displayName:'Nome', field: 'name'}
         ]
     };
 
@@ -178,18 +179,18 @@ function SelectFerramentasPopUpController( $scope, $modalInstance, ferramentasSe
 
         $scope.showLoading = true;
 
-        grupoAcessoService.listFerramentas( {
+        accessGroupService.listTools( {
             callback : function(result) {
-                $scope.ferramentas = result;
+                $scope.tools = result;
                 $scope.showLoading = false;
                 $scope.$apply();
 
                 //Function responsible for marking the records that were already tagged prior to the opening of pop-up
 
-                if (ferramentasSelecionadas != null) {
-                    var items = ferramentasSelecionadas;
+                if (selectedTools != null) {
+                    var items = selectedTools;
                     if (items.length > 0) {
-                        angular.forEach( $scope.ferramentas, function(data, index) {
+                        angular.forEach( $scope.tools, function(data, index) {
                             data.ordem = null;
                             angular.forEach( items, function(item) {
                                 if ( data.nome == item.nome ){
