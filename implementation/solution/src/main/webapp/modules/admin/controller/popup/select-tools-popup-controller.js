@@ -11,32 +11,8 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
     /*-------------------------------------------------------------------
      * 		 				 	EVENTS
      *-------------------------------------------------------------------*/
-
-	$importService("accessGroupService");
 	
-    /**
-     *  Handler that listens to each time the user makes the sorting in tables programmatically/ng-grid.
-     *  When the event is fired, we configure the pager of the spring-date
-     *  and we call again the query, considering also the filter State (@see $scope. date. filter)
-     */
-    $scope.$on('ngGridEventSorted', function(event, sort) {
-
-        // compares the objects to ensure that the event is run only once does not loop
-        if ( !angular.equals(sort, $scope.gridOptions.sortInfo) ) {
-            $scope.gridOptions.sortInfo = angular.copy(sort);
-
-            //Order of spring-data
-            var order = new Order();
-            order.direction = sort.directions[0].toUpperCase();
-            order.property = sort.fields[0];
-
-            //Sort of spring-data
-//            $scope.currentPage.pageable.sort = new Sort();
-//            $scope.currentPage.pageable.sort.orders = [ order ];
-
-            $scope.list();
-        }
-    });
+	$importService("accessGroupService");
 
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
@@ -47,58 +23,22 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
     $scope.gridSelectedItems = [];
 
     /**
-     * Handler that captures the events marking
-     * da grid
-     * @param rows
+     * Variável para armazenar atributos do formulário que
+     * não cabem em uma entidade. Ex.:
+     * @filter - Filtro da consulta
      */
-//    function toogleSelection (row) {
-//        entity[configuracaoCamadaProperty] = row.entity;
-//        $scope.close();
-//    };
-
-    var IMAGE_LEGENDA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-        '<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legenda}}"/>' +
-        '</div>';
-
-    /**
-     * General Settings da ng-grid.
-     * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
-     */
-    $scope.gridOptions = {
-        data: 'tools',
-        multiSelect: true,
-        useExternalSorting: true,
-        headerRowHeight: 45,
-        showSelectionCheckbox: true,
-        filterOptions: $scope.data,
-        selectedItems: $scope.gridSelectedItems,
-        rowHeight: 50,
-        afterSelectionChange: function(row, event){
-            $scope.selectedEntity = row.entity;
-        },
-        columnDefs: [
-            {displayName:'Descrição', field:'description'},
-            {displayName:'Nome', field: 'name'}
-        ]
+    $scope.filter = {
+        filterText: ''
     };
 
     /**
-     * Variable that stores the State of the paging
-     * to render the pager and also to make requisitions of
-     * new pages, containing the State of the Sort included.
+     * Variável que armazena o estado da paginação
+     * para renderizar o pager e também para fazer as requisições das
+     * novas páginas, contendo o estado do Sort incluído.
      *
      * @type PageRequest
      */
     $scope.currentPage;
-
-    /**
-     * Variable to store the form attributes that
-     * not fit on an entity. Ex.:
-     * @filter - Query Filter
-     */
-    $scope.data = {
-        filterText : ''
-    };
 
     /**
     *
@@ -115,7 +55,7 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
      * 		 				 	  BEHAVIORS
      *-------------------------------------------------------------------*/
     /**
-     * Performs the query when displaying a pop-up
+     * Realiza a consulta ao exibir a pop-up
      */
     $scope.initialize = function() {
 
@@ -127,10 +67,6 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
         order.direction = 'ASC';
         order.property = 'id';
 
-        $scope.data = {
-            filterText: ''
-        }
-
         $scope.pageRequest.sort = new Sort();
         $scope.pageRequest.sort.orders = [ order ];
 
@@ -138,41 +74,10 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
     };
 
     /**
-     * Configures the pageRequest as the visual component pager
-     * and calls the listing service, considering the current filter on the screen.
+     * Realiza a consulta de registros, considerando filtro, paginação e sorting.
+     * Quando ok, muda o estado da tela para list.
      *
-     * @see currentPage
-     * @see data.filter
-     */
-    $scope.changeToPage = function( filter, pageNumber ) {
-//        $scope.currentPage.pageable.page = pageNumber-1;
-//        $scope.list();
-        $scope.showLoading = false;
-    };
-
-    /**
-     * Function responsible for closing the pop without performing other actions
-     */
-    $scope.close = function( fechar )
-    {
-        $scope.msg = null;
-
-        if (fechar)
-        {
-            $modalInstance.close();
-
-        } else
-        {
-            $modalInstance.close($scope.gridOptions.selectedItems);
-        }
-
-    };
-
-    /**
-     * Performs the query records, whereas filter, paging and sorting.
-     * When ok, change the State of the screen to list.
-     *
-     * @see data.filter
+     * @see filterOptions.filter
      * @see currentPage
      */
     $scope.list = function( filter ) {
@@ -185,7 +90,7 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
                 $scope.showLoading = false;
                 $scope.$apply();
 
-                //Function responsible for marking the records that were already tagged prior to the opening of pop-up
+                //Função responsável por marcar os registros que já estavam marcados antes da abertura da pop-up
 
                 if (selectedTools != null) {
                     var items = selectedTools;
@@ -193,7 +98,7 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
                         angular.forEach( $scope.tools, function(data, index) {
                             data.ordem = null;
                             angular.forEach( items, function(item) {
-                                if ( data.nome == item.nome ){
+                                if ( data.name == item.name ){
                                     data.rotulo = item.rotulo;
                                     data.ordem = item.ordem;
                                     $scope.gridOptions.selectItem(index, true);
@@ -214,4 +119,61 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
             }
         });
     };
+
+
+    /**
+     * Configura o pageRequest conforme o componente visual pager
+     * e chama o serviço de listagem, considerando o filtro corrente na tela.
+     *
+     * @see currentPage
+     * @see filterOptions.filter
+     */
+    $scope.changeToPage = function( filter, pageNumber ) {
+//        $scope.currentPage.pageable.page = pageNumber-1;
+//        $scope.list();
+        $scope.showLoading = false;
+    };
+
+
+    /**
+     * Configurações gerais da ng-grid.
+     * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
+     */
+    $scope.gridOptions = {
+        data: 'tools',
+        multiSelect: true,
+        enableSorting: true,
+        useExternalSorting: false,
+        headerRowHeight: 45,
+        showSelectionCheckbox: true,
+        selectedItems: $scope.gridSelectedItems,
+        rowHeight: 50,
+        filterOptions: $scope.filter,
+        columnDefs: [
+            {displayName:'Descrição', field:'description'},
+            {displayName:'Nome', field: 'name'}
+
+        ]
+    };
+
+
+    /**
+     * Função responsável por fechar a pop sem executar outras ações
+     */
+    $scope.close = function( fechar )
+    {
+        $scope.msg = null;
+
+        if (fechar)
+        {
+            $modalInstance.close();
+
+        } else
+        {
+            $modalInstance.close($scope.gridOptions.selectedItems);
+        }
+
+    };
+
+
 };

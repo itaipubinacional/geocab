@@ -9,18 +9,17 @@ angular.module("grid-no-result", ['ngGrid']).directive('ngGrid', function() {
 
                 var grid = $scope.$eval(attrs.ngGrid);
 
-
                 if ($scope.$eval(grid.data) != undefined && $scope.$eval(grid.data).length == 0) {
 
-                    var row = "<div ng-row=\"\" class=\"ngRow rowEmpty\" style=\"top: 0px; height: 45px;\">" +
-                        "<div class=\"ngCell\" style=\"width:100%;cursor: pointer;\">" +
-                        "<div ng-cell=\"\">" +
-                        "<div class=\"ngCellText\">" +
-                        "<span ng-cell-text=\"\" class=\"ng-binding\">NÃ£o existem registros.</span>" +
-                        "</div>" +
-                        "</div>" +
-                        "</div>" +
-                        "</div>";
+                	var row = "<div ng-row=\"\" class=\"ngRow rowEmpty\" style=\"top: 0px; height: 45px;\">" +
+				                    "<div class=\"ngCell\" style=\"width:100%;cursor: pointer;\">" +
+				                        "<div ng-cell=\"\">" +
+				                            "<div class=\"ngCellText\">" +
+				                                "<span ng-cell-text=\"\" class=\"ng-binding\">Não existem registros.</span>" +
+				                            "</div>" +
+				                        "</div>" +
+				                    "</div>" +
+				                "</div>";
 
 
                     grid.ngGrid.$viewport.find('.ngCanvas').append(row);
@@ -28,7 +27,6 @@ angular.module("grid-no-result", ['ngGrid']).directive('ngGrid', function() {
 
                     grid.ngGrid.$viewport.find('.rowEmpty').remove();
                   
-
                 }
 
             });
