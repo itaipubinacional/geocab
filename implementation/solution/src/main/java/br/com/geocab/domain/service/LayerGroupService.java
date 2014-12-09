@@ -36,6 +36,7 @@ import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.ExternalLayer;
 import br.com.geocab.domain.entity.layer.FieldLayer;
 import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.layer.LayerField;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.repository.IFileRepository;
@@ -619,7 +620,7 @@ public class LayerGroupService
 	 * @throws JsonParseException 
 	 */
 	@Transactional(readOnly=true)
-	public List<FieldLayer> listFieldLayersByFilter(Layer layer)
+	public List<LayerField> listFieldLayersByFilter(Layer layer)
 	{
 		String sUrl;
 		
@@ -648,15 +649,25 @@ public class LayerGroupService
 				JSONObject properties = (JSONObject) featureTypes.get(0);
 				JSONArray propertiesArray = (JSONArray) properties.get("properties");
 				
-				List<FieldLayer> campos = new ArrayList<FieldLayer>();
+				List<LayerField> campos = new ArrayList<LayerField>();
 				
 				for (int i = 0; i < propertiesArray.length(); i++) 
 				{
 					
 					JSONObject jsonOb = (JSONObject) propertiesArray.get(i);
-					FieldLayer fieldLayer = new FieldLayer();
-					fieldLayer.setNome(jsonOb.get("name").toString());
-					campos.add(fieldLayer);
+//					FieldLayer fieldLayer = new FieldLayer();
+//					fieldLayer.setName(jsonOb.get("name").toString());
+//					fieldLayer.set(jsonOb.get("type").toString());
+							
+					LayerField layerField = new LayerField();
+					
+					if (layerField.isValidTipoGeoserver(jsonOb.get("type").toString())){
+						layerField.setName(jsonOb.get("name").toString());
+						layerField.setTipoGeoServer(jsonOb.get("type").toString());
+						campos.add(layerField);
+					}
+
+					//campos.add(layerField);
 				}
 				
 				return campos;
@@ -701,9 +712,25 @@ public class LayerGroupService
 	 * @return camadas
 	 */
 	@Transactional(readOnly=true)
+	public Page<Layer> listLayersByFilters( String filter, Long dataSourceId,PageRequest pageable )
+	{
+		Page<Layer> layers = this.layerRepository.listByFilters(filter, dataSourceId, pageable);
+		
+		for ( Layer layer : layers.getContent() )
+		{
+			// traz a legenda da camada do GeoServer
+			if(layer.getDataSource().getUrl() != null ) {
+				layer.setLegend(getLegendLayerFromGeoServer(layer));	
+			}
+		}
+		
+		return layers;
+	}
+	
+	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, PageRequest pageable )
 	{
-		Page<Layer> layers = this.layerRepository.listByFilters(filter, null, pageable);
+		Page<Layer> layers = this.layerRepository.listByFilters(filter, null,pageable);
 		
 		for ( Layer layer : layers.getContent() )
 		{

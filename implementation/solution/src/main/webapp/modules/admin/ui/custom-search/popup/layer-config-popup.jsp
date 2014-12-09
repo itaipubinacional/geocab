@@ -10,18 +10,17 @@
 <div class="modal-content">
 
 	<div class="modal-header">
-		<button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"><spring:message code="admin.custom-search.Close"/></span></button>
-	    <h3 class="modal-title"><spring:message code="admin.custom-search.Link-layer"/></h3>
+		<button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	    <h3 class="modal-title">Associar Camada</h3>
 	</div>
 
 	<div class="modal-body" ng-init="initialize();" style="overflow: visible">
 	
-		<!--Messages-->
-		<div class="msg" ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
+		<div ng-include="assets/libs/eits-directives/alert/alert.html"></div>
 		
         <form novalidate name="form" default-button="{{buttonInsert}}">
-            <input type="text" class="form-control" autofocus ng-model="data.filter" placeholder="<spring:message code="admin.custom-search.Search-by-name-or-title"/>" style="width: 300px; float: left; margin-bottom: 10px;"/>
-            <input type="submit" class="btn btn-default" style="margin-left: 5px" value="<spring:message code="admin.custom-search.Search"/>" ng-disabled="currentPage == null" ng-click="listByFilters(data.filter, data.fonteDados.id, currentPage.pageable )"/>
+            <input type="text" class="form-control" autofocus ng-model="data.filter" placeholder="Pesquisar por nome ou tÃ­tulo" style="width: 300px; float: left; margin-bottom: 10px;"/>
+            <input type="submit" class="btn btn-default" style="margin-left: 5px" value="Pesquisar" ng-disabled="currentPage == null" ng-click="listByFilters(data.filter, data.fonteDados.id, currentPage.pageable )"/>
         </form>
 
 		<br style="clear: both"/>
@@ -41,7 +40,7 @@
 		</div>
 		
 		<div class="grid-elements-count" ng-show="currentPage.totalElements > 0">
-			{{currentPage.numberOfElements}} <spring:message code="admin.layer-config.of"/> {{currentPage.totalElements}} items
+			{{currentPage.numberOfElements}} de {{currentPage.totalElements}} itens
 		</div>
         
 	</div>
