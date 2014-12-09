@@ -205,7 +205,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     $scope.gridCustomSearch = {
-        data: 'selectedSearch',
+        data: 'selectedSearchs',
         multiSelect: false,
         useExternalSorting: false,
         headerRowHeight: 45,
@@ -215,9 +215,9 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         columnDefs: [
 			{displayName: 'Symbology', field: 'subtitle', sortable: false, width: '10%', cellTemplate: IMAGE_SUBTITLE_SEARCH},
 			{displayName: 'Name', field: 'name', width: '20%'},
-			{displayName: 'Layer\'s Title', field: 'title', width: '20%'},
+			{displayName: 'Layer\'s Title', field: 'layer.title', width: '20%'},
 			{displayName: 'Layer\'s Name', field: 'layer.name', width: '20%'},
-			{displayName: 'Data source', field: 'dataSource.name', width: '20%'},
+			{displayName: 'Data source', field: 'layer.dataSource.name', width: '20%'},
 			{displayName: 'Actions', sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'}
         ]
     };  
