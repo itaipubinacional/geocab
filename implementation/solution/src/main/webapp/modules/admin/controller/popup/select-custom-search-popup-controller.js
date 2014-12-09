@@ -168,7 +168,7 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
      */
     $scope.initialize = function () {
 
-        $scope.itensMarcados = pesquisasSelecionadas.slice(0);
+        $scope.itensMarcados = selectedSearchs.slice(0);
 
         var pageRequest = new PageRequest();
         pageRequest.size = 6;
@@ -239,7 +239,7 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
 
         $scope.showLoading = true;
 
-        pesquisaPersonalizadaService.listPesquisaPersonalizadaByFilters(filter, pageRequest, {
+        customSearchService.listCustomSearchByFilters(filter, pageRequest, {
             callback: function (result) {
                 $scope.currentPage = result;
                 $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
