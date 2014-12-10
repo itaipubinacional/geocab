@@ -161,10 +161,12 @@ public class CustomSearchService
 		CustomSearch customSearch = this.customSearchRepository.findOne( id );
 		
 		// Get the legend of GeoServer's layer
-		int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("geoserver/");
-		String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position+10);
-		String urlLegend = urlGeoserver + Layer.LEGEND_GRAPHIC_URL + customSearch.getLayer().getName() + Layer.LEGEND_GRAPHIC_FORMAT;
-		customSearch.getLayer().setLegend(urlLegend);
+		if (customSearch.getLayer().getDataSource().getUrl() != null){
+			int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("geoserver/");
+			String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position+10);
+			String urlLegend = urlGeoserver + Layer.LEGEND_GRAPHIC_URL + customSearch.getLayer().getName() + Layer.LEGEND_GRAPHIC_FORMAT;
+			customSearch.getLayer().setLegend(urlLegend);
+		}
 		
 		return customSearch;
 	}
