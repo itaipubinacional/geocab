@@ -179,7 +179,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         '</div>';
     
     var GRID_ACTION_TOOLS_BUTTONS = '<div class="cell-centered">' +
-    '<a ng-click="removeFerramenta(row.entity)" ng-if="currentState != DETAIL_STATE" title="'+$translate('admin.access-group.Delete')+'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    '<a ng-click="removeTool(row.entity)" ng-if="currentState != DETAIL_STATE" title="'+$translate('admin.access-group.Delete')+'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
     '</div>';
 
     var GRID_ACTION_USER_BUTTONS = '<div class="cell-centered">' +
