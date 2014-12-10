@@ -1005,8 +1005,16 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void removeLayer( Long id )
 	{	
-		final Layer attr = this.layerRepository.findOne( id );
-		this.layerRepository.delete( attr );
+		
+		List<AccessGroupLayer> layers = this.accessGroupLayerRepository.listByLayerId(id);
+		for (AccessGroupLayer accessGroupLayer : layers)
+		{
+			this.accessGroupLayerRepository.delete(accessGroupLayer);
+		}
+		
+		
+		
+		this.layerRepository.delete( id );
 	}
 	
 	/**
@@ -1070,6 +1078,61 @@ public class LayerGroupService
 		return urlGeoserver + Layer.LEGEND_GRAPHIC_URL + layer.getName() + Layer.LEGEND_GRAPHIC_FORMAT;
 	}
 	
+	
+	/**
+	 * 
+	 * @param accessGroup
+	 * @param camadaId
+	 */
+	public void linkAccessGroup( List<AccessGroup> accessGroups, Long layerId )
+	{
+		Layer layer = new Layer(layerId);
+		for (AccessGroup accessGroup : accessGroups)
+		{
+			AccessGroupLayer accesGroupLayer = new AccessGroupLayer();
+			accesGroupLayer.setAccessGroup(accessGroup);
+			accesGroupLayer.setLayer(layer);
+			
+			this.accessGroupLayerRepository.save(accesGroupLayer);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param accessGroup
+	 * @param pesquisaPersonalizada
+	 */
+	public void unlinkAccessGroup( List<AccessGroup> accessGroups, Long layerId )
+	{
+		for (AccessGroup accessGroup : accessGroups)
+		{
+			List<AccessGroupLayer> list = this.accessGroupLayerRepository.listByAccessGroupLayerId(accessGroup.getId(), layerId);
+			for (AccessGroupLayer accessGroupLayer : list)
+			{
+				this.accessGroupLayerRepository.delete(accessGroupLayer);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public ArrayList<AccessGroup> listAccessGroupByLayerId(Long id)
+	{
+		ArrayList<AccessGroup> grupos = new ArrayList<AccessGroup>();
+		
+		List<AccessGroupLayer> grupoAcessoCamadas = this.accessGroupLayerRepository.listByLayerId(id);
+		
+		for (AccessGroupLayer grupoAcessoCamada : grupoAcessoCamadas)
+		{
+			grupos.add(grupoAcessoCamada.getAccessGroup());
+		}
+		
+		return grupos;
+	}
 	
 	/**
 	 * 

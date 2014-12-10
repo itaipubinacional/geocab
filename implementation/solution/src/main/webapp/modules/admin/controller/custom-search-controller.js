@@ -190,8 +190,8 @@
             return false;
         },
 			columnDefs: [
-				 {displayName:'Nome', field:'name'},
-				 {displayName:'Descrição', field:'descricao'}
+				 {displayName: 'Nome', field:'name'},
+				 {displayName: 'Descrição', field:'description'}				 
 			]
 	};
 
