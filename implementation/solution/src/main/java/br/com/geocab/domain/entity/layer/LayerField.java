@@ -71,6 +71,12 @@ public class LayerField extends AbstractEntity implements Serializable
 	@Column
 	private int orderLayer;
 	
+	/**
+	 * label of {@link LayerField}
+	 */
+	@Column(nullable=true)
+	private Long attributeId;
+	
 	
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -299,6 +305,20 @@ public class LayerField extends AbstractEntity implements Serializable
 	public void setOrderLayer(int orderLayer)
 	{
 		this.orderLayer = orderLayer;
+	}
+	/**
+	 * @return the attributeId
+	 */
+	public Long getAttributeId()
+	{
+		return attributeId;
+	}
+	/**
+	 * @param attributeId the attributeId to set
+	 */
+	public void setAttributeId(Long attributeId)
+	{
+		this.attributeId = attributeId;
 	}
 	
 }
