@@ -163,11 +163,13 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     };
 
     var IMAGE_SUBTITLE = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-        '<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.subtitle}}"/>' +
+        '<img ng-if="row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
+    	'<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.icon}}"/>' +
         '</div>';
     
     var IMAGE_SUBTITLE_SEARCH = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-    '<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.camada.legenda}}"/>' +
+    '<img ng-if="row.entity.layer.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.layer.legend}}"/>' +
+	'<img ng-if="!row.entity.layer.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.layer.icon}}"/>' +
     '</div>';
 
     var GRID_ACTION_LAYER_BUTTONS = '<div class="cell-centered">' +
@@ -871,7 +873,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.linkLayers = function() {
         accessGroupService.linkLayer($scope.addLayers, $scope.currentEntity.id, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Altera��es efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: $translate('admin.access-group.update-has-been-completed-successfully'), dismiss: true};
                 $scope.addLayers = [];
                 $scope.$apply();
             },
@@ -888,7 +890,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.linkCustomSearch = function() {
         accessGroupService.linkCustomSearch($scope.addSearchs, $scope.currentEntity.id, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Altera��es efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: $translate('admin.access-group.update-has-been-completed-successfully'), dismiss: true};
                 $scope.addSearchs = [];
                 $scope.$apply();
             },
@@ -904,7 +906,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.unlinkLayers = function() {
         accessGroupService.unlinkLayer($scope.removeLayers, $scope.currentEntity.id, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Altera��es efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: $translate('admin.access-group.update-has-been-completed-successfully'), dismiss: true};
                 $scope.removeLayers = [];
                 $scope.$apply();
             },
@@ -922,7 +924,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.unlinkCustomSearch = function() {
         accessGroupService.unlinkCustomSearch($scope.removeSearchs, $scope.currentEntity.id, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Altera��es efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: $translate('admin.access-group.update-has-been-completed-successfully'), dismiss: true};
                 $scope.removeSearchs = [];
                 $scope.$apply();
             },
@@ -996,7 +998,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.updateUsers = function() {
         accessGroupService.updateAccessGroupUsers($scope.currentEntity.id, $scope.currentEntity.users, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Altera��es efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: $translate('admin.access-group.update-has-been-completed-successfully'), dismiss: true};
                 $scope.$apply();
             },
             errorHandler: function(error){
@@ -1011,7 +1013,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.updateTools = function() {
         accessGroupService.updateAccessGroupTools($scope.currentEntity.id, $scope.currentEntity.tools, {
             callback: function(result){
-                $scope.msg = {type: "success", text: "Altera��es efetuadas com sucesso", dismiss: true};
+                $scope.msg = {type: "success", text: $translate('admin.access-group.update-has-been-completed-successfully'), dismiss: true};
                 $scope.$apply();
             },
             errorHandler: function(error){
