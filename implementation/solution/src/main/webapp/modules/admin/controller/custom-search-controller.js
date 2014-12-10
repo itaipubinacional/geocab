@@ -523,23 +523,23 @@
 	 * Realiza a inserção de um novo registro
 	 * e no suscesso, modifica o estado da tela para o detail.
 	 */
-	$scope.insertCustomSearch = function( CustomSearch ) {
+	$scope.insertCustomSearch = function( customSearch ) {
 
 		if ( !$scope.form().$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
 			return;
 		}
 
-        CustomSearch.layerFields = $scope.selectedFields;
-
-		customSearchService.insertCustomSearch( CustomSearch, {
-			callback : function() {
-                $scope.saveGroups();
-                console.log("hu1");
+		customSearch.layerFields = $scope.selectedFields;
+        
+		customSearchService.insertCustomSearch( customSearch, {
+			callback : function(result) {        				
 				$scope.currentState = $scope.LIST_STATE;
+				$scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
 				$scope.msg = {type:"success", text: "Pesquisa personalizada inserida com sucesso!", dismiss:true};
 				$scope.$apply();
+				$scope.saveGroups();
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
@@ -598,18 +598,59 @@
         dialog.result.then(function (result) {
             $log.log(result);
 
-            if (result != null && result.length > 0) {
-                $scope.selectedGroups = $scope.selectedGroups.concat(result);
+//            if (result != null && result.length > 0) {
+//                $scope.selectedGroups = $scope.selectedGroups.concat(result);
+//                for (var i = 0; i < result.length; i++) {
+//                    var index = $scope.findByIdInArray($scope.originalGroups, result[i]);
+//                    if (index == -1) {
+//                        $scope.addGroups.push(result[i]);
+//                    }
+//                    var index2 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+//                    if (index2 > -1) {
+//                        $scope.removeGroups.splice(index2, 1);
+//                    }
+//                }
+//            }
+//            
+            if (result) {
                 for (var i = 0; i < result.length; i++) {
-                    var index = $scope.findByIdInArray($scope.originalGroups, result[i]);
-                    if (index == -1) {
-                        $scope.addGroups.push(result[i]);
+                    var index = $scope.findByIdInArray($scope.selectedGroups, result[i]);
+                    var index2 = $scope.findByIdInArray($scope.originalGroups, result[i]);
+                    var index3 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+
+                    //Identifica se marcou novos registros
+                    if (index == -1 && index2 == -1) {
+                        var indexAdd = $scope.findByIdInArray($scope.addGroups, result[i]);
+                        if (indexAdd == -1)
+                            $scope.addGroups.push(result[i]);
                     }
-                    var index2 = $scope.findByIdInArray($scope.removeGroups, result[i]);
-                    if (index2 > -1) {
-                        $scope.removeGroups.splice(index2, 1);
+
+                    if (index3 > -1) {
+                        $scope.removeGroups.splice(index3, 1);
+                    }
+
+                }
+                for (var i = 0; i < $scope.selectedGroups.length; i++) {
+
+                    var index = $scope.findByIdInArray(result, $scope.selectedGroups[i]);
+
+                    if (index == -1) {
+                        var index2 = $scope.findByIdInArray($scope.addGroups, $scope.selectedGroups[i]);
+                        var index3 = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+                        var index4 = $scope.findByIdInArray($scope.originalGroups, $scope.selectedGroups[i]);
+
+                        if (index2 > -1){
+                            var indexAdd = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+                            if (indexAdd > -1)
+                                $scope.addGroups.splice(indexAdd, 1);
+                        }
+                        if (index3 == -1 && index4 > -1) {
+                            $scope.removeGroups.push($scope.selectedGroups[i]);
+                        }
+
                     }
                 }
+                $scope.selectedGroups = result;
             }
         });
     }
