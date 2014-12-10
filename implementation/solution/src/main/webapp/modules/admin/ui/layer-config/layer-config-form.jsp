@@ -214,6 +214,20 @@
                        ng-disabled="currentState == DETAIL_STATE"> <label><spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
 
             </div>
+            
+            <hr style="border-color: #d9d9d9"/>
+
+            <label class="detail-label">Acesso</label>
+
+            <br/>
+
+            <button ng-click="selectAccessGroups()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary">Associar grupo</button>
+
+            <br/>
+
+            <div class="form-item position-relative"  style="width: 100%;">
+                <div ng-grid="gridAccessOptions" style="height: 300px; width:100%; border: 1px solid rgb(212, 212, 212);"></div>
+            </div>
 
        </div>
     </form>

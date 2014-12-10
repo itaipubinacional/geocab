@@ -1587,7 +1587,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         for( var i = 0; i < $scope.searchs.length; i++ )
         {
             $scope.map.removeLayer($scope.searchs[i].wmsLayer);
-            $scope.allPesquisas[0].children[i].selected = false;
+            $scope.allSearchs[0].children[i].selected = false;
         }
 
 //        var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
@@ -1643,14 +1643,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             campos[i].valorPesquisa = '';
 
             if( firstTime ) {
-                if ($("#item_" + i).val() != '' && campos[i].tipo == 'INT') {
+                if ($("#item_" + i).val() != '' && campos[i].type == 'INT') {
 
                     campos[i].valorPesquisa = $("#item_" + i).val();
-                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
 
                 }
 
-                if (campos[i].tipo == 'NUMBER') {
+                if (campos[i].type == 'NUMBER') {
 
                     campos[i].valorPesquisa = $("#item_" + i).val();
 
@@ -1658,46 +1658,46 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     var valueNumber = $("#item_" + i + " input").val();
 
                     if ( operatorType == 'entre' ) {
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') > ' + valueNumber + "'");
-                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') <' + valueNumber + "'");
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') > ' + valueNumber + "'");
+                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <' + valueNumber + "'");
                     } else if ( operatorType == 'somente' ) {
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') IN (' + valueNumber + ")'");
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') IN (' + valueNumber + ")'");
                     } else {
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
                     }
 
                 }
 
-                if ($("#item_" + i).val() != '' && campos[i].tipo == 'STRING') {
+                if ($("#item_" + i).val() != '' && campos[i].type == 'STRING') {
 
                     campos[i].valorPesquisa = $("#item_" + i).val();
-                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
 
                 }
 
-                if (campos[i].tipo == "DATETIME") {
+                if (campos[i].type == "DATETIME") {
 
                     var startDate = $("#item_" + i + " input[name=startDate]").val();
                     var endDate = $("#item_" + i + " input[name=endDate]").val();
 
                     if(startDate != '')
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
                     if(endDate != '')
-                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
                 }
 
                 firstTime = false;
 
             } else {
 
-                if ($("#item_" + i).val() != '' && campos[i].tipo == 'INT') {
+                if ($("#item_" + i).val() != '' && campos[i].type == 'INT') {
 
                     campos[i].valorPesquisa = $("#item_" + i).val();
-                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
 
                 }
 
-                if (campos[i].tipo == 'NUMBER') {
+                if (campos[i].type == 'NUMBER') {
 
                     campos[i].valorPesquisa = $("#item_" + i).val();
 
@@ -1705,32 +1705,32 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     var valueNumber = $("#item_" + i + " input").val();
 
                     if ( operatorType == 'entre' ) {
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') > ' + valueNumber + "'");
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') <' + valueNumber + "'");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') > ' + valueNumber + "'");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <' + valueNumber + "'");
                     } else if ( operatorType == 'somente' ) {
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') IN (' + valueNumber + ")'");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') IN (' + valueNumber + ")'");
                     } else {
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
                     }
 
                 }
 
-                if ($("#item_" + i).val() != '' && campos[i].tipo == 'STRING') {
+                if ($("#item_" + i).val() != '' && campos[i].type == 'STRING') {
 
                     campos[i].valorPesquisa = $("#item_" + i).val();
-                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
 
                 }
 
-                if (campos[i].tipo == "DATETIME") {
+                if (campos[i].type == "DATETIME") {
 
                     var startDate = $("#item_" + i + " input[name=startDate]").val();
                     var endDate = $("#item_" + i + " input[name=endDate]").val();
 
                     if(startDate != '')
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
                     if(endDate != '')
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].nome + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
                 }
 
             }
@@ -1747,12 +1747,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         $scope.searchs.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'pesquisa': $scope.currentCustomSearch});
 
         var item = {};
-        item.label = 'Resultado searchs';
+        item.label = 'Resultado pesquisas';
         item.type = 'grupo'
 
         item.children = [];
 
-        var lastSearchName;
+        var lastPesquisaName;
         for(var i =0; i < $scope.searchs.length ; ++i)
         {
 
@@ -1761,7 +1761,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.searchs[i].name = "pesquisa"+ (i+1);
 
             item.children.push($scope.searchs[i]);
-            lastSearchName = "Pesquisa "+ (i+1);
+            lastPesquisaName = "Pesquisa "+ (i+1);
         }
 
         // seleciona a ultima pesquisa
@@ -1775,9 +1775,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $('#tree-pesquisas').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
         });
 
-        $scope.allPesquisas = [];
-        $scope.allPesquisas.push(item);
-        $scope.searchMsg = lastSearchName + ' - Realizada com sucesso'
+        $scope.allSearchs = [];
+        $scope.allSearchs.push(item);
+        $scope.searchMsg = lastPesquisaName + ' - Realizada com sucesso'
 
         $("#alertPesquisa").show();
 
