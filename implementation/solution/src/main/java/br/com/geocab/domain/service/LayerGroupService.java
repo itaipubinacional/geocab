@@ -43,6 +43,7 @@ import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerField;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
+import br.com.geocab.domain.entity.tool.Tool;
 import br.com.geocab.domain.repository.IFileRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupLayerRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
@@ -1099,4 +1100,27 @@ public class LayerGroupService
 		File folder = new File("/main/webapp/static/icons");
 		
 	}*/
+	
+	/**
+	 * Method that retorn a list of tools by user access group
+	 */
+	public List<Tool> listToolsByUser()
+	{
+		//Lista todos grupos de acessos do usuï¿½rio
+		List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getUsername());
+		
+		List<Tool> toolsUser = new ArrayList<Tool>();
+		
+		for (AccessGroup accessGroup : accessGroupsUser)
+		{
+			accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
+			
+			for (Tool tool : accessGroup.getTools())
+			{
+				toolsUser.add(tool);
+			}
+		}
+		
+		return toolsUser;
+	}
 }

@@ -423,7 +423,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         $scope.LAYER_MENU_STATE = 'list';
 
-        $scope.enableTools();
+        $scope.listToolsByUser();
 
         $scope.listPublishedLayersGroup();
 
@@ -692,11 +692,42 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     /**
      *
      */
-    $scope.enableTools = function(){
-    	$scope.hasPermissionCalculoDistancia = true;
-    	$scope.hasPermissionCalculoArea = true;
-    	$scope.hasPermissionKML = true;
-        enableFileKML();
+    $scope.listToolsByUser = function(){
+    	
+    	layerGroupService.listToolsByUser({
+            callback: function (result) {
+
+                for (var i = 0; i < result.length; i++)
+                {
+                    if(result[i].id == $scope.PERMISSION_CALCULO_DISTANCIA)
+                    {
+                        $scope.hasPermissionCalculoDistancia = true;
+                    }
+                    else if(result[i].id == $scope.PERMISSION_CALCULO_AREA)
+                    {
+                        $scope.hasPermissionCalculoArea = true;
+                    }
+                    else if(result[i].id == $scope.PERMISSION_KML)
+                    {
+                        $scope.hasPermissionKML = true;
+                        enableFileKML();
+                    }
+
+                }
+
+                if ($scope.hasPermissionKML == false){
+                    $("#menu-item-3").remove();
+                    $("#tabs-3").remove();
+                }
+
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.$apply();
+            }
+        });
+
     }
 
     /**
