@@ -1590,20 +1590,40 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.allPesquisas[0].children[i].selected = false;
         }
 
-        var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
+//        var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
+//
+//        var wmsSource = new ol.source.TileWMS({
+//            url: item.url,
+//            params:{
+//                'LAYERS': $scope.currentCustomSearch.layer.name
+//            }
+//        });
+//
+//        var wmsLayer = new ol.layer.Tile({
+//            source: wmsSource
+//        });
+//
+//        $scope.map.addLayer(wmsLayer);
+        
+        if($scope.currentCustomSearch.layer.dataSource.url != null ){
+        	var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
 
-        var wmsSource = new ol.source.TileWMS({
-            url: item.url,
-            params:{
-                'LAYERS': $scope.currentCustomSearch.layer.name
-            }
-        });
+			var wmsSource = new ol.source.TileWMS({
+				url: item.url,
+				params:{
+					'LAYERS': $scope.currentCustomSearch.layer.name
+				}
+			});
 
-        var wmsLayer = new ol.layer.Tile({
-            source: wmsSource
-        });
+			var wmsLayer = new ol.layer.Tile({
+				source: wmsSource
+			});
 
-        $scope.map.addLayer(wmsLayer);
+			 $scope.map.addLayer(wmsLayer);
+		} else {
+			//volta aqui
+			$scope.addInternalLayer($scope.currentCustomSearch.layer.id);
+		}
 
         var filterParams = {'CQL_FILTER' : null};
         var filterList = '';

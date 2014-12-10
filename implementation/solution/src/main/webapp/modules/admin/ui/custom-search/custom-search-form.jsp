@@ -77,7 +77,7 @@
                 <label class="detail-label"l><spring:message code="admin.custom-search.Title"/></label>
 
                 <div class="position-relative input-group" style="width: 350px;">
-                    <span>{{currentEntity.layer.titulo}}</span>
+                    <span>{{currentEntity.layer.title}}</span>
                 </div>
 
                 <br/>
@@ -85,7 +85,7 @@
                 <label class="detail-label"><spring:message code="admin.custom-search.Symbology"/></label>
 
                 <div class="position-relative input-group" style="width: 350px;">
-                    <img style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.layer.legenda}}"/>
+                    <img style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.layer.legend}}"/>
                 </div>
 
             </div>
