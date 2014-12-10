@@ -29,7 +29,9 @@ public enum LayerFieldType
 	INT,
 	DECIMAL,
 	DOUBLE,
-	DATETIME;
+	DATETIME,
+	DATE,
+	BOOLEAN;
 	
 	/**
 	 *

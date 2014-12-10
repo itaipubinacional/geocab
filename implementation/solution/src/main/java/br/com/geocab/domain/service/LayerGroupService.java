@@ -37,10 +37,12 @@ import br.com.geocab.domain.entity.accessgroup.AccessGroupLayer;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.ExternalLayer;
 import br.com.geocab.domain.entity.layer.FieldLayer;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerField;
+import br.com.geocab.domain.entity.layer.LayerFieldType;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.tool.Tool;
@@ -761,6 +763,32 @@ public class LayerGroupService
 	@Transactional(readOnly=true)
 	public List<LayerField> listFieldLayersByFilter(Layer layer)
 	{
+		if(layer.getDataSource().getUrl() == null){
+			List<LayerField> layerFields = new ArrayList<LayerField>();
+			List<Attribute>  attrs = this.listAttributesByLayer(layer.getId());
+			
+			for(Attribute attr : attrs) {
+				LayerField layerField = new LayerField();
+				layerField.setName(attr.getName());
+				layerField.setAttributeId(attr.getId());
+				
+				if(attr.getType() == AttributeType.TEXT){
+					layerField.setType(LayerFieldType.STRING);
+				} else if(attr.getType() == AttributeType.DATE){
+					layerField.setType(LayerFieldType.DATE);
+				} else if(attr.getType() == AttributeType.NUMBER){
+					layerField.setType(LayerFieldType.INT);
+				} else if(attr.getType() == AttributeType.BOOLEAN){
+					layerField.setType(LayerFieldType.BOOLEAN);
+				}
+				
+				layerFields.add(layerField);
+				
+			}
+			
+			return layerFields;
+		}
+		
 		String sUrl;
 		
 		int posicao = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
@@ -854,6 +882,7 @@ public class LayerGroupService
 	public Page<Layer> listLayersByFilters( String filter, Long dataSourceId,PageRequest pageable )
 	{
 		Page<Layer> layers = this.layerRepository.listByFilters(filter, dataSourceId, pageable);
+		
 		
 		for ( Layer layer : layers.getContent() )
 		{

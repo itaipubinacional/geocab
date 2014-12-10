@@ -1621,8 +1621,118 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
 			 $scope.map.addLayer(wmsLayer);
 		} else {
-			//volta aqui
-			$scope.addInternalLayer($scope.currentCustomSearch.layer.id);
+			
+			$scope.removeInternalLayer($scope.currentCustomSearch.layer.id, function(layerId){
+				var fields = $scope.currentCustomSearch.layerFields;
+				
+				for(var field in fields) {
+					$scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
+				}
+				
+				markerService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, {
+				    callback: function (results) {
+				    	
+				    	$scope.markersByLayer = results;
+				    	
+				    	$scope.allFieldEmpty = true;
+				    	angular.forEach($scope.currentCustomSearch.layerFields, function(field, index){
+				    		if(field.value != "" && field.value != undefined) {
+				    			$scope.allFieldEmpty = false;
+	    					}
+				    	});
+				    	
+				    	if(!$scope.allFieldEmpty){
+				    		
+				    		angular.forEach(results, function(result, index){
+				    			$scope.canRemoveMarker = true;
+				    			
+				    			angular.forEach(result.markerAttribute, function(markerAttribute, index){
+				    				
+				    				angular.forEach($scope.currentCustomSearch.layerFields, function(field, index){	    					
+				    					
+					    				if(field.attributeId == markerAttribute.attribute.id){
+					    					
+					    					if (field.value != "" && markerAttribute.value.indexOf(field.value) != -1 ) {
+					    						$scope.canRemoveMarker = false;
+					    					}
+					    					
+					    				}
+				    				
+				    				});
+				    			
+				    			});
+				    			
+				    			if($scope.canRemoveMarker) {
+				    				delete $scope.markersByLayer[index];
+				    			}
+				    		});
+				    		
+				    	}
+			    		
+				    	var normalizeArray = $scope.markersByLayer;
+				    	$scope.markersByLayer = [];
+				    	
+			    		angular.forEach(normalizeArray, function(value, index){
+
+				    		if(value != undefined){
+				    			$scope.markersByLayer.push(value);
+				    		} 
+			    			
+			    		});
+				    	
+		    			var iconPath = "static/images/marker.png";
+						 
+						if($scope.markersByLayer.length > 0) {
+							iconPath = $scope.markersByLayer[0].layer.icon;
+						}
+						
+						var iconStyle = new ol.style.Style({
+		                   image: new ol.style.Icon(({
+		                       anchor: [0.5, 1],
+		                       anchorXUnits: 'fraction',
+		                       anchorYUnits: 'fraction',
+		                       src: iconPath
+		                    
+		                   }))
+		               });
+					
+						angular.forEach($scope.markersByLayer, function(marker, index){
+			                   var iconFeature = new ol.Feature({
+			                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
+			                       marker: marker,
+			                   });	
+			                  
+			                   
+			                   var layer = new ol.layer.Vector({
+				                   source: new ol.source.Vector({ features: [iconFeature] }),
+				                   
+				                   maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
+				                   minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
+				               });
+				
+				               layer.setStyle(iconStyle);
+				
+				               $scope.map.addLayer(layer);
+				               
+				               $scope.internalLayers.push({"layer": layer, "id": layerId});
+			     			});
+			
+						$scope.$apply();
+			    	
+				    		
+		            },
+		            errorHandler: function (message, exception) {
+
+		                $scope.msg = {type: "danger", text: message, dismiss: true};
+		                $scope.$apply();
+		            }
+		        });
+			})
+			//$scope.addInternalLayer($scope.currentCustomSearch.layer.id);
+			
+			
+			
+			return false;
 		}
 
         var filterParams = {'CQL_FILTER' : null};
