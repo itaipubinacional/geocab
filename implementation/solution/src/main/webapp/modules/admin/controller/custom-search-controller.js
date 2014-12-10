@@ -133,9 +133,11 @@
 	'<a ng-click="changeToRemove(row.entity)" title="'+ $translate('admin.custom-search.Delete') +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
 	'</div>';
     
-    var IMAGE_LEGENDA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.camada.legenda}}"/>' +
+    var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+	'<img ng-if="row.entity.layer.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.layer.legend}}"/>' +
+	'<img ng-if="!row.entity.layer.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.layer.icon}}"/>' +
 	'</div>';
+
 
 	/**
 	 * Configurações gerais da ng-grid.
@@ -154,7 +156,7 @@
 				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
 			},
 			columnDefs: [
-			             {displayName: $translate('admin.custom-search.Symbology') , field:'layer.subtitle', sortable:false, width: '120px', cellTemplate: IMAGE_LEGENDA},
+			             {displayName: $translate('admin.custom-search.Symbology') , field:'layer.legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
 			             {displayName: $translate('admin.custom-search.Custom-search'), field:'name'}, 
 			             {displayName: $translate('admin.custom-search.Layer-title'), field:'layer.title'},
 			             {displayName: $translate('admin.custom-search.Layer-name'), field:'layer.name'},
