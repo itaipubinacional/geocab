@@ -678,7 +678,7 @@
                                     style="width: 90px; height: 30px; position: absolute;top: 190px;" ng-click="listFieldsLayersSearch()">Pesquisa</button>
                             <br/>
                             <div style="overflow-y: auto;position: absolute;top: 250px;bottom: 0px;left: 20px;right: 0px;">
-                                <div ng-repeat="search in currentCustomSearch.layerField" style="width: 90%;">
+                                <div ng-repeat="search in currentCustomSearch.layerFields" style="width: 90%;">
                                     <div class="form-group" ng-if="search.type == 'DATETIME'">
                                         <label>{{ search.label ? search.label : search.name }}</label>
                                         <div class="input-group input-daterange" id="item_{{$index}}" date-picker>
