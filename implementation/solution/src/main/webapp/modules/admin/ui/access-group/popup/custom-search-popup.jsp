@@ -35,7 +35,7 @@
 				max-size="currentPage.totalPages"
 				ng-change="changeToPage(data.filter, currentPage.pageable.pageNumber)"
 				ng-model="currentPage.pageable.pageNumber" boundary-links="true"
-				previous-text="â€¹" next-text="â€º" first-text="Â«" last-text="Â»">
+				previous-text="‹" next-text="›" first-text="«" last-text="»">
 			</pagination>
 		</div>
 		
@@ -45,8 +45,8 @@
         
 	</div>
 	<div class="modal-footer">
-		<button id="buttonClose" class="btn btn-primary" ng-click="close()">Selecionar</button>
-        <button class="btn btn-default" ng-click="close(false)">Fechar</button>
+		<button id="buttonClose" class="btn btn-primary" ng-click="close()"><spring:message code="Select" /></button>
+        <button class="btn btn-default" ng-click="close(false)"><spring:message code="Close" /></button>
 	</div>
 
 </div>

@@ -20,7 +20,7 @@
                 <span ng-switch-when="custom-search.detail"><spring:message code="admin.custom-search.Custom-search-detail"/></span>
                 <span ng-switch-when="custom-search.create"><spring:message code="admin.custom-search.New-custom-search"/></span>
                 <span ng-switch-when="custom-search.edit"><spring:message code="admin.custom-search.Update-custom-search"/></span>
-                <span ng-switch-default>PESQUISAS PERSONALIZADAS - Carregando...</span>
+                <span ng-switch-default><spring:message code="admin.custom-search.CUSTOM-SEARCH"/> - <spring:message code="admin.custom-search.Loading"/>...</span>
             </div>
 
             <!-- State Listar -->

@@ -95,7 +95,7 @@
                 </tab>
                  <tab heading="Ferramentas" ng-if="currentEntity.id != null">
                     <div style="margin-bottom: 20px; float: right;">
-                        <button class="btn btn-primary" ng-click="associateTools()" type="button">Associar ferramentas</button>
+                        <button class="btn btn-primary" ng-click="associateTools()" type="button"><spring:message code="admin.access-group.Associate-tools"/></button>
                         <button class="btn btn-success larger-btn" ng-click="saveAssotiations()"><spring:message code="admin.access-group.Save"/></button>
                     </div>
                     <br style="celear: both">
