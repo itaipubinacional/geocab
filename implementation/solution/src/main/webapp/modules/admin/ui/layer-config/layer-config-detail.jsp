@@ -48,7 +48,7 @@
             </div>
             <br>
             
-            <div ng-grid="gridAttributesDetail" style="height: 320px; border: 1px solid rgb(212,212,212);"></div>
+            <div ng-if="!currentEntity.dataSource.url" ng-grid="gridAttributesDetail" style="height: 320px; border: 1px solid rgb(212,212,212);"></div>
 
 			<label ng-if="!currentEntity.dataSource.url" class="detail-label" style="margin: 15px 0 5px 0;" required><spring:message code="admin.layer-config.Icon" /></label>
             
@@ -133,7 +133,19 @@
                        ng-disabled="currentState == DETAIL_STATE"> <label>Disponível para receber postagens</label>
 
             </div>
+			
+			<hr style="border-color: #d9d9d9"/>
 
+            <label class="detail-label">Grupo de Acesso</label>
+
+            <br/>
+         
+
+            <br/>
+
+            <div class="form-item position-relative"  style="width: 100%;">
+                <div ng-grid="gridAccessOptions" style="height: 300px; width:100%; border: 1px solid rgb(212, 212, 212);"></div>
+            </div>
      
         </div>
     </form>
