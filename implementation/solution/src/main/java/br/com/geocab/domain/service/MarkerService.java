@@ -243,6 +243,37 @@ public class MarkerService
 	 * @throws JAXBException 
 	 */
 	@Transactional(readOnly = true)
+	public List<Marker> listMarkerByLayerFilters( Long layerId )
+	{
+		User user = ContextHolder.getAuthenticatedUser();
+	
+		List<Marker> listMarker = null;
+		
+		if(user != null) {
+			 
+			if( user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) {
+				listMarker = this.markerRepository.listMarkerByLayerAll( layerId );
+			} else {
+				listMarker = this.markerRepository.listMarkerByLayer( layerId, user.getId() );
+			}
+			
+		}
+		
+		for(Marker marker : listMarker) {
+			marker.setMarkerAttribute(listAttributeByMarker(marker.getId()));
+		}
+		
+		return listMarker;
+	}
+	
+	/**
+	 * Method to find an {@link Marker} by layer
+	 * 
+	 * @param layerId
+	 * @return marker List
+	 * @throws JAXBException 
+	 */
+	@Transactional(readOnly = true)
 	public List<Marker> listMarkerByLayer( Long layerId )
 	{
 		User user = ContextHolder.getAuthenticatedUser();
