@@ -42,7 +42,7 @@
     </div>
 
     <div class="modal-footer">
-        <button id="buttonClose" ng-disabled="gridOptions.selectedItems.length == 0" class="btn btn-primary" ng-click="close(false)">Selecionar</button>
+        <button id="buttonClose" class="btn btn-primary" ng-click="close()">Selecionar</button>
         <button class="btn btn-default" ng-click="close(true)">Fechar</button>
     </div>
 </div>
