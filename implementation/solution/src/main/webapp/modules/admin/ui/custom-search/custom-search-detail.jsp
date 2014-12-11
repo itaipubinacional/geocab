@@ -45,7 +45,8 @@
             <div class="form-item position-relative">
                 <b class="detail-label"><spring:message code="admin.custom-search.Symbology" /></b>
                 <br>
-                <img style="border: solid 1px #c9c9c9;" ng-src="{{currentEntity.layer.legenda}}"/>
+                <img style="border: solid 1px #c9c9c9;" ng-if="currentEntity.layer.dataSource.url != null" ng-src="{{currentEntity.layer.legend}}"/>
+                    <img style="border: solid 1px #c9c9c9;" ng-if="currentEntity.layer.dataSource.url == null" ng-src="{{currentEntity.layer.icon}}"/>
             </div>
             <br/>
 
