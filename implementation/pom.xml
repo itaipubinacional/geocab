@@ -107,7 +107,7 @@
 				<mvn.jdbc.password>geocab</mvn.jdbc.password>
 
 				<!-- Hibernate -->
-				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
+				<mvn.hibernate.hbm2ddl>update</mvn.hibernate.hbm2ddl>
 				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
