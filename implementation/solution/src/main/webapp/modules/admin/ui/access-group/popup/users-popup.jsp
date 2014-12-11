@@ -11,7 +11,7 @@
 
 	<div class="modal-header">
 		<button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"><spring:message code="admin.access-group.Close"/></span></button>
-	    <h3 class="modal-title"></h3>
+	    <h3 class="modal-title"><spring:message code="admin.access-group.Associate-user" /></h3>
 	</div>
 
 	<div class="modal-body" ng-init="initialize();" style="overflow: visible">
