@@ -52,10 +52,10 @@
             <hr>
 
             <tabset>
-                <tab heading="Layer Fields">
+                <tab heading="<spring:message code="admin.custom-search.Layer-fields" />">
                     <div ng-grid="gridlayersOptions" style="height: 335px; border: 1px solid rgb(212,212,212); margin-top: 40px;"></div>
                 </tab>
-                <tab heading="Acess">
+                <tab heading="<spring:message code="admin.custom-search.Access" />">
 
                     <div class="form-item position-relative" style="width: 100%;">
                         <div ng-grid="gridGroupOptions" style="height: 300px; border: 1px solid rgb(212,212,212); margin-top: 40px;">
