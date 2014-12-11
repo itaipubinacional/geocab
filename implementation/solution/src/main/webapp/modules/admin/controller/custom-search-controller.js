@@ -535,7 +535,7 @@
 		customSearchService.insertCustomSearch( customSearch, {
 			callback : function(result) {        				
 				$scope.currentState = $scope.LIST_STATE;
-				$scope.currentEntity = result;
+				$scope.currentEntity.id = result;
 				$state.go($scope.LIST_STATE);
 				$scope.msg = {type:"success", text: "Pesquisa personalizada inserida com sucesso!", dismiss:true};
 				$scope.$apply();
