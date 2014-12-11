@@ -1752,100 +1752,131 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         	//estou aqui
             campos[i].valorPesquisa = '';
 
-            if( firstTime ) {
-                if ($("#item_" + i).val() != '' && campos[i].type == 'INT') {
-
-                    campos[i].valorPesquisa = $("#item_" + i).val();
-                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
-
+            if( $("#item_"+i).val() != '' )
+            {
+                campos[i].valorPesquisa = $("#item_"+i).val();
+ 
+                if (campos[i].tipo != "INT"){
+                    conectorLike = true;
+                } else {
+                    conectorLike = false;
                 }
-
-                if (campos[i].type == 'NUMBER') {
-
-                    campos[i].valorPesquisa = $("#item_" + i).val();
-
-                    var operatorType = $("#item_" + i + " select").val();
-                    var valueNumber = $("#item_" + i + " input").val();
-
-                    if ( operatorType == 'entre' ) {
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') > ' + valueNumber + "'");
-                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <' + valueNumber + "'");
-                    } else if ( operatorType == 'somente' ) {
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') IN (' + valueNumber + ")'");
+                if( firstTime )
+                {
+                    if (conectorLike){
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
                     } else {
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
                     }
-
+ 
+                    firstTime = false;
                 }
-
-                if ($("#item_" + i).val() != '' && campos[i].type == 'STRING') {
-
-                    campos[i].valorPesquisa = $("#item_" + i).val();
-                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
-
-                }
-
-                if (campos[i].type == "DATETIME") {
-
-                    var startDate = $("#item_" + i + " input[name=startDate]").val();
-                    var endDate = $("#item_" + i + " input[name=endDate]").val();
-
-                    if(startDate != '')
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
-                    if(endDate != '')
-                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
-                }
-
-                firstTime = false;
-
-            } else {
-
-                if ($("#item_" + i).val() != '' && campos[i].type == 'INT') {
-
-                    campos[i].valorPesquisa = $("#item_" + i).val();
-                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
-
-                }
-
-                if (campos[i].type == 'NUMBER') {
-
-                    campos[i].valorPesquisa = $("#item_" + i).val();
-
-                    var operatorType = $("#item_" + i + " select").val();
-                    var valueNumber = $("#item_" + i + " input").val();
-
-                    if ( operatorType == 'entre' ) {
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') > ' + valueNumber + "'");
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <' + valueNumber + "'");
-                    } else if ( operatorType == 'somente' ) {
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') IN (' + valueNumber + ")'");
+                else
+                {
+                    if (conectorLike){
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
                     } else {
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
                     }
-
+ 
                 }
-
-                if ($("#item_" + i).val() != '' && campos[i].type == 'STRING') {
-
-                    campos[i].valorPesquisa = $("#item_" + i).val();
-                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
-
-                }
-
-                if (campos[i].type == "DATETIME") {
-
-                    var startDate = $("#item_" + i + " input[name=startDate]").val();
-                    var endDate = $("#item_" + i + " input[name=endDate]").val();
-
-                    if(startDate != '')
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
-                    if(endDate != '')
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
-                }
-
             }
-
         }
+            
+//            if( firstTime ) {
+//                if ($("#item_" + i).val() != '' && campos[i].type == 'INT') {
+//
+//                    campos[i].valorPesquisa = $("#item_" + i).val();
+//                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+//
+//                }
+//
+//                if (campos[i].type == 'NUMBER') {
+//
+//                    campos[i].valorPesquisa = $("#item_" + i).val();
+//
+//                    var operatorType = $("#item_" + i + " select").val();
+//                    var valueNumber = $("#item_" + i + " input").val();
+//
+//                    if ( operatorType == 'entre' ) {
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') > ' + valueNumber + "'");
+//                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <' + valueNumber + "'");
+//                    } else if ( operatorType == 'somente' ) {
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') IN (' + valueNumber + ")'");
+//                    } else {
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+//                    }
+//
+//                }
+//
+//                if ($("#item_" + i).val() != '' && campos[i].type == 'STRING') {
+//
+//                    campos[i].valorPesquisa = $("#item_" + i).val();
+//                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+//
+//                }
+//
+//                if (campos[i].type == "DATETIME") {
+//
+//                    var startDate = $("#item_" + i + " input[name=startDate]").val();
+//                    var endDate = $("#item_" + i + " input[name=endDate]").val();
+//
+//                    if(startDate != '')
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+//                    if(endDate != '')
+//                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+//                }
+//
+//                firstTime = false;
+//
+//            } else {
+//
+//                if ($("#item_" + i).val() != '' && campos[i].type == 'INT') {
+//
+//                    campos[i].valorPesquisa = $("#item_" + i).val();
+//                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+//
+//                }
+//
+//                if (campos[i].type == 'NUMBER') {
+//
+//                    campos[i].valorPesquisa = $("#item_" + i).val();
+//
+//                    var operatorType = $("#item_" + i + " select").val();
+//                    var valueNumber = $("#item_" + i + " input").val();
+//
+//                    if ( operatorType == 'entre' ) {
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') > ' + valueNumber + "'");
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <' + valueNumber + "'");
+//                    } else if ( operatorType == 'somente' ) {
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') IN (' + valueNumber + ")'");
+//                    } else {
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+//                    }
+//
+//                }
+//
+//                if ($("#item_" + i).val() != '' && campos[i].type == 'STRING') {
+//
+//                    campos[i].valorPesquisa = $("#item_" + i).val();
+//                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+//
+//                }
+//
+//                if (campos[i].type == "DATETIME") {
+//
+//                    var startDate = $("#item_" + i + " input[name=startDate]").val();
+//                    var endDate = $("#item_" + i + " input[name=endDate]").val();
+//
+//                    if(startDate != '')
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+//                    if(endDate != '')
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+//                }
+//
+//            }
+//
+//        }
 
         filterParams.CQL_FILTER = filterList;
 
