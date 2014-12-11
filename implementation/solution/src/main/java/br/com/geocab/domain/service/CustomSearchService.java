@@ -80,7 +80,7 @@ public class CustomSearchService
 	 * @param CustomSearch
 	 * @return CustomSearch
 	 */
-	public void insertCustomSearch( CustomSearch customSearch )
+	public Long insertCustomSearch( CustomSearch customSearch )
 	{
 		//Assert.notNull(customSearch.getLayer(), Messages.getException( "pesquisapersonalizada.camada" ));
 		try{
@@ -97,6 +97,7 @@ public class CustomSearchService
 			this.accessGroupCustomSearchRepository.save(accessGroupCustomSearch);
 		}
 		
+		return customSearch.getId();
 	}
 	
 	/**
