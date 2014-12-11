@@ -169,11 +169,11 @@
 	'<a ng-click="removeAccessGroup(row.entity)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>'+
 	'</div>';
 
-    var GRID_CAMPOS_INPUT = '<div class="cell-centered">' +
-        '<input class="form-control" maxlength="144" ng-disabled="currentState == DETAIL_STATE" style="width: 70%; margin-top: -3px;" type="text" ng-model="row.entity.rotulo" placeholder="Label">'+
+    var GRID_FIELDS_INPUT = '<div class="cell-centered">' +
+        '<input class="form-control" maxlength="144" ng-disabled="currentState == DETAIL_STATE" style="width: 70%; margin-top: -3px;" type="text" ng-model="row.entity.rotulo" placeholder="'+$translate("admin.custom-search.Label")+'">'+
         '</div>';
 
-    var GRID_ACTION_CAMPOS_BUTTONS = '<div class="cell-centered">' +
+    var GRID_ACTION_FIELDS_BUTTONS = '<div class="cell-centered">' +
         '<a ng-click="removeCampo(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
 
@@ -215,10 +215,10 @@
             }
         },
         columnDefs: [
-            {displayName:'Campo', field: 'name'},
-            {displayName:'Tipo', field: 'type'},
-            {displayName:'Rótulo', sortable:false, cellTemplate: GRID_CAMPOS_INPUT},
-            {displayName:'', sortable:false, cellTemplate: GRID_ACTION_CAMPOS_BUTTONS, width:'100px'}
+            {displayName: $translate("admin.custom-search.Name"), field: 'name'},
+            {displayName: $translate("Type"), field: 'type'},
+            {displayName: $translate("admin.custom-search.Label"), sortable:false, cellTemplate: GRID_FIELDS_INPUT},
+            {displayName:'', sortable:false, cellTemplate: GRID_ACTION_FIELDS_BUTTONS, width:'100px'}
         ]
     };
 
