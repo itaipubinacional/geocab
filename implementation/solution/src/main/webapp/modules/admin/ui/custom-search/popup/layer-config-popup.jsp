@@ -10,7 +10,7 @@
 <div class="modal-content">
 
 	<div class="modal-header">
-		<button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		<button type="button" class="close" ng-click="close(false)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 	    <h3 class="modal-title">Associar Camada</h3>
 	</div>
 

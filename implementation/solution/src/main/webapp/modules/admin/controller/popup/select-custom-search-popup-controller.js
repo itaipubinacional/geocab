@@ -81,7 +81,8 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
 //    };
 
     var IMAGE_LEGENDA_PESQUISA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-        '<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.camada.legenda}}"/>' +
+    '<img ng-if="row.entity.layer.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.layer.legend}}"/>' +
+	'<img ng-if="!row.entity.layer.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.layer.icon}}"/>' +
         '</div>';
 
     /**
