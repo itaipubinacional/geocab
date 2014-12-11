@@ -98,6 +98,51 @@
 			menu: "layer-config"
 		});
 
+		//Custom Search
+		$stateProvider.state('custom-search', {
+            url : "/custom-search",
+            templateUrl : "modules/admin/ui/custom-search/custom-search-view.jsp",
+            controller : CustomSearchController
+        })
+        .state('custom-search.list', {
+                    url: "/list",
+                    menu: "custom-search"
+        })
+        .state('custom-search.detail', {
+                    url: "/detail/:id",
+                    menu: "custom-search"
+        })
+        .state('custom-search.create', {
+            url : "/create",
+            menu: "custom-search"
+        })
+        .state('custom-search.update', {
+            url : "/update/:id",
+            menu: "custom-search"
+        });
+		
+		//ACCESS GROUP
+		$stateProvider.state('access-group', {
+            url : "/access-group",
+            templateUrl : "modules/admin/ui/access-group/access-group-view.jsp",
+            controller : AccessGroupController
+        })
+        .state('access-group.detail', {
+            url: "/detail/:id",
+            menu: "access-group"
+        })
+        .state('access-group.list', {
+            url: "/list",
+            menu: "access-group"
+        })
+        .state('access-group.create', {
+            url : "/create",
+            menu: "access-group"
+        })
+        .state('access-group.update', {
+            url : "/update/:id",
+            menu: "access-group"
+        });
 		
 	});
 	

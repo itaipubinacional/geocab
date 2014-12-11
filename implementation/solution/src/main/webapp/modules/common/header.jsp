@@ -93,6 +93,16 @@
 	                            ng-class="{active: menuActive == 'layer-config'}"
 	                            style="width: 150px;"><spring:message code="admin.layer-config.Layers"/></a></li>
 	                    
+	                     <li class="position-relative"><a
+	                            href="admin#/custom-search"
+	                            ng-class="{active: menuActive == 'custom-search'}"
+	                            style="width: 150px;"><spring:message code="admin.custom-search.Search"/></a></li>
+	                            
+	                     <li class="position-relative"><a
+	                            href="admin#/access-group"
+	                            ng-class="{active: menuActive == 'access-group'}"
+	                            style="width: 150px;"><spring:message code="admin.access-group.Access-group"/></a></li>
+	                    
 	                </ul>
 	                <ul class="nav navbar-nav" style="float: right">
 	                	<li class="position-relative"><a

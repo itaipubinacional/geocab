@@ -20,6 +20,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	 */
 	$importService("layerGroupService");
 	$importService("markerService");
+	$importService("customSearchService");
 	
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
@@ -177,6 +178,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      *
      */
     $scope.currentLayerField = {};
+    
+    /**
+    *
+    * @type {Array}
+    */
+   $scope.searchs = [];
+
+   /**
+    *
+    * @type {Array}
+    */
+   $scope.allSearchs = [];
 
     /**
      *
@@ -410,7 +423,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         $scope.LAYER_MENU_STATE = 'list';
 
-        $scope.enableTools();
+        $scope.listToolsByUser();
 
         $scope.listPublishedLayersGroup();
 
@@ -605,23 +618,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
                     var feature = {
                         layer : $scope.layers[i],
-                        campos : {}
+                        fields : {}
                     };
 
                     angular.forEach(JSON.parse(result[i]).features, function(value, key) {
                         angular.forEach(value.properties, function(value, key) {
 
                             try {
-                                feature.campos[decodeURIComponent( escape(key))] = decodeURIComponent( escape(value));
+                                feature.fields[decodeURIComponent( escape(key))] = decodeURIComponent( escape(value));
                             }
                             catch(e) {
-                                feature.campos[key] = value;
+                                feature.fields[key] = value;
                             }
 
                         });
 
                         var insere = false;
-                        for (var propriedade in feature.campos) {
+                        for (var propriedade in feature.fields) {
                             insere = true;
                             break;
                         }
@@ -679,11 +692,42 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     /**
      *
      */
-    $scope.enableTools = function(){
-    	$scope.hasPermissionCalculoDistancia = true;
-    	$scope.hasPermissionCalculoArea = true;
-    	$scope.hasPermissionKML = true;
-        enableFileKML();
+    $scope.listToolsByUser = function(){
+    	
+    	layerGroupService.listToolsByUser({
+            callback: function (result) {
+
+                for (var i = 0; i < result.length; i++)
+                {
+                    if(result[i].id == $scope.PERMISSION_CALCULO_DISTANCIA)
+                    {
+                        $scope.hasPermissionCalculoDistancia = true;
+                    }
+                    else if(result[i].id == $scope.PERMISSION_CALCULO_AREA)
+                    {
+                        $scope.hasPermissionCalculoArea = true;
+                    }
+                    else if(result[i].id == $scope.PERMISSION_KML)
+                    {
+                        $scope.hasPermissionKML = true;
+                        enableFileKML();
+                    }
+
+                }
+
+                if ($scope.hasPermissionKML == false){
+                    $("#menu-item-3").remove();
+                    $("#tabs-3").remove();
+                }
+
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.$apply();
+            }
+        });
+
     }
 
     /**
@@ -702,7 +746,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     item.name =  !!node.nodes ? '' : node.name;
                     item.legenda =  !!node.nodes ? '' : node.legend;
                     item.selected =  !!node.nodes ? '' : node.startEnabled;
-                    item.fonteDadosEndereco =  !!node.nodes ? '' : node.dataSource.url;
+                    item.dataSourceUrl =  !!node.nodes ? '' : node.dataSource.url;
                     item.value = node.id;
                     item.type = !!node.nodes ? 'grupo' : 'camada';
 
@@ -771,22 +815,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         if( isPesquisa )
         {
-            var index = node.nome.indexOf(":");
-            var enderecoFonteDados = node.fonteDados.endereco.lastIndexOf("geoserver/");
-            var tipoCamada = node.nome.substring(0,index);
-            var nomeCamada = node.nome.substring(index+1,node.nome.length);
-            var urlFormatada = node.fonteDados.endereco.substring(0, enderecoFonteDados+10)+tipoCamada+'/wms';
+            var index = node.name.indexOf(":");
+            var dataSourceAddress = node.dataSource.url.lastIndexOf("geoserver/");
+            var layerType = node.name.substring(0,index);
+            var layerName = node.name.substring(index+1,node.name.length);
+            var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress+10)+layerType+'/wms';
         }
         else
         {
             var index = node.name.indexOf(":");
-            var enderecoFonteDados = node.fonteDadosEndereco.lastIndexOf("geoserver/");
-            var tipoCamada = node.name.substring(0,index);
-            var nomeCamada = node.name.substring(index+1,node.name.length);
-            var urlFormatada = node.fonteDadosEndereco.substring(0, enderecoFonteDados+10)+tipoCamada+'/wms';
+            var dataSourceAddress = node.dataSourceUrl.lastIndexOf("geoserver/");
+            var layerType = node.name.substring(0,index);
+            var layerName = node.name.substring(index+1,node.name.length);
+            var formattedUrl = node.dataSourceUrl.substring(0, dataSourceAddress+10)+layerType+'/wms';
         }
 
-        return {'name': nomeCamada, 'url': urlFormatada};
+        return {'name': layerName, 'url': formattedUrl};
 
     }
 
@@ -799,7 +843,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.getSelectedNode = function(node){
     	
     	/* Check if it is an internal layer */
-    	if(node.fonteDadosEndereco == null) {
+    	if(node.dataSourceUrl == null) {
     		if( node.selected ) {
     			$scope.addInternalLayer(node.value);
     		} else {
@@ -1494,6 +1538,436 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         }
         return output;
     };
+    
+    /*-------------------------------------------------------------------
+     * 		 			CUSTOM SEARCH FUNCTIONALITY
+     *-------------------------------------------------------------------*/
+    $scope.listCustomSearchByUser = function(){
+
+        // resets the fields of the last selected search
+        $scope.currentCustomSearch.layer = null;
+        $scope.currentCustomSearch.layerFields = {};
+        $scope.searchMsg = null;
+
+        // List custom searches based on user access profile
+        customSearchService.listCustomSearchsByUser( {
+            callback: function (result) {
+
+                $scope.customSearchs = result;
+
+                $scope.toggleSidebarMenu(300, '#menu-item-2');
+
+                $scope.$apply();
+
+            },
+            errorHandler: function (message, exception) {
+
+                $scope.toggleSidebarMenu(300, '#menu-item-2');
+
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.$apply();
+            }
+        });
+    }
+    
+    /**
+     * The custom search receive the selected value
+     * @param customSearch
+     */
+     $scope.selectCustomSearch = function(customSearch) {
+         $scope.currentCustomSearch = customSearch;
+         
+         $timeout(function(){
+	         $('.datepicker').datepicker({ 
+				dateFormat: 'dd/mm/yy',
+				dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+			    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+			    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+			    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+			    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+			    nextText: 'Próximo',
+			    prevText: 'Anterior'
+			});	
+	
+			$('.datepicker').mask("99/99/9999");
+         });
+    };
+    
+    /**
+     *  List the layers of custom search fields
+     */
+    $scope.listFieldsLayersSearch = function(){
+
+        // deselect the old research and remove the map
+        for( var i = 0; i < $scope.searchs.length; i++ )
+        {
+            $scope.map.removeLayer($scope.searchs[i].wmsLayer);
+            $scope.allSearchs[0].children[i].selected = false;
+        }
+
+        
+        if($scope.currentCustomSearch.layer.dataSource.url != null ){
+        	var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
+
+			var wmsSource = new ol.source.TileWMS({
+				url: item.url,
+				params:{
+					'LAYERS': $scope.currentCustomSearch.layer.name
+				}
+			});
+
+			var wmsLayer = new ol.layer.Tile({
+				source: wmsSource
+			});
+
+			 $scope.map.addLayer(wmsLayer);
+		} else {
+			
+			$scope.removeInternalLayer($scope.currentCustomSearch.layer.id, function(layerId){
+				var fields = $scope.currentCustomSearch.layerFields;
+				
+				for(var field in fields) {
+					$scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
+				}
+				
+				markerService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, {
+				    callback: function (results) {
+				    	
+				    	$scope.markersByLayer = results;
+				    	
+				    	$scope.allFieldEmpty = true;
+				    	angular.forEach($scope.currentCustomSearch.layerFields, function(field, index){
+				    		if(field.value != "" && field.value != undefined) {
+				    			$scope.allFieldEmpty = false;
+	    					}
+				    	});
+				    	
+				    	if(!$scope.allFieldEmpty){
+				    		
+				    		angular.forEach(results, function(result, index){
+				    			$scope.canRemoveMarker = true;
+				    			
+				    			angular.forEach(result.markerAttribute, function(markerAttribute, index){
+				    				
+				    				angular.forEach($scope.currentCustomSearch.layerFields, function(field, index){	    					
+				    					
+					    				if(field.attributeId == markerAttribute.attribute.id){
+					    					
+					    					if (field.value != "" && markerAttribute.value.indexOf(field.value) != -1 ) {
+					    						$scope.canRemoveMarker = false;
+					    					}
+					    					
+					    				}
+				    				
+				    				});
+				    			
+				    			});
+				    			
+				    			if($scope.canRemoveMarker) {
+				    				delete $scope.markersByLayer[index];
+				    			}
+				    		});
+				    		
+				    	}
+			    		
+				    	var normalizeArray = $scope.markersByLayer;
+				    	$scope.markersByLayer = [];
+				    	
+			    		angular.forEach(normalizeArray, function(value, index){
+
+				    		if(value != undefined){
+				    			$scope.markersByLayer.push(value);
+				    		} 
+			    			
+			    		});
+				    	
+		    			var iconPath = "static/images/marker.png";
+						 
+						if($scope.markersByLayer.length > 0) {
+							iconPath = $scope.markersByLayer[0].layer.icon;
+						}
+						
+						var iconStyle = new ol.style.Style({
+		                   image: new ol.style.Icon(({
+		                       anchor: [0.5, 1],
+		                       anchorXUnits: 'fraction',
+		                       anchorYUnits: 'fraction',
+		                       src: iconPath
+		                    
+		                   }))
+		               });
+					
+						angular.forEach($scope.markersByLayer, function(marker, index){
+			                   var iconFeature = new ol.Feature({
+			                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
+			                       marker: marker,
+			                   });	
+			                  
+			                   
+			                   var layer = new ol.layer.Vector({
+				                   source: new ol.source.Vector({ features: [iconFeature] }),
+				                   
+				                   maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
+				                   minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
+				               });
+				
+				               layer.setStyle(iconStyle);
+				
+				               $scope.map.addLayer(layer);
+				               
+				               $scope.internalLayers.push({"layer": layer, "id": layerId});
+			     			});
+			
+						$scope.$apply();
+			    	
+				    		
+		            },
+		            errorHandler: function (message, exception) {
+
+		                $scope.msg = {type: "danger", text: message, dismiss: true};
+		                $scope.$apply();
+		            }
+		        });
+			})
+			//$scope.addInternalLayer($scope.currentCustomSearch.layer.id);
+			$scope.searchs.push({'pesquisa': $scope.currentCustomSearch});
+			
+			var item = {};
+	        item.label = 'Resultado pesquisas';
+	        item.type = 'grupo'
+	
+	        item.children = [];
+	
+	        var lastSearchName;
+	        for(var i =0; i < $scope.searchs.length ; ++i)
+	        {
+	
+	            $scope.searchs[i].label = "Pesquisa "+ (i+1);
+	            $scope.searchs[i].type = 'camada';
+	            $scope.searchs[i].name = "pesquisa"+ (i+1);
+	
+	            item.children.push($scope.searchs[i]);
+	            lastSearchName = "Pesquisa "+ (i+1);
+	        }
+	
+	        // seleciona a ultima pesquisa
+	        item.children[item.children.length-1].selected = true;
+	
+	        // seleciona o grupo pai caso so tenha uma pesquisa
+	        if (item.children.length == 1) item.selected = true;
+	
+	        // Abre a tree de pesquisas
+	        $timeout(function(){
+	            $('#tree-pesquisas').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
+	        });
+	
+	        $scope.allSearchs = [];
+	        $scope.allSearchs.push(item);
+	        $scope.searchMsg = lastSearchName + ' - Realizada com sucesso'
+	
+	        $("#alertPesquisa").show();
+	
+	        setTimeout(function(){
+	            $("#alertPesquisa").fadeOut();
+	        }, 2000)
+			
+			
+			return false;
+		}
+
+        var filterParams = {'CQL_FILTER' : null};
+        var filterList = '';
+        var firstTime = true;
+
+        var fields = $scope.currentCustomSearch.layerFields;
+
+        var formatDate = function(date) {
+            var date = date.split('/');
+            return date.reverse().join('-');
+        }
+
+        var conectorLike;
+        for (var i = 0; i < fields.length; i++)
+        { 
+        	//estou aqui
+            fields[i].searchValue = '';
+
+            if( $("#item_"+i).val() != '' )
+            {
+                fields[i].searchValue = $("#item_"+i).val();
+ 
+                if (fields[i].tipo != "INT"){
+                    conectorLike = true;
+                } else {
+                    conectorLike = false;
+                }
+                if( firstTime )
+                {
+                    if (conectorLike){
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
+                    } else {
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
+                    }
+ 
+                    firstTime = false;
+                }
+                else
+                {
+                    if (conectorLike){
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
+                    } else {
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
+                    }
+ 
+                }
+            }
+        }
+            
+//            if( firstTime ) {
+//                if ($("#item_" + i).val() != '' && fields[i].type == 'INT') {
+//
+//                    fields[i].searchValue = $("#item_" + i).val();
+//                    filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+//
+//                }
+//
+//                if (fields[i].type == 'NUMBER') {
+//
+//                    fields[i].searchValue = $("#item_" + i).val();
+//
+//                    var operatorType = $("#item_" + i + " select").val();
+//                    var valueNumber = $("#item_" + i + " input").val();
+//
+//                    if ( operatorType == 'entre' ) {
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') > ' + valueNumber + "'");
+//                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') <' + valueNumber + "'");
+//                    } else if ( operatorType == 'somente' ) {
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') IN (' + valueNumber + ")'");
+//                    } else {
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+//                    }
+//
+//                }
+//
+//                if ($("#item_" + i).val() != '' && fields[i].type == 'STRING') {
+//
+//                    fields[i].searchValue = $("#item_" + i).val();
+//                    filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+//
+//                }
+//
+//                if (fields[i].type == "DATETIME") {
+//
+//                    var startDate = $("#item_" + i + " input[name=startDate]").val();
+//                    var endDate = $("#item_" + i + " input[name=endDate]").val();
+//
+//                    if(startDate != '')
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+//                    if(endDate != '')
+//                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+//                }
+//
+//                firstTime = false;
+//
+//            } else {
+//
+//                if ($("#item_" + i).val() != '' && fields[i].type == 'INT') {
+//
+//                    fields[i].searchValue = $("#item_" + i).val();
+//                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+//
+//                }
+//
+//                if (fields[i].type == 'NUMBER') {
+//
+//                    fields[i].searchValue = $("#item_" + i).val();
+//
+//                    var operatorType = $("#item_" + i + " select").val();
+//                    var valueNumber = $("#item_" + i + " input").val();
+//
+//                    if ( operatorType == 'entre' ) {
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') > ' + valueNumber + "'");
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') <' + valueNumber + "'");
+//                    } else if ( operatorType == 'somente' ) {
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') IN (' + valueNumber + ")'");
+//                    } else {
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+//                    }
+//
+//                }
+//
+//                if ($("#item_" + i).val() != '' && fields[i].type == 'STRING') {
+//
+//                    fields[i].searchValue = $("#item_" + i).val();
+//                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+//
+//                }
+//
+//                if (fields[i].type == "DATETIME") {
+//
+//                    var startDate = $("#item_" + i + " input[name=startDate]").val();
+//                    var endDate = $("#item_" + i + " input[name=endDate]").val();
+//
+//                    if(startDate != '')
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+//                    if(endDate != '')
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+//                }
+//
+//            }
+//
+//        }
+
+        filterParams.CQL_FILTER = filterList;
+
+        if( filterList != '' )
+        {
+            wmsSource.updateParams(filterParams);
+        }
+
+        $scope.searchs.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'pesquisa': $scope.currentCustomSearch});
+
+        var item = {};
+        item.label = 'Resultado pesquisas';
+        item.type = 'grupo'
+
+        item.children = [];
+
+        var lastSearchName;
+        for(var i =0; i < $scope.searchs.length ; ++i)
+        {
+
+            $scope.searchs[i].label = "Pesquisa "+ (i+1);
+            $scope.searchs[i].type = 'camada';
+            $scope.searchs[i].name = "pesquisa"+ (i+1);
+
+            item.children.push($scope.searchs[i]);
+            lastSearchName = "Pesquisa "+ (i+1);
+        }
+
+        // seleciona a ultima pesquisa
+        item.children[item.children.length-1].selected = true;
+
+        // seleciona o grupo pai caso so tenha uma pesquisa
+        if (item.children.length == 1) item.selected = true;
+
+        // Abre a tree de pesquisas
+        $timeout(function(){
+            $('#tree-pesquisas').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
+        });
+
+        $scope.allSearchs = [];
+        $scope.allSearchs.push(item);
+        $scope.searchMsg = lastSearchName + ' - Realizada com sucesso'
+
+        $("#alertPesquisa").show();
+
+        setTimeout(function(){
+            $("#alertPesquisa").fadeOut();
+        }, 2000)
+
+
+    }
 
     /*-------------------------------------------------------------------
      * 		 			KML FUNCTIONALITY

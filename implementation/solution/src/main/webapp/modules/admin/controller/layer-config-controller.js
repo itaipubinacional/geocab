@@ -41,7 +41,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
-            $scope.listLayersByFilters($scope.data.filter, $scope.currentPage.pageable);
+            $scope.listLayersByFilters($scope.data.filter,$scope.currentPage.pageable);
         }
     });
 
@@ -160,31 +160,30 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         ]
     };
 
-    var GRID_ACTION_ACESSO_BUTTONS = '<div class="cell-centered">' +
-        '<a ng-click="removeGrupoAcesso(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    var GRID_ACTION_ACCESS_BUTTONS = '<div class="cell-centered">' +
+        '<a ng-click="removeAccessGroup(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
 
     /**
      * General settings of ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
-    $scope.gridAcessoOptions = {
-        data: 'selectedGroups',
-        useExternalSorting: false,
-        multiSelect: false,
-        headerRowHeight: 45,
-        rowHeight: 45,
-        beforeSelectionChange: function (row, event) {
-            //evita chamar a selecao, quando clicado em um action button.
-        	if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
-				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
+    
+    
+    $scope.gridAccessOptions = {
+			data: 'selectedGroups',
+			multiSelect: false,
+            headerRowHeight: 45,
+            rowHeight: 45,
+			beforeSelectionChange: function (row, event) {
+            return false;
         },
-        columnDefs: [
-            {displayName: $translate('Name'), field: 'name'},
-            {displayName: $translate('Description'), field: 'description'},
-            {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ACESSO_BUTTONS, width: '100px'}
-        ]
-    };
+			columnDefs: [
+				 {displayName:$translate('Name'), field:'name'},
+				 {displayName:$translate('Description'), field:'description'},
+				 {displayName: '',sortable: false, cellTemplate: GRID_ACTION_ACCESS_BUTTONS, width: '100px'}
+			]
+	};
     
     var GRID_ACTION_ATTRIBUTES_BUTTONS = '<div class="cell-centered">' +
     '<a ng-if="!row.entity.attributeDefault" ng-click="updateAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Update" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
@@ -462,6 +461,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentState = $scope.DETAIL_STATE;
                 $state.go($scope.DETAIL_STATE, {id: id});
                 $scope.$apply();
+                
+                $scope.loadAccessGroups(result.id);
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -776,12 +777,17 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $scope.msg = null;
     };
 
+    
+    
+    /*-------------------------------------------------------------------
+     *                 ACCESS GROUP - BEHAVIORS
+     *-------------------------------------------------------------------*/
     /**
      *
      */
     $scope.saveGroups = function() {
         if ($scope.addGroups.length > 0) {
-            $scope.linkGrupos();
+            $scope.linkGroups();
         }
         if ($scope.removeGroups.length > 0) {
             $scope.unlinkGroups();
@@ -807,7 +813,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     *
     */
     $scope.unlinkGroups = function() {
-        layerGroupService.unlinkGrupoAcesso($scope.removeGroups, $scope.currentEntity.id, {
+        layerGroupService.unlinkAccessGroup($scope.removeGroups, $scope.currentEntity.id, {
             callback: function(){
                 $scope.removeGroups = [];
                 $scope.$apply();
@@ -818,6 +824,125 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         });
     };
     
+    $scope.loadAccessGroups = function(camadaId) {
+        layerGroupService.listAccessGroupByLayerId(camadaId, {
+            callback: function(result) {
+                $scope.selectedGroups = result;
+                $scope.originalGroups = result.slice(0);
+
+                $scope.$apply();
+            },
+            errorHandler: function(error) {
+                $log.error(error);
+            }
+        })
+    };
+    
+    $scope.removeAccessGroup = function (entity) {
+        var index = $scope.selectedGroups.indexOf(entity);
+        var index2 = $scope.addGroups.indexOf(entity);
+        var index3 = $scope.originalGroups.indexOf(entity);
+        if (index > -1) {
+            $scope.selectedGroups.splice(index, 1);
+        }
+        if (index2 > -1) {
+            $scope.addGroups.splice(index2, 1);
+        }
+        if (index3 > -1) {
+            $scope.removeGroups.push(entity);
+        }
+    };
+     
+//     $scope.selectAccessGroups = function() {
+//         var dialog = $modal.open({
+//             templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
+//             controller: SelectAccessGroupPopUpController,
+//             resolve: {
+//             	selectedGroups : function () {
+//                     return $scope.selectedGroups;
+//                 }
+//             }
+//         });
+//
+//         dialog.result.then(function (result) {
+//
+//             if (result) {
+//                 for (var i = 0; i < result.length; i++) {
+//                     var index = $scope.findByIdInArray($scope.selectedGroups, result[i]);
+//                     var index2 = $scope.findByIdInArray($scope.originalGroups, result[i]);
+//                     var index3 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+//
+//                     //Identifica se marcou novos registros
+//                     if (index == -1 && index2 == -1) {
+//                         var indexAdd = $scope.findByIdInArray($scope.addGroups, result[i]);
+//                         if (indexAdd == -1)
+//                             $scope.addGroups.push(result[i]);
+//                     }
+//
+//                     if (index3 > -1) {
+//                         $scope.removeGroups.splice(index3, 1);
+//                     }
+//
+//                 }
+//                 for (var i = 0; i < $scope.selectedGroups.length; i++) {
+//
+//                     var index = $scope.findByIdInArray(result, $scope.selectedGroups[i]);
+//
+//                     if (index == -1) {
+//                         var index2 = $scope.findByIdInArray($scope.addGroups, $scope.selectedGroups[i]);
+//                         var index3 = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+//                         var index4 = $scope.findByIdInArray($scope.originalGroups, $scope.selectedGroups[i]);
+//
+//                         if (index2 > -1){
+//                             var indexAdd = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+//                             if (indexAdd > -1)
+//                                 $scope.adicionarGrupos.splice(indexAdd, 1);
+//                         }
+//                         if (index3 == -1 && index4 > -1) {
+//                             $scope.removerGrupos.push($scope.selectedGroups[i]);
+//                         }
+//
+//                     }
+//                 }
+//                 $scope.selectedGroups = result;
+//             }
+//
+//         });
+//     }
+    
+    $scope.selectAccessGroups = function () {
+        var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
+            controller: SelectAccessGroupPopUpController,
+            resolve: {
+                selectedGroups : function () {
+                    return $scope.selectedGroups;
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+            $log.log(result);
+
+            if (result != null && result.length > 0) {
+                $scope.selectedGroups = $scope.selectedGroups.concat(result);
+                for (var i = 0; i < result.length; i++) {
+                    var index = $scope.findByIdInArray($scope.originalGroups, result[i]);
+                    if (index == -1) {
+                        $scope.addGroups.push(result[i]);
+                    }
+                    var index2 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+                    if (index2 > -1) {
+                        $scope.removeGroups.splice(index2, 1);
+                    }
+                }
+            }
+        });
+    }
+    
+    /*-------------------------------------------------------------------
+     *                
+     *-------------------------------------------------------------------*/
   
     $scope.moreIcons = function() {
     	var dialog = $modal.open({
@@ -897,6 +1022,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         });
     }
+    
+    
+   
+    
+    
     
     /**
      * Remove attribute

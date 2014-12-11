@@ -49,16 +49,24 @@
 	
 	<!-- Controllers -->
 	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/select-tools-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/select-config-layer-access-group-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/select-users-ldap-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/update-attribute-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/add-attribute-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-layer-group-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-access-group-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/select-layer-config-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/add-fields-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-layers-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/select-custom-search-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/data-source-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/layer-group-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/layer-config-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/custom-search-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/access-group-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/layer-group-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/users-controller.js"></script>
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>

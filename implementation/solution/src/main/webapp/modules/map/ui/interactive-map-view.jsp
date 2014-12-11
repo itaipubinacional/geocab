@@ -54,8 +54,6 @@
 			</ul>
 		</div>
 
-
-
 		<div id="sidebar-marker-detail-update" class="sidebar-style rui-resizable-left resizable-test-block" style="min-width: 384px" >
 
 			<div class='rui-resizable-content' style="position: static;">
@@ -576,6 +574,11 @@
 						<div class="icon itaipu-icon-layers sidebar-icon"></div>
 					</a>
 				</li>
+				<li class="menu-item" id="menu-item-2" ng-click="listCustomSearchByUser()" title="Pesquisa Personalizada">
+                    <a href="#tabs-2">
+                        <div class="icon itaipu-icon-zoom sidebar-icon"></div>
+                    </a>
+                </li>
 				<li class="menu-item" id="menu-item-3" ng-click="toggleSidebarMenu(300, '#menu-item-3');" title="<spring:message code="map.KML-enabled" />">
                     <a href="#tabs-3">
                         <div class="icon itaipu-icon-kml sidebar-icon"></div>
@@ -652,6 +655,61 @@
 							</div>
 		
 						</div>
+						<div id="tabs-2">
+
+                            <div class="sidebar-content-header">Pesquisas personalizadas</div>
+                            <br style="clear: both; ">
+                            <div class="form-item position-relative" style="width: 100%; margin-top: 30px; margin-bottom: 5px">
+                                <select class="sidebar-content-search form-control" style="margin-bottom: 0; margin-top: 0"
+                                        ng-model="currentCustomSearch"
+                                        ng-change="selectCustomSearch(currentCustomSearch)"
+                                        ng-options="search.name for search in customSearchs"
+                                        ng-required="true" ng-hover>
+                                    <option value="">Selecione...</option>
+                                </select>
+                            </div>
+
+                            <div id="alertPesquisa" ng-show="searchMsg != null" class="alert info" style="display: block;font-size: 11px;height: 40px;margin-top: 0px;margin-bottom: 0px;">
+                                {{searchMsg}}
+                            </div>
+                            <hr style="border-color: #d9d9d9; position: absolute;top: 155px;right: 15px;left: 15px;"/>
+
+                            <button class="btn btn-primary" ng-disabled="currentCustomSearch == null || currentCustomSearch.layer == null"
+                                    style="width: 90px; height: 30px; position: absolute;top: 190px;" ng-click="listFieldsLayersSearch()">Pesquisa</button>
+                            <br/>
+                            <div style="overflow-y: auto;position: absolute;top: 250px;bottom: 0px;left: 20px;right: 0px;">
+                                <div ng-repeat="search in currentCustomSearch.layerFields" style="width: 90%;">
+                                	<input id="item_{{$index}}" placeholder="{{search.label ? search.label : search.name}}" ng-class="{datepicker: search.type == 'DATE' }" type="text" class="form-control" maxlength="40">
+<!--                                     <div class="form-group" ng-if="search.type == 'DATETIME'"> -->
+<!--                                         <label>{{ search.label ? search.label : search.name }}</label> -->
+<!--                                         <div class="input-group input-daterange" id="item_{{$index}}" date-picker> -->
+<!--                                             <input type="text" class="form-control" name="start" /> -->
+<!--                                             <span class="input-group-addon">-</span> -->
+<!--                                             <input type="text" class="form-control" name="end" /> -->
+<!--                                         </div> -->
+<!--                                     </div> -->
+<!--                                     <input ng-if="search.type == 'STRING'" id="item_{{$index}}" placeholder="{{search.label ? search.label : search.name}}" type="text" class="form-control" maxlength="40"> -->
+<!--                                     <div class="form-group row" ng-if="search.type == 'NUMBER'" id="item_{{$index}}"> -->
+<!--                                         <div class="col-sm-5"> -->
+<!--                                             <select class="form-control" style="padding: 4px"> -->
+<!--                                                 <option value="=">=</option> -->
+<!--                                                 <option value=">">></option> -->
+<%--                                                 <option value="<"><</option> --%>
+<!--                                                 <option value=">=">>=</option> -->
+<%--                                                 <option value="<="><=</option> --%>
+<!--                                                 <option value="!=">!=</option> -->
+<!--                                                 <option value="entre">Entre</option> -->
+<!--                                                 <option value="somente">Somente</option> -->
+<!--                                             </select> -->
+<!--                                         </div> -->
+<!--                                         <div class="col-sm-7"> -->
+<!--                                             <input placeholder="{{search.label ? search.label : search.name}}" type="text" class="form-control" maxlength="40"> -->
+<!--                                         </div> -->
+<!--                                     </div> -->
+                                    </br>
+                                </div>
+                            </div>
+                        </div>
 						<div id="tabs-3" style="position: absolute; top:0; right:0; left:0; bottom:0">
 		
 		                    <div class="sidebar-content-header"><spring:message code="map.KML-files"/></div>

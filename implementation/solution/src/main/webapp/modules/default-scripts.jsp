@@ -27,6 +27,7 @@
 <script type="text/javascript" src="<c:url value="/webjars/angularjs/1.2.18/angular.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/webjars/angular-ui-router/0.2.10/angular-ui-router.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/webjars/ng-grid/2.0.11/ng-grid.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/static/libs/grid-no-results/grid-directive.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/webjars/angular-ui-bootstrap/0.11.0/ui-bootstrap-tpls.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/static/js/eits/angular-translate/angular-translate.js"/>"></script>
 

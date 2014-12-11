@@ -6,10 +6,12 @@
  * @param $log
  * @param $location
  */
-function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecionados, $log) {
+function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log, $importService) {
 
 
 	$scope.msg = null;
+	
+	$importService("accountService");
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	ATTRIBUTES
@@ -54,7 +56,7 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
 	$scope.initialize = function() 
 	{
         $scope.numeroDeRegistros = 0;
-        $scope.usuariosSelecionados = usuariosSelecionados;
+        $scope.usersSelected = usersSelected;
 	};
 
 	/*-------------------------------------------------------------------
@@ -72,17 +74,17 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
 
         $scope.showLoading = true;
 
-        usuarioService.listUsuariosByFilters( filter, {
+        accountService.listUsersByFilters( filter, {
             callback : function(result) {
-            	$scope.usuarios = result;
+            	$scope.users = result;
                 $scope.showLoading = false;
 
                 //Function responsible for marking the records that were already tagged prior to the opening of pop-up
-                if ($scope.usuariosSelecionados) {
-                    angular.forEach( $scope.usuariosSelecionados, function(data, index) {
+                if ($scope.usersSelected) {
+                    angular.forEach( $scope.usersSelected, function(data, index) {
                         var i = $scope.findUsername(data.username, $scope.usuarios);
                         if (i > -1) {
-                            $scope.usuarios.splice(i, 1);
+                            $scope.users.splice(i, 1);
                         }
                     });
                 }
@@ -100,8 +102,8 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
 
     $scope.filterSelectedUsers = function () {
         var index;
-        for (var i = 0; i < $scope.usuariosSelecionados.length; i++) {
-            index = $scope.usuarios.indexOf($scope.usuariosSelecionados[i]);
+        for (var i = 0; i < $scope.usersSelected.length; i++) {
+            index = $scope.usuarios.indexOf($scope.usersSelected[i]);
             if (index > -1) {
                 $scope.usuarios.splice(index, 1);
             };
@@ -149,7 +151,7 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
     };
 
     $scope.gridOptions = {
-        data: 'usuarios',
+        data: 'users.content',
         multiSelect: false,
         headerRowHeight: 45,
         filterOptions: $scope.filterOptions,
@@ -159,11 +161,13 @@ function SelectUsuariosPopUpController($scope, $modalInstance , usuariosSelecion
             $scope.toogleSelection(row, event);
         },
         columnDefs: [
-            {displayName:'Nome Completo', field:'nomeCompleto'},
-            {displayName:'Nome de usuário', field:'username', width: '120px'},
-            {displayName:'E-mail', field: 'email', width:'280px'}
+            {displayName:'Nome Completo', field:'name', width: '30%'},
+            {displayName:'Nome de usuário', field:'username', width: '30%'},
+            {displayName:'E-mail', field: 'email', width:'40%'}
         ]
     };
+    
+   
 
     /**
 	 *

@@ -95,8 +95,10 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 			+ "WHERE ( layerGroup.layerGroupUpper = NULL "
 			+ "AND layerGroup.draft = null "
 			+ "AND layerGroup.published = false ) "
-			+ "AND layerGroup.id NOT IN (:layerGroupIds)"
+			+ "AND layerGroup.id NOT IN (SELECT layer.layerGroup.id "
+			+ "FROM Layer layer "
+			+ "WHERE ( layer.name = :layerName ) AND ( layer.dataSource.id = :dataSourceId ) )"
 			+ "ORDER BY orderLayerGroup" )
-	public List<LayerGroup> listSupervisorsFilter(  @Param("layerGroupIds")  List<Long> LayerGroupIds );
+	public List<LayerGroup> listSupervisorsFilter( @Param("layerName") String layerName, @Param("dataSourceId") Long dataSourceId );
 	
 }

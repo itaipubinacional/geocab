@@ -1,3 +1,213 @@
+//'use strict';
+//
+///**
+// * 
+// * @param $scope
+// * @param $log
+// * @param $location
+// */
+//function SelectAccessGroupPopUpController($scope, $modalInstance, $log, selectedGroups, $importService) {
+//
+//	/*-------------------------------------------------------------------
+//	 * 		 				 	EVENT HANDLERS
+//	 *-------------------------------------------------------------------*/
+//
+//	$importService("accessGroupService")
+//    /**
+//     *  Handler that listens to each time the user makes the sorting in tables programmatically/ng-grid.
+//     *  When the event is fired, we configure the pager of the spring-date
+//     *  and we call again the query, considering also the filter State (@see $scope. date. filter)
+//     */
+//    $scope.$on('ngGridEventSorted', function (event, sort) {
+//
+//        if(event.targetScope.gridId != $scope.gridOptions.gridId)
+//        {
+//            return;
+//        }
+//
+//        // compara os objetos para garantir que o evento seja executado somente uma vez q não entre em loop
+//        if (!angular.equals(sort, $scope.gridOptions.sortInfo)) {
+//            $scope.gridOptions.sortInfo = angular.copy(sort);
+//
+//            //Order do spring-data
+//            var order = new Order();
+//            order.direction = sort.directions[0].toUpperCase();
+//            order.property = sort.fields[0];
+//
+//            //Sort do spring-data
+//            $scope.currentPage.pageable.sort = new Sort();
+//            $scope.currentPage.pageable.sort.orders = [ order ];
+//
+//            $scope.listaccessGroupsByFilter($scope.data.filter, $scope.currentPage.pageable);
+//        }
+//    });
+//
+//
+//	/*-------------------------------------------------------------------
+//	 * 		 				 	ATTRIBUTES
+//	 *-------------------------------------------------------------------*/
+//
+//
+//    /**
+//     * Variable to store the form attributes
+//     * not fit on an entity. Ex.:
+//     * @filter - Query filterv
+//     */
+//    $scope.data = { filter:null };
+//
+//	/**
+//	 * 
+//	 */
+//	$scope.currentPage;
+//
+//	/**
+//	 * 
+//	 */
+//	$scope.grupos = [];
+//
+//    /**
+//     *a
+//     * @type {{data: string, multiSelect: boolean, useExternalSorting: boolean, headerRowHeight: number, filterOptions: ($scope.filterOptions|*), rowHeight: number, enableRowSelection: boolean, afterSelectionChange: afterSelectionChange, columnDefs: *[]}}
+//     */
+//    $scope.gridOptions = {
+//        data: 'currentPage.content',
+//        multiSelect: true,
+//        showSelectionCheckbox: true,
+//        useExternalSorting: true,
+//        headerRowHeight: 45,
+//        keepLastSelected: false,
+//        rowHeight: 45,
+//        selectedItems: [],
+//        enableRowSelection: true,
+//        columnDefs: [
+//            {displayName: 'Nome', field: 'name'},
+//            {displayName: 'Descrição', field: 'description'}
+//        ]
+//    };
+//
+//	/*-------------------------------------------------------------------
+//	 * 		 				 	  NAVIGATIONS
+//	 *-------------------------------------------------------------------*/
+//	/**
+//	 * Main method that makes the role of front-controller of the screen.
+//	 * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+//	 * When this occurs, gets the State via the $state and calls the initial method of that State.
+//	 * Ex.: /list -> changeToList()
+//	 *      /create -> changeToInsert()
+//	 *
+//	 * If the State is not found, he directs to the listing,
+//	 * Although the front controller of angle won't let enter an invalid URL.
+//	 */
+//	$scope.initialize = function() 
+//	{
+//        var pageRequest = new PageRequest();
+//        pageRequest.size = 6;
+//        $scope.pageRequest = pageRequest;
+//
+//		$scope.listaccessGroupsByFilter($scope.data.filter, $scope.pageRequest);
+//
+//
+//    };
+//
+//    /**
+//     * Configures the pageRequest as the visual component pager
+//     * and calls the listing service, considering the current filter on the screen.
+//     *
+//     * @see currentPage
+//     * @see data.filter
+//     */
+//    $scope.changeToPage = function( filter, pageNumber ) {
+//        $scope.currentPage.pageable.page = pageNumber-1;
+//        $scope.listaccessGroupsByFilter( filter, $scope.currentPage.pageable );
+//        $scope.showLoading = false;
+//    };
+//
+//	/*-------------------------------------------------------------------
+//	 * 		 				 	  BEHAVIORS
+//	 *-------------------------------------------------------------------*/
+//
+//    /**
+//     *
+//     * @param string
+//     * @param list
+//     * @returns {number}
+//     */
+//    $scope.findName = function(string, list) {
+//        for (var index = 0; index < list.length; index++) {
+//            if (list[index].nome == string) return index
+//        }
+//        return -1;
+//    }
+//
+//	/**
+//	 * Performs the query records, considering  filter, paging and sorting.
+//	 * When ok, change the screen state to list
+//	 *
+//	 * @see data.filter
+//	 * @see currentPage
+//	 */
+//	$scope.listaccessGroupsByFilter = function( filter, pageRequest ) {
+//
+//        accessGroupService.listAccessGroupByFilters( filter, pageRequest, {
+//			callback : function(result) {
+//				$scope.currentPage = result;
+//				$scope.currentPage.pageable.pageNumber++;
+//                $scope.$apply();
+//
+//                $scope.showLoading = false;
+//
+//                
+//                if (selectedGroups) {
+//                    angular.forEach( selectedGroups, function(data, index) {
+//                        var i = $scope.findName(data.nome, $scope.currentPage.content);
+//                        if (i > -1) {
+//                            $scope.currentPage.content.splice(i, 1);
+//                        }
+//                    });
+//                };
+//
+//                $scope.$apply();
+//
+//
+//			},
+//			errorHandler : function(message, exception) {
+//				$scope.message = {type:"danger", text: message};
+//				$scope.$apply();
+//			}
+//		});
+//	};
+//
+//	$scope.my_tree_handler = function(branch) 
+//	{
+//		$scope.currentEntity = branch;
+//	};
+//
+//	$scope.form = function( formName )
+//	{
+//
+//		if ( !formName ) 
+//		{
+//			formName = "form";
+//		}
+//
+//		return $("form[name="+formName+"]").scope()[formName];
+//	};
+//
+//	/**
+//	 *
+//	 */
+//	 $scope.close = function( fechar )
+//	 {
+//         if (fechar) {
+//             $modalInstance.close();
+//         } else {
+//             $modalInstance.close($scope.gridOptions.selectedItems);
+//         }
+//
+//	 };
+//};
+
+
 'use strict';
 
 /**
@@ -6,17 +216,22 @@
  * @param $log
  * @param $location
  */
-function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSelecionados) {
+function SelectAccessGroupPopUpController($scope, $modalInstance, $log, selectedGroups, $injector, $importService) {
 
+	
+	$importService("accessGroupService")
+	
+	
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
 	 *-------------------------------------------------------------------*/
 
+    $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 
     /**
-     *  Handler that listens to each time the user makes the sorting in tables programmatically/ng-grid.
-     *  When the event is fired, we configure the pager of the spring-date
-     *  and we call again the query, considering also the filter State (@see $scope. date. filter)
+     *  Handler que escuta toda vez que o usuário/programadamente faz o sorting na ng-grid.
+     *  Quando o evento é disparado, configuramos o pager do spring-data
+     *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
      */
     $scope.$on('ngGridEventSorted', function (event, sort) {
 
@@ -49,9 +264,9 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
 
 
     /**
-     * Variable to store the form attributes
-     * not fit on an entity. Ex.:
-     * @filter - Query filterv
+     * Variável para armazenar atributos do formulário que
+     * não cabem em uma entidade. Ex.:
+     * @filter - Filtro da consulta
      */
     $scope.data = { filter:null };
 
@@ -60,10 +275,17 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
 	 */
 	$scope.currentPage;
 
-	/**
-	 * 
-	 */
+    /**
+     *
+     * @type {Array}
+     */
 	$scope.grupos = [];
+
+    /**
+     *
+     * @type {null}
+     */
+    $scope.itensMarcados = [];
 
     /**
      *a
@@ -78,10 +300,37 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
         keepLastSelected: false,
         rowHeight: 45,
         selectedItems: [],
+        afterSelectionChange: function (rowItem){
+            if (rowItem.length > 0) {
+                var i;
+                for (var rowItemIndex = 0; rowItemIndex < rowItem.length; rowItemIndex++) {
+                    if (rowItem[rowItemIndex].selected){
+                        i = $scope.findByIdInArray($scope.itensMarcados, rowItem[rowItemIndex].entity);
+                        if (i == -1)
+                            $scope.itensMarcados.push(rowItem[rowItemIndex].entity);
+                    } else {
+                        i = $scope.findByIdInArray($scope.itensMarcados, rowItem[rowItemIndex].entity);
+                        if (i > -1)
+                            $scope.itensMarcados.splice(i, 1);
+                    }
+                }
+            } else {
+                var i;
+                if (rowItem.selected){
+                    i = $scope.findByIdInArray($scope.itensMarcados, rowItem.entity);
+                    if (i == -1)
+                        $scope.itensMarcados.push(rowItem.entity);
+                } else {
+                    i = $scope.findByIdInArray($scope.itensMarcados, rowItem.entity);
+                    if (i > -1)
+                        $scope.itensMarcados.splice(i, 1);
+                }
+            }
+        },
         enableRowSelection: true,
         columnDefs: [
-            {displayName: 'Nome', field: 'nome'},
-            {displayName: 'Descrição', field: 'descricao'}
+            {displayName: 'Nome', field: 'name'},
+            {displayName: 'Descrição', field: 'description'}
         ]
     };
 
@@ -89,17 +338,19 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Main method that makes the role of front-controller of the screen.
-	 * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
-	 * When this occurs, gets the State via the $state and calls the initial method of that State.
+	 * Método principal que faz o papel de front-controller da tela.
+	 * Ele é invocado toda vez que ocorre uma mudança de URL (@see $stateChangeSuccess),
+	 * quando isso ocorre, obtém o estado através do $state e chama o método inicial daquele estado.
 	 * Ex.: /list -> changeToList()
-	 *      /create -> changeToInsert()
+	 *      /criar -> changeToInsert()
 	 *
-	 * If the State is not found, he directs to the listing,
-	 * Although the front controller of angle won't let enter an invalid URL.
+	 * Caso o estado não for encontrado, ele direciona para a listagem,
+	 * apesar que o front-controller do angular não deixa digitar uma URL inválida.
 	 */
 	$scope.initialize = function() 
 	{
+        $scope.itensMarcados = selectedGroups.slice(0);
+
         var pageRequest = new PageRequest();
         pageRequest.size = 6;
         $scope.pageRequest = pageRequest;
@@ -110,8 +361,8 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
     };
 
     /**
-     * Configures the pageRequest as the visual component pager
-     * and calls the listing service, considering the current filter on the screen.
+     * Configura o pageRequest conforme o componente visual pager
+     * e chama o serviço de listagem, considerando o filtro corrente na tela.
      *
      * @see currentPage
      * @see data.filter
@@ -140,35 +391,34 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
     }
 
 	/**
-	 * Performs the query records, considering  filter, paging and sorting.
-	 * When ok, change the screen state to list
+	 * Realiza a consulta de registros, consirando filtro, paginação e sorting.
+	 * Quando ok, muda o estado da tela para list.
 	 *
 	 * @see data.filter
 	 * @see currentPage
 	 */
 	$scope.listGruposAcessosByFilter = function( filtro, pageRequest ) {
 
-        grupoAcessoService.listGrupoAcessoByFilters( filtro, pageRequest, {
+        accessGroupService.listAccessGroupByFilters( filtro, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
-				$scope.currentPage.pageable.pageNumber++;
+				$scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
                 $scope.$apply();
 
                 $scope.showLoading = false;
 
-                
-                if (gruposSelecionados) {
-                    angular.forEach( gruposSelecionados, function(data, index) {
-                        var i = $scope.findName(data.nome, $scope.currentPage.content);
+                //Função responsável por retirar os registros que já estavam marcados antes da abertura da pop-up
+
+                if ($scope.itensMarcados) {
+                    angular.forEach( $scope.itensMarcados, function(data, index) {
+                        var i = $scope.findByIdInArray($scope.currentPage.content, data);
                         if (i > -1) {
-                            $scope.currentPage.content.splice(i, 1);
+                            $scope.gridOptions.selectItem(i, true);
                         }
                     });
                 };
 
                 $scope.$apply();
-
-
 			},
 			errorHandler : function(message, exception) {
 				$scope.message = {type:"danger", text: message};
@@ -177,11 +427,20 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
 		});
 	};
 
+    /**
+     *
+     * @param branch
+     */
 	$scope.my_tree_handler = function(branch) 
 	{
 		$scope.currentEntity = branch;
 	};
 
+    /**
+     *
+     * @param formName
+     * @returns {*}
+     */
 	$scope.form = function( formName )
 	{
 
@@ -193,16 +452,16 @@ function SelectAccessGroupPopUpController($scope, $modalInstance, $log, gruposSe
 		return $("form[name="+formName+"]").scope()[formName];
 	};
 
-	/**
-	 *
-	 */
+    /**
+     *
+     * @param fechar
+     */
 	 $scope.close = function( fechar )
 	 {
-         if (fechar) {
-             $modalInstance.close();
+         if (fechar == false) {
+             $modalInstance.close(fechar);
          } else {
-             $modalInstance.close($scope.gridOptions.selectedItems);
+             $modalInstance.close($scope.itensMarcados);
          }
-
 	 };
 };

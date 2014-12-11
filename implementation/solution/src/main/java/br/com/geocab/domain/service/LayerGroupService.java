@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -30,15 +31,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.geocab.application.security.ContextHolder;
+import br.com.geocab.domain.entity.accessgroup.AccessGroup;
+import br.com.geocab.domain.entity.accessgroup.AccessGroupLayer;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.ExternalLayer;
 import br.com.geocab.domain.entity.layer.FieldLayer;
 import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.layer.LayerField;
+import br.com.geocab.domain.entity.layer.LayerFieldType;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
+import br.com.geocab.domain.entity.tool.Tool;
 import br.com.geocab.domain.repository.IFileRepository;
+import br.com.geocab.domain.repository.accessgroup.IAccessGroupLayerRepository;
+import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
@@ -88,6 +98,18 @@ public class LayerGroupService
 	 */
 	@Autowired
 	private ILayerRepository layerRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAccessGroupLayerRepository accessGroupLayerRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAccessGroupRepository accessGroupRepository;
 
 	/**
 	 * 
@@ -487,7 +509,127 @@ public class LayerGroupService
 		
 		setLegendsLayers(layersGroupUpperPublished);
 		
+		List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
+		
+		for (AccessGroup accessGroup : accessGroupsUser)
+		{
+			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
+		}
+		
+		if ( !layersGroupUpperPublished.isEmpty() )
+		{
+			verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
+		}
+		
+		List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
+		
+		for ( LayerGroup layerGroup : layersGroupUpperPublished )
+		{
+			this.removeLayerGroupEmptyPublished(layerGroup);
+			
+			if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
+			{
+				layerGroupToDelete.add(layerGroup);
+			}
+		}
+		layersGroupUpperPublished.removeAll(layerGroupToDelete);
+		
 		return layersGroupUpperPublished;
+		
+	}
+	
+	/**
+	 * 
+	 * @param gruposCamadas
+	 * @param gruposAcessosUsuario
+	 */
+	private void verifyLayerPermission( List<LayerGroup> layerGroups, List<AccessGroup> accessGroupUser )
+	{
+		boolean hasAccess = false;
+		
+		if ( layerGroups != null )
+		{ 
+			if ( !layerGroups.isEmpty() )
+			{
+				for (LayerGroup group: layerGroups)
+				{
+					if( group.getLayers() != null )
+					{					
+						if( group.getLayers().size() > 0 )
+						{
+							List<Layer> layersToDelete = new ArrayList<Layer>();
+							for(Layer layer : group.getLayers())
+							{
+								if ( !accessGroupUser.isEmpty() )
+								{
+									for (AccessGroup accessGroup: accessGroupUser)
+									{
+										if ( !accessGroup.getAccessGroupLayer().isEmpty() )
+										{
+											for (AccessGroupLayer accessGroupLayer : accessGroup.getAccessGroupLayer())
+											{
+												if(layer.getId().equals(accessGroupLayer.getLayer().getId()) && layer.isStartVisible())
+												{
+													hasAccess = true;
+													break;
+												}
+												else
+												{
+													hasAccess = false;
+												}
+											}
+										}
+										
+										if (hasAccess)
+										{
+											break;
+										}
+									}
+								}
+								
+								if( !hasAccess )
+								{
+									layersToDelete.add(layer);
+								} else {
+									hasAccess = false;
+								}
+							}
+							group.getLayers().removeAll(layersToDelete);
+						}
+					}
+					
+					verifyLayerPermission(group.getLayersGroup(), accessGroupUser);
+				}
+				
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param grupoCamadas
+	 */
+	private void removeLayerGroupEmptyPublished( LayerGroup layerGroups )
+	{
+		if ( layerGroups.getLayersGroup() != null )
+		{
+			List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
+			
+			for (LayerGroup layerGroupChildren: layerGroups.getLayersGroup())
+			{
+				
+				removeLayerGroupEmptyPublished(layerGroupChildren);
+				
+				// remove o grupo de camada publicado superior vazio
+				if (layerGroupChildren.getLayersGroup().isEmpty() & layerGroupChildren.getLayers().isEmpty())
+				{
+					layerGroupToDelete.add(layerGroupChildren);
+				}
+				
+			}
+			
+			layerGroups.getLayersGroup().removeAll(layerGroupToDelete);
+		}
 		
 	}
 	
@@ -595,9 +737,11 @@ public class LayerGroupService
     public List<LayerGroup> listSupervisorsFilter(String layer, Long dataSource)
     {
         /* Retorna lista de ids dos grupos de camadas para n�o cadastramento de camadas repetidos no grupo */
-        List<Long> layerGroupIds = this.layerRepository.listLayerGroupIdsByNameAndDataSource(layer, dataSource);
+        //List<Long> layerGroupIds = this.layerRepository.listLayerGroupIdsByNameAndDataSource(layer, dataSource);
          
-        List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layerGroupIds);
+        //List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layerGroupIds);
+    	
+    	List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layer, dataSource);
          
         this.setLegendsLayers(layersGroup);
          
@@ -617,8 +761,34 @@ public class LayerGroupService
 	 * @throws JsonParseException 
 	 */
 	@Transactional(readOnly=true)
-	public List<FieldLayer> listFieldLayersByFilter(Layer layer)
+	public List<LayerField> listFieldLayersByFilter(Layer layer)
 	{
+		if(layer.getDataSource().getUrl() == null){
+			List<LayerField> layerFields = new ArrayList<LayerField>();
+			List<Attribute>  attrs = this.listAttributesByLayer(layer.getId());
+			
+			for(Attribute attr : attrs) {
+				LayerField layerField = new LayerField();
+				layerField.setName(attr.getName());
+				layerField.setAttributeId(attr.getId());
+				
+				if(attr.getType() == AttributeType.TEXT){
+					layerField.setType(LayerFieldType.STRING);
+				} else if(attr.getType() == AttributeType.DATE){
+					layerField.setType(LayerFieldType.DATE);
+				} else if(attr.getType() == AttributeType.NUMBER){
+					layerField.setType(LayerFieldType.INT);
+				} else if(attr.getType() == AttributeType.BOOLEAN){
+					layerField.setType(LayerFieldType.BOOLEAN);
+				}
+				
+				layerFields.add(layerField);
+				
+			}
+			
+			return layerFields;
+		}
+		
 		String sUrl;
 		
 		int posicao = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
@@ -646,15 +816,25 @@ public class LayerGroupService
 				JSONObject properties = (JSONObject) featureTypes.get(0);
 				JSONArray propertiesArray = (JSONArray) properties.get("properties");
 				
-				List<FieldLayer> campos = new ArrayList<FieldLayer>();
+				List<LayerField> campos = new ArrayList<LayerField>();
 				
 				for (int i = 0; i < propertiesArray.length(); i++) 
 				{
 					
 					JSONObject jsonOb = (JSONObject) propertiesArray.get(i);
-					FieldLayer fieldLayer = new FieldLayer();
-					fieldLayer.setNome(jsonOb.get("name").toString());
-					campos.add(fieldLayer);
+//					FieldLayer fieldLayer = new FieldLayer();
+//					fieldLayer.setName(jsonOb.get("name").toString());
+//					fieldLayer.set(jsonOb.get("type").toString());
+							
+					LayerField layerField = new LayerField();
+					
+					if (layerField.isValidTipoGeoserver(jsonOb.get("type").toString())){
+						layerField.setName(jsonOb.get("name").toString());
+						layerField.setTipoGeoServer(jsonOb.get("type").toString());
+						campos.add(layerField);
+					}
+
+					//campos.add(layerField);
 				}
 				
 				return campos;
@@ -699,9 +879,26 @@ public class LayerGroupService
 	 * @return camadas
 	 */
 	@Transactional(readOnly=true)
+	public Page<Layer> listLayersByFilters( String filter, Long dataSourceId,PageRequest pageable )
+	{
+		Page<Layer> layers = this.layerRepository.listByFilters(filter, dataSourceId, pageable);
+		
+		
+		for ( Layer layer : layers.getContent() )
+		{
+			// traz a legenda da camada do GeoServer
+			if(layer.getDataSource().getUrl() != null ) {
+				layer.setLegend(getLegendLayerFromGeoServer(layer));	
+			}
+		}
+		
+		return layers;
+	}
+	
+	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, PageRequest pageable )
 	{
-		Page<Layer> layers = this.layerRepository.listByFilters(filter, null, pageable);
+		Page<Layer> layers = this.layerRepository.listByFilters(filter, null,pageable);
 		
 		for ( Layer layer : layers.getContent() )
 		{
@@ -808,8 +1005,16 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void removeLayer( Long id )
 	{	
-		final Layer attr = this.layerRepository.findOne( id );
-		this.layerRepository.delete( attr );
+		
+		List<AccessGroupLayer> layers = this.accessGroupLayerRepository.listByLayerId(id);
+		for (AccessGroupLayer accessGroupLayer : layers)
+		{
+			this.accessGroupLayerRepository.delete(accessGroupLayer);
+		}
+		
+		
+		
+		this.layerRepository.delete( id );
 	}
 	
 	/**
@@ -850,7 +1055,10 @@ public class LayerGroupService
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
-			layer.setLegend(getLegendLayerFromGeoServer(layer));
+			if( layer.getDataSource().getUrl() != null) {
+				layer.setLegend(getLegendLayerFromGeoServer(layer));
+			}
+			
 		}
 		
 		return layers;
@@ -870,6 +1078,61 @@ public class LayerGroupService
 		return urlGeoserver + Layer.LEGEND_GRAPHIC_URL + layer.getName() + Layer.LEGEND_GRAPHIC_FORMAT;
 	}
 	
+	
+	/**
+	 * 
+	 * @param accessGroup
+	 * @param camadaId
+	 */
+	public void linkAccessGroup( List<AccessGroup> accessGroups, Long layerId )
+	{
+		Layer layer = new Layer(layerId);
+		for (AccessGroup accessGroup : accessGroups)
+		{
+			AccessGroupLayer accesGroupLayer = new AccessGroupLayer();
+			accesGroupLayer.setAccessGroup(accessGroup);
+			accesGroupLayer.setLayer(layer);
+			
+			this.accessGroupLayerRepository.save(accesGroupLayer);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param accessGroup
+	 * @param pesquisaPersonalizada
+	 */
+	public void unlinkAccessGroup( List<AccessGroup> accessGroups, Long layerId )
+	{
+		for (AccessGroup accessGroup : accessGroups)
+		{
+			List<AccessGroupLayer> list = this.accessGroupLayerRepository.listByAccessGroupLayerId(accessGroup.getId(), layerId);
+			for (AccessGroupLayer accessGroupLayer : list)
+			{
+				this.accessGroupLayerRepository.delete(accessGroupLayer);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public ArrayList<AccessGroup> listAccessGroupByLayerId(Long id)
+	{
+		ArrayList<AccessGroup> grupos = new ArrayList<AccessGroup>();
+		
+		List<AccessGroupLayer> grupoAcessoCamadas = this.accessGroupLayerRepository.listByLayerId(id);
+		
+		for (AccessGroupLayer grupoAcessoCamada : grupoAcessoCamadas)
+		{
+			grupos.add(grupoAcessoCamada.getAccessGroup());
+		}
+		
+		return grupos;
+	}
 	
 	/**
 	 * 
@@ -929,4 +1192,27 @@ public class LayerGroupService
 		File folder = new File("/main/webapp/static/icons");
 		
 	}*/
+	
+	/**
+	 * Method that retorn a list of tools by user access group
+	 */
+	public List<Tool> listToolsByUser()
+	{
+		//Lista todos grupos de acessos do usuï¿½rio
+		List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getUsername());
+		
+		List<Tool> toolsUser = new ArrayList<Tool>();
+		
+		for (AccessGroup accessGroup : accessGroupsUser)
+		{
+			accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
+			
+			for (Tool tool : accessGroup.getTools())
+			{
+				toolsUser.add(tool);
+			}
+		}
+		
+		return toolsUser;
+	}
 }
