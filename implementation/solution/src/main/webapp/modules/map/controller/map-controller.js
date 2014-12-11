@@ -1715,7 +1715,46 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 		        });
 			})
 			//$scope.addInternalLayer($scope.currentCustomSearch.layer.id);
+			$scope.searchs.push({'pesquisa': $scope.currentCustomSearch});
 			
+			var item = {};
+	        item.label = 'Resultado pesquisas';
+	        item.type = 'grupo'
+	
+	        item.children = [];
+	
+	        var lastSearchName;
+	        for(var i =0; i < $scope.searchs.length ; ++i)
+	        {
+	
+	            $scope.searchs[i].label = "Pesquisa "+ (i+1);
+	            $scope.searchs[i].type = 'camada';
+	            $scope.searchs[i].name = "pesquisa"+ (i+1);
+	
+	            item.children.push($scope.searchs[i]);
+	            lastSearchName = "Pesquisa "+ (i+1);
+	        }
+	
+	        // seleciona a ultima pesquisa
+	        item.children[item.children.length-1].selected = true;
+	
+	        // seleciona o grupo pai caso so tenha uma pesquisa
+	        if (item.children.length == 1) item.selected = true;
+	
+	        // Abre a tree de pesquisas
+	        $timeout(function(){
+	            $('#tree-pesquisas').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
+	        });
+	
+	        $scope.allSearchs = [];
+	        $scope.allSearchs.push(item);
+	        $scope.searchMsg = lastSearchName + ' - Realizada com sucesso'
+	
+	        $("#alertPesquisa").show();
+	
+	        setTimeout(function(){
+	            $("#alertPesquisa").fadeOut();
+	        }, 2000)
 			
 			
 			return false;
