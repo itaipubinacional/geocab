@@ -618,23 +618,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
                     var feature = {
                         layer : $scope.layers[i],
-                        campos : {}
+                        fields : {}
                     };
 
                     angular.forEach(JSON.parse(result[i]).features, function(value, key) {
                         angular.forEach(value.properties, function(value, key) {
 
                             try {
-                                feature.campos[decodeURIComponent( escape(key))] = decodeURIComponent( escape(value));
+                                feature.fields[decodeURIComponent( escape(key))] = decodeURIComponent( escape(value));
                             }
                             catch(e) {
-                                feature.campos[key] = value;
+                                feature.fields[key] = value;
                             }
 
                         });
 
                         var insere = false;
-                        for (var propriedade in feature.campos) {
+                        for (var propriedade in feature.fields) {
                             insere = true;
                             break;
                         }
@@ -1590,20 +1590,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.allSearchs[0].children[i].selected = false;
         }
 
-//        var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
-//
-//        var wmsSource = new ol.source.TileWMS({
-//            url: item.url,
-//            params:{
-//                'LAYERS': $scope.currentCustomSearch.layer.name
-//            }
-//        });
-//
-//        var wmsLayer = new ol.layer.Tile({
-//            source: wmsSource
-//        });
-//
-//        $scope.map.addLayer(wmsLayer);
         
         if($scope.currentCustomSearch.layer.dataSource.url != null ){
         	var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
@@ -1739,7 +1725,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         var filterList = '';
         var firstTime = true;
 
-        var campos = $scope.currentCustomSearch.layerFields;
+        var fields = $scope.currentCustomSearch.layerFields;
 
         var formatDate = function(date) {
             var date = date.split('/');
@@ -1747,16 +1733,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         }
 
         var conectorLike;
-        for (var i = 0; i < campos.length; i++)
+        for (var i = 0; i < fields.length; i++)
         { 
         	//estou aqui
-            campos[i].valorPesquisa = '';
+            fields[i].searchValue = '';
 
             if( $("#item_"+i).val() != '' )
             {
-                campos[i].valorPesquisa = $("#item_"+i).val();
+                fields[i].searchValue = $("#item_"+i).val();
  
-                if (campos[i].tipo != "INT"){
+                if (fields[i].tipo != "INT"){
                     conectorLike = true;
                 } else {
                     conectorLike = false;
@@ -1764,9 +1750,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 if( firstTime )
                 {
                     if (conectorLike){
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
                     } else {
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
+                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
                     }
  
                     firstTime = false;
@@ -1774,9 +1760,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 else
                 {
                     if (conectorLike){
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
                     } else {
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
+                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
                     }
  
                 }
@@ -1784,94 +1770,94 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         }
             
 //            if( firstTime ) {
-//                if ($("#item_" + i).val() != '' && campos[i].type == 'INT') {
+//                if ($("#item_" + i).val() != '' && fields[i].type == 'INT') {
 //
-//                    campos[i].valorPesquisa = $("#item_" + i).val();
-//                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+//                    fields[i].searchValue = $("#item_" + i).val();
+//                    filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
 //
 //                }
 //
-//                if (campos[i].type == 'NUMBER') {
+//                if (fields[i].type == 'NUMBER') {
 //
-//                    campos[i].valorPesquisa = $("#item_" + i).val();
+//                    fields[i].searchValue = $("#item_" + i).val();
 //
 //                    var operatorType = $("#item_" + i + " select").val();
 //                    var valueNumber = $("#item_" + i + " input").val();
 //
 //                    if ( operatorType == 'entre' ) {
-//                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') > ' + valueNumber + "'");
-//                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <' + valueNumber + "'");
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') > ' + valueNumber + "'");
+//                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') <' + valueNumber + "'");
 //                    } else if ( operatorType == 'somente' ) {
-//                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') IN (' + valueNumber + ")'");
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') IN (' + valueNumber + ")'");
 //                    } else {
-//                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
 //                    }
 //
 //                }
 //
-//                if ($("#item_" + i).val() != '' && campos[i].type == 'STRING') {
+//                if ($("#item_" + i).val() != '' && fields[i].type == 'STRING') {
 //
-//                    campos[i].valorPesquisa = $("#item_" + i).val();
-//                    filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+//                    fields[i].searchValue = $("#item_" + i).val();
+//                    filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
 //
 //                }
 //
-//                if (campos[i].type == "DATETIME") {
+//                if (fields[i].type == "DATETIME") {
 //
 //                    var startDate = $("#item_" + i + " input[name=startDate]").val();
 //                    var endDate = $("#item_" + i + " input[name=endDate]").val();
 //
 //                    if(startDate != '')
-//                        filterList = filterList.concat('strToLowerCase(' + '\"' + campos[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+//                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
 //                    if(endDate != '')
-//                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+//                        filterList = filterList.concat('AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
 //                }
 //
 //                firstTime = false;
 //
 //            } else {
 //
-//                if ($("#item_" + i).val() != '' && campos[i].type == 'INT') {
+//                if ($("#item_" + i).val() != '' && fields[i].type == 'INT') {
 //
-//                    campos[i].valorPesquisa = $("#item_" + i).val();
-//                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+//                    fields[i].searchValue = $("#item_" + i).val();
+//                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
 //
 //                }
 //
-//                if (campos[i].type == 'NUMBER') {
+//                if (fields[i].type == 'NUMBER') {
 //
-//                    campos[i].valorPesquisa = $("#item_" + i).val();
+//                    fields[i].searchValue = $("#item_" + i).val();
 //
 //                    var operatorType = $("#item_" + i + " select").val();
 //                    var valueNumber = $("#item_" + i + " input").val();
 //
 //                    if ( operatorType == 'entre' ) {
-//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') > ' + valueNumber + "'");
-//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <' + valueNumber + "'");
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') > ' + valueNumber + "'");
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') <' + valueNumber + "'");
 //                    } else if ( operatorType == 'somente' ) {
-//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') IN (' + valueNumber + ")'");
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') IN (' + valueNumber + ")'");
 //                    } else {
-//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') ' + operatorType + ' ' + valueNumber + "'");
 //                    }
 //
 //                }
 //
-//                if ($("#item_" + i).val() != '' && campos[i].type == 'STRING') {
+//                if ($("#item_" + i).val() != '' && fields[i].type == 'STRING') {
 //
-//                    campos[i].valorPesquisa = $("#item_" + i).val();
-//                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+//                    fields[i].searchValue = $("#item_" + i).val();
+//                    filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
 //
 //                }
 //
-//                if (campos[i].type == "DATETIME") {
+//                if (fields[i].type == "DATETIME") {
 //
 //                    var startDate = $("#item_" + i + " input[name=startDate]").val();
 //                    var endDate = $("#item_" + i + " input[name=endDate]").val();
 //
 //                    if(startDate != '')
-//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') >= ' + "'" + formatDate(startDate) + "' ");
 //                    if(endDate != '')
-//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + campos[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
+//                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') <= ' + "'" + formatDate(endDate) + "'");
 //                }
 //
 //            }
@@ -1893,7 +1879,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         item.children = [];
 
-        var lastPesquisaName;
+        var lastSearchName;
         for(var i =0; i < $scope.searchs.length ; ++i)
         {
 
@@ -1902,7 +1888,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.searchs[i].name = "pesquisa"+ (i+1);
 
             item.children.push($scope.searchs[i]);
-            lastPesquisaName = "Pesquisa "+ (i+1);
+            lastSearchName = "Pesquisa "+ (i+1);
         }
 
         // seleciona a ultima pesquisa
@@ -1918,7 +1904,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         $scope.allSearchs = [];
         $scope.allSearchs.push(item);
-        $scope.searchMsg = lastPesquisaName + ' - Realizada com sucesso'
+        $scope.searchMsg = lastSearchName + ' - Realizada com sucesso'
 
         $("#alertPesquisa").show();
 
