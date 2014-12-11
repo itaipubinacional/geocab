@@ -97,9 +97,20 @@ function AbstractCRUDController( $scope, $log, $state, $rootScope, $timeout ) {
 	    			angular.element( $('.htmlMain') ).unbind('click');
 	    			$scope.$apply();
 	    		});
+	    	
+	    		//Removes the message when click anywhere in the screen
+	    	    $('body').click(function(event){
+	    	        if(!$(event.target).is('.alert') && !$(event.target).is('.alert') ){
+	    	            angular.element( $('.alert') ).scope().$parent.msg = null;
+	    	            $("body").unbind('click'); //Limpa o bind event
+	    	            $scope.$apply();
+	    	        }
+	    	    });
+	    		
 	    	}
     	});
     });
+    
     
     /**
      *
