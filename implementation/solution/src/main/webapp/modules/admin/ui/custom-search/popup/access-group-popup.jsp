@@ -8,8 +8,8 @@
 <html>
 <div class="modal-content">
     <div class="modal-header">
-        <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h3 class="modal-title">Associar grupo de acesso</h3>
+        <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"><spring:message code="Close" /></span></button>
+        <h3 class="modal-title"><spring:message code="admin.layer-config.Associate-access-group" /></h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
         <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>
@@ -36,14 +36,14 @@
         </div>
 
         <div class="grid-elements-count" ng-show="currentPage.totalElements > 0">
-            {{currentPage.numberOfElements}} de {{currentPage.totalElements}} itens
+            {{currentPage.numberOfElements}} <spring:message code="of" /> {{currentPage.totalElements}} items
         </div>
 
     </div>
 
     <div class="modal-footer">
-        <button id="buttonClose" class="btn btn-primary" ng-click="close()">Selecionar</button>
-        <button class="btn btn-default" ng-click="close(true)">Fechar</button>
+        <button id="buttonClose" class="btn btn-primary" ng-click="close()"><spring:message code="Select" /></button>
+        <button class="btn btn-default" ng-click="close(true)"><spring:message code="Close" /></button>
     </div>
 </div>
 

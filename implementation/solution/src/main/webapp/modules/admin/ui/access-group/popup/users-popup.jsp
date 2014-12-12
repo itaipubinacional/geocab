@@ -34,7 +34,7 @@
         
 	</div>
 	<div class="modal-footer">
-		<button id="buttonClose" ng-disabled="selectedEntity == null && gridOptions.selectedItems.length == 0" class="btn btn-primary" ng-click="close(false)">Selecionar</button>
+		<button id="buttonClose" ng-disabled="selectedEntity == null && gridOptions.selectedItems.length == 0" class="btn btn-primary" ng-click="close(false)"><spring:message code="Select"/></button>
         <button class="btn btn-default" ng-click="close(true)"><spring:message code="admin.access-group.Close"/></button>
 	</div>
 

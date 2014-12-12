@@ -1627,7 +1627,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				var fields = $scope.currentCustomSearch.layerFields;
 				
 				for(var field in fields) {
-					$scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
+					if($scope.currentCustomSearch.layerFields[field].type == 'BOOLEAN'){
+						$scope.currentCustomSearch.layerFields[field].value = $($scope.isChecked()).val() ;
+					} else
+						$scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
 				}
 				
 				markerService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, {
@@ -1645,18 +1648,24 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				    	if(!$scope.allFieldEmpty){
 				    		
 				    		angular.forEach(results, function(result, index){
-				    			$scope.canRemoveMarker = true;
+				    			$scope.canRemoveMarker = null;
 				    			
 				    			angular.forEach(result.markerAttribute, function(markerAttribute, index){
 				    				
 				    				angular.forEach($scope.currentCustomSearch.layerFields, function(field, index){	    					
 				    					
-					    				if(field.attributeId == markerAttribute.attribute.id){
+					    				if(field.attributeId == markerAttribute.attribute.id && $scope.canRemoveMarker != true ){
 					    					
-					    					if (field.value != "" && markerAttribute.value.indexOf(field.value) != -1 ) {
-					    						$scope.canRemoveMarker = false;
+					    					if (field.value != "" && field.value != undefined) {
+					    						if (markerAttribute.value.indexOf(field.value) != -1 ){
+					    							$scope.canRemoveMarker = false;
+					    						}else{
+					    							$scope.canRemoveMarker = true;
+					    							
+					    						}
+					    							
+					    						
 					    					}
-					    					
 					    				}
 				    				
 				    				});
@@ -2903,8 +2912,19 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	
     }
     
+    $scope.isChecked = function(){
+    	if($(".yes").is(':checked')){
+    		return ".yes";
+    	}
+    	
+    	if($(".no").is(':checked')){
+    		return ".no";
+    	}
+    }
     
 };
+
+
 
 function isBooleanChecked(that){
 	$(that).parent().css("border", "0");

@@ -59,7 +59,7 @@ function SelectLayerConfigPopUpController( $scope, $modalInstance, dataSource, s
         '</div>';
 
     /**
-     * Configurações gerais da ng-grid.
+     * Configuraï¿½ï¿½es gerais da ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
     $scope.gridOptions = {
@@ -73,7 +73,7 @@ function SelectLayerConfigPopUpController( $scope, $modalInstance, dataSource, s
             $scope.selectedEntity = row.entity;
         },
         columnDefs: [
-            {displayName:'Simbologia', field:'legend', sortable:false, width: '120px', cellTemplate: IMAGE_LEGENDA},
+            {displayName:'Simbologia', field:'subtitle', sortable:false, width: '120px', cellTemplate: IMAGE_LEGENDA},
             {displayName:'TÃ­tulo', field: 'title'},
             {displayName:'Nome', field:'name'}
         ]
