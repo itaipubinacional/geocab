@@ -463,15 +463,15 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             windowClass: 'dialog-delete',
             resolve: {
                 title: function () {
-                    return "Exclusão de grupo de acesso";
+                    return $translate("admin.access-group.Access-group-exclusion");
                 },
                 message: function () {
-                    return 'Tem certeza que deseja excluir o grupo de acesso "' + accessGroup.name + '"? <br/>Esta operação não poderá mais ser desfeita.';
+                    return $translate("admin.access-group.Are-you-sure-you-want-to-delete-the-access-group")  + ' "'+ accessGroup.name + '" ' + '? <br/>' + $translate("This-operation-can-not-be-undone");
                 },
                 buttons: function () {
                     return [
-                        {label: 'Excluir', css: 'btn btn-danger'},
-                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                        {label: $translate("admin.access-group.Delete"), css: 'btn btn-danger'},
+                        {label: $translate("admin.access-group.Cancel"), css: 'btn btn-default', dismiss: true}
                     ];
                 }
             }
@@ -489,7 +489,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
                         $scope.listAccessGroupByFilters($scope.data.filter, $scope.currentPage.pageable);
                     }
 
-                    $scope.msg = {type: "success", text: 'O registro "' + accessGroup.name + '" foi excluído com sucesso.', dismiss: true};
+                    $scope.msg = {type: "success", text:  $translate("admin.access-group.The-register") + ' "'+ accessGroup.name + '" ' + $translate("admin.access-group.Was-successfully-deleted") + '.', dismiss: true};
                 },
                 errorHandler: function (message, exception) {
                     $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -554,7 +554,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             callback: function (result) {
                 $scope.usuarioTab = true;
                 $scope.currentEntity = result;
-                $scope.msg = {type: "success", text: "Grupo de acesso inserido com sucesso!", dismiss: true};
+                $scope.msg = {type: "success", text: $translate("admin.access-group.Access-group-successfully-inserted") + ' !', dismiss: true};
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
@@ -579,12 +579,12 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             callback: function (result) {
                 $scope.usuarioTab = true;
                 $scope.currentEntity = result;
-                $scope.msg = {type: "success", text: "Grupo de acesso atualizado com sucesso!", dismiss: true};
+                $scope.msg = {type: "success", text: $translate("admin.access-group.Access-group-successfully-updated") + ' !', dismiss: true};
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
                 if (exception.message.indexOf("ConstraintViolationException") > -1) {
-                    message = "O campo Nome ou Endere�o informado j� existe, altere e tente novamente.";
+                    message = $translate("admin.access-group.Informed-name-or-address-field-already-exists-change-and-try-again") + '.';
                 }
                 $scope.msg = {type: "danger", text: message, dismiss: true};
                 $scope.$apply();
@@ -1029,7 +1029,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         if ($scope.currentEntity.id == null){
 
         } else {
-            console.log("salvou")
+            
         }
     }
 
