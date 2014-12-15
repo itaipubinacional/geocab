@@ -634,7 +634,17 @@
 										ivh-treeview-label-attribute="'label'"
 										ivh-treeview-legend-attribute="'legenda'"
 										ivh-treeview-children-attribute="'children'"
-										ivh-treeview-filter="filter:bagSearch"></div>
+										ivh-treeview-filter="filter:bagSearch">
+									</div>
+									
+									<div class="sidebar-content-header" ng-if="allSearchs.length > 0" style="margin: 30px 0px;">Pesquisas</div>
+                                    <br style="clear: both;">
+                                    <div id="tree-pesquisas"
+                                         ivh-treeview="allSearchs"
+                                         ivh-fn="getSelectedSearchNode"
+                                         ivh-treeview-label-attribute="'label'"
+                                         ivh-treeview-children-attribute="'children'">
+                                    </div>
 		
 		
 									<br />
@@ -688,7 +698,7 @@
 											
 										<input type="radio" name="boolean{{ $index }}" class="boolean-2 boolean no" 
 											value="No"  /><spring:message code="map.No" /> 
-										
+																					
 									</div>
 <!--                                     <div class="form-group" ng-if="search.type == 'DATETIME'"> -->
 <!--                                         <label>{{ search.label ? search.label : search.name }}</label> -->
