@@ -190,8 +190,8 @@
             return false;
         },
 			columnDefs: [
-				 {displayName: 'Nome', field:'name'},
-				 {displayName: 'Descrição', field:'description'}				 
+				 {displayName: $translate("Nome"), field:'name'},
+				 {displayName: $translate("Description"), field:'description'}				 
 			]
 	};
 
@@ -235,8 +235,8 @@
             return false;
         },
         columnDefs: [
-            {displayName: 'Nome', field: 'name'},
-            {displayName: 'Descrição', field: 'description'},
+            {displayName: $translate("Nome"), field: 'name'},
+            {displayName: $translate("Description"), field: 'description'},
             {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ACCESS_BUTTONS, width: '100px'}
         ]
     };
@@ -449,9 +449,9 @@
 			controller: DialogController,
 			windowClass: 'dialog-delete',
 			resolve: {
-				title: function(){return "Exclusão de pesquisa personalizada";},
-				message: function(){return 'Tem certeza que deseja excluir a pesquisa personalizada "'+CustomSearch.name+'"? <br/>Esta operação não poderá mais ser desfeita.';},
-				buttons: function(){return [ {label:'Excluir', css:'btn btn-danger'}, {label:'Cancelar', css:'btn btn-default', dismiss:true} ];}
+				title: function(){return $translate("admin.custom-search.Custom-search-exclusion");},
+				message: function(){return $translate("admin.custom-search.Are-you-sure-you-want-to-delete-the-layer-group") +' ' + CustomSearch.name + ' ' + '? <br/> ' + $translate("This-operation-can-not-be-undone");},
+				buttons: function(){return [ {label:$translate("admin.custom-search.Delete"), css:'btn btn-danger'}, {label:$translate("admin.custom-search.Cancel"), css:'btn btn-default', dismiss:true} ];}
 			}
 		});
 
@@ -469,7 +469,7 @@
 						$scope.listCustomSearchByFilters($scope.data.filter, $scope.currentPage.pageable);
 					}
 
-					$scope.msg = {type: "success", text: 'O registro "'+CustomSearch.name+'" foi excluído com sucesso.', dismiss:true};
+					$scope.msg = {type: "success", text: $translate("admin.custom-search.The-register") + ' " '+CustomSearch.name+'" ' + $translate("admin.custom-search.Was-successfully-deleted"), dismiss:true};
 				},
 				errorHandler : function(message, exception) {
 					$scope.msg = {type:"danger", text: message, dismiss:true};
@@ -567,13 +567,13 @@
                 $scope.saveGroups();
 				$scope.currentState = $scope.LIST_STATE;
 				$state.go($scope.LIST_STATE);
-				$scope.msg = {type:"success", text: "Pesquisa personalizada atualizada com sucesso!", dismiss:true};
+				$scope.msg = {type:"success", text: $translate("admin.custom-search.Custom-search-successfully-updated") + ' !', dismiss:true};
 
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
 				if (exception.message.indexOf("ConstraintViolationException") > -1){
-					message = "O campo Nome informado já existe, altere e tente novamente.";
+					message = $translate("admin.custom-search.The-field-name-already-exists-change-and-try-again") + '.';
 				}
 				$scope.msg = {type:"danger", text: message, dismiss:true};
 				$scope.$apply();

@@ -634,7 +634,17 @@
 										ivh-treeview-label-attribute="'label'"
 										ivh-treeview-legend-attribute="'legenda'"
 										ivh-treeview-children-attribute="'children'"
-										ivh-treeview-filter="filter:bagSearch"></div>
+										ivh-treeview-filter="filter:bagSearch">
+									</div>
+									
+									<div class="sidebar-content-header" ng-if="allSearchs.length > 0" style="margin: 30px 0px;">Pesquisas</div>
+                                    <br style="clear: both;">
+                                    <div id="tree-pesquisas"
+                                         ivh-treeview="allSearchs"
+                                         ivh-fn="getSelectedSearchNode"
+                                         ivh-treeview-label-attribute="'label'"
+                                         ivh-treeview-children-attribute="'children'">
+                                    </div>
 		
 		
 									<br />
@@ -657,7 +667,7 @@
 						</div>
 						<div id="tabs-2">
 
-                            <div class="sidebar-content-header">Pesquisas personalizadas</div>
+                            <div class="sidebar-content-header"><spring:message code="admin.access-group.Custom-Searchs" /></div>
                             <br style="clear: both; ">
                             <div class="form-item position-relative" style="width: 100%; margin-top: 30px; margin-bottom: 5px">
                                 <select class="sidebar-content-search form-control" style="margin-bottom: 0; margin-top: 0"
@@ -665,7 +675,7 @@
                                         ng-change="selectCustomSearch(currentCustomSearch)"
                                         ng-options="search.name for search in customSearchs"
                                         ng-required="true" ng-hover>
-                                    <option value="">Selecione...</option>
+                                    <option value=""><spring:message code="admin.custom-search.Select" />...</option>
                                 </select>
                             </div>
 
@@ -675,11 +685,21 @@
                             <hr style="border-color: #d9d9d9; position: absolute;top: 155px;right: 15px;left: 15px;"/>
 
                             <button class="btn btn-primary" ng-disabled="currentCustomSearch == null || currentCustomSearch.layer == null"
-                                    style="width: 90px; height: 30px; position: absolute;top: 190px;" ng-click="listFieldsLayersSearch()">Pesquisa</button>
+                                    style="width: 90px; height: 30px; position: absolute;top: 190px;" ng-click="listFieldsLayersSearch()"><spring:message code="admin.custom-search.Search" /></button>
                             <br/>
                             <div style="overflow-y: auto;position: absolute;top: 250px;bottom: 0px;left: 20px;right: 0px;">
                                 <div ng-repeat="search in currentCustomSearch.layerFields" style="width: 90%;">
-                                	<input id="item_{{$index}}" placeholder="{{search.label ? search.label : search.name}}" ng-class="{datepicker: search.type == 'DATE' }" type="text" class="form-control" maxlength="40">
+                                	<input ng-if="search.type != 'BOOLEAN'" id="item_{{$index}}" placeholder="{{search.label ? search.label : search.name}}" ng-class="{datepicker: search.type == 'DATE' }" type="text" class="form-control" maxlength="40">                                	                                	                                	
+									
+									<div ng-if="search.type == 'BOOLEAN'"  >
+										<label>{{search.label ? search.label : search.name}}</label></br>						
+										<input type="radio" name="boolean{{ $index }}" class="boolean-1 boolean yes"  
+											value="Yes"  /><spring:message code="map.Yes" /> 
+											
+										<input type="radio" name="boolean{{ $index }}" class="boolean-2 boolean no" 
+											value="No"  /><spring:message code="map.No" /> 
+																					
+									</div>
 <!--                                     <div class="form-group" ng-if="search.type == 'DATETIME'"> -->
 <!--                                         <label>{{ search.label ? search.label : search.name }}</label> -->
 <!--                                         <div class="input-group input-daterange" id="item_{{$index}}" date-picker> -->
