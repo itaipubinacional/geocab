@@ -190,7 +190,7 @@
             return false;
         },
 			columnDefs: [
-				 {displayName: $translate("Nome"), field:'name'},
+				 {displayName: $translate("Name"), field:'name'},
 				 {displayName: $translate("Description"), field:'description'}				 
 			]
 	};
@@ -235,7 +235,7 @@
             return false;
         },
         columnDefs: [
-            {displayName: $translate("Nome"), field: 'name'},
+            {displayName: $translate("Name"), field: 'name'},
             {displayName: $translate("Description"), field: 'description'},
             {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ACCESS_BUTTONS, width: '100px'}
         ]
