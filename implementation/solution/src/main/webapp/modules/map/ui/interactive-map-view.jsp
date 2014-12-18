@@ -181,7 +181,7 @@
 				               </span>
 				               
 				               <span ng-if="feature.type == 'external'">
-					               <span ng-repeat="(key, value) in feature.feature.campos" >
+					               <span ng-repeat="(key, value) in feature.feature.fields" >
 					                   <b>{{key}}</b> - {{value}}
 					                   </br>
 					               </span>
