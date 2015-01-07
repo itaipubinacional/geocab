@@ -2563,6 +2563,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		
     	});
     	
+    	$scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry( new ol.geom.Point([  $scope.currentEntity.latitude , $scope.currentEntity.longitude ]) );
     	
     	markerService.insertMarker($scope.currentEntity,{
       		callback : function(result) {
@@ -2726,12 +2727,16 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 					var icons = [];
 					
 					angular.forEach(result, function(marker, index){
-		                   var iconFeature = new ol.Feature({
+		                  /* var iconFeature = new ol.Feature({
 		                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
 		                       marker: marker,
-		                   });	
-		                  
+		                   });*/
 		                   
+						   var iconFeature = new ol.Feature({
+		                       geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
+		                       marker: marker,
+		                   });
+		                  
 		                   var layer = new ol.layer.Vector({
 			                   source: new ol.source.Vector({ features: [iconFeature] }),
 			                   
