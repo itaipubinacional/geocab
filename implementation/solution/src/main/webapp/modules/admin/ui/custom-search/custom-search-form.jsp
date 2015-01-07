@@ -59,7 +59,8 @@
                            disabled
                            placeholder="<spring:message code="admin.custom-search.Enter-the-Layer"/>"
                            maxlength="144" ng-minlength="1"
-                           ng-hover>
+                           ng-hover
+                           required>
                     <span class="input-group-btn">
                         <button ng-click="selectLayerConfig()" class="btn btn-default" type="button"
                                 ng-disabled="data.dataSource == null || currentEntity.id != null">
@@ -67,7 +68,10 @@
                         </button>
                     </span>
                 </div>
-
+				
+				<span ng-show="form.layerGroup.$error.required && form.$submitted" 
+					class="tooltip-validation"><spring:message code="admin.custom-search.Layer-required"/> </span>
+				
             </div>
 
             <div ng-if="currentEntity.layer.name">
