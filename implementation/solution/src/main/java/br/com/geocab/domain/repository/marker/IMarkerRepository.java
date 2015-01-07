@@ -27,7 +27,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	 * @param pageable
 	 * @return
 	 */
-	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status ) " +
+	@Query(value="SELECT new Marker( marker.id, marker.status ) " +
 				"FROM Marker marker ")
 	public Page<Marker> listByFilters(  Pageable pageable );
 	
@@ -35,7 +35,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status) " +
+	@Query(value="SELECT new Marker( marker.id, marker.status) " +
 				"FROM Marker marker ")
 	public List<Marker> listAll();
 	
@@ -44,7 +44,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status, marker.created, layer, user) " +
+	@Query(value="SELECT new Marker( marker.id, marker.status, marker.created, marker.location, layer, user) " +
 				"FROM Marker marker "+
 				"LEFT OUTER JOIN marker.layer layer "+
 				"LEFT OUTER JOIN marker.user user "+
@@ -57,7 +57,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	 * @param userId
 	 * @return
 	 */
-	@Query(value="SELECT new Marker( marker.id, marker.latitude, marker.longitude, marker.status, marker.created, layer, user) " +
+	@Query(value="SELECT new Marker( marker.id, marker.status, marker.created, marker.location, layer, user) " +
 				"FROM Marker marker "+
 				"LEFT OUTER JOIN marker.layer layer "+
 				"LEFT OUTER JOIN marker.user user "+ 
