@@ -104,6 +104,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @type {Array}
      * */
     $scope.attributes = [];
+    
+    $scope.allLayers = null;
 
     //DATA GRID
     /**
@@ -396,7 +398,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         
         $scope.currentEntity.icon = 'static/icons/default_blue.png';
 
-        $scope.currentState = $scope.INSERT_STATE;
+        $scope.currentState = $scope.INSERT_STATE;       
 
     };
 
@@ -553,7 +555,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @see currentPage
      */
     $scope.listLayersByFilters = function (filter, pageRequest) {
-
+    	
         layerGroupService.listLayersByFilters(filter, pageRequest, {
             callback: function (result) {
                 $scope.currentPage = result;
@@ -575,6 +577,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.insertLayer = function (layer) {
 
+    	
     	layer.minimumScaleMap = 'UM'+$scope.layers.values[0].substring(2);
     	layer.maximumScaleMap = 'UM'+$scope.layers.values[1].substring(2);
         
@@ -584,6 +587,19 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             return;
         }
         
+        if ($scope.currentEntity.dataSource.url == null) {
+        	
+        	for (var k = 0; k < $scope.currentPage.content.length; k++ ){
+        		if ( $scope.currentEntity.title.toUpperCase() == $scope.currentPage.content[k].title.toUpperCase() ){
+        			$scope.msg = {type:"danger", text: $translate('admin.layer-config.The-field-name-already-exists,-change-and-try-again'), dismiss : true };
+        			$scope.fadeMsg();
+        			return;
+        		}
+        	}
+        	
+        }
+        
+        	
         if( ($scope.currentEntity.dataSource.url == null) && ($scope.currentEntity.icon == undefined) ){
         	$scope.msg = {type:"danger", text:$translate("admin.layer-config.Choose-an-icon"),dissmiss:true };
         	$scope.fadeMsg();
@@ -606,13 +622,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
                 $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
-                $scope.fadeMsg();
                 $scope.$apply();
                 $scope.saveGroups();
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
-                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -1044,9 +1058,5 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 	  		$("div.msg").fadeOut();
 	  	}, 5000);
     }
-    
-//    $(document).click(function() {
-//    	$("div.msg").hide();
-//    });
-    
+
 };

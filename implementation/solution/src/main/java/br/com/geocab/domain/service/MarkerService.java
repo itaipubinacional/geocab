@@ -43,6 +43,12 @@ import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.io.WKTWriter;
+
 
 /**
  * @author Thiago Rossetto Afonso
@@ -98,6 +104,9 @@ public class MarkerService
 		try{
 			User user = ContextHolder.getAuthenticatedUser();
 			
+			marker.setLocation((Point) this.wktToGeometry(marker
+					.getWktCoordenate()));
+		
 			marker.setStatus(StatusMarker.PENDING);
 			marker.setUser(user);
 			marker = this.markerRepository.save( marker );
@@ -147,6 +156,8 @@ public class MarkerService
 			if( marker.getImage() != null) {
 				this.uploadImg(marker.getImage(), marker.getId());	
 			}
+			
+			marker.setLocation(markerTemporary.getLocation());
 			
 			marker = this.markerRepository.save( marker );
 		}
@@ -291,6 +302,37 @@ public class MarkerService
 		}
 		
 		return listMarker;
+	}
+	
+	/**
+	 * 
+	 * @param wktPoint
+	 * @return
+	 */
+	private Geometry wktToGeometry(String wktPoint)
+	{
+		WKTReader fromText = new WKTReader();
+		Geometry geom = null;
+		try
+		{
+			geom = fromText.read(wktPoint);
+		}
+		catch (ParseException e)
+		{
+			throw new RuntimeException("Not a WKT string:" + wktPoint);
+		}
+		return geom;
+	}
+
+	/**
+	 * 
+	 * @param geometry
+	 * @return
+	 */
+	private String geometryToWkt(Geometry geometry)
+	{
+		WKTWriter geom = new WKTWriter();
+		return geom.write(geometry);
 	}
 	
 	
