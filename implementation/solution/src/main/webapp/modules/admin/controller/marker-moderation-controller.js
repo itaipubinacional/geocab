@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function PostingEvaluationController($scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate) {
+function MarkerModerationController($scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate) {
 
 	/**
      * Inject the methods, attributes and its states inherited from AbstractCRUDController.
@@ -26,30 +26,79 @@ function PostingEvaluationController($scope, $injector, $log, $state, $timeout, 
      * Static variable that represents
      * the State records list.
      */
-    $scope.LIST_STATE = "posting-evaluation.list";
+    $scope.LIST_STATE = "marker-moderation.list";
     /**
      * Static variable that represents
      * detail of a State record.
      */
-    $scope.DETAIL_STATE = "posting-evaluation.detail";
+    $scope.DETAIL_STATE = "marker-moderation.detail";
     /**
      * Static variable that represents
      * the State for the creation of records.
      */
-    $scope.INSERT_STATE = "posting-evaluation.create";
+    $scope.INSERT_STATE = "marker-moderation.create";
     /**
      * Static variable that represents
      * the rule for editing records.
      */
-    $scope.UPDATE_STATE = "posting-evaluation.update";
+    $scope.UPDATE_STATE = "marker-moderation.update";
     /**
      * Variable that stores the current state of the screen.
      * This variable shall ALWAYS conform to the URL
      * that is in the browser.
      */
     $scope.currentState;
- 
-	
+    
+    $scope.hiding = true;
+    
+  //DATA GRID
+    /**
+     * Static variable coms stock grid buttons
+     * The Edit button navigates via URL (sref) why editing is done in another page,
+     * Since the delete button calls a method directly via ng-click why does not have a specific screen state.
+     */
+    var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
+        '<a ui-sref="layer-config.update({id:row.entity.id})"  " title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+        '</div>';
+    
+    var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
+    '<span ng-if="!row.entity.dataSource.url" ng-cell-text="" class="ng-binding">Camada interna</span>' +
+    '<span ng-if="row.entity.dataSource.url" ng-cell-text="" class="ng-binding">{{ row.entity.name }}</span>' +
+    '</div>';
+
+    
+    var MARKER_BUTTONS = '<div  class="cell-centered">' +
+    '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == false" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
+    '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == true" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
+    '<a ng-if="row.entity.dataSource.url" class="btn btn-mini"><i style="font-size: 16px; color: blue" class="glyphicon glyphicon glyphicon-minus"></i></a>'+
+    '</div>';
+    
+    var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+	'<img ng-if="row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
+	'<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.icon}}"/>' +
+	'</div>';
+    
+    $scope.gridOptions = {
+			data: 'currentPage.content',
+			multiSelect: false,
+			useExternalSorting: true,
+            headerRowHeight: 45,
+
+            rowHeight: 45,
+			beforeSelectionChange: function (row, event) {
+				//evita chamar a selecao, quando clicado em um action button.
+				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
+				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
+			},
+			columnDefs: [
+			             {displayName: $translate('admin.marker-moderation.Name') , field:'name', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
+			             {displayName: $translate('admin.marker-moderation.Layer'), field:'layer'}, 
+			             {displayName: $translate('admin.marker-moderation.Situation'), field:'situation'},
+			             {displayName: $translate('admin.marker-moderation.Review'), field:'review'},			             
+			             ]
+	};
+    
     /*-------------------------------------------------------------------
      * 		 				 	  NAVIGATIONS
      *-------------------------------------------------------------------*/
@@ -208,5 +257,15 @@ function PostingEvaluationController($scope, $injector, $log, $state, $timeout, 
 
         
     };    
+    
+    	
+    $scope.showFields = function (showFields){
+    	if (showFields) {
+    		$scope.hiding = false;
+    	} else
+    		$scope.hiding = true;
+    }
+    
+    
     
 }

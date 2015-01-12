@@ -69,7 +69,7 @@
 	<script type="text/javascript" src="modules/admin/controller/custom-search-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/access-group-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/users-controller.js"></script>
-	<script type="text/javascript" src="modules/admin/controller/posting-evaluation-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/marker-moderation-controller.js"></script>
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
    		
 	</body>

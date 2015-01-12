@@ -146,27 +146,27 @@
 		
 	
 	
-		//Posting evaluation
-		$stateProvider.state('posting-evaluation', {
-			url : "/posting-evaluation",
-			templateUrl : "modules/admin/ui/posting-evaluation/posting-evaluation-view.jsp",
-			controller : PostingEvaluationController
+		//Marker moderation
+		$stateProvider.state('marker-moderation', {
+			url : "/marker-moderation",
+			templateUrl : "modules/admin/ui/marker-moderation/marker-moderation-view.jsp",
+			controller : MarkerModerationController
 		})
-		.state('posting-evaluation.detail', {
+		.state('marker-moderation.detail', {
 			url: "/detail/:id",
-			menu: "posting-evaluation"
+			menu: "marker-moderation"
 		})
-		.state('posting-evaluation.list', {
+		.state('marker-moderation.list', {
 			url: "/list",
-			menu: "posting-evaluation"
+			menu: "marker-moderation"
 		})
-		.state('posting-evaluation.create', {
+		.state('marker-moderation.create', {
 			url : "/create",
-			menu: "posting-evaluation"
+			menu: "marker-moderation"
 		})
-		.state('posting-evaluation.update', {
+		.state('marker-moderation.update', {
 			url : "/update/:id",
-			menu: "posting-evaluation"
+			menu: "marker-moderation"
 		});
 		
 	});
