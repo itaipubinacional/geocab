@@ -144,6 +144,31 @@
             menu: "access-group"
         });
 		
+	
+	
+		//Posting evaluation
+		$stateProvider.state('posting-evaluation', {
+			url : "/posting-evaluation",
+			templateUrl : "modules/admin/ui/posting-evaluation/posting-evaluation-view.jsp",
+			controller : PostingEvaluationController
+		})
+		.state('posting-evaluation.detail', {
+			url: "/detail/:id",
+			menu: "posting-evaluation"
+		})
+		.state('posting-evaluation.list', {
+			url: "/list",
+			menu: "posting-evaluation"
+		})
+		.state('posting-evaluation.create', {
+			url : "/create",
+			menu: "posting-evaluation"
+		})
+		.state('posting-evaluation.update', {
+			url : "/update/:id",
+			menu: "posting-evaluation"
+		});
+		
 	});
 	
 	projectModule.run( function( $rootScope, $state, $stateParams, $translate ) {
