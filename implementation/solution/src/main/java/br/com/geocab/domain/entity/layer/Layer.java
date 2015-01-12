@@ -29,7 +29,6 @@ import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
-import br.com.geocab.domain.entity.marker.MarkerAttribute;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
