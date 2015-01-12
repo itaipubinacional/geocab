@@ -25,6 +25,7 @@ import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -84,6 +85,10 @@ public class Marker extends AbstractEntity implements Serializable
 	@JsonManagedReference
 	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
+	
+	@JsonManagedReference
+	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	private List<MarkerModeration> markerModeration = new ArrayList<MarkerModeration>();
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
