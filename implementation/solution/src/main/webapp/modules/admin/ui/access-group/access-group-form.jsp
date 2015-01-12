@@ -71,7 +71,7 @@
                     <div ng-grid="gridUsers" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
                     </div>
                     <div>
-                        <!-- State Criar -->
+                        <!-- State Create -->
 
                     </div>
                 </tab>

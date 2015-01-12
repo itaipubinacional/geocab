@@ -102,6 +102,11 @@
 	                            href="admin#/access-group"
 	                            ng-class="{active: menuActive == 'access-group'}"
 	                            style="width: 150px;"><spring:message code="admin.access-group.Access-group"/></a></li>
+	                            
+	                     <li class="position-relative"><a
+	                            href="admin#/posting-evaluation"
+	                            ng-class="{active: menuActive == 'posting-evaluation'}"
+	                            style="width: 150px;"><spring:message code="admin.posting-evaluation.Posting-evaluation"/></a></li>
 	                    
 	                </ul>
 	                <ul class="nav navbar-nav" style="float: right">

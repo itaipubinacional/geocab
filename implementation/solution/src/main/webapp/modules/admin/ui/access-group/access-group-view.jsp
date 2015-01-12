@@ -51,7 +51,7 @@
         </div>
     </div>
     
-    <!-- Partial views dos states -->
+    <!-- Partial views states -->
 	<div ng-switch on="currentState">
         <div ng-switch-when="access-group.list">
         	<div ng-include="'modules/admin/ui/access-group/access-group-list.jsp'"></div>
