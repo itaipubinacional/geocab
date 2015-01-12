@@ -12,10 +12,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Inject the methods, attributes and its states inherited from AbstractCRUDController.
      * @see AbstractCRUDController
      */
-    $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
-
-    $importService("");
-    
+    $injector.invoke(AbstractCRUDController, this, {$scope: $scope});   
 
 
     /*-------------------------------------------------------------------
@@ -99,6 +96,15 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			             ]
 	};
     
+    /**
+     * The configuration view of the map
+     */
+    $scope.view = new ol.View({
+        center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 9,
+        minZoom: 3
+    })
+    
     /*-------------------------------------------------------------------
      * 		 				 	  NAVIGATIONS
      *-------------------------------------------------------------------*/
@@ -126,7 +132,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
         $log.info("Starting the front controller.");
 
-        switch (state) {
+        /*switch (state) {
             case $scope.LIST_STATE:
             {
                 $scope.changeToList();
@@ -151,7 +157,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             {
                 $state.go($scope.LIST_STATE);
             }
-        }
+        }*/
     
         /**
          * Openlayers map configuration
@@ -162,7 +168,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             controls: [
                 $scope.mousePositionControl
             ],
-
+            layers: [
+                 new ol.layer.Tile({
+                   source: new ol.source.OSM()
+                 })
+               ],
             target: $scope.olMapDiv,
             view: $scope.view
         });
