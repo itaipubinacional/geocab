@@ -151,22 +151,6 @@
 			url : "/marker-moderation",
 			templateUrl : "modules/admin/ui/marker-moderation/marker-moderation-view.jsp",
 			controller : MarkerModerationController
-		})
-		.state('marker-moderation.detail', {
-			url: "/detail/:id",
-			menu: "marker-moderation"
-		})
-		.state('marker-moderation.list', {
-			url: "/list",
-			menu: "marker-moderation"
-		})
-		.state('marker-moderation.create', {
-			url : "/create",
-			menu: "marker-moderation"
-		})
-		.state('marker-moderation.update', {
-			url : "/update/:id",
-			menu: "marker-moderation"
 		});
 		
 	});
