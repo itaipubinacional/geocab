@@ -5,8 +5,9 @@ package br.com.geocab.domain.entity.markermoderation;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,7 +15,6 @@ import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
@@ -43,18 +43,20 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = -1358373183244765164L;
-	/**
-	 * Status Description of {@link MarkerModeration}
-	 */
-	@NotEmpty
-	@Column(nullable=false, length=144, unique=true)
-	private String statusDescription;
+	
 	/**
 	 * {@link Marker} of {@link MarkerModeration}
 	 */
 	@NotNull
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Marker marker;
+	
+	/**
+	 * status of  {@link MarkerModeration}
+	 */
+	@NotNull
+	@Enumerated(EnumType.ORDINAL)
+	private MarkerModerationStatus status;
 	
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -81,10 +83,10 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 	 * @param statusDescription
 	 * @param marker
 	 */
-	public MarkerModeration( Long id, String statusDescription, Marker marker)
+	public MarkerModeration( Long id, MarkerModerationStatus status, Marker marker)
 	{
 		this.setId(id);
-		this.setStatusDescription(statusDescription);
+		this.setStatus(status);
 		this.setMarker(marker);
 	}
 	
@@ -101,10 +103,7 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((marker == null) ? 0 : marker.hashCode());
-		result = prime
-				* result
-				+ ((statusDescription == null) ? 0 : statusDescription
-						.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
 	/* (non-Javadoc)
@@ -122,35 +121,14 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 			if (other.marker != null) return false;
 		}
 		else if (!marker.equals(other.marker)) return false;
-		if (statusDescription == null)
-		{
-			if (other.statusDescription != null) return false;
-		}
-		else if (!statusDescription.equals(other.statusDescription)) return false;
+		if (status != other.status) return false;
 		return true;
 	}
-	
-	
 	
 	/*-------------------------------------------------------------------
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
 	
-	/**
-	 * @return the statusDescription
-	 */
-	public String getStatusDescription()
-	{
-		return statusDescription;
-	}
-	
-	/**
-	 * @param statusDescription the statusDescription to set
-	 */
-	public void setStatusDescription(String statusDescription)
-	{
-		this.statusDescription = statusDescription;
-	}
 	/**
 	 * @return the marker
 	 */
@@ -165,6 +143,19 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 	{
 		this.marker = marker;
 	}
-	
+	/**
+	 * @return the status
+	 */
+	public MarkerModerationStatus getStatus()
+	{
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(MarkerModerationStatus status)
+	{
+		this.status = status;
+	}
 	
 }
