@@ -39,9 +39,12 @@ import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.StatusMarker;
+import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
+import br.com.geocab.domain.entity.markermoderation.MarkerModerationStatus;
 import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
+import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -74,8 +77,17 @@ public class MarkerService
 	@Autowired
 	private IMarkerRepository markerRepository;
 	
+	/**
+	 * 
+	 */
 	@Autowired
 	private IMarkerAttributeRepository markerAttributeRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IMarkerModerationRepository markerModerationRepository;
 	
 	/**
 	 * I18n 
@@ -101,6 +113,9 @@ public class MarkerService
 	 */
 	public Marker insertMarker( Marker marker ) throws IOException, RepositoryException
 	{
+		
+		List<MarkerModeration> list = this.markerModerationRepository.listByFilters(null, null).getContent();
+		System.out.println(list);
 		try{
 			User user = ContextHolder.getAuthenticatedUser();
 			
@@ -113,6 +128,11 @@ public class MarkerService
 			if( marker.getImage() != null ) {
 				this.uploadImg(marker.getImage(), marker.getId());
 			}
+			
+			MarkerModeration markerModeration = new MarkerModeration();
+			markerModeration.setMarker(marker);
+			markerModeration.setStatus(MarkerModerationStatus.PENDING);
+			this.markerModerationRepository.save(markerModeration);
 			
 		}
 		catch ( DataIntegrityViolationException e )
