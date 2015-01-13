@@ -77,7 +77,7 @@ public class CustomSearchService
 	/**
 	 * Method to insert an {@link CustomSearch}
 	 * 
-	 * @param CustomSearch
+	 * @param MarkerModeration
 	 * @return CustomSearch
 	 */
 	public Long insertCustomSearch( CustomSearch customSearch )

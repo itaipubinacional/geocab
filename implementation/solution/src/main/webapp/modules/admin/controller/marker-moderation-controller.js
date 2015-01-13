@@ -15,6 +15,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
     
     $importService("markerModerationService");
+     $importService("markerService");
 
 
     /*-------------------------------------------------------------------
@@ -49,6 +50,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.currentState;
     
     $scope.hiding = true;
+    
+    $scope.motive;
     
   //DATA GRID
     /**
@@ -268,9 +271,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.olMapDiv = document.getElementById('olmap');
         $scope.map = new ol.Map({
 
-            controls: [
-                $scope.mousePositionControl
-            ],
             layers: [
                  new ol.layer.Tile({
                    source: new ol.source.OSM()
@@ -279,8 +279,246 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             target: $scope.olMapDiv,
             view: $scope.view
         });
+        
+        $scope.map.on('click', function() {
+        	$scope.selectedFeatures.clear();
+    	});
+        
+        $scope.listMarker();
     }
     
+    /**
+     * Faz a requisição para recuperação das postagens
+     */
+    $scope.listMarker = function(){
+    	markerService.listMarkerByFilters(null, {
+    		callback : function(result) {
+    			$scope.buildVectorMarker(result);
+		    },
+		    errorHandler : function(message, exception) {
+		        $scope.message = {type:"error", text: message};
+		        $scope.$apply();
+		    }
+    	});
+    }
     
+    /**
+     * Constroi os vetores dentro do mapa
+     */
+    $scope.buildVectorMarker = function(markers){
+    	
+    	var coordenates = [];
+    	
+    	var select = new ol.interaction.Select();
+		$scope.map.addInteraction(select);
+
+		$scope.selectedFeatures = select.getFeatures();
+		
+		$scope.features = [];
+		angular.forEach(markers.content, function(marker, index){
+               
+			var dragBox = new ol.interaction.DragBox({
+				  condition: ol.events.condition.shiftKeyOnly,
+				  style: new ol.style.Style({
+				    stroke: new ol.style.Stroke({
+				      color: [0, 0, 255, 1]
+				    })
+				  })
+			});
+			
+			dragBox.on('boxend', function(e) {
+				
+				  var extent = dragBox.getGeometry().getExtent();
+				
+				  angular.forEach($scope.features, function(feature, index){
+						var extentMarker = feature.extent;
+						var feature = feature.feature;
+						
+						if(ol.extent.containsExtent(extent, extentMarker)){
+							$scope.selectedFeatures.push(feature);
+						}
+				  });
+				  
+			});
+			
+			dragBox.on('boxstart', function(e) {
+				  $scope.selectedFeatures.clear();
+			});
+
+			
+			$scope.map.addInteraction(dragBox);
+			
+			var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+		    var feature = new ol.Feature({
+               geometry: geometry,
+               marker: marker,
+            });
+          
+			var fill = new ol.style.Fill({
+				   color: '#FFFF00',
+					width: 4.53
+				 });
+			var stroke = new ol.style.Stroke({
+				   color: '#3399CC',
+				   width: 1.25
+				 });
+		   
+			var source = new ol.source.Vector({ features: [feature] });
+            var layer = new ol.layer.Vector({
+               source: source,
+               style: new ol.style.Style(
+            		   {
+        			     image: new ol.style.Circle({
+        			       fill: fill,
+        			       stroke: stroke,
+        			       radius: 15,
+        			     }),
+        			     fill: fill,
+        			     stroke: stroke
+        			   }
+               ),
+               maxResolution: minScaleToMaxResolution(marker.layer.minimumScaleMap),
+               minResolution: maxScaleToMinResolution(marker.layer.maximumScaleMap)
+            });
+            
+            source.addFeatures(source);
+            
+            coordenates.push(geometry.getCoordinates());
+            
+            $scope.features.push({'feature': feature, "extent": source.getExtent()});
+            
+            $scope.map.addLayer(layer);
+		});
+		
+		var extent = new ol.extent.boundingExtent(coordenates);
+		
+		$scope.map.getView().fitExtent(extent, $scope.map.getSize());
+		
+    }
+    
+     /**
+	    Converts the value scale stored in the db to open layes zoom format
+	  */
+	 var minScaleToMaxResolution = function ( minScaleMap ){
+	
+	     switch (minScaleMap){
+	         case 'UM500km':
+	             return 78271.51696402048;
+	         case 'UM200km':
+	             return 78271.51696402048;
+	         case 'UM100km':
+	             return 4891.96981025128;
+	         case 'UM50km':
+	             return 2445.98490512564;
+	         case 'UM20km':
+	             return 1222.99245256282;
+	         case 'UM10km':
+	             return 611.49622628141;
+	         case 'UM5km':
+	             return 152.8740565703525;
+	         case 'UM2km':
+	             return 76.43702828517625;
+	         case 'UM1km':
+	             return 38.21851414258813;
+	         case 'UM500m':
+	             return 19.109257071294063;
+	         case 'UM200m':
+	             return 9.554628535647032;
+	         case 'UM100m':
+	             return 4.777314267823516;
+	         case 'UM50m':
+	             return 2.388657133911758;
+	         case 'UM20m':
+	             return 1.194328566955879;
+	         default :
+	             return 78271.51696402048;
+	     }
+	 }
+	
+	 /**
+	  Converts the value scale stored in the db to open layes zoom forma
+	  */
+	 var maxScaleToMinResolution = function ( maxScaleMap ){
+	
+	     switch (maxScaleMap){
+	         case 'UM500km':
+	             return 19567.87924100512;
+	         case 'UM200km':
+	             return 4891.96981025128;
+	         case 'UM100km':
+	             return 2445.98490512564;
+	         case 'UM50km':
+	             return 1222.99245256282;
+	         case 'UM20km':
+	             return 305.748113140705;
+	         case 'UM10km':
+	             return 152.8740565703525;
+	         case 'UM5km':
+	             return 76.43702828517625;
+	         case 'UM2km':
+	             return 38.21851414258813;
+	         case 'UM1km':
+	             return 19.109257071294063;
+	         case 'UM500m':
+	             return 9.554628535647032;
+	         case 'UM200m':
+	             return 4.777314267823516;
+	         case 'UM100m':
+	             return 2.388657133911758;
+	         case 'UM50m':
+	             return 1.194328566955879;
+	         case 'UM20m':
+	             return 0.0005831682455839253;
+	         default :
+	             return 0.0005831682455839253;
+	     }
+	 }
+	 
+	 $scope.refuseMarker = function() {
+    	var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
+            controller: RefuseMarkerController,
+            windowClass: 'dialog-delete',
+            resolve: {
+                attributes: function () {
+                    return $scope.motive;
+                }
+            }
+        });
+    	
+    	dialog.result.then(function (result) {
+
+            if (result) {
+                $scope.currentEntity.name = result.name;
+                $scope.currentEntity.title = result.title;
+                $scope.currentEntity.legend = result.legend;
+            }
+
+        });
+    }
+    
+    $scope.aprroveMarker = function() {
+    	
+    	var dialog = $modal.open({
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+            controller: DialogController,
+            windowClass: 'dialog-success',
+            resolve: {
+                title: function () {
+                    return $translate('admin.marker-moderation.Confirm-approve');
+                },
+                message: function () {
+                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker')+' ? <br/>.';
+                },
+                buttons: function () {
+                    return [
+                        {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
+                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                    ];
+                }
+            }
+        });
+    	
+    }
     
 }
