@@ -48,6 +48,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     
     $scope.hiding = true;
     
+    $scope.motive;
+    
   //DATA GRID
     /**
      * Static variable coms stock grid buttons
@@ -441,5 +443,52 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	             return 0.0005831682455839253;
 	     }
 	 }
+	 
+	 $scope.refuseMarker = function() {
+    	var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
+            controller: RefuseMarkerController,
+            windowClass: 'dialog-delete',
+            resolve: {
+                attributes: function () {
+                    return $scope.motive;
+                }
+            }
+        });
+    	
+    	dialog.result.then(function (result) {
+
+            if (result) {
+                $scope.currentEntity.name = result.name;
+                $scope.currentEntity.title = result.title;
+                $scope.currentEntity.legend = result.legend;
+            }
+
+        });
+    }
+    
+    $scope.aprroveMarker = function() {
+    	
+    	var dialog = $modal.open({
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+            controller: DialogController,
+            windowClass: 'dialog-success',
+            resolve: {
+                title: function () {
+                    return $translate('admin.marker-moderation.Confirm-approve');
+                },
+                message: function () {
+                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker')+' ? <br/>.';
+                },
+                buttons: function () {
+                    return [
+                        {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
+                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                    ];
+                }
+            }
+        });
+    	
+    }
     
 }
