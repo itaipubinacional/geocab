@@ -9,6 +9,10 @@
 	margin-right: 15px;
 }
 
+.logo:hover {
+    text-decoration: none;
+}
+
 .pre {
 	background: url(../images/logo-itaipu.png) 19px 20px no-repeat;
 	background-size: 61px;
@@ -20,6 +24,34 @@
 	margin-right: 15px;
 }
 
-.logo:hover {
-    text-decoration: none;
+.history{
+	background: url(../images/historico.png) 24px 8px no-repeat;
+	background-size: 26px;
 }
+
+.history:hover{
+	background: url(../images/historico.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+.approve{
+	background: url(../images/arrow_up.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+.approve:hover{
+	background: url(../images/arrow_up.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+.refuse{
+	background: url(../images/arrow_down.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+.refuse:hover{
+	background: url(../images/arrow_down.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+
