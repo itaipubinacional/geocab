@@ -46,7 +46,7 @@ public class MotiveMarkerModeration extends AbstractEntity implements Serializab
 	 * 
 	 */
 	@NotNull
-	private String value;
+	private String description;
 	
 	/**
 	 * 
@@ -95,28 +95,28 @@ public class MotiveMarkerModeration extends AbstractEntity implements Serializab
 	 * @param markerModeration
 	 * @param motive
 	 */
-	public MotiveMarkerModeration(Long id, String value, MarkerModeration markerModeration, Motive motive)
+	public MotiveMarkerModeration(Long id, String description, MarkerModeration markerModeration, Motive motive)
 	{
 		super(id);
-		this.value = value;
+		this.description = description;
 		this.markerModeration = markerModeration;
 		this.motive = motive;
 	}
 
 	/**
-	 * @return the value
+	 * @return the description
 	 */
-	public String getValue()
+	public String getDescription()
 	{
-		return value;
+		return description;
 	}
 
 	/**
-	 * @param value the value to set
+	 * @param description the description to set
 	 */
-	public void setValue(String value)
+	public void setDescription(String description)
 	{
-		this.value = value;
+		this.description = description;
 	}
 
 	/**
