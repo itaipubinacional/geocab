@@ -119,9 +119,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	 * Although the front controller of angle won't let enter an invalid URL.
      */
     $scope.initialize = function (toState, toParams, fromState, fromParams) {
-                        
-    	var state = $state.current.name;
-    	
+        
         /**
          * It is necessary to remove the sortInfo attribute because the return of an edition was doubling the value of the same with the Sort attribute
          * preventing the ordinations in the columns of the grid.
@@ -132,51 +130,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
         $log.info("Starting the front controller.");
 
-        /*switch (state) {
-            case $scope.LIST_STATE:
-            {
-                $scope.changeToList();
-            }
-                break;
-            case $scope.DETAIL_STATE:
-            {
-                $scope.changeToDetail($state.params.id);
-            }
-                break;
-            case $scope.INSERT_STATE:
-            {
-                $scope.changeToInsert();
-            }
-                break;
-            case $scope.UPDATE_STATE:
-            {
-                $scope.changeToUpdate($state.params.id);
-            }
-                break;
-            default :
-            {
-                $state.go($scope.LIST_STATE);
-            }
-        }*/
-    
-        /**
-         * Openlayers map configuration
-         */
-        $scope.olMapDiv = document.getElementById('olmap');
-        $scope.map = new ol.Map({
-
-            controls: [
-                $scope.mousePositionControl
-            ],
-            layers: [
-                 new ol.layer.Tile({
-                   source: new ol.source.OSM()
-                 })
-               ],
-            target: $scope.olMapDiv,
-            view: $scope.view
-        });
-    
+        $scope.changeToList();
+         
+        $scope.loadMap();
+       
     };
     
     /**
@@ -212,7 +169,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $log.info("changeToInsert");
 
                
-
+        $scope.currentState = $scope.INSERT_STATE;
     };
 
     /**
@@ -228,7 +185,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
         $log.info("changeToUpdate", id);
 
-       
+        $scope.currentState = $scope.UPDATE_STATE;
     };
 
     /**
@@ -244,13 +201,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToDetail = function (id) {
         $log.info("changeToDetail", id);
 
-        if (id == null || id == "" || id == 0) {
-            $scope.msg = {type: "error", text: $scope.INVALID_ID_MESSAGE, dismiss: true};
-            $scope.currentState = $scope.LIST_STATE;
-            $state.go($scope.LIST_STATE);
-            return;
-        }
-
+        $scope.currentState = $scope.DETAIL_STATE;
         
     };
 
@@ -268,12 +219,37 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
     };    
     
-    	
+    /**
+     * 
+     */
     $scope.showFields = function (showFields){
     	if (showFields) {
     		$scope.hiding = false;
     	} else
     		$scope.hiding = true;
+    }
+    
+    /**
+     * Load map
+     */
+    $scope.loadMap = function(){
+    	 /**
+         * Openlayers map configuration
+         */
+        $scope.olMapDiv = document.getElementById('olmap');
+        $scope.map = new ol.Map({
+
+            controls: [
+                $scope.mousePositionControl
+            ],
+            layers: [
+                 new ol.layer.Tile({
+                   source: new ol.source.OSM()
+                 })
+               ],
+            target: $scope.olMapDiv,
+            view: $scope.view
+        });
     }
     
     
