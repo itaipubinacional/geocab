@@ -12,7 +12,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Inject the methods, attributes and its states inherited from AbstractCRUDController.
      * @see AbstractCRUDController
      */
-    $injector.invoke(AbstractCRUDController, this, {$scope: $scope});   
+    $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
+    
+    $importService("markerModerationService");
 
 
     /*-------------------------------------------------------------------
@@ -56,7 +58,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
         '<a ui-sref="layer-config.update({id:row.entity.id})"  " title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
-        '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
     
     var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
@@ -89,10 +90,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
 			},
 			columnDefs: [
-			             {displayName: $translate('admin.marker-moderation.Name') , field:'name', sortable:false, width: '120px', cellTemplate: IMAGE_LEGEND},
-			             {displayName: $translate('admin.marker-moderation.Layer'), field:'layer'}, 
-			             {displayName: $translate('admin.marker-moderation.Situation'), field:'situation'},
-			             {displayName: $translate('admin.marker-moderation.Review'), field:'review'},			             
+			             {displayName: $translate('admin.marker-moderation.Layer'), field:'marker.layer.title'}, 
+			             {displayName: $translate('admin.marker-moderation.Situation'), field:'status'},
+			             {displayName: $translate('Actions'), sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}            
 			             ]
 	};
     
@@ -153,7 +153,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
-        //$scope.listPostsByFilters(null, pageRequest);
+        $scope.listMarkerModerationByFilters(null, pageRequest);
     };
 
     /**
@@ -217,7 +217,36 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $log.info("changeToRemove");
 
         
-    };    
+    };
+    
+    /*-------------------------------------------------------------------
+	 * 		 				 	  BEHAVIORS
+	 *-------------------------------------------------------------------*/
+
+	/**
+	 * Performs the query logs, considering filter, paging and sorting. 
+	 * When ok, change the state of the screen to list.
+	 * 
+	 * @see data.filter
+	 * @see currentPage
+	 */
+	$scope.listMarkerModerationByFilters = function( filter, pageRequest ) {
+
+		markerModerationService.listMarkerModerationByFilters( filter, pageRequest, {
+			callback : function(result) {
+				$scope.currentPage = result;
+				$scope.currentPage.pageable.pageNumber++;
+				$scope.currentState = $scope.LIST_STATE;
+				$state.go( $scope.LIST_STATE );
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
+				$scope.$apply();
+			}
+		});
+	};
     
     /**
      * 

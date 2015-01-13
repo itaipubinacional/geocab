@@ -15,7 +15,7 @@
 		<!-- Filter Bar -->
 		<div class="search-div" style="margin-bottom:10px">
 			<form>
-				<input type="text" ng-model="data.filter" class="form-control" title="<spring:message code="admin.users.Search"/>" placeholder="<spring:message code="admin.marker-moderation.Name-layer-tag"/>" style="float:left; width:300px;margin-right:10px"/>
+				<input type="text" ng-model="data.filter" class="form-control" title="<spring:message code="admin.users.Search"/>" placeholder="<spring:message code="admin.marker-moderation.Layer"/>" style="float:left; width:300px;margin-right:10px"/>
 				
 				<select class="form-control" style="width:22%;">
 					<option value="" disabled="" selected="" style="display:none"><spring:message code="admin.marker-moderation.Layer"/> ></option>
