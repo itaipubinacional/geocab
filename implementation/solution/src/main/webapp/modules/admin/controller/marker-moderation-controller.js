@@ -53,6 +53,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     
     $scope.motive;
     
+    /**
+     * All Features
+     */
+    $scope.features = [];
+    
   //DATA GRID
     /**
      * Static variable coms stock grid buttons
@@ -60,7 +65,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Since the delete button calls a method directly via ng-click why does not have a specific screen state.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
-        '<a ui-sref="layer-config.update({id:row.entity.id})"  " title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ng-click="" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '</div>';
     
     var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
@@ -82,7 +87,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     
     $scope.gridOptions = {
 			data: 'currentPage.content',
-			multiSelect: false,
+			multiSelect: true,
 			useExternalSorting: true,
             headerRowHeight: 45,
 
@@ -90,7 +95,27 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			beforeSelectionChange: function (row, event) {
 				//evita chamar a selecao, quando clicado em um action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
-				$state.go($scope.DETAIL_STATE, {id:row.entity.id});
+				
+				
+				angular.forEach($scope.features, function(feature, index){
+					var geometry = new ol.format.WKT().readGeometry(row.entity.marker.location.coordinateString);
+					if(ol.extent.equals(feature.extent, geometry.getExtent())){
+						
+						 var pan = ol.animation.pan({
+							    duration: 500,
+							    source: /** @type {ol.Coordinate} */ ($scope.view.getCenter())
+							  });
+							  $scope.map.beforeRender(pan);
+						
+						$scope.view.setCenter(geometry.getCoordinates());
+						
+						
+						$scope.selectedFeatures.push(feature.feature);
+					}
+				})
+				
+				
+				
 			},
 			columnDefs: [
 			             {displayName: $translate('admin.marker-moderation.Layer'), field:'marker.layer.title'}, 
@@ -314,7 +339,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
 		$scope.selectedFeatures = select.getFeatures();
 		
-		$scope.features = [];
 		angular.forEach(markers.content, function(marker, index){
                
 			var dragBox = new ol.interaction.DragBox({
