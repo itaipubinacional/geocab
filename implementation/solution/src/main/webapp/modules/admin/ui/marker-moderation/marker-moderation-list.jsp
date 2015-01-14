@@ -17,12 +17,12 @@
 			<form>
 				<input type="text" ng-model="data.filter" class="form-control" title="<spring:message code="admin.users.Search"/>" placeholder="<spring:message code="admin.marker-moderation.Layer"/>" style="float:left; width:300px;margin-right:10px"/>
 				
-				<select class="form-control" style="width:22%;">
-					<option value="" disabled="" selected="" style="display:none"><spring:message code="admin.marker-moderation.Layer"/> ></option>
+				<select class="form-control" style="width:22%;display:initial">
+					<option value="" disabled="" selected="" style="display:none"><spring:message code="admin.marker-moderation.Layer"/> </option>
 				</select>
 				
-				<a class="btn btn-mini" ng-if="!hiding" ng-click="showFields(false)" style="position:absolute;top:10px;left:30%"><i class="glyphicon glyphicon-chevron-up"></i></a>													    
-		    	<a class="btn btn-mini" ng-if="hiding" 	ng-click="showFields(true)"  style="position:absolute;top:10px;left:30%"><i class="glyphicon glyphicon-chevron-down"></i></a>
+				<a class="btn btn-mini" ng-if="!hiding" ng-click="showFields(false)" ><i class="glyphicon glyphicon-chevron-up"></i></a>													    
+		    	<a class="btn btn-mini" ng-if="hiding" 	ng-click="showFields(true)"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
 		    </form>		    		    		    
 		
 			<div style="margin-top:10px" ng-hide="hiding">
