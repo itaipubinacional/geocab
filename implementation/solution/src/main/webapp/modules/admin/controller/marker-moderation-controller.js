@@ -107,24 +107,37 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	'<img ng-if="row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
 	'<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.icon}}"/>' +
 	'</div>';
+   
     
     $scope.gridOptions = {
 			data: 'currentPage.content',
 			multiSelect: true,
 			useExternalSorting: true,
             headerRowHeight: 45,
-
             rowHeight: 45,
 			beforeSelectionChange: function (row, event) {
+				 
 				//evita chamar a selecao, quando clicado em um action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
 				
-				if($scope.selectedFeatures) {
-					angular.forEach($scope.selectedFeatures, function(feature, index){
-						feature.feature.clear();
-					});
-				}
+				if(row.selected) {
+					$scope.gridOptions.selectRow(row.rowIndex, false);
 					
+					if($scope.selectedFeatures) {
+						angular.forEach($scope.selectedFeatures, function(feature, index){
+							if(feature.marker.id == row.entity.marker.id) {
+								feature.feature.clear();
+							}
+							
+						});
+					}
+					
+				} else {
+					$scope.gridOptions.selectRow(row.rowIndex, true);
+				}
+				
+				
+				/**/
 				
 				angular.forEach($scope.features, function(feature, index){
 					var geometry = new ol.format.WKT().readGeometry(row.entity.marker.location.coordinateString);
@@ -205,7 +218,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      *
      * To change to this State, one must first load the data from the query.
      */
-    $scope.changeToList = function () {
+    $scope.changeToList = function (markers) {
         $log.info("changeToList");
         
         $scope.currentState = $scope.LIST_STATE;
@@ -214,7 +227,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
-        $scope.listMarkerModerationByFilters(null, pageRequest);
+        if(typeof markers == 'undefined'){
+        	$scope.listMarkerModerationByFilters(null, pageRequest);
+        } else {
+        	$scope.listMarkerModerationByMarker(markers, pageRequest);
+        }
     };
 
     /**
@@ -303,7 +320,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToRemove = function (layer) {
         $log.info("changeToRemove");
 
-        
     };
     
     /*-------------------------------------------------------------------
@@ -334,6 +350,32 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			}
 		});
 	};
+	
+	/**
+	 * Performs the query logs, considering filter, paging and sorting. 
+	 * When ok, change the state of the screen to list.
+	 * 
+	 * @see data.filter
+	 * @see currentPage
+	 */
+	$scope.listMarkerModerationByMarker = function( markers, pageRequest ) {
+
+		
+		markerModerationService.listMarkerModerationByMarker( markers, pageRequest, {
+			callback : function(result) {
+				$scope.currentPage = result;
+				$scope.currentPage.pageable.pageNumber++;
+				$scope.currentState = $scope.LIST_STATE;
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
+				$scope.$apply();
+			}
+		});
+	};
+    
     
     /**
      * 
@@ -427,15 +469,17 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			dragBox.on('boxend', function(e) {
 				
 				  var extent = dragBox.getGeometry().getExtent();
+				  var markers = [];
 				
 				  angular.forEach($scope.features, function(feature, index){
-					    var marker = feature.feature.getProperties().marker
+					    var marker = feature.feature.getProperties().marker;
 					    $scope.selectMarker(marker);
 					    
 						var extentMarker = feature.extent;
 						var feature = feature.feature;
 						
 						if(ol.extent.containsExtent(extent, extentMarker)){
+							markers.push(marker.id);
 							
 							angular.forEach($scope.selectedFeatures, function(selected, index){
 								if(selected.marker.id == marker.id){
@@ -446,6 +490,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 						}
 				  });
 				  
+				  $scope.changeToList(markers);
 			});
 			
 			dragBox.on('boxstart', function(e) {
