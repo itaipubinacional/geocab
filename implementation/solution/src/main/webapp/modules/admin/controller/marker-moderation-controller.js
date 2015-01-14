@@ -14,13 +14,31 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
     
-    $importService("markerModerationService");
+     $importService("markerModerationService");
      $importService("markerService");
 
-
+	 /*-------------------------------------------------------------------
+	  * 		 				 	CONSTANTS
+	  *-------------------------------------------------------------------*/
+     /**
+      * Accept
+      */
+     $scope.ACCEPTED = "ACCEPTED";
+     
+     /**
+      * Refused
+      */
+     $scope.REFUSED = "REFUSED";
+     
+     /**
+      * Pending
+      */
+     $scope.PENDING = "PENDING";
+     
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
+     
     //STATES
     /**
      * Static variable that represents
@@ -52,6 +70,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.hiding = true;
     
     $scope.motive;
+    
+    /**
+     * selected features
+     * */
+    $scope.selectedFeatures = [];
     
     /**
      * All Features
@@ -96,10 +119,18 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				//evita chamar a selecao, quando clicado em um action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
 				
+				if($scope.selectedFeatures) {
+					angular.forEach($scope.selectedFeatures, function(feature, index){
+						feature.feature.clear();
+					});
+				}
+					
 				
 				angular.forEach($scope.features, function(feature, index){
 					var geometry = new ol.format.WKT().readGeometry(row.entity.marker.location.coordinateString);
 					if(ol.extent.equals(feature.extent, geometry.getExtent())){
+						var marker = feature.feature.getProperties().marker;
+						$scope.selectMarker(marker);
 						
 						 var pan = ol.animation.pan({
 							    duration: 500,
@@ -109,12 +140,14 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 						
 						$scope.view.setCenter(geometry.getCoordinates());
 						
+						angular.forEach($scope.selectedFeatures, function(selected, index){
+							if(selected.marker.id == marker.id){
+								selected.feature.push(feature.feature);
+							}
+						});
 						
-						$scope.selectedFeatures.push(feature.feature);
 					}
 				})
-				
-				
 				
 			},
 			columnDefs: [
@@ -229,8 +262,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToDetail = function (marker) {
         $log.info("changeToDetail", marker);
         
-        $scope.selectedFeatures.clear();
-        
+        if($scope.selectedFeatures) {
+	        angular.forEach($scope.selectedFeatures, function(feature, index){
+				feature.feature.clear();
+			});
+        }
+                
         var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
         
         $scope.map.getView().fitExtent(geometry.getExtent(), $scope.map.getSize());
@@ -238,8 +275,16 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.map.getView().setZoom(15);
         
         angular.forEach($scope.features, function(feature, index){
+        	var marker = feature.feature.getProperties().marker;
+        	
         	if(ol.extent.equals(feature.extent, geometry.getExtent())){
-				$scope.selectedFeatures.push(feature.feature);
+				
+				angular.forEach($scope.selectedFeatures, function(selected, index){
+					if(selected.marker.id == marker.id){
+						selected.feature.push(feature.feature);
+					}
+				});
+				
 			}
 		})
         
@@ -319,8 +364,23 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             view: $scope.view
         });
         
-        $scope.map.on('click', function() {
-        	$scope.selectedFeatures.clear();
+        $scope.map.on('click', function(evt) {
+        	if($scope.selectedFeatures) {
+        		angular.forEach($scope.selectedFeatures, function(feature, index){
+					feature.feature.clear();
+				});
+        	}
+        	
+        	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+ 		        return feature;
+ 		      });
+        	
+        	if(feature) {
+        		var marker = feature.getProperties().marker;
+            	
+            	$scope.selectMarker(marker);
+        	}
+        	
     	});
         
         $scope.listMarker();
@@ -348,27 +408,13 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     	var coordenates = [];
     	
-    	var style = new ol.style.Style({
-            image: new ol.style.Circle({
-              radius: 15,
-                fill: new ol.style.Fill({
-                color: '#FFFF00'
-              }),
-              stroke: new ol.style.Stroke({
-            	color: '#3399CC',
-                width: 3.5
-              })
-            }),
-            zIndex: 100000
-          });
-    	
-    	var select = new ol.interaction.Select({style:style});
-		$scope.map.addInteraction(select);
-
-		$scope.selectedFeatures = select.getFeatures();
-		
 		angular.forEach(markers.content, function(marker, index){
-               
+            
+			/**
+			 * Verify status
+			 * */
+			var statusColor = $scope.verifyStatusColor(marker.markerModerationStatus);
+			
 			var dragBox = new ol.interaction.DragBox({
 				  condition: ol.events.condition.shiftKeyOnly,
 				  style: new ol.style.Style({
@@ -383,21 +429,33 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				  var extent = dragBox.getGeometry().getExtent();
 				
 				  angular.forEach($scope.features, function(feature, index){
+					    var marker = feature.feature.getProperties().marker
+					    $scope.selectMarker(marker);
+					    
 						var extentMarker = feature.extent;
 						var feature = feature.feature;
 						
 						if(ol.extent.containsExtent(extent, extentMarker)){
-							$scope.selectedFeatures.push(feature);
+							
+							angular.forEach($scope.selectedFeatures, function(selected, index){
+								if(selected.marker.id == marker.id){
+									selected.feature.push(feature);
+								}
+							});
+							
 						}
 				  });
 				  
 			});
 			
 			dragBox.on('boxstart', function(e) {
-				  $scope.selectedFeatures.clear();
+				if($scope.selectedFeatures) {
+					angular.forEach($scope.selectedFeatures, function(feature, index){
+						feature.feature.clear();
+					});
+				}
 			});
 
-			
 			$scope.map.addInteraction(dragBox);
 			
 			var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
@@ -407,7 +465,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             });
           
 			var fill = new ol.style.Fill({
-				   color: '#FFFF00',
+				   color: statusColor,
 					width: 4.53
 				 });
 			var stroke = new ol.style.Stroke({
@@ -571,6 +629,48 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             }
         });
     	
+    }
+    
+    /**
+     * Verify status
+     */
+    
+    $scope.verifyStatusColor = function(status) {
+    	var statusColor;
+		if(status == $scope.REFUSED) {
+			statusColor = "#FF0000";
+		} else if(status == $scope.ACCEPTED) {
+			statusColor = "#00FF00";
+		} else {
+			statusColor = "#FFFF00";
+		}
+		return statusColor;
+    }
+    
+    $scope.selectMarker = function(marker){
+    	/**
+		 * Verify status
+		 * */
+		var statusColor = $scope.verifyStatusColor(marker.markerModerationStatus);
+    	
+    	var style = new ol.style.Style({
+            image: new ol.style.Circle({
+              radius: 15,
+              fill: new ol.style.Fill({
+                color: statusColor
+              }),
+              stroke: new ol.style.Stroke({
+            	color: '#3399CC',
+                width: 3.5
+              })
+            }),
+            zIndex: 100000
+          });
+    	
+    	var select = new ol.interaction.Select({style:style});
+		$scope.map.addInteraction(select);
+
+		$scope.selectedFeatures.push({'marker': marker, 'feature': select.getFeatures()});
     }
     
 }

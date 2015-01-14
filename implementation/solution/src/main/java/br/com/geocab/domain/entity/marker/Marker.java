@@ -30,6 +30,7 @@ import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
+import br.com.geocab.domain.entity.markermoderation.MarkerModerationStatus;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -97,6 +98,9 @@ public class Marker extends AbstractEntity implements Serializable
 	@JsonManagedReference
 	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	private List<MarkerModeration> markerModeration = new ArrayList<MarkerModeration>();
+	
+	@Transient
+	private MarkerModerationStatus markerModerationStatus;
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -139,12 +143,13 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param longitude
 	 * @param status
 	 */
-	public Marker( Long id, StatusMarker status, Geometry location, Layer layer)
+	public Marker( Long id, StatusMarker status, Geometry location, MarkerModerationStatus markerModerationStatus, Layer layer)
 	{
 		this.setId(id);
 		this.setStatus(status);
 		this.setLocation( (Point) location);
 		this.setLayer(layer);
+		this.setMarkerModerationStatus(markerModerationStatus);
 	}
 
 	/**
@@ -348,5 +353,22 @@ public class Marker extends AbstractEntity implements Serializable
 	{
 		this.markerModeration = markerModeration;
 	}
-	
+
+	/**
+	 * @return the markerModerationStatus
+	 */
+	public MarkerModerationStatus getMarkerModerationStatus()
+	{
+		return markerModerationStatus;
+	}
+
+	/**
+	 * @param markerModerationStatus the markerModerationStatus to set
+	 */
+	public void setMarkerModerationStatus(
+			MarkerModerationStatus markerModerationStatus)
+	{
+		this.markerModerationStatus = markerModerationStatus;
+	}
+
 }
