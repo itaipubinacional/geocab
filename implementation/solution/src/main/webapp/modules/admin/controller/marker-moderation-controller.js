@@ -65,7 +65,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Since the delete button calls a method directly via ng-click why does not have a specific screen state.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
-        '<a ng-click="" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ng-click="changeToDetail(row.entity.marker)" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '</div>';
     
     var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
@@ -226,9 +226,23 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * the updated record query service, and then change the State of the screen.
      * If the modifier is not valid, returns to the State of the listing.
      */
-    $scope.changeToDetail = function (id) {
-        $log.info("changeToDetail", id);
-
+    $scope.changeToDetail = function (marker) {
+        $log.info("changeToDetail", marker);
+        
+        $scope.selectedFeatures.clear();
+        
+        var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+        
+        $scope.map.getView().fitExtent(geometry.getExtent(), $scope.map.getSize());
+        
+        $scope.map.getView().setZoom(15);
+        
+        angular.forEach($scope.features, function(feature, index){
+        	if(ol.extent.equals(feature.extent, geometry.getExtent())){
+				$scope.selectedFeatures.push(feature.feature);
+			}
+		})
+        
         $scope.currentState = $scope.DETAIL_STATE;
         
     };
