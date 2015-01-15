@@ -30,7 +30,6 @@ import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
-import br.com.geocab.domain.entity.markermoderation.MarkerModerationStatus;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -52,6 +51,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @TypeDef(name="geometry", typeClass=GeometryType.class)
 public class Marker extends AbstractEntity implements Serializable
 {
+	
 	
 	/**
 	 * 
@@ -81,7 +81,7 @@ public class Marker extends AbstractEntity implements Serializable
 	private Point location;
 	
 	@NotNull
-	private StatusMarker status;
+	private MarkerStatus status;
 	
 	private Boolean deleted;
 	
@@ -98,9 +98,6 @@ public class Marker extends AbstractEntity implements Serializable
 	@JsonManagedReference
 	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	private List<MarkerModeration> markerModeration = new ArrayList<MarkerModeration>();
-	
-	@Transient
-	private MarkerModerationStatus markerModerationStatus;
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -130,7 +127,7 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param longitude
 	 * @param status
 	 */
-	public Marker( Long id, StatusMarker status)
+	public Marker( Long id, MarkerStatus status)
 	{
 		this.setId(id);
 		this.setStatus(status);
@@ -143,13 +140,12 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param longitude
 	 * @param status
 	 */
-	public Marker( Long id, StatusMarker status, Geometry location, MarkerModerationStatus markerModerationStatus, Layer layer)
+	public Marker( Long id, MarkerStatus status, Geometry location, Layer layer)
 	{
 		this.setId(id);
 		this.setStatus(status);
 		this.setLocation( (Point) location);
 		this.setLayer(layer);
-		this.setMarkerModerationStatus(markerModerationStatus);
 	}
 
 	/**
@@ -160,7 +156,7 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param status
 	 * @param user
 	 */
-	public Marker( Long id, StatusMarker status, Calendar created, Layer layer, User user)
+	public Marker( Long id, MarkerStatus status, Calendar created, Layer layer, User user)
 	{
 		this.setId(id);
 		this.setStatus(status);
@@ -183,7 +179,7 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param layer
 	 * @param user
 	 */
-	public Marker( Long id, StatusMarker status, Calendar created, Geometry location, Layer layer, User user)
+	public Marker( Long id, MarkerStatus status, Calendar created, Geometry location, Layer layer, User user)
 	{
 		this.setId(id);
 		this.setStatus(status);
@@ -199,14 +195,14 @@ public class Marker extends AbstractEntity implements Serializable
 	/**
 	 * @return the status
 	 */
-	public StatusMarker getStatus()
+	public MarkerStatus getStatus()
 	{
 		return status;
 	}
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(StatusMarker status)
+	public void setStatus(MarkerStatus status)
 	{
 		this.status = status;
 	}
@@ -353,22 +349,5 @@ public class Marker extends AbstractEntity implements Serializable
 	{
 		this.markerModeration = markerModeration;
 	}
-
-	/**
-	 * @return the markerModerationStatus
-	 */
-	public MarkerModerationStatus getMarkerModerationStatus()
-	{
-		return markerModerationStatus;
-	}
-
-	/**
-	 * @param markerModerationStatus the markerModerationStatus to set
-	 */
-	public void setMarkerModerationStatus(
-			MarkerModerationStatus markerModerationStatus)
-	{
-		this.markerModerationStatus = markerModerationStatus;
-	}
-
+	
 }
