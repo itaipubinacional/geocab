@@ -413,9 +413,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	/**
 	 * Accept status marker moderation
 	 */
-	$scope.acceptMarkerModeration = function( markerModeration ) {
+	$scope.acceptMarkerModeration = function( id ) {
 		
-		markerModerationService.acceptMarkerModeration( markerModeration[0], {
+		markerModerationService.acceptMarker( id, {
          callback : function(result) {
             console.log(result);
          },
@@ -429,9 +429,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	/**
 	 * Refuse status marker moderation
 	 */
-	$scope.refuseMarkerModeration = function( markerModeration ) {
+	$scope.refuseMarkerModeration = function( id ) {
 		
-		markerModerationService.refuseMarkerModeration( markerModeration, {
+		markerModerationService.refuseMarkerModeration( id, {
          callback : function(result) {
             console.log(result);
          },
@@ -769,7 +769,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     	 dialog.result.then(function () {
 
-    		 $scope.acceptMarkerModeration($scope.currentEntity.markerModeration);
+    		 $scope.acceptMarkerModeration($scope.currentEntity.id);
          });
     	
     };

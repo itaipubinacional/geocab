@@ -96,4 +96,10 @@ function RefuseMarkerController($scope, $injector,$modalInstance, $state, attrib
 		$scope.msg = null;
 		$modalInstance.close(null);
 	};
+	
+	$scope.refuse = function()
+	{
+		console.log("SS");
+	};
+	
 };

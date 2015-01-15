@@ -82,10 +82,12 @@ public class MarkerModerationService
 	 * @param markerModeration
 	 * @return
 	 */
-	public MarkerModeration acceptMarker( Marker marker )
+	public MarkerModeration acceptMarker( Long id )
 	{			
 		try
 		{
+			
+			Marker marker = markerRepository.findOne(id);
 			marker.setStatus(MarkerStatus.ACCEPTED);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
@@ -111,11 +113,11 @@ public class MarkerModerationService
 	 * @param markerModeration
 	 * @return
 	 */
-	public MarkerModeration refuseMarker( Marker marker )
+	public MarkerModeration refuseMarker( Long id )
 	{			
 		try
 		{
-			
+			Marker marker = markerRepository.findOne(id);
 			marker.setStatus(MarkerStatus.REFUSED);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
