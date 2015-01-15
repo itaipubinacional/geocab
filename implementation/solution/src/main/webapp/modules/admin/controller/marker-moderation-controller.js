@@ -132,6 +132,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 						});
 					}
 					
+					return false;
 				} else {
 					$scope.gridOptions.selectRow(row.rowIndex, true);
 				}
