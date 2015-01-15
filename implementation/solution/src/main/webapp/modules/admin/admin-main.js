@@ -150,7 +150,8 @@
 		$stateProvider.state('marker-moderation', {
 			url : "/marker-moderation",
 			templateUrl : "modules/admin/ui/marker-moderation/marker-moderation-view.jsp",
-			controller : MarkerModerationController
+			controller : MarkerModerationController,
+			menu: 'marker-moderation'
 		});
 		
 	});

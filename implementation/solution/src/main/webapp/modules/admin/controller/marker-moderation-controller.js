@@ -745,7 +745,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
     }
     
-    $scope.aprroveMarker = function() {
+    $scope.approveMarker = function() {
     	
     	var dialog = $modal.open({
             templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
