@@ -78,9 +78,20 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.currentEntity;
     
+    /**
+     * hiding
+     */
     $scope.hiding = true;
     
+    /**
+     * motive
+     */
     $scope.motive;
+    
+    /**
+     * select Marker tool
+     * */
+    $scope.selectMarkerTool = false;
     
     /**
      * selected features
@@ -91,6 +102,13 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * All Features
      */
     $scope.features = [];
+    
+    /**
+     * Responsible for controlling variable if the functionalities are active or not
+     */
+    $scope.menu = {
+        selectMarker: false
+    };
     
   //DATA GRID
     /**
@@ -480,7 +498,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			var statusColor = $scope.verifyStatusColor(marker.markerModerationStatus);
 			
 			var dragBox = new ol.interaction.DragBox({
-				  condition: ol.events.condition.shiftKeyOnly,
+				  //condition: ol.events.condition.shiftKeyOnly,
+				  condition: function(){
+				 	  return $scope.selectMarkerTool;
+				  },
 				  style: new ol.style.Style({
 				    stroke: new ol.style.Stroke({
 				      color: [0, 0, 255, 1]
@@ -808,6 +829,22 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		$scope.selectedFeatures.push({'marker': marker, 'feature': select.getFeatures()});
     }
     
+    $scope.eventMarkerTool = function(){
+    	$scope.selectMarkerTool = $scope.menu.selectMarker = ($scope.selectMarkerTool == true) ? false : true;
+    	
+    }
    
-    
+    /**
+     * Function that decreases the zoom map
+     */
+    $scope.eventDecreaseZoom = function (){
+        $scope.map.getView().setZoom($scope.map.getView().getZoom() - 1);
+    }
+
+    /**
+     * Function that increases the zoom map
+     */
+    $scope.eventIncreaseZoom = function (){
+        $scope.map.getView().setZoom($scope.map.getView().getZoom() + 1);
+    }
 }
