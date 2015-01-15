@@ -5,15 +5,15 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html>
+<html style="overflow:hidden">
 	<div  style="width:36%; height: 100%; float:left; margin: 20px;">	
-		<div class="content-tab" style="height:615px; overflow:auto">				
+		<div class="content-tab" style="height:76vh; overflow:auto">				
 			<span style="z-index: 1000;float:right;cursor:pointer" ng-click="changeToList()" class="icon itaipu-icon-close"></span>
 				<br>
 				<div style="float: right" id="right-buttons">        			        			        		
 					</br>				        		
 					<a class="btn btn-default history" ng-click="changeToHistory(row.entity.marker)" style="float:right; margin-top:80px; width:75px; height:58px; line-height : 75px"><spring:message code="admin.marker-moderation.History" /></a></br>
-					<a class="btn btn-default approve" style="float:right; margin-top:15px; width:75px; height:58px; line-height : 75px" ng-click="aprroveMarker()" ><spring:message code="admin.marker-moderation.Approve" /></a></br>
+					<a class="btn btn-default approve" style="float:right; margin-top:15px; width:75px; height:58px; line-height : 75px" ng-click="approveMarker()" ><spring:message code="admin.marker-moderation.Approve" /></a></br>
 					<a class="btn btn-default refuse"  style="float:right; margin-top:15px; width:75px; height:58px; line-height : 75px" ng-click="refuseMarker()" ><spring:message code="admin.marker-moderation.Refuse" /></a></br> 					       													
 		        </div>									
 				
