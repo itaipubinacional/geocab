@@ -24,19 +24,19 @@
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
         <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>
 
-        <form novalidate name="form_add_attribute" default-button="buttonInsertAdd" style="margin-bottom: 10px; margin-top: 10px;" class="addAttribute">        
+        <form novalidate name="form_refuse_marker" default-button="refuseButton" style="margin-bottom: 10px; margin-top: 10px;" class="refuseMarker">        
         	
         	<div class="form-item" style="width:100%">
         		<label class="detail-label" required><spring:message code="admin.marker-moderation.Motive" /></label>
 	        	<div style="position:relative;">
 	        		<select name="select" class="form-control" ng-model="currentEntity.type"  style="margin-bottom: 15px" 
-									  ng-class="{ngInvalid: form_add_attribute.$submitted && form_add_attribute.select.$error.required }"
+									  ng-class="{ngInvalid: form_refuse_marker.$submitted && form_refuse_marker.select.$error.required }"
 	        		   				  required>
 	        		</select>
 	        	</div>
         	
         	
-	        	 <span  ng-show="form_add_attribute.$submitted  && form_add_attribute.name.$error.required" class="tooltip-validation" style="right:16px"><spring:message code="admin.users.Field-required" /></span>
+	        	 <span  ng-show="form_refuse_marker.$submitted && form_refuse_marker.select.$error.required " class="tooltip-validation" style="right:16px;top:28px"><spring:message code="admin.users.Field-required" /></span>
 	        	
 	        	 <label class="form-item"><spring:message code="admin.marker-moderation.Description" /></label>
 				 <textarea rows="5" cols="100"></textarea>
@@ -56,7 +56,7 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-danger" ng-click="refuseMarker()"><spring:message code="admin.marker-moderation.Refuse" /></button>
+        <button class="btn btn-danger" ng-click="refuseMarker()" id="refuseButton"><spring:message code="admin.marker-moderation.Refuse" /></button>
         <button class="btn btn-default" title="<spring:message code="admin.layer-config.Close" />" ng-click="close(true)"><spring:message code="admin.layer-config.Close" /></button>
     </div>
 </div>
