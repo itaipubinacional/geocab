@@ -78,9 +78,33 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.currentEntity;
     
+    /**
+     * hiding
+     */
     $scope.hiding = true;
     
+    /**
+     * motive
+     */
     $scope.motive;
+    
+    //FORM
+    /**
+     * Variável que armazena o filtro da consulta
+     * @filter - Filtro da consulta
+     */
+    $scope.data = {
+        filter : null,
+        allStatus: [],
+        status: null,
+        user: null
+        
+    };
+    
+    /**
+     * select Marker tool
+     * */
+    $scope.selectMarkerTool = false;
     
     /**
      * selected features
@@ -91,6 +115,13 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * All Features
      */
     $scope.features = [];
+    
+    /**
+     * Responsible for controlling variable if the functionalities are active or not
+     */
+    $scope.menu = {
+        selectMarker: false
+    };
     
   //DATA GRID
     /**
@@ -120,6 +151,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	'</div>';
    
     
+    var IMAGE_MODERATION = '<div  class="cell-centered">' +
+    '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>'+
+    '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>'+
+    '<a ng-if="row.entity.status == \'REFUSED\' " class="icon-refuse-moderation"></a>'+
+    '</div>';
+    
     $scope.gridOptions = {
 			data: 'currentPage.content',
 			multiSelect: true,
@@ -143,6 +180,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 						});
 					}
 					
+					return false;
 				} else {
 					$scope.gridOptions.selectRow(row.rowIndex, true);
 				}
@@ -174,7 +212,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			},
 			columnDefs: [
 			             {displayName: $translate('admin.marker-moderation.Layer'), field:'marker.layer.title'}, 
-			             {displayName: $translate('admin.marker-moderation.Situation'), field:'status'},
+			             {displayName: $translate('admin.marker-moderation.Situation'), cellTemplate: IMAGE_MODERATION},
 			             {displayName: $translate('Actions'), sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}            
 			             ]
 	};
@@ -318,6 +356,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.currentEntity = marker;
         
         $scope.listAttributesByMarker();
+        $scope.currentEntity = marker;
         
     };
 
@@ -370,6 +409,38 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				$scope.$apply();
 			}
 		});
+	};
+	
+	/**
+	 * Accept status marker moderation
+	 */
+	$scope.acceptMarkerModeration = function( markerModeration ) {
+		
+		markerModerationService.acceptMarkerModeration( markerModeration[0], {
+         callback : function(result) {
+            console.log(result);
+         },
+         errorHandler : function(message, exception) {
+             $scope.message = {type:"error", text: message};
+             $scope.$apply();
+         }
+     });
+	};
+	
+	/**
+	 * Refuse status marker moderation
+	 */
+	$scope.refuseMarkerModeration = function( markerModeration ) {
+		
+		markerModerationService.refuseMarkerModeration( markerModeration, {
+         callback : function(result) {
+            console.log(result);
+         },
+         errorHandler : function(message, exception) {
+             $scope.message = {type:"error", text: message};
+             $scope.$apply();
+         }
+     });
 	};
 	
 	/**
@@ -479,7 +550,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			var statusColor = $scope.verifyStatusColor(marker.markerModerationStatus);
 			
 			var dragBox = new ol.interaction.DragBox({
-				  condition: ol.events.condition.shiftKeyOnly,
+				  condition: function(){
+				 	  return $scope.selectMarkerTool;
+				  },
 				  style: new ol.style.Style({
 				    stroke: new ol.style.Stroke({
 				      color: [0, 0, 255, 1]
@@ -695,7 +768,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             }
         });
     	
-    }
+    	 dialog.result.then(function () {
+
+    		 $scope.acceptMarkerModeration($scope.currentEntity.markerModeration);
+         });
+    	
+    };
     
     $scope.listAttributesByMarker = function(){
     	
@@ -807,6 +885,22 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		$scope.selectedFeatures.push({'marker': marker, 'feature': select.getFeatures()});
     }
     
+    $scope.eventMarkerTool = function(){
+    	$scope.selectMarkerTool = $scope.menu.selectMarker = ($scope.selectMarkerTool == true) ? false : true;
+    	
+    }
    
-    
+    /**
+     * Function that decreases the zoom map
+     */
+    $scope.eventDecreaseZoom = function (){
+        $scope.map.getView().setZoom($scope.map.getView().getZoom() - 1);
+    }
+
+    /**
+     * Function that increases the zoom map
+     */
+    $scope.eventIncreaseZoom = function (){
+        $scope.map.getView().setZoom($scope.map.getView().getZoom() + 1);
+    }
 }
