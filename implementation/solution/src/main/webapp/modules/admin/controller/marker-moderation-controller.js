@@ -431,7 +431,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	 */
 	$scope.refuseMarkerModeration = function( id ) {
 		
-		markerModerationService.refuseMarkerModeration( id, {
+		markerModerationService.refuseMarker( id, {
          callback : function(result) {
             console.log(result);
          },
@@ -727,20 +727,14 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             controller: RefuseMarkerController,
             windowClass: 'dialog-delete',
             resolve: {
-                attributes: function () {
+                motive: function () {
                     return $scope.motive;
                 }
             }
         });
     	
     	dialog.result.then(function (result) {
-
-            if (result) {
-                $scope.currentEntity.name = result.name;
-                $scope.currentEntity.title = result.title;
-                $scope.currentEntity.legend = result.legend;
-            }
-
+    		$scope.refuseMarkerModeration($scope.currentEntity.id);
         });
     }
     
