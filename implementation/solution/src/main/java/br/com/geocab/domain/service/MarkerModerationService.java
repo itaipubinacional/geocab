@@ -4,7 +4,6 @@
 package br.com.geocab.domain.service;
 
 import java.util.logging.Logger;
-
 import java.util.List;
 
 import org.directwebremoting.annotations.RemoteProxy;
@@ -15,8 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
+import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
 
 /**
@@ -49,6 +50,11 @@ public class MarkerModerationService
 	private IMarkerModerationRepository markerModerationRepository;
 	
 	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IMarkerRepository markerRepository;
 	
 	
 	
@@ -71,46 +77,61 @@ public class MarkerModerationService
 	
 	/**
 	 * 
-	 * Method to accept a {@link MarkerModeration}
+	 * Method to accept a {@link Marker}
 	 * 
 	 * @param markerModeration
 	 * @return
 	 */
-	public MarkerModeration acceptMarkerModeration( MarkerModeration markerModeration )
+	public MarkerModeration acceptMarker( Marker marker )
 	{			
 		try
 		{
+			marker.setStatus(MarkerStatus.ACCEPTED);
+			
+			MarkerModeration markerModeration = new MarkerModeration();
+			markerModeration.setMarker(marker);
 			markerModeration.setStatus(MarkerStatus.ACCEPTED);
+			
 			markerModeration = this.markerModerationRepository.save(markerModeration);
+			
+			return markerModeration;
 		}
 		catch ( DataIntegrityViolationException e )
 		{
 			LOG.info( e.getMessage() );
 		}
 		
-		return markerModeration;
+		return null;
 	}
 	
 	/**
 	 * 
-	 * Method to refuse a {@link MarkerModeration}
+	 * Method to refuse a {@link Marker}
 	 * 
 	 * @param markerModeration
 	 * @return
 	 */
-	public MarkerModeration refuseMarkerModeration( MarkerModeration markerModeration )
+	public MarkerModeration refuseMarker( Marker marker )
 	{			
 		try
 		{
+			
+			marker.setStatus(MarkerStatus.REFUSED);
+			
+			MarkerModeration markerModeration = new MarkerModeration();
+			markerModeration.setMarker(marker);
 			markerModeration.setStatus(MarkerStatus.REFUSED);
+			
 			markerModeration = this.markerModerationRepository.save(markerModeration);
+			
+			return markerModeration;
 		}
 		catch ( DataIntegrityViolationException e )
 		{
 			LOG.info( e.getMessage() );
 		}
 		
-		return markerModeration;
+		return null;
 	}
 	
 	

@@ -130,7 +130,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Since the delete button calls a method directly via ng-click why does not have a specific screen state.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
-        '<a ng-click="changeToDetail(row.entity.marker)" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ng-click="changeToDetail(row.entity)" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '</div>';
     
     var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
@@ -173,7 +173,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 					
 					if($scope.selectedFeatures) {
 						angular.forEach($scope.selectedFeatures, function(feature, index){
-							if(feature.marker.id == row.entity.marker.id) {
+							if(feature.marker.id == row.entity.id) {
 								feature.feature.clear();
 							}
 							
@@ -187,7 +187,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				
 				
 				angular.forEach($scope.features, function(feature, index){
-					var geometry = new ol.format.WKT().readGeometry(row.entity.marker.location.coordinateString);
+					var geometry = new ol.format.WKT().readGeometry(row.entity.location.coordinateString);
 					if(ol.extent.equals(feature.extent, geometry.getExtent())){
 						var marker = feature.feature.getProperties().marker;
 						$scope.selectMarker(marker);
@@ -211,7 +211,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				
 			},
 			columnDefs: [
-			             {displayName: $translate('admin.marker-moderation.Layer'), field:'marker.layer.title'}, 
+			             {displayName: $translate('admin.marker-moderation.Layer'), field:'layer.title'}, 
 			             {displayName: $translate('admin.marker-moderation.Situation'), cellTemplate: IMAGE_MODERATION},
 			             {displayName: $translate('Actions'), sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}            
 			             ]
@@ -275,7 +275,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.pageRequest = pageRequest;
 
         if(typeof markers == 'undefined'){
-        	$scope.listMarkerModerationByFilters(null, pageRequest);
+        	$scope.listMarkerByFilters(null, pageRequest);
         } else {
         	$scope.listMarkerModerationByMarker(markers, pageRequest);
         }
@@ -393,9 +393,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	 * @see data.filter
 	 * @see currentPage
 	 */
-	$scope.listMarkerModerationByFilters = function( filter, pageRequest ) {
+	$scope.listMarkerByFilters = function( filter, pageRequest ) {
 
-		markerModerationService.listMarkerModerationByFilters( filter, pageRequest, {
+		markerService.listMarkerByFilters( filter, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;
