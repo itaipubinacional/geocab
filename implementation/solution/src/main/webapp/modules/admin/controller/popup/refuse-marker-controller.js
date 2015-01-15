@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function RefuseMarkerController($scope, $injector,$modalInstance, $state, attributes ) {
+function RefuseMarkerController($scope, $injector,$modalInstance, $state, motive ) {
 
 
 	$scope.msg = null;
@@ -99,7 +99,8 @@ function RefuseMarkerController($scope, $injector,$modalInstance, $state, attrib
 	
 	$scope.refuse = function()
 	{
-		console.log("SS");
+		console.log("Refuse");
+		$scope.close();
 	};
 	
 };
