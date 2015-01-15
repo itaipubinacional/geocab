@@ -27,11 +27,9 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	 * @param pageable
 	 * @return
 	 */
-	@Query(value="SELECT new Marker( marker.id, marker.status, marker.location, markerModeration.status, layer) " +
+	@Query(value="SELECT new Marker( marker.id, marker.status, marker.location, layer) " +
 				"FROM Marker marker " +
-				"LEFT OUTER JOIN marker.layer layer " +
-				"LEFT OUTER JOIN marker.markerModeration markerModeration " +
-				" ORDER BY markerModeration.status DESC"
+				"LEFT OUTER JOIN marker.layer layer "
 				)
 	public Page<Marker> listByFilters(  Pageable pageable );
 	

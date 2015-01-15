@@ -400,7 +400,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;
 				$scope.currentState = $scope.LIST_STATE;
-				$state.go( $scope.LIST_STATE );
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
@@ -547,7 +546,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			/**
 			 * Verify status
 			 * */
-			var statusColor = $scope.verifyStatusColor(marker.markerModerationStatus);
+			var statusColor = $scope.verifyStatusColor(marker.status);
 			
 			var dragBox = new ol.interaction.DragBox({
 				  condition: function(){
@@ -863,7 +862,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	/**
 		 * Verify status
 		 * */
-		var statusColor = $scope.verifyStatusColor(marker.markerModerationStatus);
+		var statusColor = $scope.verifyStatusColor(marker.status);
     	
     	var style = new ol.style.Style({
             image: new ol.style.Circle({
