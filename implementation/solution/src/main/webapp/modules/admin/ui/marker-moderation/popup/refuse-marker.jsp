@@ -39,7 +39,7 @@
 	        	 <span  ng-show="form_add_attribute.$submitted  && form_add_attribute.name.$error.required" class="tooltip-validation" style="right:16px"><spring:message code="admin.users.Field-required" /></span>
 	        	
 	        	 <label class="form-item"><spring:message code="admin.marker-moderation.Description" /></label>
-				 <input type="text" class="form-control">
+				 <textarea rows="5" cols="100"></textarea>
 				 
 				 <span  ng-show="form_add_attribute.$submitted && form_add_attribute.select.$error.required" class="tooltip-validation" style="right:16px;top:62px;"><spring:message code="admin.users.Field-required" /></span>
 			</div>
