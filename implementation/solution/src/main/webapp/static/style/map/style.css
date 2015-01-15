@@ -347,6 +347,30 @@ ul.ivh-treeview li .ivh-treeview-toggle {
     left: 4px;
 }
 
+.icon-waiting-moderation {
+	background: url("../../images/icon-waiting-moderation.png");
+	width: 40px;
+	height: 40px;
+	margin-left: 8px;
+	background-repeat: no-repeat;
+}
+
+.icon-accept-moderation {
+	background: url("../../images/icon-accept-moderation.png");
+	width: 40px;
+	height: 40px;
+	margin-left: 8px;
+	background-repeat: no-repeat;
+}
+
+.icon-refuse-moderation {
+	background: url("../../images/icon-refuse-moderation.png");
+	width: 40px;
+	height: 40px;
+	margin-left: 8px;
+	background-repeat: no-repeat;
+}
+
 #camada-legend-detail, #tabs-1, #tabs-2 {
     height: 100%;
 }
