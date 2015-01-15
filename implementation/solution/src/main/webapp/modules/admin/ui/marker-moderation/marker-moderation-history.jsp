@@ -13,9 +13,9 @@
 		<hr>
 		
 		<div class="alert danger" style="text-align:center;height:75px">
-			<span><b style="float:left"> {{ marker.user.name }} Usuario</b></span>						
+			<span><b style="float:left"> {{ currentEntity.user.name }}</b></span>						
 			<span><b style="line-height:80px"> Recusado</b></span>						
-			<span><b style="float:right"> {{ marker.created | date:'dd/MM/yyyy' }} 14/01/2015</b></span>					
+			<span><b style="float:right"> {{ currentEntity.created | date:'dd/MM/yyyy' }}</b></span>					
 			<span><i style="float:right;cursor:pointer;left:64px;top:40px" class="glyphicon glyphicon-chevron-up" ng-click="showFields(false)" ng-if="!hiding"></i></span>
 			<span><i style="float:right;cursor:pointer;left:75px;top:40px" class="glyphicon glyphicon-chevron-down" ng-click="showFields(true)" ng-if="hiding"></i></span>
 		</div>
