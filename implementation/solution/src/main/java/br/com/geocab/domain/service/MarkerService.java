@@ -38,9 +38,8 @@ import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
-import br.com.geocab.domain.entity.marker.StatusMarker;
+import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
-import br.com.geocab.domain.entity.markermoderation.MarkerModerationStatus;
 import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
@@ -122,7 +121,7 @@ public class MarkerService
 			marker.setLocation((Point) this.wktToGeometry(marker
 					.getWktCoordenate()));
 		
-			marker.setStatus(StatusMarker.PENDING);
+			marker.setStatus(MarkerStatus.PENDING);
 			marker.setUser(user);
 			marker = this.markerRepository.save( marker );
 			if( marker.getImage() != null ) {
@@ -131,7 +130,7 @@ public class MarkerService
 			
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
-			markerModeration.setStatus(MarkerModerationStatus.PENDING);
+			markerModeration.setStatus(MarkerStatus.PENDING);
 			this.markerModerationRepository.save(markerModeration);
 			
 		}
@@ -214,7 +213,7 @@ public class MarkerService
 	{
 		try{
 			Marker marker = this.findMarkerById(id);
-			marker.setStatus(StatusMarker.ACCEPTED);
+			marker.setStatus(MarkerStatus.ACCEPTED);
 			marker = this.markerRepository.save( marker );
 		}
 		catch ( DataIntegrityViolationException e )
@@ -236,7 +235,7 @@ public class MarkerService
 	{
 		try{
 			Marker marker = this.findMarkerById(id);
-			marker.setStatus(StatusMarker.REFUSED);
+			marker.setStatus(MarkerStatus.REFUSED);
 			marker = this.markerRepository.save( marker );
 		}
 		catch ( DataIntegrityViolationException e )

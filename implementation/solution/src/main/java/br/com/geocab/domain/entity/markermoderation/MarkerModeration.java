@@ -19,6 +19,7 @@ import org.hibernate.envers.Audited;
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.MarkerStatus;
 
 /**
  * 
@@ -31,7 +32,7 @@ import br.com.geocab.domain.entity.marker.Marker;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject(javascript="MarkerModeration")
 @Table(schema=IEntity.SCHEMA)
 public class MarkerModeration extends AbstractEntity implements Serializable
 {
@@ -56,7 +57,7 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 	 */
 	@NotNull
 	@Enumerated(EnumType.ORDINAL)
-	private MarkerModerationStatus status;
+	private MarkerStatus status;
 	
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -83,7 +84,7 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 	 * @param statusDescription
 	 * @param marker
 	 */
-	public MarkerModeration( Long id, MarkerModerationStatus status, Marker marker)
+	public MarkerModeration( Long id, MarkerStatus status, Marker marker)
 	{
 		this.setId(id);
 		this.setStatus(status);
@@ -146,14 +147,14 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 	/**
 	 * @return the status
 	 */
-	public MarkerModerationStatus getStatus()
+	public MarkerStatus getStatus()
 	{
 		return status;
 	}
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(MarkerModerationStatus status)
+	public void setStatus(MarkerStatus status)
 	{
 		this.status = status;
 	}

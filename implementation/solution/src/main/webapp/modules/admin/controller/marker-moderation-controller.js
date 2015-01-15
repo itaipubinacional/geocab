@@ -88,6 +88,19 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.motive;
     
+    //FORM
+    /**
+     * Variável que armazena o filtro da consulta
+     * @filter - Filtro da consulta
+     */
+    $scope.data = {
+        filter : null,
+        allStatus: [],
+        status: null,
+        user: null
+        
+    };
+    
     /**
      * select Marker tool
      * */
@@ -137,6 +150,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	'<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.icon}}"/>' +
 	'</div>';
    
+    
+    var IMAGE_MODERATION = '<div  class="cell-centered">' +
+    '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>'+
+    '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>'+
+    '<a ng-if="row.entity.status == \'REFUSED\' " class="icon-refuse-moderation"></a>'+
+    '</div>';
     
     $scope.gridOptions = {
 			data: 'currentPage.content',
@@ -193,7 +212,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			},
 			columnDefs: [
 			             {displayName: $translate('admin.marker-moderation.Layer'), field:'marker.layer.title'}, 
-			             {displayName: $translate('admin.marker-moderation.Situation'), field:'status'},
+			             {displayName: $translate('admin.marker-moderation.Situation'), cellTemplate: IMAGE_MODERATION},
 			             {displayName: $translate('Actions'), sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}            
 			             ]
 	};
@@ -337,6 +356,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.currentEntity = marker;
         
         $scope.listAttributesByMarker();
+        $scope.currentEntity = marker;
         
     };
 
@@ -389,6 +409,38 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				$scope.$apply();
 			}
 		});
+	};
+	
+	/**
+	 * Accept status marker moderation
+	 */
+	$scope.acceptMarkerModeration = function( markerModeration ) {
+		
+		markerModerationService.acceptMarkerModeration( markerModeration[0], {
+         callback : function(result) {
+            console.log(result);
+         },
+         errorHandler : function(message, exception) {
+             $scope.message = {type:"error", text: message};
+             $scope.$apply();
+         }
+     });
+	};
+	
+	/**
+	 * Refuse status marker moderation
+	 */
+	$scope.refuseMarkerModeration = function( markerModeration ) {
+		
+		markerModerationService.refuseMarkerModeration( markerModeration, {
+         callback : function(result) {
+            console.log(result);
+         },
+         errorHandler : function(message, exception) {
+             $scope.message = {type:"error", text: message};
+             $scope.$apply();
+         }
+     });
 	};
 	
 	/**
@@ -498,7 +550,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			var statusColor = $scope.verifyStatusColor(marker.markerModerationStatus);
 			
 			var dragBox = new ol.interaction.DragBox({
-				  //condition: ol.events.condition.shiftKeyOnly,
 				  condition: function(){
 				 	  return $scope.selectMarkerTool;
 				  },
@@ -717,7 +768,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             }
         });
     	
-    }
+    	 dialog.result.then(function () {
+
+    		 $scope.acceptMarkerModeration($scope.currentEntity.markerModeration);
+         });
+    	
+    };
     
     $scope.listAttributesByMarker = function(){
     	
