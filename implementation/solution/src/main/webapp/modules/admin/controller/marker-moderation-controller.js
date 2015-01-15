@@ -277,7 +277,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         if(typeof markers == 'undefined'){
         	$scope.listMarkerByFilters(null, pageRequest);
         } else {
-        	$scope.listMarkerModerationByMarker(markers, pageRequest);
+        	$scope.listMarkerByMarkers(markers, pageRequest);
         }
     };
 
@@ -449,10 +449,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	 * @see data.filter
 	 * @see currentPage
 	 */
-	$scope.listMarkerModerationByMarker = function( markers, pageRequest ) {
+	$scope.listMarkerByMarkers = function( markers, pageRequest ) {
 
-		
-		markerModerationService.listMarkerModerationByMarker( markers, pageRequest, {
+		markerService.listMarkerByMarkers( markers, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;
