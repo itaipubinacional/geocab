@@ -50,13 +50,15 @@
 
 	<div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
 		<ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
-			<li ng-click="aumentarZoom()" title="<spring:message code="map.Zoom-in" />"><a href="#tabs-2">
+			<li ng-click="eventIncreaseZoom()" title="<spring:message code="map.Zoom-in" />"><a href="#tabs-2">
 					<div class="icon itaipu-icon-plus sidebar-icon"></div>
 			</a></li>
-			<li ng-click="diminuirZoom()" title="<spring:message code="map.Zoom-out" />"><a>
+			<li ng-click="eventDecreaseZoom()" title="<spring:message code="map.Zoom-out" />"><a>
 					<div class="icon itaipu-icon-minus sidebar-icon"></div>
 			</a></li>
-			<li ng-click="selectMarker()" title="<spring:message code="admin.marker-moderation.Select-marker" />"><a>
+			<li ng-click="eventMarkerTool()"
+				ng-class="{ferramenta_active : menu.selectMarker}"
+				title="<spring:message code="admin.marker-moderation.Select-marker" />"><a>
 					<div class="glyphicon glyphicon-screenshot sidebar-icon"></div>
 			</a></li>
 		</ul>
