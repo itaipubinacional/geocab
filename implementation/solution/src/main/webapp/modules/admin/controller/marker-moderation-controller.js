@@ -15,7 +15,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
     
     $importService("markerModerationService");
-     $importService("markerService");
+    $importService("layerGroupService");
+    $importService("markerService");
 
 
     /*-------------------------------------------------------------------
@@ -43,11 +44,22 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.UPDATE_STATE = "marker-moderation.update";
     /**
+     * Static variable that represents
+     * the rule for editing records.
+     */
+    $scope.HISTORY_STATE = "marker-moderation.history";
+    
+    /**
      * Variable that stores the current state of the screen.
      * This variable shall ALWAYS conform to the URL
      * that is in the browser.
      */
     $scope.currentState;
+    
+    /**
+     * Stores the current entity for editing or detail.
+     */
+    $scope.currentEntity;
     
     $scope.hiding = true;
     
@@ -243,7 +255,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			}
 		})
         
-        $scope.currentState = $scope.DETAIL_STATE;
+		$scope.currentState = $scope.DETAIL_STATE;
+        $scope.currentEntity = marker;
+        
+        $scope.listAttributesByMarker();
         
     };
 
@@ -258,6 +273,15 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToRemove = function (layer) {
         $log.info("changeToRemove");
 
+        
+    };
+    
+    $scope.changeToHistory = function () {
+        $log.info("changeToHistory");
+        
+        $scope.currentEntity;
+        
+        $scope.currentState = $scope.HISTORY_STATE;
         
     };
     
@@ -348,6 +372,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     	var coordenates = [];
     	
+    	 /**
+         * Seta o Estilo ao clicar em um ponto
+         */
     	var style = new ol.style.Style({
             image: new ol.style.Circle({
               radius: 15,
@@ -572,5 +599,75 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
     	
     }
+    
+    $scope.listAttributesByMarker = function(){
+    	
+    	$scope.attributesByLayer = [];
+		$scope.showNewAttributes = false;
+    	
+    	markerService.listAttributeByMarker($scope.currentEntity.id, {
+		  callback : function(result) {
+			  $scope.attributesByMarker = result;   
+			  
+			  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.id,{
+	          		callback : function(result) {
+	          			$scope.attributesByLayer = [];
+	          			
+	          			angular.forEach(result, function(attribute, index){
+		          				
+	          					var exist = false;
+	          					
+	          					angular.forEach($scope.attributesByMarker, function(attributeByMarker, index){
+	          					
+		          					if(attributeByMarker.attribute.id == attribute.id){
+		          						exist = true;
+		          					}
+		          				});
+		          				
+		          				if( !exist ) {
+		          					$scope.attributesByLayer.push(attribute);
+		          					$scope.showNewAttributes = true;
+		          				}
+		          				
+		          			});
+	          			
+	                      $scope.$apply();
+	                  },
+	                  errorHandler : function(message, exception) {
+	                      $scope.message = {type:"error", text: message};
+	                      $scope.$apply();
+	                  }
+	          	});
+			  
+			  angular.forEach(result,function(markerAttribute,index){
+				if (markerAttribute.attribute.type == "NUMBER") {
+					markerAttribute.value = parseInt(markerAttribute.value);
+				}  
+			  })
+			  
+			 
+			  $scope.$apply();
+			 
+          },
+          errorHandler : function(message, exception) {
+              $scope.message = {type:"error", text: message};
+              $scope.$apply();
+          }
+    	});
+    	
+    	markerService.findImgByMarker($scope.currentEntity.id, {
+   		 callback : function(result) {
+   			 
+   			 $scope.imgResult = result;
+             },
+             errorHandler : function(message, exception) {
+                 $scope.message = {type:"error", text: message};
+                 $scope.$apply();
+             }
+      	});
+    	
+    }
+    
+   
     
 }
