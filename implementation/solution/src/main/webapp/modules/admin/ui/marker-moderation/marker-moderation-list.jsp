@@ -17,27 +17,35 @@
 			<form>
 				<input type="text" ng-model="data.filter" class="form-control" title="<spring:message code="admin.users.Search"/>" placeholder="<spring:message code="admin.marker-moderation.Layer"/>" style="float:left; width:300px;margin-right:10px"/>
 				
-				<select class="form-control" style="width:22%;display:initial">
-					<option value="" disabled="" selected="" style="display:none"><spring:message code="admin.marker-moderation.Layer"/> </option>
-				</select>
-				
 				<a class="btn btn-mini" ng-if="!hiding" ng-click="showFields(false)" ><i class="glyphicon glyphicon-chevron-up"></i></a>													    
 		    	<a class="btn btn-mini" ng-if="hiding" 	ng-click="showFields(true)"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
-		    </form>		    		    		    
+		    	
+		    	<input type="submit" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
+			       />
+		       		    		    
 		
-			<div style="margin-top:10px" ng-hide="hiding">
-				<form style="display:flex">
-					<input type="checkbox"> Revisão <i style="margin-right:5px"></i>
+			<div style="margin-top:10px; display:flex" ng-hide="hiding">
+			
+	       	 <select class="form-control" ng-model="data.status" style="width:30%%;margin-right:10px">
+                            <option value="">Todos status</option>
+                            <option value="0">Pendente</option>
+                            <option value="1">Aprovado</option>
+                            <option value="2"><spring:message code="admin.marker-moderation.Refused"/></option>
+                        </select>
 					
-					<select class="form-control" style="width:24%;margin-right:10px" >
-						<option value="" disabled="" selected="" style="display:none"><spring:message code="admin.marker-moderation.Refused"/></option>
-					</select>
+					<input name="date" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Beginning"/>" onfocus="(this.type='date')" onblur="(this.type='text')"  id="date" />
 					
-					<input name="date" class="form-control datepicker" style="width:20%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Beginning"/>" onfocus="(this.type='date')" onblur="(this.type='text')"  id="date" />
-					
-					<input name="date" class="form-control datepicker" style="width:20%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>" onfocus="(this.type='date')" onblur="(this.type='text')" id="date"/>
-				</form>
-			</div>
+					<input name="date" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>" onfocus="(this.type='date')" onblur="(this.type='text')" id="date"/>
+				</div>
+				
+				<div style="margin-top:10px; display:flex" ng-hide="hiding">
+					 <select class="form-control" ng-model="data.user" style="width:100%;margin-right:10px">
+                            <option value="">Usuarios</option>
+                        </select>
+	       	 
+				</div>
+			
+			 </form>		
 		
 		</div>
 		

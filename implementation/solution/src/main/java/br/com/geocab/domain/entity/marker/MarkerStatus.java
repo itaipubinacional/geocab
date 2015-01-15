@@ -1,19 +1,19 @@
 /**
  * 
  */
-package br.com.geocab.domain.entity.markermoderation;
+package br.com.geocab.domain.entity.marker;
 
 import org.directwebremoting.annotations.DataTransferObject;
 
 /**
  * 
- * @author Vinicius Ramos Kawamoto
- * @since 13/01/2015
+ * @author Thiago Rossetto Afonso
+ * @since 30/09/2014
  * @version 1.0
  * 
  */
 @DataTransferObject(type="enum")
-public enum MarkerModerationStatus
+public enum MarkerStatus
 {
 	
 	/*-------------------------------------------------------------------
