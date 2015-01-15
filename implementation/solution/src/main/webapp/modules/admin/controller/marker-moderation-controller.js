@@ -18,7 +18,24 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $importService("layerGroupService");
     $importService("markerService");
 
-
+	 /*-------------------------------------------------------------------
+	  * 		 				 	CONSTANTS
+	  *-------------------------------------------------------------------*/
+     /**
+      * Accept
+      */
+     $scope.ACCEPTED = "ACCEPTED";
+     
+     /**
+      * Refused
+      */
+     $scope.REFUSED = "REFUSED";
+     
+     /**
+      * Pending
+      */
+     $scope.PENDING = "PENDING";
+     
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
@@ -66,6 +83,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.motive;
     
     /**
+     * selected features
+     * */
+    $scope.selectedFeatures = [];
+    
+    /**
      * All Features
      */
     $scope.features = [];
@@ -96,22 +118,41 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	'<img ng-if="row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
 	'<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.icon}}"/>' +
 	'</div>';
+   
     
     $scope.gridOptions = {
 			data: 'currentPage.content',
 			multiSelect: true,
 			useExternalSorting: true,
             headerRowHeight: 45,
-
             rowHeight: 45,
 			beforeSelectionChange: function (row, event) {
+				 
 				//evita chamar a selecao, quando clicado em um action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
+				
+				if(row.selected) {
+					$scope.gridOptions.selectRow(row.rowIndex, false);
+					
+					if($scope.selectedFeatures) {
+						angular.forEach($scope.selectedFeatures, function(feature, index){
+							if(feature.marker.id == row.entity.marker.id) {
+								feature.feature.clear();
+							}
+							
+						});
+					}
+					
+				} else {
+					$scope.gridOptions.selectRow(row.rowIndex, true);
+				}
 				
 				
 				angular.forEach($scope.features, function(feature, index){
 					var geometry = new ol.format.WKT().readGeometry(row.entity.marker.location.coordinateString);
 					if(ol.extent.equals(feature.extent, geometry.getExtent())){
+						var marker = feature.feature.getProperties().marker;
+						$scope.selectMarker(marker);
 						
 						 var pan = ol.animation.pan({
 							    duration: 500,
@@ -121,12 +162,14 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 						
 						$scope.view.setCenter(geometry.getCoordinates());
 						
+						angular.forEach($scope.selectedFeatures, function(selected, index){
+							if(selected.marker.id == marker.id){
+								selected.feature.push(feature.feature);
+							}
+						});
 						
-						$scope.selectedFeatures.push(feature.feature);
 					}
 				})
-				
-				
 				
 			},
 			columnDefs: [
@@ -184,7 +227,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      *
      * To change to this State, one must first load the data from the query.
      */
-    $scope.changeToList = function () {
+    $scope.changeToList = function (markers) {
         $log.info("changeToList");
         
         $scope.currentState = $scope.LIST_STATE;
@@ -193,7 +236,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
-        $scope.listMarkerModerationByFilters(null, pageRequest);
+        if(typeof markers == 'undefined'){
+        	$scope.listMarkerModerationByFilters(null, pageRequest);
+        } else {
+        	$scope.listMarkerModerationByMarker(markers, pageRequest);
+        }
     };
 
     /**
@@ -241,8 +288,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToDetail = function (marker) {
         $log.info("changeToDetail", marker);
         
-        $scope.selectedFeatures.clear();
-        
+        if($scope.selectedFeatures) {
+	        angular.forEach($scope.selectedFeatures, function(feature, index){
+				feature.feature.clear();
+			});
+        }
+                
         var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
         
         $scope.map.getView().fitExtent(geometry.getExtent(), $scope.map.getSize());
@@ -250,8 +301,16 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.map.getView().setZoom(15);
         
         angular.forEach($scope.features, function(feature, index){
+        	var marker = feature.feature.getProperties().marker;
+        	
         	if(ol.extent.equals(feature.extent, geometry.getExtent())){
-				$scope.selectedFeatures.push(feature.feature);
+				
+				angular.forEach($scope.selectedFeatures, function(selected, index){
+					if(selected.marker.id == marker.id){
+						selected.feature.push(feature.feature);
+					}
+				});
+				
 			}
 		})
         
@@ -273,7 +332,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToRemove = function (layer) {
         $log.info("changeToRemove");
 
-        
     };
     
     $scope.changeToHistory = function () {
@@ -313,6 +371,32 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			}
 		});
 	};
+	
+	/**
+	 * Performs the query logs, considering filter, paging and sorting. 
+	 * When ok, change the state of the screen to list.
+	 * 
+	 * @see data.filter
+	 * @see currentPage
+	 */
+	$scope.listMarkerModerationByMarker = function( markers, pageRequest ) {
+
+		
+		markerModerationService.listMarkerModerationByMarker( markers, pageRequest, {
+			callback : function(result) {
+				$scope.currentPage = result;
+				$scope.currentPage.pageable.pageNumber++;
+				$scope.currentState = $scope.LIST_STATE;
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
+				$scope.$apply();
+			}
+		});
+	};
+    
     
     /**
      * 
@@ -343,8 +427,23 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             view: $scope.view
         });
         
-        $scope.map.on('click', function() {
-        	$scope.selectedFeatures.clear();
+        $scope.map.on('click', function(evt) {
+        	if($scope.selectedFeatures) {
+        		angular.forEach($scope.selectedFeatures, function(feature, index){
+					feature.feature.clear();
+				});
+        	}
+        	
+        	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+ 		        return feature;
+ 		      });
+        	
+        	if(feature) {
+        		var marker = feature.getProperties().marker;
+            	
+            	$scope.selectMarker(marker);
+        	}
+        	
     	});
         
         $scope.listMarker();
@@ -372,30 +471,13 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     	var coordenates = [];
     	
-    	 /**
-         * Seta o Estilo ao clicar em um ponto
-         */
-    	var style = new ol.style.Style({
-            image: new ol.style.Circle({
-              radius: 15,
-                fill: new ol.style.Fill({
-                color: '#FFFF00'
-              }),
-              stroke: new ol.style.Stroke({
-            	color: '#3399CC',
-                width: 3.5
-              })
-            }),
-            zIndex: 100000
-          });
-    	
-    	var select = new ol.interaction.Select({style:style});
-		$scope.map.addInteraction(select);
-
-		$scope.selectedFeatures = select.getFeatures();
-		
 		angular.forEach(markers.content, function(marker, index){
-               
+            
+			/**
+			 * Verify status
+			 * */
+			var statusColor = $scope.verifyStatusColor(marker.markerModerationStatus);
+			
 			var dragBox = new ol.interaction.DragBox({
 				  condition: ol.events.condition.shiftKeyOnly,
 				  style: new ol.style.Style({
@@ -408,23 +490,38 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			dragBox.on('boxend', function(e) {
 				
 				  var extent = dragBox.getGeometry().getExtent();
+				  var markers = [];
 				
 				  angular.forEach($scope.features, function(feature, index){
+					    var marker = feature.feature.getProperties().marker;
+					    $scope.selectMarker(marker);
+					    
 						var extentMarker = feature.extent;
 						var feature = feature.feature;
 						
 						if(ol.extent.containsExtent(extent, extentMarker)){
-							$scope.selectedFeatures.push(feature);
+							markers.push(marker.id);
+							
+							angular.forEach($scope.selectedFeatures, function(selected, index){
+								if(selected.marker.id == marker.id){
+									selected.feature.push(feature);
+								}
+							});
+							
 						}
 				  });
 				  
+				  $scope.changeToList(markers);
 			});
 			
 			dragBox.on('boxstart', function(e) {
-				  $scope.selectedFeatures.clear();
+				if($scope.selectedFeatures) {
+					angular.forEach($scope.selectedFeatures, function(feature, index){
+						feature.feature.clear();
+					});
+				}
 			});
 
-			
 			$scope.map.addInteraction(dragBox);
 			
 			var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
@@ -434,7 +531,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             });
           
 			var fill = new ol.style.Fill({
-				   color: '#FFFF00',
+				   color: statusColor,
 					width: 4.53
 				 });
 			var stroke = new ol.style.Stroke({
@@ -666,6 +763,48 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
              }
       	});
     	
+    }
+    
+      /**
+     * Verify status
+     */
+    
+    $scope.verifyStatusColor = function(status) {
+    	var statusColor;
+		if(status == $scope.REFUSED) {
+			statusColor = "#FF0000";
+		} else if(status == $scope.ACCEPTED) {
+			statusColor = "#00FF00";
+		} else {
+			statusColor = "#FFFF00";
+		}
+		return statusColor;
+    }
+    
+    $scope.selectMarker = function(marker){
+    	/**
+		 * Verify status
+		 * */
+		var statusColor = $scope.verifyStatusColor(marker.markerModerationStatus);
+    	
+    	var style = new ol.style.Style({
+            image: new ol.style.Circle({
+              radius: 15,
+              fill: new ol.style.Fill({
+                color: statusColor
+              }),
+              stroke: new ol.style.Stroke({
+            	color: '#3399CC',
+                width: 3.5
+              })
+            }),
+            zIndex: 100000
+          });
+    	
+    	var select = new ol.interaction.Select({style:style});
+		$scope.map.addInteraction(select);
+
+		$scope.selectedFeatures.push({'marker': marker, 'feature': select.getFeatures()});
     }
     
    
