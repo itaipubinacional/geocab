@@ -387,7 +387,20 @@ public class MarkerService
 	@Transactional(readOnly=true)
 	public Page<Marker> listMarkerByFilters( String filter, PageRequest pageable )
 	{
-		return this.markerRepository.listByFilters(pageable);
+		return this.markerRepository.listByFilters(filter, pageable);
+	}
+	
+	/**
+	 * Method to list {@link FonteDados} pageable with filter options
+	 *
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public Page<Marker> listMarkerByMarkers( List<Long> ids , PageRequest pageable )
+	{
+		return this.markerRepository.listByMarkers(ids, pageable);
 	}
 	
 	/**
