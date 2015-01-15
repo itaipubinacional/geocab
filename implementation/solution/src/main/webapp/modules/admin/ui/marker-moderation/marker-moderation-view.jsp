@@ -40,6 +40,9 @@
         <div ng-switch-when="marker-moderation.update">
             <div ng-include="'modules/admin/ui/marker-moderation/marker-moderation-form.jsp'"></div>
         </div>
+        <div ng-switch-when="marker-moderation.history">
+            <div ng-include="'modules/admin/ui/marker-moderation/marker-moderation-history.jsp'"></div>
+        </div>
         <div ng-switch-default>
             <div ng-include="'modules/common/loading.jsp'"></div>
         </div>
