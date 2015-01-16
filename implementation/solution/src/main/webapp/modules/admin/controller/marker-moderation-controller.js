@@ -128,6 +128,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         selectMarker: false
     };
     
+    /**
+     * Markers Moderation
+     */
+    $scope.markersModeration = [];
+    
   //DATA GRID
     /**
      * Static variable coms stock grid buttons
@@ -379,9 +384,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToHistory = function () {
         $log.info("changeToHistory");
         
-        $scope.currentEntity;
+        var pageRequest = new PageRequest();
         
-        $scope.currentState = $scope.HISTORY_STATE;
+        $scope.listMarkerModerationByMarker($scope.currentEntity.id, pageRequest);
         
     };
     
@@ -414,6 +419,29 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	};
 	
 	/**
+	 * Performs the query logs, considering filter, paging and sorting. 
+	 * When ok, change the state of the screen to list.
+	 * 
+	 * @see data.filter
+	 * @see currentPage
+	 */
+	$scope.listMarkerModerationByMarker = function( markerId, pageRequest ) {
+
+		markerModerationService.listMarkerModerationByMarker( markerId, pageRequest, {
+			callback : function(result) {
+				$scope.markersModeration = result.content;
+				$scope.currentState = $scope.HISTORY_STATE;
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
+				$scope.$apply();
+			}
+		});
+	};
+	
+	/**
 	 * Accept status marker moderation
 	 */
 	$scope.acceptMarkerModeration = function( id ) {
@@ -434,7 +462,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	 */
 	$scope.refuseMarkerModeration = function( id ) {
 		
-		markerModerationService.refuseMarkerModeration( id, {
+		markerModerationService.refuseMarker( id, {
          callback : function(result) {
             console.log(result);
          },
@@ -473,11 +501,16 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     /**
      * 
      */
-    $scope.showFields = function (showFields){
-    	if (showFields) {
+    $scope.showFields = function (showFields)
+    {
+    	if (showFields) 
+    	{
     		$scope.hiding = false;
-    	} else
+    	} 
+    	else
+		{
     		$scope.hiding = true;
+		}
     }
     
     /**
@@ -724,29 +757,29 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	     }
 	 }
 	 
+	 /**
+	  * Calls the modal to refuse a marker
+	  */
 	 $scope.refuseMarker = function() {
     	var dialog = $modal.open({
             templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
             controller: RefuseMarkerController,
             windowClass: 'dialog-delete',
             resolve: {
-                attributes: function () {
+                motive: function () {
                     return $scope.motive;
                 }
             }
         });
     	
     	dialog.result.then(function (result) {
-
-            if (result) {
-                $scope.currentEntity.name = result.name;
-                $scope.currentEntity.title = result.title;
-                $scope.currentEntity.legend = result.legend;
-            }
-
+    		$scope.refuseMarkerModeration($scope.currentEntity.id);
         });
     }
     
+	 /**
+	  * Calls the dialog to accept a marker
+	  */
     $scope.approveMarker = function() {
     	
     	var dialog = $modal.open({
@@ -776,6 +809,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     };
     
+    /**
+	  * Lists the marker attributes
+	  */
     $scope.listAttributesByMarker = function(){
     	
     	$scope.attributesByLayer = [];
