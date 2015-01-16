@@ -41,6 +41,6 @@ public interface IMarkerModerationRepository extends IDataRepository<MarkerModer
 	@Query(value="SELECT new MarkerModeration( markerModeration.id, markerModeration.status, marker) " +
 				"FROM MarkerModeration markerModeration "+
 				"LEFT OUTER JOIN markerModeration.marker marker " +
-				"WHERE marker.id in (:ids)" )
-	public Page<MarkerModeration> listByMarker(@Param("ids") List<Long> ids, Pageable pageable);
+				"WHERE marker.id = :markerId" )
+	public Page<MarkerModeration> listByMarker(@Param("markerId") Long markerId, Pageable pageable);
 }

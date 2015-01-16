@@ -12,9 +12,9 @@
 				<br>
 				<div style="float: right" id="right-buttons">        			        			        		
 					</br>				        		
-					<a class="btn btn-default history" ng-click="changeToHistory(row.entity.marker)" style="float:right; margin-top:80px; width:75px; height:58px; line-height : 75px"><spring:message code="admin.marker-moderation.History" /></a></br>
-					<a class="btn btn-default approve" style="float:right; margin-top:15px; width:75px; height:58px; line-height : 75px" ng-click="approveMarker()" ><spring:message code="admin.marker-moderation.Approve" /></a></br>
-					<a class="btn btn-default refuse"  style="float:right; margin-top:15px; width:75px; height:58px; line-height : 75px" ng-click="refuseMarker()" ><spring:message code="admin.marker-moderation.Refuse" /></a></br> 					       													
+					<a class="btn btn-default history" ng-click="changeToHistory(row.entity.marker)" style="margin-top:80px; width:75px; height:58px; line-height : 75px"><spring:message code="admin.marker-moderation.History" /></a></br>
+					<a class="btn btn-default approve" ng-click="approveMarker()" style="margin-top:15px; width:75px; height:58px; line-height : 75px"  ><spring:message code="admin.marker-moderation.Approve" /></a></br>
+					<a class="btn btn-default refuse"  ng-click="refuseMarker()" style="margin-top:15px; width:75px; height:58px; line-height : 75px" ><spring:message code="admin.marker-moderation.Refuse" /></a></br> 					       													
 		        </div>									
 				
 				 <div style="float:right">
