@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.geocab.domain.entity.marker.Marker;
-import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**
@@ -28,9 +27,10 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	 * @param pageable
 	 * @return
 	 */
-	@Query(value="SELECT new Marker( marker.id, marker.status, marker.location, layer) " +
+	@Query(value="SELECT new Marker( marker.id, marker.status, marker.created, marker.location, layer, user) " +
 				"FROM Marker marker " +
 				"LEFT OUTER JOIN marker.layer layer " +
+				"LEFT OUTER JOIN marker.user user " +
 				"WHERE  ( ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) ) "
 				)
 	public Page<Marker> listByFilters( @Param("filter") String filter, Pageable pageable );

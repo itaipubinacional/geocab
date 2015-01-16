@@ -4,13 +4,14 @@
 package br.com.geocab.domain.service;
 
 import java.util.logging.Logger;
-import java.util.List;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -144,9 +145,11 @@ public class MarkerModerationService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public Page<MarkerModeration> listMarkerModerationByMarker( List<Long> ids, PageRequest pageable  )
+	public Page<MarkerModeration> listMarkerModerationByMarker( Long markerId, PageRequest pageable  )
 	{
-		return this.markerModerationRepository.listByMarker(ids, pageable);
+		pageable.setSort(new Sort(Direction.ASC, "id"));
+
+		return this.markerModerationRepository.listByMarker(markerId, pageable);
 	}
 	
 }

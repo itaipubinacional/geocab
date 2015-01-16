@@ -123,6 +123,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         selectMarker: false
     };
     
+    /**
+     * Markers Moderation
+     */
+    $scope.markersModeration = [];
+    
   //DATA GRID
     /**
      * Static variable coms stock grid buttons
@@ -376,9 +381,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToHistory = function () {
         $log.info("changeToHistory");
         
-        $scope.currentEntity;
+        var pageRequest = new PageRequest();
         
-        $scope.currentState = $scope.HISTORY_STATE;
+        $scope.listMarkerModerationByMarker($scope.currentEntity.id, pageRequest);
         
     };
     
@@ -400,6 +405,29 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;
 				$scope.currentState = $scope.LIST_STATE;
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
+				$scope.$apply();
+			}
+		});
+	};
+	
+	/**
+	 * Performs the query logs, considering filter, paging and sorting. 
+	 * When ok, change the state of the screen to list.
+	 * 
+	 * @see data.filter
+	 * @see currentPage
+	 */
+	$scope.listMarkerModerationByMarker = function( markerId, pageRequest ) {
+
+		markerModerationService.listMarkerModerationByMarker( markerId, pageRequest, {
+			callback : function(result) {
+				$scope.markersModeration = result.content;
+				$scope.currentState = $scope.HISTORY_STATE;
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
@@ -470,11 +498,16 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     /**
      * 
      */
-    $scope.showFields = function (showFields){
-    	if (showFields) {
+    $scope.showFields = function (showFields)
+    {
+    	if (showFields) 
+    	{
     		$scope.hiding = false;
-    	} else
+    	} 
+    	else
+		{
     		$scope.hiding = true;
+		}
     }
     
     /**
