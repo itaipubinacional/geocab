@@ -721,6 +721,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	     }
 	 }
 	 
+	 /**
+	  * Calls the modal to refuse a marker
+	  */
 	 $scope.refuseMarker = function() {
     	var dialog = $modal.open({
             templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
@@ -738,6 +741,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
     }
     
+	 /**
+	  * Calls the dialog to accept a marker
+	  */
     $scope.approveMarker = function() {
     	
     	var dialog = $modal.open({
@@ -767,6 +773,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     };
     
+    /**
+	  * Lists the marker attributes
+	  */
     $scope.listAttributesByMarker = function(){
     	
     	$scope.attributesByLayer = [];
