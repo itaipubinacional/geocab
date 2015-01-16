@@ -30,8 +30,12 @@
         		<label class="detail-label" required><spring:message code="admin.marker-moderation.Motive" /></label>
 	        	<div style="position:relative;">
 	        		<select name="select" class="form-control" ng-model="currentEntity.type"  style="margin-bottom: 15px" 
-									  ng-class="{ngInvalid: form_refuse_marker.$submitted && form_refuse_marker.select.$error.required }"
-	        		   				  required>
+							ng-class="{ngInvalid: form_refuse_marker.$submitted && form_refuse_marker.select.$error.required }"
+	        		   		required>
+	        		   		
+	        		   		<option value="0">Lugar não existe mais</option>
+	        		   		<option value="0">Área inválida</option>
+	        		   		
 	        		</select>
 	        	</div>
         	
@@ -56,7 +60,7 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-danger" ng-click="refuseMarker()" id="refuseButton"><spring:message code="admin.marker-moderation.Refuse" /></button>
+        <button class="btn btn-danger" ng-click="refuse()" id="refuseButton"><spring:message code="admin.marker-moderation.Refuse" /></button>
         <button class="btn btn-default" title="<spring:message code="admin.layer-config.Close" />" ng-click="close(true)"><spring:message code="admin.layer-config.Close" /></button>
     </div>
 </div>
