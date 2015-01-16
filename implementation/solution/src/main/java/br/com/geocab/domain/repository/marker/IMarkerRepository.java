@@ -3,6 +3,7 @@
  */
 package br.com.geocab.domain.repository.marker;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
@@ -31,9 +33,14 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 	@Query(value="SELECT new Marker( marker.id, marker.status, marker.location, layer) " +
 				"FROM Marker marker " +
 				"LEFT OUTER JOIN marker.layer layer " +
-				"WHERE  ( ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) ) "
+				"LEFT OUTER JOIN marker.user user " +
+				"WHERE  ( ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL ) ) " +
+				"OR ( marker.status = :status ) " +
+				"OR ( marker.created > :dateStart) " +
+				"OR ( marker.created < :dateEnd) " +
+				"OR ( ( LOWER(marker.user.email) LIKE '%' || LOWER(CAST(:user AS string))  || '%' OR :user = NULL ) ) "
 				)
-	public Page<Marker> listByFilters( @Param("filter") String filter, Pageable pageable );
+	public Page<Marker> listByFilters( @Param("layer") String layer, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user, Pageable pageable );
 	
 	/**
 	 * 
