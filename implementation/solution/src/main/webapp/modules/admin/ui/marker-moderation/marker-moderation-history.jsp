@@ -14,19 +14,28 @@
 		
 		<div ng-repeat="markerModeration in markersModeration " >
 		
-			<div class="{{markerModeration.status == 'PENDING' ? 'alert warning' : markerModeration.status == 'ACCEPTED' ? 'alert success' : 'alert danger'}}" style="text-align:center;height:75px">								
-				<span><b ng-if="markerModeration.status == 'REFUSED'" style="position:relative;right:38%"> {{ $index + 1 }}</b></span>
-				<span><b ng-if="markerModeration.status != 'REFUSED'" style="position:relative;right:37.5%"> {{ $index + 1 }}</b></span>
+			<div class="{{markerModeration.status == 'PENDING' ? 'alert warning' : markerModeration.status == 'ACCEPTED' ? 'alert success' : 'alert danger'}}" style="text-align:center;height:75px">																	
 				
-				<span><b style="float:left"> {{ currentEntity.user.name }}</b></span>																																						
+				<div>
+					<span><b style="float:left"> {{ currentEntity.user.name }}</b></span>			
+				</div>
+
+				<div style="position:relative">					
+					<span><b style="position:absolute;top:25px;left:13px" > {{ $index + 1 }}</b></span>
+				</div>																																				
 				
-				<span><b ng-if="markerModeration.status == 'REFUSED'" style="line-height:80px"> {{ translateStatus($index) }}</b></span>						
-				<span><b ng-if="markerModeration.status != 'REFUSED'" style="line-height:80px;margin-right:27px"> {{ translateStatus($index) }}</b></span>						
-													
-				<span><b style="float:right"> {{ currentEntity.created | date:'dd/MM/yyyy' }}</b></span>													
-								
-				<span ng-show="visible && markerModeration.status == 'REFUSED'" id="up-arrow" ><i style="float:right;cursor:pointer;left:64px;top:40px" class="glyphicon glyphicon-chevron-up" ng-click="visible = false" ></i></span>
-				<span ng-show="!visible && markerModeration.status == 'REFUSED'"><i style="float:right;cursor:pointer;left:75px;top:40px" class="glyphicon glyphicon-chevron-down" ng-click="visible = true" ></i></span>
+				<div style="position:relative">										
+					<span><b  style="position:absolute;top:15px;left:45%" > {{ translateStatus($index) }}</b></span>						
+				</div>										
+				
+				<div style="position:relative">
+					<span><b style="float:right;position:absolute;top:0px;right:0px"> {{ currentEntity.created | date:'dd/MM/yyyy' }}</b></span>												
+				</div>
+					
+				<div>				
+					<span ng-show="visible && markerModeration.status == 'REFUSED'" id="up-arrow" ><i style="float:right;cursor:pointer;left:-12px;top:40px" class="glyphicon glyphicon-chevron-up" ng-click="visible = false" ></i></span>
+					<span ng-show="!visible && markerModeration.status == 'REFUSED'"><i style="float:right;cursor:pointer;top:40px" class="glyphicon glyphicon-chevron-down" ng-click="visible = true" ></i></span>
+				</div>
 												
 			</div>
 
