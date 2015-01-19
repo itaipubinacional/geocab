@@ -17,19 +17,19 @@
 			<form>
 				<input type="text" ng-model="filter.layer" class="form-control" title="<spring:message code="admin.users.Search"/>" placeholder="<spring:message code="admin.marker-moderation.Layer"/>" style="float:left; width:300px;margin-right:10px"/>
 				
-				<a class="btn btn-mini" ng-if="!hiding" ng-click="showFields(false)" ><i class="glyphicon glyphicon-chevron-up"></i></a>													    
-		    	<a class="btn btn-mini" ng-if="hiding" 	ng-click="showFields(true)"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
+				<a class="btn btn-mini" ng-show="visible"   ng-click="visible = false" ><i class="glyphicon glyphicon-chevron-up"></i></a>													    
+		    	<a class="btn btn-mini" ng-show="!visible" 	ng-click="visible = true"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
 		    	
 		    	<input type="button" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
 			       />
 		
-			<div style="margin-top:10px; display:flex" ng-hide="hiding">
+			<div style="margin-top:10px; display:flex" ng-show="visible">
 			
-       	 			<select class="form-control" ng-model="filter.status" style="width:30%;margin-right:10px">
-                         <option value="" selected="selected">Todos status</option>
-                         <option value="PENDING">Pendente</option>
-                         <option value="ACCEPTED">Aprovado</option>
-                         <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
+       	 			<select class="form-control" ng-model="filter.status" style="width:30%%;margin-right:10px">
+                         <option value=""><spring:message code="admin.marker-moderation.All-status" /></option>
+                         <option value="0"><spring:message code="admin.marker-moderation.Pending" /></option>
+                         <option value="1"><spring:message code="admin.marker-moderation.Approved" /></option>
+                         <option value="2"><spring:message code="admin.marker-moderation.Refused"/></option>
                      </select>
 					
 					<!--  
@@ -43,12 +43,10 @@
 					<input ng-model="filter.dateEnd" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>"/>
 				</div>
 				
-				<div style="margin-top:10px; display:flex" ng-hide="hiding">
-					 <!-- <select class="form-control" ng-model="filter.user" style="width:100%;margin-right:10px">
-                            <option value="">Usuarios</option>
-                        </select> -->
-                      <input type="text" ng-model="filter.user" class="form-control" title="<spring:message code="admin.users.Search"/>" placeholder="<spring:message code="admin.users.User"/>" style="float:left; width:300px;margin-right:10px"/>
-	       	 
+				<div style="margin-top:10px; display:flex" ng-show="visible">
+					 <select class="form-control" ng-model="data.user" style="width:100%;margin-right:10px">
+					 	<option value="">Usuarios</option>
+					 </select>
 				</div>
 			
 			 </form>		
