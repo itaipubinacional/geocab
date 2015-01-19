@@ -34,11 +34,11 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				"FROM Marker marker " +
 				"LEFT OUTER JOIN marker.layer layer " +
 				"LEFT OUTER JOIN marker.user user " +
-				"WHERE  ( ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL ) ) " +
-				"OR ( marker.status = :status ) " +
-				"OR ( marker.created > :dateStart) " +
-				"OR ( marker.created < :dateEnd) " +
-				"OR ( ( LOWER(marker.user.email) LIKE '%' || LOWER(CAST(:user AS string))  || '%' OR :user = NULL ) ) "
+				"WHERE  ( ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
+				"AND ( marker.status = :status OR :status = NULL ) " +
+				"AND ( marker.created >= :dateStart OR CAST( :dateStart as date ) = NULL ) " +
+				"AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
+				"AND ( LOWER(user.email) LIKE '%' || LOWER(CAST(:user AS string)) || '%' OR :user = NULL) ) "
 				)
 	public Page<Marker> listByFilters( @Param("layer") String layer, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user, Pageable pageable );
 	
