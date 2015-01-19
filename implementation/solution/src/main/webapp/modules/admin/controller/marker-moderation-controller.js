@@ -79,9 +79,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.currentEntity;
     
     /**
-     * hiding
+     * visible
      */
-    $scope.hiding = true;
+    $scope.visible = false;
     
     /**
      * motive
@@ -505,22 +505,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		});
 	};
     
-    
-    /**
-     * Show Fields
-     */
-    $scope.showFields = function (showFields)
-    {
-    	if (showFields) 
-    	{
-    		$scope.hiding = false;
-    	} 
-    	else
-		{
-    		$scope.hiding = true;
-		}
-    }
-    
     /**
      * Load map
      */
@@ -908,6 +892,22 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
              }
       	});
     	
+    }
+    
+    /**
+     * Return the translated status of the marker
+     */
+    $scope.translateStatus = function(id){
+    	
+    	if ($scope.markersModeration[id].status == 'PENDING'){
+    		return $translate('admin.marker-moderation.PENDING');
+    	} 
+    	if ($scope.markersModeration[id].status == 'REFUSED'){
+    		return $translate('admin.marker-moderation.REFUSED');
+    	} 
+    	if ($scope.markersModeration[id].status == 'ACCEPTED'){
+    		return $translate('admin.marker-moderation.ACCEPTED');
+    	} 
     }
     
       /**
