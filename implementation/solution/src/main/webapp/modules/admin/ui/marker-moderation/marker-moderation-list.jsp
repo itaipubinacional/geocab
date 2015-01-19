@@ -27,9 +27,9 @@
 			<div style="margin-top:10px; display:flex" ng-show="visible">
 			
        	 			<select class="form-control" ng-model="filter.status" style="width:30%%;margin-right:10px">
-                         <option value="">Todos status</option>
-                         <option value="0">Pendente</option>
-                         <option value="1">Aprovado</option>
+                         <option value=""><spring:message code="admin.marker-moderation.All-status" /></option>
+                         <option value="0"><spring:message code="admin.marker-moderation.Pending" /></option>
+                         <option value="1"><spring:message code="admin.marker-moderation.Approved" /></option>
                          <option value="2"><spring:message code="admin.marker-moderation.Refused"/></option>
                      </select>
 					
@@ -38,17 +38,19 @@
 					<input name="filter.dateEnd" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>" onfocus="(this.type='date')" onblur="(this.type='text')" id="date"/>
 				</div>
 				
-<<<<<<< HEAD
+
 				<div style="margin-top:10px; display:flex" ng-show="visible">
 					 <select class="form-control" ng-model="data.user" style="width:100%;margin-right:10px">
-=======
-				<div style="margin-top:10px; display:flex" ng-hide="hiding">
-					 <select class="form-control" ng-model="filter.user" style="width:100%;margin-right:10px">
->>>>>>> refs/remotes/origin/master
-                            <option value="">Usuarios</option>
-                        </select>
-	       	 
+					 	<option value="">Usuarios</option>
+					 </select>
 				</div>
+
+<!-- 				<div style="margin-top:10px; display:flex" ng-hide="vi"> -->
+<!-- 					 <select class="form-control" ng-model="filter.user" style="width:100%;margin-right:10px"> -->
+                            
+<!--                      </select> -->
+	       	 
+<!-- 				</div> -->
 			
 			 </form>		
 		
