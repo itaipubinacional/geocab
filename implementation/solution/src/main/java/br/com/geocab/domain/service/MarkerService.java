@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -385,9 +386,9 @@ public class MarkerService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public Page<Marker> listMarkerByFilters( String filter, PageRequest pageable )
+	public Page<Marker> listMarkerByFilters(  String layer, MarkerStatus status, Calendar dateStart, Calendar dateEnd, String user, PageRequest pageable )
 	{
-		return this.markerRepository.listByFilters(filter, pageable);
+		return this.markerRepository.listByFilters(layer, status, dateStart, dateEnd, user, pageable);
 	}
 	
 	/**
