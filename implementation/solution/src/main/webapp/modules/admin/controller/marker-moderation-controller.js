@@ -88,6 +88,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.motive;
     
+    /**
+     * filter
+     */
+    $scope.filter;
+    
     //FORM
     /**
      * Variável que armazena o filtro da consulta
@@ -164,7 +169,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     
     $scope.gridOptions = {
 			data: 'currentPage.content',
-			multiSelect: true,
+			multiSelect: false,
 			useExternalSorting: true,
             headerRowHeight: 45,
             rowHeight: 45,
@@ -173,20 +178,18 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				//evita chamar a selecao, quando clicado em um action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
 				
+				if($scope.selectedFeatures) {
+					angular.forEach($scope.selectedFeatures, function(feature, index){
+							feature.feature.clear();
+					});
+				}
+				
 				if(row.selected) {
 					$scope.gridOptions.selectRow(row.rowIndex, false);
 					
-					if($scope.selectedFeatures) {
-						angular.forEach($scope.selectedFeatures, function(feature, index){
-							if(feature.marker.id == row.entity.id) {
-								feature.feature.clear();
-							}
-							
-						});
-					}
-					
 					return false;
 				} else {
+					
 					$scope.gridOptions.selectRow(row.rowIndex, true);
 				}
 				
@@ -280,7 +283,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.pageRequest = pageRequest;
 
         if(typeof markers == 'undefined'){
-        	$scope.listMarkerByFilters(null, pageRequest);
+        	$scope.listMarkerByFilters(null, null, null, null, null, pageRequest);
         } else {
         	$scope.listMarkerByMarkers(markers, pageRequest);
         }
@@ -398,9 +401,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	 * @see data.filter
 	 * @see currentPage
 	 */
-	$scope.listMarkerByFilters = function( filter, pageRequest ) {
+	$scope.listMarkerByFilters = function( layer, status, dateStart, dateEnd, user, pageRequest ) {
 
-		markerService.listMarkerByFilters( filter, pageRequest, {
+		markerService.listMarkerByFilters( layer, status, dateStart, dateEnd, user, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;
