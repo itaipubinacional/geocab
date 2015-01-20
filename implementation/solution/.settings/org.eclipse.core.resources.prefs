@@ -4,6 +4,7 @@ encoding//src/main/resources=ISO-8859-1
 encoding//src/main/resources/i18n=UTF-8
 encoding//src/main/resources/i18n/map_en.properties=UTF-8
 encoding//src/main/resources/i18n/map_pt.properties=UTF-8
+encoding//src/main/webapp/modules/admin/controller/marker-moderation-controller.js=UTF-8
 encoding//src/test/java=ISO-8859-1
 encoding//src/test/resources=ISO-8859-1
 encoding/<project>=ISO-8859-1

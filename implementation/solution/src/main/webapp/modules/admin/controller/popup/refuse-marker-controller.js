@@ -6,8 +6,10 @@
  * @param $log
  * @param $location
  */
-function RefuseMarkerController($scope, $injector,$modalInstance, $state, motive ) {
-
+function RefuseMarkerController($scope, $injector,$modalInstance, $state, $importService, motive ) {
+	
+	
+	$importService("motiveService");
 
 	$scope.msg = null;
 
@@ -58,11 +60,30 @@ function RefuseMarkerController($scope, $injector,$modalInstance, $state, motive
 	$scope.initialize = function() 
 	{
 		$scope.currentEntity = new Attribute();
+		
+		$scope.listMotives();
 	};
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	  BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	
+	/**
+	 * 
+	 */
+    $scope.listMotives = function () {
+
+        motiveService.listMotives( {
+            callback: function (result) {
+                $scope.motives = result;
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.$apply();
+            }
+        });
+    };
 
 
     /**

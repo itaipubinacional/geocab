@@ -15,7 +15,14 @@
 		<!-- Filter Bar -->
 		<div class="search-div" style="margin-bottom:10px">
 			<form>
-				<input type="text" ng-model="filter.layer" class="form-control" title="<spring:message code="admin.users.Search"/>" placeholder="<spring:message code="admin.marker-moderation.Layer"/>" style="float:left; width:300px;margin-right:10px"/>
+				
+				<div style="width:60%;display:inline-block">
+					<select data-placeholder="<spring:message code="admin.marker-moderation.Layer"/>" name="camada"
+							ng-options="layer.layerTitle for layer in selectLayerGroup"
+							ng-model="currentEntity.layer" chosen class="form-control"
+							>
+					</select>
+				</div>
 				
 				<a class="btn btn-mini" ng-show="visible"   ng-click="visible = false" ><i class="glyphicon glyphicon-chevron-up"></i></a>													    
 		    	<a class="btn btn-mini" ng-show="!visible" 	ng-click="visible = true"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
@@ -25,7 +32,7 @@
 		
 			<div style="margin-top:10px; display:flex" ng-show="visible">
 			
-       	 			<select class="form-control" ng-model="filter.status" style="width:30%%;margin-right:10px">
+       	 			<select class="form-control" ng-model="filter.status" style="width:30%;margin-right:10px">
                          <option ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
                          <option value="0"><spring:message code="admin.marker-moderation.Pending" /></option>
                          <option value="1"><spring:message code="admin.marker-moderation.Approved" /></option>

@@ -3,6 +3,7 @@
  */
 package br.com.geocab.domain.service;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.directwebremoting.annotations.RemoteProxy;
@@ -88,14 +89,24 @@ public class MarkerModerationService
 		try
 		{
 			
-			Marker marker = markerRepository.findOne(id);
-			marker.setStatus(MarkerStatus.ACCEPTED);
+			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(id).get(0);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
-			markerModeration.setMarker(marker);
-			markerModeration.setStatus(MarkerStatus.ACCEPTED);
 			
-			markerModeration = this.markerModerationRepository.save(markerModeration);
+			if( lastMarkerModeration.getStatus().equals(MarkerStatus.ACCEPTED) )
+			{
+				throw new IllegalArgumentException("The marker moderation already accepted");
+			}
+			else
+			{
+				Marker marker = markerRepository.findOne(id);
+				marker.setStatus(MarkerStatus.ACCEPTED);
+				
+				markerModeration.setMarker(marker);
+				markerModeration.setStatus(MarkerStatus.ACCEPTED);
+				
+				markerModeration = this.markerModerationRepository.save(markerModeration);
+			}
 			
 			return markerModeration;
 		}
@@ -118,14 +129,25 @@ public class MarkerModerationService
 	{			
 		try
 		{
-			Marker marker = markerRepository.findOne(id);
-			marker.setStatus(MarkerStatus.REFUSED);
+			
+			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(id).get(0);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
-			markerModeration.setMarker(marker);
-			markerModeration.setStatus(MarkerStatus.REFUSED);
 			
-			markerModeration = this.markerModerationRepository.save(markerModeration);
+			if( lastMarkerModeration.getStatus().equals(MarkerStatus.REFUSED) )
+			{
+				throw new IllegalArgumentException("The marker moderation already refused");
+			}
+			else
+			{
+				Marker marker = markerRepository.findOne(id);
+				marker.setStatus(MarkerStatus.REFUSED);
+				
+				markerModeration.setMarker(marker);
+				markerModeration.setStatus(MarkerStatus.REFUSED);
+				
+				markerModeration = this.markerModerationRepository.save(markerModeration);
+			}
 			
 			return markerModeration;
 		}
@@ -135,6 +157,17 @@ public class MarkerModerationService
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param markerId
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public List<MarkerModeration> listMarkerModerationByMarker( Long markerId  )
+	{
+		return this.markerModerationRepository.listMarkerModerationByMarker(markerId);
 	}
 	
 	
