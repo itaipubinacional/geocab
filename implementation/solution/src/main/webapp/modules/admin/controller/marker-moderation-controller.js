@@ -17,6 +17,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $importService("markerModerationService");
     $importService("layerGroupService");
     $importService("markerService");
+    $importService("accountService");
 
 	 /*-------------------------------------------------------------------
 	  * 		 				 	CONSTANTS
@@ -287,6 +288,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.currentState = $scope.LIST_STATE;
         
         $scope.listAllInternalLayerGroups();
+        $scope.listAllUsers();
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
@@ -411,7 +413,22 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     /**     
      * List all the internal layers
      */
-    $scope.listAllInternalLayerGroups = function() {
+    $scope.listAllInternalLayerGroups = function( filter ) {
+ 		   
+ 		   var pageRequest = new PageRequest();
+ 		   pageRequest.size = 8;
+
+ 		   var page = layerGroupService.listLayersByFilters( filter, pageRequest, {
+ 			   errorHandler : function(message, exception) {
+ 				   $scope.message = {type:"error", text: message};
+ 				   $scope.$apply();
+ 			   },
+ 			   async:false //UTILIZAR SOMENTE NO AUTOCOMPLETE
+ 		   });
+ 		   
+ 		   //Simula um timeout para a exibição dos dados com 0 de delay.
+ 		   return $timeout( function () { return page ? page.content : []; }, 0);
+ 	    	
  	   
     	layerGroupService.listAllInternalLayerGroups({
      		callback : function(result) {
@@ -428,7 +445,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                  	});
                  	
                  })
-                 s
+                 
                  $scope.$apply();
              },
              errorHandler : function(message, exception) {
@@ -439,7 +456,32 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     };
 
+    /**     
+     * List all the Users
+     */
     $scope.listAllUsers = function(){
+    	
+    	accountService.listAllUsers({
+    		callback : function(result){
+    			$scope.selectUsers = [];
+    			
+    			angular.forEach(result, function(user,index){
+                 	
+                 	$scope.selectUsers.push({
+                 		"name": user.name,
+                 		"email": user.email,
+                 		"userName": user.username,
+                 	});
+                 	
+                 })
+    			
+                 $scope.apply();   
+    		},
+    		errorHandler : function(message, exception) {
+                $scope.message = {type:"error", text: message};
+                $scope.$apply();
+            }
+    	});
     	
     }
     
