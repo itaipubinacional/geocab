@@ -286,7 +286,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
         $scope.currentState = $scope.LIST_STATE;
         
-        $scope.listLayersByFilters();
+        $scope.listAllInternalLayerGroups();
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
@@ -408,6 +408,41 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	 * 		 				 	  BEHAVIORS
 	 *-------------------------------------------------------------------*/
 
+    /**     
+     * List all the internal layers
+     */
+    $scope.listAllInternalLayerGroups = function() {
+ 	   
+    	layerGroupService.listAllInternalLayerGroups({
+     		callback : function(result) {
+                 //$scope.layersGroups = result;
+                 $scope.selectLayerGroup = [];
+                 
+                 angular.forEach(result, function(layer,index){
+                 	
+                 	$scope.selectLayerGroup.push({
+                 		"layerTitle": layer.title,
+                 		"layerId": layer.id,
+                 		"layerIcon": layer.icon,
+                 		"group": layer.layerGroup.name
+                 	});
+                 	
+                 })
+                 s
+                 $scope.$apply();
+             },
+             errorHandler : function(message, exception) {
+                 $scope.message = {type:"error", text: message};
+                 $scope.$apply();
+             }
+     	});
+    	
+    };
+
+    $scope.listAllUsers = function(){
+    	
+    }
+    
 	/**
 	 * Performs the query logs, considering filter, paging and sorting. 
 	 * When ok, change the state of the screen to list.
