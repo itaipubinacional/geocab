@@ -11,7 +11,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -383,11 +387,28 @@ public class MarkerService
 	 * @param filter
 	 * @param pageable
 	 * @return
+	 * @throws java.text.ParseException 
 	 */
 	@Transactional(readOnly=true)
-	public Page<Marker> listMarkerByFilters( String filter, PageRequest pageable )
+	public Page<Marker> listMarkerByFilters(  String layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable ) throws java.text.ParseException
 	{
-		return this.markerRepository.listByFilters(filter, pageable);
+		
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+		Calendar dEnd = null;
+		Calendar dStart = null;
+		
+		if(dateStart != null) {
+			dStart = Calendar.getInstance();
+			dStart.setTime( (Date)formatter.parse(dateStart) );
+		}
+		
+		if(dateEnd != null) {
+			dEnd = Calendar.getInstance();
+			dEnd.setTime( (Date)formatter.parse(dateEnd) );
+		}
+		
+		//return this.markerRepository.listByFilters(layer, status, dStart, dEnd, user, pageable);
+		return this.markerRepository.listByFilters(layer, status, dStart, dEnd, user, pageable);
 	}
 	
 	/**
