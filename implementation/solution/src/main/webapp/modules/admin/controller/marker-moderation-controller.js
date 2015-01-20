@@ -374,8 +374,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			}
 		});
 		
-		
-        
 		$scope.currentState = $scope.DETAIL_STATE;
         $scope.currentEntity = marker;
         
@@ -753,7 +751,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         			     image: new ol.style.Circle({
         			       fill: fill,
         			       stroke: stroke,
-        			       radius: 15,
+        			       radius: 10,
         			     }),
         			     fill: fill,
         			     stroke: stroke
@@ -1002,11 +1000,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.verifyStatusColor = function(status) {
     	var statusColor;
 		if(status == $scope.REFUSED) {
-			statusColor = "#FF0000";
+			statusColor = "#ba0000";
 		} else if(status == $scope.ACCEPTED) {
-			statusColor = "#00FF00";
+			statusColor = "#09ba00";
 		} else {
-			statusColor = "#FFFF00";
+			statusColor = "#edad09";
 		}
 		return statusColor;
     }
@@ -1019,7 +1017,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     	var style = new ol.style.Style({
             image: new ol.style.Circle({
-              radius: 15,
+              radius: 10,
               fill: new ol.style.Fill({
                 color: statusColor
               }),
