@@ -20,7 +20,7 @@
                     <span><b style="float:left"> {{ currentEntity.user.name }}</b></span>           
                 </div>
  
-                <div style="position:relative">                   
+                <div style="position:relative">      
                     <span><b style="position:absolute;top:25px;left:13px" > {{ $index + 1 }}</b></span>
                 </div>                                                                                                                                                
                  
