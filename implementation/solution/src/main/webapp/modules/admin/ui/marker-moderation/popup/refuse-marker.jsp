@@ -29,7 +29,8 @@
         	<div class="form-item" style="width:100%">
         		<label class="detail-label" required><spring:message code="admin.marker-moderation.Motive" /></label>
 	        	<div style="position:relative;">
-	        		<select name="select" class="form-control" ng-model="currentEntity.type"  style="margin-bottom: 15px" 
+	        		<select name="select" class="form-control" ng-model="currentEntity.type" style="margin-bottom: 15px"
+	        				ng-options="motive.name for motive in motives"
 							ng-class="{ngInvalid: form_refuse_marker.$submitted && form_refuse_marker.select.$error.required }"
 	        		   		required>
 	        		   		
