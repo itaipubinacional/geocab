@@ -139,6 +139,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.markersModeration = [];
     
+    $scope.selectLayerGroup = [];
+    
   //DATA GRID
     /**
      * Static variable coms stock grid buttons
@@ -283,6 +285,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $log.info("changeToList");
         
         $scope.currentState = $scope.LIST_STATE;
+        
+        $scope.listLayersByFilters();
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
@@ -401,6 +405,43 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     /*-------------------------------------------------------------------
 	 * 		 				 	  BEHAVIORS
 	 *-------------------------------------------------------------------*/
+    
+	/**
+     * Realiza a consulta de organizaÃ§Ãµes militares superiores para exibiÃ§Ã£o no autocomplete.
+     * 
+     * Por uma limitaÃ§Ã£o do componente visual, 
+     * neste caso Ã© necessÃ¡rio fazer uma consulta sincrona 
+     * ao invÃ©s de assincrona para renderizar os dados corretamente.
+     * 
+     * O uso indevido de async:false ocasiona em problemas GRAVES de performance.
+     */
+    $scope.listLayersByFilters = function(  ) {
+ 	   
+    	layerGroupService.listAllInternalLayerGroups({
+     		callback : function(result) {
+                 //$scope.layersGroups = result;
+                 $scope.selectLayerGroup = [];
+                 
+                 angular.forEach(result, function(layer,index){
+                 	
+                 	$scope.selectLayerGroup.push({
+                 		"layerTitle": layer.title,
+                 		"layerId": layer.id,
+                 		"layerIcon": layer.icon,
+                 		"group": layer.layerGroup.name
+                 	});
+                 	
+                 })
+                 s
+                 $scope.$apply();
+             },
+             errorHandler : function(message, exception) {
+                 $scope.message = {type:"error", text: message};
+                 $scope.$apply();
+             }
+     	});
+    	
+    };
 
 	/**
 	 * Performs the query logs, considering filter, paging and sorting. 
@@ -555,12 +596,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	$timeout(function(){
 			$('.datepicker').datepicker({ 
 				dateFormat: 'dd/mm/yy',
-				dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+				dayNames: ['Domingo','Segunda','Terï¿½a','Quarta','Quinta','Sexta','Sï¿½bado'],
 			    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-			    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-			    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+			    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sï¿½b','Dom'],
+			    monthNames: ['Janeiro','Fevereiro','Marï¿½o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
 			    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-			    nextText: 'Próximo',
+			    nextText: 'Prï¿½ximo',
 			    prevText: 'Anterior'
 			});	
 
