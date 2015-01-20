@@ -79,14 +79,25 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.currentEntity;
     
     /**
-     * hiding
+     * visible
      */
-    $scope.hiding = true;
+    $scope.visible = false;
     
     /**
      * motive
      */
     $scope.motive;
+    
+    /**
+     * filter
+     */
+    $scope.filter = {
+    		'layer': null,
+    		'status': null,
+    		'dateStart': null,
+    		'dateEnd': null,
+    		'user': null
+    };
     
     //FORM
     /**
@@ -128,6 +139,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.markersModeration = [];
     
+    $scope.selectLayerGroup = [];
+    
   //DATA GRID
     /**
      * Static variable coms stock grid buttons
@@ -135,7 +148,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Since the delete button calls a method directly via ng-click why does not have a specific screen state.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
-        '<a ng-click="changeToDetail(row.entity)" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+        '<a ng-click="changeToDetail(row.entity)" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i style="color: #333; font-size: 18px" class="glyphicon glyphicon-eye-open"></i></a>' +
         '</div>';
     
     var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
@@ -164,7 +177,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     
     $scope.gridOptions = {
 			data: 'currentPage.content',
-			multiSelect: true,
+			multiSelect: false,
 			useExternalSorting: true,
             headerRowHeight: 45,
             rowHeight: 45,
@@ -173,20 +186,18 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				//evita chamar a selecao, quando clicado em um action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
 				
+				if($scope.selectedFeatures) {
+					angular.forEach($scope.selectedFeatures, function(feature, index){
+							feature.feature.clear();
+					});
+				}
+				
 				if(row.selected) {
 					$scope.gridOptions.selectRow(row.rowIndex, false);
 					
-					if($scope.selectedFeatures) {
-						angular.forEach($scope.selectedFeatures, function(feature, index){
-							if(feature.marker.id == row.entity.id) {
-								feature.feature.clear();
-							}
-							
-						});
-					}
-					
 					return false;
 				} else {
+					
 					$scope.gridOptions.selectRow(row.rowIndex, true);
 				}
 				
@@ -259,9 +270,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.changeToList();
          
         $scope.loadMap();
-       
+        
     };
-    
+  
     /**
      * Performs initial procedures (prepares the State)
      * for the query screen and after that, change the State to list.
@@ -274,13 +285,15 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $log.info("changeToList");
         
         $scope.currentState = $scope.LIST_STATE;
+        
+        $scope.listLayersByFilters();
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
         if(typeof markers == 'undefined'){
-        	$scope.listMarkerByFilters(null, pageRequest);
+        	$scope.listMarkerByFilters(null, null, null, null, null, pageRequest);
         } else {
         	$scope.listMarkerByMarkers(markers, pageRequest);
         }
@@ -355,7 +368,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				});
 				
 			}
-		})
+		});
+		
+		$scope.selectMarker(marker);
         
 		$scope.currentState = $scope.DETAIL_STATE;
         $scope.currentEntity = marker;
@@ -398,9 +413,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	 * @see data.filter
 	 * @see currentPage
 	 */
-	$scope.listMarkerByFilters = function( filter, pageRequest ) {
-
-		markerService.listMarkerByFilters( filter, pageRequest, {
+	$scope.listMarkerByFilters = function( layer, status, dateStart, dateEnd, user, pageRequest ) {
+		
+		markerService.listMarkerByFilters( layer, status, dateStart, dateEnd, user, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;
@@ -494,22 +509,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		});
 	};
     
-    /**
-     * 
-     */
-    $scope.showFields = function (showFields, index)
-    {
-    	$scope.teste = index;
-    	
-    	if (showFields) 
-    	{
-    		$scope.hiding = false;
-    	} 
-    	else
-		{
-    		$scope.hiding = true;
-		}
-    }
+    
     
     /**
      * Load map
@@ -544,12 +544,34 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         	if(feature) {
         		var marker = feature.getProperties().marker;
             	
-            	$scope.selectMarker(marker);
+            	$scope.changeToDetail(marker);
         	}
         	
     	});
         
         $scope.listMarker();
+        
+        $scope.resolveDatePicker();
+    }
+    
+    /**
+     * Resolve date picker
+     */
+    $scope.resolveDatePicker = function(){
+    	$timeout(function(){
+			$('.datepicker').datepicker({ 
+				dateFormat: 'dd/mm/yy',
+				dayNames: ['Domingo','Segunda','Ter�a','Quarta','Quinta','Sexta','S�bado'],
+			    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+			    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','S�b','Dom'],
+			    monthNames: ['Janeiro','Fevereiro','Mar�o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+			    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+			    nextText: 'Pr�ximo',
+			    prevText: 'Anterior'
+			});	
+
+			$('.datepicker').mask("99/99/9999");
+		}, 300);
     }
     
     /**
@@ -755,6 +777,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	     }
 	 }
 	 
+	 /**
+	  * Calls the modal to refuse a marker
+	  */
 	 $scope.refuseMarker = function() {
     	var dialog = $modal.open({
             templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
@@ -772,6 +797,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
     }
     
+	 /**
+	  * Calls the dialog to accept a marker
+	  */
     $scope.approveMarker = function() {
     	
     	var dialog = $modal.open({
@@ -801,6 +829,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     };
     
+    /**
+	  * Lists the marker attributes
+	  */
     $scope.listAttributesByMarker = function(){
     	
     	$scope.attributesByLayer = [];
@@ -869,6 +900,22 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     }
     
+    /**
+     * Return the translated status of the marker
+     */
+    $scope.translateStatus = function(id){
+    	
+    	if ($scope.markersModeration[id].status == 'PENDING'){
+    		return $translate('admin.marker-moderation.PENDING');
+    	} 
+    	if ($scope.markersModeration[id].status == 'REFUSED'){
+    		return $translate('admin.marker-moderation.REFUSED');
+    	} 
+    	if ($scope.markersModeration[id].status == 'ACCEPTED'){
+    		return $translate('admin.marker-moderation.ACCEPTED');
+    	} 
+    }
+    
       /**
      * Verify status
      */
@@ -928,5 +975,19 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.eventIncreaseZoom = function (){
         $scope.map.getView().setZoom($scope.map.getView().getZoom() + 1);
+    }
+    
+    /**
+     * Filter
+     */
+    $scope.bindFilter = function() {
+    	var pageRequest = new PageRequest();
+        pageRequest.size = 10;
+        $scope.pageRequest = pageRequest;
+        
+        if($scope.filter.status == "") $scope.filter.status = null;
+        
+    	$scope.listMarkerByFilters( $scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user, pageRequest );
+    	
     }
 }
