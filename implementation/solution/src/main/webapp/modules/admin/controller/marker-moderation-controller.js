@@ -139,6 +139,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.markersModeration = [];
     
+    $scope.selectLayerGroup = [];
+    
   //DATA GRID
     /**
      * Static variable coms stock grid buttons
@@ -283,6 +285,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $log.info("changeToList");
         
         $scope.currentState = $scope.LIST_STATE;
+        
+        $scope.listLayersByFilters();
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
@@ -507,6 +511,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		});
 	};
     
+    
+    
     /**
      * Load map
      */
@@ -557,12 +563,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	$timeout(function(){
 			$('.datepicker').datepicker({ 
 				dateFormat: 'dd/mm/yy',
-				dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+				dayNames: ['Domingo','Segunda','Terï¿½a','Quarta','Quinta','Sexta','Sï¿½bado'],
 			    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-			    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-			    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+			    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sï¿½b','Dom'],
+			    monthNames: ['Janeiro','Fevereiro','Marï¿½o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
 			    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-			    nextText: 'Próximo',
+			    nextText: 'Prï¿½ximo',
 			    prevText: 'Anterior'
 			});	
 
