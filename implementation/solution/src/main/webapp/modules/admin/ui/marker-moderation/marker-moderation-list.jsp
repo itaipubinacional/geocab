@@ -17,13 +17,13 @@
 			<form>
 				
 				<div style="width:60%;display:inline-block">
-					<select data-placeholder="<spring:message code="admin.marker-moderation.Layer"/>" name="camada"
-							ng-options="layer.layerTitle for layer in selectLayerGroup"
-							ng-model="currentEntity.layer" chosen class="form-control"
-							>
-					</select>
-				</div>
 				
+					<input auto-complete autocomplete="off" type="text" class="form-control" 
+                	   typeahead-wait-ms="500" ng-model="currentEntity.layer" placeholder="<spring:message code="admin.marker-moderation.Layer" />"
+                	   typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:8">	
+				
+				</div>					                        
+								
 				<a class="btn btn-mini" ng-show="visible"   ng-click="visible = false" ><i class="glyphicon glyphicon-chevron-up"></i></a>													    
 		    	<a class="btn btn-mini" ng-show="!visible" 	ng-click="visible = true"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
 		    	
@@ -51,8 +51,8 @@
 				</div>
 				
 				<div style="margin-top:10px; display:flex" ng-show="visible">
-					 <select data-placeholder="<spring:message code="admin.marker-moderation.Layer"/>" name="camada"
-							ng-options="layer.layerTitle for layer in selectLayerGroup"
+					 <select data-placeholder="<spring:message code="admin.marker-moderation.Users"/>" name="camada"
+							ng-options="user.email for user in selectUsers"
 							ng-model="currentEntity.layer" chosen class="form-control"
 							>
 					</select>
