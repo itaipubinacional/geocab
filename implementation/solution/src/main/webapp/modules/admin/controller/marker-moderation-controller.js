@@ -352,6 +352,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
         $scope.map.getView().setZoom(15);
         
+        $scope.selectMarker(marker);
+        
         angular.forEach($scope.features, function(feature, index){
         	var marker = feature.feature.getProperties().marker;
         	
@@ -366,7 +368,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			}
 		});
 		
-		$scope.selectMarker(marker);
+		
         
 		$scope.currentState = $scope.DETAIL_STATE;
         $scope.currentEntity = marker;
