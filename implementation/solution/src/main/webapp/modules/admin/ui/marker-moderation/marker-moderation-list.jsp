@@ -51,9 +51,11 @@
 				</div>
 				
 				<div style="margin-top:10px; display:flex" ng-show="visible">
-					 <select class="form-control" ng-model="data.user" style="width:100%;margin-right:10px">
-					 	<option value="">Usuarios</option>
-					 </select>
+					 <select data-placeholder="<spring:message code="admin.marker-moderation.Layer"/>" name="camada"
+							ng-options="layer.layerTitle for layer in selectLayerGroup"
+							ng-model="currentEntity.layer" chosen class="form-control"
+							>
+					</select>
 				</div>
 			
 			 </form>		
