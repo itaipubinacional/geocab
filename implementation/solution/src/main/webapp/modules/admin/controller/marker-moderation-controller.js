@@ -494,12 +494,13 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		});
 	};
     
-    
     /**
      * 
      */
-    $scope.showFields = function (showFields)
+    $scope.showFields = function (showFields, index)
     {
+    	$scope.teste = index;
+    	
     	if (showFields) 
     	{
     		$scope.hiding = false;
