@@ -186,11 +186,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				//evita chamar a selecao, quando clicado em um action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
 				
-				if($scope.selectedFeatures) {
-					angular.forEach($scope.selectedFeatures, function(feature, index){
-							feature.feature.clear();
-					});
-				}
+				$scope.clearFeatures();
 				
 				if(row.selected) {
 					$scope.gridOptions.selectRow(row.rowIndex, false);
@@ -344,11 +340,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToDetail = function (marker) {
         $log.info("changeToDetail", marker);
         
-        if($scope.selectedFeatures) {
-	        angular.forEach($scope.selectedFeatures, function(feature, index){
-				feature.feature.clear();
-			});
-        }
+        $scope.clearFeatures();
                 
         var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
         
@@ -365,10 +357,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				
 				angular.forEach($scope.selectedFeatures, function(selected, index){
 					if(selected.marker.id == marker.id){
+						
 						selected.feature.push(feature.feature);
 					}
 				});
 				
+				return false;
 			}
 		});
 		
@@ -566,12 +560,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
         
         $scope.map.on('click', function(evt) {
-        	if($scope.selectedFeatures) {
-        		angular.forEach($scope.selectedFeatures, function(feature, index){
-					feature.feature.clear();
-				});
-        	}
-        	
         	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
  		        return feature;
  		      });
@@ -580,6 +568,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         		var marker = feature.getProperties().marker;
             	
             	$scope.changeToDetail(marker);
+            	return false;
+        	} else {
+        		$scope.clearFeatures();
         	}
         	
     	});
@@ -677,11 +668,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			});
 			
 			dragBox.on('boxstart', function(e) {
-				if($scope.selectedFeatures) {
-					angular.forEach($scope.selectedFeatures, function(feature, index){
-						feature.feature.clear();
-					});
-				}
+				$scope.clearFeatures();
 			});
 
 			$scope.map.addInteraction(dragBox);
@@ -1024,5 +1011,17 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
     	$scope.listMarkerByFilters( $scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user, pageRequest );
     	
+    }
+    
+    $scope.clearFeatures = function(){
+    	if($scope.selectedFeatures.length) {
+	        angular.forEach($scope.selectedFeatures, function(feature, index){
+				feature.feature.clear();
+			});
+	        angular.forEach($scope.selectedFeatures, function(feature, index){
+	        	 $scope.selectedFeatures.splice(index, 1);
+			});
+	       
+        }
     }
 }
