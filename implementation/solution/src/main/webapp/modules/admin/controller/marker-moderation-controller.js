@@ -272,7 +272,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.currentState = $scope.LIST_STATE;
         
         $scope.listAllInternalLayerGroups();
-        //$scope.listAllUsers();
+        $scope.listAllUsers();
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
