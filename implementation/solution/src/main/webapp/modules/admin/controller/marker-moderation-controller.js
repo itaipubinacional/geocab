@@ -589,7 +589,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      });
    	
    };
-=======
+
+   /*
 	 * List motives of marker moderation
 	 */
 	$scope.listMotivesByMarkerModeration = function( markerModerationId ) {
@@ -605,7 +606,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			}
 		});
 	};
->>>>>>> refs/remotes/origin/master
 	
 	/**
 	 * Accept status marker moderation
@@ -624,8 +624,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      });
 	};
 	
-<<<<<<< HEAD
-=======
 	/**
 	 * Refuse status marker moderation
 	 */
@@ -641,7 +639,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
          }
      });
 	};
->>>>>>> refs/remotes/origin/master
+
 	
 	/**
 	 * Performs the query logs, considering filter, paging and sorting. 
@@ -666,10 +664,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			}
 		});
 	};
-<<<<<<< HEAD
-=======
 
-	
 	/**
     *
     * @param camadas
@@ -686,7 +681,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
            }
        });
    };
->>>>>>> refs/remotes/origin/master
     
     /**
      * Load map
@@ -929,9 +923,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	             return 0.0005831682455839253;
 	     }
 	 };
-	 
-<<<<<<< HEAD
-=======
+
 	 /**
 	  * Calls the modal to refuse a marker
 	  */
@@ -987,7 +979,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
          });
     	
     };
->>>>>>> refs/remotes/origin/master
+
     
     /**
 	  * Lists the marker attributes
