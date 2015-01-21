@@ -20,6 +20,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import br.com.geocab.domain.entity.account.IAccountMailRepository;
 import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.marker.Marker;
 
 /**
  * @author Rodrigo P. Fraga
@@ -59,8 +60,10 @@ public class AccountMailRepository implements IAccountMailRepository
 	@Async
 	public Future<Void> sendRecoveryPassword( final User user )
 	{
-		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
-            public void prepare( MimeMessage mimeMessage ) throws Exception {
+		final MimeMessagePreparator preparator = new MimeMessagePreparator() 
+		{
+            public void prepare( MimeMessage mimeMessage ) throws Exception 
+            {
 
                 final MimeMessageHelper message = new MimeMessageHelper( mimeMessage );
                 message.setSubject("Redefinição de senha"); //FIXME Localize
@@ -80,6 +83,74 @@ public class AccountMailRepository implements IAccountMailRepository
         this.mailSender.send(preparator);
 
         return new AsyncResult<Void>(null);
+	}
+	
+	/**
+	 *
+	 * @param user
+	 * @param marker
+	 */
+	@Async
+	public Future<Void> sendMarkerAccepted( final User user, final Marker marker )
+	{
+		final MimeMessagePreparator preparator = new MimeMessagePreparator() 
+		{
+           public void prepare( MimeMessage mimeMessage ) throws Exception 
+           {
+        	   System.out.println( user );
+        	   System.out.println( user.getEmail() );
+        	   System.out.println( marker.getLayer().getName() );
+        	   
+               final MimeMessageHelper message = new MimeMessageHelper( mimeMessage );
+               message.setSubject("Postagem aprovada!"); //FIXME Localize
+               message.setTo( user.getEmail() );
+               message.setFrom( mailFrom );
+
+               final Map<String, Object> model = new HashMap<String, Object>();
+   	        	model.put("user.name",  user.getName() );
+   	        	model.put("marker", marker.getLayer().getName()); //TODO message
+
+               final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/accept-marker.html", StandardCharsets.UTF_8.toString(), model);
+               message.setText(content, true);
+           }
+       };
+
+       this.mailSender.send(preparator);
+
+       return new AsyncResult<Void>(null);
+	}
+	
+	/**
+	 *
+	 * @param user
+	 * @param marker
+	 */
+	@Async
+	public Future<Void> sendMarkerRefused( final User user,  final Marker marker )
+	{
+		final MimeMessagePreparator preparator = new MimeMessagePreparator() 
+		{
+          public void prepare( MimeMessage mimeMessage ) throws Exception 
+          {
+
+              final MimeMessageHelper message = new MimeMessageHelper( mimeMessage );
+              message.setSubject("Postagem recusada!"); //FIXME Localize
+              message.setTo( user.getEmail() );
+              message.setFrom( mailFrom );
+
+              final Map<String, Object> model = new HashMap<String, Object>();
+  	          model.put("user.name",  user.getName() );
+  	          model.put("marker", marker.getLayer().getName());
+  	          model.put("motive", "motivo");
+
+              final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/refuse-marker.html", StandardCharsets.UTF_8.toString(), model);
+              message.setText(content, true);
+          }
+      };
+
+      this.mailSender.send(preparator);
+
+      return new AsyncResult<Void>(null);
 	}
 
 }
