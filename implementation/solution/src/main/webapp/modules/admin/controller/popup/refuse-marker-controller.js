@@ -45,6 +45,11 @@ function RefuseMarkerController($scope, $injector,$modalInstance, $state, $impor
      * @type {boolean}
      */
 	var isEqual = false;
+	
+	/**
+	 * 
+	 */
+	$scope.data = {'motive': null, 'description': ""};
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS
@@ -59,8 +64,6 @@ function RefuseMarkerController($scope, $injector,$modalInstance, $state, $impor
 	 */
 	$scope.initialize = function() 
 	{
-		$scope.currentEntity = new Attribute();
-		
 		$scope.listMotives();
 	};
 
@@ -121,7 +124,7 @@ function RefuseMarkerController($scope, $injector,$modalInstance, $state, $impor
 	$scope.refuse = function()
 	{
 		console.log("Refuse");
-		$scope.close();
+		$modalInstance.close($scope.data);
 	};
 	
 };

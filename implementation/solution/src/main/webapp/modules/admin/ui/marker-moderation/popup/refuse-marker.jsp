@@ -29,14 +29,10 @@
         	<div class="form-item" style="width:100%">
         		<label class="detail-label" required><spring:message code="admin.marker-moderation.Motive" /></label>
 	        	<div style="position:relative;">
-	        		<select name="select" class="form-control" ng-model="currentEntity.type" style="margin-bottom: 15px"
+	        		<select name="select" class="form-control" ng-model="data.motive" style="margin-bottom: 15px"
 	        				ng-options="motive.name for motive in motives"
 							ng-class="{ngInvalid: form_refuse_marker.$submitted && form_refuse_marker.select.$error.required }"
 	        		   		required>
-	        		   		
-	        		   		<option value="0">Lugar não existe mais</option>
-	        		   		<option value="0">Área inválida</option>
-	        		   		
 	        		</select>
 	        	</div>
         	
@@ -44,7 +40,7 @@
 	        	 <span  ng-show="form_refuse_marker.$submitted && form_refuse_marker.select.$error.required " class="tooltip-validation" style="right:16px;top:28px"><spring:message code="admin.users.Field-required" /></span>
 	        	
 	        	 <label class="form-item"><spring:message code="admin.marker-moderation.Description" /></label>
-				 <textarea rows="5" cols="100"></textarea>
+				 <textarea rows="5" cols="100" ng-model="data.description"></textarea>
 				 
 				 <span  ng-show="form_add_attribute.$submitted && form_add_attribute.select.$error.required" class="tooltip-validation" style="right:16px;top:62px;"><spring:message code="admin.users.Field-required" /></span>
 			</div>
