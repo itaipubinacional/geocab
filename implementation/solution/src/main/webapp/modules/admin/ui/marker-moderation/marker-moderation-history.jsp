@@ -41,7 +41,7 @@
 	            </div>
 	 
 	            <div class="alert danger" style="text-align:center" ng-if="visible && markerModeration.status == 'REFUSED'">
-	                <span><b> Algum motivo </b></span>                      
+	                <span><b> {{motiveMarkerModeration[0].motive.name}} - {{motiveMarkerModeration[0].description}} </b></span>                      
 	            </div>
 	             
 	        </div>

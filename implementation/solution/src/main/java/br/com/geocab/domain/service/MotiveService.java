@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.entity.markermoderation.Motive;
+import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
+import br.com.geocab.domain.repository.motive.IMotiveMarkerModerationRepository;
 import br.com.geocab.domain.repository.motive.IMotiveRepository;
 
 /**
@@ -37,6 +40,12 @@ public class MotiveService
 	@Autowired
 	private IMotiveRepository motiveRepository;
 	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IMotiveMarkerModerationRepository motiveMarkerModerationRepository;
+	
 	
 	
 	
@@ -53,6 +62,25 @@ public class MotiveService
 	public List<Motive> listMotives()
 	{
 		return this.motiveRepository.findAll();
+	}
+	
+	/**
+	 * 
+	 * @param layers
+	 * @param accessGroupId
+	 */
+	public void associateMotive( List<Motive> motives, Long markerModerationId )
+	{
+		MarkerModeration markerModeration = new MarkerModeration(markerModerationId);
+		
+		for (Motive motive : motives)
+		{
+			MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
+			motiveMarkerModeration.setMarkerModeration(markerModeration);
+			motiveMarkerModeration.setMotive(motive);
+			
+			this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
+		}
 	}
 	
 }

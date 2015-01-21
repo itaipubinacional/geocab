@@ -18,6 +18,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $importService("layerGroupService");
     $importService("markerService");
     $importService("accountService");
+    $importService("motiveService");
 
 	 /*-------------------------------------------------------------------
 	  * 		 				 	CONSTANTS
@@ -88,6 +89,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * motive
      */
     $scope.motive;
+    
+    /**
+     * motives
+     */
+    $scope.addMotives = [];
     
     /**
      * filter
@@ -513,6 +519,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	};
 	
 	/**
+<<<<<<< HEAD
 	  * Calls the modal to refuse a marker
 	  */
 	 $scope.refuseMarker = function() {
@@ -582,6 +589,23 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      });
    	
    };
+=======
+	 * List motives of marker moderation
+	 */
+	$scope.listMotivesByMarkerModeration = function( markerModerationId ) {
+		markerModerationService.listMotivesByMarkerModerationId( markerModerationId, {
+			callback : function(result) {
+				$scope.motiveMarkerModeration = result;
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
+				$scope.$apply();
+			}
+		});
+	};
+>>>>>>> refs/remotes/origin/master
 	
 	/**
 	 * Accept status marker moderation
@@ -600,6 +624,24 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      });
 	};
 	
+<<<<<<< HEAD
+=======
+	/**
+	 * Refuse status marker moderation
+	 */
+	$scope.refuseMarkerModeration = function( id, motives, description ) {
+		
+		markerModerationService.refuseMarker( id, motives, description, {
+         callback : function(result) {
+            console.log(result);
+         },
+         errorHandler : function(message, exception) {
+             $scope.message = {type:"error", text: message};
+             $scope.$apply();
+         }
+     });
+	};
+>>>>>>> refs/remotes/origin/master
 	
 	/**
 	 * Performs the query logs, considering filter, paging and sorting. 
@@ -624,6 +666,27 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			}
 		});
 	};
+<<<<<<< HEAD
+=======
+
+	
+	/**
+    *
+    * @param camadas
+    */
+   $scope.associateMotive = function() {
+	   motiveService.associateMotive($scope.addMotives, $scope.currentEntity.id, {
+           callback: function(result){
+               $scope.msg = {type: "success", text: $translate('admin.access-group.update-has-been-completed-successfully'), dismiss: true};
+               $scope.addLayers = [];
+               $scope.$apply();
+           },
+           errorHandler: function(error){
+               $scope.msg = {type: "danger", text: "Erro: "+error, dismiss: true};
+           }
+       });
+   };
+>>>>>>> refs/remotes/origin/master
     
     /**
      * Load map
@@ -867,6 +930,64 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	     }
 	 };
 	 
+<<<<<<< HEAD
+=======
+	 /**
+	  * Calls the modal to refuse a marker
+	  */
+	 $scope.refuseMarker = function() {
+    	var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
+            controller: RefuseMarkerController,
+            windowClass: 'dialog-delete',
+            resolve: {
+                motive: function () {
+                    return $scope.motive;
+                }
+            }
+        });
+    	
+    	dialog.result.then(function (result) {
+    		
+    		var motives = [];
+    		motives.push(result.motive);
+    		
+    		$scope.refuseMarkerModeration($scope.currentEntity.id, motives, result.description );
+        });
+    };
+    
+	 /**
+	  * Calls the dialog to accept a marker
+	  */
+    $scope.approveMarker = function() {
+    	
+    	var dialog = $modal.open({
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+            controller: DialogController,
+            windowClass: 'dialog-success',
+            resolve: {
+                title: function () {
+                    return $translate('admin.marker-moderation.Confirm-approve');
+                },
+                message: function () {
+                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker')+' ? <br/>.';
+                },
+                buttons: function () {
+                    return [
+                        {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
+                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                    ];
+                }
+            }
+        });
+    	
+    	 dialog.result.then(function () {
+
+    		 $scope.acceptMarkerModeration($scope.currentEntity.id);
+         });
+    	
+    };
+>>>>>>> refs/remotes/origin/master
     
     /**
 	  * Lists the marker attributes
