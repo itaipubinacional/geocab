@@ -8,13 +8,13 @@
 <html style="overflow:hidden">
 	<div  style="width:36%; height: 100%; float:left; margin: 20px;">	
 		<div class="content-tab" style="height:76vh; overflow:auto">				
-			<span style="z-index: 1000;float:right;cursor:pointer" ng-click="changeToList()" class="icon itaipu-icon-close"></span>
+			<span style="z-index: 1000;float:right;cursor:pointer" ng-click="changeToList(pageRequest)" class="icon itaipu-icon-close"></span>
 				<br>
 				<div style="float: right" id="right-buttons">        			        			        		
 					</br>				        		
 					<a class="btn btn-default history" ng-click="changeToHistory(row.entity.marker)" style="margin-top:80px; width:75px; height:58px; line-height : 75px"><spring:message code="admin.marker-moderation.History" /></a></br>
 					
-					<div class="btn btn-default" 
+					<div class="btn btn-default" name="btnApprove"
 						ng-class="{approve: currentEntity.status == 'PENDING' || currentEntity.status == 'REFUSED' , approve1: currentEntity.status == 'ACCEPTED' }" 
 						ng-click="approveMarker()" style="position:relative;margin-top:15px; width:75px; height:58px; line-height : 75px"  >
 							
@@ -25,7 +25,7 @@
 					</br>
 					
 					
-					<div class="btn btn-default" 
+					<div class="btn btn-default" name="btnRefuse" 
 						ng-class="{refuse: currentEntity.status == 'PENDING' || currentEntity.status == 'ACCEPTED' , refuse1: currentEntity.status == 'REFUSED' }" 
 						ng-click="refuseMarker()" style="position:relative;margin-top:15px; width:75px; height:58px; line-height : 75px" >
 					
