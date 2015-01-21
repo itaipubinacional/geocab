@@ -25,33 +25,60 @@
 }
 
 .history{
-	background: url(../images/historico.png) 24px 8px no-repeat;
+	background: url(../images/marker-moderation/historico.png) 24px 8px no-repeat;
 	background-size: 26px;
 }
 
 .history:hover{
-	background: url(../images/historico.png) 24px 8px no-repeat;
+	background: url(../images/marker-moderation/historico.png) 24px 8px no-repeat;
 	background-size: 26px;
 }
 
 .approve{
-	background: url(../images/arrow_up.png) 24px 8px no-repeat;
+	background: url(../images/marker-moderation/aceitar-2.png) 24px 8px no-repeat;
 	background-size: 26px;
 }
 
 .approve:hover{
-	background: url(../images/arrow_up.png) 24px 8px no-repeat;
+	background: url(../images/marker-moderation/aceitar-2.png) 24px 8px no-repeat;
 	background-size: 26px;
 }
 
+.approve1{
+	background: url(../images/marker-moderation/aceitar.png) green 24px 8px no-repeat;
+	background-size: 26px;
+	color: white
+}
+
+.approve1:hover{
+	background: url(../images/marker-moderation/aceitar.png) green 24px 8px no-repeat;
+	background-size: 26px;
+	color: white
+}
+
+
 .refuse{
-	background: url(../images/arrow_down.png) 24px 8px no-repeat;
+	background: url(../images/marker-moderation/recusar-2.png) 24px 8px no-repeat;
 	background-size: 26px;
 }
 
 .refuse:hover{
-	background: url(../images/arrow_down.png) 24px 8px no-repeat;
+	background: url(../images/marker-moderation/recusar-2.png) 24px 8px no-repeat;
 	background-size: 26px;
 }
+
+.refuse1{
+	background: url(../images/marker-moderation/recusar.png) red 24px 8px no-repeat;
+	background-size: 26px;
+	color: white
+}
+
+.refuse1:hover{
+	background: url(../images/marker-moderation/recusar.png) red 24px 8px no-repeat;
+	background-size: 26px;
+	color: white
+}
+
+
 
 

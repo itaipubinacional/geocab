@@ -13,8 +13,27 @@
 				<div style="float: right" id="right-buttons">        			        			        		
 					</br>				        		
 					<a class="btn btn-default history" ng-click="changeToHistory(row.entity.marker)" style="margin-top:80px; width:75px; height:58px; line-height : 75px"><spring:message code="admin.marker-moderation.History" /></a></br>
-					<a class="btn btn-default approve" ng-click="approveMarker()" style="margin-top:15px; width:75px; height:58px; line-height : 75px"  ><spring:message code="admin.marker-moderation.Approve" /></a></br>
-					<a class="btn btn-default refuse"  ng-click="refuseMarker()" style="margin-top:15px; width:75px; height:58px; line-height : 75px" ><spring:message code="admin.marker-moderation.Refuse" /></a></br> 					       													
+					
+					<div class="btn btn-default" 
+						ng-class="{approve: currentEntity.status == 'PENDING' || currentEntity.status == 'REFUSED' , approve1: currentEntity.status == 'ACCEPTED' }" 
+						ng-click="approveMarker()" style="position:relative;margin-top:15px; width:75px; height:58px; line-height : 75px"  >
+							
+						<a style="font-size:14px;text-decoration:none;color:black" ng-if="currentEntity.status != 'ACCEPTED'"><spring:message code="admin.marker-moderation.Approve" /></a>
+						<a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%" ng-if="currentEntity.status == 'ACCEPTED'"><spring:message code="admin.marker-moderation.Approved" /></a>
+					
+					</div>
+					</br>
+					
+					
+					<div class="btn btn-default" 
+						ng-class="{refuse: currentEntity.status == 'PENDING' || currentEntity.status == 'ACCEPTED' , refuse1: currentEntity.status == 'REFUSED' }" 
+						ng-click="refuseMarker()" style="position:relative;margin-top:15px; width:75px; height:58px; line-height : 75px" >
+					
+						<a style="font-size:14px;text-decoration:none;color:black" ng-if="currentEntity.status != 'REFUSED'" ><spring:message code="admin.marker-moderation.Refuse" /></a>
+						<a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%" ng-if="currentEntity.status == 'REFUSED'" ><spring:message code="admin.marker-moderation.Refused" /></a>
+					
+					</div></br> 					       													
+		        
 		        </div>									
 				
 				 <div style="float:right">

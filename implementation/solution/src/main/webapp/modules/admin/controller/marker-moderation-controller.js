@@ -1055,6 +1055,22 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     }
     
+    $scope.clearFilters = function(){
+    	
+    	var pageRequest = new PageRequest();
+        pageRequest.size = 10;
+        $scope.pageRequest = pageRequest;
+        
+        $scope.filter.layer = "";
+        $scope.filter.status = $translate('admin.marker-moderation.All-status');     
+        $scope.filter.dateStart="";
+        $scope.filter.dateEnd="";
+        $scope.filter.user="";
+        
+        $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
+    	
+    }
+    
     $scope.clearFeatures = function(){
     	if($scope.selectedFeatures.length) {
 	        angular.forEach($scope.selectedFeatures, function(feature, index){
