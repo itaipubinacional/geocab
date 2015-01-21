@@ -975,7 +975,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	if ($scope.markersModeration[id].status == 'REFUSED'){
     		return $translate('admin.marker-moderation.REFUSED');
     	} 
-    	if ($scope.markersModeration[id].status == 'ACCEPTED'){
+    	if ($scope.markersModeration[id].status == 'APPROVED'){
     		return $translate('admin.marker-moderation.ACCEPTED');
     	} 
     }
@@ -1061,11 +1061,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
         
-        $scope.filter.layer = "";
-        $scope.filter.status = $translate('admin.marker-moderation.All-status');     
-        $scope.filter.dateStart="";
-        $scope.filter.dateEnd="";
-        $scope.filter.user="";
+        $scope.filter.layer = null;
+        $scope.filter.status = null;     
+        $scope.filter.dateStart=null;
+        $scope.filter.dateEnd=null;
+        $scope.filter.user=nu;
         
         $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
     	
