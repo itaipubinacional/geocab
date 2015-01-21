@@ -34,13 +34,13 @@
                      
                 <div>             
                     <span ng-show="visible && markerModeration.status == 'REFUSED'" id="up-arrow" ><i style="float:right;cursor:pointer;left:-12px;top:40px" class="glyphicon glyphicon-chevron-up" ng-click="visible = false" ></i></span>
-                    <span ng-show="!visible && markerModeration.status == 'REFUSED'"><i style="float:right;cursor:pointer;top:40px" class="glyphicon glyphicon-chevron-down" ng-click="visible = true" ></i></span>
+                    <span ng-show="!visible && markerModeration.status == 'REFUSED'"><i style="float:right;cursor:pointer;top:40px" class="glyphicon glyphicon-chevron-down" ng-click="visible = true; listMotivesByMarkerModeration(markerModeration.id)" ></i></span>
                 </div>
                                                  
             </div>
  
             <div class="alert danger" style="text-align:center" ng-if="visible && markerModeration.status == 'REFUSED'">
-                <span><b> Algum motivo </b></span>                      
+                <span><b> {{motiveMarkerModeration[0].motive.name}} - {{motiveMarkerModeration[0].description}} </b></span>                      
             </div>
              
         </div>

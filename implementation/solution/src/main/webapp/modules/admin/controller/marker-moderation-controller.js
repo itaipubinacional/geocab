@@ -18,6 +18,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $importService("layerGroupService");
     $importService("markerService");
     $importService("accountService");
+    $importService("motiveService");
 
 	 /*-------------------------------------------------------------------
 	  * 		 				 	CONSTANTS
@@ -88,6 +89,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * motive
      */
     $scope.motive;
+    
+    /**
+     * motives
+     */
+    $scope.addMotives = [];
     
     /**
      * filter
@@ -288,7 +294,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.currentState = $scope.LIST_STATE;
         
         $scope.listAllInternalLayerGroups();
-        $scope.listAllUsers();
+        //$scope.listAllUsers();
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
@@ -531,6 +537,23 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	};
 	
 	/**
+	 * List motives of marker moderation
+	 */
+	$scope.listMotivesByMarkerModeration = function( markerModerationId ) {
+		markerModerationService.listMotivesByMarkerModerationId( markerModerationId, {
+			callback : function(result) {
+				$scope.motiveMarkerModeration = result;
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
+				$scope.$apply();
+			}
+		});
+	};
+	
+	/**
 	 * Accept status marker moderation
 	 */
 	$scope.acceptMarkerModeration = function( id ) {
@@ -549,9 +572,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	/**
 	 * Refuse status marker moderation
 	 */
-	$scope.refuseMarkerModeration = function( id ) {
+	$scope.refuseMarkerModeration = function( id, motives, description ) {
 		
-		markerModerationService.refuseMarker( id, {
+		markerModerationService.refuseMarker( id, motives, description, {
          callback : function(result) {
             console.log(result);
          },
@@ -585,8 +608,24 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			}
 		});
 	};
-    
-    
+
+	
+	/**
+    *
+    * @param camadas
+    */
+   $scope.associateMotive = function() {
+	   motiveService.associateMotive($scope.addMotives, $scope.currentEntity.id, {
+           callback: function(result){
+               $scope.msg = {type: "success", text: $translate('admin.access-group.update-has-been-completed-successfully'), dismiss: true};
+               $scope.addLayers = [];
+               $scope.$apply();
+           },
+           errorHandler: function(error){
+               $scope.msg = {type: "danger", text: "Erro: "+error, dismiss: true};
+           }
+       });
+   };
     
     /**
      * Load map
@@ -870,7 +909,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
     	
     	dialog.result.then(function (result) {
-    		$scope.refuseMarkerModeration($scope.currentEntity.id);
+    		
+    		var motives = [];
+    		motives.push(result.motive);
+    		
+    		$scope.refuseMarkerModeration($scope.currentEntity.id, motives, result.description );
         });
     }
     
