@@ -36,10 +36,10 @@
 			<div style="margin-top:10px; display:flex" ng-show="visible">
 			
        	 			<select class="form-control" ng-model="filter.status" style="width:30%;margin-right:10px">
-                         <option ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
-                         <option value="0"><spring:message code="admin.marker-moderation.Pending" /></option>
-                         <option value="1"><spring:message code="admin.marker-moderation.Approved" /></option>
-                         <option value="2"><spring:message code="admin.marker-moderation.Refused"/></option>
+                         <option value="" ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
+                         <option value="PENDING"><spring:message code="admin.marker-moderation.Pending" /></option>
+                         <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
+                         <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
                      </select>
 					
 					<!--  
