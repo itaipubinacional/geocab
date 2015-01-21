@@ -19,7 +19,7 @@
 				<div style="width:60%;display:inline-block">
 				
 					<input auto-complete autocomplete="off" type="text" class="form-control" 
-                	   typeahead-wait-ms="500" ng-model="currentEntity.layer" placeholder="<spring:message code="admin.marker-moderation.Layer" />"
+                	   typeahead-wait-ms="500" ng-model="filter.layer" placeholder="<spring:message code="admin.marker-moderation.Layer" />"
                 	   typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:8">	
 				
 				</div>					                        
@@ -33,10 +33,10 @@
 			<div style="margin-top:10px; display:flex" ng-show="visible">
 			
        	 			<select class="form-control" ng-model="filter.status" style="width:30%;margin-right:10px">
-                         <option ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
-                         <option value="0"><spring:message code="admin.marker-moderation.Pending" /></option>
-                         <option value="1"><spring:message code="admin.marker-moderation.Approved" /></option>
-                         <option value="2"><spring:message code="admin.marker-moderation.Refused"/></option>
+                         <option value="" ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
+                         <option value="PENDING"><spring:message code="admin.marker-moderation.Pending" /></option>
+                         <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
+                         <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
                      </select>
 					
 					<!--  
@@ -53,7 +53,7 @@
 				<div style="margin-top:10px; display:flex" ng-show="visible">
 					 <select data-placeholder="<spring:message code="admin.marker-moderation.Users"/>" name="camada"
 							ng-options="user.email for user in selectUsers"
-							ng-model="currentEntity.layer" chosen class="form-control"
+							ng-model="filter.user" chosen class="form-control"
 							>
 					</select>
 				</div>
