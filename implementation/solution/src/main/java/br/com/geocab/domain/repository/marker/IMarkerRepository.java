@@ -38,7 +38,8 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				"AND ( marker.status = :status OR :status = NULL ) " +
 				"AND ( marker.created >= :dateStart OR CAST( :dateStart as date ) = NULL ) " +
 				"AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
-				"AND ( LOWER(user.email) LIKE '%' || LOWER(CAST(:user AS string)) || '%' OR :user = NULL) ) "
+				"AND ( LOWER(user.email) LIKE '%' || LOWER(CAST(:user AS string)) || '%' OR :user = NULL) ) " +
+				"AND ( marker.deleted = NULL OR marker.deleted = FALSE )"
 				)
 	public Page<Marker> listByFilters( @Param("layer") String layer, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user, Pageable pageable );
 	
