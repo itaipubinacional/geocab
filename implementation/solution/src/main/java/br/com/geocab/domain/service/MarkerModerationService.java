@@ -3,6 +3,7 @@
  */
 package br.com.geocab.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -19,8 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
+import br.com.geocab.domain.entity.markermoderation.Motive;
+import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
+import br.com.geocab.domain.repository.motive.IMotiveMarkerModerationRepository;
 
 /**
  * 
@@ -57,6 +61,12 @@ public class MarkerModerationService
 	 */
 	@Autowired
 	private IMarkerRepository markerRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IMotiveMarkerModerationRepository motiveMarkerModerationRepository;
 	
 	
 	
@@ -120,17 +130,36 @@ public class MarkerModerationService
 	
 	/**
 	 * 
+	 * @param layers
+	 * @param accessGroupId
+	 */
+	public void associateMotive( List<Motive> motives, Long markerModerationId )
+	{
+		MarkerModeration markerModeration = new MarkerModeration(markerModerationId);
+		
+		for (Motive motive : motives)
+		{
+			MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
+			motiveMarkerModeration.setMarkerModeration(markerModeration);
+			motiveMarkerModeration.setMotive(motive);
+			
+			this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
+		}
+	}
+	
+	/**
+	 * 
 	 * Method to refuse a {@link Marker}
 	 * 
 	 * @param markerModeration
 	 * @return
 	 */
-	public MarkerModeration refuseMarker( Long id )
+	public MarkerModeration refuseMarker( Long markerId, List<Motive> motives, String description )
 	{			
 		try
 		{
 			
-			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(id).get(0);
+			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(markerId).get(0);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
 			
@@ -140,13 +169,23 @@ public class MarkerModerationService
 			}
 			else
 			{
-				Marker marker = markerRepository.findOne(id);
+				Marker marker = markerRepository.findOne(markerId);
 				marker.setStatus(MarkerStatus.REFUSED);
 				
 				markerModeration.setMarker(marker);
 				markerModeration.setStatus(MarkerStatus.REFUSED);
 				
 				markerModeration = this.markerModerationRepository.save(markerModeration);
+				
+				for (Motive motive : motives)
+				{
+					MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
+					motiveMarkerModeration.setMarkerModeration(markerModeration);
+					motiveMarkerModeration.setMotive(motive);
+					motiveMarkerModeration.setDescription(description);
+					
+					this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
+				}
 			}
 			
 			return markerModeration;
@@ -157,6 +196,19 @@ public class MarkerModerationService
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param markerModerationId
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public List<MotiveMarkerModeration> listMotivesByMarkerModerationId(Long markerModerationId)
+	{
+		List<MotiveMarkerModeration> motivesMarkerModeration = this.motiveMarkerModerationRepository.listByMarkerModerationId(markerModerationId);
+		
+		return motivesMarkerModeration;
 	}
 	
 	/**
