@@ -158,24 +158,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         '<a ng-click="changeToDetail(row.entity)" title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i style="color: #333; font-size: 18px" class="glyphicon glyphicon-eye-open"></i></a>' +
         '</div>';
     
-    var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
-    '<span ng-if="!row.entity.dataSource.url" ng-cell-text="" class="ng-binding">Camada interna</span>' +
-    '<span ng-if="row.entity.dataSource.url" ng-cell-text="" class="ng-binding">{{ row.entity.name }}</span>' +
-    '</div>';
-
-    
-    var MARKER_BUTTONS = '<div  class="cell-centered">' +
-    '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == false" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
-    '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == true" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
-    '<a ng-if="row.entity.dataSource.url" class="btn btn-mini"><i style="font-size: 16px; color: blue" class="glyphicon glyphicon glyphicon-minus"></i></a>'+
-    '</div>';
-    
-    var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-	'<img ng-if="row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
-	'<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.icon}}"/>' +
-	'</div>';
-   
-    
     var IMAGE_MODERATION = '<div  class="cell-centered">' +
     '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>'+
     '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>'+
@@ -193,11 +175,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				//evita chamar a selecao, quando clicado em um action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
 				
-				if($scope.selectedFeatures) {
-					angular.forEach($scope.selectedFeatures, function(feature, index){
-							feature.feature.clear();
-					});
-				}
+				$scope.clearFeatures();
 				
 				if(row.selected) {
 					$scope.gridOptions.selectRow(row.rowIndex, false);
@@ -230,7 +208,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 						});
 						
 					}
-				})
+				});
 				
 			},
 			columnDefs: [
@@ -247,7 +225,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
         zoom: 9,
         minZoom: 3
-    })
+    });
     
     /*-------------------------------------------------------------------
      * 		 				 	  NAVIGATIONS
@@ -352,11 +330,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToDetail = function (marker) {
         $log.info("changeToDetail", marker);
         
-        if($scope.selectedFeatures) {
-	        angular.forEach($scope.selectedFeatures, function(feature, index){
-				feature.feature.clear();
-			});
-        }
+        $scope.clearFeatures();
                 
         var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
         
@@ -373,10 +347,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				
 				angular.forEach($scope.selectedFeatures, function(selected, index){
 					if(selected.marker.id == marker.id){
+						
 						selected.feature.push(feature.feature);
 					}
 				});
 				
+				return false;
 			}
 		});
 		
@@ -448,7 +424,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                  		"group": layer.layerGroup.name
                  	});
                  	
-                 })
+                 });
                  
                  $scope.$apply();
              },
@@ -477,7 +453,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                  		"userName": user.username,
                  	});
                  	
-                 })
+                 });
     			
                  $scope.apply();   
     		},
@@ -487,7 +463,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             }
     	});
     	
-    }
+    };
     
 	/**
 	 * Performs the query logs, considering filter, paging and sorting. 
@@ -500,6 +476,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		
 		markerService.listMarkerByFilters( layer, status, dateStart, dateEnd, user, pageRequest, {
 			callback : function(result) {
+				if($scope.features.length) {
+					$scope.clearFeatures();
+					$scope.removeLayers();
+				}
+				$scope.buildVectorMarker(result);
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;
 				$scope.currentState = $scope.LIST_STATE;
@@ -647,12 +628,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
         
         $scope.map.on('click', function(evt) {
-        	if($scope.selectedFeatures) {
-        		angular.forEach($scope.selectedFeatures, function(feature, index){
-					feature.feature.clear();
-				});
-        	}
-        	
         	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
  		        return feature;
  		      });
@@ -661,14 +636,15 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         		var marker = feature.getProperties().marker;
             	
             	$scope.changeToDetail(marker);
+            	return false;
+        	} else {
+        		$scope.clearFeatures();
         	}
         	
     	});
         
-        $scope.listMarker();
-        
         $scope.resolveDatePicker();
-    }
+    };
     
     /**
      * Resolve date picker
@@ -688,22 +664,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
 			$('.datepicker').mask("99/99/9999");
 		}, 300);
-    }
-    
-    /**
-     * Faz a requisi��o para recupera��o das postagens
-     */
-    $scope.listMarker = function(){
-    	markerService.listMarkerByFilters(null, {
-    		callback : function(result) {
-    			$scope.buildVectorMarker(result);
-		    },
-		    errorHandler : function(message, exception) {
-		        $scope.message = {type:"error", text: message};
-		        $scope.$apply();
-		    }
-    	});
-    }
+    };
     
     /**
      * Constroi os vetores dentro do mapa
@@ -758,11 +719,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			});
 			
 			dragBox.on('boxstart', function(e) {
-				if($scope.selectedFeatures) {
-					angular.forEach($scope.selectedFeatures, function(feature, index){
-						feature.feature.clear();
-					});
-				}
+				$scope.clearFeatures();
 			});
 
 			$scope.map.addInteraction(dragBox);
@@ -804,7 +761,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             
             coordenates.push(geometry.getCoordinates());
             
-            $scope.features.push({'feature': feature, "extent": source.getExtent()});
+            $scope.features.push({'feature': feature, "extent": source.getExtent(), 'layer': layer});
             
             $scope.map.addLayer(layer);
 		});
@@ -813,7 +770,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		
 		$scope.map.getView().fitExtent(extent, $scope.map.getSize());
 		
-    }
+    };
     
      /**
 	    Converts the value scale stored in the db to open layes zoom format
@@ -852,7 +809,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	         default :
 	             return 78271.51696402048;
 	     }
-	 }
+	 };
 	
 	 /**
 	  Converts the value scale stored in the db to open layes zoom forma
@@ -891,7 +848,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	         default :
 	             return 0.0005831682455839253;
 	     }
-	 }
+	 };
 	 
 	 /**
 	  * Calls the modal to refuse a marker
@@ -915,7 +872,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     		
     		$scope.refuseMarkerModeration($scope.currentEntity.id, motives, result.description );
         });
-    }
+    };
     
 	 /**
 	  * Calls the dialog to accept a marker
@@ -995,7 +952,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				if (markerAttribute.attribute.type == "NUMBER") {
 					markerAttribute.value = parseInt(markerAttribute.value);
 				}  
-			  })
+			  });
 			  
 			 
 			  $scope.$apply();
@@ -1018,7 +975,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
              }
       	});
     	
-    }
+    };
     
     /**
      * Return the translated status of the marker
@@ -1031,10 +988,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	if ($scope.markersModeration[id].status == 'REFUSED'){
     		return $translate('admin.marker-moderation.REFUSED');
     	} 
-    	if ($scope.markersModeration[id].status == 'ACCEPTED'){
+    	if ($scope.markersModeration[id].status == 'APPROVED'){
     		return $translate('admin.marker-moderation.ACCEPTED');
     	} 
-    }
+    };
     
       /**
      * Verify status
@@ -1050,7 +1007,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			statusColor = "#edad09";
 		}
 		return statusColor;
-    }
+    };
     
     $scope.selectMarker = function(marker){
     	/**
@@ -1076,26 +1033,26 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		$scope.map.addInteraction(select);
 
 		$scope.selectedFeatures.push({'marker': marker, 'feature': select.getFeatures()});
-    }
+    };
     
     $scope.eventMarkerTool = function(){
     	$scope.selectMarkerTool = $scope.menu.selectMarker = ($scope.selectMarkerTool == true) ? false : true;
     	
-    }
+    };
    
     /**
      * Function that decreases the zoom map
      */
     $scope.eventDecreaseZoom = function (){
         $scope.map.getView().setZoom($scope.map.getView().getZoom() - 1);
-    }
+    };
 
     /**
      * Function that increases the zoom map
      */
     $scope.eventIncreaseZoom = function (){
         $scope.map.getView().setZoom($scope.map.getView().getZoom() + 1);
-    }
+    };
     
     /**
      * Filter
@@ -1109,5 +1066,39 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
     	$scope.listMarkerByFilters( $scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user, pageRequest );
     	
-    }
+    };
+    
+    $scope.clearFilters = function(){
+    	
+    	var pageRequest = new PageRequest();
+        pageRequest.size = 10;
+        $scope.pageRequest = pageRequest;
+        
+        $scope.filter.layer = null;
+        $scope.filter.status = null;     
+        $scope.filter.dateStart=null;
+        $scope.filter.dateEnd=null;
+        $scope.filter.user=nu;
+        
+        $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
+    	
+    };
+    
+    $scope.clearFeatures = function(){
+    	if($scope.selectedFeatures.length) {
+	        angular.forEach($scope.selectedFeatures, function(feature, index){
+				feature.feature.clear();
+			});
+	        angular.forEach($scope.selectedFeatures, function(feature, index){
+	        	 $scope.selectedFeatures.splice(index, 1);
+			});
+	       
+        }
+    };
+    
+    $scope.removeLayers = function() {
+    	angular.forEach($scope.features, function(feature, index){
+    		$scope.map.removeLayer(feature.layer);
+    	});
+    };
 }

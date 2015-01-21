@@ -14,14 +14,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.geocab.application.security.ContextHolder;
+import br.com.geocab.domain.entity.account.IAccountMailRepository;
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.entity.markermoderation.Motive;
 import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
+import br.com.geocab.domain.repository.account.IUserRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
 import br.com.geocab.domain.repository.motive.IMotiveMarkerModerationRepository;
@@ -55,6 +60,11 @@ public class MarkerModerationService
 	@Autowired
 	private IMarkerModerationRepository markerModerationRepository;
 	
+	/**
+	 * User Repository
+	 */
+	@Autowired
+	private IUserRepository userRepository;
 	
 	/**
 	 * 
@@ -67,6 +77,12 @@ public class MarkerModerationService
 	 */
 	@Autowired
 	private IMotiveMarkerModerationRepository motiveMarkerModerationRepository;
+	
+	/**
+	 * AccountMail Repository
+	 */
+	@Autowired
+	private IAccountMailRepository accountMailRepository;
 	
 	
 	
@@ -98,6 +114,7 @@ public class MarkerModerationService
 	{			
 		try
 		{
+			User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
 			
 			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(id).get(0);
 			
@@ -116,7 +133,11 @@ public class MarkerModerationService
 				markerModeration.setStatus(MarkerStatus.ACCEPTED);
 				
 				markerModeration = this.markerModerationRepository.save(markerModeration);
+				
+				this.accountMailRepository.sendMarkerAccepted( user, marker );
 			}
+			
+			
 			
 			return markerModeration;
 		}
@@ -124,6 +145,8 @@ public class MarkerModerationService
 		{
 			LOG.info( e.getMessage() );
 		}
+		
+		
 		
 		return null;
 	}
@@ -158,6 +181,7 @@ public class MarkerModerationService
 	{			
 		try
 		{
+			User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
 			
 			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(markerId).get(0);
 			
@@ -186,6 +210,8 @@ public class MarkerModerationService
 					
 					this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
 				}
+				
+				this.accountMailRepository.sendMarkerRefused( user, marker );
 			}
 			
 			return markerModeration;
