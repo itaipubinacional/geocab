@@ -3,7 +3,6 @@
  */
 package br.com.geocab.domain.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -153,31 +151,12 @@ public class MarkerModerationService
 	
 	/**
 	 * 
-	 * @param layers
-	 * @param accessGroupId
-	 */
-	public void associateMotive( List<Motive> motives, Long markerModerationId )
-	{
-		MarkerModeration markerModeration = new MarkerModeration(markerModerationId);
-		
-		for (Motive motive : motives)
-		{
-			MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
-			motiveMarkerModeration.setMarkerModeration(markerModeration);
-			motiveMarkerModeration.setMotive(motive);
-			
-			this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
-		}
-	}
-	
-	/**
-	 * 
 	 * Method to refuse a {@link Marker}
 	 * 
 	 * @param markerModeration
 	 * @return
 	 */
-	public MarkerModeration refuseMarker( Long markerId, List<Motive> motives, String description )
+	public MarkerModeration refuseMarker( Long markerId, Motive motive, String description )
 	{			
 		try
 		{
@@ -201,15 +180,12 @@ public class MarkerModerationService
 				
 				markerModeration = this.markerModerationRepository.save(markerModeration);
 				
-				for (Motive motive : motives)
-				{
-					MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
-					motiveMarkerModeration.setMarkerModeration(markerModeration);
-					motiveMarkerModeration.setMotive(motive);
-					motiveMarkerModeration.setDescription(description);
-					
-					this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
-				}
+				MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
+				motiveMarkerModeration.setMarkerModeration(markerModeration);
+				motiveMarkerModeration.setMotive(motive);
+				motiveMarkerModeration.setDescription(description);
+				
+				this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
 				
 				this.accountMailRepository.sendMarkerRefused( user, marker );
 			}
