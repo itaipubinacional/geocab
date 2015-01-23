@@ -14,6 +14,10 @@
 			position : static;
 		}
 	</style>
+	
+	<!--Message -->
+    <div class="msg" style="position:absolute;text-align:center; width:57%;top:13%;left:40%; z-index:1000" ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
+	
 	<!-- OpenLayers 3  -->
 	<link rel="stylesheet" href="static/libs/openlayers/ol.css" type="text/css">
 	

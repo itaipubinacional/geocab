@@ -55,7 +55,7 @@
 				
 				<div style="margin-top:10px; display:flex" ng-show="visible">
 					 <select data-placeholder="<spring:message code="admin.marker-moderation.Users"/>" name="layer"
-							ng-options="user.email for user in selectUsers | limitTo:5"
+							ng-options="user.email for user in selectUsers "
 							ng-model="filter.user" chosen class="form-control"
 							>
 					</select>

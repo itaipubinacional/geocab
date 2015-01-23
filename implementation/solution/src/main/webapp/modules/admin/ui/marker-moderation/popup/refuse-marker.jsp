@@ -24,7 +24,7 @@
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
         <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>
 
-        <form novalidate name="form_refuse_marker" default-button="refuseButton" style="margin-bottom: 10px; margin-top: 10px;" class="refuseMarker">        
+        <form novalidate name="form_refuse_marker" ng-model="form_refuse_marker" default-button="refuseButton" style="margin-bottom: 10px; margin-top: 10px;" class="refuseMarker">        
         	
         	<div class="form-item" style="width:100%">
         		<label class="detail-label" required><spring:message code="admin.marker-moderation.Motive" /></label>

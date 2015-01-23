@@ -261,9 +261,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      *
      * To change to this State, one must first load the data from the query.
      */
-    $scope.changeToList = function (markers) {
+    $scope.changeToList = function (markers) { //hu3
         $log.info("changeToList");
-        
+
         $scope.currentState = $scope.LIST_STATE;
         
         $scope.listAllInternalLayerGroups();
@@ -271,10 +271,21 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
-        $scope.pageRequest = pageRequest;
-
+        $scope.pageRequest = pageRequest;        
+        
         if(typeof markers == 'undefined'){
         	$scope.listMarkerByFilters(null, null, null, null, null, pageRequest);
+        } else if( typeof markers.content != 'undefined' ) {
+        	
+        	var markersId = [];
+
+            for ( var k = 0; k < markers.content.length; k++ ){
+            	markersId.push(markers.content[k].id);
+            }
+        	
+        	$scope.listMarkerByMarkers(markersId, pageRequest);
+     
+      		
         } else {
         	$scope.listMarkerByMarkers(markers, pageRequest);
         }
@@ -326,6 +337,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.changeToDetail = function (marker) {
         $log.info("changeToDetail", marker);
         
+        $scope.drag = false;
         $scope.clearFeatures();
                 
         var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
@@ -476,8 +488,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 					$scope.clearFeatures();
 					$scope.removeLayers();
 				}
-				$scope.buildVectorMarker(result);
 				$scope.currentPage = result;
+				$scope.buildVectorMarker(result);				
 				$scope.currentPage.pageable.pageNumber++;
 				$scope.currentState = $scope.LIST_STATE;
 				$scope.$apply();
@@ -539,11 +551,23 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
        });
    	
    	 dialog.result.then(function () {
-
    		 $scope.acceptMarkerModeration($scope.currentEntity.id);
      });
    	
    };
+   
+   /**
+	* Update the status of the marker in the listView
+	*/
+   $scope.updateStatus = function() {
+	   
+	   for ( var k = 0; k < $scope.currentPage.content.length; k++ ){
+		   if ( $scope.currentPage.content[k].id == $scope.currentEntity.id ){
+			   $scope.currentPage.content[k] = $scope.currentEntity;
+			   return;
+		   }
+	   } 
+   }
 
    /*
 	 * List motives of marker moderation
@@ -562,6 +586,16 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		});
 	};
 	
+	$scope.refreshMap = function(markers){
+		
+		if($scope.features.length) {
+			$scope.clearFeatures();
+			$scope.removeLayers();
+		}
+		$scope.buildVectorMarker(markers);
+		
+	}
+	
 	/**
 	 * Accept status marker moderation
 	 */
@@ -571,6 +605,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
          callback : function(result) {
             console.log(result);
             $scope.currentEntity = result.marker;
+      		$scope.updateStatus();
+      		$scope.changeToList($scope.currentPage);
+      		$scope.msg = {type:"success", text: $translate('admin.marker-moderation.Marker-successfully-approved') , dismiss:true};
+      		$scope.$apply();
          },
          errorHandler : function(message, exception) {
              $scope.message = {type:"error", text: message};
@@ -587,6 +625,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		markerModerationService.refuseMarker( id, motive, description, {
          callback : function(result) {
             console.log(result);
+            $scope.currentEntity = result.marker;       
+            $scope.updateStatus();
+      		$scope.changeToList($scope.currentPage);
+      		$scope.msg = {type:"danger", text: $translate('admin.marker-moderation.Marker-successfully-refused') , dismiss:true};
+            $scope.$apply();
          },
          errorHandler : function(message, exception) {
              $scope.message = {type:"error", text: message};
@@ -606,7 +649,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	$scope.listMarkerByMarkers = function( markers, pageRequest ) {
 
 		markerService.listMarkerByMarkers( markers, pageRequest, {
-			callback : function(result) {
+			callback : function(result) {	
+				if ( !$scope.drag ){
+					$scope.refreshMap(result);
+				}
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;
 				$scope.currentState = $scope.LIST_STATE;
@@ -682,7 +728,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Build the vectors in the map
      */
     $scope.buildVectorMarker = function(markers){
-    	
+    	$scope.drag = false;
     	var coordenates = [];
     	
 		angular.forEach(markers.content, function(marker, index){
@@ -728,7 +774,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				  });
 				  
 				  $scope.changeToList(markers);
+				  $scope.drag = true;
 			});
+			
 			
 			dragBox.on('boxstart', function(e) {
 				$scope.clearFeatures();
@@ -866,21 +914,26 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	  * Calls the modal to refuse a marker
 	  */
 	 $scope.refuseMarker = function() {
-    	var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
-            controller: RefuseMarkerController,
-            windowClass: 'dialog-delete',
-            resolve: {
-                motive: function () {
-                    return $scope.motive;
-                }
-            }
-        });
-    	
-    	dialog.result.then(function (result) {
-    		
-    		$scope.refuseMarkerModeration($scope.currentEntity.id, result.motive, result.description );
-        });
+		 
+		if ( $scope.currentEntity.status != 'REFUSED' ){
+			
+			var dialog = $modal.open({
+	            templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
+	            controller: RefuseMarkerController,
+	            windowClass: 'dialog-delete',
+	            resolve: {
+	                motive: function () {
+	                    return $scope.motive;
+	                }
+	            }
+	        });
+	    	
+	    	dialog.result.then(function (result) {
+	    		
+	    		$scope.refuseMarkerModeration($scope.currentEntity.id, result.motive, result.description );
+	        });
+			
+		}
     };
     
 	 /**
@@ -888,30 +941,34 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	  */
     $scope.approveMarker = function() {
     	
-    	var dialog = $modal.open({
-            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-            controller: DialogController,
-            windowClass: 'dialog-success',
-            resolve: {
-                title: function () {
-                    return $translate('admin.marker-moderation.Confirm-approve');
-                },
-                message: function () {
-                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker')+' ? <br/>.';
-                },
-                buttons: function () {
-                    return [
-                        {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
-                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
-                    ];
-                }
-            }
-        });
+    	if ($scope.currentEntity.status != 'ACCEPTED') {
     	
-    	 dialog.result.then(function () {
+    		var dialog = $modal.open({
+                templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+                controller: DialogController,
+                windowClass: 'dialog-success',
+                resolve: {
+                    title: function () {
+                        return $translate('admin.marker-moderation.Confirm-approve');
+                    },
+                    message: function () {
+                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker')+' ? <br/>.';
+                    },
+                    buttons: function () {
+                        return [
+                            {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
+                            {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                        ];
+                    }
+                }
+            });
+        	
+        	 dialog.result.then(function () {
 
-    		 $scope.acceptMarkerModeration($scope.currentEntity.id);
-         });
+        		 $scope.acceptMarkerModeration($scope.currentEntity.id);
+             });
+    		
+    	}
     	
     };
 
