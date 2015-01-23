@@ -64,23 +64,4 @@ public class MotiveService
 		return this.motiveRepository.findAll();
 	}
 	
-	/**
-	 * 
-	 * @param layers
-	 * @param accessGroupId
-	 */
-	public void associateMotive( List<Motive> motives, Long markerModerationId )
-	{
-		MarkerModeration markerModeration = new MarkerModeration(markerModerationId);
-		
-		for (Motive motive : motives)
-		{
-			MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
-			motiveMarkerModeration.setMarkerModeration(markerModeration);
-			motiveMarkerModeration.setMotive(motive);
-			
-			this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
-		}
-	}
-	
 }

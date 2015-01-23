@@ -177,7 +177,7 @@ public class MarkerModerationService
 	 * @param markerModeration
 	 * @return
 	 */
-	public MarkerModeration refuseMarker( Long markerId, List<Motive> motives, String description )
+	public MarkerModeration refuseMarker( Long markerId, Motive motive, String description )
 	{			
 		try
 		{
@@ -201,17 +201,14 @@ public class MarkerModerationService
 				
 				markerModeration = this.markerModerationRepository.save(markerModeration);
 				
-				for (Motive motive : motives)
-				{
-					MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
-					motiveMarkerModeration.setMarkerModeration(markerModeration);
-					motiveMarkerModeration.setMotive(motive);
-					motiveMarkerModeration.setDescription(description);
-					
-					this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
-					
-					this.accountMailRepository.sendMarkerRefused( user, marker, motiveMarkerModeration );
-				}
+				MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
+				motiveMarkerModeration.setMarkerModeration(markerModeration);
+				motiveMarkerModeration.setMotive(motive);
+				motiveMarkerModeration.setDescription(description);
+				
+				this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
+				
+				this.accountMailRepository.sendMarkerRefused( user, marker, motiveMarkerModeration );
 				
 			}
 			
