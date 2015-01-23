@@ -209,9 +209,10 @@ public class MarkerModerationService
 					motiveMarkerModeration.setDescription(description);
 					
 					this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
+					
+					this.accountMailRepository.sendMarkerRefused( user, marker, motiveMarkerModeration );
 				}
 				
-				this.accountMailRepository.sendMarkerRefused( user, marker );
 			}
 			
 			return markerModeration;

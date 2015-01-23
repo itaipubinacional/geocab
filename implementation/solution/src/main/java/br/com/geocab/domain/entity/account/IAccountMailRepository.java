@@ -3,6 +3,7 @@ package br.com.geocab.domain.entity.account;
 import java.util.concurrent.Future;
 
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
 
 /**
  * Interface para o envio de e-mails
@@ -32,5 +33,5 @@ public interface IAccountMailRepository
 	 * @param user
 	 * @param marker
 	 */
-	public Future<Void> sendMarkerRefused( User user, Marker marker );
+	public Future<Void> sendMarkerRefused( User user, Marker marker, MotiveMarkerModeration motiveMarkerModeration );
 }
