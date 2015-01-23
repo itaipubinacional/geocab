@@ -111,6 +111,20 @@ function RefuseMarkerController($scope, $injector,$modalInstance, $state, $impor
         $scope.currentEntity.nome = '';
         $scope.currentState = $scope.NORMAL_STATE;
     };
+    
+    /**
+	 * 
+	 */
+	$scope.form = function( formName ) 
+	{
+
+		if ( !formName ) 
+		{
+			formName = "form";
+		}
+
+		return $("form[name="+formName+"]").scope()[formName];
+	};
 
 	/**
 	 *
@@ -123,7 +137,10 @@ function RefuseMarkerController($scope, $injector,$modalInstance, $state, $impor
 	
 	$scope.refuse = function()
 	{
-		console.log("Refuse");
+		if ( !$scope.form('form_refuse_marker').$valid ){
+			return;
+		}
+		
 		$modalInstance.close($scope.data);
 	};
 	

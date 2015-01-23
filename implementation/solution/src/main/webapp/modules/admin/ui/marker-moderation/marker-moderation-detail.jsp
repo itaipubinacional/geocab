@@ -8,7 +8,7 @@
 <html style="overflow:hidden">
 	<div  style="width:36%; height: 100%; float:left; margin: 20px;">	
 		<div class="content-tab" style="height:76vh; overflow:auto">				
-			<span style="z-index: 1000;float:right;cursor:pointer" ng-click="changeToList(pageRequest)" class="icon itaipu-icon-close"></span>
+			<span style="z-index: 1000;float:right;cursor:pointer" ng-click="changeToList(currentPage)" class="icon itaipu-icon-close"></span>
 				<br>
 				<div style="float: right" id="right-buttons">        			        			        		
 					</br>				        		
