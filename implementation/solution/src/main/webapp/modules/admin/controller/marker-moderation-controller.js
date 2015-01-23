@@ -86,14 +86,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.visible = false;
     
     /**
-     * motive
+     * selected motive
      */
-    $scope.motive;
-    
-    /**
-     * motives
-     */
-    $scope.addMotives = [];
+    $scope.selectedMotive;
     
     /**
      * filter
@@ -518,46 +513,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		});
 	};
 	
-	/**
-<<<<<<< HEAD
-	  * Calls the modal to refuse a marker
-	  */
-	 $scope.refuseMarker = function() {
-   	var dialog = $modal.open({
-           templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
-           controller: RefuseMarkerController,
-           windowClass: 'dialog-delete',
-           resolve: {
-               motive: function () {
-                   return $scope.motive;
-               }
-           }
-       });
-   	
-   	dialog.result.then(function (result) {
-   		$scope.refuseMarkerModeration($scope.currentEntity.id);
-       });
-   };
-   
-   /**
-	 * Refuse status marker moderation
-	 */
-	$scope.refuseMarkerModeration = function( id ) {
-		
-		markerModerationService.refuseMarker( id, {
-        callback : function(result) {
-           console.log(result);
-           $scope.currentEntity = result.marker;
-           $scope.changeToList($scope.pageRequest);
-        },
-        errorHandler : function(message, exception) {
-            $scope.message = {type:"error", text: message};
-            $scope.$apply();
-        }
-		
-		});
-	};
-	
   /**
 	* Calls the dialog to accept a marker
 	*/
@@ -627,9 +582,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	/**
 	 * Refuse status marker moderation
 	 */
-	$scope.refuseMarkerModeration = function( id, motives, description ) {
+	$scope.refuseMarkerModeration = function( id, motive, description ) {
 		
-		markerModerationService.refuseMarker( id, motives, description, {
+		markerModerationService.refuseMarker( id, motive, description, {
          callback : function(result) {
             console.log(result);
          },
@@ -665,23 +620,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		});
 	};
 
-	/**
-    *
-    * @param camadas
-    */
-   $scope.associateMotive = function() {
-	   motiveService.associateMotive($scope.addMotives, $scope.currentEntity.id, {
-           callback: function(result){
-               $scope.msg = {type: "success", text: $translate('admin.access-group.update-has-been-completed-successfully'), dismiss: true};
-               $scope.addLayers = [];
-               $scope.$apply();
-           },
-           errorHandler: function(error){
-               $scope.msg = {type: "danger", text: "Erro: "+error, dismiss: true};
-           }
-       });
-   };
-    
     /**
      * Load map
      */
@@ -941,10 +879,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     	dialog.result.then(function (result) {
     		
-    		var motives = [];
-    		motives.push(result.motive);
-    		
-    		$scope.refuseMarkerModeration($scope.currentEntity.id, motives, result.description );
+    		$scope.refuseMarkerModeration($scope.currentEntity.id, result.motive, result.description );
         });
     };
     

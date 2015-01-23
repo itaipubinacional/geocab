@@ -35,7 +35,7 @@
 	                     
 	                <div>             
 	                    <span ng-show="visible && markerModeration.status == 'REFUSED'" id="up-arrow" ><i style="float:right;cursor:pointer;left:-12px;top:40px" class="glyphicon glyphicon-chevron-up" ng-click="visible = false" ></i></span>
-	                    <span ng-show="!visible && markerModeration.status == 'REFUSED'"><i style="float:right;cursor:pointer;top:40px" class="glyphicon glyphicon-chevron-down" ng-click="visible = true" ></i></span>
+	                    <span ng-show="!visible && markerModeration.status == 'REFUSED'"><i style="float:right;cursor:pointer;top:40px" class="glyphicon glyphicon-chevron-down" ng-click="visible = true; listMotivesByMarkerModeration(markerModeration.id)" ></i></span>
 	                </div>
 	                                                 
 	            </div>
