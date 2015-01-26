@@ -63,7 +63,7 @@
 			<li ng-click="eventMarkerTool()"
 				ng-class="{ferramenta_active : menu.selectMarker}"
 				title="<spring:message code="admin.marker-moderation.Select-marker" />"><a>
-					<div class="glyphicon glyphicon-screenshot sidebar-icon"></div>
+					<div class="select-moderation sidebar-icon" style="width: 37px; height: 20px;"></div>
 			</a></li>
 		</ul>
 	</div>
