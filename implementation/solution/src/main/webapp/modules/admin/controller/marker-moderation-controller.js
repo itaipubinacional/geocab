@@ -261,7 +261,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      *
      * To change to this State, one must first load the data from the query.
      */
-    $scope.changeToList = function (markers) { //hu3
+    $scope.changeToList = function (markers) { 
         $log.info("changeToList");
 
         $scope.currentState = $scope.LIST_STATE;
@@ -711,7 +711,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	$timeout(function(){
 			$('.datepicker').datepicker({ 
 				dateFormat: 'dd/mm/yy',
-				dayNames: ['Domingo','Segunda','Ter�a','Quarta','Quinta','Sexta','S�bado'],
+				dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
 			    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
 			    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','S�b','Dom'],
 			    monthNames: ['Janeiro','Fevereiro','Mar�o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
