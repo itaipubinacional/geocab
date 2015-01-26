@@ -39,6 +39,10 @@
 	background-size: 26px;
 }
 
+.select-moderation{
+	background: url(../images/icon-select-moderation.png) 14px 0 no-repeat;
+}
+
 .approve:hover{
 	background: url(../images/marker-moderation/aceitar-2.png) 24px 8px no-repeat;
 	background-size: 26px;
