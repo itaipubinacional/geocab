@@ -344,7 +344,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
         $scope.map.getView().fitExtent(geometry.getExtent(), $scope.map.getSize());
         
-        $scope.map.getView().setZoom(15);
+        $scope.map.getView().setZoom(14);
         
         $scope.selectMarker(marker);
         
@@ -363,12 +363,14 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				return false;
 			}
 		});
+        
+        $scope.selectMarker(marker);
 		
 		$scope.currentState = $scope.DETAIL_STATE;
         $scope.currentEntity = marker;
         
         $scope.listAttributesByMarker();
-        $scope.currentEntity = marker;
+
         
     };
 
