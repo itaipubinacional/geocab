@@ -6,9 +6,11 @@
  * @param $log
  * @param $location
  */
-function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log, $importService) {
+function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log, $importService, $injector) {
 
 
+	$injector.invoke(AbstractCRUDController, this, {$scope: $scope});
+	
 	$scope.msg = null;
 	
 	$importService("accountService");
@@ -20,13 +22,19 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
 	/**
 	 * 
 	 */
-	$scope.currentEntity;
+	$scope.currentEntity = [];
 
     /**
      *
      * @type {null}
      */
     $scope.selectedEntity = null;
+
+    /**
+    *
+    * @type {Array}
+    */
+   $scope.gridSelectedItems = [];
 	
 	/**
 	 * 
@@ -55,8 +63,22 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
 	 */
 	$scope.initialize = function() 
 	{
-        $scope.numeroDeRegistros = 0;
-        $scope.usersSelected = usersSelected;
+        
+        $scope.currentEntity = usersSelected.slice(0);
+        
+        var pageRequest = new PageRequest();
+        pageRequest.size = 6;
+        $scope.pageRequest = pageRequest;
+
+        var order = new Order();
+        order.direction = 'ASC';
+        order.property = 'id';
+
+        $scope.pageRequest.sort = new Sort();
+        $scope.pageRequest.sort.orders = [ order ];
+     
+        $scope.listUsersByFilters(null, $scope.pageRequest);
+        
 	};
 
 	/*-------------------------------------------------------------------
@@ -70,25 +92,31 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
      * @see data.filter
      * @see currentPage
      */
-    $scope.listUsuariosByFilters = function( filter ) {
+    $scope.listUsersByFilters = function( filter, pageRequest ) {
 
+    	$scope.currentEntity = $scope.gridOptions.selectedItems.length > 0 ? $scope.gridOptions.selectedItems.slice(0): $scope.currentEntity;
+        $scope.gridOptions.selectedItems.length = 0;
+        
         $scope.showLoading = true;
 
-        accountService.listUsersByFilters( filter, {
+        accountService.listUsersByFilters( filter, pageRequest, {
             callback : function(result) {
-            	$scope.users = result;
+            	$scope.currentPage = result;
+                $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
                 $scope.showLoading = false;
+                $scope.$apply();
 
-                //Function responsible for marking the records that were already tagged prior to the opening of pop-up
-                if ($scope.usersSelected) {
-                    angular.forEach( $scope.usersSelected, function(data, index) {
-                        var i = $scope.findUsername(data.username, $scope.usuarios);
+                //Função responsável por marcar os registros na grid que já estavam marcados
+                if ($scope.currentEntity) {
+                    angular.forEach( $scope.currentEntity, function(data, index) {
+                        var i = $scope.findByIdInArray($scope.currentPage.content, data);
                         if (i > -1) {
-                            $scope.users.splice(i, 1);
+                            $scope.gridOptions.selectItem(i, true);
                         }
                     });
-                }
+                };
 
+                $scope.showLoading = false;
                 $scope.$apply();
 
             },
@@ -103,9 +131,9 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
     $scope.filterSelectedUsers = function () {
         var index;
         for (var i = 0; i < $scope.usersSelected.length; i++) {
-            index = $scope.usuarios.indexOf($scope.usersSelected[i]);
+            index = $scope.users.indexOf($scope.usersSelected[i]);
             if (index > -1) {
-                $scope.usuarios.splice(index, 1);
+                $scope.users.splice(index, 1);
             };
         };
     };
@@ -136,29 +164,43 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
         return -1;
     }
     
-    var IMAGE_LEGENDA = '<div align="center" class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
-	'<img style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legenda}}"/>' +
-	'</div>';
-
-	/**
-     * Handler that captures the events marking
-     * da grid
-     * @param rows
-     */
-    $scope.toogleSelection = function(row, event) {
-    	$scope.currentEntity = row.entity;
-        $scope.selectedEntity = row.entity;
-    };
-
     $scope.gridOptions = {
-        data: 'users.content',
-        multiSelect: false,
+        data: 'currentPage.content',
+        multiSelect: true,
+        useExternalSorting: true,
         headerRowHeight: 45,
         filterOptions: $scope.filterOptions,
+        showSelectionCheckbox: true,
+        selectedItems: $scope.gridSelectedItems,
         rowHeight: 45,
         enableRowSelection: true,
-        afterSelectionChange: function (row, event) {
-            $scope.toogleSelection(row, event);
+        afterSelectionChange: function (rowItem, event) {
+        	
+            if (rowItem.length > 0) {
+                var i;
+                for (var rowItemIndex = 0; rowItemIndex < rowItem.length; rowItemIndex++) {
+                    if (rowItem[rowItemIndex].selected){
+                        i = $scope.findByIdInArray($scope.currentEntity, rowItem[rowItemIndex].entity);
+                        if (i == -1)
+                            $scope.currentEntity.push(rowItem[rowItemIndex].entity);
+                    } else {
+                        i = $scope.findByIdInArray($scope.currentEntity, rowItem[rowItemIndex].entity);
+                        if (i > -1)
+                            $scope.currentEntity.splice(i, 1);
+                    }
+                }
+            } else {
+                var i;
+                if (rowItem.selected){
+                    i = $scope.findByIdInArray($scope.currentEntity, rowItem.entity);
+                    if (i == -1)
+                        $scope.currentEntity.push(rowItem.entity);
+                } else {
+                    i = $scope.findByIdInArray($scope.currentEntity, rowItem.entity);
+                    if (i > -1)
+                        $scope.currentEntity.splice(i, 1);
+                }
+            }
         },
         columnDefs: [
             {displayName:'Nome Completo', field:'name', width: '30%'},
@@ -167,6 +209,11 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
         ]
     };
     
+    $scope.changeToPage = function (filter, pageNumber) {
+        $scope.currentPage.pageable.page = pageNumber - 1;
+        $scope.listUsersByFilters(filter, $scope.currentPage.pageable);
+        $scope.showLoading = false;
+    };
    
 
     /**
