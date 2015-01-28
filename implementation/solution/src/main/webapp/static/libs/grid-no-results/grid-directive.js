@@ -15,7 +15,7 @@ angular.module("grid-no-result", ['ngGrid']).directive('ngGrid', function() {
 				                    "<div class=\"ngCell\" style=\"width:100%;cursor: pointer;\">" +
 				                        "<div ng-cell=\"\">" +
 				                            "<div class=\"ngCellText\">" +
-				                                "<span ng-cell-text=\"\" class=\"ng-binding\">Não existem registros.</span>" +
+				                                "<span ng-cell-text=\"\" class=\"ng-binding\">NÃ£o existem registros.</span>" +
 				                            "</div>" +
 				                        "</div>" +
 				                    "</div>" +
