@@ -20,6 +20,9 @@
 		<!-- Scripts -->
 		<jsp:include page="../../default-scripts.jsp"/> <!-- FIXME Deixar caminhos relativos.. -->
 		
+		<script type="text/javascript"
+			src="static/libs/grid-no-results/grid-directive.js"></script>
+		
 		<link href="<c:url value="/static/libs/angular-ui-tree/css/angular-ui-tree.min.css"/>" type="text/css" rel="stylesheet" />
 		
 		<script type="text/javascript" src="<c:url value="/static/libs/angular-ui-tree/js/angular-ui-tree.min.js"/>"></script>
