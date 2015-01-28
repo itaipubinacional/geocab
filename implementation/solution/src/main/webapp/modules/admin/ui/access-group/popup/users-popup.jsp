@@ -20,13 +20,24 @@
 		
         <form novalidate name="form" default-button="{{buttonInsert}}">
             <input type="text" class="form-control" autofocus ng-model="data.filter" placeholder="<spring:message code="admin.access-group.Search-by-name"/>" style="width: 300px; float: left; margin-bottom: 10px;"/>
-            <input type="submit" class="btn btn-default" style="margin-left: 5px" value="<spring:message code="Search"/>" ng-disabled="data.filter.length < 3" ng-click="listUsuariosByFilters(data.filter)"/>
+            <input type="submit" class="btn btn-default" style="margin-left: 5px" value="<spring:message code="Search"/>" ng-disabled="data.filter.length < 3" ng-click="listUsersByFilters(data.filter)"/>
             <div ng-show="showLoading" class="grid-loading" style="top: 21px; left: 702px;"></div>
         </form>
 
 		<br style="clear: both"/>
 
 		<div ng-grid="gridOptions" style="height: 350px; border: 1px solid rgb(212,212,212);"></div>
+		
+		<div class="gridFooterDiv">
+			<pagination style="text-align: center;"
+				total-items="currentPage.total" rotate="false"
+				items-per-page="currentPage.size"
+				max-size="currentPage.totalPages"
+				ng-change="changeToPage(data.filter, currentPage.pageable.pageNumber)"
+				ng-model="currentPage.pageable.pageNumber" boundary-links="true"
+				previous-text="‹" next-text="›" first-text="«" last-text="»">
+			</pagination>
+		</div>
 
 		<div class="grid-elements-count" ng-show="currentPage.totalElements > 0">
 			{{users.length}} <spring:message code="admin.access-group.Registers"/>
