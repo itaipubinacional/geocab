@@ -827,18 +827,19 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         if( isPesquisa )
         {
             var index = node.name.indexOf(":");
-            var dataSourceAddress = node.dataSource.url.lastIndexOf("geoserver/");
+            var dataSourceAddress = node.dataSource.url.lastIndexOf("ows?");
+            
             var layerType = node.name.substring(0,index);
             var layerName = node.name.substring(index+1,node.name.length);
-            var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress+10)+layerType+'/wms';
+            var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress)+layerType+'/wms';
         }
         else
         {
             var index = node.name.indexOf(":");
-            var dataSourceAddress = node.dataSourceUrl.lastIndexOf("geoserver/");
+            var dataSourceAddress = node.dataSourceUrl.lastIndexOf("ows?");
             var layerType = node.name.substring(0,index);
             var layerName = node.name.substring(index+1,node.name.length);
-            var formattedUrl = node.dataSourceUrl.substring(0, dataSourceAddress+10)+layerType+'/wms';
+            var formattedUrl = node.dataSourceUrl.substring(0, dataSourceAddress)+layerType+'/wms';
         }
 
         return {'name': layerName, 'url': formattedUrl};

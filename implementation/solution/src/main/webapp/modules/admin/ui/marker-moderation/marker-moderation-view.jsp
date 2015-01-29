@@ -52,7 +52,7 @@
         </div>
     </div>
 
-	<div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
+	<div class="menu-sidebar-container" style="right: 5px" ng-mouseover="hideMousePosition()">
 		<ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
 			<li ng-click="eventIncreaseZoom()" title="<spring:message code="map.Zoom-in" />"><a href="#tabs-2">
 					<div class="icon itaipu-icon-plus sidebar-icon"></div>
