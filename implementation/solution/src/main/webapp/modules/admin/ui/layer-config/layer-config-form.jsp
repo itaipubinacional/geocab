@@ -164,7 +164,7 @@
                            placeholder="<spring:message code="admin.layer-config.Enter-the-layer-group" />"
                            maxlength="144" ng-minlength="1"
                            required
-                           ng-class="{ng-invalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation}"                           
+                           ng-class="{ ngInvalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)}" class="tooltip-validation}"                           
                            >
                     <span class="input-group-btn">
                         <button ng-click="selectLayerGroup()" class="btn btn-default"
