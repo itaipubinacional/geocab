@@ -425,6 +425,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentState = $scope.UPDATE_STATE;
                 $state.go($scope.UPDATE_STATE);
                 $scope.$apply();
+                
+                $scope.loadAccessGroups(result.id);
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -456,7 +458,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         layerGroupService.findLayerById(id, {
             callback: function (result) {
                 $scope.currentEntity = result;
-                $scope.attributes = result.attributes;
+                $scope.attributes = result.attributes;                
                 $scope.layers.values = {};
                 $scope.layers.values[0] = '1:'+$scope.currentEntity.minimumScaleMap.substring(2);
                 $scope.layers.values[1] = '1:'+$scope.currentEntity.maximumScaleMap.substring(2);
