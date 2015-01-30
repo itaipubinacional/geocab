@@ -1619,9 +1619,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             callback: function (result) {
 
                 $scope.customSearchs = result;
-
+                
                 $scope.toggleSidebarMenu(300, '#menu-item-2');
-
+                
                 $scope.$apply();
 
             },
@@ -1633,6 +1633,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.$apply();
             }
         });
+                
     }
     
     /**
@@ -2698,10 +2699,19 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.removeInternalLayer = function(layerId, callback){
     	var callBackHasExecuted = false;
     	var internalLayers =  $.extend([], $scope.internalLayers);
+    	
     	angular.forEach(internalLayers, function(value, index){
 			  if(value.id == layerId) {
 				  $scope.map.removeLayer(value.layer);
-				  $scope.internalLayers.splice(index, 1);
+				  var len = $scope.internalLayers.length;
+				  
+				  for (var i = 0; i < len; i++){
+					  if(value.id == $scope.internalLayers[i].id ){
+						  $scope.internalLayers.splice(i, 1);
+						  return;
+					  }
+				  }
+				  	
 				 if(typeof callback != 'undefined' && !callBackHasExecuted) {
 					 callback(value.id);
 					 callBackHasExecuted = true;
