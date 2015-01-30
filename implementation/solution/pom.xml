@@ -40,6 +40,7 @@
 	
 	<dependencies>
 	
+		
 		<!-- SpringFramework -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -120,7 +121,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate.version}</version>
         </dependency>
 		
 		<!-- VividSolutions -->
@@ -128,6 +128,12 @@
 			<groupId>com.vividsolutions</groupId>
 			<artifactId>jts</artifactId>
 			<version>1.11</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		
