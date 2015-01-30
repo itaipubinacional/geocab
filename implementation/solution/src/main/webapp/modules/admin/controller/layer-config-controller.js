@@ -869,92 +869,92 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         }
     };
      
-//     $scope.selectAccessGroups = function() {
-//         var dialog = $modal.open({
-//             templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
-//             controller: SelectAccessGroupPopUpController,
-//             resolve: {
-//             	selectedGroups : function () {
-//                     return $scope.selectedGroups;
-//                 }
-//             }
-//         });
-//
-//         dialog.result.then(function (result) {
-//
-//             if (result) {
-//                 for (var i = 0; i < result.length; i++) {
-//                     var index = $scope.findByIdInArray($scope.selectedGroups, result[i]);
-//                     var index2 = $scope.findByIdInArray($scope.originalGroups, result[i]);
-//                     var index3 = $scope.findByIdInArray($scope.removeGroups, result[i]);
-//
-//                     //Identifica se marcou novos registros
-//                     if (index == -1 && index2 == -1) {
-//                         var indexAdd = $scope.findByIdInArray($scope.addGroups, result[i]);
-//                         if (indexAdd == -1)
-//                             $scope.addGroups.push(result[i]);
-//                     }
-//
-//                     if (index3 > -1) {
-//                         $scope.removeGroups.splice(index3, 1);
-//                     }
-//
-//                 }
-//                 for (var i = 0; i < $scope.selectedGroups.length; i++) {
-//
-//                     var index = $scope.findByIdInArray(result, $scope.selectedGroups[i]);
-//
-//                     if (index == -1) {
-//                         var index2 = $scope.findByIdInArray($scope.addGroups, $scope.selectedGroups[i]);
-//                         var index3 = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
-//                         var index4 = $scope.findByIdInArray($scope.originalGroups, $scope.selectedGroups[i]);
-//
-//                         if (index2 > -1){
-//                             var indexAdd = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
-//                             if (indexAdd > -1)
-//                                 $scope.adicionarGrupos.splice(indexAdd, 1);
-//                         }
-//                         if (index3 == -1 && index4 > -1) {
-//                             $scope.removerGrupos.push($scope.selectedGroups[i]);
-//                         }
-//
-//                     }
-//                 }
-//                 $scope.selectedGroups = result;
-//             }
-//
-//         });
-//     }
+     $scope.selectAccessGroups = function() {
+         var dialog = $modal.open({
+             templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
+             controller: SelectAccessGroupPopUpController,
+             resolve: {
+             	selectedGroups : function () {
+                     return $scope.selectedGroups;
+                 }
+             }
+         });
+
+         dialog.result.then(function (result) {
+
+             if (result) {
+                 for (var i = 0; i < result.length; i++) {
+                     var index = $scope.findByIdInArray($scope.selectedGroups, result[i]);
+                     var index2 = $scope.findByIdInArray($scope.originalGroups, result[i]);
+                     var index3 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+
+                     //Identifica se marcou novos registros
+                     if (index == -1 && index2 == -1) {
+                         var indexAdd = $scope.findByIdInArray($scope.addGroups, result[i]);
+                         if (indexAdd == -1)
+                             $scope.addGroups.push(result[i]);
+                     }
+
+                     if (index3 > -1) {
+                         $scope.removeGroups.splice(index3, 1);
+                     }
+
+                 }
+                 for (var i = 0; i < $scope.selectedGroups.length; i++) {
+
+                     var index = $scope.findByIdInArray(result, $scope.selectedGroups[i]);
+
+                     if (index == -1) {
+                         var index2 = $scope.findByIdInArray($scope.addGroups, $scope.selectedGroups[i]);
+                         var index3 = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+                         var index4 = $scope.findByIdInArray($scope.originalGroups, $scope.selectedGroups[i]);
+
+                         if (index2 > -1){
+                             var indexAdd = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+                             if (indexAdd > -1)
+                                 $scope.adicionarGrupos.splice(indexAdd, 1);
+                         }
+                         if (index3 == -1 && index4 > -1) {
+                             $scope.removeGroups.push($scope.selectedGroups[i]);
+                         }
+
+                     }
+                 }
+                 $scope.selectedGroups = result;
+             }
+
+         });
+     }
     
-    $scope.selectAccessGroups = function () {
-        var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
-            controller: SelectAccessGroupPopUpController,
-            resolve: {
-                selectedGroups : function () {
-                    return $scope.selectedGroups;
-                }
-            }
-        });
-
-        dialog.result.then(function (result) {
-            $log.log(result);
-
-            if (result != null && result.length > 0) {
-                $scope.selectedGroups = $scope.selectedGroups.concat(result);
-                for (var i = 0; i < result.length; i++) {
-                    var index = $scope.findByIdInArray($scope.originalGroups, result[i]);
-                    if (index == -1) {
-                        $scope.addGroups.push(result[i]);
-                    }
-                    var index2 = $scope.findByIdInArray($scope.removeGroups, result[i]);
-                    if (index2 > -1) {
-                        $scope.removeGroups.splice(index2, 1);
-                    }
-                }
-            }
-        });
-    }
+//    $scope.selectAccessGroups = function () {
+//        var dialog = $modal.open({
+//            templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
+//            controller: SelectAccessGroupPopUpController,
+//            resolve: {
+//                selectedGroups : function () {
+//                    return $scope.selectedGroups;
+//                }
+//            }
+//        });
+//
+//        dialog.result.then(function (result) {
+//            $log.log(result);
+//
+//            if (result != null && result.length > 0) {
+//                $scope.selectedGroups = $scope.selectedGroups.concat(result);
+//                for (var i = 0; i < result.length; i++) {
+//                    var index = $scope.findByIdInArray($scope.originalGroups, result[i]);
+//                    if (index == -1) {
+//                        $scope.addGroups.push(result[i]);
+//                    }
+//                    var index2 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+//                    if (index2 > -1) {
+//                        $scope.removeGroups.splice(index2, 1);
+//                    }
+//                }
+//            }
+//        });
+//    }
     
     /*-------------------------------------------------------------------
      *                
