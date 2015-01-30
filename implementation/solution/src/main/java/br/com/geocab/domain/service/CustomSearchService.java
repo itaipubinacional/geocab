@@ -162,8 +162,8 @@ public class CustomSearchService
 		
 		// Get the legend of GeoServer's layer
 		if (customSearch.getLayer().getDataSource().getUrl() != null){
-			int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("geoserver/");
-			String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position+10);
+			int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("ows?");
+			String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position);
 			String urlLegend = urlGeoserver + Layer.LEGEND_GRAPHIC_URL + customSearch.getLayer().getName() + Layer.LEGEND_GRAPHIC_FORMAT;
 			customSearch.getLayer().setLegend(urlLegend);
 		}
@@ -186,8 +186,8 @@ public class CustomSearchService
 		for ( CustomSearch customSearch : customsSearch.getContent() )
 		{
 			if(customSearch.getLayer().getDataSource().getUrl() != null) {
-				int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("geoserver/");
-				String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position+10);
+				int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("ows?");
+				String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position);
 				String urlLegend = urlGeoserver + Layer.LEGEND_GRAPHIC_URL + customSearch.getLayer().getName() + Layer.LEGEND_GRAPHIC_FORMAT;
 				customSearch.getLayer().setLegend(urlLegend);
 			}

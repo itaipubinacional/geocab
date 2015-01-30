@@ -422,7 +422,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
 
         accessGroupService.findAccessGroupById($state.params.id, {
             callback: function (result) {
-                $scope.currentEntity = result;
+            	$scope.selectedUsers = result.users;
+                $scope.currentEntity =  result;
                 $scope.currentState = $scope.UPDATE_STATE;
                 $state.go($scope.UPDATE_STATE);
                 $scope.$apply();
@@ -554,7 +555,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
 
         accessGroupService.listAccessGroupByFilters(filter, pageRequest, {
             callback: function (result) {
-                $scope.currentPage = result;
+                $scope.currentPage = $scope.selectedUsers = result;
                 $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
                 $scope.currentState = $scope.LIST_STATE;
                 $state.go($scope.LIST_STATE);
@@ -857,7 +858,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
                     }
                 }
                 
-                $scope.selectedUsers = result;
+                $scope.selectedUsers = $scope.currentEntity.users = result;
+                
             }
         });
     };
