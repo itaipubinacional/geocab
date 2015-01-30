@@ -242,7 +242,10 @@ public class AccessGroupService
 		
 		for (AccessGroupCustomSearch accessGroupCustomSearch : accessGroupCustomSearchs)
 		{
-			accessGroupCustomSearch.getCustomSearch().getLayer().setLegend(layerGroupService.getLegendLayerFromGeoServer(accessGroupCustomSearch.getCustomSearch().getLayer()));
+			if(accessGroupCustomSearch.getCustomSearch().getLayer().getDataSource().getUrl() != null){
+				accessGroupCustomSearch.getCustomSearch().getLayer().setLegend(layerGroupService.getLegendLayerFromGeoServer(accessGroupCustomSearch.getCustomSearch().getLayer()));
+			}
+			
 			customsSearch.add(accessGroupCustomSearch.getCustomSearch());
 		}
 		
