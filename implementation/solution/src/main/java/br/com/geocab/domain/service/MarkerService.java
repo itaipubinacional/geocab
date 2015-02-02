@@ -322,6 +322,8 @@ public class MarkerService
 				listMarker = this.markerRepository.listMarkerByLayer( layerId, user.getId() );
 			}
 			
+		} else {
+			listMarker = this.markerRepository.listMarkerByLayerPublic( layerId );
 		}
 		
 		return listMarker;

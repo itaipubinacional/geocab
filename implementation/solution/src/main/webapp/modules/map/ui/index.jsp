@@ -7,9 +7,6 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"  %>
 <!DOCTYPE html>
 <html xmlns:ng="http://angularjs.org">
-	<sec:authorize access="isAnonymous()">
-		<c:redirect url="./authentication"/>
-    </sec:authorize>
     
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -74,7 +71,7 @@
 			</header>
 		
 			<!-- content -->
-			<security:authorize ifAnyGranted="ADMINISTRATOR" >
+			<security:authorize ifAnyGranted="ADMINISTRATOR">
 			    <div  id="sb-site"  ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
 			</security:authorize>
 			
@@ -85,6 +82,10 @@
 				<sec:authorize access="principal.password == 'no password'">
 			    	<div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 60px; left: 0; right: 0;" ng-controller="MapController"></div>
 				</sec:authorize>
+			</security:authorize>
+			
+			<security:authorize access="!isAuthenticated()">
+				<div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 60px; left: 0; right: 0;" ng-controller="MapController"></div>
 			</security:authorize>
 		
 			<!-- /content -->
