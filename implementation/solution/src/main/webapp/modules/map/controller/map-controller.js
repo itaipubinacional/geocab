@@ -753,6 +753,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 var parseNode = function( node ) {
                     var item = {};
 
+                    item.id = (!!node.nodes ? 'grupo' : 'camada') + '_' + node.id.toString();
                     item.label =  !!node.nodes ? node.name : node.title;
                     item.name =  !!node.nodes ? '' : node.name;
                     item.legenda =  !!node.nodes ? '' : node.legend;
@@ -1813,6 +1814,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 			$scope.searchs.push({'pesquisa': $scope.currentCustomSearch});
 			
 			var item = {};
+			item.id = 'results';
 	        item.label = 'Resultado pesquisas';
 	        item.type = 'grupo';
 	        item.searchId = $scope.searchId;
@@ -1824,6 +1826,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        for(var i =0; i < $scope.searchs.length ; ++i)
 	        {
 	        	
+	        	$scope.searchs[i].id = (i+1).toString();
 	            $scope.searchs[i].label = "Pesquisa "+ (i+1);
 	            $scope.searchs[i].type = 'camada';
 	            $scope.searchs[i].name = "pesquisa"+ (i+1);
