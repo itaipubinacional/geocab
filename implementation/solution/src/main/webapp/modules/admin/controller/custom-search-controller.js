@@ -170,7 +170,7 @@
 	'</div>';
 
     var GRID_FIELDS_INPUT = '<div class="cell-centered">' +
-        '<input class="form-control" maxlength="144" ng-disabled="currentState == DETAIL_STATE" style="width: 70%; margin-top: -3px;" type="text" ng-model="row.entity.rotulo" placeholder="'+$translate("admin.custom-search.Label")+'">'+
+        '<input class="form-control" maxlength="144" ng-disabled="currentState == DETAIL_STATE" style="width: 70%; margin-top: -3px;" type="text" ng-model="row.entity.label" placeholder="'+$translate("admin.custom-search.Label")+'">'+
         '</div>';
 
     var GRID_ACTION_FIELDS_BUTTONS = '<div class="cell-centered">' +
