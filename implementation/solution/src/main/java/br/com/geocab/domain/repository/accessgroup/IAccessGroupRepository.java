@@ -60,4 +60,14 @@ public interface IAccessGroupRepository extends IDataRepository<AccessGroup, Lon
 				"WHERE user.email = :email" )
 	public List<AccessGroup> listByUser( @Param("email") String email );
 	
+	/**
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value="SELECT new AccessGroup ( accessGroup.id, accessGroup.name, accessGroup.description ) " +
+				"FROM AccessGroup accessGroup " +
+				"WHERE accessGroup.id = 1" )
+	public List<AccessGroup> listPublicGroups();
+	
 }

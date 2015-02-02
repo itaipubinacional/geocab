@@ -28,6 +28,8 @@ public class ContextHolder
 			return (User) authentication.getPrincipal();
 		}
 		
-		throw new InsufficientAuthenticationException("There is no user authenticated.");//FIXME Localize
+		
+		return null;
+		//throw new InsufficientAuthenticationException("There is no user authenticated.");//FIXME Localize
 	}
 }
