@@ -516,30 +516,34 @@ public class LayerGroupService
 		
 		setLegendsLayers(layersGroupUpperPublished);
 		
-		List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
-		
-		for (AccessGroup accessGroup : accessGroupsUser)
-		{
-			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
-		}
-		
-		if ( !layersGroupUpperPublished.isEmpty() )
-		{
-			verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
-		}
-		
-		List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
-		
-		for ( LayerGroup layerGroup : layersGroupUpperPublished )
-		{
-			this.removeLayerGroupEmptyPublished(layerGroup);
+		if(ContextHolder.getAuthenticatedUser() != null) {
+			List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
 			
-			if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
+			for (AccessGroup accessGroup : accessGroupsUser)
 			{
-				layerGroupToDelete.add(layerGroup);
+				accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
 			}
+			
+			if ( !layersGroupUpperPublished.isEmpty() )
+			{
+				verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
+			}
+			
+			List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
+			
+			for ( LayerGroup layerGroup : layersGroupUpperPublished )
+			{
+				this.removeLayerGroupEmptyPublished(layerGroup);
+				
+				if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
+				{
+					layerGroupToDelete.add(layerGroup);
+				}
+			}
+			layersGroupUpperPublished.removeAll(layerGroupToDelete);
 		}
-		layersGroupUpperPublished.removeAll(layerGroupToDelete);
+		
+		
 		
 		return layersGroupUpperPublished;
 		
@@ -1212,19 +1216,24 @@ public class LayerGroupService
 	 */
 	public List<Tool> listToolsByUser()
 	{
-		//Lista todos grupos de acessos do usuï¿½rio
-		List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getUsername());
-		
 		List<Tool> toolsUser = new ArrayList<Tool>();
 		
-		for (AccessGroup accessGroup : accessGroupsUser)
-		{
-			accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
+		//logado
+		if( ContextHolder.getAuthenticatedUser() != null )  {
+			List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getUsername());
 			
-			for (Tool tool : accessGroup.getTools())
+			for (AccessGroup accessGroup : accessGroupsUser)
 			{
-				toolsUser.add(tool);
+				accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
+				
+				for (Tool tool : accessGroup.getTools())
+				{
+					toolsUser.add(tool);
+				}
 			}
+		} else {
+			//Anonimo
+			
 		}
 		
 		return toolsUser;
