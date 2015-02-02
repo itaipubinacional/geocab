@@ -798,8 +798,9 @@ public class LayerGroupService
 		
 		String sUrl;
 		
-		int posicao = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-		String urlGeoserver = layer.getDataSource().getUrl().substring(0, posicao+10);
+		int position = layer.getDataSource().getUrl().lastIndexOf("ows?");
+		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position);
+		
 		
 		sUrl = urlGeoserver + ExternalLayer.CAMPO_CAMADA_URL + layer.getName();
 		
@@ -1085,8 +1086,8 @@ public class LayerGroupService
 	 */
 	public String getLegendLayerFromGeoServer( Layer layer )
 	{
-		int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position+10);
+		int position = layer.getDataSource().getUrl().lastIndexOf("ows?");
+		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position);
 		
 		return urlGeoserver + Layer.LEGEND_GRAPHIC_URL + layer.getName() + Layer.LEGEND_GRAPHIC_FORMAT;
 	}

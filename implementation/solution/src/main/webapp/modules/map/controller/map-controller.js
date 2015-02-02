@@ -196,7 +196,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     * @type {Array}
     */
    $scope.allSearchs = [];
-
+   
+   /**
+    * 
+    */
+   $scope.allLayersSearches = [];
+   
     /**
      *
      * @type {Array}
@@ -822,18 +827,19 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         if( isPesquisa )
         {
             var index = node.name.indexOf(":");
-            var dataSourceAddress = node.dataSource.url.lastIndexOf("geoserver/");
+            var dataSourceAddress = node.dataSource.url.lastIndexOf("ows?");
+            
             var layerType = node.name.substring(0,index);
             var layerName = node.name.substring(index+1,node.name.length);
-            var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress+10)+layerType+'/wms';
+            var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress)+layerType+'/wms';
         }
         else
         {
             var index = node.name.indexOf(":");
-            var dataSourceAddress = node.dataSourceUrl.lastIndexOf("geoserver/");
+            var dataSourceAddress = node.dataSourceUrl.lastIndexOf("ows?");
             var layerType = node.name.substring(0,index);
             var layerName = node.name.substring(index+1,node.name.length);
-            var formattedUrl = node.dataSourceUrl.substring(0, dataSourceAddress+10)+layerType+'/wms';
+            var formattedUrl = node.dataSourceUrl.substring(0, dataSourceAddress)+layerType+'/wms';
         }
 
         return {'name': layerName, 'url': formattedUrl};
@@ -930,7 +936,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     	if( $scope.allSearchs[0].children[i].pesquisa.layer.dataSource.url == null ) {
                     		
                     		//$scope.addInternalLayerSearch($scope.allSearchs[0].children[i].pesquisa.searchId);
-                    		$scope.addInternalLayerSearch(1);
+                    		$scope.addInternalLayerSearch(i);
                     	} else {
                     		$scope.map.removeLayer(node.wmsLayer);
                             $scope.map.addLayer($scope.allSearchs[0].children[i].wmsLayer);	
@@ -951,7 +957,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     	if( $scope.allSearchs[0].children[i].pesquisa.layer.dataSource.url == null ) {
                     		
                     			//$scope.removeInternalLayerSearch($scope.allSearchs[0].children[i].pesquisa.searchId);
-                    			$scope.removeInternalLayerSearch(1, $scope.allSearchs[0].children[i].pesquisa.layer.id);
+                    			$scope.removeInternalLayerSearch(i, $scope.allSearchs[0].children[i].pesquisa.layer.id);
                     	} else {
                     	
 	                        //Is external layer
@@ -1613,9 +1619,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             callback: function (result) {
 
                 $scope.customSearchs = result;
-
+                
                 $scope.toggleSidebarMenu(300, '#menu-item-2');
-
+                
                 $scope.$apply();
 
             },
@@ -1627,6 +1633,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.$apply();
             }
         });
+                
     }
     
     /**
@@ -1772,7 +1779,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 					
 						angular.forEach($scope.markersByLayer, function(marker, index){
 			                   var iconFeature = new ol.Feature({
-			                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
+			                       geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
 			                       marker: marker,
 			                   });	
 			                  
@@ -1811,15 +1818,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        item.searchId = $scope.searchId;
 	
 	        item.children = [];
-	
+
+	        	        
 	        var lastSearchName;
 	        for(var i =0; i < $scope.searchs.length ; ++i)
 	        {
-	
+	        	
 	            $scope.searchs[i].label = "Pesquisa "+ (i+1);
 	            $scope.searchs[i].type = 'camada';
 	            $scope.searchs[i].name = "pesquisa"+ (i+1);
-	
+	            
+	            if ( $scope.searchs[i].pesquisa.layer != null ){
+	            	$scope.allLayersSearches[i] = $scope.searchs[i].pesquisa.layer;	            		            	
+	            } else {
+	            	$scope.searchs[i].pesquisa.layer = $scope.allLayersSearches[i];
+	            }
+	            
 	            item.children.push($scope.searchs[i]);
 	            lastSearchName = "Pesquisa "+ (i+1);
 	        }
@@ -2685,10 +2699,19 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.removeInternalLayer = function(layerId, callback){
     	var callBackHasExecuted = false;
     	var internalLayers =  $.extend([], $scope.internalLayers);
+    	
     	angular.forEach(internalLayers, function(value, index){
 			  if(value.id == layerId) {
 				  $scope.map.removeLayer(value.layer);
-				  $scope.internalLayers.splice(index, 1);
+				  var len = $scope.internalLayers.length;
+				  
+				  for (var i = 0; i < len; i++){
+					  if(value.id == $scope.internalLayers[i].id ){
+						  $scope.internalLayers.splice(i, 1);
+						  return;
+					  }
+				  }
+				  	
 				 if(typeof callback != 'undefined' && !callBackHasExecuted) {
 					 callback(value.id);
 					 callBackHasExecuted = true;
@@ -2769,9 +2792,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
    
     $scope.addInternalLayerSearch = function( searchId ) {
     	
-    	angular.forEach($scope.internalLayersSearch, function(internalLayer, index){
-    		$scope.map.addLayer(internalLayer.layer);
+    	angular.forEach($scope.internalLayersSearch, function(internalLayer, index){	
+    		if ( (internalLayer.searchId - 1) == searchId){    			
+    			$scope.map.addLayer($scope.internalLayersSearch[index].layer);
+    		}	
     	});
+    	
     	$scope.$apply();
     	
     } 
@@ -2780,15 +2806,15 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	var internalLayers =  $.extend([], $scope.internalLayers);
     	var internalLayersSearch =  $.extend([], $scope.internalLayersSearch);
     	
-    	angular.forEach(internalLayers, function(value, index){
-			  if(value.id == layerId) {
-				  $scope.map.removeLayer(value.layer);
-				 
-			  }
-		  });
+//    	angular.forEach(internalLayers, function(value, index){
+//			  if(value.id == layerId) {
+//				  $scope.map.removeLayer(value.layer);
+//				 
+//			  }
+//		  });
     	
     	angular.forEach(internalLayersSearch, function(value, index){
-			  if(value.searchId == searchId) {
+			  if(value.searchId == searchId + 1) {
 				  $scope.map.removeLayer(value.layer);
 				 
 			  }
