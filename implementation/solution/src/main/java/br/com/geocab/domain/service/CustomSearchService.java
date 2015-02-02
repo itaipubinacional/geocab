@@ -219,13 +219,21 @@ public class CustomSearchService
 	/**
 	 * Method that return an list of custom searchs according the access group of user
 	 */
-	@PreAuthorize("hasAnyRole('"+UserRole.USER_VALUE+"', '"+UserRole.ADMINISTRATOR_VALUE+"')")
+	@PreAuthorize("true")
 	public List<CustomSearch> listCustomSearchsByUser()
 	{
-		//List of all access groups of user
-		List<AccessGroup> accessGroupUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
-		
 		List<CustomSearch> customsSearchUser = new ArrayList<CustomSearch>();
+		
+		List<AccessGroup> accessGroupUser = null;
+		//List of all access groups of user
+		if(ContextHolder.getAuthenticatedUser() != null) 
+		{
+			accessGroupUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
+		} 
+		else 
+		{
+			accessGroupUser = this.accessGroupRepository.listPublicGroups();
+		}
 		
 		for (AccessGroup accessGroup : accessGroupUser)
 		{
@@ -239,6 +247,7 @@ public class CustomSearchService
 				}
 			}
 		}
+		
 		
 		return customsSearchUser;
 	}
