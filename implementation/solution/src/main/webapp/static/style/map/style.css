@@ -292,6 +292,15 @@ input[type=checkbox].css-checkbox:checked + label:before {
     background-color: #0077C1;
 }
 
+input[type=checkbox].css-checkbox:indeterminate + label:before {
+    content: "\2796";
+    font-size: 11px;
+    color: #f3f3f3;
+    text-align: center;
+    line-height: 15px;
+    background-color: #0077C1;
+}
+
 .label-text {
     font-size: 14px;
     font-weight: normal;

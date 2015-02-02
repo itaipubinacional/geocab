@@ -634,6 +634,7 @@
 										ivh-treeview-label-attribute="'label'"
 										ivh-treeview-legend-attribute="'legenda'"
 										ivh-treeview-children-attribute="'children'"
+										ivh-treeview-id-attribute="'id'"
 										ivh-treeview-filter="filter:bagSearch">
 									</div>
 									
