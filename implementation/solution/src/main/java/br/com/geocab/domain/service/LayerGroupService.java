@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletContext;
+import javax.validation.ConstraintViolationException;
 import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
@@ -24,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -73,6 +75,12 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
+	
+	/**
+	 * I18n 
+	 */
+	@Autowired
+	private MessageSource messages;
 	
 	/**
 	 * 
@@ -1004,16 +1012,22 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void removeLayer( Long id )
 	{	
-		
 		List<AccessGroupLayer> layers = this.accessGroupLayerRepository.listByLayerId(id);
 		for (AccessGroupLayer accessGroupLayer : layers)
 		{
 			this.accessGroupLayerRepository.delete(accessGroupLayer);
 		}
 		
+		try
+		{
+			this.layerRepository.delete( id );
+			
+		}
+		catch (ConstraintViolationException e)
+		{
+			
+		}
 		
-		
-		this.layerRepository.delete( id );
 	}
 	
 	/**
