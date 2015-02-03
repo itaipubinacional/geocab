@@ -2740,7 +2740,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	angular.forEach(internalLayers, function(internalLayer, index){
 			  if(internalLayer.id != layerId && internalLayer.searchId == searchId) {
-				  $scope.internalLayers = internalLayer;
+				  $scope.internalLayers.push(internalLayer);
 			  }
 		  });
     	
