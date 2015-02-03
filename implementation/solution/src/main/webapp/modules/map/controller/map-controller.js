@@ -1800,8 +1800,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				
 				               $scope.map.addLayer(layer);
 				               
-				               $scope.internalLayers.push({"layer": layer, "id": layerId});
-				               $scope.internalLayersSearch.push({"layer": layer, "searchId": $scope.searchId});
+				               var location = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+				               
+				               $scope.internalLayers.push({"layer": layer, "id": layerId, "location": location, 'searchId': $scope.searchId});
+				               $scope.internalLayersSearch.push({"layer": layer, "layerId": layerId, "searchId": $scope.searchId, "location": location});
 			     			});
 			
 						$scope.$apply();
@@ -2705,9 +2707,27 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
    
     $scope.addInternalLayerSearch = function( searchId ) {
     	
-    	angular.forEach($scope.internalLayersSearch, function(internalLayer, index){	
-    		if ( (internalLayer.searchId - 1) == searchId){    			
-    			$scope.map.addLayer($scope.internalLayersSearch[index].layer);
+    	angular.forEach($scope.internalLayersSearch, function(internalLayerSearch, index){	
+    		if ( (internalLayerSearch.searchId - 1) == searchId){    
+    			
+    			var existInMap = false;
+    			
+    			angular.forEach($scope.internalLayers, function(internalLayer, index){
+    				if(
+    						internalLayerSearch.location.getCoordinates()[0] == internalLayer.location.getCoordinates()[0]
+    						&&
+    						internalLayerSearch.location.getCoordinates()[1] == internalLayer.location.getCoordinates()[1]
+    				) {
+    					existInMap = true;
+    					return false;
+    				}
+    				
+    			})
+    		
+    			if(!existInMap) {
+    				$scope.map.addLayer(internalLayerSearch.layer);
+    				$scope.internalLayers.push({"layer": internalLayerSearch.layer, "id": internalLayerSearch.layerId, "location": internalLayerSearch.location, "searchId": searchId});
+    			}
     		}	
     	});
     	
@@ -2716,20 +2736,20 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     } 
     
     $scope.removeInternalLayerSearch = function(searchId, layerId){
-    	var internalLayers =  $.extend([], $scope.internalLayers);
     	var internalLayersSearch =  $.extend([], $scope.internalLayersSearch);
+    	var internalLayers =  $.extend([], $scope.internalLayers);
+    	$scope.internalLayers = [];
     	
-//    	angular.forEach(internalLayers, function(value, index){
-//			  if(value.id == layerId) {
-//				  $scope.map.removeLayer(value.layer);
-//				 
-//			  }
-//		  });
     	
-    	angular.forEach(internalLayersSearch, function(value, index){
-			  if(value.searchId == searchId + 1) {
-				  $scope.map.removeLayer(value.layer);
-				 
+    	angular.forEach(internalLayers, function(internalLayer, index){
+			  if(internalLayer.id != layerId && internalLayer.searchId == searchId) {
+				  $scope.internalLayers = internalLayer;
+			  }
+		  });
+    	
+    	angular.forEach(internalLayersSearch, function(internalLayerSearch, index){
+			  if(internalLayerSearch.searchId == searchId + 1) {
+				  $scope.map.removeLayer(internalLayerSearch.layer);
 			  }
 		  });
     	
