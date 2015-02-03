@@ -2707,27 +2707,23 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
    
     $scope.addInternalLayerSearch = function( searchId ) {
     	
+    	var enterIn = true;
     	angular.forEach($scope.internalLayersSearch, function(internalLayerSearch, index){	
-    		if ( (internalLayerSearch.searchId - 1) == searchId){    
+    		if ( (internalLayerSearch.searchId - 1) == searchId){  
     			
-    			var existInMap = false;
     			
-    			angular.forEach($scope.internalLayers, function(internalLayer, index){
-    				if(
-    						internalLayerSearch.location.getCoordinates()[0] == internalLayer.location.getCoordinates()[0]
-    						&&
-    						internalLayerSearch.location.getCoordinates()[1] == internalLayer.location.getCoordinates()[1]
-    				) {
-    					existInMap = true;
-    					return false;
-    				}
-    				
-    			})
-    		
-    			if(!existInMap) {
-    				$scope.map.addLayer(internalLayerSearch.layer);
-    				$scope.internalLayers.push({"layer": internalLayerSearch.layer, "id": internalLayerSearch.layerId, "location": internalLayerSearch.location, "searchId": searchId});
+    			if(enterIn) {
+	    			angular.forEach($scope.internalLayers, function(internalLayer, index){
+	    				if(internalLayer.id == internalLayerSearch.layerId) {
+	    					$scope.map.removeLayer(internalLayer.layer);
+	    				}
+	    				
+	    			});
+	    			enterIn = false;
     			}
+    			
+    			$scope.map.addLayer(internalLayerSearch.layer);
+    			    			  
     		}	
     	});
     	
@@ -2738,14 +2734,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.removeInternalLayerSearch = function(searchId, layerId){
     	var internalLayersSearch =  $.extend([], $scope.internalLayersSearch);
     	var internalLayers =  $.extend([], $scope.internalLayers);
-    	$scope.internalLayers = [];
-    	
-    	
-    	angular.forEach(internalLayers, function(internalLayer, index){
-			  if(internalLayer.id != layerId && internalLayer.searchId == searchId) {
-				  $scope.internalLayers.push(internalLayer);
-			  }
-		  });
     	
     	angular.forEach(internalLayersSearch, function(internalLayerSearch, index){
 			  if(internalLayerSearch.searchId == searchId + 1) {
