@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,6 @@ import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
@@ -66,6 +66,12 @@ public class Attribute extends AbstractEntity implements Serializable
 	private Boolean attributeDefault; 
 	
 	/**
+	 * Order {@link Attribute}
+	 */
+	@Column
+	private int orderAttribute;
+	
+	/**
 	 * Layer {@link Layer}
 	 * */
 	@ManyToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
@@ -83,11 +89,12 @@ public class Attribute extends AbstractEntity implements Serializable
 		super(id);
 	}
 	
-	public Attribute(Long id, String name, AttributeType type, Boolean required){
+	public Attribute(Long id, String name, AttributeType type, Boolean required, int orderAttribute){
 		super(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
+		this.setOrderAttribute(orderAttribute);
 	}
 	
 	public Attribute(String name){
@@ -95,11 +102,12 @@ public class Attribute extends AbstractEntity implements Serializable
 		this.setName(name);
 	}
 	
-	public Attribute(Long id, String name, Boolean required, AttributeType type){
+	public Attribute(Long id, String name, Boolean required, AttributeType type, int orderAttribute){
 		this.setTemporaryId(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
+		this.setOrderAttribute(orderAttribute);
 	}
 	
 	public Attribute(Long id, String name, AttributeType type, Layer layer){
@@ -199,4 +207,21 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		this.temporaryId = temporaryId;
 	}
+
+	/**
+	 * @return the orderAttribute
+	 */
+	public int getOrderAttribute()
+	{
+		return orderAttribute;
+	}
+
+	/**
+	 * @param orderAttribute the orderAttribute to set
+	 */
+	public void setOrderAttribute(int orderAttribute)
+	{
+		this.orderAttribute = orderAttribute;
+	}
+	
 }

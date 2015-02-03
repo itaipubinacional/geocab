@@ -106,6 +106,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     $scope.attributes = [];
     
     $scope.allLayers = null;
+    
+    /**
+    *
+    */
+   $scope.currentAttribute = null;
 
     //DATA GRID
     /**
@@ -214,10 +219,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         multiSelect: false,
         headerRowHeight: 45,
         rowHeight: 45,
-        beforeSelectionChange: function (row, event) {
-            //evita chamar a selecao, quando clicado em um action button.
-        	/*if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
-				$state.go($scope.DETAIL_STATE, {id:row.entity.id});*/
+        beforeSelectionChange: function(row) {
+            row.changed = true;
+            return true;
+        },
+        afterSelectionChange: function (row, event) {
+            if (row.changed){
+                $scope.currentAttribute = row.entity;
+                row.changed = false;
+            }
         },
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '30%'},
@@ -1035,14 +1045,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentEntity.title = result.title;
                 $scope.currentEntity.legend = result.legend;
             }
+            
+            for(var i = 0; i < $scope.attributes.length; i++)
+            {
+                $scope.attributes[i].orderAttribute = i;
+            }
 
         });
     }
-    
-    
-   
-    
-    
     
     /**
      * Remove attribute
@@ -1060,5 +1070,56 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 	  		$("div.msg").fadeOut();
 	  	}, 5000);
     }
+    
+    /**
+    *
+    */
+   $scope.levelDown = function() {
+       var rows = $scope.gridAttributes.ngGrid.data;
+       for(var i = 0; i < rows.length; i++)
+       {
+           if( rows[i].name == $scope.currentAttribute.name && rows[i].type ==  $scope.currentAttribute.type )
+           {
+               if( rows[i].orderAttribute < rows.length - 1 )
+               {
+                   var currentRow = rows[i];
+                   rows[i] = rows[i+1];
+                   rows[i+1] = currentRow;
+                   rows[i].orderAttribute = i;
+                   rows[i+1].orderAttribute = i + 1;
+                   $scope.attributes = rows;
+                   return;
+               }
+           }
+       }
+       $scope.apply;
+   }
+    
+    /**
+    *
+    */
+   $scope.levelUp = function() {
+
+       var rows = $scope.gridAttributes.ngGrid.data;
+
+       for(var i = 0; i < rows.length; i++)
+       {
+           if( rows[i].name == $scope.currentAttribute.name && rows[i].type ==  $scope.currentAttribute.type )
+           {
+               if( rows[i].orderAttribute > 0 )
+               {
+                   var currentRow = rows[i];
+                   rows[i] = rows[i-1];
+                   rows[i-1] = currentRow;
+                   rows[i].orderAttribute = i;
+                   rows[i-1].orderAttribute = i - 1;
+
+                   $scope.attributes = rows;
+
+               }
+           }
+       }
+       $scope.apply;
+   };
 
 };
