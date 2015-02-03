@@ -28,22 +28,22 @@ public interface IAttributeRepository extends IDataRepository<Attribute, Long>
 	 * @param layerId
 	 * @return
 	 */
-	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.type, attribute.required ) " +
+	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.type, attribute.required, attribute.orderAttribute ) " +
 				"FROM Attribute attribute " +
 				"LEFT OUTER JOIN attribute.layer layer " + 
 				"WHERE ( layer.id = :layerId ) "+ 
-				"ORDER BY attribute.id ASC")
+				"ORDER BY attribute.orderAttribute ASC")
 	public List<Attribute> listAttributeByLayer( @Param("layerId") Long layerId );
 	
 	/**
 	 * @param layerId
 	 * @return
 	 */
-	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.required, attribute.type ) " +
+	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.required, attribute.type, attribute.orderAttribute ) " +
 				"FROM Attribute attribute " +
 				"LEFT OUTER JOIN attribute.layer layer " + 
 				"WHERE ( layer.id = :layerId ) "+ 
-				"ORDER BY attribute.id ASC")
+				"ORDER BY attribute.orderAttribute ASC")
 	public List<Attribute> listAttributeByLayerMarker( @Param("layerId") Long layerId );
 
 }

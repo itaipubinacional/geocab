@@ -114,6 +114,22 @@
                 <br/>
                 
 	            <div>
+	            
+
+				<button type="button" ng-click="levelDown()"
+					class="btn btn-default"
+					ng-disabled="currentAttribute == null || attributes.length == 0 || attributes.length == 1 || currentAttribute.orderAttribute == attributes.length - 1"
+					style="float: left; margin-right: 5px;">
+					<span class="glyphicon glyphicon-arrow-down"></span>
+				</button>
+				<button type="button" ng-click="levelUp()"
+					class="btn btn-default"
+					ng-disabled="currentAttribute == null || attributes.length == 0 || attributes.length == 1 || currentAttribute.orderAttribute == 0"
+					style="float: left; margin-right: 10px;">
+					<span class="glyphicon glyphicon-arrow-up"></span>
+				</button>
+
+                    
 		            <button ng-click="addAttribute()" title="<spring:message code="admin.layer-config.Add-attributes" />" class="btn btn-primary" style="margin-bottom: 5px"><spring:message code="admin.layer-config.Add-attributes" /></button>
 		            <div ng-grid="gridAttributes" style="height: 320px; border: 1px solid rgb(212,212,212);"></div>
 		            
