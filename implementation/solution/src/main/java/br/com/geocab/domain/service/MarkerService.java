@@ -285,12 +285,19 @@ public class MarkerService
 		
 		if(user != null) {
 			 
-			if( user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) {
+			if( user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) 
+			{
 				listMarker = this.markerRepository.listMarkerByLayerAll( layerId );
-			} else {
+			} 
+			else 
+			{
 				listMarker = this.markerRepository.listMarkerByLayer( layerId, user.getId() );
 			}
 			
+		}
+		else 
+		{
+			listMarker = this.markerRepository.listMarkerByLayerPublic( layerId );
 		}
 		
 		for(Marker marker : listMarker) {
