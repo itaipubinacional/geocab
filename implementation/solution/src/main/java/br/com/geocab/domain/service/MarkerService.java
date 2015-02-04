@@ -426,6 +426,35 @@ public class MarkerService
 	 * @param filter
 	 * @param pageable
 	 * @return
+	 * @throws java.text.ParseException 
+	 */
+	@Transactional(readOnly=true)
+	public List<Marker> listMarkerByFiltersMap(  String layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable ) throws java.text.ParseException
+	{
+		
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+		Calendar dEnd = null;
+		Calendar dStart = null;
+		
+		if(dateStart != null) {
+			dStart = Calendar.getInstance();
+			dStart.setTime( (Date)formatter.parse(dateStart) );
+		}
+		
+		if(dateEnd != null) {
+			dEnd = Calendar.getInstance();
+			dEnd.setTime( (Date)formatter.parse(dateEnd) );
+		}
+		
+		return this.markerRepository.listByFiltersMap(layer, status, dStart, dEnd, user);
+	}
+	
+	/**
+	 * Method to list {@link FonteDados} pageable with filter options
+	 *
+	 * @param filter
+	 * @param pageable
+	 * @return
 	 */
 	@Transactional(readOnly=true)
 	public Page<Marker> listMarkerByMarkers( List<Long> ids , PageRequest pageable )

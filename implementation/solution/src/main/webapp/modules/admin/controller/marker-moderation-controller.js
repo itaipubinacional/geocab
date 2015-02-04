@@ -241,9 +241,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
          * It is necessary to remove the sortInfo attribute because the return of an edition was doubling the value of the same with the Sort attribute
          * preventing the ordinations in the columns of the grid.
          */
-//        if ($scope.gridOptions.sortInfo) {
-//            delete $scope.gridOptions.sortInfo;
-//        }
     	
         $log.info("Starting the front controller.");
 
@@ -275,6 +272,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
         if(typeof markers == 'undefined'){
         	$scope.listMarkerByFilters(null, null, null, null, null, pageRequest);
+        	$scope.listMarkerByFiltersMap(null, null, null, null);
         } else if( typeof markers.content != 'undefined' ) {
         	
         	var markersId = [];
@@ -396,6 +394,19 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
     };
     
+    /**
+	 * Sets the pageRequest as visual pager component	 
+	 * and call the list services, considering the current screen filter
+	 *
+	 * @see currentPage
+	 * @see data.filter
+	 */
+	$scope.changeToPage = function( filter, pageNumber ) {
+		$scope.currentPage.pageable.page = pageNumber-1;		
+		$scope.listMarkerByFilters(null, null, null, null, null, $scope.currentPage.pageable);
+				
+	};
+    
     /*-------------------------------------------------------------------
 	 * 		 				 	  BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -422,7 +433,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
  	   
     	layerGroupService.listAllInternalLayerGroups({
      		callback : function(result) {
-                 //$scope.layersGroups = result;
                  $scope.selectLayerGroup = [];
                  
                  angular.forEach(result, function(layer,index){
@@ -475,6 +485,34 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	
     };
     
+    /**
+	 * Performs the query logs, considering filter, paging and sorting. 
+	 * When ok, change the state of the screen to list.
+	 * 
+	 * @see data.filter
+	 * @see currentPage
+	 */
+	$scope.listMarkerByFiltersMap = function( layer, status, dateStart, dateEnd, user ) {
+		
+		markerService.listMarkerByFiltersMap( layer, status, dateStart, dateEnd, user, {
+			callback : function(result) {
+				if($scope.features.length) {
+					$scope.clearFeatures();
+					$scope.removeLayers();
+				}
+				var markers = { 'content' : null };
+				markers.content = result;
+				$scope.buildVectorMarker(markers);			
+				$scope.$apply();
+			},
+			errorHandler : function(message, exception) {
+				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.fadeMsg();
+				$scope.$apply();
+			}
+		});
+	};
+    
 	/**
 	 * Performs the query logs, considering filter, paging and sorting. 
 	 * When ok, change the state of the screen to list.
@@ -486,12 +524,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 		
 		markerService.listMarkerByFilters( layer, status, dateStart, dateEnd, user, pageRequest, {
 			callback : function(result) {
-				if($scope.features.length) {
-					$scope.clearFeatures();
-					$scope.removeLayers();
-				}
-				$scope.currentPage = result;
-				$scope.buildVectorMarker(result);				
+				
+				$scope.currentPage = result;				
 				$scope.currentPage.pageable.pageNumber++;
 				$scope.currentState = $scope.LIST_STATE;
 				$scope.$apply();
@@ -1130,10 +1164,13 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
         
-        if($scope.filter.status == "") $scope.filter.status = null;
+        if($scope.filter.status == "")
+        	$scope.filter.status = null;
+        if($scope.filter.user != null)
+        	var userEmail = $scope.filter.user.email;
         
-    	$scope.listMarkerByFilters( $scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user, pageRequest );
-    	
+    	$scope.listMarkerByFilters( $scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest );
+    	$scope.listMarkerByFiltersMap($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);
     };
     
     $scope.clearFilters = function(){
@@ -1149,6 +1186,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.filter.user= null;
         
         $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
+        $scope.listMarkerByFiltersMap( null, null, null, null, null);
     	
     };
     

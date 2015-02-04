@@ -16,7 +16,7 @@
 		<div class="search-div" style="margin-bottom:10px">
 			<form>
 				
-				<div style="width:60%;display:inline-block">
+				<div style="width:45%;display:inline-block">
 				
 					<input auto-complete autocomplete="off" type="text" class="form-control" 
                 	   typeahead-wait-ms="500" ng-model="filter.layer" placeholder="<spring:message code="admin.marker-moderation.Layer" />"
@@ -27,7 +27,7 @@
 				<a class="btn btn-mini" ng-show="visible"   ng-click="visible = false" ><i class="glyphicon glyphicon-chevron-up"></i></a>													    
 		    	<a class="btn btn-mini" ng-show="!visible" 	ng-click="visible = true"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
 		    	
-		    	<input type="button" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
+		    	<input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
 			       />		    			    	
 		    	
 		    	<input type="button" ng-click="clearFilters()" value="Limpar Filtros" class="btn btn-default" ng-disabled="currentPage == null"
