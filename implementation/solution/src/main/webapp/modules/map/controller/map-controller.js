@@ -1930,10 +1930,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         var lastSearchName;
         for(var i =0; i < $scope.searchs.length ; ++i)
         {
-
+        	$scope.searchs[i].id = (i+1).toString();
             $scope.searchs[i].label = "Pesquisa "+ (i+1);
             $scope.searchs[i].type = 'layer';
             $scope.searchs[i].name = "pesquisa"+ (i+1);
+            
+            if ( $scope.searchs[i].search.layer != null ){
+            		$scope.allLayersSearches[i] = $scope.searchs[i].search.layer;
+            		            		            	
+            } else {
+            	$scope.searchs[i].search.layer = $scope.allLayersSearches[i];
+            }
 
             item.children.push($scope.searchs[i]);
             lastSearchName = "Pesquisa "+ (i+1);
@@ -2723,7 +2730,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 			  if(internalLayerSearch.searchId == searchId + 1) {
 				  $scope.map.removeLayer(internalLayerSearch.layer);
 			  }
+			  
 		  });
+    	
     	
     }
     
