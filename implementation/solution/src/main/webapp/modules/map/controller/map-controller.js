@@ -1698,7 +1698,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 		} else {
 			//If internal layer...
 		
-			
 			$scope.removeInternalLayer($scope.currentCustomSearch.layer.id, function(layerId){
 				var fields = $scope.currentCustomSearch.layerFields;
 				
@@ -1733,7 +1732,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 					    				if(field.attributeId == markerAttribute.attribute.id && $scope.canRemoveMarker != true ){
 					    					
 					    					if (field.value != "" && field.value != undefined) {
-					    						if (markerAttribute.value.indexOf(field.value) != -1 ){
+					    						if ( markerAttribute.value.toUpperCase().indexOf(field.value.toUpperCase()) != -1 ){
 					    							$scope.canRemoveMarker = false;
 					    						}else{
 					    							$scope.canRemoveMarker = true;
@@ -1814,8 +1813,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 		                $scope.$apply();
 		            }
 		        });
-			})
-			//$scope.addInternalLayer($scope.currentCustomSearch.layer.id);
+			})						
+			
+			
 			$scope.searchs.push({'search': $.extend([], $scope.currentCustomSearch)});
 			
 			var item = {};
@@ -1878,7 +1878,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         var conectorLike;
         for (var i = 0; i < fields.length; i++)
         { 
-        	//estou aqui
+        	
             fields[i].searchValue = '';
 
             if( $("#item_"+i).val() != '' )
@@ -2703,6 +2703,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	var enterIn = true;
     	angular.forEach($scope.internalLayersSearch, function(internalLayerSearch, index){	
     		if ( (internalLayerSearch.searchId - 1) == searchId){  
+    			    			
     			
     			if(enterIn) {
 	    			angular.forEach($scope.internalLayers, function(internalLayer, index){
@@ -2713,6 +2714,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    			});
 	    			enterIn = false;
     			}
+    			  			
     			
     			$scope.map.addLayer(internalLayerSearch.layer);
     		}	
@@ -2726,13 +2728,13 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	var internalLayersSearch =  $.extend([], $scope.internalLayersSearch);
     	var internalLayers =  $.extend([], $scope.internalLayers);
     	
-    	angular.forEach(internalLayersSearch, function(internalLayerSearch, index){
-			  if(internalLayerSearch.searchId == searchId + 1) {
-				  $scope.map.removeLayer(internalLayerSearch.layer);
-			  }
-			  
-		  });
-    	
+    			
+		   angular.forEach(internalLayersSearch, function(internalLayerSearch, index){
+				 if(internalLayerSearch.searchId == searchId + 1) {
+					$scope.map.removeLayer(internalLayerSearch.layer);
+				 }		  
+		   });
+ 	
     	
     }
     
