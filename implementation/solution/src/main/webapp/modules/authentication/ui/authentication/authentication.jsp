@@ -106,7 +106,7 @@
 					<td><a class="dont-have-account" id="register"  ng-click="changeToInsert()"><spring:message code="authentication.Dont-have-an-account" /></a><td>
 				</tr>
 				<tr>
-					<td><a style="margin: 0 0 0 100px" class="dont-have-account" id="register" href="/geocab"><spring:message code="authentication.Show-map" /></a><td>
+					<td><a style="margin: 0 0 0 100px" class="dont-have-account" id="register" href="${pageContext.request.contextPath}"><spring:message code="authentication.Show-map" /></a><td>
 				</tr>
 			</table>
 		</div>
