@@ -626,7 +626,7 @@
 		
 									<div ng-show="allLayers.length > 0">
 										<input type="text" ng-model="bagSearch"
-											placeholder="Grupo ou layer"
+											placeholder="<spring:message code="map.Group-or-layer"/>"
 											class="sidebar-content-search form-control" />
 									</div>
 		
@@ -638,12 +638,12 @@
 										ivh-treeview-filter="filter:bagSearch">
 									</div>
 									
-									<div class="sidebar-content-header" ng-if="allSearchs.length > 0" style="margin: 30px 0px;">Pesquisas</div>
+									<div class="sidebar-content-header" ng-if="allSearchs.length > 0" style="margin: 30px 0px;"><spring:message code="map.Searchs"/></div>
                                     <br style="clear: both;">
                                     <div id="tree-pesquisas"
                                          ivh-treeview="allSearchs"
                                          ivh-fn="getSelectedSearchNode"
-                                         ivh-treeview-label-attribute="'label'"
+                                         ivh-treeview-label-attribute="'label'"	
                                          ivh-treeview-children-attribute="'children'">
                                     </div>
 		
