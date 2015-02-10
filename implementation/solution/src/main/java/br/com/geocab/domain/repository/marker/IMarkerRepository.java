@@ -90,7 +90,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				"FROM Marker marker "+
 				"LEFT OUTER JOIN marker.layer layer "+
 				"LEFT OUTER JOIN marker.user user "+
-				"WHERE (layer.id = :layerId AND (marker.status = 0 OR user.id = :userId) AND ( marker.deleted = NULL OR marker.deleted = FALSE ) ) ")
+				"WHERE (layer.id = :layerId AND (marker.status = 1 OR user.id = :userId) AND ( marker.deleted = NULL OR marker.deleted = FALSE ) ) ")
 	public List<Marker> listMarkerByLayer(@Param("layerId") Long layerId, @Param("userId") Long userId);
 	
 	/**
@@ -114,7 +114,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				"FROM Marker marker "+
 				"LEFT OUTER JOIN marker.layer layer "+
 				"LEFT OUTER JOIN marker.user user "+
-				"WHERE (layer.id = :layerId AND marker.status = 0 AND ( marker.deleted = NULL OR marker.deleted = FALSE ) ) ")
+				"WHERE (layer.id = :layerId AND marker.status = 1 AND ( marker.deleted = NULL OR marker.deleted = FALSE ) ) ")
 	public List<Marker> listMarkerByLayerPublic(@Param("layerId") Long layerId);
 	
 }
