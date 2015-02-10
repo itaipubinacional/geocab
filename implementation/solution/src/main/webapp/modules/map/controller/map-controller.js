@@ -1676,7 +1676,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         // deselect the old research and remove the map
     	angular.forEach($scope.searchs, function(search, index){
     		$scope.map.removeLayer(search.wmsLayer);
-    		$scope.allSearchs[0].children[index].selected = false;
+    		///$scope.allSearchs[0].children[index].selected = false;
+    		
+    		if ( $scope.currentCustomSearch.name == $scope.allSearchs[0].children[index].search.name ){
+    		   	$scope.allSearchs[0].children[index].selected = false;
+    		}else{
+    		   	if ( $scope.allSearchs[0].children[index].selected == true ){
+    		   		$scope.allSearchs[0].children[index].selected = true;
+    		   	}else{
+    		   		$scope.allSearchs[0].children[index].selected = false;
+    		   	}
+    		}
     		
     	});
 
@@ -2703,14 +2713,21 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	var enterIn = true;
     	angular.forEach($scope.internalLayersSearch, function(internalLayerSearch, index){	
+    		// verifica qual é a pesquisa selecionada...
     		if ( (internalLayerSearch.searchId - 1) == searchId){  
     			
+    			
     			if(enterIn) {
-        			
-	    			angular.forEach($scope.internalLayers, function(internalLayer, index){
-	    				if(internalLayer.id == internalLayerSearch.layerId) {
+    				var internalLayers = $.extend([], $scope.internalLayers);
+    				$scope.internalLayers = [];
+    				
+    				//Percorre a lista das layers existentes no mapa...
+	    			angular.forEach(internalLayers, function(internalLayer, index){
+	    				if(internalLayer.id == internalLayerSearch.layerId && !internalLayer.searchId) {
 	    					$scope.map.removeLayer(internalLayer.layer);
 	    					
+	    				} else {
+	    					$scope.internalLayers.push(internalLayer);
 	    				}
 	    			});
 	    			enterIn = false;
@@ -2727,7 +2744,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.removeInternalLayerSearch = function(searchId, layerId){
     	var internalLayersSearch =  $.extend([], $scope.internalLayersSearch);
-    	
+    		
 	   angular.forEach(internalLayersSearch, function(internalLayerSearch, index){
 			 if(internalLayerSearch.searchId == searchId + 1) {
 				$scope.map.removeLayer(internalLayerSearch.layer);
