@@ -1736,22 +1736,37 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				    		angular.forEach(results, function(result, index){
 				    			$scope.canRemoveMarker = null;
 				    			
-				    			angular.forEach(result.markerAttribute, function(markerAttribute, index){
+				    			
+				    			angular.forEach($scope.currentCustomSearch.layerFields, function(field, index){	
 				    				
-				    				angular.forEach($scope.currentCustomSearch.layerFields, function(field, index){	    					
-				    					
+				    				if($scope.canRemoveMarker == true) return false;
+				    				
+				    				//Se campo colocado na pesquisa realmente possuir um valor, ele deve ser processado!
+				    				//If the field in the search has a value, it need to be proccesed 
+				    				var enter = false;
+				    				
+				    				angular.forEach(result.markerAttribute, function(markerAttribute, index){
+				    				
 					    				if(field.attributeId == markerAttribute.attribute.id && $scope.canRemoveMarker != true ){
+					    					enter = true;
 					    					
 					    					if (field.value != "" && field.value != undefined) {
 					    						if ( markerAttribute.value.toUpperCase().indexOf(field.value.toUpperCase()) != -1 ){
 					    							$scope.canRemoveMarker = false;
 					    						}else{
 					    							$scope.canRemoveMarker = true;
+					    							return false;
 					    						}
 					    					}
 					    				}
 				    				
 				    				});
+				    				
+				    				//Se caso o valor não for processado dentro do foreach acima, e caso esse valor campo não esteja vazio, deve-se remover o marcador do mapa.
+				    				//Case the value isn't processed inside the foreach above, and case this value isn't empty, so the marker need to be removed of the map. 
+				    				if(!enter && (field.value != "" && field.value != undefined) ) {
+				    					$scope.canRemoveMarker = true;
+				    				}
 				    			
 				    			});
 				    			
