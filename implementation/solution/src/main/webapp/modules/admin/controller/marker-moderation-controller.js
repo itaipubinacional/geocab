@@ -143,6 +143,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     
     $scope.selectLayerGroup = [];
     
+    /**
+     * checks whether any research has been done
+     */
+    $scope.hasSearch = false;
+    
   //DATA GRID
     /**
      * Static variable coms stock grid buttons
@@ -628,7 +633,15 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 			$scope.clearFeatures();
 			$scope.removeLayers();
 		}
-		$scope.buildVectorMarker(markers);
+		
+		
+		if ( $scope.hasSearch ){
+			//if it was done some search, return the searched markers on the map
+			$scope.buildVectorMarker(markers);
+		}else {
+			//else return all the markers
+			$scope.listMarkerByFiltersMap(null, null, null, null);
+		}
 		
 	}
 	
@@ -689,8 +702,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 				if ( !$scope.drag ){
 					$scope.refreshMap(result);
 				}
-				$scope.currentPage = result;
-				$scope.currentPage.pageable.pageNumber++;
+				
+				if ($scope.hasSearch || $scope.drag){
+					$scope.currentPage = result;
+					$scope.currentPage.pageable.pageNumber++;
+				}
+
 				$scope.currentState = $scope.LIST_STATE;
 				$scope.$apply();
 			},
@@ -1173,6 +1190,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
     	$scope.listMarkerByFilters( $scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest );
     	$scope.listMarkerByFiltersMap($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);
+    	$scope.hasSearch = true;
     };
     
     $scope.clearFilters = function(){
@@ -1189,6 +1207,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         
         $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
         $scope.listMarkerByFiltersMap( null, null, null, null, null);
+        $scope.hasSearch = false;
     	
     };
     
