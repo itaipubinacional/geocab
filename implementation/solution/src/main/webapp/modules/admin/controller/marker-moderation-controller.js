@@ -809,7 +809,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 						}
 				  });
 				  
-				  $scope.changeToList(markers);
+				  if(markers.length)
+					  $scope.changeToList(markers);
+				  
 				  $scope.drag = true;
 			});
 			
