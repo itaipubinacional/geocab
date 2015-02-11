@@ -33,11 +33,11 @@
 	        				ng-options="motive.name for motive in motives"
 							ng-class="{ngInvalid: form_refuse_marker.$submitted && form_refuse_marker.select.$error.required }"
 	        		   		required>
+	        		   		<option value="">Selecione o motivo</option>
 	        		</select>
 	        	</div>
         	
-        	
-	        	 <span  ng-show="form_refuse_marker.$submitted && form_refuse_marker.select.$error.required " class="tooltip-validation" style="right:16px;top:28px"><spring:message code="admin.users.Field-required" /></span>
+	        	 <span ng-show="form_refuse_marker.$submitted && form_refuse_marker.select.$error.required " class="tooltip-validation" style="right:16px;top:28px"><spring:message code="admin.users.Field-required" /></span>
 	        	
 	        	 <label class="form-item"><spring:message code="admin.marker-moderation.Description" /></label>
 				 <textarea rows="5" cols="100" ng-model="data.description"></textarea>
