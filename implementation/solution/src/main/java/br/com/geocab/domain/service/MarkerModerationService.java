@@ -114,8 +114,6 @@ public class MarkerModerationService
 	{			
 		try
 		{
-			User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
-			
 			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(id).get(0);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
@@ -127,6 +125,8 @@ public class MarkerModerationService
 			else
 			{
 				Marker marker = markerRepository.findOne(id);
+				User user = this.userRepository.findOne(marker.getUser().getId());
+				
 				marker.setStatus(MarkerStatus.ACCEPTED);
 				
 				markerModeration.setMarker(marker);
@@ -181,8 +181,6 @@ public class MarkerModerationService
 	{			
 		try
 		{
-			User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
-			
 			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(markerId).get(0);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
@@ -194,6 +192,8 @@ public class MarkerModerationService
 			else
 			{
 				Marker marker = markerRepository.findOne(markerId);
+				User user = this.userRepository.findOne(marker.getUser().getId());
+				
 				marker.setStatus(MarkerStatus.REFUSED);
 				
 				markerModeration.setMarker(marker);
