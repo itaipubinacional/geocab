@@ -634,10 +634,10 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         accessGroupService.testaConexao(accessGroup.url, accessGroup.accessGroupType, {
             callback: function (result) {
                 if (result) {
-                    $scope.msg = {type: "success", text: "Conex�o estabelecida com �xito.", dismiss: true};
+                    $scope.msg = {type: "success", text: $translate('admin.access-group.Connection-established-with-success'), dismiss: true};
                 }
                 else {
-                    $scope.msg = {type: "danger", text: "N�o foi poss�vel estabelecer conex�o com o grupo de acesso geogr�ficos.", dismiss: true};
+                    $scope.msg = {type: "danger", text: $translate('admin.access-group.Could-not-connect-to-the-geographical-access-group') , dismiss: true};
                 }
                 $scope.$apply();
             },

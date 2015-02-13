@@ -36,6 +36,7 @@ import org.springframework.web.client.RestTemplate;
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
 import br.com.geocab.domain.entity.accessgroup.AccessGroupLayer;
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
@@ -54,6 +55,7 @@ import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
+import br.com.geocab.domain.repository.tool.IToolRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -123,6 +125,12 @@ public class LayerGroupService
 	 */
 	@Autowired
 	private IAttributeRepository attributeRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IToolRepository toolRepository;
 	
 	/**
 	 * 
@@ -1212,7 +1220,7 @@ public class LayerGroupService
 	}*/
 	
 	/**
-	 * Method that retorn a list of tools by user access group
+	 * Method that return a list of tools by user access group
 	 */
 	public List<Tool> listToolsByUser()
 	{
@@ -1222,20 +1230,36 @@ public class LayerGroupService
 		if( ContextHolder.getAuthenticatedUser() != null )  {
 			List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getUsername());
 			
-			for (AccessGroup accessGroup : accessGroupsUser)
-			{
-				accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
-				
-				for (Tool tool : accessGroup.getTools())
+			if (ContextHolder.getAuthenticatedUser().getRole() != UserRole.ADMINISTRATOR)
+			{				
+								
+				for (AccessGroup accessGroup : accessGroupsUser)
 				{
-					toolsUser.add(tool);
-				}
+					accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
+					
+					for (Tool tool : accessGroup.getTools())
+					{
+						toolsUser.add(tool);
+					}
+				}								
+				
+			} else {
+				toolsUser = this.toolRepository.findAll();
 			}
-		} else {
-			//Anonimo
 			
-		}
+		} else{
+			
+			AccessGroup accessGroup = this.accessGroupRepository.findOne(1L);
+			
+			accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
+				
+			for (Tool tool : accessGroup.getTools())
+			{
+				toolsUser.add(tool);
+			}
+			
+		}	
 		
-		return toolsUser;
+		return toolsUser ;
 	}
 }
