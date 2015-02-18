@@ -27,6 +27,9 @@ function CreateUserPopUpController( $scope, $modalInstance, $state, $importServi
     	if ( !$scope.form('form_create_account').$valid ){
 			$scope.msg = {type:"danger", text: $translate('admin.users.The-highlighted-fields-are-required') , dismiss:true};
 			return;
+		} else if ($scope.currentEntity.password != $scope.currentEntity.confirmPassword ){
+			$scope.msg = null;
+			return
 		}
 
     	loginService.insertUser( $scope.currentEntity, {
