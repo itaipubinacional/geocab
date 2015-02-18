@@ -43,6 +43,8 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	 */
 	private static final long serialVersionUID = 6380496199746377568L;
 	
+	public static final Long PUBLIC_GROUP_ID = 1L;
+	
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
