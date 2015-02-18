@@ -55,7 +55,6 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
 
-
 /**
  * @author Thiago Rossetto Afonso
  * @since 30/09/2014
@@ -63,7 +62,7 @@ import com.vividsolutions.jts.io.WKTWriter;
  */
 @Service
 @Transactional
-@RemoteProxy(name="markerService")
+@RemoteProxy(name = "markerService")
 public class MarkerService
 {
 	/*-------------------------------------------------------------------
@@ -72,37 +71,36 @@ public class MarkerService
 	/**
 	 * Log
 	 */
-	private static final Logger LOG = Logger.getLogger( DataSourceService.class.getName() );
-	
+	private static final Logger LOG = Logger.getLogger(DataSourceService.class
+			.getName());
+
 	/**
 	 * Repository of {@link DataSource}
 	 */
 	@Autowired
 	private IMarkerRepository markerRepository;
-	
+
 	/**
 	 * 
 	 */
 	@Autowired
 	private IMarkerAttributeRepository markerAttributeRepository;
-	
+
 	/**
 	 * 
 	 */
 	@Autowired
 	private IMarkerModerationRepository markerModerationRepository;
-	
+
 	/**
-	 * I18n 
+	 * I18n
 	 */
 	@Autowired
 	private MessageSource messages;
-	
+
 	@Autowired
 	private IMetaFileRepository metaFileRepository;
-	
-	
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -111,231 +109,265 @@ public class MarkerService
 	 * 
 	 * @param Marker
 	 * @return Marker
-	 * @throws RepositoryException 
-	 * @throws IOException 
+	 * @throws RepositoryException
+	 * @throws IOException
 	 */
-	public Marker insertMarker( Marker marker ) throws IOException, RepositoryException
+	public Marker insertMarker(Marker marker) throws IOException,
+			RepositoryException
 	{
-		
-		List<MarkerModeration> list = this.markerModerationRepository.listByFilters(null, null).getContent();
+
+		List<MarkerModeration> list = this.markerModerationRepository
+				.listByFilters(null, null).getContent();
 		System.out.println(list);
-		try{
+		try
+		{
 			User user = ContextHolder.getAuthenticatedUser();
-			
+
 			marker.setLocation((Point) this.wktToGeometry(marker
 					.getWktCoordenate()));
-		
+
 			marker.setStatus(MarkerStatus.PENDING);
 			marker.setUser(user);
-			marker = this.markerRepository.save( marker );
-			if( marker.getImage() != null ) {
+			marker = this.markerRepository.save(marker);
+			if (marker.getImage() != null)
+			{
 				this.uploadImg(marker.getImage(), marker.getId());
 			}
-			
+
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
 			markerModeration.setStatus(MarkerStatus.PENDING);
 			this.markerModerationRepository.save(markerModeration);
-			
+
 		}
-		catch ( DataIntegrityViolationException e )
+		catch (DataIntegrityViolationException e)
 		{
-			LOG.info( e.getMessage() );
+			LOG.info(e.getMessage());
 			final String error = e.getCause().getCause().getMessage();
-			
-			this.dataIntegrityViolationException(error);			
+
+			this.dataIntegrityViolationException(error);
 		}
-		return marker; 
+		return marker;
 	}
-	
+
 	/**
 	 * Method to update an {@link Marker}
 	 * 
 	 * @param Marker
 	 * @return Marker
-	 * @throws RepositoryException 
-	 * @throws IOException 
+	 * @throws RepositoryException
+	 * @throws IOException
 	 */
-	//@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
-	public Marker updateMarker( Marker marker ) throws IOException, RepositoryException
-	{			
-		try{
-			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
-			
-			if(markerTemporary.getLayer().getId() != marker.getLayer().getId()) {
-				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
-				
-				if( markerAttributes != null ) {
-					this.markerAttributeRepository.deleteInBatch(markerAttributes);	
+	// @PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
+	public Marker updateMarker(Marker marker) throws IOException,
+			RepositoryException
+	{
+		try
+		{
+			Marker markerTemporary = this.markerRepository.findOne(marker
+					.getId());
+
+			if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
+			{
+				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository
+						.listAttributeByMarker(marker.getId());
+
+				if (markerAttributes != null)
+				{
+					this.markerAttributeRepository
+							.deleteInBatch(markerAttributes);
 				}
 			}
-			
+
 			FileTransfer file = this.findImgByMarker(marker.getId());
-			
-			if( file != null && marker.getImage() != null ){
+
+			if (file != null && marker.getImage() != null)
+			{
 				this.removeImg(String.valueOf(marker.getId()));
 			}
-			
-			if( marker.getImage() != null) {
-				this.uploadImg(marker.getImage(), marker.getId());	
+
+			if (marker.getImage() != null)
+			{
+				this.uploadImg(marker.getImage(), marker.getId());
 			}
-			
+
 			marker.setLocation(markerTemporary.getLocation());
-			
-			marker = this.markerRepository.save( marker );
+
+			marker = this.markerRepository.save(marker);
 		}
-		catch ( DataIntegrityViolationException e )
+		catch (DataIntegrityViolationException e)
 		{
-			LOG.info( e.getMessage() );
+			LOG.info(e.getMessage());
 			final String error = e.getCause().getCause().getMessage();
-			
+
 			this.dataIntegrityViolationException(error);
 		}
 		return marker;
 	}
-	
+
 	/**
 	 * Method to remove an {@link Marker}
 	 * 
 	 * @param id
 	 */
-	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
-	public void removeMarker( Long id )
+	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
+			+ UserRole.MODERATOR_VALUE + "')")
+	public void removeMarker(Long id)
 	{
 		Marker marker = this.findMarkerById(id);
 		marker.setDeleted(true);
 		this.markerRepository.save(marker);
 	}
-	
+
 	/**
 	 * Method to block an {@link Marker}
 	 * 
-	 * @param Marker marker
+	 * @param Marker
+	 *            marker
 	 */
-	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
-	public void enableMarker( Long id )
+	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
+			+ UserRole.MODERATOR_VALUE + "')")
+	public void enableMarker(Long id)
 	{
-		try{
+		try
+		{
 			Marker marker = this.findMarkerById(id);
 			marker.setStatus(MarkerStatus.ACCEPTED);
-			marker = this.markerRepository.save( marker );
+			marker = this.markerRepository.save(marker);
 		}
-		catch ( DataIntegrityViolationException e )
+		catch (DataIntegrityViolationException e)
 		{
-			LOG.info( e.getMessage() );
+			LOG.info(e.getMessage());
 			final String error = e.getCause().getCause().getMessage();
-			
+
 			this.dataIntegrityViolationException(error);
 		}
 	}
-	
+
 	/**
 	 * Method to unblock an {@link Marker}
 	 * 
-	 * @param Marker marker
+	 * @param Marker
+	 *            marker
 	 */
-	@PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
-	public void disableMarker( Long id )
+	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
+			+ UserRole.MODERATOR_VALUE + "')")
+	public void disableMarker(Long id)
 	{
-		try{
+		try
+		{
 			Marker marker = this.findMarkerById(id);
 			marker.setStatus(MarkerStatus.REFUSED);
-			marker = this.markerRepository.save( marker );
+			marker = this.markerRepository.save(marker);
 		}
-		catch ( DataIntegrityViolationException e )
+		catch (DataIntegrityViolationException e)
 		{
-			LOG.info( e.getMessage() );
+			LOG.info(e.getMessage());
 			final String error = e.getCause().getCause().getMessage();
-			
+
 			this.dataIntegrityViolationException(error);
 		}
 	}
-	
+
 	/**
 	 * Method to find an {@link Marker} by id
 	 * 
 	 * @param id
 	 * @return marker
-	 * @throws JAXBException 
+	 * @throws JAXBException
 	 */
 	@Transactional(readOnly = true)
-	public Marker findMarkerById( Long id )
+	public Marker findMarkerById(Long id)
 	{
-		return this.markerRepository.findOne( id );
+		return this.markerRepository.findOne(id);
 	}
-	
-	public User getUserMe(){
-		User u = ContextHolder.getAuthenticatedUser();
-		return u;
+
+	public User getUserMe()
+	{
+		return ContextHolder.getAuthenticatedUser();
 	}
-	
+
 	/**
 	 * Method to find an {@link Marker} by layer
 	 * 
 	 * @param layerId
 	 * @return marker List
-	 * @throws JAXBException 
+	 * @throws JAXBException
 	 */
 	@Transactional(readOnly = true)
-	public List<Marker> listMarkerByLayerFilters( Long layerId )
+	public List<Marker> listMarkerByLayerFilters(Long layerId)
 	{
 		User user = ContextHolder.getAuthenticatedUser();
-	
+
 		List<Marker> listMarker = null;
-		
-		if(user != null) {
-			 
-			if( user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) 
-			{
-				listMarker = this.markerRepository.listMarkerByLayerAll( layerId );
-			} 
-			else 
-			{
-				listMarker = this.markerRepository.listMarkerByLayer( layerId, user.getId() );
-			}
-			
-		}
-		else 
+
+		if (!user.equals(User.ANONYMOUS))
 		{
-			listMarker = this.markerRepository.listMarkerByLayerPublic( layerId );
+
+			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
+					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
+			{
+				listMarker = this.markerRepository
+						.listMarkerByLayerAll(layerId);
+			}
+			else
+			{
+				listMarker = this.markerRepository.listMarkerByLayer(layerId,
+						user.getId());
+			}
+
 		}
-		
-		for(Marker marker : listMarker) {
+		else
+		{
+			listMarker = this.markerRepository.listMarkerByLayerPublic(layerId);
+		}
+
+		for (Marker marker : listMarker)
+		{
 			marker.setMarkerAttribute(listAttributeByMarker(marker.getId()));
 		}
-		
+
 		return listMarker;
 	}
-	
+
 	/**
 	 * Method to find an {@link Marker} by layer
 	 * 
 	 * @param layerId
 	 * @return marker List
-	 * @throws JAXBException 
+	 * @throws JAXBException
 	 */
 	@Transactional(readOnly = true)
-	public List<Marker> listMarkerByLayer( Long layerId )
+	public List<Marker> listMarkerByLayer(Long layerId)
 	{
 		User user = ContextHolder.getAuthenticatedUser();
-	
+
 		List<Marker> listMarker = null;
-		
-		if(user != null) {
-			 
-			if( user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) {
-				listMarker = this.markerRepository.listMarkerByLayerAll( layerId );
-			} else {
-				listMarker = this.markerRepository.listMarkerByLayer( layerId, user.getId() );
+
+		if (!user.equals(User.ANONYMOUS))
+		{
+
+			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
+					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
+			{
+				listMarker = this.markerRepository
+						.listMarkerByLayerAll(layerId);
 			}
-			
-		} else {
-			listMarker = this.markerRepository.listMarkerByLayerPublic( layerId );
+			else
+			{
+				listMarker = this.markerRepository.listMarkerByLayer(layerId,
+						user.getId());
+			}
+
 		}
-		
+		else
+		{
+			listMarker = this.markerRepository.listMarkerByLayerPublic(layerId);
+		}
+
 		return listMarker;
 	}
-	
+
 	/**
 	 * 
 	 * @param wktPoint
@@ -366,138 +398,148 @@ public class MarkerService
 		WKTWriter geom = new WKTWriter();
 		return geom.write(geometry);
 	}
-	
-	
+
 	/**
 	 * Method to list all {@link Marker}
 	 * 
 	 * @param id
 	 * @return marker
-	 * @throws JAXBException 
+	 * @throws JAXBException
 	 */
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public List<Marker> listAll()
 	{
 		return this.markerRepository.listAll();
 	}
-	
+
 	/**
-	 * Method to find attribute by marker 
+	 * Method to find attribute by marker
 	 * 
-	 * @param id 
+	 * @param id
 	 */
-	public List<MarkerAttribute> listAttributeByMarker(Long id){
+	public List<MarkerAttribute> listAttributeByMarker(Long id)
+	{
 		return this.markerAttributeRepository.listAttributeByMarker(id);
 	}
-	
+
 	/**
 	 * Method to list {@link FonteDados} pageable with filter options
-	 *
+	 * 
 	 * @param filter
 	 * @param pageable
 	 * @return
-	 * @throws java.text.ParseException 
+	 * @throws java.text.ParseException
 	 */
-	@Transactional(readOnly=true)
-	public Page<Marker> listMarkerByFilters(  String layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable ) throws java.text.ParseException
+	@Transactional(readOnly = true)
+	public Page<Marker> listMarkerByFilters(String layer, MarkerStatus status,
+			String dateStart, String dateEnd, String user, PageRequest pageable)
+			throws java.text.ParseException
 	{
-		
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Calendar dEnd = null;
 		Calendar dStart = null;
-		
-		if(dateStart != null) {
+
+		if (dateStart != null)
+		{
 			dStart = Calendar.getInstance();
-			dStart.setTime( (Date)formatter.parse(dateStart) );
+			dStart.setTime((Date) formatter.parse(dateStart));
 		}
-		
-		if(dateEnd != null) {
+
+		if (dateEnd != null)
+		{
 			dEnd = Calendar.getInstance();
-			dEnd.setTime( (Date)formatter.parse(dateEnd) );
+			dEnd.setTime((Date) formatter.parse(dateEnd));
 		}
-		
-		//return this.markerRepository.listByFilters(layer, status, dStart, dEnd, user, pageable);
-		return this.markerRepository.listByFilters(layer, status, dStart, dEnd, user, pageable);
+
+		// return this.markerRepository.listByFilters(layer, status, dStart,
+		// dEnd, user, pageable);
+		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,
+				user, pageable);
 	}
-	
+
 	/**
 	 * Method to list {@link FonteDados} pageable with filter options
-	 *
+	 * 
 	 * @param filter
 	 * @param pageable
 	 * @return
-	 * @throws java.text.ParseException 
+	 * @throws java.text.ParseException
 	 */
-	@Transactional(readOnly=true)
-	public List<Marker> listMarkerByFiltersMap(  String layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable ) throws java.text.ParseException
+	@Transactional(readOnly = true)
+	public List<Marker> listMarkerByFiltersMap(String layer,
+			MarkerStatus status, String dateStart, String dateEnd, String user,
+			PageRequest pageable) throws java.text.ParseException
 	{
-		
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Calendar dEnd = null;
 		Calendar dStart = null;
-		
-		if(dateStart != null) {
+
+		if (dateStart != null)
+		{
 			dStart = Calendar.getInstance();
-			dStart.setTime( (Date)formatter.parse(dateStart) );
+			dStart.setTime((Date) formatter.parse(dateStart));
 		}
-		
-		if(dateEnd != null) {
+
+		if (dateEnd != null)
+		{
 			dEnd = Calendar.getInstance();
-			dEnd.setTime( (Date)formatter.parse(dateEnd) );
+			dEnd.setTime((Date) formatter.parse(dateEnd));
 		}
-		
-		return this.markerRepository.listByFiltersMap(layer, status, dStart, dEnd, user);
+
+		return this.markerRepository.listByFiltersMap(layer, status, dStart,
+				dEnd, user);
 	}
-	
+
 	/**
 	 * Method to list {@link FonteDados} pageable with filter options
-	 *
+	 * 
 	 * @param filter
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(readOnly=true)
-	public Page<Marker> listMarkerByMarkers( List<Long> ids , PageRequest pageable )
+	@Transactional(readOnly = true)
+	public Page<Marker> listMarkerByMarkers(List<Long> ids, PageRequest pageable)
 	{
 		return this.markerRepository.listByMarkers(ids, pageable);
 	}
-	
+
 	/**
-	 * Method to verify DataIntegrityViolations and throw IllegalArgumentException with the field name
-	 *
+	 * Method to verify DataIntegrityViolations and throw
+	 * IllegalArgumentException with the field name
+	 * 
 	 * @param error
-	 * @throws IllegalArgumentException 
+	 * @throws IllegalArgumentException
 	 * @return void
 	 */
-	private void dataIntegrityViolationException( String error )
-	{	
-		/*String fieldError = "";
-		
-		if(error.contains("uk_data_source_name"))
-		{
-			fieldError = this.messages.getMessage("Name", new Object [] {}, null );
-		}
-		else if(error.contains("uk_data_source_url"))
-		{
-			fieldError = this.messages.getMessage("Address", new Object [] {}, null );
-		}
-		
-		if(!fieldError.isEmpty()){
-			throw new IllegalArgumentException( this.messages.getMessage("The-field-entered-already-exists,-change-and-try-again", new Object [] {fieldError}, null) );
-		}*/
+	private void dataIntegrityViolationException(String error)
+	{
+		/*
+		 * String fieldError = ""; if(error.contains("uk_data_source_name")) {
+		 * fieldError = this.messages.getMessage("Name", new Object [] {}, null
+		 * ); } else if(error.contains("uk_data_source_url")) { fieldError =
+		 * this.messages.getMessage("Address", new Object [] {}, null ); }
+		 * if(!fieldError.isEmpty()){ throw new IllegalArgumentException(
+		 * this.messages
+		 * .getMessage("The-field-entered-already-exists,-change-and-try-again",
+		 * new Object [] {fieldError}, null) ); }
+		 */
 	}
+
 	/**
 	 * 
 	 * @param metaFileId
 	 * @throws IOException
 	 * @throws RepositoryException
 	 */
-	public void removeImg( String metaFileId ) throws IOException, RepositoryException {
-		
-	
+	public void removeImg(String metaFileId) throws IOException,
+			RepositoryException
+	{
+
 		this.metaFileRepository.remove(metaFileId);
 	}
-	
+
 	/**
 	 * 
 	 * @param fileTransfer
@@ -505,62 +547,66 @@ public class MarkerService
 	 * @throws IOException
 	 * @throws RepositoryException
 	 */
-	public void uploadImg( FileTransfer fileTransfer, Long markerId ) throws IOException, RepositoryException {
-		
-		final String  mimeType = fileTransfer.getMimeType();
-		
+	public void uploadImg(FileTransfer fileTransfer, Long markerId)
+			throws IOException, RepositoryException
+	{
+
+		final String mimeType = fileTransfer.getMimeType();
+
 		final List<String> validMimeTypes = new ArrayList<String>();
 		validMimeTypes.add("image/gif");
 		validMimeTypes.add("image/jpeg");
 		validMimeTypes.add("image/bmp");
 		validMimeTypes.add("image/png");
-		
-		if ( mimeType == null || !validMimeTypes.contains(mimeType))
+
+		if (mimeType == null || !validMimeTypes.contains(mimeType))
 		{
-			throw new IllegalArgumentException( "Formato inválido!" );
+			throw new IllegalArgumentException("Formato inválido!");
 		}
-		
+
 		InputStream is = new BufferedInputStream(fileTransfer.getInputStream());
-		final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+		final BufferedImage bufferedImage = new BufferedImage(640, 480,
+				BufferedImage.TYPE_INT_RGB);
 		Image image = ImageIO.read(is);
 		Graphics2D g = bufferedImage.createGraphics();
 		g.drawImage(image, 0, 0, 640, 480, null);
 		g.dispose();
-			
+
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ImageIO.write(bufferedImage, "png", os);
 		InputStream isteam = new ByteArrayInputStream(os.toByteArray());
-		
+
 		MetaFile metaFile = new MetaFile();
 		metaFile.setId(String.valueOf(markerId));
-		metaFile.setContentType( fileTransfer.getMimeType() );
-		metaFile.setContentLength( fileTransfer.getSize() );
-		metaFile.setFolder("/marker/"+markerId);
+		metaFile.setContentType(fileTransfer.getMimeType());
+		metaFile.setContentLength(fileTransfer.getSize());
+		metaFile.setFolder("/marker/" + markerId);
 		metaFile.setInputStream(isteam);
-		metaFile.setName( fileTransfer.getFilename() );
-		
-		this.metaFileRepository.insert( metaFile );
+		metaFile.setName(fileTransfer.getFilename());
+
+		this.metaFileRepository.insert(metaFile);
 	}
-	
+
 	/**
 	 * 
 	 * @param markerId
 	 * @return
 	 * @throws RepositoryException
 	 */
-	public FileTransfer findImgByMarker( Long markerId ) throws RepositoryException
+	public FileTransfer findImgByMarker(Long markerId)
+			throws RepositoryException
 	{
 		try
 		{
-			final MetaFile metaFile = this.metaFileRepository.findByPath("/marker/"+markerId+"/"+markerId, true);
-			return new FileTransfer(metaFile.getName(), metaFile.getContentType(), metaFile.getInputStream());
+			final MetaFile metaFile = this.metaFileRepository.findByPath(
+					"/marker/" + markerId + "/" + markerId, true);
+			return new FileTransfer(metaFile.getName(),
+					metaFile.getContentType(), metaFile.getInputStream());
 		}
-		catch ( PathNotFoundException e )
+		catch (PathNotFoundException e)
 		{
 			return null;
-		}	
+		}
 	}
-	
-	
 
 }
