@@ -528,12 +528,13 @@ public class LayerGroupService
 		
 			
 			List<AccessGroup> accessGroupsUser =  new ArrayList<AccessGroup>();
+			final User user = ContextHolder.getAuthenticatedUser();
 			
-			if(ContextHolder.getAuthenticatedUser() != null) 
+			if (!user.equals(User.ANONYMOUS))
 			{
-				if( ContextHolder.getAuthenticatedUser().getRole() != UserRole.ADMINISTRATOR ) 
+				if( user.getRole() != UserRole.ADMINISTRATOR ) 
 				{
-					accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
+					accessGroupsUser = this.accessGroupRepository.listByUser(user.getEmail());
 					
 					for (AccessGroup accessGroup : accessGroupsUser)
 					{
@@ -1260,12 +1261,13 @@ public class LayerGroupService
 	public List<Tool> listToolsByUser()
 	{
 		List<Tool> toolsUser = new ArrayList<Tool>();
+		final User user = ContextHolder.getAuthenticatedUser();
 		
 		//logado
-		if( ContextHolder.getAuthenticatedUser() != null )  {
-			List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getUsername());
+		if (!user.equals(User.ANONYMOUS)) {
+			List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(user.getUsername());
 			
-			if (ContextHolder.getAuthenticatedUser().getRole() != UserRole.ADMINISTRATOR)
+			if (user.getRole() != UserRole.ADMINISTRATOR)
 			{				
 								
 				for (AccessGroup accessGroup : accessGroupsUser)

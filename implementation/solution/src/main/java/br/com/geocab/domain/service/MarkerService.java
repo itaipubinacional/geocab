@@ -297,7 +297,7 @@ public class MarkerService
 	@Transactional(readOnly = true)
 	public List<Marker> listMarkerByLayerFilters(Long layerId)
 	{
-		User user = ContextHolder.getAuthenticatedUser();
+		final User user = ContextHolder.getAuthenticatedUser();
 
 		List<Marker> listMarker = null;
 
@@ -340,7 +340,7 @@ public class MarkerService
 	@Transactional(readOnly = true)
 	public List<Marker> listMarkerByLayer(Long layerId)
 	{
-		User user = ContextHolder.getAuthenticatedUser();
+		final User user = ContextHolder.getAuthenticatedUser();
 
 		List<Marker> listMarker = null;
 
