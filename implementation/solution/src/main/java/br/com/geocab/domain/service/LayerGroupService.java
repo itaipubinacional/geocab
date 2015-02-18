@@ -562,7 +562,7 @@ public class LayerGroupService
 			} 
 			else 
 			{
-				AccessGroup accessGroup = this.accessGroupRepository.findOne(1L);
+				AccessGroup accessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
 				accessGroupsUser.add(accessGroup);
 				
 				accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
@@ -1286,7 +1286,7 @@ public class LayerGroupService
 			
 		} else{
 			
-			AccessGroup accessGroup = this.accessGroupRepository.findOne(1L);
+			AccessGroup accessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
 			
 			accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
 				
