@@ -35,7 +35,7 @@ Socialize
 
 Se você encontrou um erro abra uma [issue](https://github.com/itaipubinacional/geocab/issues/new) que trabalharemos para corrigí-lo.
 
-Se você encontrou e corrigiu o bug (obrigado!) ou desenvolveu uma nova funcionalidade (eba!) por favor envie uma [pull request](https://github.com/itaipubinacional/geocab/compare) que teremos o maior prazer em avaliá-la e distribuí-la para todos.
+Se você encontrou e corrigiu o bug (obrigado!) ou desenvolveu uma nova funcionalidade por favor envie uma [pull request](https://github.com/itaipubinacional/geocab/compare) que teremos o maior prazer em avaliá-la e distribuí-la para todos.
 
 
 
