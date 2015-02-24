@@ -68,10 +68,10 @@
                         <button class="btn btn-success larger-btn" ng-click="saveAssotiations()"><spring:message code="admin.access-group.Save"/></button>
                     </div>
                     <br style="clear: both">
-                    <div ng-grid="gridUsers" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
-                    </div>
+                    <div ng-grid="gridUsers" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);"></div>
+                    
                     <div>
-                        <!-- State Criar -->
+                        <!-- State Create -->
 
                     </div>
                 </tab>

@@ -9,6 +9,10 @@
 	margin-right: 15px;
 }
 
+.logo:hover {
+    text-decoration: none;
+}
+
 .pre {
 	background: url(../images/logo-itaipu.png) 19px 20px no-repeat;
 	background-size: 61px;
@@ -20,6 +24,65 @@
 	margin-right: 15px;
 }
 
-.logo:hover {
-    text-decoration: none;
+.history{
+	background: url(../images/marker-moderation/historico.png) 24px 8px no-repeat;
+	background-size: 26px;
 }
+
+.history:hover{
+	background: url(../images/marker-moderation/historico.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+.approve{
+	background: url(../images/marker-moderation/aceitar-2.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+.select-moderation{
+	background: url(../images/icon-select-moderation.png) 14px 0 no-repeat;
+}
+
+.approve:hover{
+	background: url(../images/marker-moderation/aceitar-2.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+.approve1{
+	background: url(../images/marker-moderation/aceitar.png) green 24px 8px no-repeat;
+	background-size: 26px;
+	color: white
+}
+
+.approve1:hover{
+	background: url(../images/marker-moderation/aceitar.png) green 24px 8px no-repeat;
+	background-size: 26px;
+	color: white
+}
+
+
+.refuse{
+	background: url(../images/marker-moderation/recusar-2.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+.refuse:hover{
+	background: url(../images/marker-moderation/recusar-2.png) 24px 8px no-repeat;
+	background-size: 26px;
+}
+
+.refuse1{
+	background: url(../images/marker-moderation/recusar.png) red 24px 8px no-repeat;
+	background-size: 26px;
+	color: white
+}
+
+.refuse1:hover{
+	background: url(../images/marker-moderation/recusar.png) red 24px 8px no-repeat;
+	background-size: 26px;
+	color: white
+}
+
+
+
+

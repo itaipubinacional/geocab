@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -19,13 +20,19 @@ import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.io.FileTransfer;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.hibernate.envers.Audited;
+import org.hibernate.spatial.GeometryType;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -41,8 +48,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Audited
 @DataTransferObject(javascript="Marker")
 @Table(schema=IEntity.SCHEMA)
+@TypeDef(name="geometry", typeClass=GeometryType.class)
 public class Marker extends AbstractEntity implements Serializable
 {
+	
 	
 	/**
 	 * 
@@ -64,14 +73,15 @@ public class Marker extends AbstractEntity implements Serializable
 	@Transient
 	private Boolean imageToDelete;
 	
-	@NotNull
-	private String latitude;
+	@Transient
+	private String wktCoordenate;
 
-	@NotNull
-	private String longitude;
+	@Column(nullable = true)
+	@Type(type="org.hibernate.spatial.GeometryType")
+	private Point location;
 	
 	@NotNull
-	private StatusMarker status;
+	private MarkerStatus status;
 	
 	private Boolean deleted;
 	
@@ -84,6 +94,10 @@ public class Marker extends AbstractEntity implements Serializable
 	@JsonManagedReference
 	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
+	
+	@JsonManagedReference
+	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	private List<MarkerModeration> markerModeration = new ArrayList<MarkerModeration>();
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -113,12 +127,25 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param longitude
 	 * @param status
 	 */
-	public Marker( Long id, String latitude, String longitude, StatusMarker status)
+	public Marker( Long id, MarkerStatus status)
 	{
 		this.setId(id);
-		this.setLatitude(latitude);
-		this.setLongitude(longitude);
 		this.setStatus(status);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param latitude
+	 * @param longitude
+	 * @param status
+	 */
+	public Marker( Long id, MarkerStatus status, Geometry location, Layer layer)
+	{
+		this.setId(id);
+		this.setStatus(status);
+		this.setLocation( (Point) location);
+		this.setLayer(layer);
 	}
 
 	/**
@@ -129,11 +156,9 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param status
 	 * @param user
 	 */
-	public Marker( Long id, String latitude, String longitude, StatusMarker status, Calendar created, Layer layer, User user)
+	public Marker( Long id, MarkerStatus status, Calendar created, Layer layer, User user)
 	{
 		this.setId(id);
-		this.setLatitude(latitude);
-		this.setLongitude(longitude);
 		this.setStatus(status);
 		user.setPassword("");
 		user.setEmail("");
@@ -142,45 +167,42 @@ public class Marker extends AbstractEntity implements Serializable
 		this.setCreated(created);
 	}
 	
+
 	/**
-	 * @return the latitude
+	 * 
+	 * @param id
+	 * @param latitudeGeometry
+	 * @param longitude
+	 * @param status
+	 * @param created
+	 * @param geom
+	 * @param layer
+	 * @param user
 	 */
-	public String getLatitude()
+	public Marker( Long id, MarkerStatus status, Calendar created, Geometry location, Layer layer, User user)
 	{
-		return latitude;
+		this.setId(id);
+		this.setStatus(status);
+		user.setPassword("");
+		user.setEmail("");
+		this.setUser(user);
+		layer.setMarkers(null);
+		this.setLayer(layer);
+		this.setLocation( (Point) location );
+		this.setCreated(created);
 	}
-	/**
-	 * @param latitude the latitude to set
-	 */
-	public void setLatitude(String latitude)
-	{
-		this.latitude = latitude;
-	}
-	/**
-	 * @return the longitude
-	 */
-	public String getLongitude()
-	{
-		return longitude;
-	}
-	/**
-	 * @param longitude the longitude to set
-	 */
-	public void setLongitude(String longitude)
-	{
-		this.longitude = longitude;
-	}
+	
 	/**
 	 * @return the status
 	 */
-	public StatusMarker getStatus()
+	public MarkerStatus getStatus()
 	{
 		return status;
 	}
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(StatusMarker status)
+	public void setStatus(MarkerStatus status)
 	{
 		this.status = status;
 	}
@@ -279,6 +301,53 @@ public class Marker extends AbstractEntity implements Serializable
 	public void setImageToDelete(Boolean imageToDelete)
 	{
 		this.imageToDelete = imageToDelete;
+	}
+
+	/**
+	 * @return the wktCoordenate
+	 */
+	public String getWktCoordenate()
+	{
+		return wktCoordenate;
+	}
+
+	/**
+	 * @param wktCoordenate the wktCoordenate to set
+	 */
+	public void setWktCoordenate(String wktCoordenate)
+	{
+		this.wktCoordenate = wktCoordenate;
+	}
+	/**
+	 * @return the location
+	 */
+	public Point getLocation()
+	{
+		return location;
+	}
+
+	/**
+	 * @param location the location to set
+	 */
+	public void setLocation(Point location)
+	{
+		this.location = location;
+	}
+
+	/**
+	 * @return the markerModeration
+	 */
+	public List<MarkerModeration> getMarkerModeration()
+	{
+		return markerModeration;
+	}
+
+	/**
+	 * @param markerModeration the markerModeration to set
+	 */
+	public void setMarkerModeration(List<MarkerModeration> markerModeration)
+	{
+		this.markerModeration = markerModeration;
 	}
 	
 }

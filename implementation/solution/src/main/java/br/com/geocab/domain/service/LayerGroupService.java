@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletContext;
+import javax.validation.ConstraintViolationException;
 import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
@@ -24,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +36,7 @@ import org.springframework.web.client.RestTemplate;
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
 import br.com.geocab.domain.entity.accessgroup.AccessGroupLayer;
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
@@ -52,6 +55,7 @@ import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
+import br.com.geocab.domain.repository.tool.IToolRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -73,6 +77,12 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
+	
+	/**
+	 * I18n 
+	 */
+	@Autowired
+	private MessageSource messages;
 	
 	/**
 	 * 
@@ -115,6 +125,12 @@ public class LayerGroupService
 	 */
 	@Autowired
 	private IAttributeRepository attributeRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IToolRepository toolRepository;
 	
 	/**
 	 * 
@@ -508,30 +524,70 @@ public class LayerGroupService
 		
 		setLegendsLayers(layersGroupUpperPublished);
 		
-		List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
+		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
 		
-		for (AccessGroup accessGroup : accessGroupsUser)
-		{
-			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
-		}
-		
-		if ( !layersGroupUpperPublished.isEmpty() )
-		{
-			verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
-		}
-		
-		List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
-		
-		for ( LayerGroup layerGroup : layersGroupUpperPublished )
-		{
-			this.removeLayerGroupEmptyPublished(layerGroup);
 			
-			if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
+			List<AccessGroup> accessGroupsUser =  new ArrayList<AccessGroup>();
+			final User user = ContextHolder.getAuthenticatedUser();
+			
+			if (!user.equals(User.ANONYMOUS))
 			{
-				layerGroupToDelete.add(layerGroup);
+				if( user.getRole() != UserRole.ADMINISTRATOR ) 
+				{
+					accessGroupsUser = this.accessGroupRepository.listByUser(user.getEmail());
+					
+					for (AccessGroup accessGroup : accessGroupsUser)
+					{
+						accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
+					}
+					
+					if ( !layersGroupUpperPublished.isEmpty() )
+					{
+						verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
+					}
+					
+					List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
+					
+					for ( LayerGroup layerGroup : layersGroupUpperPublished )
+					{
+						this.removeLayerGroupEmptyPublished(layerGroup);
+						
+						if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
+						{
+							layerGroupToDelete.add(layerGroup);
+						}
+					}
+					layersGroupUpperPublished.removeAll(layerGroupToDelete);
+				}
+			} 
+			else 
+			{
+				AccessGroup accessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
+				accessGroupsUser.add(accessGroup);
+				
+				accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
+				
+				if ( !layersGroupUpperPublished.isEmpty() )
+				{
+					verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
+				}
+				
+				List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
+				
+				for ( LayerGroup layerGroup : layersGroupUpperPublished )
+				{
+					this.removeLayerGroupEmptyPublished(layerGroup);
+					
+					if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
+					{
+						layerGroupToDelete.add(layerGroup);
+					}
+				}
+				layersGroupUpperPublished.removeAll(layerGroupToDelete);
 			}
-		}
-		layersGroupUpperPublished.removeAll(layerGroupToDelete);
+			
+			
+		
 		
 		return layersGroupUpperPublished;
 		
@@ -790,8 +846,9 @@ public class LayerGroupService
 		
 		String sUrl;
 		
-		int posicao = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-		String urlGeoserver = layer.getDataSource().getUrl().substring(0, posicao+10);
+		int position = layer.getDataSource().getUrl().lastIndexOf("ows?");
+		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position);
+		
 		
 		sUrl = urlGeoserver + ExternalLayer.CAMPO_CAMADA_URL + layer.getName();
 		
@@ -1004,16 +1061,22 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void removeLayer( Long id )
 	{	
-		
 		List<AccessGroupLayer> layers = this.accessGroupLayerRepository.listByLayerId(id);
 		for (AccessGroupLayer accessGroupLayer : layers)
 		{
 			this.accessGroupLayerRepository.delete(accessGroupLayer);
 		}
 		
+		try
+		{
+			this.layerRepository.delete( id );
+			
+		}
+		catch (ConstraintViolationException e)
+		{
+			
+		}
 		
-		
-		this.layerRepository.delete( id );
 	}
 	
 	/**
@@ -1071,8 +1134,8 @@ public class LayerGroupService
 	 */
 	public String getLegendLayerFromGeoServer( Layer layer )
 	{
-		int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position+10);
+		int position = layer.getDataSource().getUrl().lastIndexOf("ows?");
+		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position);
 		
 		return urlGeoserver + Layer.LEGEND_GRAPHIC_URL + layer.getName() + Layer.LEGEND_GRAPHIC_FORMAT;
 	}
@@ -1193,25 +1256,47 @@ public class LayerGroupService
 	}*/
 	
 	/**
-	 * Method that retorn a list of tools by user access group
+	 * Method that return a list of tools by user access group
 	 */
 	public List<Tool> listToolsByUser()
 	{
-		//Lista todos grupos de acessos do usuÃ¯Â¿Â½rio
-		List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getUsername());
-		
 		List<Tool> toolsUser = new ArrayList<Tool>();
+		final User user = ContextHolder.getAuthenticatedUser();
 		
-		for (AccessGroup accessGroup : accessGroupsUser)
-		{
-			accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
+		//logado
+		if (!user.equals(User.ANONYMOUS)) {
+			List<AccessGroup> accessGroupsUser = this.accessGroupRepository.listByUser(user.getUsername());
 			
+			if (user.getRole() != UserRole.ADMINISTRATOR)
+			{				
+								
+				for (AccessGroup accessGroup : accessGroupsUser)
+				{
+					accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
+					
+					for (Tool tool : accessGroup.getTools())
+					{
+						toolsUser.add(tool);
+					}
+				}								
+				
+			} else {
+				toolsUser = this.toolRepository.findAll();
+			}
+			
+		} else{
+			
+			AccessGroup accessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
+			
+			accessGroup = this.accessGroupRepository.findOne(accessGroup.getId());
+				
 			for (Tool tool : accessGroup.getTools())
 			{
 				toolsUser.add(tool);
 			}
-		}
+			
+		}	
 		
-		return toolsUser;
+		return toolsUser ;
 	}
 }

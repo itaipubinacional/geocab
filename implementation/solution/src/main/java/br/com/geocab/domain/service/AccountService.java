@@ -1,6 +1,7 @@
 package br.com.geocab.domain.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -21,6 +22,7 @@ import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.account.IUserRepository;
 
@@ -90,15 +92,15 @@ public class AccountService
 		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); 
 		user.setPassword( encodedPassword );
 		
-		User u = this.userRepository.save( user );
+		user = this.userRepository.save( user );
 		
-		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(1L);
+		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
 		
-		publicAccessGroup.getUsers().add(u);
+		publicAccessGroup.getUsers().add(user);
 		
 		this.accessGroupRepository.save(publicAccessGroup);
 		
-		return u;
+		return user;
 	}
 		
 	/**
@@ -112,6 +114,12 @@ public class AccountService
 	public Page<User> listUsersByFilters( String filter, PageRequest pageable )
 	{
 		return this.userRepository.listByFilters(filter, pageable);
+	}
+	
+	@Transactional(readOnly=true)
+	public List<User> listAllUsers()
+	{
+		return this.userRepository.findAll();
 	}
 	
 	/**

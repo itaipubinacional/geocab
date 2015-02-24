@@ -40,6 +40,7 @@
 	
 	<dependencies>
 	
+		
 		<!-- SpringFramework -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -109,6 +110,32 @@
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-envers</artifactId>
 		</dependency>
+		
+		<!-- Hibernate Spatial -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-spatial</artifactId>
+            <version>4.3</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+		
+		<!-- VividSolutions -->
+		<dependency>
+			<groupId>com.vividsolutions</groupId>
+			<artifactId>jts</artifactId>
+			<version>1.11</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
 		
 		<!-- DataSource -->
 		<dependency>

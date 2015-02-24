@@ -122,6 +122,30 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      * @type {Array}
      */
     $scope.originalSearchs = [];
+    
+    /**
+    *
+    * @type {Array}
+    */
+   $scope.removeUsers = [];
+
+   /**
+    *
+    * @type {Array}
+    */
+   $scope.addUsers = [];
+
+   /**
+    *
+    * @type {Array}
+    */
+   $scope.selectedUsers = [];
+
+   /**
+    *
+    * @type {Array}
+    */
+   $scope.originalUsers = [];
 
     /**
      *
@@ -241,7 +265,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         };
     
     $scope.gridUsers = {
-        data: 'currentEntity.users',
+        data: 'selectedUsers',
         multiSelect: false,
         useExternalSorting: false,
         headerRowHeight: 45,
@@ -372,6 +396,10 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         $scope.addSearchs = [];
         $scope.selectedSearchs = [];
         $scope.originalSearchs = [];
+        $scope.removeUsers = [];
+        $scope.addUsers = [];
+        $scope.selectedUsers = [];
+        $scope.originalUsers = [];
 
         //Para funcionar com o ng-model no radio button
         $scope.currentEntity.accessGroupType = 'WMS';
@@ -394,7 +422,8 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
 
         accessGroupService.findAccessGroupById($state.params.id, {
             callback: function (result) {
-                $scope.currentEntity = result;
+            	$scope.selectedUsers = result.users;
+                $scope.currentEntity =  result;
                 $scope.currentState = $scope.UPDATE_STATE;
                 $state.go($scope.UPDATE_STATE);
                 $scope.$apply();
@@ -526,7 +555,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
 
         accessGroupService.listAccessGroupByFilters(filter, pageRequest, {
             callback: function (result) {
-                $scope.currentPage = result;
+                $scope.currentPage = $scope.selectedUsers = result;
                 $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
                 $scope.currentState = $scope.LIST_STATE;
                 $state.go($scope.LIST_STATE);
@@ -605,10 +634,10 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         accessGroupService.testaConexao(accessGroup.url, accessGroup.accessGroupType, {
             callback: function (result) {
                 if (result) {
-                    $scope.msg = {type: "success", text: "Conex�o estabelecida com �xito.", dismiss: true};
+                    $scope.msg = {type: "success", text: $translate('admin.access-group.Connection-established-with-success'), dismiss: true};
                 }
                 else {
-                    $scope.msg = {type: "danger", text: "N�o foi poss�vel estabelecer conex�o com o grupo de acesso geogr�ficos.", dismiss: true};
+                    $scope.msg = {type: "danger", text: $translate('admin.access-group.Could-not-connect-to-the-geographical-access-group') , dismiss: true};
                 }
                 $scope.$apply();
             },
@@ -783,15 +812,54 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             windowClass: 'xx-dialog',
             resolve: {
                 usersSelected: function () {
-                    return $scope.currentEntity.users;
+                    return $scope.selectedUsers;
                 }
             }
         });
 
         dialog.result.then(function (result) {
+        	
+            if (result) {
+                for (var i = 0; i < result.length; i++) {
+                    var index = $scope.findByIdInArray($scope.selectedUsers, result[i]);
+                    var index2 = $scope.findByIdInArray($scope.originalUsers, result[i]);
+                    var index3 = $scope.findByIdInArray($scope.removeUsers, result[i]);
 
-            if (result != null) {
-                $scope.currentEntity.users.push(result);
+                    //Identifica se marcou novos registros
+                    if (index == -1 && index2 == -1) {
+                        var indexAdd = $scope.findByIdInArray($scope.addUsers, result[i]);
+                        if (indexAdd == -1)
+                            $scope.addUsers.push(result[i]);
+                    }
+
+                    if (index3 > -1) {
+                        $scope.removeUsers.splice(index3, 1);
+                    }
+                }
+
+                for (var i = 0; i < $scope.selectedUsers.length; i++) {
+
+                    var index = $scope.findByIdInArray(result, $scope.selectedUsers[i]);
+
+                    if (index == -1) {
+                        var index2 = $scope.findByIdInArray($scope.addUsers, $scope.selectedUsers[i]);
+                        var index3 = $scope.findByIdInArray($scope.removeUsers, $scope.selectedUsers[i]);
+                        var index4 = $scope.findByIdInArray($scope.originalUsers, $scope.selectedUsers[i]);
+
+                        if (index2 > -1){
+                            var indexAdd = $scope.findByIdInArray($scope.removeUsers, $scope.selectedUsers[i]);
+                            if (indexAdd > -1)
+                                $scope.addUsers.splice(indexAdd, 1);
+                        }
+                        if (index3 == -1 && index4 > -1) {
+                            $scope.removeUsers.push($scope.selectedUsers[i]);
+                        }
+
+                    }
+                }
+                
+                $scope.selectedUsers = $scope.currentEntity.users = result;
+                
             }
         });
     };
@@ -843,6 +911,25 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             $scope.removeSearchs.push(entity);
         }
     };
+    
+    /**
+    *
+    * @param entity
+    */
+   $scope.removeUser = function (entity) {
+       var index = $scope.selectedUsers.indexOf(entity);
+       var index2 = $scope.addUsers.indexOf(entity);
+       var index3 = $scope.originalUsers.indexOf(entity);
+       if (index > -1) {
+           $scope.selectedUsers.splice(index, 1);
+       }
+       if (index2 > -1) {
+           $scope.addUsers.splice(index2, 1);
+       }
+       if (index3 > -1) {
+           $scope.removeUsers.push(entity);
+       }
+   };
 
     /**
      *

@@ -2,7 +2,7 @@
 	"use strict";
 			
 	//Start the AngularJS
-	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", "ui.tree",'angularBootstrapNavTree', 'ui-scaleSlider', 'localytics.directives','eits-default-button']);
+	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", "ui.tree",'angularBootstrapNavTree', 'ui-scaleSlider', 'localytics.directives', 'grid-no-result', 'eits-default-button']);
 	
 	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider, $translateProvider ) {
 		//-------
@@ -143,6 +143,16 @@
             url : "/update/:id",
             menu: "access-group"
         });
+		
+	
+	
+		//Marker moderation
+		$stateProvider.state('marker-moderation', {
+			url : "/marker-moderation",
+			templateUrl : "modules/admin/ui/marker-moderation/marker-moderation-view.jsp",
+			controller : MarkerModerationController,
+			menu: 'marker-moderation'
+		});
 		
 	});
 	

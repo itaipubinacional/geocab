@@ -104,6 +104,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @type {Array}
      * */
     $scope.attributes = [];
+    
+    $scope.allLayers = null;
+    
+    /**
+    *
+    */
+   $scope.currentAttribute = null;
 
     //DATA GRID
     /**
@@ -212,10 +219,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         multiSelect: false,
         headerRowHeight: 45,
         rowHeight: 45,
-        beforeSelectionChange: function (row, event) {
-            //evita chamar a selecao, quando clicado em um action button.
-        	/*if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
-				$state.go($scope.DETAIL_STATE, {id:row.entity.id});*/
+        beforeSelectionChange: function(row) {
+            row.changed = true;
+            return true;
+        },
+        afterSelectionChange: function (row, event) {
+            if (row.changed){
+                $scope.currentAttribute = row.entity;
+                row.changed = false;
+            }
         },
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '30%'},
@@ -396,7 +408,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         
         $scope.currentEntity.icon = 'static/icons/default_blue.png';
 
-        $scope.currentState = $scope.INSERT_STATE;
+        $scope.currentState = $scope.INSERT_STATE;       
 
     };
 
@@ -423,6 +435,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentState = $scope.UPDATE_STATE;
                 $state.go($scope.UPDATE_STATE);
                 $scope.$apply();
+                
+                $scope.loadAccessGroups(result.id);
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -454,7 +468,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         layerGroupService.findLayerById(id, {
             callback: function (result) {
                 $scope.currentEntity = result;
-                $scope.attributes = result.attributes;
+                $scope.attributes = result.attributes;                
                 $scope.layers.values = {};
                 $scope.layers.values[0] = '1:'+$scope.currentEntity.minimumScaleMap.substring(2);
                 $scope.layers.values[1] = '1:'+$scope.currentEntity.maximumScaleMap.substring(2);
@@ -553,7 +567,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @see currentPage
      */
     $scope.listLayersByFilters = function (filter, pageRequest) {
-
+    	
         layerGroupService.listLayersByFilters(filter, pageRequest, {
             callback: function (result) {
                 $scope.currentPage = result;
@@ -575,6 +589,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.insertLayer = function (layer) {
 
+    	
     	layer.minimumScaleMap = 'UM'+$scope.layers.values[0].substring(2);
     	layer.maximumScaleMap = 'UM'+$scope.layers.values[1].substring(2);
         
@@ -584,6 +599,19 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             return;
         }
         
+        if ($scope.currentEntity.dataSource.url == null) {
+        	
+        	for (var k = 0; k < $scope.currentPage.content.length; k++ ){
+        		if ( $scope.currentEntity.title.toUpperCase() == $scope.currentPage.content[k].title.toUpperCase() ){
+        			$scope.msg = {type:"danger", text: $translate('admin.layer-config.The-field-name-already-exists,-change-and-try-again'), dismiss : true };
+        			$scope.fadeMsg();
+        			return;
+        		}
+        	}
+        	
+        }
+        
+        	
         if( ($scope.currentEntity.dataSource.url == null) && ($scope.currentEntity.icon == undefined) ){
         	$scope.msg = {type:"danger", text:$translate("admin.layer-config.Choose-an-icon"),dissmiss:true };
         	$scope.fadeMsg();
@@ -606,13 +634,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
                 $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
-                $scope.fadeMsg();
                 $scope.$apply();
                 $scope.saveGroups();
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
-                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -853,92 +879,92 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         }
     };
      
-//     $scope.selectAccessGroups = function() {
-//         var dialog = $modal.open({
-//             templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
-//             controller: SelectAccessGroupPopUpController,
-//             resolve: {
-//             	selectedGroups : function () {
-//                     return $scope.selectedGroups;
-//                 }
-//             }
-//         });
-//
-//         dialog.result.then(function (result) {
-//
-//             if (result) {
-//                 for (var i = 0; i < result.length; i++) {
-//                     var index = $scope.findByIdInArray($scope.selectedGroups, result[i]);
-//                     var index2 = $scope.findByIdInArray($scope.originalGroups, result[i]);
-//                     var index3 = $scope.findByIdInArray($scope.removeGroups, result[i]);
-//
-//                     //Identifica se marcou novos registros
-//                     if (index == -1 && index2 == -1) {
-//                         var indexAdd = $scope.findByIdInArray($scope.addGroups, result[i]);
-//                         if (indexAdd == -1)
-//                             $scope.addGroups.push(result[i]);
-//                     }
-//
-//                     if (index3 > -1) {
-//                         $scope.removeGroups.splice(index3, 1);
-//                     }
-//
-//                 }
-//                 for (var i = 0; i < $scope.selectedGroups.length; i++) {
-//
-//                     var index = $scope.findByIdInArray(result, $scope.selectedGroups[i]);
-//
-//                     if (index == -1) {
-//                         var index2 = $scope.findByIdInArray($scope.addGroups, $scope.selectedGroups[i]);
-//                         var index3 = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
-//                         var index4 = $scope.findByIdInArray($scope.originalGroups, $scope.selectedGroups[i]);
-//
-//                         if (index2 > -1){
-//                             var indexAdd = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
-//                             if (indexAdd > -1)
-//                                 $scope.adicionarGrupos.splice(indexAdd, 1);
-//                         }
-//                         if (index3 == -1 && index4 > -1) {
-//                             $scope.removerGrupos.push($scope.selectedGroups[i]);
-//                         }
-//
-//                     }
-//                 }
-//                 $scope.selectedGroups = result;
-//             }
-//
-//         });
-//     }
+     $scope.selectAccessGroups = function() {
+         var dialog = $modal.open({
+             templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
+             controller: SelectAccessGroupPopUpController,
+             resolve: {
+             	selectedGroups : function () {
+                     return $scope.selectedGroups;
+                 }
+             }
+         });
+
+         dialog.result.then(function (result) {
+
+             if (result) {
+                 for (var i = 0; i < result.length; i++) {
+                     var index = $scope.findByIdInArray($scope.selectedGroups, result[i]);
+                     var index2 = $scope.findByIdInArray($scope.originalGroups, result[i]);
+                     var index3 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+
+                     //Identifica se marcou novos registros
+                     if (index == -1 && index2 == -1) {
+                         var indexAdd = $scope.findByIdInArray($scope.addGroups, result[i]);
+                         if (indexAdd == -1)
+                             $scope.addGroups.push(result[i]);
+                     }
+
+                     if (index3 > -1) {
+                         $scope.removeGroups.splice(index3, 1);
+                     }
+
+                 }
+                 for (var i = 0; i < $scope.selectedGroups.length; i++) {
+
+                     var index = $scope.findByIdInArray(result, $scope.selectedGroups[i]);
+
+                     if (index == -1) {
+                         var index2 = $scope.findByIdInArray($scope.addGroups, $scope.selectedGroups[i]);
+                         var index3 = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+                         var index4 = $scope.findByIdInArray($scope.originalGroups, $scope.selectedGroups[i]);
+
+                         if (index2 > -1){
+                             var indexAdd = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+                             if (indexAdd > -1)
+                                 $scope.adicionarGrupos.splice(indexAdd, 1);
+                         }
+                         if (index3 == -1 && index4 > -1) {
+                             $scope.removeGroups.push($scope.selectedGroups[i]);
+                         }
+
+                     }
+                 }
+                 $scope.selectedGroups = result;
+             }
+
+         });
+     }
     
-    $scope.selectAccessGroups = function () {
-        var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
-            controller: SelectAccessGroupPopUpController,
-            resolve: {
-                selectedGroups : function () {
-                    return $scope.selectedGroups;
-                }
-            }
-        });
-
-        dialog.result.then(function (result) {
-            $log.log(result);
-
-            if (result != null && result.length > 0) {
-                $scope.selectedGroups = $scope.selectedGroups.concat(result);
-                for (var i = 0; i < result.length; i++) {
-                    var index = $scope.findByIdInArray($scope.originalGroups, result[i]);
-                    if (index == -1) {
-                        $scope.addGroups.push(result[i]);
-                    }
-                    var index2 = $scope.findByIdInArray($scope.removeGroups, result[i]);
-                    if (index2 > -1) {
-                        $scope.removeGroups.splice(index2, 1);
-                    }
-                }
-            }
-        });
-    }
+//    $scope.selectAccessGroups = function () {
+//        var dialog = $modal.open({
+//            templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
+//            controller: SelectAccessGroupPopUpController,
+//            resolve: {
+//                selectedGroups : function () {
+//                    return $scope.selectedGroups;
+//                }
+//            }
+//        });
+//
+//        dialog.result.then(function (result) {
+//            $log.log(result);
+//
+//            if (result != null && result.length > 0) {
+//                $scope.selectedGroups = $scope.selectedGroups.concat(result);
+//                for (var i = 0; i < result.length; i++) {
+//                    var index = $scope.findByIdInArray($scope.originalGroups, result[i]);
+//                    if (index == -1) {
+//                        $scope.addGroups.push(result[i]);
+//                    }
+//                    var index2 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+//                    if (index2 > -1) {
+//                        $scope.removeGroups.splice(index2, 1);
+//                    }
+//                }
+//            }
+//        });
+//    }
     
     /*-------------------------------------------------------------------
      *                
@@ -1019,14 +1045,14 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentEntity.title = result.title;
                 $scope.currentEntity.legend = result.legend;
             }
+            
+            for(var i = 0; i < $scope.attributes.length; i++)
+            {
+                $scope.attributes[i].orderAttribute = i;
+            }
 
         });
     }
-    
-    
-   
-    
-    
     
     /**
      * Remove attribute
@@ -1045,8 +1071,55 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 	  	}, 5000);
     }
     
-//    $(document).click(function() {
-//    	$("div.msg").hide();
-//    });
+    /**
+    *
+    */
+   $scope.levelDown = function() {
+       var rows = $scope.gridAttributes.ngGrid.data;
+       for(var i = 0; i < rows.length; i++)
+       {
+           if( rows[i].name == $scope.currentAttribute.name && rows[i].type ==  $scope.currentAttribute.type )
+           {
+               if( rows[i].orderAttribute < rows.length - 1 )
+               {
+                   var currentRow = rows[i];
+                   rows[i] = rows[i+1];
+                   rows[i+1] = currentRow;
+                   rows[i].orderAttribute = i;
+                   rows[i+1].orderAttribute = i + 1;
+                   $scope.attributes = rows;
+                   return;
+               }
+           }
+       }
+       $scope.apply;
+   };
     
+    /**
+    *
+    */
+   $scope.levelUp = function() {
+
+       var rows = $scope.gridAttributes.ngGrid.data;
+
+       for(var i = 0; i < rows.length; i++)
+       {
+           if( rows[i].name == $scope.currentAttribute.name && rows[i].type ==  $scope.currentAttribute.type )
+           {
+               if( rows[i].orderAttribute > 0 )
+               {
+                   var currentRow = rows[i];
+                   rows[i] = rows[i-1];
+                   rows[i-1] = currentRow;
+                   rows[i].orderAttribute = i;
+                   rows[i-1].orderAttribute = i - 1;
+
+                   $scope.attributes = rows;
+
+               }
+           }
+       }
+       $scope.apply;
+   };
+
 };

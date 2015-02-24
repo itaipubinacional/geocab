@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.JAXBException;
-
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -244,7 +242,10 @@ public class AccessGroupService
 		
 		for (AccessGroupCustomSearch accessGroupCustomSearch : accessGroupCustomSearchs)
 		{
-			accessGroupCustomSearch.getCustomSearch().getLayer().setLegend(layerGroupService.getLegendLayerFromGeoServer(accessGroupCustomSearch.getCustomSearch().getLayer()));
+			if(accessGroupCustomSearch.getCustomSearch().getLayer().getDataSource().getUrl() != null){
+				accessGroupCustomSearch.getCustomSearch().getLayer().setLegend(layerGroupService.getLegendLayerFromGeoServer(accessGroupCustomSearch.getCustomSearch().getLayer()));
+			}
+			
 			customsSearch.add(accessGroupCustomSearch.getCustomSearch());
 		}
 		
@@ -270,22 +271,7 @@ public class AccessGroupService
 	{
 		// Access Group isn't allow to insert/remove users
 		Assert.isTrue(accessGroupId != 1);
-//	 
-//		// put users on public access group 
-//		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(1L);
-//		
-//		for (User user: users) 
-//		{
-//			user = this.userRepository.save(user);
-//			
-//			//Add the user on public group
-//			if (!publicAccessGroup.getUsers().contains(user))
-//			{
-//				publicAccessGroup.getUsers().add(user);
-//			}
-//		}
-//		this.accessGroupRepository.save(publicAccessGroup);
-		
+
 		AccessGroup accessGroup = this.accessGroupRepository.findOne(accessGroupId);
 		
 		Set<User> usersDB = new HashSet<User>();

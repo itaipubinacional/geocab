@@ -27,14 +27,14 @@
 							<td><span ng-show="form_forget_password.email.$error.required && form_forget_password.$submitted" class="tooltip-validation create"><spring:message code="admin.users.Field-required" /></span></td>							
 						</tr>
 						<tr>
-							<td><span ng-show="form_forget_password.email.$error.email" class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
+							<td><span ng-show="form_forget_password.$submitted && form_forget_password.email.$error.email" class="tooltip-validation create"><spring:message code="admin.users.The-email-is-not-valid" /></span></td>
 						</tr>
 						<tr>												
 							<td><input 
 							class="form-control ng-invalid" 
 							ng-model="currentEntity.email" 
 							name="email" 							
-							ng-class="{ ngInvalid: form_forget_password.email.$error.required && (form_forget_password.$error.email || form_forget_password.email.$dirty || form_forget_password.$submitted ) }"
+							ng-class="{ ngInvalid: form_forget_password.$submitted && (form_forget_password.email.$error.required ) }"
 							type="email" 
 							required
 							ng-hover

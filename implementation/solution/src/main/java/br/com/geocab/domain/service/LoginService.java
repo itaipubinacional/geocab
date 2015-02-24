@@ -95,15 +95,15 @@ public class LoginService
 		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); 
 		user.setPassword( encodedPassword );
 		
-		User u = this.userRepository.save( user );
+		user = this.userRepository.save( user );
 		
-		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(1L);
+		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
 		
-		publicAccessGroup.getUsers().add(u);
+		publicAccessGroup.getUsers().add(user);
 		
 		this.accessGroupRepository.save(publicAccessGroup);
 		
-		return u;
+		return user;
 	}
 	
 	/**

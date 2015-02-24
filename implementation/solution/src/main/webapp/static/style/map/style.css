@@ -292,6 +292,15 @@ input[type=checkbox].css-checkbox:checked + label:before {
     background-color: #0077C1;
 }
 
+input[type=checkbox].css-checkbox:indeterminate + label:before {
+    content: "\2796";
+    font-size: 11px;
+    color: #f3f3f3;
+    text-align: center;
+    line-height: 15px;
+    background-color: #0077C1;
+}
+
 .label-text {
     font-size: 14px;
     font-weight: normal;
@@ -345,6 +354,30 @@ ul.ivh-treeview li .ivh-treeview-toggle {
     bottom: 0;
     right: 0;
     left: 4px;
+}
+
+.icon-waiting-moderation {
+	background: url("../../images/icon-waiting-moderation.png");
+	width: 40px;
+	height: 40px;
+	margin-left: 8px;
+	background-repeat: no-repeat;
+}
+
+.icon-accept-moderation {
+	background: url("../../images/icon-accept-moderation.png");
+	width: 40px;
+	height: 40px;
+	margin-left: 8px;
+	background-repeat: no-repeat;
+}
+
+.icon-refuse-moderation {
+	background: url("../../images/icon-refuse-moderation.png");
+	width: 40px;
+	height: 40px;
+	margin-left: 8px;
+	background-repeat: no-repeat;
 }
 
 #camada-legend-detail, #tabs-1, #tabs-2 {

@@ -20,6 +20,9 @@
 		<!-- Scripts -->
 		<jsp:include page="../../default-scripts.jsp"/> <!-- FIXME Deixar caminhos relativos.. -->
 		
+		<script type="text/javascript"
+			src="static/libs/grid-no-results/grid-directive.js"></script>
+		
 		<link href="<c:url value="/static/libs/angular-ui-tree/css/angular-ui-tree.min.css"/>" type="text/css" rel="stylesheet" />
 		
 		<script type="text/javascript" src="<c:url value="/static/libs/angular-ui-tree/js/angular-ui-tree.min.js"/>"></script>
@@ -62,14 +65,17 @@
 	<script type="text/javascript" src="modules/admin/controller/popup/select-layers-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/select-custom-search-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/layer-group-popup-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/popup/refuse-marker-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/data-source-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/layer-group-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/layer-config-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/custom-search-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/access-group-controller.js"></script>
-	<script type="text/javascript" src="modules/admin/controller/popup/layer-group-popup-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/users-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/marker-moderation-controller.js"></script>
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
+	<script type="text/javascript" src="static/libs/eits-directives/autocomplete/autocomplete.js"></script>
    		
 	</body>
 </html>

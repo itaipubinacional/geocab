@@ -1,5 +1,6 @@
 package br.com.geocab.application.security;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,11 +24,19 @@ public class ContextHolder
 	{
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
-		if ( authentication != null && authentication.getPrincipal() instanceof User )
+		if ( authentication != null )
 		{
-			return (User) authentication.getPrincipal();
+			if ( authentication.getPrincipal() instanceof User )
+			{
+				return (User) authentication.getPrincipal();
+			}
+			
+			if ( authentication instanceof AnonymousAuthenticationToken )
+			{
+				return User.ANONYMOUS;
+			}
 		}
 		
-		throw new InsufficientAuthenticationException("There is no user authenticated.");//FIXME Localize
+		throw new InsufficientAuthenticationException("There is no user authenticated or even anonymous.");//FIXME Localize
 	}
 }

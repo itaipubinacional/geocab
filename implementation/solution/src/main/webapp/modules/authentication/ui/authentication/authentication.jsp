@@ -89,7 +89,7 @@
 	  						<button id="enter-facebook" type="submit" class="btn-facebook">
 	  							<spring:message code="authentication.Login-with-Facebook" />
 	  						</button>
-						</form>
+						</form> 
 					</td>
 				</tr>
 				<tr>
@@ -104,6 +104,9 @@
 				</tr>
 				<tr>
 					<td><a class="dont-have-account" id="register"  ng-click="changeToInsert()"><spring:message code="authentication.Dont-have-an-account" /></a><td>
+				</tr>
+				<tr>
+					<td><a style="margin: 0 0 0 100px" class="dont-have-account" id="register" href="${pageContext.request.contextPath != '' ? pageContext.request.contextPath: '/'}"><spring:message code="authentication.Show-map" /></a><td>
 				</tr>
 			</table>
 		</div>

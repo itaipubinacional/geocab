@@ -35,11 +35,12 @@
 	<!-- Default Security -->
  	<security:http auto-config="false" use-expressions="true" disable-url-rewriting="true" realm="You must login before continue.">
  		<security:http-basic/>
- 		<security:intercept-url pattern="/authentication/**" access="permitAll" />
- 		<security:intercept-url pattern="/**" access="isAuthenticated()" />
+ 		<security:intercept-url pattern="/admin/**" access="isAuthenticated()" />
+ 		<security:intercept-url pattern="/user/**" access="isAuthenticated()" />
  		<security:form-login login-page="/authentication" always-use-default-target="true"
  			password-parameter="password" username-parameter="email"/>
  		<security:logout/>
  	</security:http>
+ 	
 
 </beans>

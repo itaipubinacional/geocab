@@ -77,7 +77,7 @@ public class CustomSearchService
 	/**
 	 * Method to insert an {@link CustomSearch}
 	 * 
-	 * @param CustomSearch
+	 * @param MarkerModeration
 	 * @return CustomSearch
 	 */
 	public Long insertCustomSearch( CustomSearch customSearch )
@@ -162,8 +162,8 @@ public class CustomSearchService
 		
 		// Get the legend of GeoServer's layer
 		if (customSearch.getLayer().getDataSource().getUrl() != null){
-			int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("geoserver/");
-			String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position+10);
+			int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("ows?");
+			String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position);
 			String urlLegend = urlGeoserver + Layer.LEGEND_GRAPHIC_URL + customSearch.getLayer().getName() + Layer.LEGEND_GRAPHIC_FORMAT;
 			customSearch.getLayer().setLegend(urlLegend);
 		}
@@ -186,8 +186,8 @@ public class CustomSearchService
 		for ( CustomSearch customSearch : customsSearch.getContent() )
 		{
 			if(customSearch.getLayer().getDataSource().getUrl() != null) {
-				int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("geoserver/");
-				String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position+10);
+				int position = customSearch.getLayer().getDataSource().getUrl().lastIndexOf("ows?");
+				String urlGeoserver = customSearch.getLayer().getDataSource().getUrl().substring(0, position);
 				String urlLegend = urlGeoserver + Layer.LEGEND_GRAPHIC_URL + customSearch.getLayer().getName() + Layer.LEGEND_GRAPHIC_FORMAT;
 				customSearch.getLayer().setLegend(urlLegend);
 			}
@@ -219,13 +219,21 @@ public class CustomSearchService
 	/**
 	 * Method that return an list of custom searchs according the access group of user
 	 */
-	@PreAuthorize("hasAnyRole('"+UserRole.USER_VALUE+"', '"+UserRole.ADMINISTRATOR_VALUE+"')")
+	@PreAuthorize("true")
 	public List<CustomSearch> listCustomSearchsByUser()
 	{
-		//List of all access groups of user
-		List<AccessGroup> accessGroupUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
-		
 		List<CustomSearch> customsSearchUser = new ArrayList<CustomSearch>();
+		
+		List<AccessGroup> accessGroupUser = null;
+		//List of all access groups of user
+		if(ContextHolder.getAuthenticatedUser() != null) 
+		{
+			accessGroupUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
+		} 
+		else 
+		{
+			accessGroupUser = this.accessGroupRepository.listPublicGroups();
+		}
 		
 		for (AccessGroup accessGroup : accessGroupUser)
 		{
@@ -239,6 +247,7 @@ public class CustomSearchService
 				}
 			}
 		}
+		
 		
 		return customsSearchUser;
 	}
