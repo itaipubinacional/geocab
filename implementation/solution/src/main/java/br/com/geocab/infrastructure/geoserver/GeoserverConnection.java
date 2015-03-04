@@ -111,12 +111,15 @@ public class GeoserverConnection
 				
 				for (Layer layer : wmsCapabilities.getCapability().getLayer().getLayer()) 
 				{
-					ExternalLayer camada = new ExternalLayer();
-					camada.setName(layer.getName());
-					camada.setTitle(layer.getTitle());
-					camada.setLegend(layer.getStyle().get(0).getLegendURL().get(0).getOnlineResource().getHref());
+					ExternalLayer externalLayer = new ExternalLayer();
+					externalLayer.setName(layer.getName());
+					externalLayer.setTitle(layer.getTitle());
 					
-					layers.add(camada);
+					if(!layer.getStyle().isEmpty()){
+						externalLayer.setLegend(layer.getStyle().get(0).getLegendURL().get(0).getOnlineResource().getHref());
+                    }
+					
+					layers.add(externalLayer);
 				}
 			}
 			catch (Exception e){
