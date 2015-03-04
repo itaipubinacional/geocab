@@ -80,7 +80,7 @@
         <div ng-switch-when="users.detail">
         	<div ng-include="'modules/admin/ui/users/users-detail.jsp'"></div>
         </div>
-        <div ng-switch-when="users.create" ">
+        <div ng-switch-when="users.create">
         	<div ng-include="'modules/admin/ui/users/users-form.jsp'"></div>	
         </div> 
         <div ng-switch-when="users.update">
