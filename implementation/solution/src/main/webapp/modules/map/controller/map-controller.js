@@ -1398,11 +1398,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     $scope.initializeMarker = function () {
     	
-    	if(!$scope.userMe){
-    		window.location = "/geocab/authentication";
-    		return false;
-    	}
-    	
     	if($("#sidebar-marker-detail-update").css("display") == 'block') {
     		$scope.clearDetailMarker();
     	}
