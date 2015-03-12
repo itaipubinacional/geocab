@@ -6,6 +6,8 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"  %>
 <!DOCTYPE html>
 <html>
 
@@ -41,12 +43,14 @@
 				</a></li>
 
 				<!-- Verificar... -->
-				<li ng-click="initializeMarker()"
-					title="<spring:message code="map.Perform-post" />"
-					ng-class="{ferramenta_active : menu.fcMarker}"><a
-					href="#tabs-1"> <span
-						class="glyphicon glyphicon-map-marker sidebar-icon"></span>
-				</a></li>
+				<security:authorize access="isAuthenticated()">
+					<li ng-click="initializeMarker()"
+						title="<spring:message code="map.Perform-post" />"
+						ng-class="{ferramenta_active : menu.fcMarker}"><a
+						href="#tabs-1"> <span
+							class="glyphicon glyphicon-map-marker sidebar-icon"></span>
+					</a></li>
+				</security:authorize>
 
 				<!--  <li ng-if="hasPermissionKML" ng-click=""><a>
 						<div class="icon itaipu-icon-kml sidebar-icon"></div>
