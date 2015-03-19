@@ -44,8 +44,13 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 	 * 
 	 */
 	@Test
+	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
+			"/dataset/AccountDataSet.xml"
+	})
 	public void insertLayerGroup()
 	{
+		this.authenticate(100L);
+		
 		LayerGroup layerGroup = new LayerGroup();
 		
 		Assert.assertNull(layerGroup.getId());
@@ -72,10 +77,13 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 	 */
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/LayerGroupDataSet.xml"
+			"/dataset/LayerGroupDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void updateLayerGroup() throws Exception
 	{
+		this.authenticate(100L);
+		
 		LayerGroup layerGroup = this.layerGroupService.findLayerGroupById(100L);
 		
 		layerGroup.setName("Group 10 updated");
@@ -97,10 +105,13 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 	 */
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/LayerGroupDataSet.xml"
+			"/dataset/LayerGroupDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void findLayersGroupById() throws Exception
 	{
+		this.authenticate(100L);
+		
 		LayerGroup layerGroup = this.layerGroupService.findLayerGroupById(100L);
 		
 		Assert.assertNotNull(layerGroup);
@@ -112,10 +123,13 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 	 */
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/LayerGroupDataSet.xml"
+			"/dataset/LayerGroupDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void listLayerGroup() throws Exception
 	{
+		this.authenticate(100L);
+		
 		List<LayerGroup> layerGroups = this.layerGroupService.listLayerGroups(null, null).getContent();
 		Assert.assertNotNull(layerGroups);
 		Assert.assertTrue(layerGroups.size() > 0);
@@ -126,10 +140,13 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 	 */
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/LayerGroupDataSet.xml"
+			"/dataset/LayerGroupDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void removeLayerGroups()
 	{
+		this.authenticate(100L);
+		
 		this.layerGroupService.removeLayerGroup(100L);
 	}
 	
@@ -137,10 +154,15 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 	 * 
 	 */
 	@Test
+	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
+			"/dataset/AccountDataSet.xml"
+	})
 	public void listLayerGroupsByFilter() throws JAXBException
 	{
+		this.authenticate(100L);
+		
 		DataSource dataSource = new DataSource();
-		dataSource.setUrl("Url test Some url");
+		dataSource.setUrl("http://geocab.sbox.me/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities");
 		
 		Layer layer = new Layer();
 		layer.setName("Name");
@@ -152,10 +174,12 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 	
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/LayerGroupDataSet.xml"
+			"/dataset/LayerGroupDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void changeLayerGroupUpper()
 	{
+		this.authenticate(100L);
 		
 		LayerGroup layerGroup= this.layerGroupService.findLayerGroupById(100L);
 		
@@ -186,25 +210,7 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 		
 		
 	}
-	
-	@Test
-	public void listIcons(){
-		
-		File folder = new File(getClass().getResourceAsStream("/main/webapp/static/icons").toString());
-		File[] listOfFiles = folder.listFiles();
-		
-		for (int i = 0; i < listOfFiles.length; i++) {
-		      if (listOfFiles[i].isFile()) {
-		        System.out.println("File " + listOfFiles[i].getName());
-		      } else if (listOfFiles[i].isDirectory()) {
-		        System.out.println("Directory " + listOfFiles[i].getName());
-		      }
-		    }
-		
-	}
 
-
-	
 	
 }
 

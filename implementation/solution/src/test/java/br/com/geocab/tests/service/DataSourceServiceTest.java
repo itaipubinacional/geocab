@@ -26,8 +26,13 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 	private DataSourceService dataSourceService;
 
 	@Test
+	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
+			"/dataset/AccountDataSet.xml"
+	})
 	public void insertDataSouce()
 	{
+		this.authenticate(100L);
+		
 		DataSource dataSource = new DataSource();
 		
 		dataSource.setName("Data Source");
@@ -50,10 +55,13 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 	
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/DataSourceDataSet.xml"
+			"/dataset/DataSourceDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void updateDataSource() throws Exception
 	{
+		this.authenticate(100L);
+		
 		DataSource dataSource = dataSourceService.findDataSourceById(100L);
 		
 		dataSource.setName("Data Source changed");
@@ -76,10 +84,12 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 	
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/DataSourceDataSet.xml"
+			"/dataset/DataSourceDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void findFonteDadosById() throws Exception
 	{
+		this.authenticate(100L);
 		
 		DataSource dataSource = dataSourceService.findDataSourceById(100L);
 		Assert.assertNotNull(dataSource);
@@ -88,10 +98,13 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 	
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/DataSourceDataSet.xml"
+			"/dataset/DataSourceDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void removeDataSource()
 	{
+		this.authenticate(100L);
+		
 		this.dataSourceService.removeDataSource(100L);
 	}
 	
