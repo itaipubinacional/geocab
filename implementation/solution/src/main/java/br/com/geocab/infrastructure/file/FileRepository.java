@@ -23,7 +23,7 @@ public class FileRepository implements IFileRepository
 	/**
 	 * 
 	 */
-	@Autowired
+	@Autowired(required=false)
 	private ServletContext servletContext;
 	
 	@Override

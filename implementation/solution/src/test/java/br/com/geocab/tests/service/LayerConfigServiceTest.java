@@ -44,10 +44,13 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 	 */
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/LayerConfigDataSet.xml"
+			"/dataset/LayerConfigDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void insertLayer()
 	{
+		this.authenticate(100L);
+		
 		Layer layer = new Layer();
 		
 		Assert.assertNull(layer.getId());
@@ -73,8 +76,8 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals(layerGroup, layer.getLayerGroup());
 		Assert.assertEquals("bdgeo:v_ag_demandantes2", layer.getName());
 		Assert.assertEquals("Demandantes2", layer.getTitle());
-		Assert.assertEquals(MapScale.UM1km, layer.getMaximumScaleMap());
-		Assert.assertEquals(MapScale.UM20m, layer.getMinimumScaleMap());
+		Assert.assertEquals(MapScale.UM100km, layer.getMaximumScaleMap());
+		Assert.assertEquals(MapScale.UM10km, layer.getMinimumScaleMap());
 		Assert.assertEquals("http://172.17.6.112:80/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=v_ag_demandantes", layer.getLegend());
 	}
 	/**
@@ -83,10 +86,13 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 	 */
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/LayerConfigDataSet.xml"
+			"/dataset/LayerConfigDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void updateLayer() throws Exception
 	{
+		this.authenticate(100L);
+		
 		Layer layer = this.layerGroupService.findLayerById(2L);
 		
 		layer.setName("bdgeo:v_ag_demandantes2");
@@ -100,8 +106,8 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 		Assert.assertNotNull(layer);
 		Assert.assertEquals("bdgeo:v_ag_demandantes", layer.getName());
 		Assert.assertEquals("Demandantes2", layer.getTitle());
-		Assert.assertEquals(MapScale.UM10km, layer.getMaximumScaleMap());
-		Assert.assertEquals(MapScale.UM2km, layer.getMinimumScaleMap());
+		Assert.assertEquals(MapScale.UM100m, layer.getMaximumScaleMap());
+		Assert.assertEquals(MapScale.UM200m, layer.getMinimumScaleMap());
 		
 	}
 	/**
@@ -109,10 +115,12 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 	 */
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/LayerConfigDataSet.xml"
+			"/dataset/LayerConfigDataSet.xml",
+			"/dataset/AccountDataSet.xml"
 	})
 	public void findLayerById() throws Exception
 	{	
+		this.authenticate(100L);
 		
 		Layer layer = this.layerGroupService.findLayerById(2L);
 		Assert.assertTrue(layer.getId().equals(2L));
@@ -123,10 +131,14 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 	 */
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/LayerConfigDataSet.xml"
+			"/dataset/LayerConfigDataSet.xml",
+			"/dataset/AccountDataSet.xml"
+			
 	})
 	public void removeLayer()
 	{
+		this.authenticate(100L);
+		
 		this.layerGroupService.removeLayer(2L);
 	}
 	

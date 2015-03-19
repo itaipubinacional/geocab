@@ -8,7 +8,6 @@
 		login="user" 
 		password="password123"
 		url="url1"
-		internal="true"
 		 />
 	
 </dataset>

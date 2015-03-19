@@ -8,7 +8,6 @@
 			login="user" 
 			password="password123"
 			url="http://172.17.6.112:80/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=v_ag_demandantes"
-			internal="true"
 		 />
 		 
 	 	<geocab.layer_group 
@@ -26,7 +25,7 @@
 			start_visible="false"
 			layer_group_id="1"
 			order_layer="0"
-			maximum_scale_map="15"
+			maximum_scale_map="13"
 			minimum_scale_map="0"
 			name="bdgeo:v_ag_demandantes"
 			title="Demandantes"
