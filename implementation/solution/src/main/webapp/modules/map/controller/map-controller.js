@@ -537,6 +537,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
  		        return feature;
  		      });
          	
+         	
+         	/*It is used to check if the user has clicked on the map or on the feature.*/
+         	$scope.feature = feature;
+         	
          	if(($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia) || feature) {
                 $scope.features = [];
          	}
@@ -680,11 +684,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     
                 }
                 
+                
                 if ( $("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px' ) {
         			
         			if($scope.menu.fcMarker){
         	    		$scope.clearFcMarker();
-        	    	} else {
+        	    	} else if(!$scope.feature) {
         	    		$scope.clearDetailMarker();
         	    	}
                 }
@@ -1353,7 +1358,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     	if($scope.menu.fcMarker){
     		$scope.clearFcMarker();
+    	} else if ( $("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px' ) {
+    		$scope.clearDetailMarker();
     	}
+    	
     	
         // checks whether any functionality is already active
         if ($scope.menu.fcDistancia || $scope.menu.fcArea){
@@ -1398,11 +1406,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     $scope.initializeMarker = function () {
     	
-    	if(!$scope.userMe){
-    		window.location = "/geocab/authentication";
-    		return false;
-    	}
-    	
     	if($("#sidebar-marker-detail-update").css("display") == 'block') {
     		$scope.clearDetailMarker();
     	}
@@ -1443,7 +1446,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     	if($scope.menu.fcMarker){
     		$scope.clearFcMarker();
+    	} else if ( $("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px' ) {
+    		$scope.clearDetailMarker();
     	}
+    	
+    	
 
         // checks whether any functionality is already active
         if ($scope.menu.fcArea || $scope.menu.fcDistancia || $scope.menu.fcMarker){
