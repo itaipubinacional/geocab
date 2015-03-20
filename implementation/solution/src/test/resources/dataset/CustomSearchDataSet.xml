@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+		
+		
+		<geocab.custom_search 
+			id="1"
+			created="2014-09-22 00:00:00"
+			name="Pesquisa Personalizada 02"
+			layer_id="2"
+		 />
+	
+</dataset>
