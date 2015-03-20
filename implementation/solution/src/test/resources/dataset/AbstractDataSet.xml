@@ -5,4 +5,6 @@
 	<geocab.user></geocab.user>		
 	<geocab.layer_group></geocab.layer_group>
 	<geocab.layer></geocab.layer>
+	<geocab.custom_search></geocab.custom_search>
+	<geocab.access_group></geocab.access_group>
 </dataset>
