@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+		<geocab.marker
+		id="100"
+		created="2015-03-20 00:00:00"
+		updated="2015-03-20 00:00:00"
+		deleted="FALSE" 
+		layer_id="2"
+		user_id="100"
+		status="0" />
+		
+	
+</dataset>
