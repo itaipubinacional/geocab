@@ -10,4 +10,5 @@
 	<geocab.motive></geocab.motive>
 	<geocab.custom_search></geocab.custom_search>
 	<geocab.access_group></geocab.access_group>
+	<geocab.access_group_user></geocab.access_group_user>
 </dataset>
