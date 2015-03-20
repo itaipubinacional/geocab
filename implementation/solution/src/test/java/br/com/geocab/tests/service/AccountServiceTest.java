@@ -50,7 +50,8 @@ public class AccountServiceTest extends AbstractIntegrationTest
 
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/AccountDataSet.xml"
+			"/dataset/AccountDataSet.xml",
+			"/dataset/AccessGroupDataSet.xml"
 	})
 	public void insertUser()
 	{
