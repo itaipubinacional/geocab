@@ -49,10 +49,16 @@ public class AccountServiceTest extends AbstractIntegrationTest
 	 *-------------------------------------------------------------------*/
 
 	@Test
+	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
+			"/dataset/AccountDataSet.xml",
+			"/dataset/AccessGroupDataSet.xml"
+	})
 	public void insertUser()
 	{
+		this.authenticate(100L);
+		
 		User user = new User();
-		user.setEmail("user@geocab.com.br");
+		user.setEmail("someUser@geocab.com.br");
 		user.setName("Testing User");
 		user.setPassword("123");
 		user.setRole(UserRole.ADMINISTRATOR);
@@ -64,7 +70,7 @@ public class AccountServiceTest extends AbstractIntegrationTest
 		Assert.assertNotNull( user.getId() );
 		Assert.assertNotNull( user.getCreated() );
 		
-		Assert.assertEquals("user@geocab.com.br", user.getEmail());
+		Assert.assertEquals("someUser@geocab.com.br", user.getEmail());
 		Assert.assertEquals("Testing User", user.getName());
 		Assert.assertEquals(UserRole.ADMINISTRATOR, user.getRole());
 		
@@ -81,6 +87,8 @@ public class AccountServiceTest extends AbstractIntegrationTest
 	})
 	public void updateUser()
 	{
+		this.authenticate(100L);
+		
 		User user = this.accountService.findUserById(100L);
 		
 		user.setEmail("user2@geocab.com.br");
@@ -106,6 +114,8 @@ public class AccountServiceTest extends AbstractIntegrationTest
 	})
 	public void findUserById()
 	{
+		this.authenticate(100L);
+		
 		User user = this.accountService.findUserById(100L);
 		
 		Assert.assertNotNull( user );
@@ -127,6 +137,8 @@ public class AccountServiceTest extends AbstractIntegrationTest
 	})
 	public void findUserByEmail()
 	{
+		this.authenticate(100L);
+		
 		User user = this.accountService.findUserByEmail("user@geocab.com.br");
 		
 		Assert.assertNotNull( user );
@@ -148,6 +160,8 @@ public class AccountServiceTest extends AbstractIntegrationTest
 	})
 	public void disableEnableUser()
 	{
+		this.authenticate(100L);
+		
 		this.accountService.disableUser(100L);
 		User user = this.accountService.findUserById(100L);
 		Assert.assertFalse(user.isEnabled());

@@ -99,7 +99,7 @@ public class LayerGroupService
 	/**
 	 * 
 	 */
-	@Autowired
+	@Autowired(required=false)
 	private ServletContext servletContext;
 	
 	/**

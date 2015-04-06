@@ -5,4 +5,11 @@
 	<geocab.user></geocab.user>		
 	<geocab.layer_group></geocab.layer_group>
 	<geocab.layer></geocab.layer>
+	<geocab.marker></geocab.marker>
+	<geocab.marker_moderation></geocab.marker_moderation>
+	<geocab.motive></geocab.motive>
+	<geocab.custom_search></geocab.custom_search>
+	<geocab.access_group></geocab.access_group>
+	<geocab.access_group_user></geocab.access_group_user>
+	<geocab.motive_marker_moderation></geocab.motive_marker_moderation>
 </dataset>
