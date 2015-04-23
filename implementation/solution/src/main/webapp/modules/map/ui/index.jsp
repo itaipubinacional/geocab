@@ -50,8 +50,8 @@
 		<script src="static/libs/openlayers/ol.js" type="text/javascript"></script>
 		
 		<!-- Google Maps -->
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?client=gme-itaipubinacional&sensor=false&channel=geocab"></script>
-
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?client=gme-itaipubinacional&sensor=false&channel=geocab"></script> 
+	
 		<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
 		
 	 	<style>
