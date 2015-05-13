@@ -100,7 +100,7 @@ public class NavigationController
 	public String signinError( @RequestParam String error, HttpServletRequest httpServletRequest )
 	{
 		System.out.println( error );
-		return null;
+		return "modules/signin";
 	}
 	
 	/**
