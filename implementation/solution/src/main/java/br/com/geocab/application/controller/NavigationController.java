@@ -101,6 +101,16 @@ public class NavigationController
 		System.out.println( error );
 		return null;
 	}
+	
+	/**
+	 * 
+	 */
+	@RequestMapping( value="/signup", method=RequestMethod.GET )
+	public String signupError( @RequestParam String error, HttpServletRequest httpServletRequest )
+	{
+		System.out.println( error );
+		return null;
+	}
 
 
 	/**
