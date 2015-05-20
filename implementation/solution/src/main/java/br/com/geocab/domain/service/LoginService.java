@@ -122,7 +122,16 @@ public class LoginService
 		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); */
 		user.setPassword( "no password" );
 	
-		return this.userRepository.save( user );
+		user = this.userRepository.save( user );
+		
+		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
+		
+		publicAccessGroup.getUsers().add(user);
+		
+		this.accessGroupRepository.save(publicAccessGroup);
+		
+		return user;
+		
 	}
 	
 	@Transactional(readOnly = true)
