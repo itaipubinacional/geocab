@@ -2824,7 +2824,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.setPhotoMarker = function(element) {
     	if (!(/\.(gif|jpg|jpeg|bmp|png)$/i).test(element.value)){
+    		$("#upload-input").val("");
             $scope.msg = {text: $translate("map.The-selected-file-is-invalid"), type: "danger", dismiss: true};
+            $("div.msgMap").show();
+			  
+  			setTimeout(function(){
+  			  $("div.msgMap").fadeOut();
+  			}, 3500);
+            $scope.$apply();
             return false;
         }
     	
