@@ -36,6 +36,7 @@
                                       name="description"
                                       required ng-minlength="1"
                                       ng-class="{ ngInvalid: form.description.$error.required && (form.$submitted || form.description.$dirty) }"
+                                      maxlength="255"
                                       ng-hover>
                             <span ng-show="form.description.$error.required && (form.$submitted || form.description.$dirty)" class="tooltip-validation"><spring:message code="admin.access-group.Description-required"/></span>
                             </textarea>

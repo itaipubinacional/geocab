@@ -34,6 +34,7 @@
         		   placeholder="<spring:message code="admin.layer-config.Attribut-name" />" 
         		   style="margin-bottom: 23px"
         		   ng-class="{ngInvalid: form_add_attribute.$submitted && form_add_attribute.name.$error.required }"
+        		   maxlength="255"
         		   required
         		   >
         	</div>
