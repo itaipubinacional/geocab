@@ -286,6 +286,7 @@
 									ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
 									class="form-control" ng-model="markerAttribute.value"
 									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+									maxlength="255"
 									ng-required="markerAttribute.attribute.required"
 									> 
 									
@@ -500,7 +501,7 @@
 								<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
 									class="form-control" ng-model="attribute.value"
 									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-									ng-required="attribute.required"
+									ng-required="attribute.required" maxlength="255"
 									> 
 									
 									
