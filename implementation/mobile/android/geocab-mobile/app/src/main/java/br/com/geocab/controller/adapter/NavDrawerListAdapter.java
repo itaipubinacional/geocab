@@ -22,6 +22,9 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -34,14 +37,15 @@ import br.com.geocab.controller.app.AppController;
 import br.com.geocab.controller.delegate.MarkerDelegate;
 import br.com.geocab.entity.Layer;
 import br.com.geocab.entity.Marker;
+import br.com.geocab.util.DelegateHandler;
 
 public class NavDrawerListAdapter extends ArrayAdapter {
 
 	private Context context;
 	private ArrayList<Layer> navDrawerItems;
 	private ArrayList<Layer> navDrawerItemsSearch;
-    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     private WebView webViewMap;
+    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
     private int selectedItemCount = 0;
     private final int limitCheckList = 3;
@@ -49,7 +53,7 @@ public class NavDrawerListAdapter extends ArrayAdapter {
     private TextView textViewSelectedCountItems;
     private TextView textViewTotalItems;
 
-    private MarkerDelegate markerDelegate;
+    public MarkerDelegate markerDelegate;
 
     private String layerIcon;
 
@@ -198,25 +202,30 @@ public class NavDrawerListAdapter extends ArrayAdapter {
                     String nameLayer = layer.getName().substring(index+1,layer.getName().length());
                     String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"/wms";
 
-                    webViewMap.loadUrl("javascript:showLayer(\""+urlFormated+"\",\""+nameLayer+"\", \""+layer.getTitle()+"\",\""+layer.getIsChecked()+"\")");
+                    webViewMap.loadUrl("javascript:geocabapp.showLayer(\""+urlFormated+"\",\""+nameLayer+"\", \""+layer.getTitle()+"\",\""+layer.getIsChecked()+"\")");
                 }
                 else
                 {
                     if( layer.getIsChecked() )
                     {
-                        String nameIcon = layer.getIcon().substring(layer.getIcon().lastIndexOf("/")+1, layer.getIcon().indexOf("."));
-                        NavDrawerListAdapter.this.markerDelegate = new MarkerDelegate(NavDrawerListAdapter.this.context, webViewMap, layer.getName() );
-                        NavDrawerListAdapter.this.markerDelegate.listMarkersByLayer(layer.getId(), nameIcon);
+                        NavDrawerListAdapter.this.markerDelegate = new MarkerDelegate(NavDrawerListAdapter.this.context);
+                        NavDrawerListAdapter.this.markerDelegate.listMarkersByLayer(layer.getId(), new DelegateHandler<JSONArray>() {
+                            @Override public void responseHandler(JSONArray response) {
+                                try {
+                                    for (int i = 0; i < response.length(); i++) {
+                                        webViewMap.loadUrl("javascript:geocabapp.addMarker('" + response.getString(i) + "')");
+                                    }
+                                } catch (JSONException e ){
+                                    Log.d("ERRO", e.getMessage());
+                                }
+                            }
+                        });
                     }
                     else
                     {
-                        webViewMap.loadUrl("javascript:closeMarker(\""+ layer.getName() + "\")");
+                        webViewMap.loadUrl("javascript:geocabapp.closeMarker('" + layer.getId() + "')");
                     }
-
-
                 }
-
-
             }
         });
 

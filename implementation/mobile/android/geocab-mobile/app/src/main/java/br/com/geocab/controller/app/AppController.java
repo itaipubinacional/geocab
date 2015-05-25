@@ -1,9 +1,12 @@
 package br.com.geocab.controller.app;
 
+import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.util.LruBitmapCache;
 import android.app.Application;
 import android.text.TextUtils;
+import android.webkit.WebView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -15,6 +18,7 @@ public class AppController extends Application {
 
 	private RequestQueue mRequestQueue;
 	private ImageLoader mImageLoader;
+    private WebView webViewMap;
 
 	private static AppController mInstance;
 
@@ -53,7 +57,11 @@ public class AppController extends Application {
 
 	public <T> void addToRequestQueue(Request<T> req) {
 		req.setTag(TAG);
-		getRequestQueue().add(req);
+        req.setRetryPolicy(new DefaultRetryPolicy(
+            10000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        getRequestQueue().add(req);
 	}
 
 	public void cancelPendingRequests(Object tag) {
@@ -61,4 +69,12 @@ public class AppController extends Application {
 			mRequestQueue.cancelAll(tag);
 		}
 	}
+
+    public WebView getWebViewMap() {
+        return webViewMap;
+    }
+
+    public void setWebViewMap(WebView webViewMap) {
+        this.webViewMap = webViewMap;
+    }
 }

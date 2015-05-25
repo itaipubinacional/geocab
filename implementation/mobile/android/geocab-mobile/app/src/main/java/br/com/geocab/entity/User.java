@@ -1,11 +1,16 @@
 package br.com.geocab.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by Vinicius on 24/09/2014.
  */
-public class User {
+public class User implements Serializable {
 
-    //Basic
+    /**
+     * Id {@link User}
+     */
+    private Long id;
     /**
      *
      */
@@ -46,6 +51,14 @@ public class User {
         this.enabled = enabled;
         this.password = password;
         this.role = role;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

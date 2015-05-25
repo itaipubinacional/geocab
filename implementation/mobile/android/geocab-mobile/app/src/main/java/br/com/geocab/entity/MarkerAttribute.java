@@ -17,6 +17,8 @@ public class MarkerAttribute implements Serializable
 	 */
 	private static final long serialVersionUID = 7579901947534822117L;
 
+    private Long id;
+
 	private String value;
 
     private Layer layer;
@@ -34,6 +36,14 @@ public class MarkerAttribute implements Serializable
         this.layer = layer;
         this.marker = marker;
         this.attribute = attribute;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
