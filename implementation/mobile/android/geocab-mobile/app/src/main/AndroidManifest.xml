@@ -7,6 +7,7 @@
         android:targetSdkVersion="15" />
 
     <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,9 +17,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
-        android:name="br.com.geocab.controller.app.AppController"
+        android:name=".controller.app.AppController"
         android:allowBackup="true"
         android:icon="@drawable/icon_app"
         android:label="@string/app_name"
@@ -31,27 +37,32 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name="br.com.geocab.controller.activity.AuthenticationActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="standard" >
+            android:name=".controller.activity.AuthenticationActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.facebook.LoginActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="br.com.geocab.controller.activity.MapActivity"
-            android:screenOrientation="portrait"
-            android:hardwareAccelerated="true">
+            android:name=".controller.activity.MapActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="br.com.geocab.controller.activity.SplashScreenActivity"
-            android:screenOrientation="portrait">
+            android:name=".controller.activity.SplashScreenActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".controller.activity.MarkerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
+            android:label="@string/app_name" >
         </activity>
     </application>
 
