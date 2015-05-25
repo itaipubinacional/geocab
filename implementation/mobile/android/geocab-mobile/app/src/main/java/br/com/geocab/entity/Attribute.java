@@ -3,7 +3,15 @@
  */
 package br.com.geocab.entity;
 
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
 import java.io.Serializable;
+
+import br.com.geocab.R;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -20,7 +28,11 @@ public class Attribute implements Serializable
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	
+
+    /**
+     * Id {@link br.com.geocab.entity.Attribute}
+     */
+    private Long id;
 	/**
 	 * Name {@link br.com.geocab.entity.Attribute}
 	 * */
@@ -35,6 +47,8 @@ public class Attribute implements Serializable
 	private Boolean required;
 	
 	private Boolean attributeDefault;
+
+    private transient View viewComponent;
 	
 	/**
 	 * Layer {@link Layer}
@@ -119,4 +133,41 @@ public class Attribute implements Serializable
     public void setAttributeDefault(Boolean attributeDefault) {
         this.attributeDefault = attributeDefault;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public View getViewComponent() {
+        return viewComponent;
+    }
+
+    public void setViewComponent(View viewComponent) {
+        this.viewComponent = viewComponent;
+    }
+
+    public String getViewComponentValue(){
+
+        if ( this.getType() == AttributeType.TEXT || this.getType() == AttributeType.NUMBER || this.getType() == AttributeType.DATE ){
+            return ((EditText) this.viewComponent).getText().toString();
+
+        } else if ( this.getType() == AttributeType.BOOLEAN ){
+            RadioGroup group = (RadioGroup) this.viewComponent;
+
+            if ( group.getCheckedRadioButtonId() == 1 ) {
+                return "Yes";
+
+            } else if ( group.getCheckedRadioButtonId() == 0 ) {
+                return "No";
+            }
+        }
+
+        return null;
+
+    }
+
 }
