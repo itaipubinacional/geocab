@@ -10,9 +10,8 @@ package br.com.geocab.entity;
  * @version 1.0
  * 
  */
-public enum StatusMarker
+public enum MarkerStatus
 {
-	
 	/*-------------------------------------------------------------------
 	 *				 		     ENUMS
 	 *-------------------------------------------------------------------*/

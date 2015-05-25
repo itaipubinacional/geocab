@@ -10,9 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import br.com.geocab.controller.activity.MapActivity;
-import br.com.geocab.controller.activity.dialog.DialogInformation;
 
 public class JavaScriptHandler {
+
     MapActivity mapActivity;
 
     public JavaScriptHandler(MapActivity activity)  {
@@ -25,10 +25,14 @@ public class JavaScriptHandler {
         vb.vibrate(100);
     }
 
-    public void showInformation(int markerId, String markerUser, String markerDate, String layerName, String[] listUrls, String[] listTitles)
+    public void showInformation(long markerId, String[] obj)
     {
-        this.mapActivity.showInformation(markerId, markerUser, markerDate, layerName, listUrls, listTitles);
+        this.mapActivity.showLayerMarker(markerId, obj);
     }
 
+    public void showOpenMenuButton()
+    {
+        this.mapActivity.showOpenMenuButton();
+    }
 
 }
