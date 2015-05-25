@@ -5,10 +5,10 @@ package br.com.geocab.entity;
 
 import android.graphics.Bitmap;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -29,13 +29,9 @@ public class Marker implements Serializable
      */
     private Long id;
 
-	private String latitude;
-
-	private String longitude;
-
-    private Bitmap image;
+	private String wktCoordenate;
 	
-	private StatusMarker status;
+	private MarkerStatus status;
 
     private User user;
 
@@ -43,9 +39,11 @@ public class Marker implements Serializable
 
     private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
 
-    private Calendar created;
+    private List<MarkerModeration> markerModeration = new ArrayList<MarkerModeration>();
 
-    private String markerCreatedFormated;
+    private transient Bitmap image;
+
+    private transient File file;
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -53,20 +51,15 @@ public class Marker implements Serializable
 	/**
 	 * 
 	 */
-	public Marker(Long id, String markerCreatedFormated, User user)
+    public Marker()
+    {
+    }
+
+
+	public Marker(Long id)
 	{
         this.id = id;
-        this.markerCreatedFormated = markerCreatedFormated;
-		this.user = user;
 	}
-
-    public Marker(Long id, String latitude, String longitude, StatusMarker status, List<MarkerAttribute> markerAttributes) {
-        this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.status = status;
-        this.markerAttributes = markerAttributes;
-    }
 
     public Long getId() {
         return id;
@@ -76,20 +69,12 @@ public class Marker implements Serializable
         this.id = id;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public String getWktCoordenate() {
+        return wktCoordenate;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setWktCoordenate(String wktCoordenate) {
+        this.wktCoordenate = wktCoordenate;
     }
 
     public Bitmap getImage() {
@@ -100,11 +85,11 @@ public class Marker implements Serializable
         this.image = image;
     }
 
-    public StatusMarker getStatus() {
+    public MarkerStatus getStatus() {
         return status;
     }
 
-    public void setStatus(StatusMarker status) {
+    public void setStatus(MarkerStatus status) {
         this.status = status;
     }
 
@@ -124,6 +109,14 @@ public class Marker implements Serializable
         this.layer = layer;
     }
 
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
     public List<MarkerAttribute> getMarkerAttributes() {
         return markerAttributes;
     }
@@ -132,19 +125,4 @@ public class Marker implements Serializable
         this.markerAttributes = markerAttributes;
     }
 
-    public Calendar getCreated() {
-        return created;
-    }
-
-    public void setCreated(Calendar created) {
-        this.created = created;
-    }
-
-    public String getMarkerCreatedFormated() {
-        return markerCreatedFormated;
-    }
-
-    public void setMarkerCreatedFormated(String markerCreatedFormated) {
-        this.markerCreatedFormated = markerCreatedFormated;
-    }
 }

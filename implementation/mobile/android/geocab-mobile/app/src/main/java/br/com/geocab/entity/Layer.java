@@ -1,11 +1,12 @@
 package br.com.geocab.entity;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  * Created by Vinicius on 25/09/2014.
  */
-public class Layer
+public class Layer implements Serializable
 {
 
     /*-------------------------------------------------------------------
@@ -60,7 +61,7 @@ public class Layer
     /**
      * Field that informs if the {@link Layer} is checked
      */
-    private Boolean isChecked = false;
+    private transient Boolean isChecked = false;
 
     /**
      * Icon of {@link Layer}
@@ -201,5 +202,27 @@ public class Layer
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    @Override
+    public String toString() {
+        return this.title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Layer layer = (Layer) o;
+
+        if (id != null ? !id.equals(layer.id) : layer.id != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

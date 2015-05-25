@@ -1,9 +1,11 @@
 package br.com.geocab.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by Vinicius on 25/09/2014.
  */
-public class DataSource
+public class DataSource implements Serializable
 {
 
     /*-------------------------------------------------------------------

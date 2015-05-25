@@ -31,10 +31,6 @@ import br.com.geocab.entity.User;
 public class AccountDelegate extends AbstractDelegate
 {
 
-    private final Context context;
-
-    private ProgressDialog progressDialog;
-
 	/*-------------------------------------------------------------------
      * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -44,11 +40,8 @@ public class AccountDelegate extends AbstractDelegate
      */
     public AccountDelegate(Context context)
     {
-        super("authentication");
-        this.context = context;
+        super("authentication", context);
     }
-
-
 
 	/*-------------------------------------------------------------------
 	 * 		 					BEHAVIORS
@@ -123,7 +116,6 @@ public class AccountDelegate extends AbstractDelegate
             {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("credentials", credentials);
-
                 return params;
             }
 
