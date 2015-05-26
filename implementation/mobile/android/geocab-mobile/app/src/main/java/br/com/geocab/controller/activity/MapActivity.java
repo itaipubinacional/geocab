@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
@@ -163,11 +162,6 @@ public class MapActivity extends Activity
         webViewMap.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webViewMap.setWebChromeClient(new WebChromeClient());
         webViewMap.loadUrl("file:///android_asset/webview.html");
-
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            webViewMap.setWebContentsDebuggingEnabled(true);
-        //}
-
         webViewMap.addJavascriptInterface(this, "Android");
 
         // Guarda a referência do webview na main controller
@@ -322,21 +316,18 @@ public class MapActivity extends Activity
         alertDialog.show();
     }
 
-    @JavascriptInterface
     public void changeToAddMarker(String wktCoordenate){
         Intent intent = new Intent(MapActivity.this, MarkerActivity.class);
         intent.putExtra("wktCoordenate", wktCoordenate);
         startActivity(intent);
     }
 
-    @JavascriptInterface
     public void changeToUpdateMarker(String markerJson){
         Intent intent = new Intent(MapActivity.this, MarkerActivity.class);
         intent.putExtra("marker", new GsonBuilder().create().fromJson(markerJson, Marker.class));
         startActivity(intent);
     }
 
-    @JavascriptInterface
     public void showLayerMarker( final long markerId, final String[] layersUrl )
     {
         // Verifica se existem camadas sendo mostradas
@@ -405,7 +396,6 @@ public class MapActivity extends Activity
 
     }
 
-    @JavascriptInterface
     public void showOpenMenuButton()
     {
         runOnUiThread(new Runnable() {
@@ -415,7 +405,6 @@ public class MapActivity extends Activity
         });
     }
 
-    @JavascriptInterface
     public void changeToApproveMarker(String markerJson)
     {
         final Gson gson = new GsonBuilder().create();
@@ -433,7 +422,6 @@ public class MapActivity extends Activity
         });
     }
 
-    @JavascriptInterface
     public void changeToRefuseMarker(String markerJson)
     {
         final Gson gson = new GsonBuilder().create();
@@ -451,7 +439,6 @@ public class MapActivity extends Activity
         });
     }
 
-    @JavascriptInterface
     public void changeToRemoveMarker(String markerJson)
     {
         final Gson gson = new GsonBuilder().create();
