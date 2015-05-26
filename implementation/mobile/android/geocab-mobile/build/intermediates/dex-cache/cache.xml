@@ -1,95 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pre-dex-items>
+<items version="2" >
 
     <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\bolts-android-1.1.2-4e8853f4b043d0a45d00785935b65ecb24e99d07.jar"
-        jar="C:\Users\Vinicius\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-android\1.1.2\91c20388c9a45f62b5ed8fe0502bb76ff6251fc7\bolts-android-1.1.2.jar"
+        jar="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\com.google.android.gms\play-services\5.0.89\classes.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="91c20388c9a45f62b5ed8fe0502bb76ff6251fc7"/>
+        sha1="d71573c9c5ea98a8db47ad6ff993a63d492b3bfa">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\classes-6c88596a896879689dc4eb1bb253e3747865b6e8.jar" />
+    </item>
     <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\classes-9246cecfec1746c1523c3126c04c42e6f71e6d46.jar"
-        jar="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\com.google.android.gms\play-services\5.0.89\classes.jar"
+        jar="C:\Users\SOARES-01\.gradle\wrapper\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3\5fc52c41ef0239d1093a1eb7c3697036183677ce\gson-2.3.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="d71573c9c5ea98a8db47ad6ff993a63d492b3bfa"/>
+        sha1="5fc52c41ef0239d1093a1eb7c3697036183677ce">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\gson-2.3-75aa166980ee5f1e2300d3de8e4989be5369e01b.jar" />
+    </item>
     <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\classes-fc805520973905edd835e2afca30e6e44f2c22f9.jar"
-        jar="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
-    <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\internal_impl-20.0.0-18ded041513f4f8440b4e27a63b57ff6df41ae50.jar"
-        jar="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\libs\internal_impl-20.0.0.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
-    <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\gson-2.3-34e99968532b54f731ca8df06d970468bc6a8a19.jar"
-        jar="C:\Users\Vinicius\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3\5fc52c41ef0239d1093a1eb7c3697036183677ce\gson-2.3.jar"
+        jar="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\geocab-mobile.libraries\facebook\unspecified\classes.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="5fc52c41ef0239d1093a1eb7c3697036183677ce"/>
+        sha1="cf756aeadffd25795e3a37aa5f373db41f28b8e1">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\classes-c98f4d8485e35f420dafc7cb1118a4e88120432c.jar" />
+    </item>
     <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\library-1.0.1-e9711ef9bad85c9210c94d60a99f4eaaf52e1130.jar"
-        jar="C:\Users\Vinicius\.gradle\caches\modules-2\files-2.1\com.mcxiaoke.volley\library\1.0.1\6620d542981e7be6578fe75135f9ff97f14b5df6\library-1.0.1.jar"
+        jar="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\classes.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="6620d542981e7be6578fe75135f9ff97f14b5df6"/>
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\classes-2d94365d57e56fecd4dc272664c347faf7ab19fc.jar" />
+    </item>
     <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\support-annotations-20.0.0-ea87af0fd9862ec4663f6deb7fbea188d8b6fce3.jar"
-        jar="D:\Development\sdks\android-sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
-    <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\library-1.0.1-e9711ef9bad85c9210c94d60a99f4eaaf52e1130.jar"
-        jar="C:\Users\Vinicius\.gradle\caches\modules-2\files-2.1\com.mcxiaoke.volley\library\1.0.1\6620d542981e7be6578fe75135f9ff97f14b5df6\library-1.0.1.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="6620d542981e7be6578fe75135f9ff97f14b5df6"/>
-    <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\gson-2.3-34e99968532b54f731ca8df06d970468bc6a8a19.jar"
-        jar="C:\Users\Vinicius\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3\5fc52c41ef0239d1093a1eb7c3697036183677ce\gson-2.3.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="5fc52c41ef0239d1093a1eb7c3697036183677ce"/>
-    <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\classes-fc580f93d5c691f9c541ff6e1e8309db2ce2a3fc.jar"
-        jar="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\geocab-mobile.libraries\facebook\unspecified\classes.jar"
+        jar="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\libs\internal_impl-20.0.0.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="8c581fc7ab00c3b6c9b8f3368202b068cc660762"/>
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\internal_impl-20.0.0-caf4eace8b79289331472ce287a3f2a1fa360c2f.jar" />
+    </item>
     <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\classes-fc805520973905edd835e2afca30e6e44f2c22f9.jar"
-        jar="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\classes.jar"
+        jar="C:\Users\SOARES-01\.gradle\wrapper\caches\modules-2\files-2.1\org.apache.httpcomponents\httpclient-android\4.3.5\82edcaec6c7b4599eaeaaf11167ceea41db42f33\httpclient-android-4.3.5.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
+        sha1="82edcaec6c7b4599eaeaaf11167ceea41db42f33">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\httpclient-android-4.3.5-05d586c56d52d90c8dff192fce826991380c8554.jar" />
+    </item>
     <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\bolts-android-1.1.2-4e8853f4b043d0a45d00785935b65ecb24e99d07.jar"
-        jar="C:\Users\Vinicius\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-android\1.1.2\91c20388c9a45f62b5ed8fe0502bb76ff6251fc7\bolts-android-1.1.2.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="91c20388c9a45f62b5ed8fe0502bb76ff6251fc7"/>
-    <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\classes-fc580f93d5c691f9c541ff6e1e8309db2ce2a3fc.jar"
-        jar="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\geocab-mobile.libraries\facebook\unspecified\classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="a5b589d778a397e5f4770251b027abe9df97f2a5"/>
-    <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\support-annotations-20.0.0-ea87af0fd9862ec4663f6deb7fbea188d8b6fce3.jar"
-        jar="D:\Development\sdks\android-sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
+        jar="C:\Users\SOARES-01\.gradle\wrapper\caches\modules-2\files-2.1\com.mcxiaoke.volley\library\1.0.1\6620d542981e7be6578fe75135f9ff97f14b5df6\library-1.0.1.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
+        sha1="6620d542981e7be6578fe75135f9ff97f14b5df6">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\library-1.0.1-4f851dd6d4bf06cf8fb6cb8a78b9a2b0dd00d7d8.jar" />
+    </item>
     <item
-        dex="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\internal_impl-20.0.0-18ded041513f4f8440b4e27a63b57ff6df41ae50.jar"
-        jar="C:\Users\Vinicius\git\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\libs\internal_impl-20.0.0.jar"
+        jar="C:\Users\SOARES-01\.gradle\wrapper\caches\modules-2\files-2.1\com.parse.bolts\bolts-android\1.1.2\91c20388c9a45f62b5ed8fe0502bb76ff6251fc7\bolts-android-1.1.2.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
+        sha1="91c20388c9a45f62b5ed8fe0502bb76ff6251fc7">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\bolts-android-1.1.2-fcaa3150a7e6fa0eb396aa5a94146b07e9a132ab.jar" />
+    </item>
+    <item
+        jar="C:\Users\SOARES-01\.gradle\wrapper\caches\modules-2\files-2.1\org.apache.httpcomponents\httpmime\4.3.5\1dd0d38df9c6d21e893f2e52403f1cd99e91cd81\httpmime-4.3.5.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="1dd0d38df9c6d21e893f2e52403f1cd99e91cd81">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\httpmime-4.3.5-beb49fbfb14cc1be47a3c1c9399cf0163c968ec0.jar" />
+    </item>
+    <item
+        jar="C:\Users\SOARES-01\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="D:\JOAZ\DEV\MOBILE\geocab-scm\itaipu-geocab\implementation\mobile\android\geocab-mobile\app\build\intermediates\pre-dexed\debug\support-annotations-20.0.0-0787a4468554da869c25709ea1e8b1317580a4c0.jar" />
+    </item>
 
-</pre-dex-items>
+</items>
