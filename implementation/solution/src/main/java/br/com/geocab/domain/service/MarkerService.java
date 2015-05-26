@@ -115,10 +115,6 @@ public class MarkerService
 	public Marker insertMarker(Marker marker) throws IOException,
 			RepositoryException
 	{
-
-		List<MarkerModeration> list = this.markerModerationRepository
-				.listByFilters(null, null).getContent();
-		System.out.println(list);
 		try
 		{
 			User user = ContextHolder.getAuthenticatedUser();
@@ -210,7 +206,7 @@ public class MarkerService
 	 * 
 	 * @param id
 	 */
-	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
+	//@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
 			+ UserRole.MODERATOR_VALUE + "')")
 	public void removeMarker(Long id)
 	{
