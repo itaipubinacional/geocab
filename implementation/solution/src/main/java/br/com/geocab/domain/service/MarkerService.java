@@ -206,8 +206,7 @@ public class MarkerService
 	 * 
 	 * @param id
 	 */
-	//@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
-			+ UserRole.MODERATOR_VALUE + "')")
+	//@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"+ UserRole.MODERATOR_VALUE + "')")
 	public void removeMarker(Long id)
 	{
 		Marker marker = this.findMarkerById(id);
