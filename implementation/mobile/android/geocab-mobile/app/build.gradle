@@ -13,10 +13,13 @@ android {
     buildTypes {
         release {
             //runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    compileOptions {
+    packagingOptions{
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
     }
 }
 
@@ -28,4 +31,6 @@ dependencies {
     compile 'com.android.support:support-v4:20.0.0'
     compile 'com.mcxiaoke.volley:library:1.0.1@jar'
     compile 'com.google.code.gson:gson:2.3'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5'
+    compile 'org.apache.httpcomponents:httpmime:4.3.5'
 }
