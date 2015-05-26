@@ -49,8 +49,8 @@ public abstract class AbstractDelegate
 
     protected String getUrl()
     {
-        //return "http://192.168.0.45:8080/geocab/" + urlPath;
-        return "http://geocab.sbox.me/" + urlPath;
+        //return "http://geocab.sbox.me/" + urlPath;
+        return "https://geocab.itaipu.gov.br/" + urlPath;
     }
 
     public void showLoadingDialog(){
