@@ -17,7 +17,7 @@
 		<level value="WARN" />
 	</logger>
 	<logger name="org.springframework.web">
-		<level value="WARN" />
+		<level value="DEBUG" />
 	</logger>
 	
 	<logger name="org.directwebremoting">
