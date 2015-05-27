@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
 	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -12,9 +12,14 @@
 		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr/spring-dwr-3.0.xsd"
 	default-autowire="byName">
 	
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	<bean id="multipartResolver" 
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 	
+	<mvc:annotation-driven />
+
+	<!--
+		RESTful
+	-->	
 	<context:component-scan  
 		base-package="br.com.geocab.application.restful"/>
-		
 </beans>
