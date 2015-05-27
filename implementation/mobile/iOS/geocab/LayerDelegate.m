@@ -8,20 +8,14 @@
 
 #import "LayerDelegate.h"
 #import "Layer.h"
+#import "Attribute.h"
 
 @implementation LayerDelegate
 
 - (RKObjectMapping *) mapping
 {
     RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[Layer class]];
-    [mapping addAttributeMappingsFromDictionary:@{
-                                                  @"id"        : @"id",
-                                                  @"name"      : @"name",
-                                                  @"title"     : @"title",
-                                                  @"legend"    : @"legend",
-                                                  @"icon"      : @"icon",
-                                                  @"created"   : @"created"
-                                                  }];
+    [mapping addAttributeMappingsFromDictionary: [Layer generateDictionary]];
     
     RKObjectMapping *dataSourceMapping = [RKObjectMapping mappingForClass:[DataSource class]];
     [dataSourceMapping addAttributeMappingsFromDictionary:@{
@@ -49,6 +43,30 @@
     RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[ responseDescriptor ]];
     
     [objectRequestOperation setCompletionBlockWithSuccess:successBlock failure:failBlock];
+    [objectRequestOperation start];
+}
+
+- (void) listAttributesById: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password layerId: (NSNumber*) layerId
+{
+    RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[Attribute class]];
+    [mapping addAttributeMappingsFromDictionary:@{
+                                                           @"id"       : @"id",
+                                                           @"name"     : @"name",
+                                                           @"type"     : @"type",
+                                                           @"required" : @"required"
+                                                           }];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping method:RKRequestMethodGET pathPattern:nil keyPath:@"" statusCodes:nil];
+    
+    NSURL* url = [NSURL URLWithString:self.baseUrl];
+    RKObjectManager* objectManager = [RKObjectManager managerWithBaseURL:url];
+    [objectManager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    
+    NSURLRequest *request = [objectManager requestWithObject:nil method:RKRequestMethodGET path:[NSString stringWithFormat:@"%@/layerattributes", layerId] parameters:nil];
+    
+    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[ responseDescriptor ]];
+    
+    [objectRequestOperation setCompletionBlockWithSuccess:successBlock failure:nil];
     [objectRequestOperation start];
 }
 
