@@ -6,6 +6,7 @@
   Copyright (c) 2014 Itaipu. All rights reserved.
 */
 
+"Layers" = "Layers";
 "gps.error.message" = "An error occurred while trying to obtain your current location";
 "gps.error.title" = "GPS Error";
 "login.error.message" = "An error ocurred trying with the login. Check your email or password.";
@@ -20,5 +21,6 @@
 "created-by" = "Created by";
 "logout-confirmation.title" = "Logout";
 "logout-confirmation.message" = "Do you want to proceed?";
+"marker.information" = "Marker Information";
 "no" = "No";
-"yes" = "Yes";
+"yes" = "Ye";
