@@ -228,7 +228,8 @@ public class LayerDelegate extends AbstractDelegate
      */
     public void listLayerProperties(final String[] layerUrls, final DelegateHandler<String> delegateHandler) {
 
-        String urlRequest = "http://192.168.0.45:8080/geocab/layergroup/layerproperties";
+        String urlRequest = this.getUrl()+"/layerproperties";
+        urlRequest = "http://192.168.20.143:8080/geocab/layergroup/layerproperties";
         JSONArray jsonArray = new JSONArray();
 
         try
@@ -244,10 +245,10 @@ public class LayerDelegate extends AbstractDelegate
             Log.d("Error", "Error: " + error.getMessage());
         }
 
-        JsonArrayPostRequest request = new JsonArrayPostRequest(urlRequest, jsonArray.toString(), new Response.Listener<JSONArray>() {
+        JsonArrayPostRequest request = new JsonArrayPostRequest(urlRequest, jsonArray.toString(), new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
-                delegateHandler.responseHandler(response.toString());
+            public void onResponse(String response) {
+                delegateHandler.responseHandler(response);
             }
         }, new Response.ErrorListener() {
             @Override

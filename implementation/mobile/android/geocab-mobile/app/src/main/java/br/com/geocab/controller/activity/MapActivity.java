@@ -17,10 +17,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
@@ -160,9 +162,13 @@ public class MapActivity extends Activity
         webViewMap.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         webViewMap.getSettings().setRenderPriority(RenderPriority.HIGH);
         webViewMap.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webViewMap.setWebChromeClient(new WebChromeClient());
         webViewMap.loadUrl("file:///android_asset/webview.html");
         webViewMap.addJavascriptInterface(this, "Android");
+        webViewMap.setWebChromeClient(new WebChromeClient());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
 
         // Guarda a referência do webview na main controller
         AppController.getInstance().setWebViewMap(webViewMap);
@@ -336,7 +342,11 @@ public class MapActivity extends Activity
             this.layerDelegate.listLayerProperties(layersUrl, new DelegateHandler<String>() {
                 @Override
                 public void responseHandler(String result) {
-                    MapActivity.this.loadMarker(markerId, result);
+                    if ( markerId > 0 ){
+                        MapActivity.this.loadMarker(markerId, result);
+                    } else {
+                        webViewMap.loadUrl("javascript:geocabapp.marker.show(null, null, null, '" + result + "')");
+                    }
                 }
             });
         }

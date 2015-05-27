@@ -5,6 +5,7 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +15,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * Created by Joaz Soares on 25/05/2015.
  */
-public class JsonArrayPostRequest extends JsonRequest<JSONArray> {
+public class JsonArrayPostRequest extends JsonRequest<String> {
 
     /**
      * Creates a new request.
@@ -22,22 +23,19 @@ public class JsonArrayPostRequest extends JsonRequest<JSONArray> {
      * @param listener Listener to receive the JSON response
      * @param errorListener Error listener, or null to ignore errors.
      */
-    public JsonArrayPostRequest(String url, String body, Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
+    public JsonArrayPostRequest(String url, String body, Response.Listener<String> listener, Response.ErrorListener errorListener) {
         super(Method.POST, url, body, listener, errorListener);
     }
 
     @Override
-    protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
+    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+        String parsed;
         try {
-            String jsonString =
-                    new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            return Response.success(new JSONArray(jsonString),
-                    HttpHeaderParser.parseCacheHeaders(response));
+            parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
         } catch (UnsupportedEncodingException e) {
-            return Response.error(new ParseError(e));
-        } catch (JSONException je) {
-            return Response.error(new ParseError(je));
+            parsed = new String(response.data);
         }
+        return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
     }
 
 }
