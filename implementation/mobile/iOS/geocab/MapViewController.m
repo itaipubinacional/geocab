@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "AddNewMarkerViewController.h"
 #import "MarkerDelegate.h"
+#import "LayerDelegate.h"
 #import "Layer.h"
 #import "User.h"
 #import "Marker.h"
@@ -163,42 +164,36 @@ extern NSUserDefaults *defaults;
         
     };
     
-    context[@"showMarker"] = ^(NSNumber *markerId) {
+    context[@"showLayerMarker"] = ^(NSNumber *markerId, NSArray *layersUrl) {
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.menuButton.hidden = YES;
-        });
-        
-        MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
-        
-        [markerDelegate listAttributesById:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        // Verifica se existem camadas sendo mostradas
+        if ( layersUrl != nil && [layersUrl count] > 0 )
+        {
+            LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup"];
             
-            self.currentMarkerAttributes = [[result array] mutableCopy];
+            [layerDelegate listProperties:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+                
+                NSString *response = operation.HTTPRequestOperation.responseString;
+                response = [response stringByReplacingOccurrencesOfString:@"\"{" withString:@"{"];
+                response = [response stringByReplacingOccurrencesOfString:@"}\"" withString:@"}"];                
+                
+                if ( [markerId longValue] > 0 ){
+                    [self loadMarker:markerId layersProperties:response];
+                    
+                } else {
+                    NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.show(null,null,null,'%@')", response];
+                    [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+                }
+                
+            } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] dataSource:layersUrl];
             
-            NSString *userId = [defaults objectForKey:@"userId"];
-            NSString *userRole = [defaults objectForKey:@"userRole"];
-            NSString *markerAttributes = operation.HTTPRequestOperation.responseString;
-            
-            MarkerDelegate *delegate = [[MarkerDelegate alloc] initWithUrl:@"files/markers/"];
-            
-            [delegate downloadMarkerAttributePhoto:markerId success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                
-				NSString *imageBase64 = responseObject != nil ? [NSString stringWithFormat:@"data:image/jpeg;base64,%@", [operation.responseData base64EncodedStringWithOptions:0]] : @"";
-                
-                NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.showOptions('%@','%@','%@','%@','%@')", markerId, markerAttributes, imageBase64, userId, userRole];
-                
-                [_webView stringByEvaluatingJavaScriptFromString:functionCall];
-                
-            } fail:^(AFHTTPRequestOperation *operation, NSError *error) {
-                
-                NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.showOptions('%@','%@','','%@','%@')", markerId, markerAttributes, userId, userRole];
-                
-                [_webView stringByEvaluatingJavaScriptFromString:functionCall];
-                
-            } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
-            
-            
-        } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:markerId];
+        }
+        // Caso não, mostra apenas o marker
+        else if ( markerId > 0 )
+        {
+			[self loadMarker:markerId layersProperties:nil];
+        }
+
     };
     
     context[@"showOpenMenuButton"] = ^() {
@@ -208,6 +203,49 @@ extern NSUserDefaults *defaults;
         });
         
     };
+    
+    context[@"closeOpenMenuButton"] = ^() {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.menuButton.hidden = YES;
+        });
+        
+    };
+    
+}
+
+- (void) loadMarker:(NSNumber *) markerId layersProperties: (NSString *)layersProperties {
+    
+    MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
+    
+    [markerDelegate listAttributesById:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        
+        self.currentMarkerAttributes = [[result array] mutableCopy];
+        
+        NSString *userId = [defaults objectForKey:@"userId"];
+        NSString *userRole = [defaults objectForKey:@"userRole"];
+        NSString *markerAttributes = operation.HTTPRequestOperation.responseString;
+        
+        MarkerDelegate *delegate = [[MarkerDelegate alloc] initWithUrl:@"files/markers/"];
+        
+        [delegate downloadMarkerAttributePhoto:markerId success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSString *imageBase64 = responseObject != nil ? [NSString stringWithFormat:@"data:image/jpeg;base64,%@", [operation.responseData base64EncodedStringWithOptions:0]] : @"";
+            
+            NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.showOptions('%@','%@','%@','%@','%@','%@')", markerId, markerAttributes, imageBase64, userId, userRole, layersProperties];
+            
+            [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+            
+        } fail:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.showOptions('%@','%@','','%@','%@','%@')", markerId, markerAttributes, userId, userRole, layersProperties];
+            
+            [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+            
+        } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+        
+        
+    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:markerId];
     
 }
 
@@ -219,7 +257,7 @@ extern NSUserDefaults *defaults;
         
         NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
         
-        NSString *functionCall = [NSString stringWithFormat:@"showLayer('%@', '%@', '%@', 'true')", urlFormated , layer.name, layer.title];
+        NSString *functionCall = [NSString stringWithFormat:@"geocabapp.showLayer('%@', '%@', '%@', 'true')", urlFormated , layer.name, layer.title];
         [_webView stringByEvaluatingJavaScriptFromString:functionCall];
     } else {
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker/"];
@@ -275,7 +313,7 @@ extern NSUserDefaults *defaults;
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"webview" ofType:@"html" inDirectory:@"/"];
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:path]]];
-    _webView.scrollView.scrollEnabled = TRUE;
+    _webView.scrollView.scrollEnabled = FALSE;
     _webView.scalesPageToFit = TRUE;
 }
 

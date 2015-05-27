@@ -353,21 +353,7 @@ extern NSUserDefaults *defaults;
                 self.positionY += fieldHeight;
                 
                 // Em caso de edicao preenche o valor
-                if ( ![markerValue isEqualToString:@""] ){
-                    
-                    double timestampval;
-                    
-                    if ( [markerValue length] == 13 ){
-                    	timestampval = [markerValue doubleValue]/1000;
-                    } else {
-                        timestampval = [markerValue doubleValue];
-                    }
-                
-                    NSTimeInterval timestamp = (NSTimeInterval)timestampval;
-                    NSDate *updatetimestamp = [NSDate dateWithTimeIntervalSince1970:timestamp];
-                    uiTextField.text = [Marker formatDate:updatetimestamp];
-                }
-
+                uiTextField.text = markerValue;
                 attribute.viewComponent = uiTextField;
             }
         }
