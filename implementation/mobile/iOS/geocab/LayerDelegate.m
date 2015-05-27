@@ -70,4 +70,37 @@
     [objectRequestOperation start];
 }
 
+- (void) listProperties: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password dataSource:(NSArray*)dataSource
+{
+    NSMutableArray *dataSourceArray = [NSMutableArray array];
+    for (NSString *url in dataSource) {
+        DataSource *dataSource = [[DataSource alloc] init];
+        dataSource.url = url;
+        [dataSourceArray addObject:dataSource];
+    }
+
+    // Response Mapeamentos
+    NSIndexSet *statusCodes = RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful);
+    RKObjectMapping *responseMapping = [RKObjectMapping mappingForClass:[DataSource class]];
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:responseMapping method:RKRequestMethodAny pathPattern:nil keyPath:@"" statusCodes:statusCodes];
+    
+    // Request Mapeamentos
+    RKObjectMapping *requestMapping = [RKObjectMapping requestMapping];
+    [requestMapping addAttributeMappingsFromDictionary: @{@"url":@"url"}];
+    
+    // Request
+    RKRequestDescriptor *requestDescriptor = [RKRequestDescriptor requestDescriptorWithMapping:requestMapping objectClass:[DataSource class] rootKeyPath:nil method:RKRequestMethodAny];
+    
+    // Configurações da requisição
+    NSURL* url = [NSURL URLWithString:self.baseUrl];
+    RKObjectManager *manager = [RKObjectManager managerWithBaseURL:url];
+    [manager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [manager setRequestSerializationMIMEType:RKMIMETypeJSON];
+    [manager addRequestDescriptor:requestDescriptor];
+    [manager addResponseDescriptor:responseDescriptor];
+    
+    // POST to create
+    [manager postObject:dataSourceArray path:@"/layergroup/layerproperties" parameters:nil success:successBlock failure:nil];
+}
+
 @end
