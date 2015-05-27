@@ -15,12 +15,18 @@
 
 @property (nonatomic, retain) NSNumber *id;
 @property (nonatomic, retain) NSNumber *created;
-@property (nonatomic, retain) NSString *latitude;
-@property (nonatomic, retain) NSString *longitude;
-@property (nonatomic, retain) NSData *image;
+@property (nonatomic, retain) NSString *wktCoordenate;
+@property (nonatomic, retain) NSData *imageData;
+@property (nonatomic, retain) UIImage *imageUI;
+@property (nonatomic, retain) NSString *status;
 @property (strong, nonatomic) Layer *layer;
-@property (nonatomic) enum StatusMarker status;
-@property (nonatomic, retain) NSArray *markerAtrributes;
+@property (nonatomic, retain) NSMutableArray *markerAttributes;
 @property (nonatomic, retain) User *user;
 
++ (NSDictionary *) generateDictionary;
++ (NSString *) formatDate:(NSDate *)date;
++ (NSString *) dateStrToTimeStamp:(NSString *) dateStr;
++ (Marker *)fromJSONString:(NSString *)jsonString;
+- (NSString *)toJSONString;
+    
 @end

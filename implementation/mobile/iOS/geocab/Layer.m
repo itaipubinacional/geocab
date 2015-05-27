@@ -12,4 +12,17 @@
 
 @synthesize id, name, title, legend, icon, selected, dataSource, created;
 
++ (NSDictionary*) generateDictionary {
+    
+    return @{
+             @"id"        : @"id",
+             @"name"      : @"name",
+             @"title"     : @"title",
+             @"legend"    : @"legend",
+             @"icon"      : @"icon",
+             @"created"   : @"created"
+             };
+    
+}
+
 @end

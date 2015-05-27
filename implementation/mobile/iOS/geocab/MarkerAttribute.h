@@ -17,4 +17,6 @@
 @property (nonatomic, retain) Marker *marker;
 @property (nonatomic, retain) Attribute *attribute;
 
++ (NSDictionary *) generateDictionary;
+
 @end

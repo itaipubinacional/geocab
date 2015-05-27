@@ -19,9 +19,11 @@
 @property (retain, nonatomic) NSString *username;
 @property (retain, nonatomic) NSString *password;
 @property (retain, nonatomic) NSArray *authorities;
+@property (retain, nonatomic) NSString *role;
 @property (nonatomic) BOOL enabled;
-@property (nonatomic) enum UserRole role;
 @property (nonatomic) BOOL accountNonLocked;
 @property (nonatomic) BOOL accountNonExpired;
+
++ (NSDictionary *) generateDictionary;
 
 @end
