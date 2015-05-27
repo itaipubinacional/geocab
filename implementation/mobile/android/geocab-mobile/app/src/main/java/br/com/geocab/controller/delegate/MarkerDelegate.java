@@ -95,7 +95,7 @@ public class MarkerDelegate extends AbstractDelegate
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("ERROR", "ERROR");
+                Log.e("ERROR", error.getMessage());
             }
         })
         {

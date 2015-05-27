@@ -97,7 +97,7 @@ public class LayerGroupRESTful
 	 * @return
 	 * @throws UnsupportedEncodingException 
 	 */
-	@RequestMapping(value="/layerproperties", method = RequestMethod.POST)
+	@RequestMapping(value="/layerproperties", method = RequestMethod.POST, produces={"application/json; charset=UTF-8"})
 	public @ResponseBody List<String> listAllFeatures(@RequestBody List<DataSource> dataSources) throws UnsupportedEncodingException
 	{
 		List<String> listUrls = new ArrayList<>();
