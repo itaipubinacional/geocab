@@ -96,12 +96,17 @@ extern User *loggedUser;
 }
 
 - (void) authenticateUser:(User*) user {
-    [defaults setObject:user.email forKey:@"email"];
+
     [defaults setObject:user.name forKey:@"name"];
+    [defaults setObject:user.email forKey:@"email"];
+    [defaults setObject:user.id forKey:@"userId"];
+    [defaults setObject:user.role forKey:@"userRole"];
+    
     NSString *password = [_password.text isEqualToString:@""] ? user.password : _password.text;
     [defaults setObject:password forKey:@"password"];
     loggedUser = user;
     [defaults synchronize];
+    
     [self performSegueWithIdentifier:@"loginToMainSegue" sender:self];
 }
 
@@ -127,11 +132,6 @@ extern User *loggedUser;
         
         [[[GPPSignIn sharedInstance] plusService] executeQuery:[GTLQueryPlus queryForPeopleGetWithUserId:_signIn.userID] completionHandler:^(GTLServiceTicket *ticket, GTLPlusPerson *person, NSError *error)
          {
-             //Prints null in both
-//             User *loggedUser = [[User alloc] init];
-//             loggedUser.email = [[GPPSignIn sharedInstance] userEmail];
-//             loggedUser.name = person.displayName;
-             
              [self clearTextInputs];
              AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/create"];
              [accountDelegate socialAuthenticate:[[GPPSignIn sharedInstance] userEmail] name:person.displayName successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
