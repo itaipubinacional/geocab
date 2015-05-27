@@ -44,6 +44,8 @@ BOOL animating;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
+    LayerDelegate *layerDelegate = nil;
+    
     if (self.multipleSelection) {
         _syncButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_syncButton setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
@@ -57,8 +59,6 @@ BOOL animating;
         [closeButton addTarget:self action:@selector(didFinish) forControlEvents:UIControlEventTouchUpInside];
         [closeButton setImage:[UIImage imageNamed:@"menu-close-btn.png"] forState:UIControlStateNormal];
         UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc]initWithCustomView:closeButton];
-        
-//        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(didFinish)];
         self.navigationItem.rightBarButtonItem = buttonItem;
         
         UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -72,6 +72,9 @@ BOOL animating;
         [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
         [self.view addSubview:logoutButton];
         
+        // Todas as layers
+        layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
+        
     } else {
         _syncButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_syncButton setFrame:CGRectMake(10.0, 2.0, 20.0, 20.0)];
@@ -81,11 +84,13 @@ BOOL animating;
         self.navigationItem.rightBarButtonItem = button;
         
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didCancel)];
+        
+        // Apenas layers para cadastro de markers
+        layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/internal/layers"];
     }
     
     [self startSpin];
     
-    LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup/layers"];
     [layerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
         
         _layers = [[result array] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
@@ -246,10 +251,6 @@ BOOL animating;
             });
         });
         
-//        cell.legendImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:layer.legend]]];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            cell.legendImage.image = [UIImage imageNamed:iconName];
-//        });
     } else {
         NSRange position = [layer.icon rangeOfString:@"/" options:NSBackwardsSearch];
         NSString *iconName = [layer.icon substringWithRange:NSMakeRange(position.location+1, layer.icon.length - (position.location + 1))];
