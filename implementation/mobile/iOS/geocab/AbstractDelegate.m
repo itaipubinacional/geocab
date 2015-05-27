@@ -12,6 +12,8 @@
 
 - (id)initWithUrl:(NSString *)url
 {
+    RKLogConfigureByName("RestKit/Network", RKLogLevelTrace);
+    
     self = [super init];
     
     if (self)

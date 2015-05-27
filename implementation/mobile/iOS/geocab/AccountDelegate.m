@@ -14,20 +14,12 @@
 - (RKObjectMapping *) mapping
 {
     RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[User class]];
-    [mapping addAttributeMappingsFromDictionary:@{
-                                                  @"id"          : @"id",
-                                                  @"name"        : @"name",
-                                                  @"created"     : @"created",
-                                                  @"updated"     : @"updated",
-                                                  @"email"       : @"email",
-                                                  @"enabled"     : @"enabled",
-                                                  @"role"        : @"role",
-                                                  @"password"    : @"password",
-                                                  @"authorities" : @"authorities"
-                                                  }];
+    [mapping addAttributeMappingsFromDictionary: [User generateDictionary]];
     
     return mapping;
 }
+
+
 
 - (void) loginWithEmail: (NSString *)email password: (NSString *)password successBlock: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failureBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failureBlock
 {
