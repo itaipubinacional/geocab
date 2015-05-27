@@ -12,4 +12,20 @@
 
 @synthesize id, name, email, password, enabled, role, created, updated, username, authorities, accountNonExpired, accountNonLocked;
 
++ (NSDictionary*) generateDictionary {
+    
+    return @{
+             @"id"          : @"id",
+             @"name"        : @"name",
+             @"created"     : @"created",
+             @"updated"     : @"updated",
+             @"email"       : @"email",
+             @"enabled"     : @"enabled",
+             @"role"        : @"role",
+             @"password"    : @"password",
+             @"authorities" : @"authorities"
+             };
+    
+}
+
 @end

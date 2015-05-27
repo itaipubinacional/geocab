@@ -20,4 +20,6 @@
 @property (retain, nonatomic) DataSource *dataSource;
 @property BOOL selected;
 
++ (NSDictionary*) generateDictionary;
+    
 @end
