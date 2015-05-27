@@ -1,0 +1,79 @@
+/*
+*  webview.css
+*
+*  Created by Joaz Vieira Soares on 05/05/15.
+*  Copyright (c) 2014 Itaipu.
+*/
+
+/*
+ * Geral
+ */
+body {
+    margin: 0; padding: 0; position: relative; font-family: arial
+}
+.hide {
+    display: none
+}
+div.map {
+    height: 100%; width: 100%; overflow: hidden
+}
+.ol-attribution button, .ol-attribution u, .ol-zoom {
+    display: none;
+}
+#marker-template, #layer-template { 
+    display: none !important;
+}
+
+/*
+ * Ações do marcador
+ */
+.center-marker {
+    position: absolute; z-index: 10;
+    background:url(marker.png) no-repeat;  background-size: 58px;
+    height: 60px; width: 60px; top:50%; left:50%; margin-left: -29px; margin-top: -41px;
+}
+.add-point {
+    z-index: 10; background: url(add.png) no-repeat; background-size: 48px;
+    position: fixed; bottom: 10px; right: 10px; width: 50px; height: 50px;
+}
+.save-point {
+    z-index: 10; background: url(confirm.png) no-repeat; background-size: 48px;
+    position: fixed; bottom: 10px; right: 70px; width: 50px; height: 50px;
+}
+.cancel-point {
+    z-index: 10; background: url(cancel.png) no-repeat; background-size: 48px;
+    position: fixed; bottom: 10px; right: 10px; width: 50px; height: 50px;
+}
+
+/*
+ * Painel do marcador
+ */
+.marker-info-box {
+    width: 100%; height: 100%; background: white; position: absolute; left: 0;
+    box-shadow: -2px -2px 8px -1px rgba(0,0,0,0.75); overflow: hidden
+}
+.marker-info-header {
+    width: 100%; height: 65px; background: #265CB2; position: relative
+}
+.marker-info-header p {
+    font-size: 1.2em; margin: 0; padding-left: 15px; padding-top: 20px; color: white; float: left;
+}
+.marker-info-action { 
+	margin: 20px 20px 5px 20px 
+}
+.marker-info-content {
+    clear: both; height: 100%; width: 100%; overflow-y: scroll;
+}
+
+/*
+ * Informações do marcador
+ */
+.marker-info-close { float: right; margin: 12px 10px 0 0; background: url(cancel.png) no-repeat; background-size: 38px; width: 38px; width: 42px; height: 42px }
+.marker-label { padding: 10px 20px 5px 20px; margin: 0; font-size: 1em; font-weight: bold; }
+.marker-value { padding: 0 20px 0 20px; margin: 0; font-size: 1em; font-weight: normal; }
+.marker-value-img { text-align: center; width: 85%; margin: auto; }
+.marker-value-img img { width: 100%; }
+.marker-action { width: 25%; height: 82px; float: left; text-align: center }
+.marker-action p { font-size: 1em; font-weight: bold; color: #555}
+.marker-action:active { opacity: 0.6 }
+.marker-status { font-weight: bold; text-align: left; text-transform: uppercase; clear: both; color: #888; margin-left: 20px }
