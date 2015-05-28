@@ -118,7 +118,7 @@ public class MarkerRESTful
 	@RequestMapping(value="/", method = RequestMethod.PUT)
 	public @ResponseBody Marker updateMarker(@RequestBody Marker marker) throws IOException, RepositoryException
 	{
-		if ( marker.getImageToDelete() == true )
+		if ( marker.getImageToDelete() != null && marker.getImageToDelete() == true )
 		{
 			FileTransfer currentFile = this.markerService.findImgByMarker(marker.getId());
 
