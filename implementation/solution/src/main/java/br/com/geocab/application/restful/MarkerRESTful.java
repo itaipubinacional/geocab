@@ -151,7 +151,10 @@ public class MarkerRESTful
 	}	
 	
 	/**
+	 * 
+	 * @param motiveMarkerModeration
 	 * @param markerId
+	 * @return
 	 */
 	@RequestMapping(value="/{markerId}/refuse", method = RequestMethod.POST)
 	public @ResponseBody MarkerModeration refuseMarker(@RequestBody MotiveMarkerModeration motiveMarkerModeration, @PathVariable long markerId)
@@ -190,7 +193,6 @@ public class MarkerRESTful
 	
 	/**
 	 * 
-	 * @param layerId
 	 * @return
 	 */
 	@RequestMapping(value="/motives", method = RequestMethod.GET)
