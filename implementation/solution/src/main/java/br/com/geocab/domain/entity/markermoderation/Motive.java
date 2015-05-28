@@ -21,6 +21,8 @@ import org.hibernate.envers.Audited;
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author Vinicius Ramos Kawamoto
  * @since 09/01/2015
@@ -51,7 +53,7 @@ public class Motive extends AbstractEntity implements Serializable
 	@Column(nullable=true, length=144)
 	private String name;
 	
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="motive", fetch=FetchType.EAGER, cascade={CascadeType.REMOVE})
 	private List<MotiveMarkerModeration> motiveMarkerModerations = new ArrayList<MotiveMarkerModeration>();
 	
