@@ -1,8 +1,5 @@
 package br.com.geocab.application.restful;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -15,13 +12,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
+import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
+import br.com.geocab.domain.entity.markermoderation.Motive;
+import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
+import br.com.geocab.domain.service.MarkerModerationService;
 import br.com.geocab.domain.service.MarkerService;
+import br.com.geocab.domain.service.MotiveService;
 
 import com.vividsolutions.jts.io.WKTWriter;
 
@@ -47,6 +48,18 @@ public class MarkerRESTful
 	@Autowired
 	private MarkerService markerService;
 	
+	/**
+	 * 
+	 */
+	@Autowired
+	private MotiveService motiveService;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private MarkerModerationService markerModerationService;
+
 	/*-------------------------------------------------------------------
 	 * 		 					BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -105,6 +118,16 @@ public class MarkerRESTful
 	@RequestMapping(value="/", method = RequestMethod.PUT)
 	public @ResponseBody Marker updateMarker(@RequestBody Marker marker) throws IOException, RepositoryException
 	{
+		if ( marker.getImageToDelete() == true )
+		{
+			FileTransfer currentFile = this.markerService.findImgByMarker(marker.getId());
+
+			if (currentFile != null)
+			{
+				this.markerService.removeImg(String.valueOf(marker.getId()));
+			}			
+		}
+		
 		return this.markerService.updateMarker(marker);
 	}	
 	
@@ -121,19 +144,19 @@ public class MarkerRESTful
 	 * 
 	 * @param markerId
 	 */
-	@RequestMapping(value="/{markerId}/approve", method = RequestMethod.PUT)
-	public @ResponseBody void approveMarker(@PathVariable long markerId)
+	@RequestMapping(value="/{markerId}/approve", method = RequestMethod.POST)
+	public @ResponseBody MarkerModeration approveMarker(@PathVariable long markerId)
 	{
-		this.markerService.enableMarker(markerId);
+		return this.markerModerationService.acceptMarker(markerId);
 	}	
 	
 	/**
 	 * @param markerId
 	 */
-	@RequestMapping(value="/{markerId}/refuse", method = RequestMethod.PUT)
-	public @ResponseBody void refuseMarker(@PathVariable long markerId)
+	@RequestMapping(value="/{markerId}/refuse", method = RequestMethod.POST)
+	public @ResponseBody MarkerModeration refuseMarker(@RequestBody MotiveMarkerModeration motiveMarkerModeration, @PathVariable long markerId)
 	{
-		this.markerService.disableMarker(markerId);
+		return this.markerModerationService.refuseMarker(markerId, motiveMarkerModeration.getMotive(), motiveMarkerModeration.getDescription());
 	}
 	
 	/**
@@ -146,9 +169,17 @@ public class MarkerRESTful
     public @ResponseBody String markerUploadPhoto(MultipartFile file, @PathVariable long markerId){
         try 
         {
-            byte[] bytes = file.getBytes();
-            FileTransfer fileTransfer = new FileTransfer(file.getOriginalFilename(), "image/jpeg", bytes);
+			FileTransfer currentFile = this.markerService.findImgByMarker(markerId);
+
+			if (currentFile != null)
+			{
+				this.markerService.removeImg(String.valueOf(markerId));
+			}
+			
+            FileTransfer fileTransfer = new FileTransfer(file.getOriginalFilename(), "image/jpeg", file.getBytes());
+            
             this.markerService.uploadImg(fileTransfer, markerId);
+            
             return "Uploaded";
         } 
         catch ( Exception e )
@@ -156,5 +187,16 @@ public class MarkerRESTful
         	return e.getMessage();
         }
     }	
+	
+	/**
+	 * 
+	 * @param layerId
+	 * @return
+	 */
+	@RequestMapping(value="/motives", method = RequestMethod.GET)
+	public @ResponseBody List<Motive> listMotives()
+	{
+		return this.motiveService.listMotives();
+	}	
 	
 }
