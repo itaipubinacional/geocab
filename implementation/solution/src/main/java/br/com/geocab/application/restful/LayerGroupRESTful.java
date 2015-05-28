@@ -1,7 +1,6 @@
 package br.com.geocab.application.restful;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import br.com.geocab.domain.service.LayerGroupService;
  */
 
 @Controller
-@RequestMapping("layergroup")
+@RequestMapping("/layergroup")
 public class LayerGroupRESTful
 {
 	
@@ -49,7 +48,7 @@ public class LayerGroupRESTful
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value="layers", method = RequestMethod.GET)
+	@RequestMapping(value="/layers", method = RequestMethod.GET)
 	public @ResponseBody List<Layer> listLayerGroups()
 	{
 		List<Layer> layers = this.layerGroupService.listLayersPublished();
@@ -74,7 +73,7 @@ public class LayerGroupRESTful
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value="internal/layers", method = RequestMethod.GET)
+	@RequestMapping(value="/internal/layers", method = RequestMethod.GET)
 	public @ResponseBody List<Layer> listAllInternalLayerGroups()
 	{
 		return this.layerGroupService.listAllInternalLayerGroups();

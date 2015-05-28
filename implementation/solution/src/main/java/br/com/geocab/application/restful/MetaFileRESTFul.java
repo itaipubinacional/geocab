@@ -28,7 +28,7 @@ import br.com.geocab.domain.repository.IMetaFileRepository;
  * @category Controller
  */
 @Controller
-@RequestMapping("files")
+@RequestMapping("/files")
 public class MetaFileRESTFul
 {
 	/*-------------------------------------------------------------------
@@ -54,7 +54,7 @@ public class MetaFileRESTFul
 	 * @throws IOException
 	 * @throws RepositoryException 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "markers/{markerId}/download")
+	@RequestMapping(method = RequestMethod.GET, value = "/markers/{markerId}/download")
 	public @ResponseBody MetaFile downloadProfilePicture( @PathVariable Long markerId, @RequestParam(required=false) boolean download, 
 			 @RequestParam(required=false) boolean display,
 			 HttpServletResponse response ) throws IOException, InvocationTargetException, RepositoryException
@@ -121,7 +121,7 @@ public class MetaFileRESTFul
 	 * @return The Files of the product and folder
 	 * @throws RepositoryException 
 	 */
-	@RequestMapping(value = "{folder}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{folder}", method = RequestMethod.GET)
 	public @ResponseBody List<MetaFile> listByFolder( @PathVariable String folder ) throws RepositoryException
 	{
 		return this.metaFileRepository.listByFolder( folder );

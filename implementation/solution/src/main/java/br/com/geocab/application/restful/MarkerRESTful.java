@@ -35,7 +35,7 @@ import com.vividsolutions.jts.io.WKTWriter;
  */
 
 @Controller
-@RequestMapping("marker")
+@RequestMapping("/marker")
 public class MarkerRESTful
 {
 	
