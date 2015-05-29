@@ -6,17 +6,21 @@
 !-->
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">    
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
-    <link rel="stylesheet" href="ol.css" type="text/css">
+	<link rel="stylesheet" href="ol.css" type="text/css">
     <link rel="stylesheet" href="webview.css" type="text/css">
-
-    <script src="ol.js" type="text/javascript"></script>
-    <script src="jquery-2.1.1.min.js" type="text/javascript"></script>
-    <script src="jquery.touchSwipe.min.js" type="text/javascript"></script>
-    <script src="geocab.app.js" type="text/javascript"></script>
-    <script src="geocab.swipe.app.js" type="text/javascript"></script>
-    <script src="geocab.marker.app.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="jquery.mobile.custom.structure.min.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile.min.css" type="text/css">
+            
+	<script src="ol.js" type="text/javascript"></script>
+	<script src="jquery-2.1.1.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile.min.js" type="text/javascript"></script>
+	<script src="jquery.touchSwipe.min.js" type="text/javascript"></script>
+	<script src="geocab.app.js" type="text/javascript"></script>
+	<script src="geocab.swipe.app.js" type="text/javascript"></script>
+	<script src="geocab.marker.app.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -41,26 +45,66 @@
                 <p class="marker-title"></p>
                 <div class="marker-info-close"></div>
             </div>
-            <p class="marker-status"></p>
             <div class="marker-info-action">
                 <div class="marker-action update">
-                    <img src="edit.png">
-                        <p>Editar</p>
-                        </div>
+                    <a href="" id="editar">
+                        <img src="edit2.png" />
+                    </a>
+                </div>
                 <div class="marker-action remove">
-                    <img src="remove.png">
-                        <p>Excluir</p>
-                        </div>
+                    <a href="" id="open-remove">
+                        <img src="remove2.png" />
+                    </a>
+                </div>
                 <div class="marker-action approve">
-                    <img src="approve.png">
-                        <p>Aprovar</p>
-                        </div>
+                    <a href="" id="aprovar">
+                        <img src="approve2.png" />
+                    </a>
+                </div>
                 <div class="marker-action refuse">
-                    <img src="refuse.png">
-                        <p>Recusar</p>
-                        </div>
+                    <a href="" id="open-refuse">
+                        <img src="refuse2.png">
+                    </a>
+                </div>
             </div>
+            
+            <p class="marker-status"></p>
+            
             <div class="marker-info-content"></div>
+            
+            <div data-role="popup" id="popup-refuse" data-transition="pop" data-position-to="window" data-tolerance="30,15,0,15" data-theme="a" data-corners="false" style="max-width:400px;">
+                <form>
+                    <div style="padding: 20px 20px 30px 20px">
+                        <h4 style="margin: 0 0 20px 0">Recusar</h4>
+                        <label for="un" class="ui-hidden-accessible"></label>
+                        <select name="select-cause" id="select-cause" data-corners="false">
+                        </select>
+                        <label for="description" class="ui-hidden-accessible">Motivo:</label>
+                        <textarea data-mini="true" rows="3" class="motivo-moderacao ui-shadow" name="description" id="description" data-corners="false"></textarea>
+                        
+                        <div style="float: right; padding: 10px">
+                            <a href="#" data-rel="back" class="action-cause">cancelar</a>
+                            <a href="" id="confirm-refuse" class="action-cause">confirmar</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div data-role="popup" id="popup-remove" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-popup ui-body-c ui-overlay-shadow"  data-corners="false">
+                <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content ui-body-d" role="main">
+                    <h3 class="ui-title" style="font-size: 0.8em">Deseja realmente excluir o item?</h3>
+                    <p style="font-size: 0.7em">Esta operação não poderá ser desfeita.</p>
+                    <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-btn-up-c ui-shadow ui-btn-corner-all ui-btn-inline">
+                        <span class="ui-btn-inner ui-btn-corner-all" style="width: 70px; height: 40px; font-size: 0.8em">
+                        <span class="ui-btn-text">Cancelar</span></span>
+                    </a>
+                    <a href="#" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-btn-up-b ui-shadow ui-btn-corner-all ui-btn-inline">
+                        <span class="ui-btn-inner ui-btn-corner-all" style="width: 70px; height: 40px; font-size: 0.8em">
+                        <span class="ui-btn-text" id="confirm-remove">Confirmar</span></span>
+                    </a>
+                </div>
+            </div>
+            
         </div>
     </div>
 
@@ -73,10 +117,13 @@
             <div class="marker-info-content"></div>
         </div>   	
     </div>
-
+    
+    <span id="No" class="hide">Não</span>
+    <span id="Yes" class="hide">Sim</span>
+    
     <script type="text/javascript">
     $(document).ready(function() {
-                      
+        
         var iOS = {
 			changeToAddMarker : function(coordenates){
 				changeToAddMarker(coordenates);
@@ -90,11 +137,11 @@
 			closeOpenMenuButton : function(){
 				closeOpenMenuButton();
 			},
-			changeToUpdateMarker : function(marker){
-				changeToUpdateMarker(marker);
+			changeToUpdateMarker : function(marker, image){
+				changeToUpdateMarker(marker, image);
             },
-			changeToRefuseMarker : function(marker){
-				changeToRefuseMarker(marker);
+			changeToRefuseMarker : function(marker, motive){
+				changeToRefuseMarker(marker, motive);
 			},
 			changeToApproveMarker : function(marker){
 				changeToApproveMarker(marker);
@@ -106,6 +153,16 @@
                       
         geocabapp.init("map", iOS);
         geocabapp.marker.init();
+                      
+		$("#map").on("click", "#open-refuse", function(){
+			$("#description").val("");
+			$("#select-cause").selectedIndex = 0;
+                     $("#popup-refuse").popup("open");
+		});
+                      
+		$("#map").on("click", "#open-remove", function(){
+			$("#popup-remove").popup("open");
+        });
 
         $(".add-point").click(function(){
             geocabapp.changeToAddState();
@@ -123,22 +180,30 @@
             geocabapp.marker.hide(event);
         });
                       
-		$("#map").on('click', '.marker-action.remove', function(event){
+        $("#map").on('click', '.marker-action.update', function(){
+            geocabapp.marker.update();
+        });
+		
+		$("#map").on('click', '.marker-action.approve', function(){
+			geocabapp.marker.approve();
+        });
+		
+		$(document).on('click', '#confirm-remove', function(){
 			geocabapp.marker.remove();
 		});
                       
-        $("#map").on('click', '.marker-action.update', function(){
-            geocabapp.marker.update();
-        });		
-		
-        $(".marker-action.approve").click(function(){
-            geocabapp.marker.approve();
-        });
-		
-        $(".marker-action.refuse").click(function(){
-            geocabapp.marker.refuse();
-        });		
-		
+		$(document).on('click', '#confirm-refuse', function(){
+                     
+			var motiveMarker = { motive : {} };
+            motiveMarker.description = $("#description").val();
+            motiveMarker.motive.id = $("#select-cause").val();
+                     
+            geocabapp.marker.refuse(motiveMarker);
+                     
+            $("#popup-refuse").popup("close");
+                     
+		});
+                      
     });
     </script>
 
