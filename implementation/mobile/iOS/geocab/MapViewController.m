@@ -78,6 +78,7 @@ extern NSUserDefaults *defaults;
     _currentMarker = [[Marker alloc] init];
     
     [ControllerUtil verifyInternetConection];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -114,10 +115,17 @@ extern NSUserDefaults *defaults;
         
     };
     
-    context[@"changeToUpdateMarker"] = ^(NSString *markerJson) {
+    context[@"changeToUpdateMarker"] = ^(NSString *markerJson, NSString *base64Image) {
         
         self.currentMarker = [Marker fromJSONString:markerJson];
-            
+        
+        if ( [base64Image length] > 0 )
+        {
+            NSURL *url = [NSURL URLWithString:base64Image];
+            NSData *imageData = [NSData dataWithContentsOfURL:url];
+            self.currentMarker.imageData = imageData;
+        }
+        
         self.currentMarker.markerAttributes = self.currentMarkerAttributes;
         
         [self performSegueWithIdentifier:@"addNewMarkerSegue" sender:self];
@@ -138,12 +146,13 @@ extern NSUserDefaults *defaults;
         
     };
     
-    context[@"changeToRefuseMarker"] = ^(NSString *markerJson) {
-        
-        Marker *marker = [Marker fromJSONString:markerJson];
+    context[@"changeToRefuseMarker"] = ^(NSString *markerJSON, NSString *motiveMarkerJSON) {
+
+        Marker *marker = [Marker fromJSONString:markerJSON];
+        MotiveMarkerModeration *motiveMarkerModeration = [MotiveMarkerModeration fromJSONString:motiveMarkerJSON];
         
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
-        [markerDelegate refuse:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:marker.id];
+        [markerDelegate refuse:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:marker.id motiveMarkerModeration:motiveMarkerModeration];
         
         marker.status = @"REFUSED";
         
@@ -169,7 +178,7 @@ extern NSUserDefaults *defaults;
         // Verifica se existem camadas sendo mostradas
         if ( layersUrl != nil && [layersUrl count] > 0 )
         {
-            LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@"layergroup"];
+            LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@""];
             
             [layerDelegate listProperties:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
                 
@@ -181,7 +190,7 @@ extern NSUserDefaults *defaults;
                     [self loadMarker:markerId layersProperties:response];
                     
                 } else {
-                    NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.show(null,null,null,'%@')", response];
+                    NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.show('','','','%@')", response];
                     [_webView stringByEvaluatingJavaScriptFromString:functionCall];
                 }
                 
@@ -235,12 +244,14 @@ extern NSUserDefaults *defaults;
             NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.showOptions('%@','%@','%@','%@','%@','%@')", markerId, markerAttributes, imageBase64, userId, userRole, layersProperties];
             
             [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+            [self loadMotives:markerDelegate];
             
         } fail:^(AFHTTPRequestOperation *operation, NSError *error) {
             
             NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.showOptions('%@','%@','','%@','%@','%@')", markerId, markerAttributes, userId, userRole, layersProperties];
             
             [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+            [self loadMotives:markerDelegate];
             
         } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
         
@@ -249,16 +260,35 @@ extern NSUserDefaults *defaults;
     
 }
 
+- (void) loadMotives:(MarkerDelegate *) markerDelegate {
+    
+    [markerDelegate listMotives:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        
+        NSString *motives = operation.HTTPRequestOperation.responseString;
+        NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadMotives('%@')", motives];
+        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        
+    } failBlock: nil userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+    
+}
+
 - (void) didCheckedLayer:(Layer *)layer {
     if (layer.dataSource.url != nil) {
-        NSRange index = [layer.name rangeOfString:@":"];
+
         NSRange position = [layer.dataSource.url rangeOfString:@"geoserver/" options:NSBackwardsSearch];
-        NSString *typeLayer = [layer.name substringWithRange:NSMakeRange(0, index.location)];
         
-        NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
+        // Caso nao encontre geoserver
+        if ( position.length > 0 ){
+            
+            NSRange index = [layer.name rangeOfString:@":"];
+            NSString *typeLayer = [layer.name substringWithRange:NSMakeRange(0, index.location)];
+            
+        	NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
         
-        NSString *functionCall = [NSString stringWithFormat:@"geocabapp.showLayer('%@', '%@', '%@', 'true')", urlFormated , layer.name, layer.title];
-        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        	NSString *functionCall = [NSString stringWithFormat:@"geocabapp.showLayer('%@','%@','%@','%@')", urlFormated , layer.id, layer.name, layer.title];
+        	[_webView stringByEvaluatingJavaScriptFromString:functionCall];
+        }
+        
     } else {
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker/"];
         [markerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
@@ -283,7 +313,7 @@ extern NSUserDefaults *defaults;
 
 - (void) didUnheckedLayer:(Layer *)layer {
     
-    NSString *functionCall = [NSString stringWithFormat:@"geocabapp.closeMarker('%@')", layer.id];
+    NSString *functionCall = [NSString stringWithFormat:@"geocabapp.closeLayer('%@')", layer.id];
     [_webView stringByEvaluatingJavaScriptFromString:functionCall];
     
 }
