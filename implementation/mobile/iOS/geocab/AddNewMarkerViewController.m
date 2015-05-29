@@ -12,6 +12,7 @@
 #import "MarkerAttribute.h"
 #import "Attribute.h"
 #import "AttributeType.h"
+#define MAXLENGTH 250
 
 @interface AddNewMarkerViewController()
 
@@ -27,12 +28,15 @@
 @property (weak, nonatomic) IBOutlet UIButton *selectLayer;
 @property (weak, nonatomic) IBOutlet UIView *dynamicFieldsView;
 @property (weak, nonatomic) UITextField *activeTextField;
+@property (weak, nonatomic) UIButton *removeImage;
 
 extern NSUserDefaults *defaults;
 
 @end
 
 @implementation AddNewMarkerViewController
+
+UIActivityIndicatorView *indicator;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,9 +50,9 @@ extern NSUserDefaults *defaults;
         
     } else {
         
-        // Seleciona a layer em caso de edição do marker
         if ( self.marker.layer != nil )
         {
+             // Seleciona a layer em caso de edição do marker
             [self generateAttributeFieldsByLayer: self.marker.layer];
             [self.selectLayer setTitle: self.marker.layer.title forState:UIControlStateNormal ];
             [self.selectLayer setTintColor: [UIColor blackColor]];
@@ -70,6 +74,14 @@ extern NSUserDefaults *defaults;
     UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc]initWithCustomView:closeButton];
     self.navigationItem.rightBarButtonItem = buttonItem;
     self.navigationItem.hidesBackButton = YES;
+    
+    // Loading
+    indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    indicator.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+    indicator.center = self.view.center;
+    [self.view addSubview:indicator];
+    [indicator bringSubviewToFront:self.view];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = TRUE;
 
 }
 
@@ -119,7 +131,9 @@ extern NSUserDefaults *defaults;
             
         }
         
-        MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker/"];
+        MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@""];
+        
+        [indicator startAnimating];
         
         // Chamada ao serviço para persistir o marker
         if ( self.marker.id == nil || self.marker.id == 0 ){
@@ -136,9 +150,11 @@ extern NSUserDefaults *defaults;
                 [_webView stringByEvaluatingJavaScriptFromString:@"geocabapp.changeToActionState()"];
                 
                 // Faz upload da imagem do marker
-                if ( self.marker.imageUI != nil )
-                    [markerDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+                if ( self.marker.imageUI != nil ){
+                    [markerDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] handler:nil];
+                }
                 
+                [indicator stopAnimating];
                 [self didFinish];
                 
             } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] marker:self.marker];
@@ -150,49 +166,81 @@ extern NSUserDefaults *defaults;
                 Marker *markerResponse = [[result array] objectAtIndex: 0];
                 
                 // Faz upload da imagem do marker
-                if ( self.marker.imageUI != nil )
-                    [markerDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
-                
-                // Lista os atributos atualizados do marker
-                [markerDelegate listAttributesById:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+                if ( self.marker.imageUI != nil ){
                     
-                    NSMutableArray *markerAttributes = [[result array] mutableCopy];
-                    markerResponse.markerAttributes = markerAttributes;
+                    [markerDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] handler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                        
+                        [self listAttributes:markerResponse];
+                        
+                    }];
                     
-                    MarkerDelegate *delegate = [[MarkerDelegate alloc] initWithUrl:@"files/markers/"];
+                } else {
                     
-                    // Faz o download da imagem se houver
-                    [delegate downloadMarkerAttributePhoto:self.marker.id success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        
-                        // Converte a imagem para base64
-                        NSString *imageBase64 = responseObject != nil ? [NSString stringWithFormat:@"data:image/jpeg;base64,%@", [operation.responseData base64EncodedStringWithOptions:0]] : @"";
-                        
-						// Atualiza o panel com as informações do marker
-                        NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadAttributes('%@','%@')", [markerResponse toJSONString], imageBase64];
-                        
-                        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
-                        
-                        [self didFinish];
-                        
-                    } fail:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        
-                        NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadAttributes('%@','')", [markerResponse toJSONString]];
-                        
-                        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
-                        
-                        [self didFinish];
-                        
-                    } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+                    [self listAttributes:markerResponse];
                     
-                    
-                } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:self.marker.id];
-                
+                }
                 
             } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] marker:self.marker];
             
         }
 
     }
+}
+
+- (void)listAttributes:(Marker *)markerResponse {
+    
+    MarkerDelegate *delegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
+    
+    // Lista os atributos atualizados do marker
+    [delegate listAttributesById:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        
+        NSMutableArray *markerAttributes = [[result array] mutableCopy];
+        markerResponse.markerAttributes = markerAttributes;
+        
+        MarkerDelegate *delegateFile = [[MarkerDelegate alloc] initWithUrl:@"files/markers/"];
+        
+        // Faz o download da imagem se houver
+        [delegateFile downloadMarkerAttributePhoto:self.marker.id success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            // Converte a imagem para base64
+            NSString *imageBase64 = responseObject != nil ? [NSString stringWithFormat:@"data:image/jpeg;base64,%@", [operation.responseData base64EncodedStringWithOptions:0]] : @"";
+            
+            // Atualiza o panel com as informações do marker
+            NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadAttributes('%@','%@')", [markerResponse toJSONString], imageBase64];
+            
+            [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+            
+            [indicator stopAnimating];
+            [self didFinish];
+            
+        } fail:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadAttributes('%@','')", [markerResponse toJSONString]];
+            
+            [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+            
+            [indicator stopAnimating];
+            [self didFinish];
+            
+        } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+        
+        
+    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:self.marker.id];
+    
+}
+
+- (IBAction)removeMarkerImage:(id)sender {
+    
+    self.marker.imageUI = nil;
+    self.marker.imageData = nil;
+    self.marker.imageToDelete = @"true";
+    
+    if ( self.imageView != nil )
+        [self.imageView removeFromSuperview];
+    
+    if ( self.removeImage != nil )
+    	[self.removeImage removeFromSuperview];
+    
 }
 
 - (void)didEndSelecting:(Layer *)selectedLayer{
@@ -218,6 +266,14 @@ extern NSUserDefaults *defaults;
 }
 
 - (BOOL)validateForm {
+    
+    if ( self.marker.layer == nil ){
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Dado não informado" message: @"Selecione a camada" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        
+        return NO;
+    }
     
     // Percorre a lista de atributos da camada
     for (Attribute *attribute in self.layerAttributes) {
@@ -356,7 +412,16 @@ extern NSUserDefaults *defaults;
                 uiTextField.text = markerValue;
                 attribute.viewComponent = uiTextField;
             }
+            
         }
+
+        // Em caso de edicao mostra a imagem
+        if ( self.marker.imageData != nil ){
+            
+            [self addImageView: [UIImage imageWithData:self.marker.imageData]];
+            
+        }
+
         
     } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] layerId:layer.id];
     
@@ -377,6 +442,19 @@ extern NSUserDefaults *defaults;
     
     return uiTextField;
     
+}
+
+- (BOOL)textField:(UITextField *) textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    NSUInteger oldLength = [textField.text length];
+    NSUInteger replacementLength = [string length];
+    NSUInteger rangeLength = range.length;
+    
+    NSUInteger newLength = oldLength - rangeLength + replacementLength;
+    
+    BOOL returnKey = [string rangeOfString: @"\n"].location != NSNotFound;
+    
+    return newLength <= MAXLENGTH || returnKey;
 }
 
 -(void)loadTextFieldPositionConstraints:(UITextField *)textField positionY:(int)positionY {
@@ -407,9 +485,29 @@ extern NSUserDefaults *defaults;
 - (void)takeController:(FDTakeController *)controller gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info {
     
     self.marker.imageUI = photo;
+    [self addImageView:photo];
+}
+
+- (void)addImageView:(UIImage *)photo {
     
+    // Botao para remover a imagem
+    self.removeImage = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.removeImage.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.removeImage.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [self.removeImage setTitle: @"Remover Imagem" forState:UIControlStateNormal];
+    [self.removeImage setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.removeImage addTarget:self action:@selector(removeMarkerImage:)
+          forControlEvents:UIControlEventTouchUpInside];
+    
+    // Adiciona o campo a view dinamica
+    [_dynamicFieldsView addSubview:self.removeImage];
+    
+    // Posicionamento
+    [self loadLeftTopPositionConstraints:self.removeImage positionY:self.positionY];
+    
+    // Imagem
     if ( self.imageView != nil )
-	    [self.imageView removeFromSuperview];
+        [self.imageView removeFromSuperview];
     
     self.imageView = [[UIImageView alloc] init];
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -422,7 +520,7 @@ extern NSUserDefaults *defaults;
     float height = (photo.size.height * percent) / 100;
     
     // Define o posicionamento
-    [self loadLeftTopPositionConstraints:self.imageView positionY:self.positionY+10];
+    [self loadLeftTopPositionConstraints:self.imageView positionY:self.positionY+35];
     
     NSDictionary *viewsDictionary = @{@"uiView":self.imageView};
     
