@@ -3,9 +3,11 @@ geocabapp.marker = function(){
 
 	var templateAttribute = "<div><h2 class='marker-label'>{{label}}</h2><p class='marker-value'>{{value}}</p></div>";
 	var templateImage = "<div><h2 class='marker-label'>{{label}}</h2><p class='marker-value-img'><img src='{{value}}'></p></div>";
-    var templatePadding = "<div style='height: 20px; width: 100%'></div>";
+    var templatePadding = "<div style='height: 50px; width: 100%'></div>";
 	var currentMarker;
 	var currentUser;
+    var currentImage;
+    var currentMotives;
 	var assetsPath = "";
 	
 	/**
@@ -30,7 +32,7 @@ geocabapp.marker = function(){
             var fieldValue = attr.value;
                             
             if ( attr.attribute.type == 'BOOLEAN' ){
-                fieldValue = { Yes : 'Sim', No : 'N‹o' }[attr.value];
+                fieldValue = $("#"+attr.value).html();
             }
             
             html += templateAttribute
@@ -63,6 +65,8 @@ geocabapp.marker = function(){
 	var loadMarkerActions = function(element, marker){
 		if ( typeof marker === 'string' )
 			marker = JSON.parse(marker);
+        
+        geocabapp.findMarker(currentMarker.id).status = marker.status;
 			
 		$(".marker-action").hide();
 		$(".marker-status").hide();
@@ -102,7 +106,6 @@ geocabapp.marker = function(){
 		$("#map").append($("#layer-template").html());
 		var template = $("#map").children(".marker-info-box").last();
 
-   		geocabapp.swipe.hideElement(template);
 		geocabapp.swipe.loadSwipeElement(template);	
 		geocabapp.swipe.animateInitialTop(template);
 		
@@ -126,19 +129,34 @@ geocabapp.marker = function(){
 	/**
 	 * Mostra a infobox do marker
 	 */			
-	var showInfoMarker = function(marker){
+	var showInfoMarker = function(marker, image){
 	
 		$("#map").append($("#marker-template").html());
 		var template = $("#map").children(".marker-info-box").last();
 		
-		geocabapp.swipe.hideElement(template);
         geocabapp.swipe.loadSwipeElement(template);
 		geocabapp.swipe.animateInitialTop(template);	
 		
-		loadMarkerAttributes(template, currentMarker, null);
+		loadMarkerAttributes(template, currentMarker, image);
 		loadMarkerActions(template, currentMarker);
 				
 	};
+    
+    /**
+     * Carrega o combo de motivos
+     */
+    var loadMotives = function(){
+        
+        $("#select-cause").empty();
+        $("#select-cause").append("<option selected value='"+currentMotives[0].id+"'>"+currentMotives[0].name+"</option>");
+        
+        for (var i = 1; i < currentMotives.length; i++) {
+            $("#select-cause").append("<option value='"+currentMotives[i].id+"'>"+currentMotives[i].name+"</option>");
+        };
+        
+        $('#select-cause').selectmenu('refresh', true);
+        
+    };
     
 	return {
 		
@@ -148,7 +166,10 @@ geocabapp.marker = function(){
 		
 		show : function(marker, image, loggedUser, layerProperties){
             
-            $("#map").remove(".marker-info-box");
+            $('#map').find('.marker-info-box').remove();
+            geocabapp.swipe.setInfoBox(0);
+            geocabapp.changeToActionState();
+            geocabapp.getNativeInterface().showOpenMenuButton();
 			
 			if ( !geocabapp.isEmpty(layerProperties) ){
 				layerProperties = JSON.parse(layerProperties);
@@ -160,12 +181,13 @@ geocabapp.marker = function(){
 				}
 			}
 			
-			if ( !geocabapp.isEmpty(marker) ){
-				currentMarker = typeof marker === 'string' ? JSON.parse(marker) : marker;
+			if ( !geocabapp.isEmpty(marker) && marker.id != 0){
+				currentImage = image;
+                currentMarker = typeof marker === 'string' ? JSON.parse(marker) : marker;
 				currentUser = typeof loggedUser === 'string' ? JSON.parse(loggedUser) : loggedUser;
 				$.extend(true, currentMarker, geocabapp.findMarker(currentMarker.id));
 				
-				showInfoMarker(currentMarker);
+				showInfoMarker(currentMarker, image);
 			}			
 			
 		},
@@ -183,10 +205,18 @@ geocabapp.marker = function(){
 		loadAttributes : function(marker, image){
             if ( typeof marker === 'string' )
                 marker = JSON.parse(marker);
-            
+
+            currentImage = image;
 			marker.user = geocabapp.findMarker(marker.id).user;
 			loadMarkerAttributes(geocabapp.getElementFromMap(), marker, image);
-		},	
+		},
+        
+        loadMotives : function(motives){
+            if ( typeof motives === 'string' )
+                currentMotives = JSON.parse(motives);
+            
+            loadMotives();
+        },
 		
 		hide : function(event){
             
@@ -200,7 +230,7 @@ geocabapp.marker = function(){
 		},
 		
 		update : function(){
-			geocabapp.getNativeInterface().changeToUpdateMarker(JSON.stringify(currentMarker));
+			geocabapp.getNativeInterface().changeToUpdateMarker(JSON.stringify(currentMarker), currentImage);
 		},	
 		
 		remove : function(){
@@ -211,8 +241,8 @@ geocabapp.marker = function(){
 			geocabapp.getNativeInterface().changeToApproveMarker(JSON.stringify(currentMarker));
 		},
 		
-		refuse : function(){
-			geocabapp.getNativeInterface().changeToRefuseMarker(JSON.stringify(currentMarker));
+		refuse : function(markerMotive){
+			geocabapp.getNativeInterface().changeToRefuseMarker(JSON.stringify(currentMarker), JSON.stringify(markerMotive));
 		}
 	
 	};

@@ -100,46 +100,35 @@ var geocabapp = function(){
         },
         
         isEmpty : function(value){
-            return (typeof value === "undefined" || value == null || value.length === 0);
+            return (typeof value === "undefined" || value == null
+                    || value == '(null)' || value.length === 0);
         },
 		
 		/**
 		 * Mostra ou esconde uma camada no mapa
 		 */
-		showLayer : function(url, name, title, checked) {
-		
-			// Verifica se a camada está selecionada
-			if (checked == 'true') {
-			
-				var wmsSource = new ol.source.TileWMS({
-					url: url,
-					params: { 'LAYERS': name },
-				});
+		showLayer : function(url, id, name, title) {
+            
+            var wmsSource = new ol.source.TileWMS({
+                url: url,
+                params: { 'LAYERS': name },
+            });
 
-				var wmsLayer = new ol.layer.Tile({
-					source: wmsSource
-				});
+            var wmsLayer = new ol.layer.Tile({
+                source: wmsSource
+            });
 
-				// Adiciona a camada ao mapa
-				map.addLayer(wmsLayer);
+            // Adiciona a camada ao mapa
+            map.addLayer(wmsLayer);
 
-				// Adiciona a camada a lista global
-				layersAdd.push({
-					'wmsLayer': wmsLayer,
-					'wmsSource': wmsSource,
-					'name': name,
-					'title': title
-				});
+            // Adiciona a camada a lista global
+            layersAdd.push({
+                'wmsLayer': wmsLayer,
+                'wmsSource': wmsSource,
+                'id': id,
+                'title': title
+            });
 				
-			} else {
-				// Percorre para remover a camada que foi desmarcada
-				for (i in layersAdd) {
-					if (layersAdd[i].name == name) {
-						map.removeLayer(layersAdd[i].wmsLayer);
-						layersAdd.splice(i, 1);
-					}
-				}
-			}
 		},
 
 		/**
@@ -200,16 +189,35 @@ var geocabapp = function(){
         },
 		
 		/**
-		 * Esconde um marcador do mapa a partir do nome
+		 * Esconde marcador do mapa
 		 */	
-		closeMarker : function(layerOrMarkerId) {
+		closeMarker : function(markerId) {
 			for (i in markersAdd) {
-				if (markersAdd[i].marker.id == layerOrMarkerId || 
-					markersAdd[i].marker.layer.id == layerOrMarkerId) {
+				if (markersAdd[i].marker.id == markerId) {
 					map.removeLayer(markersAdd[i].vectorLayer);
+                    markersAdd.splice(i, 1);
+                    break;
 				}
 			}
 		},
+        
+        /**
+         * Esconde layer do mapa
+         */
+        closeLayer : function(layerId) {
+            // Percorre para remover a camada que foi desmarcada
+            for (i in layersAdd) {
+                if (layersAdd[i].id == layerId) {
+                    map.removeLayer(layersAdd[i].wmsLayer);
+                    layersAdd.splice(i, 1);
+                }
+            }
+            for (i in markersAdd) {
+                if (markersAdd[i].marker.layer.id == layerId) {
+                    map.removeLayer(markersAdd[i].vectorLayer);
+                }
+            }
+        },
 		
 		/**
 		 * Busca um marker pelo id
