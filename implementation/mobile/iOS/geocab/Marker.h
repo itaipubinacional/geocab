@@ -22,6 +22,7 @@
 @property (strong, nonatomic) Layer *layer;
 @property (nonatomic, retain) NSMutableArray *markerAttributes;
 @property (nonatomic, retain) User *user;
+@property (nonatomic, retain) NSString *imageToDelete;
 
 + (NSDictionary *) generateDictionary;
 + (NSString *) formatDate:(NSDate *)date;

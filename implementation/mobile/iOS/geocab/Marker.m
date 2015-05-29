@@ -12,7 +12,7 @@
 
 @implementation Marker
 
-@synthesize id, created, wktCoordenate, layer, status, imageUI, imageData, markerAttributes, user;
+@synthesize id, created, wktCoordenate, layer, status, imageUI, imageData, markerAttributes, user, imageToDelete;
 
 + (NSDictionary*) generateDictionary {
     
