@@ -100,7 +100,7 @@
     [manager addResponseDescriptor:responseDescriptor];
     
     // POST to create
-    [manager postObject:dataSourceArray path:@"/layergroup/layerproperties" parameters:nil success:successBlock failure:nil];
+    [manager postObject:dataSourceArray path:@"layergroup/layerproperties" parameters:nil success:successBlock failure:nil];
 }
 
 @end
