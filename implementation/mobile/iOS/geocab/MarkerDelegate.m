@@ -10,6 +10,7 @@
 #import "Marker.h"
 #import "MarkerAttribute.h"
 #import "Attribute.h"
+#import "Motive.h"
 #import "LayerDelegate.h"
 #import "AccountDelegate.h"
 
@@ -87,10 +88,12 @@
     [objectManager.HTTPClient enqueueHTTPRequestOperation:requestOperation];
 }
 
-- (void) uploadMarkerAttributePhoto:(NSNumber *)markerId image:(UIImage *)image login:(NSString*)login password:(NSString*)password
+- (void) uploadMarkerAttributePhoto:(NSNumber *)markerId image:(UIImage *)image login:(NSString*)login password:(NSString*)password handler: (void(^)(NSURLResponse *response, NSData *data, NSError *connectionError)) handler
 {
     // the server url to which the image (or the media) is uploaded.
-    NSString *urlString = [[self.baseUrl stringByAppendingString:[markerId stringValue]] stringByAppendingString:@"/uploadphoto"];
+    NSString *urlString = [self.baseUrl stringByAppendingString:@"marker/"];
+	urlString = [urlString stringByAppendingString:[markerId stringValue]];
+	urlString = [urlString stringByAppendingString:@"/uploadphoto"];
     NSURL* requestURL = [NSURL URLWithString:urlString];    
     
     // random string, that will not repeat in post data, to separate post data fields.
@@ -140,7 +143,7 @@
     // set URL
     [request setURL:requestURL];
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:nil];
+    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:handler];
     
 }
 
@@ -180,7 +183,7 @@
     [manager addResponseDescriptor:markerDescriptor];
     
     // POST to create
-    [manager postObject:marker path:@"/marker/" parameters:nil success:successBlock failure:nil];
+    [manager postObject:marker path:@"marker/" parameters:nil success:successBlock failure:nil];
     
 }
 
@@ -193,7 +196,13 @@
     
     // Mapeamentos
     RKObjectMapping *requestMapping = [RKObjectMapping requestMapping];
-    [requestMapping addAttributeMappingsFromDictionary: [Marker generateDictionary]];
+    [requestMapping addAttributeMappingsFromDictionary: @{
+		@"id":  @"id",
+		@"created" : @"created",
+		@"wktCoordenate" : @"wktCoordenate",
+        @"status" : @"status",
+        @"imageToDelete" : @"imageToDelete",
+	}];
     
     RKObjectMapping *mappingLayer = [RKObjectMapping requestMapping];
     [mappingLayer addAttributeMappingsFromDictionary: [Layer generateDictionary]];
@@ -224,7 +233,7 @@
     [manager addResponseDescriptor:markerDescriptor];
     
     // POST to create
-    [manager putObject:marker path:@"/marker/" parameters:nil success:successBlock failure:nil];
+    [manager putObject:marker path:@"marker/" parameters:nil success:successBlock failure:nil];
     
 }
 
@@ -251,26 +260,57 @@
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
-    [request setHTTPMethod:@"PUT"];
+    [request setHTTPMethod:@"POST"];
     [request setValue:@"text/plain" forHTTPHeaderField:@"Accept"];
     [request setValue:@"text/plain" forHTTPHeaderField:@"Content-Type"];
     
     [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
 }
 
-- (void) refuse:(NSString*)userName password:(NSString*)password markerId:(NSNumber*)markerId
+- (void) refuse:(NSString*)userName password:(NSString*)password markerId:(NSNumber*)markerId motiveMarkerModeration:(MotiveMarkerModeration *)motiveMarkerModeration;
 {
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@/refuse", self.baseUrl, markerId]];
+    // Response
+    NSIndexSet *statusCodes = RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful);
+    RKObjectMapping *responseMapping = [RKObjectMapping mappingForClass:[MotiveMarkerModeration class]];
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:responseMapping method:RKRequestMethodAny pathPattern:nil keyPath:@"" statusCodes:statusCodes];
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    // Mapeamentos
+    RKObjectMapping *requestMapping = [RKObjectMapping requestMapping];
+    [requestMapping addAttributeMappingsFromDictionary: [MotiveMarkerModeration generateDictionary]];
     
-    [request setHTTPMethod:@"PUT"];
-    [request setValue:@"text/plain" forHTTPHeaderField:@"Accept"];
-    [request setValue:@"text/plain" forHTTPHeaderField:@"Content-Type"];
+    RKObjectMapping *mappingMotive = [RKObjectMapping requestMapping];
+    [mappingMotive addAttributeMappingsFromDictionary: [Motive generateDictionary]];
+    [requestMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"motive" toKeyPath:@"motive" withMapping:mappingMotive]];
     
-    [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    RKRequestDescriptor *requestDescriptor = [RKRequestDescriptor requestDescriptorWithMapping:requestMapping objectClass:[MotiveMarkerModeration class] rootKeyPath:nil method:RKRequestMethodAny];
+    
+    // Configurações da requisição
+    NSURL* url = [NSURL URLWithString:self.baseUrl];
+    RKObjectManager *manager = [RKObjectManager managerWithBaseURL:url];
+    [manager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [manager setRequestSerializationMIMEType:RKMIMETypeJSON];
+    [manager addRequestDescriptor:requestDescriptor];
+    [manager addResponseDescriptor:responseDescriptor];
+    
+    // POST to create
+    [manager postObject:motiveMarkerModeration path:[NSString stringWithFormat:@"%@/refuse", markerId] parameters:nil success:nil failure:nil];
+}
+
+- (void) listMotives: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failBlock userName:(NSString*)userName password:(NSString*)password
+{
+    RKObjectMapping *responseMapping = [RKObjectMapping mappingForClass:[Motive class]];
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:responseMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"" statusCodes:nil];
+    
+    NSURL* url = [NSURL URLWithString:self.baseUrl];
+    RKObjectManager* objectManager = [RKObjectManager managerWithBaseURL:url];
+    [objectManager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    
+    NSURLRequest *request = [objectManager requestWithObject:nil method:RKRequestMethodGET path:@"motives" parameters:nil];
+    
+    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[ responseDescriptor ]];
+    
+    [objectRequestOperation setCompletionBlockWithSuccess:successBlock failure:failBlock];
+    [objectRequestOperation start];
 }
 
 @end
