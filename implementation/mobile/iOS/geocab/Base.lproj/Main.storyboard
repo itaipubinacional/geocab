@@ -242,7 +242,7 @@
                                                 <rect key="frame" x="20" y="70" width="280" height="100"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVs-tV-4JN" userLabel="AcoesView">
-                                                <rect key="frame" x="0.0" y="508" width="320" height="60"/>
+                                                <rect key="frame" x="0.0" y="438" width="320" height="60"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dbk-7N-Qhq">
                                                         <rect key="frame" x="170" y="10" width="140" height="40"/>
@@ -316,7 +316,7 @@
                                             <constraint firstItem="WVs-tV-4JN" firstAttribute="width" secondItem="qv2-aC-sZG" secondAttribute="width" id="Ged-nY-w5u"/>
                                             <constraint firstItem="6t6-8X-3hS" firstAttribute="top" secondItem="qv2-aC-sZG" secondAttribute="top" constant="70" id="JdF-0y-GSQ"/>
                                             <constraint firstItem="H5B-E2-Edq" firstAttribute="top" secondItem="qv2-aC-sZG" secondAttribute="top" constant="15" id="KgW-9V-s3Z"/>
-                                            <constraint firstAttribute="bottom" secondItem="WVs-tV-4JN" secondAttribute="bottom" id="MhI-WG-PmL"/>
+                                            <constraint firstAttribute="bottom" secondItem="WVs-tV-4JN" secondAttribute="bottom" constant="70" id="MhI-WG-PmL"/>
                                             <constraint firstItem="H5B-E2-Edq" firstAttribute="leading" secondItem="qv2-aC-sZG" secondAttribute="leading" constant="20" id="Uf4-Fg-OQH"/>
                                             <constraint firstItem="Lvq-aS-qvx" firstAttribute="leading" secondItem="H5B-E2-Edq" secondAttribute="trailing" constant="15" id="bzE-yh-9JP"/>
                                             <constraint firstItem="WVs-tV-4JN" firstAttribute="leading" secondItem="qv2-aC-sZG" secondAttribute="leading" id="f0t-hD-07T"/>
@@ -329,7 +329,7 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="qv2-aC-sZG" secondAttribute="trailing" id="6wF-pX-qOJ"/>
                                     <constraint firstItem="qv2-aC-sZG" firstAttribute="top" secondItem="t7Y-Th-tpb" secondAttribute="top" id="BpQ-qP-2fP"/>
-                                    <constraint firstAttribute="bottom" secondItem="qv2-aC-sZG" secondAttribute="bottom" id="H1e-UM-JbI"/>
+                                    <constraint firstAttribute="bottom" secondItem="qv2-aC-sZG" secondAttribute="bottom" constant="-70" id="H1e-UM-JbI"/>
                                     <constraint firstItem="qv2-aC-sZG" firstAttribute="leading" secondItem="t7Y-Th-tpb" secondAttribute="leading" id="xwn-8G-wBB"/>
                                 </constraints>
                             </scrollView>
