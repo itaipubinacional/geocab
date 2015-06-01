@@ -21,6 +21,8 @@ import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  * 
  * Class to define {@link MarkerModeration}
@@ -50,6 +52,7 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 	 */
 	@NotNull
 	@ManyToOne(fetch=FetchType.EAGER)
+	@JsonBackReference
 	private Marker marker;
 	
 	/**
