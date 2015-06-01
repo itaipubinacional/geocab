@@ -164,35 +164,6 @@ public class MarkerRESTful
 	
 	/**
 	 * 
-	 * @param file
-	 * @param markerId
-	 * @return
-	 */
-    @RequestMapping(value="/{markerId}/uploadphoto", headers="content-type=multipart/*", method=RequestMethod.POST)
-    public @ResponseBody String markerUploadPhoto(MultipartFile file, @PathVariable long markerId){
-        try 
-        {
-			FileTransfer currentFile = this.markerService.findImgByMarker(markerId);
-
-			if (currentFile != null)
-			{
-				this.markerService.removeImg(String.valueOf(markerId));
-			}
-			
-            FileTransfer fileTransfer = new FileTransfer(file.getOriginalFilename(), "image/jpeg", file.getBytes());
-            
-            this.markerService.uploadImg(fileTransfer, markerId);
-            
-            return "Uploaded";
-        } 
-        catch ( Exception e )
-        {
-        	return e.getMessage();
-        }
-    }	
-	
-	/**
-	 * 
 	 * @return
 	 */
 	@RequestMapping(value="/motives", method = RequestMethod.GET)
