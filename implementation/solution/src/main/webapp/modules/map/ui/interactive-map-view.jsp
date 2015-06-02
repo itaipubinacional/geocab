@@ -116,7 +116,7 @@
 											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')"
 											style="float: right; margin-right: 5px; color: red;"
 											ng-click="disableMarker()" class="btn btn-default"
-											title="<spring:message code="map.Disable"/>"
+											title="<spring:message code="map.Refuse"/>"
 											>
 											<i class="glyphicon glyphicon-ban-circle"></i>
 										</button>
@@ -125,7 +125,7 @@
 											style="float: right; margin-right: 5px; color: #00981F"
 											ng-click="enableMarker()" 
 											class="btn btn-default"
-											title="<spring:message code="map.Enable"/>"
+											title="<spring:message code="map.Approve"/>"
 											>
 											<i class="glyphicon glyphicon-ok"></i>
 										</button>
@@ -139,10 +139,10 @@
 										<div style=" overflow: auto;">
 											<div ng-repeat="markerAttribute in attributesByMarker track by $index" style="position: relative;margin-bottom:15px">
 											
-													<label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
+													<label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == '' || markerAttribute.value == '0'">{{ markerAttribute.attribute.name }}</label> 
 														<input
 														type="number" name="number1"
-														ng-if="markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '' "
+														ng-if="(markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '') || markerAttribute.value == '0' "
 														class="form-control" ng-model="markerAttribute.value"									
 														required ng-disabled="true"
 														> 
