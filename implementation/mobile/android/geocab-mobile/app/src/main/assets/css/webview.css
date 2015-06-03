@@ -1,59 +1,48 @@
 /*
-*  webview.css
-*
-*  Created by Joaz Vieira Soares on 05/05/15.
-*  Copyright (c) 2014 Itaipu.
-*/
+ *  webview.css
+ *
+ *  Created by Joaz Vieira Soares on 05/05/15.
+ *  Copyright (c) 2014 Itaipu.
+ */
 
 /*
  * Geral
  */
 body {
-    margin: 0; padding: 0; position: relative; font-family: arial
+    margin: 0; padding: 0; position: relative; font-family: helvetica; overflow: hidden;
 }
 .hide {
     display: none
 }
 div.map {
-    height: 100%; width: 100%;
+    height: 100%; width: 100%; overflow: hidden
 }
 .ol-attribution button, .ol-attribution u, .ol-zoom {
     display: none;
 }
-#info {
-	width: 100%; height: 100%;
-}
-#marker-template, #layer-template { 
-	display: none !important 
+#marker-template, #layer-template {
+    display: none !important;
 }
 
 /*
- * Ações do marcador
+ * Aï¿½ï¿½es do marcador
  */
 .center-marker {
-    position:absolute; z-index: 10;
+    position: absolute; z-index: 10;
     background:url(file:///android_res/drawable/marker.png) no-repeat;  background-size: 58px;
     height: 60px; width: 60px; top:50%; left:50%; margin-left: -29px; margin-top: -41px;
-	
-	background-color: gray;
 }
 .add-point {
     z-index: 10; background: url(file:///android_res/drawable/add.png) no-repeat; background-size: 48px;
     position: fixed; bottom: 10px; right: 10px; width: 50px; height: 50px;
-	
-	background-color: gray;
 }
 .save-point {
     z-index: 10; background: url(file:///android_res/drawable/confirm.png) no-repeat; background-size: 48px;
     position: fixed; bottom: 10px; right: 70px; width: 50px; height: 50px;
-	
-	background-color: gray;
 }
 .cancel-point {
     z-index: 10; background: url(file:///android_res/drawable/cancel.png) no-repeat; background-size: 48px;
     position: fixed; bottom: 10px; right: 10px; width: 50px; height: 50px;
-	
-	background-color: gray;
 }
 
 /*
@@ -61,30 +50,57 @@ div.map {
  */
 .marker-info-box {
     width: 100%; height: 100%; background: white; position: absolute; left: 0;
-	box-shadow: -2px -2px 8px -1px rgba(0,0,0,0.75);
+    overflow: hidden; box-shadow: -2px -2px 8px -1px rgba(0,0,0,0.75);
 }
 .marker-info-header {
-    width: 100%; height: 65px; background: #265CB2; position: relative
+    width: 100%; height: 65px; background: #fff; position: relative;
+    box-shadow: -2px -2px 8px -1px rgba(0,0,0,0.75);
 }
 .marker-info-header p {
-    font-size: 1.2em; margin: 0; padding-left: 15px; padding-top: 20px; color: white; float: left;
+    font-size: 1.1em; margin: 0; padding-left: 15px; padding-top: 20px; color: #444; float: left;
+    
 }
-.marker-info-action { 
-	margin: 20px 20px 5px 20px 
+.marker-info-action {
+    position: relative;
+    height: 90px !important;
+    box-shadow: -2px 1px 8px -1px rgba(0,0,0,0.75);
+    overflow: hidden;
 }
 .marker-info-content {
-	clear: both; height: 100%;
+    clear: both; height: 100%; width: 100%; overflow-y: scroll;
+    background: #eee !important;
 }
 
 /*
- * Informações do marcador
+ * Informaï¿½ï¿½es do marcador
  */
-.marker-info-close { float: right; margin: 12px 10px 0 0; background: url(file:///android_res/drawable/cancel.png) no-repeat; background-size: 38px; width: 38px; width: 42px; height: 42px }
-.marker-label { padding: 10px 20px 5px 20px; margin: 0; font-size: 1em; font-weight: bold; }
-.marker-value { padding: 0 20px 0 20px; margin: 0; font-size: 1em; font-weight: normal; }
+.marker-info-close { float: right; margin: 20px 10px 0 0; background: url(file:///android_res/drawable/cancel2.png) no-repeat; width: 38px; height: 42px }
+.marker-label { padding: 10px 20px 5px 20px; margin: 0; font-size: 0.9em; font-weight: bold; }
+.marker-value { word-wrap: break-word; padding: 0 20px 0 20px; margin: 0; font-size: 0.9em; font-weight: normal; }
 .marker-value-img { text-align: center; width: 85%; margin: auto; }
 .marker-value-img img { width: 100%; }
-.marker-action { width: 25%; height: 82px; float: left; text-align: center }
-.marker-action p { font-size: 1em; font-weight: bold; color: #555}
+
+.marker-action { padding-top: 20px; width: 24%; height: 80px; float: left; text-align: center }
+.marker-action p { font-size: 0.9em; font-weight: bold; color: #555}
 .marker-action:active { opacity: 0.6 }
-.marker-status { font-weight: bold; text-align: left; text-transform: uppercase; clear: both; color: #888; margin-left: 20px }
+.marker-action img{
+    height: 50px;
+}
+
+.marker-status { font-size: 0.7em; font-weight: bold; text-align: left; text-transform: uppercase; clear: both; color: #888; margin-left: 20px; height: 10px }
+
+/*
+ * Popup
+ */
+.action-cause {
+    text-decoration: none; color:#444 !important; padding: 10px !important;
+}
+.action-cause:hover{
+    color:#38c !important;
+}
+.motivo-moderacao {
+    height:75px !important; margin: 0px; background-color: #f6f6f6 !important; color: #333;
+}
+.select-cause {
+    height: 20px !important;
+}
