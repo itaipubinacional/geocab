@@ -28,6 +28,16 @@
 				<string>fb1563968713815015</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>br.com.geocab</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>br.com.geocab</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0.1</string>
@@ -38,7 +48,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location for point&apos;s management</string>
+	<string>Location for point's management</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

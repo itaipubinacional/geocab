@@ -129,18 +129,22 @@ UIActivityIndicatorView *indicator;
     
     context[@"changeToUpdateMarker"] = ^(NSString *markerJson, NSString *base64Image) {
         
-        self.currentMarker = [Marker fromJSONString:markerJson];
-        
-        if ( [base64Image length] > 0 )
-        {
-            NSURL *url = [NSURL URLWithString:base64Image];
-            NSData *imageData = [NSData dataWithContentsOfURL:url];
-            self.currentMarker.imageData = imageData;
-        }
-        
-        self.currentMarker.markerAttributes = self.currentMarkerAttributes;
-        
-        [self performSegueWithIdentifier:@"addNewMarkerSegue" sender:self];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            self.currentMarker = [Marker fromJSONString:markerJson];
+            
+            if ( [base64Image length] > 0 )
+            {
+                NSURL *url = [NSURL URLWithString:base64Image];
+                NSData *imageData = [NSData dataWithContentsOfURL:url];
+                self.currentMarker.imageData = imageData;
+            }
+            
+            self.currentMarker.markerAttributes = self.currentMarkerAttributes;
+            
+            [self performSegueWithIdentifier:@"addNewMarkerSegue" sender:self];
+            
+        });
         
     };
     
