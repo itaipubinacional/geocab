@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "AddNewMarkerViewController.h"
 #import "MarkerDelegate.h"
+#import "FileDelegate.h"
 #import "LayerDelegate.h"
 #import "Layer.h"
 #import "User.h"
@@ -42,6 +43,8 @@ extern NSUserDefaults *defaults;
 @end
 
 @implementation MapViewController
+
+UIActivityIndicatorView *indicator;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -76,6 +79,15 @@ extern NSUserDefaults *defaults;
     [_menuButton.layer setShadowOpacity:0.5];
     
     _currentMarker = [[Marker alloc] init];
+    
+    // Loading
+    indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [indicator setBackgroundColor:[UIColor lightTextColor]];
+    indicator.frame = CGRectMake(0.0, 0.0, 45.0, 45.0);
+    indicator.center = self.view.center;
+    [self.view addSubview:indicator];
+    [indicator bringSubviewToFront:self.view];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = TRUE;
     
     [ControllerUtil verifyInternetConection];
     
@@ -234,8 +246,9 @@ extern NSUserDefaults *defaults;
         NSString *userId = [defaults objectForKey:@"userId"];
         NSString *userRole = [defaults objectForKey:@"userRole"];
         NSString *markerAttributes = operation.HTTPRequestOperation.responseString;
+        markerAttributes = [markerAttributes stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
-        MarkerDelegate *delegate = [[MarkerDelegate alloc] initWithUrl:@"files/markers/"];
+        FileDelegate *delegate = [[FileDelegate alloc] initWithUrl:@"files/marker/"];
         
         [delegate downloadMarkerAttributePhoto:markerId success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
@@ -275,24 +288,15 @@ extern NSUserDefaults *defaults;
 - (void) didCheckedLayer:(Layer *)layer {
     if (layer.dataSource.url != nil) {
 
-        NSRange position = [layer.dataSource.url rangeOfString:@"geoserver/" options:NSBackwardsSearch];
-        
-        // Caso nao encontre geoserver
-        if ( position.length > 0 ){
-            
-            NSRange index = [layer.name rangeOfString:@":"];
-            NSString *typeLayer = [layer.name substringWithRange:NSMakeRange(0, index.location)];
-            
-        	NSString *urlFormated = [NSString stringWithFormat:@"%@%@/wms", [layer.dataSource.url substringWithRange:NSMakeRange(0, position.location+10)],typeLayer ];
-        
-        	NSString *functionCall = [NSString stringWithFormat:@"geocabapp.showLayer('%@','%@','%@','%@')", urlFormated , layer.id, layer.name, layer.title];
-        	[_webView stringByEvaluatingJavaScriptFromString:functionCall];
-        }
+        NSString *functionCall = [NSString stringWithFormat:@"geocabapp.showLayer('%@','%@','%@','%@')", layer.dataSource.url , layer.id, layer.name, layer.title];
+        [_webView stringByEvaluatingJavaScriptFromString:functionCall];
         
     } else {
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker/"];
         [markerDelegate list:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
 
+            [self didUnheckedLayer:layer]; // Para pontos adicionados recentemente
+            
             NSString *markers = operation.HTTPRequestOperation.responseString;
 			NSString *functionCall = [NSString stringWithFormat:@"geocabapp.addMarkers('%@')", markers];
 			[_webView stringByEvaluatingJavaScriptFromString:functionCall];
