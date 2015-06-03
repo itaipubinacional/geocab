@@ -9,6 +9,7 @@
 #import "AddNewMarkerViewController.h"
 #import "LayerDelegate.h"
 #import "MarkerDelegate.h"
+#import "FileDelegate.h"
 #import "MarkerAttribute.h"
 #import "Attribute.h"
 #import "AttributeType.h"
@@ -77,7 +78,8 @@ UIActivityIndicatorView *indicator;
     
     // Loading
     indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    indicator.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+    [indicator setBackgroundColor:[UIColor lightTextColor]];
+    indicator.frame = CGRectMake(0.0, 0.0, 45.0, 45.0);
     indicator.center = self.view.center;
     [self.view addSubview:indicator];
     [indicator bringSubviewToFront:self.view];
@@ -132,6 +134,7 @@ UIActivityIndicatorView *indicator;
         }
         
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@""];
+        FileDelegate *fileDelegate = [[FileDelegate alloc] initWithUrl:@"files/"];
         
         [indicator startAnimating];
         
@@ -151,11 +154,17 @@ UIActivityIndicatorView *indicator;
                 
                 // Faz upload da imagem do marker
                 if ( self.marker.imageUI != nil ){
-                    [markerDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] handler:nil];
+                    [fileDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] handler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                        
+                        [indicator stopAnimating];
+                        [self didFinish];
+                        
+                    }];
+                    
+                } else {
+                    [indicator stopAnimating];
+                    [self didFinish];
                 }
-                
-                [indicator stopAnimating];
-                [self didFinish];
                 
             } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] marker:self.marker];
             
@@ -168,7 +177,7 @@ UIActivityIndicatorView *indicator;
                 // Faz upload da imagem do marker
                 if ( self.marker.imageUI != nil ){
                     
-                    [markerDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] handler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                    [fileDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] handler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                         
                         [self listAttributes:markerResponse];
                         
@@ -197,16 +206,18 @@ UIActivityIndicatorView *indicator;
         NSMutableArray *markerAttributes = [[result array] mutableCopy];
         markerResponse.markerAttributes = markerAttributes;
         
-        MarkerDelegate *delegateFile = [[MarkerDelegate alloc] initWithUrl:@"files/markers/"];
+        FileDelegate *fileDelegate = [[FileDelegate alloc] initWithUrl:@"files/marker/"];
+        NSString *markerJSON = [markerResponse toJSONString];
+        markerJSON = [markerJSON stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
         // Faz o download da imagem se houver
-        [delegateFile downloadMarkerAttributePhoto:self.marker.id success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [fileDelegate downloadMarkerAttributePhoto:self.marker.id success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             // Converte a imagem para base64
             NSString *imageBase64 = responseObject != nil ? [NSString stringWithFormat:@"data:image/jpeg;base64,%@", [operation.responseData base64EncodedStringWithOptions:0]] : @"";
             
             // Atualiza o panel com as informações do marker
-            NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadAttributes('%@','%@')", [markerResponse toJSONString], imageBase64];
+            NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadAttributesJson('%@','%@')", markerJSON, imageBase64];
             
             [_webView stringByEvaluatingJavaScriptFromString:functionCall];
             
@@ -215,7 +226,7 @@ UIActivityIndicatorView *indicator;
             
         } fail:^(AFHTTPRequestOperation *operation, NSError *error) {
             
-            NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadAttributes('%@','')", [markerResponse toJSONString]];
+            NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadAttributesJson('%@','')", markerJSON];
             
             [_webView stringByEvaluatingJavaScriptFromString:functionCall];
             
