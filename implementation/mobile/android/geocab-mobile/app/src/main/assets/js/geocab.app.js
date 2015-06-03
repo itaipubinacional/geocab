@@ -9,6 +9,7 @@ var geocabapp = function(){
 	var view;
 	var map;
 	var nativeInterface;
+    var assetsPath = '';
 	
 	/**
 	 * Inicializa atributos
@@ -17,7 +18,7 @@ var geocabapp = function(){
 	
 		view = new ol.View({
 			center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
-			zoom: 13
+			zoom: 9
 		});
 		
 		map = new ol.Map({
@@ -63,6 +64,18 @@ var geocabapp = function(){
 		
 	};	
 	
+    var formatUrl = function(url, name) {
+        
+        var index = name.indexOf(":");
+        var dataSourceAddress = url.lastIndexOf("ows?");
+        var layerType = name.substring(0,index);
+        var layerName = name.substring(index+1,name.length);
+        var formattedUrl = url.substring(0, dataSourceAddress)+layerType+'/wms';
+        
+        return {'name': layerName, 'url': formattedUrl};
+        
+    };	
+	
 	return {
 		
 		/**
@@ -91,46 +104,45 @@ var geocabapp = function(){
         },	
 
 		getElementFromEvent : function(event){
-			return $(event.target.closest('div[class^="marker-info-box"]'));
+			return $(event.target).closest('div[class^="marker-info-box"]');
 		},
+        
+        getElementFromMap : function(){
+            return $("#map").find(".marker-t");
+        },
+        
+        isEmpty : function(value){
+            return (typeof value === "undefined" || value == null
+                    || value == '(null)' || value.length === 0);
+        },
 		
 		/**
 		 * Mostra ou esconde uma camada no mapa
 		 */
-		showLayer : function(url, name, title, checked) {
-		
-			// Verifica se a camada está selecionada
-			if (checked == 'true') {
-			
-				var wmsSource = new ol.source.TileWMS({
-					url: url,
-					params: { 'LAYERS': name },
-				});
+		showLayer : function(url, id, name, title) {
+            
+            var item = formatUrl(url, name);
+            
+            var wmsSource = new ol.source.TileWMS({
+                url: item.url,
+                params: { 'LAYERS': item.name },
+            });
 
-				var wmsLayer = new ol.layer.Tile({
-					source: wmsSource
-				});
+            var wmsLayer = new ol.layer.Tile({
+                source: wmsSource
+            });
 
-				// Adiciona a camada ao mapa
-				map.addLayer(wmsLayer);
+            // Adiciona a camada ao mapa
+            map.addLayer(wmsLayer);
 
-				// Adiciona a camada a lista global
-				layersAdd.push({
-					'wmsLayer': wmsLayer,
-					'wmsSource': wmsSource,
-					'name': name,
-					'title': title
-				});
+            // Adiciona a camada a lista global
+            layersAdd.push({
+                'wmsLayer': wmsLayer,
+                'wmsSource': wmsSource,
+                'id': id,
+                'title': title
+            });
 				
-			} else {
-				// Percorre para remover a camada que foi desmarcada
-				for (i in layersAdd) {
-					if (layersAdd[i].name == name) {
-						map.removeLayer(layersAdd[i].wmsLayer);
-						layersAdd.splice(i, 1);
-					}
-				}
-			}
 		},
 
 		/**
@@ -175,18 +187,53 @@ var geocabapp = function(){
 			});
 
 		},
+        
+        /**
+         * Adiciona marcadores ao mapa
+         */
+        addMarkers : function(markers) {
+            
+            if ( typeof markers === 'string' )
+                markers = JSON.parse(markers);
+            
+            for (pos in markers ) {
+                this.addMarker(markers[pos]);
+            }
+            
+        },
 		
 		/**
-		 * Esconde um marcador do mapa a partir do nome
+		 * Esconde marcador do mapa
 		 */	
-		closeMarker : function(layerOrMarkerId) {
+		closeMarker : function(markerId) {
 			for (i in markersAdd) {
-				if (markersAdd[i].marker.id == layerOrMarkerId || 
-					markersAdd[i].marker.layer.id == layerOrMarkerId) {
+				if (markersAdd[i].marker.id == markerId) {
 					map.removeLayer(markersAdd[i].vectorLayer);
+                    markersAdd.splice(i, 1);
+                    break;
 				}
 			}
 		},
+        
+        /**
+         * Esconde layer do mapa
+         */
+        closeLayer : function(layerId) {
+            // Percorre para remover a camada que foi desmarcada
+            for (i in layersAdd) {
+                if (layersAdd[i].id == layerId) {
+                    map.removeLayer(layersAdd[i].wmsLayer);
+                    layersAdd.splice(i, 1);
+                }
+            }
+			var i = markersAdd.length
+            while (i--) {
+                if (markersAdd[i].marker.layer.id == layerId) {
+                    map.removeLayer(markersAdd[i].vectorLayer);
+                    markersAdd.splice(i, 1);
+                }
+            }
+        },
 		
 		/**
 		 * Busca um marker pelo id
@@ -226,7 +273,7 @@ var geocabapp = function(){
 		
 		changeToSaveState : function(){
 			var coordinates = new ol.format.WKT().writeGeometry( new ol.geom.Point(map.getView().getCenter()) );
-			Android.changeToAddMarker(coordinates);
+			nativeInterface.changeToAddMarker(coordinates);
 		},
 
 		hideStates : function(){
