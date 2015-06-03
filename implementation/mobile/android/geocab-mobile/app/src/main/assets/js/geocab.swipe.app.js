@@ -39,7 +39,7 @@ geocabapp.swipe = function(){
 		triggerOnTouchEnd: true,
 		swipeStatus: swipeStatus,
 		allowPageScroll: "none",
-		threshold: 150
+		threshold: 100
 	};
 	
 	/**
@@ -59,17 +59,45 @@ geocabapp.swipe = function(){
 	};
 	
 	var hideElement = function(element){
-		var parentHeight = $("#map").height();
-		element.css("top", parentHeight);
+		element.css("top", $("#map").height());
 	};
+    
+    var loadInfoBoxSize = function(element, infoNumber){
+        
+        var containerHeight = $("#map").height() - ((infoNumber-1) * HEADER_HEIGHT);
+        var contentHeight = containerHeight - HEADER_HEIGHT;
+        
+        if ( element.hasClass("marker-t") ){
+            
+            if ( $(".marker-info-action", element).is(":visible") )
+                contentHeight = contentHeight - 90;
+            
+            if ( $(".marker-status", element).is(":visible") )
+                contentHeight = contentHeight - 10;
+            
+        }
+        
+        element.height(containerHeight);
+        $(".marker-info-content",element).height(contentHeight);
+        
+    };
+    
+    var loadInfoBoxData = function(element, infoNumber){
+        
+        element.data("info-box-number", infoNumber);
+        element.data("initial-top", $("#map").height() - (infoNumber * HEADER_HEIGHT));
+        element.css("z-index", MAX_INFO_BOX - infoNumber);
+        
+    };
 	
 	var destroyElement = function(element){
 		// Move a posicao de todos os boxes proximos
 		element.nextAll().each(function(i, infobox){
-			var newTop = $("#map").height() - HEADER_HEIGHT;
-			$(infobox).css("top", newTop);
+			loadInfoBoxSize($(infobox), $(infobox).data("info-box-number")-1);
+			loadInfoBoxData($(infobox), $(infobox).data("info-box-number")-1);
+			animateInitialTop($(infobox));
 		});
-		
+
 		// Esconde o infobox atual
 		hideElement(element);
 		setInterval(function(){  element.remove()  }, 500);
@@ -78,8 +106,8 @@ geocabapp.swipe = function(){
 		infoBoxNumber--;		
 		if ( infoBoxNumber == 0 ){
 			geocabapp.changeToActionState();
-			//geocabapp.getNativeInterface().showOpenMenuButton();
-		}
+			geocabapp.getNativeInterface().showOpenMenuButton();
+        }
 	};	
 	
 	return {
@@ -99,12 +127,25 @@ geocabapp.swipe = function(){
 		animateInitialTop : function(element){
 			animateInitialTop(element);
 		},
+        
+        setInfoBox : function(value){
+            infoBoxNumber = value;
+        },
 		
 		loadSwipeElement : function(element){
-			infoBoxNumber++;
-			element.data("info-box-number", infoBoxNumber);
-			element.data("initial-top", element.parent().height() - (infoBoxNumber * HEADER_HEIGHT));
-			element.css("z-index", MAX_INFO_BOX - infoBoxNumber);
+            
+            infoBoxNumber++;
+
+            loadInfoBoxSize(element, infoBoxNumber);
+            this.hideElement(element);
+            loadInfoBoxData(element, infoBoxNumber);
+            
+            // Esconde o botao das camadas
+            if ( infoBoxNumber == 1 ){
+                geocabapp.getNativeInterface().closeOpenMenuButton();
+                geocabapp.hideStates();
+            }
+            
 			loadSwipeElement(element);
 		}
 	
