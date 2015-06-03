@@ -20,10 +20,6 @@
 
 - (void) update: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password marker:(Marker*)marker;
 
-- (void) downloadMarkerAttributePhoto: (NSNumber *) markerId success: (void(^)(AFHTTPRequestOperation *operation, id responseObject)) success fail: (void(^)(AFHTTPRequestOperation *operation, NSError *error)) fail login:(NSString*)login password:(NSString*)password;
-
-- (void) uploadMarkerAttributePhoto:(NSNumber *)markerId image:(UIImage *)image login:(NSString*)login password:(NSString*)password handler: (void(^)(NSURLResponse *response, NSData *data, NSError *connectionError)) handler;
-
 - (void) remove:(NSString*)userName password:(NSString*)password markerId:(NSNumber*)markerId;
 
 - (void) approve:(NSString*)userName password:(NSString*)password markerId:(NSNumber*)markerId;

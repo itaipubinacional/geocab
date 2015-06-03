@@ -19,7 +19,8 @@
     if (self)
     {
         #warning Verificar endereço base
-        self.baseUrl = [@"http://geocab.sbox.me/api/" mutableCopy];
+        //self.baseUrl = [@"http://geocab.sbox.me/api/" mutableCopy];
+        self.baseUrl = [@"https://geocab.itaipu.gov.br/api/" mutableCopy];
         [self.baseUrl appendString:url];
         
         RKObjectManager *objectManager = [RKObjectManager managerWithBaseURL:[NSURL URLWithString:self.baseUrl]];
