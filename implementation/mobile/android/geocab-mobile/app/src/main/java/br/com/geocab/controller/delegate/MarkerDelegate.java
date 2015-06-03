@@ -53,6 +53,7 @@ import br.com.geocab.entity.GroupEntity;
 import br.com.geocab.entity.Layer;
 import br.com.geocab.entity.Marker;
 import br.com.geocab.entity.MarkerAttribute;
+import br.com.geocab.entity.MotiveMarkerModeration;
 import br.com.geocab.util.DelegateHandler;
 import br.com.geocab.util.MultiPartRequest;
 
@@ -104,7 +105,7 @@ public class MarkerDelegate extends AbstractDelegate
                 Map<String,String> params = new HashMap<String, String>();
                 final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
                 params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
-                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
                 return params;
             }
         };
@@ -158,76 +159,12 @@ public class MarkerDelegate extends AbstractDelegate
                 Map<String,String> params = new HashMap<String, String>();
                 final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
                 params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
-                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
                 return params;
             }
         };
 
         AppController.getInstance().addToRequestQueue(jReq);
-
-    }
-
-    /**
-     *
-     * @param marker
-     */
-    public void downloadMarkerPicture(final Marker marker, final DelegateHandler delegateHandler)
-    {
-        String url =  "http://geocab.sbox.me/files/markers/"+marker.getId()+"/download";
-
-        ImageRequest jReq = new ImageRequest(url, new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response)
-            {
-                delegateHandler.responseHandler(response);
-            }
-        }, 0, 0, null, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                delegateHandler.responseHandler(null);
-            }
-        } )
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String, String>();
-                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
-                params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP));
-                params.put("Content-Type","application/x-www-form-urlencoded");
-                return params;
-            }
-        };
-
-        AppController.getInstance().addToRequestQueue(jReq);
-    }
-
-    public void uploadMarkerFile( long markerId, File file, final DelegateHandler delegateHandler){
-
-        String url = getUrl() + "/"+markerId+"/uploadphoto";
-
-        MultiPartRequest request = new MultiPartRequest(url, file, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response){
-                if ( delegateHandler != null )
-                    delegateHandler.responseHandler(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("ERROR", error.getMessage());
-            }
-        })
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String, String>();
-                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
-                params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
-                return params;
-            }
-        };
-
-        AppController.getInstance().addToRequestQueue(request);
 
     }
 
@@ -338,7 +275,7 @@ public class MarkerDelegate extends AbstractDelegate
 
         try {
 
-            StringRequest jReq = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
+            StringRequest jReq = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response)
                 {
@@ -375,19 +312,20 @@ public class MarkerDelegate extends AbstractDelegate
      * @param markerId
      * @param delegateHandler
      */
-    public void refuseMarker( final long markerId, final DelegateHandler delegateHandler )
+    public void refuseMarker( final long markerId, final MotiveMarkerModeration motiveMarkerModeration, final DelegateHandler<String> delegateHandler )
     {
         String url = getUrl() + "/"+markerId+"/refuse";
         final Gson gson = new GsonBuilder().create();
 
         try {
 
-            StringRequest jReq = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
+            JSONObject motiveJson = new JSONObject(gson.toJson(motiveMarkerModeration));
+            JsonObjectRequest jReq = new JsonObjectRequest(url, motiveJson, new Response.Listener<JSONObject>() {
                 @Override
-                public void onResponse(String response)
+                public void onResponse(JSONObject response)
                 {
                     if ( delegateHandler != null )
-                        delegateHandler.responseHandler(response);
+                        delegateHandler.responseHandler(response.toString());
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -455,6 +393,41 @@ public class MarkerDelegate extends AbstractDelegate
         } catch (Exception e) {
             Log.e("ERROR", e.getMessage());
         }
+
+    }
+
+    /**
+     * @return
+     */
+    public void listMotives( final DelegateHandler delegateHandler )
+    {
+        String url = getUrl() + "/motives";
+
+        StringRequest jReq = new StringRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response)
+            {
+                if ( delegateHandler != null )
+                    delegateHandler.responseHandler(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("ERROR", error.getMessage());
+            }
+        })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
+                params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
+                params.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(jReq);
 
     }
 

@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.Menu;
@@ -50,6 +51,7 @@ import br.com.geocab.R;
 import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.controller.app.AppController;
 import br.com.geocab.controller.delegate.AbstractDelegate;
+import br.com.geocab.controller.delegate.FileDelegate;
 import br.com.geocab.controller.delegate.LayerDelegate;
 import br.com.geocab.controller.delegate.MarkerDelegate;
 import br.com.geocab.entity.Attribute;
@@ -72,6 +74,7 @@ public class MarkerActivity extends Activity {
     private ArrayList<Attribute> layerAttributes;
     private LinearLayout linearPainel;
     private Marker marker;
+    private Button removeImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +82,15 @@ public class MarkerActivity extends Activity {
         setContentView(R.layout.activity_marker);
 
         this.linearPainel = (LinearLayout) findViewById(R.id.linearPainel);
-        this.imgMarker = (ImageView) findViewById(R.id.img_marker);
         this.buttonSelectPhoto = (Button) findViewById(R.id.btn_select_photo);
 
         this.marker = (Marker) this.getIntent().getSerializableExtra("marker");
-        if ( this.marker == null )
+        if ( this.marker == null ) {
             this.marker = new Marker();
+        } else {
+            if ( AppController.getInstance().getBitmap() != null )
+                this.marker.setImage(AppController.getInstance().getBitmap());
+        }
 
         this.wktCoordenate = this.getIntent().getStringExtra("wktCoordenate");
         this.layerDelegate = new LayerDelegate(this);
@@ -168,6 +174,11 @@ public class MarkerActivity extends Activity {
                         EditText editText = (EditText) getLayoutInflater().inflate(R.layout.style_edit_text, null);
                         editText.setText(markerValue);
 
+                        // Max length
+                        InputFilter[] FilterArray = new InputFilter[1];
+                        FilterArray[0] = new InputFilter.LengthFilter(250);
+                        editText.setFilters(FilterArray);
+
                         if ( attribute.getType() == AttributeType.NUMBER ){
                             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
                         } else {
@@ -203,11 +214,62 @@ public class MarkerActivity extends Activity {
                         //IMPLEMENTAR
 
                     }
+                }
 
+                // Em caso de edicao mostra a imagem
+                if ( MarkerActivity.this.marker.getImage() != null )
+                {
+                    addImageView(MarkerActivity.this.marker.getImage());
                 }
 
             }
         });
+
+    }
+
+    private void removeMarkerImage(){
+
+        this.marker.setImage(null);
+        this.marker.setFile(null);
+        this.marker.setImageToDelete(true);
+
+        if ( this.imgMarker != null )
+            linearPainel.removeView(this.imgMarker);
+
+        if ( this.removeImage != null )
+            linearPainel.removeView(this.removeImage);
+
+    }
+
+    private void addImageView(Bitmap image) {
+
+        if ( this.removeImage != null )
+            linearPainel.removeView(this.removeImage);
+
+        // Botao para remover a imagem
+        this.removeImage = new Button(this);
+        this.removeImage.setText("Remover Imagem");
+        this.removeImage.setTextColor(Color.GRAY);
+        this.removeImage.setBackground(null);
+        this.removeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeMarkerImage();
+            }
+        });
+
+        // Adiciona o campo a view dinamica
+        linearPainel.addView(this.removeImage);
+
+        // Imagem
+        if ( this.imgMarker != null )
+            linearPainel.removeView(this.imgMarker);
+
+        this.imgMarker = new ImageView(this);
+        this.imgMarker.setImageBitmap(image);
+        this.imgMarker.setAdjustViewBounds(true);
+        this.imgMarker.setPadding(0, 0, 0, 20);
+        linearPainel.addView(this.imgMarker);
 
     }
 
@@ -243,7 +305,7 @@ public class MarkerActivity extends Activity {
         final CharSequence[] options = { "Galeria", "Tirar foto", "Cancelar" };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MarkerActivity.this);
-        builder.setTitle("Selecionar foto");
+        builder.setTitle("Selecionar");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
@@ -306,6 +368,7 @@ public class MarkerActivity extends Activity {
         }
 
         final MarkerDelegate markerDelegate = new MarkerDelegate(this);
+        final FileDelegate fileDelegate = new FileDelegate(MarkerActivity.this);
         markerDelegate.showLoadingDialog();
 
         // Chamada ao serviço para persistir o marker
@@ -320,13 +383,21 @@ public class MarkerActivity extends Activity {
                     markerResponse.setLayer(layer);
                     AppController.getInstance().getWebViewMap().loadUrl("javascript:geocabapp.addMarker('" + new GsonBuilder().create().toJson(markerResponse) + "')");
                     AppController.getInstance().getWebViewMap().loadUrl("javascript:geocabapp.changeToActionState()");
-                    markerDelegate.hideLoadingDialog();
 
                     // Faz upload da imagem do marker
-                    if ( marker.getFile() != null )
-                        markerDelegate.uploadMarkerFile(markerResponse.getId(), marker.getFile(), null);
+                    if ( marker.getFile() != null ) {
 
-                    finish();
+                        fileDelegate.uploadMarkerPicture(markerResponse.getId(), marker.getFile(), new DelegateHandler() {
+                            @Override
+                            public void responseHandler(Object result) {
+                                markerDelegate.hideLoadingDialog();
+                                finish();
+                            }
+                        });
+                    } else {
+                        markerDelegate.hideLoadingDialog();
+                        finish();
+                    }
                 }
             });
         }
@@ -335,42 +406,67 @@ public class MarkerActivity extends Activity {
         {
             markerDelegate.updateMarker(marker, new DelegateHandler<Marker>() {
                 @Override
-                public void responseHandler(Marker markerResponse) {
+                public void responseHandler(final Marker markerResponse) {
 
                     // Faz upload da imagem do marker
-                    if (marker.getFile() != null)
-                        markerDelegate.uploadMarkerFile(marker.getId(), marker.getFile(), null);
+                    if (marker.getFile() != null) {
 
-                    markerDelegate.listMarkerAttributesByMarker(marker, new DelegateHandler<String>() {
-                        @Override
-                        public void responseHandler(final String markerJson) {
-
-                            Bitmap bitmap = MarkerActivity.this.marker.getImage();
-
-                            // Convert bitmap to Base64 encoded image for web
-                            String imageBase64 = "";
-                            if (bitmap != null) {
-                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                                byte[] byteArray = byteArrayOutputStream.toByteArray();
-                                String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                                imageBase64 = "data:image/png;base64," + image;
+                        fileDelegate.uploadMarkerPicture(marker.getId(), marker.getFile(), new DelegateHandler() {
+                            @Override
+                            public void responseHandler(Object result) {
+                                listAttributes(markerDelegate, fileDelegate);
                             }
+                        });
 
-                            // Atualiza o panel com as informações do marker
-                            AppController.getInstance().getWebViewMap().loadUrl("javascript:geocabapp.marker.loadAttributes('" + markerJson + "', '" + imageBase64 + "')");
-                            markerDelegate.hideLoadingDialog();
-                            finish();
+                    } else {
 
-                        };
-                    });
+                        listAttributes(markerDelegate, fileDelegate);
+
+                    }
+
                 }
             });
         }
 
-
     }
 
+    private void listAttributes(final MarkerDelegate markerDelegate, final FileDelegate fileDelegate){
+
+        markerDelegate.listMarkerAttributesByMarker(marker, new DelegateHandler<String>() {
+            @Override
+            public void responseHandler(final String markerJson) {
+
+                // Faz uma nova requisição para mostrar a imagem do marker
+                fileDelegate.downloadMarkerPicture(marker, new DelegateHandler<Bitmap>() {
+                    @Override
+                    public void responseHandler(Bitmap bitmap) {
+
+                        // Convert bitmap to Base64 encoded image for web
+                        String imageBase64 = "";
+                        if (bitmap != null) {
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                            byte[] byteArray = byteArrayOutputStream.toByteArray();
+                            String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                            imageBase64 = "data:image/jpeg;base64," + image;
+                            imageBase64 = imageBase64.replaceAll("\n", "");
+                        }
+
+                        // Mostra o painel com informações do marker
+                        String loggedUserJson = new GsonBuilder().create().toJson(AbstractDelegate.loggedUser);
+                        AppController.getInstance().getWebViewMap().loadUrl("javascript:geocabapp.marker.loadAttributes('" + markerJson + "', '" + imageBase64 + "')");
+
+                        markerDelegate.hideLoadingDialog();
+                        finish();
+
+                    };
+
+                });
+
+            };
+        });
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -395,14 +491,8 @@ public class MarkerActivity extends Activity {
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
 
-                    imgMarker.setImageBitmap(bitmap);
-                    MarkerActivity.this.marker.setImage(bitmap);
+                    this.addImageView(bitmap);
                     MarkerActivity.this.marker.setFile(f);
-                    //f.delete();
-
-                    String path = android.os.Environment.getExternalStorageDirectory() + File.separator + "Geocab" + File.separator + "default";
-                    OutputStream outFile = null;
-                    File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -416,8 +506,8 @@ public class MarkerActivity extends Activity {
                 String picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                imgMarker.setImageBitmap(thumbnail);
-                MarkerActivity.this.marker.setImage(thumbnail);
+
+                this.addImageView(thumbnail);
                 MarkerActivity.this.marker.setFile( new File(picturePath) );
             }
         }

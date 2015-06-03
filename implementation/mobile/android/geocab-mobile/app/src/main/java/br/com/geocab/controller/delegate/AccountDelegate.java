@@ -122,7 +122,7 @@ public class AccountDelegate extends AbstractDelegate
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/x-www-form-urlencoded; charset='UTF-8'");
+                params.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
                 return params;
             }
         };
@@ -184,7 +184,7 @@ public class AccountDelegate extends AbstractDelegate
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
                 return params;
             }
         };

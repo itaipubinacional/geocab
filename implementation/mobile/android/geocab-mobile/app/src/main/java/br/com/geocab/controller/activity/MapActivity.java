@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -50,15 +52,16 @@ import br.com.geocab.R;
 import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.controller.app.AppController;
 import br.com.geocab.controller.delegate.AbstractDelegate;
+import br.com.geocab.controller.delegate.FileDelegate;
 import br.com.geocab.controller.delegate.LayerDelegate;
 import br.com.geocab.controller.delegate.MarkerDelegate;
 import br.com.geocab.entity.GroupEntity;
 import br.com.geocab.entity.Layer;
 import br.com.geocab.entity.Marker;
 import br.com.geocab.entity.MarkerStatus;
+import br.com.geocab.entity.MotiveMarkerModeration;
 import br.com.geocab.entity.User;
 import br.com.geocab.util.DelegateHandler;
-import br.com.geocab.util.JavaScriptHandler;
 
 public class MapActivity extends Activity
 {
@@ -166,9 +169,9 @@ public class MapActivity extends Activity
         webViewMap.addJavascriptInterface(this, "Android");
         webViewMap.setWebChromeClient(new WebChromeClient());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            WebView.setWebContentsDebuggingEnabled(true);
+//        }
 
         // Guarda a referência do webview na main controller
         AppController.getInstance().setWebViewMap(webViewMap);
@@ -328,9 +331,20 @@ public class MapActivity extends Activity
         startActivity(intent);
     }
 
-    public void changeToUpdateMarker(String markerJson){
+    public void changeToUpdateMarker(String markerJson, String base64Image){
+
+        Marker marker = new GsonBuilder().create().fromJson(markerJson, Marker.class);
+
+        if ( base64Image != null && !base64Image.equals("") ) {
+            byte[] decodeResponse = Base64.decode(base64Image.replace("data:image/jpeg;base64,",""), Base64.NO_WRAP );
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodeResponse, 0, decodeResponse.length);
+            AppController.getInstance().setBitmap(decodedByte);
+        } else {
+            AppController.getInstance().setBitmap(null);
+        }
+
         Intent intent = new Intent(MapActivity.this, MarkerActivity.class);
-        intent.putExtra("marker", new GsonBuilder().create().fromJson(markerJson, Marker.class));
+        intent.putExtra("marker", marker);
         startActivity(intent);
     }
 
@@ -361,6 +375,7 @@ public class MapActivity extends Activity
     private void loadMarker(final long markerId, final String layersProperties){
 
         final Marker marker = new Marker(markerId);
+        final FileDelegate fileDelegate = new FileDelegate(MapActivity.this.getApplicationContext());
 
         this.markerDelegate.showLoadingDialog();
 
@@ -369,7 +384,7 @@ public class MapActivity extends Activity
             public void responseHandler(final String markerJson) {
 
                 // Faz uma nova requisição para mostrar a imagem do marker
-                markerDelegate.downloadMarkerPicture(marker, new DelegateHandler<Bitmap>() {
+                fileDelegate.downloadMarkerPicture(marker, new DelegateHandler<Bitmap>() {
                     @Override
                     public void responseHandler(Bitmap bitmap) {
 
@@ -380,12 +395,15 @@ public class MapActivity extends Activity
                             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
                             byte[] byteArray = byteArrayOutputStream.toByteArray();
                             String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                            imageBase64 = "data:image/png;base64," + image;
+                            imageBase64 = "data:image/jpeg;base64," + image;
+                            imageBase64 = imageBase64.replaceAll("\n", "");
                         }
 
                         // Mostra o painel com informações do marker
                         String loggedUserJson = new GsonBuilder().create().toJson(AbstractDelegate.loggedUser);
-                        webViewMap.loadUrl("javascript:geocabapp.marker.show('" + markerJson + "', '" + imageBase64 + "', '" + loggedUserJson + "', '" + layersProperties + "')");
+                        String command = "javascript:geocabapp.marker.show('" + markerJson + "', '" + imageBase64 + "', '" + loggedUserJson + "', '" + layersProperties + "')";
+                        webViewMap.loadUrl(command);
+                        loadMotives();
 
                         markerDelegate.hideLoadingDialog();
 
@@ -398,12 +416,6 @@ public class MapActivity extends Activity
             ;
         });
 
-        runOnUiThread(new Runnable() {
-            public void run() {
-                buttonOpenMenu.setVisibility(View.GONE);
-            }
-        });
-
     }
 
     public void showOpenMenuButton()
@@ -411,6 +423,15 @@ public class MapActivity extends Activity
         runOnUiThread(new Runnable() {
             public void run() {
                 buttonOpenMenu.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    public void closeOpenMenuButton()
+    {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                buttonOpenMenu.setVisibility(View.GONE);
             }
         });
     }
@@ -432,13 +453,14 @@ public class MapActivity extends Activity
         });
     }
 
-    public void changeToRefuseMarker(String markerJson)
+    public void changeToRefuseMarker(String markerJson, String motiveMarkerJSON)
     {
         final Gson gson = new GsonBuilder().create();
         final Marker marker = gson.fromJson(markerJson, Marker.class);
+        final MotiveMarkerModeration motiveMarker = gson.fromJson(motiveMarkerJSON, MotiveMarkerModeration.class);
 
         this.markerDelegate.showLoadingDialog();
-        this.markerDelegate.refuseMarker(marker.getId(), new DelegateHandler() {
+        this.markerDelegate.refuseMarker(marker.getId(), motiveMarker   ,  new DelegateHandler() {
             @Override
             public void responseHandler(Object result) {
                 marker.setStatus(MarkerStatus.REFUSED);
@@ -464,6 +486,18 @@ public class MapActivity extends Activity
                 markerDelegate.hideLoadingDialog();
             }
         });
+    }
+
+    public void loadMotives(){
+
+        MarkerDelegate delegate = new MarkerDelegate(this);
+        delegate.listMotives(new DelegateHandler() {
+            @Override
+            public void responseHandler(Object result) {
+                AppController.getInstance().getWebViewMap().loadUrl("javascript:geocabapp.marker.loadMotives('" + result + "')");
+            }
+        });
+
     }
 
     /**

@@ -3,6 +3,7 @@ package br.com.geocab.controller.app;
 import br.com.geocab.controller.adapter.NavDrawerListAdapter;
 import br.com.geocab.util.LruBitmapCache;
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.webkit.WebView;
 
@@ -19,6 +20,7 @@ public class AppController extends Application {
 	private RequestQueue mRequestQueue;
 	private ImageLoader mImageLoader;
     private WebView webViewMap;
+    private Bitmap bitmap;
 
 	private static AppController mInstance;
 
@@ -76,5 +78,13 @@ public class AppController extends Application {
 
     public void setWebViewMap(WebView webViewMap) {
         this.webViewMap = webViewMap;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }
