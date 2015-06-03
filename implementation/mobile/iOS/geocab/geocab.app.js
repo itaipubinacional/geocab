@@ -18,7 +18,7 @@ var geocabapp = function(){
 	
 		view = new ol.View({
 			center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
-			zoom: 13
+			zoom: 9
 		});
 		
 		map = new ol.Map({
@@ -62,7 +62,19 @@ var geocabapp = function(){
 			
 		});		
 		
-	};	
+	};
+    
+    var formatUrl = function(url, name) {
+        
+        var index = name.indexOf(":");
+        var dataSourceAddress = url.lastIndexOf("ows?");
+        var layerType = name.substring(0,index);
+        var layerName = name.substring(index+1,name.length);
+        var formattedUrl = url.substring(0, dataSourceAddress)+layerType+'/wms';
+        
+        return {'name': layerName, 'url': formattedUrl};
+        
+    };
 	
 	return {
 		
@@ -109,9 +121,11 @@ var geocabapp = function(){
 		 */
 		showLayer : function(url, id, name, title) {
             
+            var item = formatUrl(url, name);
+            
             var wmsSource = new ol.source.TileWMS({
-                url: url,
-                params: { 'LAYERS': name },
+                url: item.url,
+                params: { 'LAYERS': item.name },
             });
 
             var wmsLayer = new ol.layer.Tile({
@@ -146,9 +160,15 @@ var geocabapp = function(){
 				markerId: marker.id
 			});
 
+            var iSize = [32, 37];
+            
+            if( layerIcon.indexOf('default_') >= 0){
+                iSize = [32, 32];
+            }
+            
 			var iconStyle = new ol.style.Style({
 				image: new ol.style.Icon(({
-					size: [32, 37],
+					size: iSize,
 					src: layerIcon
 				}))
 			});
@@ -212,9 +232,11 @@ var geocabapp = function(){
                     layersAdd.splice(i, 1);
                 }
             }
-            for (i in markersAdd) {
+            var i = markersAdd.length
+            while (i--) {
                 if (markersAdd[i].marker.layer.id == layerId) {
                     map.removeLayer(markersAdd[i].vectorLayer);
+                    markersAdd.splice(i, 1);
                 }
             }
         },

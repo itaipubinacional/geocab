@@ -57,14 +57,19 @@ geocabapp.marker = function(){
 			return d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();		
 		}
 		return null;
-    };	
+    };
+    
+    var toJSON = function(value){
+        value = value.replace(/(:\s*"[^"]*)"([^"]*"\s*(,|\s*\}))/g, '$1\\"$2');
+                              return JSON.parse(value);
+                              };
 	
 	/**
 	 * Carrega as actions do marker
 	 */		
 	var loadMarkerActions = function(element, marker){
 		if ( typeof marker === 'string' )
-			marker = JSON.parse(marker);
+			marker = toJSON(marker);
         
         geocabapp.findMarker(currentMarker.id).status = marker.status;
 			
@@ -183,7 +188,7 @@ geocabapp.marker = function(){
 			
 			if ( !geocabapp.isEmpty(marker) && marker.id != 0){
 				currentImage = image;
-                currentMarker = typeof marker === 'string' ? JSON.parse(marker) : marker;
+                currentMarker = typeof marker === 'string' ? toJSON(marker) : marker;
 				currentUser = typeof loggedUser === 'string' ? JSON.parse(loggedUser) : loggedUser;
 				$.extend(true, currentMarker, geocabapp.findMarker(currentMarker.id));
 				
@@ -193,7 +198,7 @@ geocabapp.marker = function(){
 		},
 		
         showOptions : function(markerId, attributes, image, userId, userRole, layerProperties){
-            var marker = { id : markerId, markerAttributes : JSON.parse(attributes) };
+            var marker = { id : markerId, markerAttributes : toJSON(decodeURIComponent(attributes)) };
             var user = { id : userId, role: userRole };
             this.show(marker, image, user, layerProperties);
         },		
@@ -209,6 +214,15 @@ geocabapp.marker = function(){
             currentImage = image;
 			marker.user = geocabapp.findMarker(marker.id).user;
 			loadMarkerAttributes(geocabapp.getElementFromMap(), marker, image);
+		},
+                              
+		loadAttributesJson : function(marker, image){
+        	if ( typeof marker === 'string' )
+            	marker = toJSON(decodeURIComponent(marker));
+                              
+                    currentImage = image;
+                    marker.user = geocabapp.findMarker(marker.id).user;
+                    loadMarkerAttributes(geocabapp.getElementFromMap(), marker, image);
 		},
         
         loadMotives : function(motives){
