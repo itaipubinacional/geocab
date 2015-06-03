@@ -37,6 +37,8 @@ public class Marker implements Serializable
 
     private Layer layer;
 
+    private Boolean imageToDelete;
+
     private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
 
     private List<MarkerModeration> markerModeration = new ArrayList<MarkerModeration>();
@@ -44,6 +46,8 @@ public class Marker implements Serializable
     private transient Bitmap image;
 
     private transient File file;
+
+    private String created;
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -125,4 +129,19 @@ public class Marker implements Serializable
         this.markerAttributes = markerAttributes;
     }
 
+    public Boolean getImageToDelete() {
+        return imageToDelete;
+    }
+
+    public void setImageToDelete(Boolean imageToDelete) {
+        this.imageToDelete = imageToDelete;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
 }
