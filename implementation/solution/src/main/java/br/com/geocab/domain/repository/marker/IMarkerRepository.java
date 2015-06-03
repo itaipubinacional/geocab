@@ -34,7 +34,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				"FROM Marker marker " +
 				"LEFT OUTER JOIN marker.layer layer " +
 				"LEFT OUTER JOIN marker.user user " +
-				"WHERE  ( ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
+				"WHERE  ( ( LOWER(layer.title) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
 				"AND ( marker.status = :status OR :status = NULL ) " +
 				"AND ( marker.created >= :dateStart OR CAST( :dateStart as date ) = NULL ) " +
 				"AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
@@ -52,7 +52,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				"FROM Marker marker " +
 				"LEFT OUTER JOIN marker.layer layer " +
 				"LEFT OUTER JOIN marker.user user " +
-				"WHERE  ( ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
+				"WHERE  ( ( LOWER(layer.title) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
 				"AND ( marker.status = :status OR :status = NULL ) " +
 				"AND ( marker.created >= :dateStart OR CAST( :dateStart as date ) = NULL ) " +
 				"AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
