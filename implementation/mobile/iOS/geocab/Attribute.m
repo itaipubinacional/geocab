@@ -18,6 +18,8 @@
     if ([self.viewComponent class] == [UITextField class]){
         
         NSString *value = [((UITextField *)self.viewComponent) text];
+        value = [value stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+        value = [value stringByReplacingOccurrencesOfString:@"'" withString:@""];
         return value;
         
     } else if ([self.viewComponent class] == [UISwitch class]){
