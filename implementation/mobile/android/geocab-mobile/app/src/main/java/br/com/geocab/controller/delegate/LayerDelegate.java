@@ -112,7 +112,7 @@ public class LayerDelegate extends AbstractDelegate
                 Map<String,String> params = new HashMap<String, String>();
                 final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
                 params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
-                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
                 return params;
             }
         };
@@ -170,7 +170,7 @@ public class LayerDelegate extends AbstractDelegate
                 Map<String,String> params = new HashMap<String, String>();
                 final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
                 params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
-                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
                 return params;
             }
         };
@@ -216,7 +216,17 @@ public class LayerDelegate extends AbstractDelegate
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(LayerDelegate.this.context, R.string.problem_loading_layer, Toast.LENGTH_SHORT).show();
             }
-        });
+        })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
+                params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
+                params.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
+                return params;
+            }
+        };
 
         AppController.getInstance().addToRequestQueue(jReq);
 
@@ -229,7 +239,6 @@ public class LayerDelegate extends AbstractDelegate
     public void listLayerProperties(final String[] layerUrls, final DelegateHandler<String> delegateHandler) {
 
         String urlRequest = this.getUrl()+"/layerproperties";
-        urlRequest = "http://192.168.20.143:8080/geocab/layergroup/layerproperties";
         JSONArray jsonArray = new JSONArray();
 
         try
@@ -248,6 +257,8 @@ public class LayerDelegate extends AbstractDelegate
         JsonArrayPostRequest request = new JsonArrayPostRequest(urlRequest, jsonArray.toString(), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                response = response.replace("\"{","{");
+                response = response.replace("}\"","}");
                 delegateHandler.responseHandler(response);
             }
         }, new Response.ErrorListener() {

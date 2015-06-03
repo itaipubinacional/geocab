@@ -181,6 +181,21 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).addApi(Plus.API, PlusOptions.builder().build())
 				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "br.com.geocab",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
 	}
 
     protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
@@ -311,7 +326,7 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
-            Log.d("TEste", String.format("Error: %s", "TESTE"));
+            Log.d("Fb.call", String.format("Error: %s", state.toString()));
             onSessionStateChange(session, state, exception);
         }
     };
@@ -319,12 +334,12 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     private FacebookDialog.Callback dialogCallback = new FacebookDialog.Callback() {
         @Override
         public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
-            Log.d("HelloFacebook", String.format("Error: %s", error.toString()));
+            Log.d("Fb.onError", String.format("Error: %s", error.toString()));
         }
 
         @Override
         public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
-            Log.d("HelloFacebook", "Success!");
+            Log.d("Fb.onComplete", "Success!");
         }
     };
 
@@ -389,7 +404,6 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     @Override
     public void onConnectionSuspended(int arg0)
     {
-        //Toast.makeText(this, "onConnectionSuspended", Toast.LENGTH_LONG).show();
         mGoogleApiClient.connect();
     }
 

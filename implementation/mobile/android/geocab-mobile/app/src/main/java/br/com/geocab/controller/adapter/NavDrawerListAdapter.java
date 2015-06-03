@@ -168,7 +168,7 @@ public class NavDrawerListAdapter extends ArrayAdapter {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 CheckBox checkBoxLayer = (CheckBox) buttonView;
-                Layer layer = (Layer) checkBoxLayer.getTag();
+                final Layer layer = (Layer) checkBoxLayer.getTag();
 
                 if( (isChecked && layer.getIsChecked()) || (!isChecked && !layer.getIsChecked()) )
                 {
@@ -194,37 +194,37 @@ public class NavDrawerListAdapter extends ArrayAdapter {
 
                 textViewSelectedCountItems.setText(Integer.toString(selectedItemCount));
 
-                if( layer.getDataSource().getUrl() != null )
+                if( layer.getIsChecked() )
                 {
-                    int index = layer.getName().indexOf(":");
-                    int position = layer.getDataSource().getUrl().lastIndexOf("geoserver/");
-                    String typeLayer = layer.getName().substring(0,index);
-                    String nameLayer = layer.getName().substring(index+1,layer.getName().length());
-                    String urlFormated = layer.getDataSource().getUrl().substring(0, position+10)+typeLayer+"/wms";
-
-                    webViewMap.loadUrl("javascript:geocabapp.showLayer(\""+urlFormated+"\",\""+nameLayer+"\", \""+layer.getTitle()+"\",\""+layer.getIsChecked()+"\")");
-                }
-                else
-                {
-                    if( layer.getIsChecked() )
+                    if( layer.getDataSource().getUrl() != null )
+                    {
+                        webViewMap.loadUrl("javascript:geocabapp.showLayer(\""+layer.getDataSource().getUrl()+"\",\""+layer.getId()+"\", \""+layer.getName()+"\", \""+layer.getTitle()+"\")");
+                    }
+                    else
                     {
                         NavDrawerListAdapter.this.markerDelegate = new MarkerDelegate(NavDrawerListAdapter.this.context);
                         NavDrawerListAdapter.this.markerDelegate.listMarkersByLayer(layer.getId(), new DelegateHandler<JSONArray>() {
                             @Override public void responseHandler(JSONArray response) {
-                                try {
-                                    for (int i = 0; i < response.length(); i++) {
+                                try
+                                {
+                                    webViewMap.loadUrl("javascript:geocabapp.closeLayer('" + layer.getId() + "')");
+
+                                    for (int i = 0; i < response.length(); i++)
+                                    {
                                         webViewMap.loadUrl("javascript:geocabapp.addMarker('" + response.getString(i) + "')");
                                     }
-                                } catch (JSONException e ){
+                                }
+                                catch (JSONException e )
+                                {
                                     Log.d("ERRO", e.getMessage());
                                 }
                             }
                         });
                     }
-                    else
-                    {
-                        webViewMap.loadUrl("javascript:geocabapp.closeMarker('" + layer.getId() + "')");
-                    }
+                }
+                else
+                {
+                    webViewMap.loadUrl("javascript:geocabapp.closeLayer('" + layer.getId() + "')");
                 }
             }
         });
