@@ -36,7 +36,7 @@
 		<!-- Others -->
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<aspectj.version>1.8.1</aspectj.version>
-		<dwr.version>3.0.1-RELEASE</dwr.version>
+		<dwr.version>3.0.0-RELEASE</dwr.version>
 
 		<!-- Default Environment -->
 		<environment>development</environment>

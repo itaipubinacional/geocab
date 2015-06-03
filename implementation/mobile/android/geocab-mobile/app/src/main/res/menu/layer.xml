@@ -1,4 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="br.com.geocab.controller.activity.LayerActivity" >
+    tools:context="br.gov.itaipu.geocab.controller.activity.LayerActivity" >
 </menu>
