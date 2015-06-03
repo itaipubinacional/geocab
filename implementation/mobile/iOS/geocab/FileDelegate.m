@@ -27,7 +27,7 @@
     [objectManager.HTTPClient enqueueHTTPRequestOperation:requestOperation];
 }
 
-- (void) uploadMarkerAttributePhoto:(NSNumber *)markerId image:(UIImage *)image login:(NSString*)login password:(NSString*)password handler: (void(^)(NSURLResponse *response, NSData *data, NSError *connectionError)) handler
+- (void) uploadMarkerAttributePhoto:(NSNumber *)markerId image:(UIImage *)image login:(NSString*)login password:(NSString*)password
 {
     // the server url to which the image (or the media) is uploaded.
     NSString *urlString = [self.baseUrl stringByAppendingString:@"marker/"];
@@ -43,10 +43,10 @@
     
     // create request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *credentials = [[login stringByAppendingString:@":"] stringByAppendingString:password];
-    NSData *credentialsData = [credentials dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *credentialsEncoded = [credentialsData base64EncodedStringWithOptions:0];
-    [request setValue:credentialsEncoded forHTTPHeaderField:@"Authorization"];
+    NSString *authStr = [NSString stringWithFormat:@"%@:%@", login, password];
+    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
+    [request setValue:authValue forHTTPHeaderField:@"Authorization"];
     
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [request setHTTPShouldHandleCookies:NO];
@@ -81,8 +81,7 @@
     
     // set URL
     [request setURL:requestURL];
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:handler];
+    [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     
 }
 

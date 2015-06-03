@@ -154,17 +154,12 @@ UIActivityIndicatorView *indicator;
                 
                 // Faz upload da imagem do marker
                 if ( self.marker.imageUI != nil ){
-                    [fileDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] handler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                        
-                        [indicator stopAnimating];
-                        [self didFinish];
-                        
-                    }];
+                    [fileDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
                     
-                } else {
-                    [indicator stopAnimating];
-                    [self didFinish];
                 }
+                     
+                [indicator stopAnimating];
+                [self didFinish];
                 
             } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] marker:self.marker];
             
@@ -177,17 +172,11 @@ UIActivityIndicatorView *indicator;
                 // Faz upload da imagem do marker
                 if ( self.marker.imageUI != nil ){
                     
-                    [fileDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] handler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                        
-                        [self listAttributes:markerResponse];
-                        
-                    }];
-                    
-                } else {
-                    
-                    [self listAttributes:markerResponse];
+                    [fileDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
                     
                 }
+                
+                [self listAttributes:markerResponse];
                 
             } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] marker:self.marker];
             

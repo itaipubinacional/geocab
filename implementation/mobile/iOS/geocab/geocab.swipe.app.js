@@ -67,8 +67,15 @@ geocabapp.swipe = function(){
         var containerHeight = $("#map").height() - ((infoNumber-1) * HEADER_HEIGHT);
         var contentHeight = containerHeight - HEADER_HEIGHT;
         
-        if ( element.hasClass("marker-t") )
-            contentHeight = contentHeight - 100;
+        if ( element.hasClass("marker-t") ){
+            
+            if ( $(".marker-info-action", element).is(":visible") )
+                contentHeight = contentHeight - 90;
+            
+            if ( $(".marker-status", element).is(":visible") )
+                contentHeight = contentHeight - 10;
+            
+        }
         
         element.height(containerHeight);
         $(".marker-info-content",element).height(contentHeight);

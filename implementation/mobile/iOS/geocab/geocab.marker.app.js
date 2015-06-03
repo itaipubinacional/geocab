@@ -8,6 +8,7 @@ geocabapp.marker = function(){
 	var currentUser;
     var currentImage;
     var currentMotives;
+    var actionsHeight = 0;
 	var assetsPath = "";
 	
 	/**
@@ -72,29 +73,34 @@ geocabapp.marker = function(){
 			marker = toJSON(marker);
         
         geocabapp.findMarker(currentMarker.id).status = marker.status;
-			
+        
+		$(".marker-info-action").hide();
 		$(".marker-action").hide();
 		$(".marker-status").hide();
 		
 		if ((currentUser.role == 'ADMINISTRATOR' || currentUser.role == 'MODERATOR') || 
 			(marker.status == 'PENDING' && currentUser.id == marker.user.id)){
+            $(".marker-info-action").show();
 			$(".marker-action.remove").show();
 			$(".marker-status").show();
 		}
 		
 		if ((currentUser.role == 'ADMINISTRATOR' || currentUser.role == 'MODERATOR') || 
 			(marker.status == 'PENDING' && currentUser.id == marker.user.id)){
+            $(".marker-info-action").show();
 			$(".marker-action.update").show();
 			$(".marker-status").show();
 		}
 		
 		if ((currentUser.role == 'ADMINISTRATOR' || currentUser.role == 'MODERATOR') && 
 			(marker.status == 'ACCEPTED' || marker.status == 'PENDING')){
+            $(".marker-info-action").show();
 			$(".marker-action.refuse").show();
 		}
 		
 		if ((currentUser.role == 'ADMINISTRATOR' || currentUser.role == 'MODERATOR') && 
 			(marker.status == 'REFUSED' || marker.status == 'PENDING')){
+            $(".marker-info-action").show();
 			$(".marker-action.approve").show();
 		}
 		
@@ -139,11 +145,11 @@ geocabapp.marker = function(){
 		$("#map").append($("#marker-template").html());
 		var template = $("#map").children(".marker-info-box").last();
 		
-        geocabapp.swipe.loadSwipeElement(template);
-		geocabapp.swipe.animateInitialTop(template);	
-		
 		loadMarkerAttributes(template, currentMarker, image);
 		loadMarkerActions(template, currentMarker);
+                              
+        geocabapp.swipe.loadSwipeElement(template);
+        geocabapp.swipe.animateInitialTop(template);
 				
 	};
     
