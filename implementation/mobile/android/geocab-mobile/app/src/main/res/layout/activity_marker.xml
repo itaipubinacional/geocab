@@ -62,7 +62,8 @@
                 android:gravity="bottom" >
 
                 <Button
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
+                    android:layout_weight=".50"
                     android:layout_height="40dp"
                     android:text="Imagem"
                     android:id="@+id/btn_select_photo"
@@ -75,9 +76,10 @@
                     android:onClick="selectMarkerImage" />
 
                 <Button
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:text="Salvar"
+                    android:layout_weight=".50"
                     android:layout_marginLeft="15dp"
                     android:background="@android:color/darker_gray"
                     android:padding="4dp"
