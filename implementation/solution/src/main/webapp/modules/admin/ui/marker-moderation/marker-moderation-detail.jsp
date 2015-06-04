@@ -93,11 +93,14 @@
 										<spring:message code="map.No" />
 									</div>
 						
-									<input type="text"
+									<div
 										ng-if="markerAttribute.attribute.type == 'TEXT' && !markerAttribute.value == ''" 
 										name="texto"
-										class="form-control" ng-model="markerAttribute.value"
-										required ng-disabled="true"> 
+										class="form-control" ng-bind="markerAttribute.value"
+										required 
+										style="resize: none;max-height: 127px;min-height: 30px;height: auto; width:404px "
+										ng-disabled="true" style="resize:none">
+									</div> 
 																				
 								</div>
 							</div>
