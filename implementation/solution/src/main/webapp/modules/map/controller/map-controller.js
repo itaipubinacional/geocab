@@ -2355,7 +2355,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    }
 	    $scope.lastActive = element;
 	    
-	    if(element == "closeButton"){
+	    if(element == "closeButton" || !closed){
 	    	$scope.slideActived = '';
 	    } else {
 	    	$scope.slideActived = slide;

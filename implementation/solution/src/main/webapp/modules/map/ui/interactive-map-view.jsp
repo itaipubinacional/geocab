@@ -71,13 +71,13 @@
 										title="<spring:message code="map.Close" />"
 										></span>
 							</div>			
-						<accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret">
+						<accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret" heightStyle="content">
 				            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' }"> 
 				            
 				                <accordion-heading>
 				                    <div style="cursor:pointer; padding: 10px 0;">
 				                    	<i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-				                        <span ng-if="feature.type == 'internal'" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
+				                        <span ng-if="feature.type == 'internal'" style="overflow:auto" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
 				                        <span ng-if="feature.type == 'external'">{{feature.feature.layer.titulo}}</span>
 				                        
 				                    </div>
@@ -173,11 +173,15 @@
 															<spring:message code="map.No" />
 													</div>
 				
-													<input type="text"
+													<div
 														ng-if="markerAttribute.attribute.type == 'TEXT' && !markerAttribute.value == ''" 
 														name="texto"
-														class="form-control" ng-model="markerAttribute.value"
-														required ng-disabled="true"> 
+														class="form-control" ng-bind="markerAttribute.value"
+														required 
+														style="resize: none;max-height: 127px;min-height: 30px;height: auto;"
+														ng-disabled="true" style="resize:none">
+													</div> 
+													 
 																		
 											</div>
 										</div>
@@ -249,6 +253,7 @@
 										ng-if="markerAttribute.attribute.type == 'NUMBER'"
 										class="form-control"
 										ng-model="markerAttribute.value"
+										maxlength="255"
 										ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
 										ng-required="markerAttribute.attribute.required"
 										> 
