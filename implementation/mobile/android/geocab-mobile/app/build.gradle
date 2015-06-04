@@ -4,10 +4,11 @@ android {
     compileSdkVersion 16
     buildToolsVersion '20.0.0'
     defaultConfig {
+        applicationId "br.gov.itaipu.geocab"
         minSdkVersion 14
         targetSdkVersion 15
-        versionCode 2
-        versionName "2.0"
+        versionCode 3
+        versionName "3.0"
     }
     buildTypes {
         release {

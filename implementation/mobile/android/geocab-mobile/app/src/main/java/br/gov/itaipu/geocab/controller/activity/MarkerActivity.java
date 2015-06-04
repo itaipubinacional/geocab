@@ -180,20 +180,22 @@ public class MarkerActivity extends Activity {
                         RadioGroup radioGroup = new RadioGroup(getApplicationContext());
                         radioGroup.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         radioGroup.setOrientation(LinearLayout.HORIZONTAL);
+                        radioGroup.setMinimumWidth(300);
                         attribute.setViewComponent(radioGroup);
                         linearPainel.addView(radioGroup);
 
                         RadioButton radioBtnSim = (RadioButton) getLayoutInflater().inflate(R.layout.style_radio_button, null);
                         radioBtnSim.setText("Sim");
                         radioBtnSim.setChecked(markerValue.equals("Yes") ? true : false);
-                        radioBtnSim.setPadding(0, 0, 7, 0);
                         radioBtnSim.setId(1);
+                        radioBtnSim.setWidth(150);
                         radioGroup.addView(radioBtnSim);
 
                         RadioButton radioBtnNao = (RadioButton) getLayoutInflater().inflate(R.layout.style_radio_button, null);
                         radioBtnNao.setText("Não");
                         radioBtnNao.setChecked(markerValue.equals("No") ? true : false);
                         radioBtnNao.setId(0);
+                        radioBtnNao.setWidth(150);
                         radioGroup.addView(radioBtnNao);
 
                     } else if ( attribute.getType() == AttributeType.DATE ){

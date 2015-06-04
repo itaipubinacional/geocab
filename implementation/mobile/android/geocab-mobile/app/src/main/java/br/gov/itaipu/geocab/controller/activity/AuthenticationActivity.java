@@ -179,20 +179,6 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 				.addOnConnectionFailedListener(this).addApi(Plus.API, PlusOptions.builder().build())
 				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "br.com.geocab",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
 	}
 
     protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
