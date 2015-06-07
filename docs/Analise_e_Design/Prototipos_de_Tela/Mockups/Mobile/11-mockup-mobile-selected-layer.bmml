@@ -29,7 +29,9 @@
     <control controlID="177" controlTypeID="com.balsamiq.mockups::Button" x="825" y="503" w="91" h="24" measuredW="66" measuredH="24" zOrder="6" locked="false" isInGroup="-1">
       <controlProperties>
         <color>0</color>
+        <href>12-mockup-mobile-photo-select%26bm%3B12-mockup-mobile-photo-select.bmml%26bm%3B12-mockup-mobile-photo-select.bmml%26bm%3B12-mockup-mobile-photo-select.bmml</href>
         <icon>CameraIcon%7Cxsmall</icon>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2263%2C448%2C154%2C472%22%20href%3D%2212-mockup-mobile-photo-select.bmml%22%20alt%3D%2212-mockup-mobile-photo-select%22%20id%3D%22177%22/%3E</map>
         <text>Foto</text>
       </controlProperties>
     </control>

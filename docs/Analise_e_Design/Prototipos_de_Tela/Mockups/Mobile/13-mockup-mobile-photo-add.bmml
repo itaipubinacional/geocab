@@ -26,6 +26,8 @@
     <control controlID="178" controlTypeID="com.balsamiq.mockups::Button" x="922" y="503" w="92" h="24" measuredW="59" measuredH="24" zOrder="6" locked="false" isInGroup="-1">
       <controlProperties>
         <color>13421772</color>
+        <href>14-mockup-mobile-marker-added%26bm%3B14-mockup-mobile-marker-added.bmml%26bm%3B14-mockup-mobile-marker-added.bmml%26bm%3B14-mockup-mobile-marker-added.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22160%2C448%2C252%2C472%22%20href%3D%2214-mockup-mobile-marker-added.bmml%22%20alt%3D%2214-mockup-mobile-marker-added%22%20id%3D%22178%22/%3E</map>
         <text>Salvar</text>
       </controlProperties>
     </control>

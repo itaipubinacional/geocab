@@ -95,6 +95,8 @@
           <controlProperties>
             <align>center</align>
             <bold>true</bold>
+            <href>13-mockup-mobile-photo-add%26bm%3B13-mockup-mobile-photo-add.bmml%26bm%3B13-mockup-mobile-photo-add.bmml%26bm%3B13-mockup-mobile-photo-add.bmml</href>
+            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22103%2C381%2C228%2C403%22%20href%3D%2213-mockup-mobile-photo-add.bmml%22%20alt%3D%2213-mockup-mobile-photo-add%22%20id%3D%220%22/%3E</map>
             <size>14</size>
             <text>Imagem%20da%20galeria</text>
           </controlProperties>
