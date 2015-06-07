@@ -26,14 +26,18 @@
     <control controlID="168" controlTypeID="com.balsamiq.mockups::Icon" x="994" y="501" w="-1" h="-1" measuredW="32" measuredH="32" zOrder="5" locked="false" isInGroup="-1">
       <controlProperties>
         <color>13369344</color>
+        <href>07-mockup-mobile-map-main-with-layer%26bm%3B07-mockup-mobile-map-main-with-layer.bmml%26bm%3B07-mockup-mobile-map-main-with-layer.bmml%26bm%3B07-mockup-mobile-map-main-with-layer.bmml</href>
         <icon>CircledXIcon%7Cmedium</icon>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22232%2C446%2C264%2C478%22%20href%3D%2207-mockup-mobile-map-main-with-layer.bmml%22%20alt%3D%2207-mockup-mobile-map-main-with-layer%22%20id%3D%22168%22/%3E</map>
       </controlProperties>
     </control>
     <control controlID="169" controlTypeID="com.balsamiq.mockups::Icon" x="954" y="501" w="-1" h="-1" measuredW="32" measuredH="32" zOrder="6" locked="false" isInGroup="-1">
       <controlProperties>
         <borderStyle>none</borderStyle>
         <color>40463</color>
+        <href>09-mockup-mobile-add-marker%26bm%3B09-mockup-mobile-add-marker.bmml%26bm%3B09-mockup-mobile-add-marker.bmml%26bm%3B09-mockup-mobile-add-marker.bmml</href>
         <icon>GtCircledIcon%7Cmedium</icon>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22192%2C446%2C224%2C478%22%20href%3D%2209-mockup-mobile-add-marker.bmml%22%20alt%3D%2209-mockup-mobile-add-marker%22%20id%3D%22169%22/%3E</map>
         <rotation>270</rotation>
       </controlProperties>
     </control>
@@ -44,6 +48,72 @@
         <icon>GeoLocation2Icon%7Clarge</icon>
         <rotation>180</rotation>
       </controlProperties>
+    </control>
+    <control controlID="171" controlTypeID="__group__" x="823" y="239" w="24" h="30" measuredW="24" measuredH="30" zOrder="8" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Icon" x="4" y="14" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="0" locked="false" isInGroup="171">
+          <controlProperties>
+            <color>40463</color>
+            <icon>DownFillTriangleIcon%7Cxsmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="24" h="24" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="171">
+          <controlProperties>
+            <borderColor>40463</borderColor>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Icon" x="0" y="0" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="2" locked="false" isInGroup="171">
+          <controlProperties>
+            <borderStyle>square</borderStyle>
+            <color>40463</color>
+            <icon>ClubIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="172" controlTypeID="__group__" x="834" y="396" w="24" h="30" measuredW="24" measuredH="30" zOrder="9" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Icon" x="4" y="14" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="0" locked="false" isInGroup="172">
+          <controlProperties>
+            <color>40463</color>
+            <icon>DownFillTriangleIcon%7Cxsmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="24" h="24" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="172">
+          <controlProperties>
+            <borderColor>40463</borderColor>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Icon" x="0" y="0" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="2" locked="false" isInGroup="172">
+          <controlProperties>
+            <borderStyle>square</borderStyle>
+            <color>40463</color>
+            <icon>ClubIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="173" controlTypeID="__group__" x="1003" y="290" w="24" h="30" measuredW="24" measuredH="30" zOrder="10" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Icon" x="4" y="14" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="0" locked="false" isInGroup="173">
+          <controlProperties>
+            <color>40463</color>
+            <icon>DownFillTriangleIcon%7Cxsmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="24" h="24" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="173">
+          <controlProperties>
+            <borderColor>40463</borderColor>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Icon" x="0" y="0" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="2" locked="false" isInGroup="173">
+          <controlProperties>
+            <borderStyle>square</borderStyle>
+            <color>40463</color>
+            <icon>ClubIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
     </control>
   </controls>
 </mockup>

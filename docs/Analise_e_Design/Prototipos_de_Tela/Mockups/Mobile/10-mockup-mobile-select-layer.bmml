@@ -8,6 +8,8 @@
     <control controlID="180" controlTypeID="com.balsamiq.mockups::Canvas" x="810" y="154" w="228" h="389" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="-1"/>
     <control controlID="184" controlTypeID="com.balsamiq.mockups::Label" x="860" y="209" w="125" h="-1" measuredW="72" measuredH="19" zOrder="2" locked="false" isInGroup="-1">
       <controlProperties>
+        <href>11-mockup-mobile-selected-layer%26bm%3B11-mockup-mobile-selected-layer.bmml%26bm%3B11-mockup-mobile-selected-layer.bmml%26bm%3B11-mockup-mobile-selected-layer.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2298%2C154%2C223%2C173%22%20href%3D%2211-mockup-mobile-selected-layer.bmml%22%20alt%3D%2211-mockup-mobile-selected-layer%22%20id%3D%22184%22/%3E</map>
         <size>11</size>
         <text>Florestamento</text>
       </controlProperties>

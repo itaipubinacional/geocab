@@ -18,12 +18,16 @@
     </control>
     <control controlID="175" controlTypeID="com.balsamiq.mockups::Label" x="830" y="207" w="-1" h="-1" measuredW="121" measuredH="21" zOrder="4" locked="false" isInGroup="-1">
       <controlProperties>
+        <href>10-mockup-mobile-select-layer%26bm%3B10-mockup-mobile-select-layer.bmml%26bm%3B10-mockup-mobile-select-layer.bmml%26bm%3B10-mockup-mobile-select-layer.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2268%2C152%2C189%2C173%22%20href%3D%2210-mockup-mobile-select-layer.bmml%22%20alt%3D%2210-mockup-mobile-select-layer%22%20id%3D%22175%22/%3E</map>
         <text>Selecione%20a%20camada</text>
       </controlProperties>
     </control>
     <control controlID="176" controlTypeID="com.balsamiq.mockups::Icon" x="959" y="209" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="5" locked="false" isInGroup="-1">
       <controlProperties>
+        <href>10-mockup-mobile-select-layer%26bm%3B10-mockup-mobile-select-layer.bmml%26bm%3B10-mockup-mobile-select-layer.bmml%26bm%3B10-mockup-mobile-select-layer.bmml</href>
         <icon>RightTriangleIcon%7Cxsmall</icon>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22197%2C154%2C213%2C170%22%20href%3D%2210-mockup-mobile-select-layer.bmml%22%20alt%3D%2210-mockup-mobile-select-layer%22%20id%3D%22176%22/%3E</map>
       </controlProperties>
     </control>
     <control controlID="177" controlTypeID="com.balsamiq.mockups::Button" x="825" y="503" w="91" h="24" measuredW="74" measuredH="24" zOrder="6" locked="false" isInGroup="-1">
