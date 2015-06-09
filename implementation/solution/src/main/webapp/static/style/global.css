@@ -47,3 +47,7 @@
 .panel-body{
 	height:710px;
 }
+
+.datepicker{
+	z-index:10000 !important;
+}

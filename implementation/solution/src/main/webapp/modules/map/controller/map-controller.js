@@ -21,6 +21,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	$importService("layerGroupService");
 	$importService("markerService");
 	$importService("customSearchService");
+	$importService("markerModerationService");
 	
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
@@ -2843,22 +2844,30 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.enableMarker = function() {
     	
-    	var dialog = $modal.open( {
-    		templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-    		controller: DialogController,
-    		windowClass: 'dialog-enable',
-    		resolve: {
-    			title: function(){return $translate("map.Enable-mark")},
-    			message: function(){return $translate("map.Are-you-sure-you-want-to-enable-the-mark") + " ?"},
-    			buttons: function(){return [ {label:$translate("map.Enable"), css:'btn btn-success'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
-    		}
-    	});
+    	var dialog = $modal.open({
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+            controller: DialogController,
+            windowClass: 'dialog-success',
+            resolve: {
+                title: function () {
+                    return $translate('admin.marker-moderation.Confirm-approve');
+                },
+                message: function () {
+                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker')+' ? <br/>.';
+                },
+                buttons: function () {
+                    return [
+                        {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
+                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                    ];
+                }
+            }
+        });
     	
-    	
-    	dialog.result.then(function(result) {
+    	dialog.result.then(function () {
     		
-    		markerService.enableMarker($scope.marker.id, {
-  			  callback : function(result) {
+    		markerModerationService.acceptMarker( $scope.marker.id, {
+    			callback : function(result) {
   				$scope.marker.status = "ACCEPTED";
   				
   				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-enabled"), dismiss: true};
@@ -2868,53 +2877,57 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
       			  $("div.msgMap").fadeOut();
       			}, 5000);
   				
+      			$scope.$apply();
   	          },
-  	          errorHandler : function(message, exception) {
-  	              $scope.message = {type:"error", text: message};
-  	              $scope.$apply();
-  	          }
-  		});
+    	         errorHandler : function(message, exception) {
+    	             $scope.message = {type:"error", text: message};
+    	             $scope.$apply();
+    	         }
+    	     });
     		
-    	});
+        });
     	
     }
     
     $scope.disableMarker = function() {
     	
-    	var dialog = $modal.open( {
-    		templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-    		controller: DialogController,
-    		windowClass: 'dialog-enable',
-    		resolve: {
-    			title: function(){return $translate("map.Disable-mark")},
-    			message: function(){return $translate("map.Are-you-sure-you-want-to-disable-the-mark") + " ?"},
-    			buttons: function(){return [ {label:$translate("map.Disable"), css:'btn btn-danger'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
-    		}
-    	});
+    	var dialog = $modal.open({
+            templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
+            controller: RefuseMarkerController,
+            windowClass: 'dialog-delete',
+            resolve: {
+                motive: function () {
+                    return $scope.motive;
+                }
+            }
+        });
     	
-    	dialog.result.then(function(result) {
-    		
-    		markerService.disableMarker($scope.marker.id, {
-			  callback : function(result) {
-				$scope.marker.status = "REFUSED";
-				
-				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
-      			$("div.msgMap").show();
-      			
-      			setTimeout(function(){
-      			  $("div.msgMap").fadeOut();
-      			}, 5000);
-				
-	          },
-	          errorHandler : function(message, exception) {
-	              $scope.message = {type:"error", text: message};
-	              $scope.$apply();
-	          }
-    		});
-    		
-    	});
     	
+    	dialog.result.then(function (result) {
+    		$scope.refuseMarkerModeration($scope.currentEntity.id, result.motive, result.description );
+        });    	
     }
+    
+    $scope.refuseMarkerModeration = function( id, motive, description ) {
+		
+		markerModerationService.refuseMarker( id, motive, description, {
+         callback : function(result) {
+            console.log(result);
+            $scope.marker.status = "REFUSED";
+            $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
+			$("div.msgMap").show();
+			
+			setTimeout(function(){
+			  $("div.msgMap").fadeOut();
+			}, 5000);
+            $scope.$apply();
+         },
+         errorHandler : function(message, exception) {
+             $scope.message = {type:"error", text: message};
+             $scope.$apply();
+         }
+     });
+	};
     
     $scope.readURL = function(input){
 
