@@ -166,10 +166,17 @@ public class MarkerActivity extends Activity {
                         FilterArray[0] = new InputFilter.LengthFilter(250);
                         editText.setFilters(FilterArray);
 
-                        if ( attribute.getType() == AttributeType.NUMBER ){
-                            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                        } else {
+                        if ( attribute.getType() == AttributeType.TEXT )
+                        {
                             editText.setInputType(InputType.TYPE_CLASS_TEXT);
+                        }
+                        else if ( attribute.getType() == AttributeType.NUMBER )
+                        {
+                            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        }
+                        else if ( attribute.getType() == AttributeType.DATE )
+                        {
+                            editText.setInputType(InputType.TYPE_CLASS_DATETIME);
                         }
 
                         attribute.setViewComponent(editText);
@@ -197,10 +204,6 @@ public class MarkerActivity extends Activity {
                         radioBtnNao.setId(0);
                         radioBtnNao.setWidth(150);
                         radioGroup.addView(radioBtnNao);
-
-                    } else if ( attribute.getType() == AttributeType.DATE ){
-
-                        //IMPLEMENTAR
 
                     }
                 }
@@ -358,7 +361,7 @@ public class MarkerActivity extends Activity {
 
         final MarkerDelegate markerDelegate = new MarkerDelegate(this);
         final FileDelegate fileDelegate = new FileDelegate(MarkerActivity.this);
-        markerDelegate.showLoadingDialog();
+        markerDelegate.showLoadingDialog("Salvando informações...");
 
         // Chamada ao serviço para persistir o marker
         if ( this.marker.getId() == null || this.marker.getId() == 0 )
