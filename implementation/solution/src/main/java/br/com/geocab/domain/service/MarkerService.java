@@ -445,12 +445,15 @@ public class MarkerService
 		{
 			dEnd = Calendar.getInstance();
 			dEnd.setTime((Date) formatter.parse(dateEnd));
+			dEnd.add(Calendar.DAY_OF_YEAR, 1);
+			System.out.println(dEnd);
 		}
 
 		// return this.markerRepository.listByFilters(layer, status, dStart,
 		// dEnd, user, pageable);
 		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,
 				user, pageable);
+		
 	}
 
 	/**
@@ -481,6 +484,8 @@ public class MarkerService
 		{
 			dEnd = Calendar.getInstance();
 			dEnd.setTime((Date) formatter.parse(dateEnd));
+			dEnd.add(Calendar.DAY_OF_MONTH,1);
+			dEnd.setTime(dEnd.getTime());
 		}
 
 		return this.markerRepository.listByFiltersMap(layer, status, dStart,
