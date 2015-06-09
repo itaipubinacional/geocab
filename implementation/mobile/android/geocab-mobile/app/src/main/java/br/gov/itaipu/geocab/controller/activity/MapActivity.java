@@ -157,7 +157,7 @@ public class MapActivity extends Activity
         webViewMap.addJavascriptInterface(this, "Android");
         webViewMap.setWebChromeClient(new WebChromeClient());
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
 //            WebView.setWebContentsDebuggingEnabled(true);
 //        }
 
@@ -254,21 +254,21 @@ public class MapActivity extends Activity
                         R.string.app_name // nav drawer close - description for accessibility
                 )
         {
-        public void onDrawerClosed (View view)
-        {
-            hideSoftKeyboard(MapActivity.this);
-            invalidateOptionsMenu();
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
+            public void onDrawerClosed (View view)
+            {
+                hideSoftKeyboard(MapActivity.this);
+                invalidateOptionsMenu();
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
 
-        public void onDrawerOpened(View drawerView)
-        {
-            hideSoftKeyboard(MapActivity.this);
-            invalidateOptionsMenu();
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
-
+            public void onDrawerOpened(View drawerView)
+            {
+                hideSoftKeyboard(MapActivity.this);
+                invalidateOptionsMenu();
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            }
         };
+
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
     }
@@ -365,7 +365,7 @@ public class MapActivity extends Activity
         final Marker marker = new Marker(markerId);
         final FileDelegate fileDelegate = new FileDelegate(MapActivity.this.getApplicationContext());
 
-        this.markerDelegate.showLoadingDialog();
+        this.markerDelegate.showLoadingDialog("Carregando postagem...");
 
         this.markerDelegate.listMarkerAttributesByMarker(marker, new DelegateHandler<String>() {
             @Override
@@ -396,12 +396,8 @@ public class MapActivity extends Activity
                         markerDelegate.hideLoadingDialog();
 
                     };
-
                 });
-
-            }
-
-            ;
+            };
         });
 
     }
@@ -429,7 +425,7 @@ public class MapActivity extends Activity
         final Gson gson = new GsonBuilder().create();
         final Marker marker = gson.fromJson(markerJson, Marker.class);
 
-        this.markerDelegate.showLoadingDialog();
+        this.markerDelegate.showLoadingDialog("Aprovando postagem...");
         this.markerDelegate.approveMarker(marker.getId(), new DelegateHandler() {
             @Override
             public void responseHandler(Object result) {
@@ -447,7 +443,7 @@ public class MapActivity extends Activity
         final Marker marker = gson.fromJson(markerJson, Marker.class);
         final MotiveMarkerModeration motiveMarker = gson.fromJson(motiveMarkerJSON, MotiveMarkerModeration.class);
 
-        this.markerDelegate.showLoadingDialog();
+        this.markerDelegate.showLoadingDialog("Recusando postagem...");
         this.markerDelegate.refuseMarker(marker.getId(), motiveMarker   ,  new DelegateHandler() {
             @Override
             public void responseHandler(Object result) {
@@ -464,7 +460,7 @@ public class MapActivity extends Activity
         final Gson gson = new GsonBuilder().create();
         final Marker marker = gson.fromJson(markerJson, Marker.class);
 
-        this.markerDelegate.showLoadingDialog();
+        this.markerDelegate.showLoadingDialog("Removendo postagem...");
         this.markerDelegate.removeMarker(marker.getId(), new DelegateHandler() {
             @Override
             public void responseHandler(Object result) {

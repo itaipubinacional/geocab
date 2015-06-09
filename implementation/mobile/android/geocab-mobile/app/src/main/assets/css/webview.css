@@ -15,7 +15,7 @@ body {
     display: none
 }
 div.map {
-    height: 100%; width: 100%; overflow: hidden
+    height: 100%; width: 100%; overflow: hidden; position: relative
 }
 .ol-attribution button, .ol-attribution u, .ol-zoom {
     display: none;
@@ -25,7 +25,7 @@ div.map {
 }
 
 /*
- * A��es do marcador
+ * Acoes do marcador
  */
 .center-marker {
     position: absolute; z-index: 10;
@@ -58,7 +58,6 @@ div.map {
 }
 .marker-info-header p {
     font-size: 1.1em; margin: 0; padding-left: 15px; padding-top: 20px; color: #444; float: left;
-    
 }
 .marker-info-action {
     position: relative;
@@ -67,12 +66,12 @@ div.map {
     overflow: hidden;
 }
 .marker-info-content {
-    clear: both; height: 100%; width: 100%; overflow-y: scroll;
+    clear: both; height: 100%; width: 100%; overflow-y: auto;
     background: #eee !important;
 }
 
 /*
- * Informa��es do marcador
+ * Informacoes do marcador
  */
 .marker-info-close { float: right; margin: 20px 10px 0 0; background: url(file:///android_res/drawable/cancel2.png) no-repeat; width: 38px; height: 42px }
 .marker-label { padding: 10px 20px 5px 20px; margin: 0; font-size: 0.9em; font-weight: bold; }
@@ -83,7 +82,7 @@ div.map {
 .marker-action { padding-top: 20px; width: 24%; height: 80px; float: left; text-align: center }
 .marker-action p { font-size: 0.9em; font-weight: bold; color: #555}
 .marker-action:active { opacity: 0.6 }
-.marker-action img{
+.marker-action img {
     height: 50px;
 }
 

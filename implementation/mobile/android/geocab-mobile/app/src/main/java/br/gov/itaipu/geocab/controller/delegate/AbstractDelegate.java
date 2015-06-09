@@ -52,11 +52,11 @@ public abstract class AbstractDelegate
         //return "http://geocab.sbox.me/api/" + urlPath;
     }
 
-    public void showLoadingDialog(){
+    public void showLoadingDialog(String message){
 
         this.progressDialog = new ProgressDialog(this.context);
-        this.progressDialog.setTitle("Carregando");
-        this.progressDialog.setMessage("Por favor aguarde...");
+        this.progressDialog.setTitle("Aguarde");
+        this.progressDialog.setMessage(message);
         this.progressDialog.show();
 
     }
