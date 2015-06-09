@@ -73,7 +73,7 @@
 	            	<input id="role-adminstrator" type="radio" value="ADMINISTRATOR" ng-model="currentEntity.role" />
 	                <label class="radio-label" for="role-adminstrator"><spring:message code="admin.users.Administrator"/></label>
 					<br/>
-	                <input id="role-moderator" type="radio" value="MODERATOR" ng-model="currentEntity.role" />
+	                <input id="role-moderator" type="radio" value="MODERATOR" ng-model="currentEntity.role" checked="checked"/>
 	                <label class="radio-label" for="role-moderator"><spring:message code="admin.users.Moderator"/></label>
 	                <br/>
 	                <input id="role-user" type="radio" value="USER" ng-model="currentEntity.role" />
