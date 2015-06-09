@@ -38,7 +38,7 @@
 		<script type="text/javascript" src="modules/map/controller/map-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
-
+		<script type="text/javascript" src="modules/admin/controller/popup/refuse-marker-controller.js"></script>
 
    		<!-- Treeview -->
 		<script type="text/javascript"

@@ -215,7 +215,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 		
 		
 		//Default role value
-		$scope.currentEntity.role = 'ADMINISTRATOR';
+		$scope.currentEntity.role = 'USER';
 		
 		$scope.currentState = $scope.INSERT_STATE;
 		

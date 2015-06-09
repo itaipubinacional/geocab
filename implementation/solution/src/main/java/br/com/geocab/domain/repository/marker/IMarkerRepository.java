@@ -37,9 +37,9 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				"WHERE  ( ( LOWER(layer.title) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
 				"AND ( marker.status = :status OR :status = NULL ) " +
 				"AND ( marker.created >= :dateStart OR CAST( :dateStart as date ) = NULL ) " +
-				"AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
+				"AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +              // "AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
 				"AND ( LOWER(user.email) LIKE '%' || LOWER(CAST(:user AS string)) || '%' OR :user = NULL) ) " +
-				"AND ( marker.deleted = NULL OR marker.deleted = FALSE )"
+				"AND ( marker.deleted = NULL OR marker.deleted = FALSE ) order by marker.status"
 				)
 	public Page<Marker> listByFilters( @Param("layer") String layer, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user, Pageable pageable );
 	
@@ -70,7 +70,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				"FROM Marker marker " +
 				"LEFT OUTER JOIN marker.layer layer " +
 				"LEFT OUTER JOIN marker.user user "+
-				"WHERE marker.id in (:ids)" )
+				"WHERE marker.id in (:ids) order by marker.status" )
 	public Page<Marker> listByMarkers(@Param("ids") List<Long> ids, Pageable pageable);
 	
 	/**
@@ -90,7 +90,7 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				"FROM Marker marker "+
 				"LEFT OUTER JOIN marker.layer layer "+
 				"LEFT OUTER JOIN marker.user user "+
-				"WHERE (layer.id = :layerId AND (marker.status = 1 OR (user.id = :userId AND marker.status != 2) ) AND ( marker.deleted = NULL OR marker.deleted = FALSE ) ) ")
+				"WHERE (layer.id = :layerId AND (marker.status = 1 OR (user.id = :userId ) ) AND ( marker.deleted = NULL OR marker.deleted = FALSE ) ) ")
 	public List<Marker> listMarkerByLayer(@Param("layerId") Long layerId, @Param("userId") Long userId);
 	
 	/**

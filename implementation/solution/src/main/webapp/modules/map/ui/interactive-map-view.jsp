@@ -88,12 +88,14 @@
 					                
 									<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="height: 100%; width: 100%; padding: 0;">
 										
-										<span
-											style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
-											marker.layer.title }}</span> <br style="clear: both;"> <br> <span
-											style="float: left"><spring:message code="map.Created-by"/>: <b>{{ marker.user.name
-												}}</b></span> <span style="float: right">{{ marker.created |
-											date:'dd/MM/yyyy' }}</span>
+										<span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{marker.layer.title }}</span> 
+										<br style="clear: both;"> <br> 
+										<span style="float: left"><spring:message code="map.Created-by"/>: <b>{{ marker.user.name}}</b></span> 
+										<span style="float: right">{{ marker.created |date:'dd/MM/yyyy' }}</span>
+										<br>
+										<span style="float: left" ng-if="marker.status == 'PENDING'"><spring:message code="map.Status"/>: <b><spring:message code="map.Pending"/></b></span>
+										<span style="float: left" ng-if="marker.status == 'REFUSED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Refused"/></b></span>
+										<span style="float: left" ng-if="marker.status == 'ACCEPTED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Approved"/></b></span>
 										<hr>
 				
 										<button
@@ -105,7 +107,7 @@
 											<i class="itaipu-icon-delete"></i>
 										</button>
 										<button		
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+											ng-if="(marker.status != 'ACCEPTED' && userMe.id == marker.user.id)"
 											style="float: right; margin-right: 5px" class="btn btn-default"
 											ng-click="changeToScreen('update')"
 											title="<spring:message code="map.Update"/>"
