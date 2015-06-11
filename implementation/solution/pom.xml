@@ -254,6 +254,13 @@
 			<version>2.4</version>
 		</dependency>
 		
+		<dependency>
+  			<groupId>org.directwebremoting</groupId>
+  			<artifactId>dwr</artifactId>
+  			<version>3.0.2-RELEASE</version>
+  			<classifier>jdk16</classifier>
+		</dependency>
+		
 	</dependencies>
 	
 </project>
