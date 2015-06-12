@@ -71,13 +71,13 @@
 										title="<spring:message code="map.Close" />"
 										></span>
 							</div>			
-						<accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret">
+						<accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret" heightStyle="content">
 				            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' }"> 
 				            
 				                <accordion-heading>
 				                    <div style="cursor:pointer; padding: 10px 0;">
 				                    	<i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-				                        <span ng-if="feature.type == 'internal'" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
+				                        <span ng-if="feature.type == 'internal'" style="overflow:auto" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
 				                        <span ng-if="feature.type == 'external'">{{feature.feature.layer.titulo}}</span>
 				                        
 				                    </div>
@@ -88,12 +88,14 @@
 					                
 									<div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="height: 100%; width: 100%; padding: 0;">
 										
-										<span
-											style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{
-											marker.layer.title }}</span> <br style="clear: both;"> <br> <span
-											style="float: left"><spring:message code="map.Created-by"/>: <b>{{ marker.user.name
-												}}</b></span> <span style="float: right">{{ marker.created |
-											date:'dd/MM/yyyy' }}</span>
+										<span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{marker.layer.title }}</span> 
+										<br style="clear: both;"> <br> 
+										<span style="float: left"><spring:message code="map.Created-by"/>: <b>{{ marker.user.name}}</b></span> 
+										<span style="float: right">{{ marker.created |date:'dd/MM/yyyy' }}</span>
+										<br>
+										<span style="float: left" ng-if="marker.status == 'PENDING'"><spring:message code="map.Status"/>: <b><spring:message code="map.Pending"/></b></span>
+										<span style="float: left" ng-if="marker.status == 'REFUSED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Refused"/></b></span>
+										<span style="float: left" ng-if="marker.status == 'ACCEPTED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Approved"/></b></span>
 										<hr>
 				
 										<button
@@ -105,7 +107,7 @@
 											<i class="itaipu-icon-delete"></i>
 										</button>
 										<button		
-											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+											ng-if="(marker.status != 'ACCEPTED' && userMe.id == marker.user.id)"
 											style="float: right; margin-right: 5px" class="btn btn-default"
 											ng-click="changeToScreen('update')"
 											title="<spring:message code="map.Update"/>"
@@ -116,7 +118,7 @@
 											ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') && (marker.status == 'ACCEPTED' || marker.status == 'PENDING')"
 											style="float: right; margin-right: 5px; color: red;"
 											ng-click="disableMarker()" class="btn btn-default"
-											title="<spring:message code="map.Disable"/>"
+											title="<spring:message code="map.Refuse"/>"
 											>
 											<i class="glyphicon glyphicon-ban-circle"></i>
 										</button>
@@ -125,7 +127,7 @@
 											style="float: right; margin-right: 5px; color: #00981F"
 											ng-click="enableMarker()" 
 											class="btn btn-default"
-											title="<spring:message code="map.Enable"/>"
+											title="<spring:message code="map.Approve"/>"
 											>
 											<i class="glyphicon glyphicon-ok"></i>
 										</button>
@@ -139,10 +141,10 @@
 										<div style=" overflow: auto;">
 											<div ng-repeat="markerAttribute in attributesByMarker track by $index" style="position: relative;margin-bottom:15px">
 											
-													<label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == ''">{{ markerAttribute.attribute.name }}</label> 
+													<label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == '' || markerAttribute.value == '0'">{{ markerAttribute.attribute.name }}</label> 
 														<input
 														type="number" name="number1"
-														ng-if="markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '' "
+														ng-if="(markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '') || markerAttribute.value == '0' "
 														class="form-control" ng-model="markerAttribute.value"									
 														required ng-disabled="true"
 														> 
@@ -173,11 +175,15 @@
 															<spring:message code="map.No" />
 													</div>
 				
-													<input type="text"
+													<div
 														ng-if="markerAttribute.attribute.type == 'TEXT' && !markerAttribute.value == ''" 
 														name="texto"
-														class="form-control" ng-model="markerAttribute.value"
-														required ng-disabled="true"> 
+														class="form-control" ng-bind="markerAttribute.value"
+														required 
+														style="resize: none;max-height: 127px;min-height: 30px;height: auto;"
+														ng-disabled="true" style="resize:none">
+													</div> 
+													 
 																		
 											</div>
 										</div>
@@ -249,6 +255,7 @@
 										ng-if="markerAttribute.attribute.type == 'NUMBER'"
 										class="form-control"
 										ng-model="markerAttribute.value"
+										maxlength="255"
 										ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
 										ng-required="markerAttribute.attribute.required"
 										> 
@@ -286,6 +293,7 @@
 									ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
 									class="form-control" ng-model="markerAttribute.value"
 									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+									maxlength="255"
 									ng-required="markerAttribute.attribute.required"
 									> 
 									
@@ -500,7 +508,7 @@
 								<input type="text" ng-if="attribute.type == 'TEXT'" name="texto"
 									class="form-control" ng-model="attribute.value"
 									ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-									ng-required="attribute.required"
+									ng-required="attribute.required" maxlength="255"
 									> 
 									
 									

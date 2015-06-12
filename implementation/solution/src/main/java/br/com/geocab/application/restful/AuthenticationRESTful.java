@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +23,7 @@ import br.com.geocab.domain.service.LoginService;
  */
 
 @Controller
-@RequestMapping("authentication")
+@RequestMapping("/authentication")
 public class AuthenticationRESTful
 {
 
@@ -50,7 +48,7 @@ public class AuthenticationRESTful
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "check", method = RequestMethod.POST)
+	@RequestMapping(value = "/check", method = RequestMethod.POST)
 	public @ResponseBody User checkCredentials( @RequestParam String credentials,
 								  HttpServletResponse response ) throws IOException
 	{
@@ -69,7 +67,7 @@ public class AuthenticationRESTful
 	/**
 	 * 
 	 */ 
-	@RequestMapping(value = "create", method = RequestMethod.POST)
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public @ResponseBody User insert( @RequestParam("email") String email, @RequestParam("name") String name )
 	{
 		final User user = this.loginService.findUserByEmail(email);

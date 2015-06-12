@@ -72,11 +72,11 @@ public class AccountMailRepository implements IAccountMailRepository
                 message.setFrom( mailFrom );
 
                 final Map<String, Object> model = new HashMap<String, Object>();
-    	        model.put("name",  user.getName() );
+    	        model.put("userName",  user.getName() );
     	        model.put("message", "redefinição." ); //TODO message
     	        model.put("newPassword", user.getNewPassword());
 
-                final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/recovery-password.html", StandardCharsets.UTF_8.toString(), model);
+                final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/recovery-password.html", StandardCharsets.ISO_8859_1.toString(), model);
                 message.setText(content, true);
             }
         };
@@ -105,10 +105,10 @@ public class AccountMailRepository implements IAccountMailRepository
                message.setFrom( mailFrom );
 
                final Map<String, Object> model = new HashMap<String, Object>();
-   	        	model.put("user.name",  user.getName() );
+   	        	model.put("userName",  user.getName() );
    	        	model.put("marker", marker.getLayer().getName()); //TODO message
 
-               final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/accept-marker.html", StandardCharsets.UTF_8.toString(), model);
+               final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/accept-marker.html", StandardCharsets.ISO_8859_1.toString(), model);
                message.setText(content, true);
            }
        };
@@ -137,11 +137,11 @@ public class AccountMailRepository implements IAccountMailRepository
               message.setFrom( mailFrom );
 
               final Map<String, Object> model = new HashMap<String, Object>();
-  	          model.put("user.name",  user.getName() );
+  	          model.put("userName",  user.getName() );
   	          model.put("marker", marker.getLayer().getName());
   	          model.put("motive", motiveMarkerModeration.getMotive().getName() + " - " + motiveMarkerModeration.getDescription());
 
-              final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/refuse-marker.html", StandardCharsets.UTF_8.toString(), model);
+              final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/refuse-marker.html", StandardCharsets.ISO_8859_1.toString(), model);
               message.setText(content, true);
           }
       };

@@ -45,7 +45,6 @@
 	<!-- DWR - Defines the dwrController. During production, set the debug property to false -->
 	<dwr:controller debug="false">
 		<dwr:config-param name="scriptCompressed" value="true"/>
-		<dwr:config-param name="jsonpEnabled" value="true"/>
     	<dwr:config-param name="activeReverseAjaxEnabled" value="false"/> 
 	</dwr:controller>
 	
@@ -57,9 +56,6 @@
 	<!-- The controllers are autodetected POJOs labeled with the @Controller annotation. --> 
 	<context:component-scan  
 		base-package="br.com.geocab.application.controller"/>
-		
-	<context:component-scan  
-		base-package="br.com.geocab.application.restful"/>
 		
 	<!-- Social -->
 	<bean class="org.springframework.social.connect.web.ProviderSignInController"/>

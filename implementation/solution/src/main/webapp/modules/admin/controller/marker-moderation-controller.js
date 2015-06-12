@@ -406,10 +406,19 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	 * @see currentPage
 	 * @see data.filter
 	 */
-	$scope.changeToPage = function( filter, pageNumber ) {
-		$scope.currentPage.pageable.page = pageNumber-1;		
-		$scope.listMarkerByFilters(null, null, null, null, null, $scope.currentPage.pageable);
-				
+	$scope.changeToPage = function( filter, pageNumber ) { 
+		$scope.currentPage.pageable.page = pageNumber-1;
+		
+		if ($scope.dragMarkers != null){
+			$scope.listMarkerByMarkers($scope.dragMarkers, $scope.currentPage.pageable);
+		} else {
+			if (  $scope.filter.user == null ){
+				$scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, null, $scope.currentPage.pageable);
+			} else {
+				$scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user.email, $scope.currentPage.pageable);
+			}
+		}
+	
 	};
     
     /*-------------------------------------------------------------------
@@ -480,7 +489,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                  	
                  });
     			
-                 $scope.apply();   
+                 $scope.$apply();   
     		},
     		errorHandler : function(message, exception) {
                 $scope.message = {type:"error", text: message};
@@ -826,8 +835,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 						}
 				  });
 				  
-				  if(markers.length)
+				  if(markers.length){
 					  $scope.changeToList(markers);
+					  $scope.dragMarkers = markers;
+				  }
+					  
 				  
 				  $scope.drag = true;
 			});
@@ -1187,9 +1199,14 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         	$scope.filter.status = null;
         if($scope.filter.user != null)
         	var userEmail = $scope.filter.user.email;
+        if ($scope.filter.dateStart == "")
+        	$scope.filter.dateStart = null;
+        if ($scope.filter.dateEnd == "")
+        	$scope.filter.dateEnd = null;
         
     	$scope.listMarkerByFilters( $scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest );
     	$scope.listMarkerByFiltersMap($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);
+    	$scope.dragMarkers = null;
     	$scope.hasSearch = true;
     };
     
@@ -1198,6 +1215,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	var pageRequest = new PageRequest();
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
+        
+        if ( $scope.dragMarkers != null ){
+        	$scope.dragMarkers = null;
+        }
         
         $scope.filter.layer = null;
         $scope.filter.status = null;     

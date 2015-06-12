@@ -17,11 +17,17 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>2.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb1563968713815015</string>
+			</array>
+		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -29,17 +35,16 @@
 			<string>br.com.geocab</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb1565690900310619</string>
 				<string>br.com.geocab</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0.1</string>
+	<string>1.0.0</string>
 	<key>FacebookAppID</key>
-	<string>1565690900310619</string>
+	<string>1563968713815015</string>
 	<key>FacebookDisplayName</key>
-	<string>itaipu - geocab</string>
+	<string>Geocab Oficial</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -59,6 +64,6 @@
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>kClientId</key>
-	<string>270304814139-a6lnic7muup0ptkf1p4160r56bcrhspv.apps.googleusercontent.com</string>
+	<string>978630797426-ai0fic65kt3canfvib3e5bc2h89fib0m.apps.googleusercontent.com</string>
 </dict>
 </plist>

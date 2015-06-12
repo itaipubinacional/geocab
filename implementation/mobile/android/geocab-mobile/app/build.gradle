@@ -3,20 +3,25 @@ apply plugin: 'android'
 android {
     compileSdkVersion 16
     buildToolsVersion '20.0.0'
-
     defaultConfig {
+        applicationId "br.gov.itaipu.geocab"
         minSdkVersion 14
         targetSdkVersion 15
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "3.1"
     }
     buildTypes {
         release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            //runProguard false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+        debug {
         }
     }
-    compileOptions {
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
     }
 }
 
@@ -28,4 +33,6 @@ dependencies {
     compile 'com.android.support:support-v4:20.0.0'
     compile 'com.mcxiaoke.volley:library:1.0.1@jar'
     compile 'com.google.code.gson:gson:2.3'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
+    compile 'org.apache.httpcomponents:httpmime:4.3.5'
 }

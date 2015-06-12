@@ -10,13 +10,12 @@
 #import "FDTakeController.h"
 #import <CoreLocation/CoreLocation.h>
 #import "SelectLayerViewController.h"
+#import "Marker.h"
 
-@interface AddNewMarkerViewController: UIViewController <UITableViewDelegate, UITableViewDataSource, FDTakeDelegate, UIGestureRecognizerDelegate, LayerSelectDelegate, UIScrollViewDelegate, UITextFieldDelegate, UITextViewDelegate>
+@interface AddNewMarkerViewController: UIViewController <FDTakeDelegate, LayerSelectDelegate, UIScrollViewDelegate, UITextFieldDelegate, UITextViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UITextField *pointName;
-@property (weak, nonatomic) IBOutlet UITextView *pointDescription;
-
-@property (nonatomic) CLLocationDegrees latitude;
-@property (nonatomic) CLLocationDegrees longitude;
+@property (nonatomic, retain) NSString *wktCoordenate;
+@property (weak, nonatomic) UIWebView *webView;
+@property (strong, nonatomic) Marker *marker;
 
 @end

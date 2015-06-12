@@ -24,6 +24,9 @@ import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author Thiago Rossetto Afonso
  * @since 02/10/2014
@@ -74,9 +77,11 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * Layer {@link Layer}
 	 * */
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
 	private Layer layer;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="attribute", fetch=FetchType.EAGER, cascade={CascadeType.REMOVE})
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
 

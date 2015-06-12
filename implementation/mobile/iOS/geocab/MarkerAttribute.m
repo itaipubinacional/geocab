@@ -12,4 +12,13 @@
 
 @synthesize id, value, marker, attribute;
 
++ (NSDictionary*) generateDictionary {
+    
+    return @{
+             @"id"     : @"id",
+             @"value"  : @"value"
+            };
+    
+}
+
 @end

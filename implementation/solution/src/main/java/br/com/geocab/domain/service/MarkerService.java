@@ -115,10 +115,6 @@ public class MarkerService
 	public Marker insertMarker(Marker marker) throws IOException,
 			RepositoryException
 	{
-
-		List<MarkerModeration> list = this.markerModerationRepository
-				.listByFilters(null, null).getContent();
-		System.out.println(list);
 		try
 		{
 			User user = ContextHolder.getAuthenticatedUser();
@@ -210,8 +206,7 @@ public class MarkerService
 	 * 
 	 * @param id
 	 */
-	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
-			+ UserRole.MODERATOR_VALUE + "')")
+	//@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"+ UserRole.MODERATOR_VALUE + "')")
 	public void removeMarker(Long id)
 	{
 		Marker marker = this.findMarkerById(id);
@@ -450,12 +445,15 @@ public class MarkerService
 		{
 			dEnd = Calendar.getInstance();
 			dEnd.setTime((Date) formatter.parse(dateEnd));
+			dEnd.add(Calendar.DAY_OF_YEAR, 1);
+			System.out.println(dEnd);
 		}
 
 		// return this.markerRepository.listByFilters(layer, status, dStart,
 		// dEnd, user, pageable);
 		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,
 				user, pageable);
+		
 	}
 
 	/**
@@ -486,6 +484,8 @@ public class MarkerService
 		{
 			dEnd = Calendar.getInstance();
 			dEnd.setTime((Date) formatter.parse(dateEnd));
+			dEnd.add(Calendar.DAY_OF_MONTH,1);
+			dEnd.setTime(dEnd.getTime());
 		}
 
 		return this.markerRepository.listByFiltersMap(layer, status, dStart,

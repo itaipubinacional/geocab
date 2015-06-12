@@ -8,6 +8,7 @@ import java.util.List;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletResponse;
 
+import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.repository.IMetaFileRepository;
+import br.com.geocab.domain.service.MarkerService;
 
 
 /**
@@ -28,7 +31,7 @@ import br.com.geocab.domain.repository.IMetaFileRepository;
  * @category Controller
  */
 @Controller
-@RequestMapping("files")
+@RequestMapping("/files")
 public class MetaFileRESTFul
 {
 	/*-------------------------------------------------------------------
@@ -40,10 +43,45 @@ public class MetaFileRESTFul
 	@Autowired
 	private IMetaFileRepository metaFileRepository;
 	
+	/**
+	 * 
+	 */
+	@Autowired
+	private MarkerService markerService;	
+	
 	/*-------------------------------------------------------------------
 	 * 		 					BEHAVIORS
 	 *-------------------------------------------------------------------*/
 
+	/**
+	 * 
+	 * @param file
+	 * @param markerId
+	 * @return
+	 */
+    @RequestMapping(value="/marker/{markerId}/upload", headers="content-type=multipart/*", method=RequestMethod.POST)
+    public @ResponseBody String markerUploadPhoto(MultipartFile file, @PathVariable long markerId){
+        try 
+        {
+			FileTransfer currentFile = this.markerService.findImgByMarker(markerId);
+
+			if (currentFile != null)
+			{
+				this.markerService.removeImg(String.valueOf(markerId));
+			}
+			
+            FileTransfer fileTransfer = new FileTransfer(file.getOriginalFilename(), "image/jpeg", file.getBytes());
+            
+            this.markerService.uploadImg(fileTransfer, markerId);
+            
+            return "Uploaded";
+        } 
+        catch ( Exception e )
+        {
+        	return e.getMessage();
+        }
+    }	
+    
 	/**
 	 * 
 	 * @param path
@@ -54,7 +92,7 @@ public class MetaFileRESTFul
 	 * @throws IOException
 	 * @throws RepositoryException 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "markers/{markerId}/download")
+	@RequestMapping(method = RequestMethod.GET, value = "/marker/{markerId}/download")
 	public @ResponseBody MetaFile downloadProfilePicture( @PathVariable Long markerId, @RequestParam(required=false) boolean download, 
 			 @RequestParam(required=false) boolean display,
 			 HttpServletResponse response ) throws IOException, InvocationTargetException, RepositoryException
@@ -121,7 +159,7 @@ public class MetaFileRESTFul
 	 * @return The Files of the product and folder
 	 * @throws RepositoryException 
 	 */
-	@RequestMapping(value = "{folder}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{folder}", method = RequestMethod.GET)
 	public @ResponseBody List<MetaFile> listByFolder( @PathVariable String folder ) throws RepositoryException
 	{
 		return this.metaFileRepository.listByFolder( folder );

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -97,6 +98,16 @@ public class NavigationController
 	 */
 	@RequestMapping( value="/signin", method=RequestMethod.GET )
 	public String signinError( @RequestParam String error, HttpServletRequest httpServletRequest )
+	{
+		System.out.println( error );
+		return "modules/signin";
+	}
+	
+	/**
+	 * 
+	 */
+	@RequestMapping( value="/signup", method=RequestMethod.GET )
+	public String signupError( @ModelAttribute("error") String error, HttpServletRequest httpServletRequest )
 	{
 		System.out.println( error );
 		return null;
