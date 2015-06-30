@@ -31,10 +31,19 @@
 
     <!-- Translator -->
     <security:http pattern="/bundles" security="none"/>
-
-	<!-- Default Security -->
- 	<security:http auto-config="false" use-expressions="true" disable-url-rewriting="true" realm="You must login before continue.">
+ 	
+	<!-- API Restful Security -->
+ 	<security:http auto-config="false" use-expressions="true" disable-url-rewriting="true" pattern="/api/**" 
+ 		realm="Geocab API Authentication" entry-point-ref="socialAuthenticationEntryPoint">
  		<security:http-basic/>
+		<security:custom-filter ref="socialAuthenticationFilter" before="BASIC_AUTH_FILTER"/>
+        <security:intercept-url pattern="/api/marker/**" access="isAuthenticated()" />
+		<security:intercept-url pattern="/api/layergroup/**" access="isAuthenticated()" />
+		<security:intercept-url pattern="/api/files/**" access="isAuthenticated()" />
+ 	</security:http>
+ 	
+	<!-- Default Security -->
+ 	<security:http auto-config="false" use-expressions="true" disable-url-rewriting="true">
  		<security:intercept-url pattern="/admin/**" access="isAuthenticated()" />
  		<security:intercept-url pattern="/user/**" access="isAuthenticated()" />
         <security:intercept-url pattern="/api/marker/**" access="isAuthenticated()" />
@@ -45,5 +54,12 @@
  		<security:logout/>
  	</security:http>
  	
+ 	<bean id="socialAuthenticationEntryPoint" 
+ 		class="br.com.geocab.application.security.SocialAuthenticationEntryPoint"/>
+ 	<bean id="socialAuthenticationFilter" 
+ 		class="br.com.geocab.application.security.SocialAuthenticationFilter">
+ 		<constructor-arg ref="authenticationManager"/>
+ 		<constructor-arg ref="socialAuthenticationEntryPoint"/>
+ 	</bean>
 
 </beans>
