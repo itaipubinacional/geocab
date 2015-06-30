@@ -638,7 +638,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                         layer : $scope.layers[i],
                         fields : {}
                     };
-
+                    
+                    try{
                     angular.forEach(JSON.parse(result[i]).features, function(value, key) {
                         angular.forEach(value.properties, function(value, key) {
 
@@ -682,6 +683,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     	}
 
                     });
+                    } catch(e){
+                    	continue;
+                    }
                     
                 }
                 
