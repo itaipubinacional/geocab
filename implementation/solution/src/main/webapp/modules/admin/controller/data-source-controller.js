@@ -329,6 +329,9 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 					
 				},
 				errorHandler : function(message, exception) {
+					if (exception.message.indexOf("ConstraintViolationException") > -1){
+						message = $translate("admin.datasource.Is-not-possible-to-delete-this-item-because-there-a-layer-with-this-data-source")+".";
+					}
 					$scope.msg = {type:"danger", text: message, dismiss:true};
 					$scope.fadeMsg();
 					$scope.$apply();
