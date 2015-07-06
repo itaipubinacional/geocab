@@ -206,16 +206,4 @@ public class LoginService
 		}
 	}
 	
-	public User insertUserSocial(String email, String name)
-	{
-		User user = new User();
-		user.setEmail(email);
-		user.setName(name);
-		user.setRole(UserRole.USER);
-		user.setEnabled(true);
-		user.setPassword("none");
-		user = this.insertUser(user);
-		return user;
-	}	
-	
 }

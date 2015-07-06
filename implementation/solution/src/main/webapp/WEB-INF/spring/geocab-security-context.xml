@@ -46,9 +46,6 @@
  	<security:http auto-config="false" use-expressions="true" disable-url-rewriting="true">
  		<security:intercept-url pattern="/admin/**" access="isAuthenticated()" />
  		<security:intercept-url pattern="/user/**" access="isAuthenticated()" />
-        <security:intercept-url pattern="/api/marker/**" access="isAuthenticated()" />
-		<security:intercept-url pattern="/api/layergroup/**" access="isAuthenticated()" />
-		<security:intercept-url pattern="/api/files/**" access="isAuthenticated()" />
  		<security:form-login login-page="/authentication" always-use-default-target="true"
  			password-parameter="password" username-parameter="email"/>
  		<security:logout/>

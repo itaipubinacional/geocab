@@ -77,7 +77,7 @@ public class AuthenticationRESTful
 			return user;
 		}
 		
-		return this.loginService.insertUserSocial(email, name);
+		return this.loginService.insertSocialUser(new User(name, email));
 	}
 	
 	
