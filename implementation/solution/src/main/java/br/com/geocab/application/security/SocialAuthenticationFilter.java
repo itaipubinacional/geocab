@@ -1,6 +1,7 @@
 package br.com.geocab.application.security;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -8,19 +9,29 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.social.google.api.impl.GoogleTemplate;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
+
+import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.repository.account.IUserRepository;
 
 /**
  * 
@@ -33,6 +44,14 @@ public class SocialAuthenticationFilter extends GenericFilterBean
 	// ================================================================================================
 	
 	private static final String AUTH_TOKEN = "access_token ";
+	private static final String FACEBOOK = "facebook";
+	private static final String GOOGLEPLUS = "googleplus";
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IUserRepository userRepository;	
 
 	private AuthenticationEntryPoint authenticationEntryPoint;
 	private AuthenticationManager authenticationManager;
@@ -88,13 +107,39 @@ public class SocialAuthenticationFilter extends GenericFilterBean
 		{
 			final String[] tokens = this.extractAndDecodeHeader(header, request);
 			final String username = tokens[0];
-			
-			if ( authenticationIsRequired(username) )
-			{
-//				UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, tokens[1]);
-//				authRequest.setDetails(user);
-//				Authentication authResult = this.authenticationManager.authenticate(authRequest);
-//				SecurityContextHolder.getContext().setAuthentication(authResult);
+							
+			if ( authenticationIsRequired(username) ) {
+
+				final String access_token = tokens[1];
+				final String provider = tokens[2];
+				String usernameToken = null;
+				
+				if ( provider.equals(FACEBOOK) )
+				{
+					FacebookTemplate facebookTemplate = new FacebookTemplate(access_token);
+					usernameToken = facebookTemplate.userOperations().getUserProfile().getEmail();
+				} 
+				else if ( provider.equals(GOOGLEPLUS) )
+				{
+					GoogleTemplate googleTemplate = new GoogleTemplate(access_token);
+					usernameToken = googleTemplate.plusOperations().getGoogleProfile().getAccountEmail();					
+				}
+				
+				if ( usernameToken == null || !usernameToken.equals(username) )
+				{
+					throw new BadCredentialsException("Invalid access authentication token");
+				}
+				
+				final User user = this.userRepository.findByEmail(username);
+				
+				if( false == user.isEnabled() ){
+					final DisabledException erro = new DisabledException("User is disabled" );
+					return;
+				}
+				
+				final SecurityContext securityContext = SecurityContextHolder.getContext();
+				securityContext.setAuthentication( new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()) );
+				
 			}
 		}
 		catch ( AuthenticationException failed )
@@ -128,14 +173,19 @@ public class SocialAuthenticationFilter extends GenericFilterBean
 
 		final String token = new String(decoded, "UTF-8");
 
-//		final int delim = token.indexOf(":");
-//		if ( delim == -1 )
-//		{
-//			throw new BadCredentialsException("Invalid basic authentication token");
-//		}
-//		
-//		return new String[]{ token.substring(0, delim), token.substring(delim + 1) };
-		return null;
+		final int delimUser = token.indexOf(":");
+		final int delimProvider = token.indexOf(":", delimUser + 1);
+		
+		if ( delimUser == -1 || delimProvider == -1 )
+		{
+			throw new BadCredentialsException("Invalid access authentication token");
+		}
+		
+		return new String[]{ 
+			token.substring(0, delimUser), 
+			token.substring(delimUser + 1, delimProvider),
+			token.substring(delimProvider + 1)
+		};
 	}
 
 	/**
