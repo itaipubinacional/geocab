@@ -64,12 +64,11 @@ public class SplashScreenActivity extends Activity {
                     accountDelegate = new AccountDelegate(SplashScreenActivity.this);
 
                     User user = new User();
-
                     user.setEmail(settings.getAll().get("email").toString());
                     user.setPassword(settings.getAll().get("password").toString());
 
-                    final byte[] credentials = (user.getEmail() + ":" + user.getPassword()).getBytes();
-                    accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP), false);
+                    String credentials = User.createToken(user.getEmail(), user.getPassword());
+                    accountDelegate.checkLogin(credentials, false);
 
                 }
                 else

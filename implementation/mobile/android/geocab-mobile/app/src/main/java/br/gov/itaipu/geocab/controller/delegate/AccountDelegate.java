@@ -72,18 +72,22 @@ public class AccountDelegate extends AbstractDelegate
 
                         Log.d("Response", response);
                         Gson json = new Gson();
-                        User user = json.fromJson(response, User.class);
-
-                        AbstractDelegate.loggedUser = user;
+                        User userResponse = json.fromJson(response, User.class);
+                        AbstractDelegate.loggedUser = userResponse;
 
                         SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
-                        SplashScreenActivity.prefEditor.putString("email", user.getEmail());
+                        SplashScreenActivity.prefEditor.putString("email", userResponse.getEmail());
                         SplashScreenActivity.prefEditor.commit();
 
+                        // Atualiza com o plain password do formulario
                         if(SplashScreenActivity.settings.getAll().get("email") != null && SplashScreenActivity.settings.getAll().get("password") != null )
                         {
-                            AbstractDelegate.loggedUser.setPassword(SplashScreenActivity.settings.getAll().get("password").toString());
+                            String formPassword = SplashScreenActivity.settings.getAll().get("password").toString();
+                            AbstractDelegate.loggedUser.setPassword(formPassword);
                         }
+
+                        // Atualiza as credenciais
+                        AbstractDelegate.loggedUser.setBasicAuthorization(AbstractDelegate.loggedUser.getEmail(), AbstractDelegate.loggedUser.getPassword());
 
                         Intent mapIntent = new Intent(AccountDelegate.this.context, MapActivity.class);
                         AccountDelegate.this.context.startActivity(mapIntent);
@@ -145,20 +149,9 @@ public class AccountDelegate extends AbstractDelegate
             public void onResponse(String response) {
 
                 Gson json = new Gson();
-
-                SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
-                SplashScreenActivity.prefEditor.putString("email", user.getEmail());
-                SplashScreenActivity.prefEditor.putString("password", "none");
-                SplashScreenActivity.prefEditor.commit();
-
-                User user = json.fromJson(response, User.class);
-
-                AbstractDelegate.loggedUser = user;
-
-                if(SplashScreenActivity.settings.getAll().get("email") != null && SplashScreenActivity.settings.getAll().get("password") != null )
-                {
-                    AbstractDelegate.loggedUser.setPassword(SplashScreenActivity.settings.getAll().get("password").toString());
-                }
+                User userResponse = json.fromJson(response, User.class);
+                userResponse.setCredentials(user.getCredentials());
+                AbstractDelegate.loggedUser = userResponse;
 
                 Intent mapIntent = new Intent(AccountDelegate.this.context, MapActivity.class);
                 AccountDelegate.this.context.startActivity(mapIntent);

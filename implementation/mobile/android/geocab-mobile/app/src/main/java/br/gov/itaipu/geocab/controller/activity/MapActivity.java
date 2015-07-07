@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -297,7 +298,9 @@ public class MapActivity extends Activity
             SplashScreenActivity.prefEditor.putString("password", null);
             SplashScreenActivity.prefEditor.commit();
 
-            startActivity(new Intent(MapActivity.this, AuthenticationActivity.class));
+            Intent intent = new Intent(MapActivity.this, AuthenticationActivity.class);
+            intent.putExtra("logout", "logout");
+            startActivity(intent);
             finish();
 
             }

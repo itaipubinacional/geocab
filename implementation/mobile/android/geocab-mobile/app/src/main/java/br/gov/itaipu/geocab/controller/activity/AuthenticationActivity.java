@@ -6,6 +6,7 @@ import android.content.IntentSender.SendIntentException;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -20,24 +21,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LoginButton;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.Plus.PlusOptions;
 import com.google.android.gms.plus.model.people.Person;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -61,6 +69,10 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 
     private AccountDelegate accountDelegate;
 
+    private AsyncTask<Void, Void, String> task;
+
+    private User userApplication;
+
     /*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES GOOGLE
 	 *-------------------------------------------------------------------*/
@@ -69,6 +81,7 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
      * Code for request when sign in
      */
 	private static final int CODE_SIGN_IN_GOOGLE = 0;
+    private static final int REQUEST_GOOGLE_TOKEN = 1;
 
     /**
      * Logcat tag
@@ -142,15 +155,18 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
             public void onUserInfoFetched(GraphUser user) {
                 AuthenticationActivity.this.user = user;
 
-                if( SplashScreenActivity.settings.getAll().get("email") == null && SplashScreenActivity.settings.getAll().get("password") == null )
+                if( SplashScreenActivity.settings.getAll().get("email") == null )
                 {
                     if( user != null)
                     {
+                        Session session = Session.getActiveSession();
+
                         try {
                             User userApplication = new User();
                             userApplication.setName(user.getName());
                             userApplication.setEmail(user.getInnerJSONObject().getString("email"));
-                            userApplication.setPassword("none");
+                            userApplication.setAccessTokenAuthorization(userApplication.getEmail(), session.getAccessToken(), User.FACEBOOK);
+
                             accountDelegate.insertUserSocial(userApplication);
 
                         } catch (JSONException e1) {
@@ -177,9 +193,12 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).addApi(Plus.API, PlusOptions.builder().build())
-				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
+                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
 
-	}
+        if ( this.getIntent().getStringExtra("logout") != null )
+            this.mSignInClicked = false;
+
+    }
 
     protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
         for (int i = 0; i < signInButton.getChildCount(); i++) {
@@ -270,8 +289,8 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
                 SplashScreenActivity.prefEditor.putString("password", editTextPassword.getText().toString());
                 SplashScreenActivity.prefEditor.commit();
 
-                final byte[] credentials = ( editTextUsername.getText() + ":" + editTextPassword.getText() ).getBytes();
-                accountDelegate.checkLogin(Base64.encodeToString(credentials, Base64.NO_WRAP), true);
+                final String credentials = User.createToken(editTextUsername.getText().toString(), editTextPassword.getText().toString());
+                accountDelegate.checkLogin(credentials, true);
             }
         }
     }
@@ -336,7 +355,12 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     @Override
     protected void onActivityResult(int requestCode, int responseCode, Intent intent)
     {
-        if (requestCode == CODE_SIGN_IN_GOOGLE)
+        if (requestCode == REQUEST_GOOGLE_TOKEN && responseCode == RESULT_OK)
+        {
+            String oneTimeToken = intent.getExtras().getString("authtoken");
+            authenticateGooglePlus(oneTimeToken);
+        }
+        else if (requestCode == CODE_SIGN_IN_GOOGLE)
         {
             if (responseCode != RESULT_OK) {
                 mSignInClicked = false;
@@ -367,16 +391,15 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
     @Override
     public void onConnected(Bundle arg0)
     {
-        // Get user's information
+        Object password = SplashScreenActivity.settings.getAll().get("password");
 
-        if( mSignInClicked )
-        {
-            getProfileInformation();
+        if ( !this.mSignInClicked && (password == null || !password.equals("googleplus")) ) {
+            this.signOutFromGoogle();
+            return;
         }
-        else
-        {
-            signOutFromGoogle();
-        }
+
+        getProfileInformation();
+
     }
 
     /**
@@ -440,22 +463,23 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
         {
 			if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null)
             {
-                if( SplashScreenActivity.settings.getAll().get("email") == null && SplashScreenActivity.settings.getAll().get("password") == null )
+                if( SplashScreenActivity.settings.getAll().get("email") == null )
                 {
-                    Person currentPerson = Plus.PeopleApi
-                            .getCurrentPerson(mGoogleApiClient);
+                    Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
                     String personName = currentPerson.getDisplayName();
                     String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
 
-                    User userApplication = new User();
+                    this.userApplication = new User();
                     userApplication.setName(personName);
                     userApplication.setEmail(email);
-                    userApplication.setPassword("none");
 
-                    accountDelegate.insertUserSocial(userApplication);
+                    if ( this.task == null || this.task.getStatus() != AsyncTask.Status.FINISHED )
+                    {
+                        this.task = new GetAuthTokenFromGoogle();
+                        this.task.execute();
+                    }
 
                 }
-
 			}
             else
             {
@@ -503,6 +527,57 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private class GetAuthTokenFromGoogle extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... params) {
+            String token = null;
+            String scope = "oauth2:" + User.GOOGLEPLUS_SCOPE;
+            try {
+
+                if ( SplashScreenActivity.settings.getAll().get("token") != null )
+                    GoogleAuthUtil.invalidateToken(getApplicationContext(), (String)SplashScreenActivity.settings.getAll().get("token"));
+
+                token = GoogleAuthUtil.getToken(
+                        getApplicationContext(),
+                        Plus.AccountApi.getAccountName(mGoogleApiClient),
+                        scope);
+
+            } catch (IOException transientEx) {
+                // Network or server error, try later
+                Log.e(TAG, transientEx.toString());
+            } catch (UserRecoverableAuthException e) {
+                // Recover (with e.getIntent())
+                startActivityForResult(e.getIntent(), REQUEST_GOOGLE_TOKEN);
+            } catch (GoogleAuthException authEx) {
+                // The call is not ever expected to succeed
+                // assuming you have already verified that
+                // Google Play services is installed.
+                Log.e(TAG, authEx.toString());
+            }
+
+            return token;
+        }
+
+        @Override
+        protected void onPostExecute(String token) {
+            authenticateGooglePlus(token);
+        }
+
+    };
+
+    private void authenticateGooglePlus(String access_token)
+    {
+        if ( access_token != null )
+        {
+            SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
+            SplashScreenActivity.prefEditor.putString("password", "googleplus");
+            SplashScreenActivity.prefEditor.putString("token", access_token);
+            SplashScreenActivity.prefEditor.commit();
+            this.userApplication.setAccessTokenAuthorization(userApplication.getEmail(), access_token, User.GOOGLEPLUS);
+            this.accountDelegate.insertUserSocial(userApplication);
         }
     }
 
