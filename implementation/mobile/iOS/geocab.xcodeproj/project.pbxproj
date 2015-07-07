@@ -2729,7 +2729,7 @@
 				ORGANIZATIONNAME = Itaipu;
 				TargetAttributes = {
 					5D960B7F19CA1EC600B8DEFF = {
-						DevelopmentTeam = 47CBXZ8G6X;
+						DevelopmentTeam = NU7JM4SJD2;
 					};
 					5D960BA019CA1EC600B8DEFF = {
 						DevelopmentTeam = UE55GE739N;
