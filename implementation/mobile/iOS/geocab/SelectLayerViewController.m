@@ -109,7 +109,7 @@ BOOL animating;
         [alert show];
 
         
-    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+    }];
     
     
 }
@@ -172,7 +172,7 @@ BOOL animating;
         [alert show];
         
         
-    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+    }];
 }
 
 #pragma mark - Table view data source

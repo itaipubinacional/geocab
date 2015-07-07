@@ -48,8 +48,6 @@ extern User *loggedUser;
     
     _standardLoginButton.backgroundColor = [ControllerUtil colorWithHexString:@"27a7c6"];
     
-    //[self.signInButton setStyle:(GPPSignInButtonStyle)];
-    
     _username.delegate = self;
     _password.delegate = self;
     
@@ -62,6 +60,13 @@ extern User *loggedUser;
             loginLabel.text = @"Facebook";
         }
     }
+    
+    [_signIn trySilentAuthentication];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.fbLoginView.delegate = nil;
 }
 
 //Method to make the keyboard disappear when touch happens out of the text field
@@ -83,10 +88,14 @@ extern User *loggedUser;
     if ( [ControllerUtil verifyInternetConection] && self.isFormValid ) {
         AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/"];
         [accountDelegate loginWithEmail:_username.text password:_password.text successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+            
             User *loggedUser = [[User alloc] init];
             loggedUser = [[result array] objectAtIndex:0];
             [loggedUser setPassword:_password.text];
+            [loggedUser setBasicAuthorization];
+            [defaults setObject:@"basic" forKey:@"auth"];
             [self authenticateUser:loggedUser];
+            
         } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
             UIAlertView *errorMessage = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"") message:NSLocalizedString(@"login.error.message", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [errorMessage show];
@@ -99,14 +108,12 @@ extern User *loggedUser;
 
     [defaults setObject:user.name forKey:@"name"];
     [defaults setObject:user.email forKey:@"email"];
+    [defaults setObject:user.password forKey:@"password"];
     [defaults setObject:user.id forKey:@"userId"];
     [defaults setObject:user.role forKey:@"userRole"];
     
-    NSString *password = [_password.text isEqualToString:@""] ? user.password : _password.text;
-    [defaults setObject:password forKey:@"password"];
     loggedUser = user;
     [defaults synchronize];
-    
     [self performSegueWithIdentifier:@"loginToMainSegue" sender:self];
 }
 
@@ -135,9 +142,11 @@ extern User *loggedUser;
              [self clearTextInputs];
              AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/create"];
              [accountDelegate socialAuthenticate:[[GPPSignIn sharedInstance] userEmail] name:person.displayName successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+                 
                  User *loggedUser = (User*)[result firstObject];
-                 loggedUser.password = @"none";
+                 [loggedUser setAccessTokenAuthorization:auth.accessToken provider:@"googleplus" ];
                  [self authenticateUser:loggedUser];
+                 
              } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
                  NSLog(@"Google plus login error");
              }];
@@ -148,17 +157,35 @@ extern User *loggedUser;
 
 //Facebook login callback
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user {
-    [self clearTextInputs];
-    AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/create"];
-    [accountDelegate socialAuthenticate:[user objectForKey:@"email"] name:user.name successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
-        User *loggedUser = (User*)[result firstObject];
-        loggedUser.password = @"none";
-        [self authenticateUser:loggedUser];
-    } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Facebook login error");
-    }];
-
+    
+    if ([self facebookCounter] > 0)
+        return;
+    else
+    {
+        self.facebookCounter++;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            
+            [self clearTextInputs];
+            AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/create"];
+            
+            [accountDelegate socialAuthenticate:[user objectForKey:@"email"] name:user.name successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+                
+                NSString *accessToken = [[[FBSession activeSession] accessTokenData] accessToken];
+                
+                User *loggedUser = (User*)[result firstObject];
+                [loggedUser setAccessTokenAuthorization:accessToken provider:@"facebook" ];
+                [self authenticateUser:loggedUser];
+                [self setFacebookCounter:0];
+                
+            } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+                NSLog(@"Facebook login error");
+            }];
+            
+        });
+    }
 }
+
+
 
 - (void)presentSignInViewController: (UIViewController *)viewController {
     [[self navigationController] pushViewController:viewController animated:YES];

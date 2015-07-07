@@ -22,12 +22,16 @@ extern User *loggedUser;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    if ( [defaults objectForKey:@"name"] != NULL
-        && [defaults objectForKey:@"email"] != NULL )
+    if ( [defaults objectForKey:@"auth"] != NULL )
     {
+        loggedUser = [[User alloc] init];
         loggedUser.name = [defaults objectForKey:@"name"];
         loggedUser.email = [defaults objectForKey:@"email"];
         loggedUser.password = [defaults objectForKey:@"password"];
+        loggedUser.role = [defaults objectForKey:@"userRole"];
+        loggedUser.id = [defaults objectForKey:@"userId"];
+        [loggedUser setBasicAuthorization];
+        
         [self performSegueWithIdentifier:@"mainSegue" sender:self];
     }
     else

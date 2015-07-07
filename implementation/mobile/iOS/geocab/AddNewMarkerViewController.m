@@ -154,14 +154,14 @@ UIActivityIndicatorView *indicator;
                 
                 // Faz upload da imagem do marker
                 if ( self.marker.imageUI != nil ){
-                    [fileDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+                    [fileDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI];
                     
                 }
                      
                 [indicator stopAnimating];
                 [self didFinish];
                 
-            } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] marker:self.marker];
+            } marker:self.marker];
             
         } else {
             
@@ -172,13 +172,13 @@ UIActivityIndicatorView *indicator;
                 // Faz upload da imagem do marker
                 if ( self.marker.imageUI != nil ){
                     
-                    [fileDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+                    [fileDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI];
                     
                 }
                 
                 [self listAttributes:markerResponse];
                 
-            } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] marker:self.marker];
+            } marker:self.marker];
             
         }
 
@@ -222,10 +222,10 @@ UIActivityIndicatorView *indicator;
             [indicator stopAnimating];
             [self didFinish];
             
-        } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+        }];
         
         
-    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:self.marker.id];
+    } markerId:self.marker.id];
     
 }
 
@@ -423,7 +423,7 @@ UIActivityIndicatorView *indicator;
         }
 
         
-    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] layerId:layer.id];
+    } layerId:layer.id];
     
     
 }

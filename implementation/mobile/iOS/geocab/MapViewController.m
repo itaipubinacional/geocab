@@ -153,7 +153,7 @@ UIActivityIndicatorView *indicator;
         Marker *marker = [Marker fromJSONString:markerJson];
         
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
-        [markerDelegate approve:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:marker.id];
+        [markerDelegate approve:marker.id];
         
         marker.status = @"ACCEPTED";
         
@@ -168,7 +168,7 @@ UIActivityIndicatorView *indicator;
         MotiveMarkerModeration *motiveMarkerModeration = [MotiveMarkerModeration fromJSONString:motiveMarkerJSON];
         
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
-        [markerDelegate refuse:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:marker.id motiveMarkerModeration:motiveMarkerModeration];
+        [markerDelegate refuse:marker.id motiveMarkerModeration:motiveMarkerModeration];
         
         marker.status = @"REFUSED";
         
@@ -181,7 +181,7 @@ UIActivityIndicatorView *indicator;
         
         Marker *marker = [Marker fromJSONString:markerJson];
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
-        [markerDelegate remove:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:marker.id];
+        [markerDelegate remove:marker.id];
         
 		NSString *functionCall = [NSString stringWithFormat:@"geocabapp.closeMarker('%@')", marker.id];
 		[_webView stringByEvaluatingJavaScriptFromString:functionCall];
@@ -210,7 +210,7 @@ UIActivityIndicatorView *indicator;
                     [_webView stringByEvaluatingJavaScriptFromString:functionCall];
                 }
                 
-            } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] dataSource:layersUrl];
+            } dataSource:layersUrl];
             
         }
         // Caso não, mostra apenas o marker
@@ -270,10 +270,10 @@ UIActivityIndicatorView *indicator;
             [_webView stringByEvaluatingJavaScriptFromString:functionCall];
             [self loadMotives:markerDelegate];
             
-        } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+        }];
         
         
-    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:markerId];
+    } markerId:markerId];
     
 }
 
@@ -285,7 +285,7 @@ UIActivityIndicatorView *indicator;
         NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadMotives('%@')", motives];
         [_webView stringByEvaluatingJavaScriptFromString:functionCall];
         
-    } failBlock: nil userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+    } failBlock: nil];
     
 }
 
@@ -315,7 +315,7 @@ UIActivityIndicatorView *indicator;
             [alert show];
             
             
-        } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] layerId:layer.id];
+        } layerId:layer.id];
     }
 }
 
@@ -405,6 +405,9 @@ UIActivityIndicatorView *indicator;
             if ([[FBSession activeSession] isOpen]) {
                 [[FBSession activeSession] closeAndClearTokenInformation];
             }
+            
+            [[GPPSignIn sharedInstance] signOut];
+            [[GPPSignIn sharedInstance] disconnect];
             
             [_layerSelectorNavigator dismissViewControllerAnimated:NO completion:^{
                [self performSegueWithIdentifier:@"logoutSegue" sender:nil];

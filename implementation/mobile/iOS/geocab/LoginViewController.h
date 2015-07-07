@@ -16,5 +16,6 @@
 
 @property (retain, nonatomic) IBOutlet GPPSignInButton *signInButton;
 @property (weak, nonatomic) IBOutlet FBLoginView *fbLoginView;
+@property (nonatomic, assign) int facebookCounter;
 
 @end
