@@ -66,8 +66,7 @@ public class FileDelegate extends AbstractDelegate
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
-                params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP));
+                params.put("Authorization", loggedUser.getCredentials());
                 params.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
                 return params;
             }
@@ -97,8 +96,7 @@ public class FileDelegate extends AbstractDelegate
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                final String credentials = loggedUser.getEmail() + ":" + loggedUser.getPassword();
-                params.put("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP) );
+                params.put("Authorization", loggedUser.getCredentials() );
                 return params;
             }
         };

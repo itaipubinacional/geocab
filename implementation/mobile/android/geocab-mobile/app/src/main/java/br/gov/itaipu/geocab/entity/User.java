@@ -1,11 +1,20 @@
 package br.gov.itaipu.geocab.entity;
 
+import android.util.Base64;
+
 import java.io.Serializable;
 
 /**
  * Created by Vinicius on 24/09/2014.
  */
 public class User implements Serializable {
+
+    public static final String FACEBOOK = "facebook";
+    public static final String GOOGLEPLUS = "googleplus";
+    public static final String GOOGLEPLUS_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
+
+    private static final String ACCESS_TOKEN = "access_token ";
+    private static final String BASIC_TOKEN = "Basic ";
 
     /**
      * Id {@link User}
@@ -27,6 +36,10 @@ public class User implements Serializable {
      *
      */
     private String password;
+    /**
+     *
+     */
+    private String credentials;
     /**
      *
      */
@@ -100,4 +113,34 @@ public class User implements Serializable {
     public void setRole(UserRole role) {
         this.role = role;
     }
+
+    public String getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(String credentials) {
+        this.credentials = credentials;
+    }
+
+    public void setAccessTokenAuthorization(String username, String accessToken, String provider){
+
+        final byte[] token = (username + ":" + accessToken + ":" + provider).getBytes();
+        this.credentials = User.ACCESS_TOKEN + Base64.encodeToString(token, Base64.NO_WRAP);
+
+    }
+
+    public void setBasicAuthorization(String username, String password){
+
+        final byte[] token = ( username + ":" + password ).getBytes();
+        this.credentials = User.BASIC_TOKEN + Base64.encodeToString(token, Base64.NO_WRAP);
+
+    }
+
+    public static String createToken(String username, String password){
+
+        final byte[] token = ( username + ":" + password ).getBytes();
+        return Base64.encodeToString(token, Base64.NO_WRAP);
+
+    }
+
 }
