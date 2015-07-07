@@ -16,6 +16,8 @@
 
 @implementation MarkerDelegate
 
+extern User *loggedUser;
+
 - (RKObjectMapping *) mapping
 {
     RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[Marker class]];
@@ -31,13 +33,13 @@
     return mapping;
 }
 
-- (void) list: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failBlock userName:(NSString*)userName password:(NSString*)password layerId: (NSNumber*) layerId
+- (void) list: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failBlock layerId: (NSNumber*) layerId
 {
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:self.mapping method:RKRequestMethodGET pathPattern:nil keyPath:@"" statusCodes:nil];
     
     NSURL* url = [NSURL URLWithString:self.baseUrl];
     RKObjectManager* objectManager = [RKObjectManager managerWithBaseURL:url];
-    [objectManager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     
     NSURLRequest *request = [objectManager requestWithObject:nil method:RKRequestMethodGET path:[NSString stringWithFormat:@"%@/markers", layerId] parameters:nil];
     
@@ -47,7 +49,7 @@
     [objectRequestOperation start];
 }
 
-- (void) listAttributesById: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password markerId: (NSNumber*) markerId
+- (void) listAttributesById: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock markerId: (NSNumber*) markerId
 {
     RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[MarkerAttribute class]];
     [mapping addAttributeMappingsFromDictionary:[MarkerAttribute generateDictionary]];
@@ -61,7 +63,7 @@
     
     NSURL* url = [NSURL URLWithString:self.baseUrl];
     RKObjectManager* objectManager = [RKObjectManager managerWithBaseURL:url];
-    [objectManager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     
     NSURLRequest *request = [objectManager requestWithObject:nil method:RKRequestMethodGET path:[NSString stringWithFormat:@"%@/markerattributes", markerId] parameters:nil];
     
@@ -71,7 +73,7 @@
     [objectRequestOperation start];
 }
 
-- (void) insert: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password marker:(Marker*)marker
+- (void) insert: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock marker:(Marker*)marker
 {
     // Response
     NSIndexSet *statusCodes = RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful);
@@ -101,7 +103,7 @@
     // Configurações da requisição
     NSURL* url = [NSURL URLWithString:self.baseUrl];
     RKObjectManager *manager = [RKObjectManager managerWithBaseURL:url];
-    [manager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [manager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     [manager setRequestSerializationMIMEType:RKMIMETypeJSON];
     [manager addRequestDescriptor:requestDescriptor];
     [manager addResponseDescriptor:markerDescriptor];
@@ -111,7 +113,7 @@
     
 }
 
-- (void) update: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password marker:(Marker*)marker
+- (void) update: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock marker:(Marker*)marker
 {
     // Response
     NSIndexSet *statusCodes = RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful);
@@ -151,7 +153,7 @@
     // Configurações da requisição
     NSURL* url = [NSURL URLWithString:self.baseUrl];
     RKObjectManager *manager = [RKObjectManager managerWithBaseURL:url];
-    [manager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [manager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     [manager setRequestSerializationMIMEType:RKMIMETypeJSON];
     [manager addRequestDescriptor:requestDescriptor];
     [manager addResponseDescriptor:markerDescriptor];
@@ -161,7 +163,7 @@
     
 }
 
-- (void) remove:(NSString*)userName password:(NSString*)password markerId:(NSNumber*)markerId
+- (void) remove:(NSNumber*)markerId
 {
     NSURLResponse * response = nil;
     NSError * error = nil;
@@ -174,15 +176,12 @@
     [request setValue:@"text/plain" forHTTPHeaderField:@"Content-Type"];
     
     //Authorization
-    NSString *credentials = [[userName stringByAppendingString:@":"] stringByAppendingString:password];
-    NSData *credentialsData = [credentials dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *credentialsEncoded = [credentialsData base64EncodedStringWithOptions:0];
-    [request setValue:credentialsEncoded forHTTPHeaderField:@"Authorization"];
+    [request setValue:loggedUser.credentials forHTTPHeaderField:@"Authorization"];
 
 	[NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
 }
 
-- (void) approve:(NSString*)userName password:(NSString*)password markerId:(NSNumber*)markerId
+- (void) approve:(NSNumber*)markerId
 {
     NSURLResponse * response = nil;
     NSError * error = nil;
@@ -197,7 +196,7 @@
     [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
 }
 
-- (void) refuse:(NSString*)userName password:(NSString*)password markerId:(NSNumber*)markerId motiveMarkerModeration:(MotiveMarkerModeration *)motiveMarkerModeration;
+- (void) refuse:(NSNumber*)markerId motiveMarkerModeration:(MotiveMarkerModeration *)motiveMarkerModeration;
 {
     // Response
     NSIndexSet *statusCodes = RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful);
@@ -217,7 +216,7 @@
     // Configurações da requisição
     NSURL* url = [NSURL URLWithString:self.baseUrl];
     RKObjectManager *manager = [RKObjectManager managerWithBaseURL:url];
-    [manager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [manager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     [manager setRequestSerializationMIMEType:RKMIMETypeJSON];
     [manager addRequestDescriptor:requestDescriptor];
     [manager addResponseDescriptor:responseDescriptor];
@@ -226,14 +225,14 @@
     [manager postObject:motiveMarkerModeration path:[NSString stringWithFormat:@"%@/refuse", markerId] parameters:nil success:nil failure:nil];
 }
 
-- (void) listMotives: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failBlock userName:(NSString*)userName password:(NSString*)password
+- (void) listMotives: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failBlock
 {
     RKObjectMapping *responseMapping = [RKObjectMapping mappingForClass:[Motive class]];
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:responseMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"" statusCodes:nil];
     
     NSURL* url = [NSURL URLWithString:self.baseUrl];
     RKObjectManager* objectManager = [RKObjectManager managerWithBaseURL:url];
-    [objectManager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     
     NSURLRequest *request = [objectManager requestWithObject:nil method:RKRequestMethodGET path:@"motives" parameters:nil];
     
