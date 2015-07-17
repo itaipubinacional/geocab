@@ -65,7 +65,7 @@
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7bM-OH-vdc" customClass="GPPSignInButton">
+                                    <view opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7bM-OH-vdc" customClass="GIDSignInButton">
                                         <rect key="frame" x="171" y="346" width="132" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="132" id="vLf-N5-Kzr"/>
@@ -80,7 +80,7 @@
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                         </userDefinedRuntimeAttributes>
-                                    </button>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G8H-Vf-wtg" customClass="FBLoginView">
                                         <rect key="frame" x="17" y="346" width="132" height="44"/>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
