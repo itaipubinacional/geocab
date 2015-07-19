@@ -1,7 +1,6 @@
 package br.com.geocab.application.security;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -9,29 +8,29 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.social.facebook.api.UserOperations;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.google.api.impl.GoogleTemplate;
+import org.springframework.social.google.api.plus.PlusOperations;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
 
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.repository.account.IUserRepository;
+import br.com.geocab.domain.service.LoginService;
 
 /**
  * 
@@ -51,7 +50,7 @@ public class SocialAuthenticationFilter extends GenericFilterBean
 	 * 
 	 */
 	@Autowired
-	private IUserRepository userRepository;	
+	private LoginService loginService;	
 
 	private AuthenticationEntryPoint authenticationEntryPoint;
 	private AuthenticationManager authenticationManager;
@@ -113,16 +112,19 @@ public class SocialAuthenticationFilter extends GenericFilterBean
 				final String access_token = tokens[1];
 				final String provider = tokens[2];
 				String usernameToken = null;
+				String profileName = null;
 				
 				if ( provider.equals(FACEBOOK) )
 				{
-					FacebookTemplate facebookTemplate = new FacebookTemplate(access_token);
-					usernameToken = facebookTemplate.userOperations().getUserProfile().getEmail();
+					UserOperations userOperations = new FacebookTemplate(access_token).userOperations();
+					usernameToken = userOperations.getUserProfile().getEmail();
+					profileName = userOperations.getUserProfile().getName();
 				} 
 				else if ( provider.equals(GOOGLEPLUS) )
 				{
-					GoogleTemplate googleTemplate = new GoogleTemplate(access_token);
-					usernameToken = googleTemplate.plusOperations().getGoogleProfile().getAccountEmail();					
+					PlusOperations plusOperations = new GoogleTemplate(access_token).plusOperations();
+					usernameToken = plusOperations.getGoogleProfile().getAccountEmail();
+					profileName = plusOperations.getGoogleProfile().getDisplayName();
 				}
 				
 				if ( usernameToken == null || !usernameToken.equals(username) )
@@ -130,11 +132,15 @@ public class SocialAuthenticationFilter extends GenericFilterBean
 					throw new BadCredentialsException("Invalid access authentication token");
 				}
 				
-				final User user = this.userRepository.findByEmail(username);
+				User user = this.loginService.findUserByEmail(username);
 				
-				if( false == user.isEnabled() ){
-					final DisabledException erro = new DisabledException("User is disabled" );
-					return;
+				if( user != null && user.isEnabled() == false )
+				{
+					throw new BadCredentialsException("Invalid credentials - User disabled");
+				} 
+				else if( user == null )
+				{
+					user = this.loginService.insertSocialUser(new User(profileName, username));
 				}
 				
 				final SecurityContext securityContext = SecurityContextHolder.getContext();
