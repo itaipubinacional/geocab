@@ -3,7 +3,7 @@
 "0xi-DB-hia.text" = "Choose a location by pressing and holding at the map.";
 
 /* Class = "IBUIButton"; normalTitle = "Photo"; ObjectID = "7OT-jg-oVn"; */
-"7OT-jg-oVn.normalTitle" = "Photo";
+"7OT-jg-oVn.normalTitle" = "Foto";
 
 /* Class = "IBUIButton"; normalTitle = "Google"; ObjectID = "7bM-OH-vdc"; */
 "7bM-OH-vdc.normalTitle" = "Google";

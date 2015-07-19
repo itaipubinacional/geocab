@@ -241,7 +241,7 @@
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="40" id="ema-JF-Gcp"/>
                                                         </constraints>
-                                                        <state key="normal" title="Salvar">
+                                                        <state key="normal" title="Save">
                                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
@@ -257,7 +257,7 @@
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <state key="normal" title="Foto" image="ic_camera.png">
+                                                        <state key="normal" title="Photo" image="ic_camera.png">
                                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <color key="titleShadowColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                                         </state>
@@ -278,7 +278,7 @@
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" tag="1001" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lvq-aS-qvx">
-                                                <rect key="frame" x="174" y="22" width="10" height="19"/>
+                                                <rect key="frame" x="141" y="22" width="10" height="19"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="19" id="187-Rk-5oo"/>
                                                     <constraint firstAttribute="width" constant="10" id="t2X-IS-Rqi"/>
@@ -292,8 +292,8 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H5B-E2-Edq">
-                                                <rect key="frame" x="20" y="15" width="139" height="30"/>
-                                                <state key="normal" title="Selecione a camada">
+                                                <rect key="frame" x="20" y="15" width="106" height="30"/>
+                                                <state key="normal" title="Select the layer">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <connections>

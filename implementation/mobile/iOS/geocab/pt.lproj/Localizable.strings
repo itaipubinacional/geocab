@@ -9,7 +9,7 @@
 "Layers" = "Camadas";
 "gps.error.message" = "Houve um erro ao tentar obter sua localização";
 "gps.error.title" = "Erro de GPS";
-"login.error.message" = "Houve um erro com o login. Verifique seu email e senha.";
+"login.error.message" = "Dados inválidos ou usuário desabilitado.";
 "login.form-invalid.message" = "Verifique se os campos estão preenchidos corretamente.";
 "error" = "Erro";
 "layer.content-type.text" = "Texto";
@@ -24,3 +24,13 @@
 "marker.information" = "Informações do ponto";
 "no" = "Não";
 "yes" = "Sim";
+"field-missing" = "Dado não informado";
+"select-layer" = "Selecione a camada";
+"inform-field" = "Preencha o campo";
+"remove-image" = "Remover Imagem";
+"verify-form-fields" = "Verifique se os campos estão preenchidos corretamente.";
+"cancel" = "Cancelar";
+"refuse" = "Recusar";
+"motive" = "Motivo";
+"confirm" = "Confirmar";
+"confirm_remove" = "Deseja realmente excluir o item?";
