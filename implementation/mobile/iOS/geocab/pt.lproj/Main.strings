@@ -1,51 +1,24 @@
 
-/* Class = "IBUILabel"; text = "Choose a location by pressing and holding at the map."; ObjectID = "0xi-DB-hia"; */
-"0xi-DB-hia.text" = "Choose a location by pressing and holding at the map.";
+/* Class = "UIButton"; normalTitle = "Photo"; ObjectID = "AQa-ou-PVG"; */
+"AQa-ou-PVG.normalTitle" = "Foto";
 
-/* Class = "IBUIButton"; normalTitle = "Photo"; ObjectID = "7OT-jg-oVn"; */
-"7OT-jg-oVn.normalTitle" = "Foto";
-
-/* Class = "IBUIButton"; normalTitle = "Google"; ObjectID = "7bM-OH-vdc"; */
-"7bM-OH-vdc.normalTitle" = "Google";
-
-/* Class = "IBUIButton"; normalTitle = "Login"; ObjectID = "BdG-iE-eCz"; */
+/* Class = "UIButton"; normalTitle = "Login"; ObjectID = "BdG-iE-eCz"; */
 "BdG-iE-eCz.normalTitle" = "Login";
 
-/* Class = "IBUITextField"; placeholder = "Password"; ObjectID = "FW6-aU-sBN"; */
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "Dbk-7N-Qhq"; */
+"Dbk-7N-Qhq.normalTitle" = "Salvar";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "FW6-aU-sBN"; */
 "FW6-aU-sBN.placeholder" = "Senha";
 
-/* Class = "IBUILabel"; text = "Description"; ObjectID = "Lpa-ir-ujs"; */
-"Lpa-ir-ujs.text" = "Descrição";
+/* Class = "UIButton"; normalTitle = "Select the layer"; ObjectID = "H5B-E2-Edq"; */
+"H5B-E2-Edq.normalTitle" = "Selecione a camada";
 
-/* Class = "IBUIButton"; normalTitle = "Choose another location"; ObjectID = "Q9v-PT-LrE"; */
-"Q9v-PT-LrE.normalTitle" = "Escolher outra localização";
-
-/* Class = "IBUIBarButtonItem"; title = "Save"; ObjectID = "R8E-UF-xxo"; */
-"R8E-UF-xxo.title" = "Salvar";
-
-/* Class = "IBUILabel"; text = "Login with"; ObjectID = "V2k-dr-ftR"; */
+/* Class = "UILabel"; text = "Login with"; ObjectID = "V2k-dr-ftR"; */
 "V2k-dr-ftR.text" = "Login com";
 
-/* Class = "IBUIButton"; normalTitle = "Confirm"; ObjectID = "Wd8-B2-hyq"; */
-"Wd8-B2-hyq.normalTitle" = "Confirmar";
-
-/* Class = "IBUILabel"; text = "Name"; ObjectID = "bEL-pC-iSI"; */
-"bEL-pC-iSI.text" = "Nome";
-
-/* Class = "IBUIButton"; normalTitle = "Add another location"; ObjectID = "f1k-gy-Ely"; */
-"f1k-gy-Ely.normalTitle" = "Adicionar outra localização";
-
-/* Class = "IBUINavigationItem"; title = "Map"; ObjectID = "fst-os-tLY"; */
+/* Class = "UINavigationItem"; title = "Map"; ObjectID = "fst-os-tLY"; */
 "fst-os-tLY.title" = "Mapa";
 
-/* Class = "IBUINavigationItem"; title = "New point"; ObjectID = "iQZ-2J-3Sk"; */
-"iQZ-2J-3Sk.title" = "Novo ponto";
-
-/* Class = "IBUILabel"; text = "Select layer"; ObjectID = "k69-mJ-nJB"; */
-"k69-mJ-nJB.text" = "Selecionar camada";
-
-/* Class = "IBUIButton"; normalTitle = "Add my location"; ObjectID = "lJz-Lm-QPe"; */
-"lJz-Lm-QPe.normalTitle" = "Adicionar minha localização";
-
-/* Class = "IBUITextField"; placeholder = "Email"; ObjectID = "zqD-Fc-n4X"; */
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "zqD-Fc-n4X"; */
 "zqD-Fc-n4X.placeholder" = "Email";

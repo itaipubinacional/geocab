@@ -38,9 +38,17 @@
 				<string>br.com.geocab</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.978630797426-ai0fic65kt3canfvib3e5bc2h89fib0m</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0.1</string>
+	<string>1.0.3</string>
 	<key>FacebookAppID</key>
 	<string>1563968713815015</string>
 	<key>FacebookDisplayName</key>
