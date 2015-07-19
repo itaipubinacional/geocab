@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="5px"
-                android:text="Camada"
+                android:text="@string/layer"
                 android:textAppearance="?android:attr/textAppearanceMedium">
             </TextView>
 
@@ -65,7 +65,7 @@
                     android:layout_width="0dp"
                     android:layout_weight=".50"
                     android:layout_height="40dp"
-                    android:text="Imagem"
+                    android:text="@string/photo"
                     android:id="@+id/btn_select_photo"
                     android:padding="4dp"
                     android:textColor="#FFFFFF"
@@ -78,7 +78,7 @@
                 <Button
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:text="Salvar"
+                    android:text="@string/save"
                     android:layout_weight=".50"
                     android:layout_marginLeft="15dp"
                     android:background="@android:color/darker_gray"

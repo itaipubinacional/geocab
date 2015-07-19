@@ -71,8 +71,6 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
 
     private AsyncTask<Void, Void, String> task;
 
-    private User userApplication;
-
     /*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES GOOGLE
 	 *-------------------------------------------------------------------*/
@@ -102,6 +100,8 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
      * Button sign in google
      */
 	private SignInButton btnSignInGoogle;
+
+    private String emailGoogle;
 
     /**
      * A flag indicating that a PendingIntent is in progress and prevents us
@@ -162,12 +162,10 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
                         Session session = Session.getActiveSession();
 
                         try {
-                            User userApplication = new User();
-                            userApplication.setName(user.getName());
+                            final User userApplication = new User();
                             userApplication.setEmail(user.getInnerJSONObject().getString("email"));
                             userApplication.setAccessTokenAuthorization(userApplication.getEmail(), session.getAccessToken(), User.FACEBOOK);
-
-                            accountDelegate.insertUserSocial(userApplication);
+                            accountDelegate.authenticateUser(userApplication, null);
 
                         } catch (JSONException e1) {
                             e1.printStackTrace();
@@ -287,10 +285,13 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
             {
                 SplashScreenActivity.prefEditor = SplashScreenActivity.settings.edit();
                 SplashScreenActivity.prefEditor.putString("password", editTextPassword.getText().toString());
+                SplashScreenActivity.prefEditor.putString("email", editTextUsername.getText().toString());
                 SplashScreenActivity.prefEditor.commit();
 
-                final String credentials = User.createToken(editTextUsername.getText().toString(), editTextPassword.getText().toString());
-                accountDelegate.checkLogin(credentials, true);
+                final User userApplication = new User();
+                userApplication.setEmail(editTextUsername.getText().toString());
+                userApplication.setBasicAuthorization(editTextUsername.getText().toString(), editTextPassword.getText().toString());
+                accountDelegate.authenticateUser(userApplication, null);
             }
         }
     }
@@ -465,13 +466,7 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
             {
                 if( SplashScreenActivity.settings.getAll().get("email") == null )
                 {
-                    Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-                    String personName = currentPerson.getDisplayName();
-                    String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-
-                    this.userApplication = new User();
-                    userApplication.setName(personName);
-                    userApplication.setEmail(email);
+                    this.emailGoogle = Plus.AccountApi.getAccountName(mGoogleApiClient);
 
                     if ( this.task == null || this.task.getStatus() != AsyncTask.Status.FINISHED )
                     {
@@ -576,8 +571,11 @@ public class AuthenticationActivity extends Activity implements OnClickListener,
             SplashScreenActivity.prefEditor.putString("password", "googleplus");
             SplashScreenActivity.prefEditor.putString("token", access_token);
             SplashScreenActivity.prefEditor.commit();
-            this.userApplication.setAccessTokenAuthorization(userApplication.getEmail(), access_token, User.GOOGLEPLUS);
-            this.accountDelegate.insertUserSocial(userApplication);
+
+            final User userApplication = new User();
+            userApplication.setEmail(this.emailGoogle);
+            userApplication.setAccessTokenAuthorization(userApplication.getEmail(), access_token, User.GOOGLEPLUS);
+            this.accountDelegate.authenticateUser(userApplication, null);
         }
     }
 

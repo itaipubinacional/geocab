@@ -15,23 +15,42 @@
     <string name="title_activity_map">Mapa</string>
 
     <!-- Map -->
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
     <string name="search_layer">Pesquisar</string>
     <string name="of_layer">de</string>
     <string name="items_layer">itens</string>
     <string name="loading_layer">Carregando atributos da camada</string>
     <string name="click_exit">Por favor clique novamente para sair da aplicação</string>
+    <string name="confirm_exit">Tem certeza que deseja sair?</string>
+    <string name="loading_marker">Carregando postagem...</string>
+    <string name="approving_marker">Aprovando postagem...</string>
+    <string name="refusing_marker">Recusando postagem...</string>
+    <string name="removing_marker">Removendo postagem...</string>
 
     <!-- Account delegate -->
+    <string name="authenticating">Autenticando</string>
+    <string name="please_wait">Por favor, aguarde!</string>
+    <string name="wait">Aguarde</string>
     <string name="error_authentication">E-mail ou senha inválida!</string>
     <string name="loading">Carregando</string>
-    <string name="authenticating_application">Autenticando no sistema. Por favor, aguarde!</string>
     <string name="connection_problem">Problema com conexão. Verifique sua conexão com a internet!</string>
-    <string name="email_password_invalid">Email ou senha inválido</string>
+    <string name="email_password_invalid">Dados inválidos ou usuário desabilitado</string>
     <string name="problem_loading_layer">Problema ao carregar as camadas</string>
 
     <!-- Layer and Marker delegate -->
     <string name="error_connection">Problema com a conexão. Por favor verifique</string>
-
+    <string name="field_missing">Dados incompletos</string>
+    <string name="inform_field">Preencha o campo</string>
+    <string name="remove_image">Remover Imagem</string>
+    <string name="gallery">Galeria</string>
+    <string name="take_picture">Tirar foto</string>
+    <string name="cancel">Cancelar</string>
+    <string name="choose_option">Selecionar</string>
+    <string name="saving_informations">Salvando informações...</string>
+    <string name="layer">Camada</string>
+    <string name="photo">Foto</string>
+    <string name="save">Salvar</string>
 
     <!-- Nav Drawer -->
     <string name="drawer_open">Slider Menu Opened</string>
@@ -40,5 +59,11 @@
     <string name="title_activity_layer">Layer</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Webview -->
+    <string name="refuse">Recusar</string>
+    <string name="motive">Motivo</string>
+    <string name="confirm">Confirmar</string>
+    <string name="confirm_remove">Deseja realmente excluir o item?</string>
 
 </resources>

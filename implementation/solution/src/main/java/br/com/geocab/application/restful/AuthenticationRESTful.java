@@ -43,41 +43,15 @@ public class AuthenticationRESTful
 	
 	/**
 	 * 
-	 * @param credentials using base64 form.
+	 * @param get user info
 	 * @param response
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/check", method = RequestMethod.POST)
-	public @ResponseBody User checkCredentials( @RequestParam String credentials,
-								  HttpServletResponse response ) throws IOException
+	@RequestMapping(value = "/user", method = RequestMethod.POST)
+	public @ResponseBody User getUser( @RequestParam String username ) throws IOException
 	{
-		try 
-		{
-			return this.loginService.checkCredentials(credentials);
-			
-		} 
-		catch (Exception e) 
-		{
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-			return null;
-		}
-	}
-	
-	/**
-	 * 
-	 */ 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public @ResponseBody User insert( @RequestParam("email") String email, @RequestParam("name") String name )
-	{
-		final User user = this.loginService.findUserByEmail(email);
-		
-		if( user != null )
-		{
-			return user;
-		}
-		
-		return this.loginService.insertSocialUser(new User(name, email));
+		return this.loginService.findUserByEmail(username);
 	}
 	
 	
