@@ -7,14 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GPPSignIn.h"
+#import <GoogleSignIn/GoogleSignIn.h>
 #import <FacebookSDK/FacebookSDK.h>
 
-@class GPPSignInButton;
+@interface LoginViewController : UIViewController <GIDSignInDelegate, FBLoginViewDelegate, UITextFieldDelegate>
 
-@interface LoginViewController : UIViewController <GPPSignInDelegate, FBLoginViewDelegate, UITextFieldDelegate>
-
-@property (retain, nonatomic) IBOutlet GPPSignInButton *signInButton;
+@property(weak, nonatomic) IBOutlet GIDSignInButton *signInButton;
 @property (weak, nonatomic) IBOutlet FBLoginView *fbLoginView;
 @property (nonatomic, assign) int facebookCounter;
 

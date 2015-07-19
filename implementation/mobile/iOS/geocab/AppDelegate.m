@@ -7,8 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import <GooglePlus/GooglePlus.h>
 #import <FacebookSDK/FacebookSDK.h>
+#import <GoogleSignIn/GoogleSignIn.h>
 
 @implementation AppDelegate
 
@@ -64,7 +64,8 @@
         return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
     }
     
-    return [GPPURLHandler handleURL:url sourceApplication:sourceApplication annotation:annotation];
+    return [[GIDSignIn sharedInstance] handleURL:url sourceApplication:sourceApplication
+                                      annotation:annotation];
 }
 
 @end

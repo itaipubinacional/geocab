@@ -19,7 +19,7 @@
 #import "AttributeType.h"
 #import "ControllerUtil.h"
 #import "LoginViewController.h"
-#import <FacebookSDK/FacebookSDK.h>
+#import "MBProgressHUD.h"
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
@@ -43,8 +43,6 @@ extern NSUserDefaults *defaults;
 @end
 
 @implementation MapViewController
-
-UIActivityIndicatorView *indicator;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -80,15 +78,6 @@ UIActivityIndicatorView *indicator;
     
     _currentMarker = [[Marker alloc] init];
     
-    // Loading
-    indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [indicator setBackgroundColor:[UIColor lightTextColor]];
-    indicator.frame = CGRectMake(0.0, 0.0, 45.0, 45.0);
-    indicator.center = self.view.center;
-    [self.view addSubview:indicator];
-    [indicator bringSubviewToFront:self.view];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = TRUE;
-    
     [ControllerUtil verifyInternetConection];
     
 }
@@ -108,7 +97,6 @@ UIActivityIndicatorView *indicator;
     CATransition *transition = [CATransition animation];
     transition.duration = 0.3;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//    transition.type = kCATransitionPush;
     transition.type = kCATransitionFromRight;
     [self.layerSelectorNavigator.view.window.layer addAnimation:transition forKey:nil];
     
@@ -150,6 +138,8 @@ UIActivityIndicatorView *indicator;
     
     context[@"changeToApproveMarker"] = ^(NSString *markerJson) {
         
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
         Marker *marker = [Marker fromJSONString:markerJson];
         
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
@@ -160,10 +150,14 @@ UIActivityIndicatorView *indicator;
         NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadActions('%@')", [marker toJSONString]];
         [_webView stringByEvaluatingJavaScriptFromString:functionCall];
         
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
     };
     
     context[@"changeToRefuseMarker"] = ^(NSString *markerJSON, NSString *motiveMarkerJSON) {
 
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
         Marker *marker = [Marker fromJSONString:markerJSON];
         MotiveMarkerModeration *motiveMarkerModeration = [MotiveMarkerModeration fromJSONString:motiveMarkerJSON];
         
@@ -175,9 +169,13 @@ UIActivityIndicatorView *indicator;
         NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.loadActions('%@')", [marker toJSONString]];
         [_webView stringByEvaluatingJavaScriptFromString:functionCall];
         
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
     };
     
     context[@"changeToRemoveMarker"] = ^(NSString *markerJson) {
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
         Marker *marker = [Marker fromJSONString:markerJson];
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
@@ -187,13 +185,18 @@ UIActivityIndicatorView *indicator;
 		[_webView stringByEvaluatingJavaScriptFromString:functionCall];
         [_webView stringByEvaluatingJavaScriptFromString:@"geocabapp.marker.hide()"];
         
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
     };
     
     context[@"showLayerMarker"] = ^(NSNumber *markerId, NSArray *layersUrl) {
         
+        [self initializeI18n];
+        
         // Verifica se existem camadas sendo mostradas
         if ( layersUrl != nil && [layersUrl count] > 0 )
         {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             LayerDelegate *layerDelegate = [[LayerDelegate alloc] initWithUrl:@""];
             
             [layerDelegate listProperties:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
@@ -206,6 +209,9 @@ UIActivityIndicatorView *indicator;
                     [self loadMarker:markerId layersProperties:response];
                     
                 } else {
+                    
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    
                     NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.show('','','','%@')", response];
                     [_webView stringByEvaluatingJavaScriptFromString:functionCall];
                 }
@@ -214,8 +220,9 @@ UIActivityIndicatorView *indicator;
             
         }
         // Caso não, mostra apenas o marker
-        else if ( markerId > 0 )
+        else if ( [markerId doubleValue] > 0 )
         {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 			[self loadMarker:markerId layersProperties:nil];
         }
 
@@ -239,6 +246,15 @@ UIActivityIndicatorView *indicator;
     
 }
 
+- (void) initializeI18n {
+    
+    NSString *i18n = [NSString stringWithFormat:@"cancel:%@;motive:%@;refuse:%@;confirm:%@;confirm_remove:%@", NSLocalizedString(@"cancel", @""), NSLocalizedString(@"motive", @""), NSLocalizedString(@"refuse", @""), NSLocalizedString(@"confirm", @""), NSLocalizedString(@"confirm_remove", @"")];
+    NSString *language = [[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0];
+    NSString *functionCall = [NSString stringWithFormat:@"geocabapp.initialize_i18n('%@','%@')", i18n, language];
+    [_webView stringByEvaluatingJavaScriptFromString:functionCall];
+    
+}
+
 - (void) loadMarker:(NSNumber *) markerId layersProperties: (NSString *)layersProperties {
     
     MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@"marker"];
@@ -256,6 +272,8 @@ UIActivityIndicatorView *indicator;
         
         [delegate downloadMarkerAttributePhoto:markerId success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            
             NSString *imageBase64 = responseObject != nil ? [NSString stringWithFormat:@"data:image/jpeg;base64,%@", [operation.responseData base64EncodedStringWithOptions:0]] : @"";
             
             NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.showOptions('%@','%@','%@','%@','%@','%@')", markerId, markerAttributes, imageBase64, userId, userRole, layersProperties];
@@ -264,6 +282,8 @@ UIActivityIndicatorView *indicator;
             [self loadMotives:markerDelegate];
             
         } fail:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
             
             NSString *functionCall = [NSString stringWithFormat:@"geocabapp.marker.showOptions('%@','%@','','%@','%@','%@')", markerId, markerAttributes, userId, userRole, layersProperties];
             
@@ -406,8 +426,8 @@ UIActivityIndicatorView *indicator;
                 [[FBSession activeSession] closeAndClearTokenInformation];
             }
             
-            [[GPPSignIn sharedInstance] signOut];
-            [[GPPSignIn sharedInstance] disconnect];
+            [[GIDSignIn sharedInstance] signOut];
+            [[GIDSignIn sharedInstance] disconnect];
             
             [_layerSelectorNavigator dismissViewControllerAnimated:NO completion:^{
                [self performSegueWithIdentifier:@"logoutSegue" sender:nil];

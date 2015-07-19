@@ -8,6 +8,8 @@
 
 #import "MainViewController.h"
 #import "User.h"
+#import "MBProgressHUD.h"
+#import "AccountDelegate.h"
 
 @interface MainViewController ()
 
@@ -32,7 +34,19 @@ extern User *loggedUser;
         loggedUser.id = [defaults objectForKey:@"userId"];
         [loggedUser setBasicAuthorization];
         
-        [self performSegueWithIdentifier:@"mainSegue" sender:self];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/"];
+        [accountDelegate userWithEmail:loggedUser successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+            
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+			[self performSegueWithIdentifier:@"mainSegue" sender:self];
+            
+        } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+			[self performSegueWithIdentifier:@"loginSegue" sender:nil];
+        }];
+        
     }
     else
     {
