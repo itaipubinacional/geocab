@@ -10,9 +10,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import com.android.volley.VolleyError;
+
 import br.gov.itaipu.geocab.R;
 import br.gov.itaipu.geocab.controller.delegate.AccountDelegate;
 import br.gov.itaipu.geocab.entity.User;
+import br.gov.itaipu.geocab.util.DelegateHandler;
 
 public class SplashScreenActivity extends Activity {
 
@@ -63,13 +66,17 @@ public class SplashScreenActivity extends Activity {
                 if (settings.getAll().get("email") != null && settings.getAll().get("password") != null) {
                     accountDelegate = new AccountDelegate(SplashScreenActivity.this);
 
-                    User user = new User();
+                    final User user = new User();
                     user.setEmail(settings.getAll().get("email").toString());
                     user.setPassword(settings.getAll().get("password").toString());
+                    user.setBasicAuthorization(user.getEmail(), user.getPassword());
 
-                    String credentials = User.createToken(user.getEmail(), user.getPassword());
-                    accountDelegate.checkLogin(credentials, false);
-
+                    accountDelegate.authenticateUser(user, new DelegateHandler() {
+                        public void responseHandler(Object error) {
+                            startActivity(new Intent(SplashScreenActivity.this, AuthenticationActivity.class));
+                            SplashScreenActivity.this.finish();
+                        }
+                    });
                 }
                 else
                 {

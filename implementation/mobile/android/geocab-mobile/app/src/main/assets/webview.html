@@ -48,22 +48,22 @@
             <div class="marker-info-action">
                 <div class="marker-action update">
                     <a href="" id="editar">
-                        <img src="file:///android_res/drawable/edit2.png" />
+                        <img src="file:///android_res/drawable/edit" class="i18n image"/>
                     </a>
                 </div>
                 <div class="marker-action remove">
                     <a href="" id="open-remove">
-                        <img src="file:///android_res/drawable/remove2.png" />
+                        <img src="file:///android_res/drawable/remove" class="i18n image"/>
                     </a>
                 </div>
                 <div class="marker-action approve">
                     <a href="" id="aprovar">
-                        <img src="file:///android_res/drawable/approve2.png" />
+                        <img src="file:///android_res/drawable/approve" class="i18n image"/>
                     </a>
                 </div>
                 <div class="marker-action refuse">
                     <a href="" id="open-refuse">
-                        <img src="file:///android_res/drawable/refuse2.png">
+                        <img src="file:///android_res/drawable/refuse" class="i18n image"/>
                     </a>
                 </div>
             </div>
@@ -75,16 +75,16 @@
             <div data-role="popup" id="popup-refuse" data-transition="pop" data-position-to="window" data-tolerance="30,15,0,15" data-theme="a" data-corners="false" style="max-width:400px;">
                 <form>
                     <div style="padding: 20px 20px 30px 20px">
-                        <h4 style="margin: 0 0 20px 0">Recusar</h4>
+                        <h4 style="margin: 0 0 20px 0"><span class="i18n refuse"></span></h4>
                         <label for="un" class="ui-hidden-accessible"></label>
                         <select name="select-cause" id="select-cause" data-corners="false">
                         </select>
-                        <label for="description" class="ui-hidden-accessible">Motivo:</label>
+                        <label for="description" class="ui-hidden-accessible"><span class="i18n motive"></span>:</label>
                         <textarea data-mini="true" rows="3" class="motivo-moderacao ui-shadow" name="description" id="description" data-corners="false"></textarea>
                         
                         <div style="float: right; padding: 10px">
-                            <a href="#" data-rel="back" class="action-cause">cancelar</a>
-                            <a href="" id="confirm-refuse" class="action-cause">confirmar</a>
+                            <a href="#" data-rel="back" class="action-cause"><span class="i18n cancel"></span></a>
+                            <a href="" id="confirm-refuse" class="action-cause"><span class="i18n confirm"></span></a>
                         </div>
                     </div>
                 </form>
@@ -92,15 +92,14 @@
             
             <div data-role="popup" id="popup-remove" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-popup ui-body-c ui-overlay-shadow"  data-corners="false">
                 <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content ui-body-d" role="main">
-                    <h3 class="ui-title" style="font-size: 0.8em">Deseja realmente excluir o item?</h3>
-                    <p style="font-size: 0.7em">Esta operação não poderá ser desfeita.</p>
+                    <h3 class="ui-title" style="font-size: 0.8em"><span class="i18n confirm_remove"></span></h3><br/>
                     <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-btn-up-c ui-shadow ui-btn-corner-all ui-btn-inline">
                         <span class="ui-btn-inner ui-btn-corner-all" style="width: 70px; height: 40px; font-size: 0.8em">
-                        <span class="ui-btn-text">Cancelar</span></span>
+                        <span class="ui-btn-text"><span class="i18n cancel"></span></span></span>
                     </a>
                     <a href="#" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-btn-up-b ui-shadow ui-btn-corner-all ui-btn-inline">
                         <span class="ui-btn-inner ui-btn-corner-all" style="width: 70px; height: 40px; font-size: 0.8em">
-                        <span class="ui-btn-text" id="confirm-remove">Confirmar</span></span>
+                        <span class="ui-btn-text" id="confirm-remove"><span class="i18n confirm"></span></span></span>
                     </a>
                 </div>
             </div>

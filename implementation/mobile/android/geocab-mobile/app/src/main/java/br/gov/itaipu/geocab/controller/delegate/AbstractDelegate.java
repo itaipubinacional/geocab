@@ -3,6 +3,7 @@ package br.gov.itaipu.geocab.controller.delegate;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import br.gov.itaipu.geocab.R;
 import br.gov.itaipu.geocab.entity.User;
 
 /**
@@ -55,7 +56,7 @@ public abstract class AbstractDelegate
     public void showLoadingDialog(String message){
 
         this.progressDialog = new ProgressDialog(this.context);
-        this.progressDialog.setTitle("Aguarde");
+        this.progressDialog.setTitle(R.string.wait);
         this.progressDialog.setMessage(message);
         this.progressDialog.show();
 
