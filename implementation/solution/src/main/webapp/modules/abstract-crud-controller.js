@@ -28,6 +28,8 @@ function AbstractCRUDController( $scope, $log, $state, $rootScope, $timeout ) {
 	 * Whenever there is a change of URL if via button, manual URL Exchange, or 
 	 * the advancing and back browser, this event is called and calls the initilize () that plays the role of front controller.
 	 * 
+	 * 
+	 * 
 	 */
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
     	$log.info("$stateChangeSuccess");
