@@ -9,8 +9,11 @@
 #import "LayerDelegate.h"
 #import "Layer.h"
 #import "Attribute.h"
+#import "User.h"
 
 @implementation LayerDelegate
+
+extern User *loggedUser;
 
 - (RKObjectMapping *) mapping
 {
@@ -30,13 +33,12 @@
     return mapping;
 }
 
-- (void) list: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failBlock userName:(NSString*)userName password:(NSString*)password
-{
+- (void) list: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failBlock {
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:self.mapping method:RKRequestMethodGET pathPattern:nil keyPath:@"" statusCodes:nil];
     
     NSURL* url = [NSURL URLWithString:self.baseUrl];
     RKObjectManager* objectManager = [RKObjectManager managerWithBaseURL:url];
-    [objectManager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     
     NSURLRequest *request = [objectManager requestWithObject:nil method:RKRequestMethodGET path:@"" parameters:nil];
     
@@ -46,7 +48,7 @@
     [objectRequestOperation start];
 }
 
-- (void) listAttributesById: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password layerId: (NSNumber*) layerId
+- (void) listAttributesById: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock layerId: (NSNumber*) layerId
 {
     RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[Attribute class]];
     [mapping addAttributeMappingsFromDictionary:@{
@@ -60,7 +62,7 @@
     
     NSURL* url = [NSURL URLWithString:self.baseUrl];
     RKObjectManager* objectManager = [RKObjectManager managerWithBaseURL:url];
-    [objectManager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     
     NSURLRequest *request = [objectManager requestWithObject:nil method:RKRequestMethodGET path:[NSString stringWithFormat:@"%@/layerattributes", layerId] parameters:nil];
     
@@ -70,7 +72,7 @@
     [objectRequestOperation start];
 }
 
-- (void) listProperties: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock userName:(NSString*)userName password:(NSString*)password dataSource:(NSArray*)dataSource
+- (void) listProperties: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock dataSource:(NSArray*)dataSource
 {
     NSMutableArray *dataSourceArray = [NSMutableArray array];
     for (NSString *url in dataSource) {
@@ -94,7 +96,7 @@
     // Configurações da requisição
     NSURL* url = [NSURL URLWithString:self.baseUrl];
     RKObjectManager *manager = [RKObjectManager managerWithBaseURL:url];
-    [manager.HTTPClient setAuthorizationHeaderWithUsername:userName password:password];
+    [manager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     [manager setRequestSerializationMIMEType:RKMIMETypeJSON];
     [manager addRequestDescriptor:requestDescriptor];
     [manager addResponseDescriptor:responseDescriptor];

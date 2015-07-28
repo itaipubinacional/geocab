@@ -10,6 +10,7 @@ var geocabapp = function(){
 	var map;
 	var nativeInterface;
     var assetsPath = '';
+    var i18n = false;
 	
 	/**
 	 * Inicializa atributos
@@ -285,7 +286,30 @@ var geocabapp = function(){
 		hideStates : function(){
 			$("#action-state").hide();
 			$("#add-state").hide();
-		}
+		},
+        
+        initialize_i18n : function(messages, locale){
+            if ( i18n )
+                return;
+            
+            var tokens = messages.split(";");
+            
+            $.each(tokens, function( index, value ) {
+            	var values = value.split(":");
+            	$( ".i18n."+values[0] ).replaceWith( values[1] );
+            });
+            
+            if ( locale != 'pt' && locale != 'en' ){
+                locale = 'pt';
+            }
+            
+            $(".i18n.image").each(function(){
+                var newSrc = $(this).attr('src') + locale.toLowerCase() + ".png";
+            	$(this).attr('src', newSrc);
+        	});
+            
+            i18n = true;
+        }
 	
 	};
 

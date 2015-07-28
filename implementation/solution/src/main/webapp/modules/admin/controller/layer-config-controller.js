@@ -619,7 +619,6 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         }
         
         if ( layer.legend == null ) {
-        	layer.name = layer.title;
             
             angular.forEach($scope.attributes, function(value, index){
             	value.layer = layer;

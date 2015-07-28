@@ -240,7 +240,7 @@ public class MarkerActivity extends Activity {
 
         // Botao para remover a imagem
         this.removeImage = new Button(this);
-        this.removeImage.setText("Remover Imagem");
+        this.removeImage.setText(getResources().getString(R.string.remove_image));
         this.removeImage.setTextColor(Color.GRAY);
         this.removeImage.setBackground(null);
         this.removeImage.setOnClickListener(new View.OnClickListener() {
@@ -275,8 +275,8 @@ public class MarkerActivity extends Activity {
             if ( attribute.getRequired() && (fieldValue == null || fieldValue.equals("")) ) {
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Dados incompletos");
-                alert.setMessage("Preencha o campo " + attribute.getName());
+                alert.setTitle(getResources().getString(R.string.field_missing));
+                alert.setMessage(getResources().getString(R.string.inform_field) + " " + attribute.getName());
                 alert.setPositiveButton("OK",null);
                 alert.show();
 
@@ -294,26 +294,30 @@ public class MarkerActivity extends Activity {
      */
     public void selectMarkerImage(View v) {
 
-        final CharSequence[] options = { "Galeria", "Tirar foto", "Cancelar" };
+        final CharSequence[] options = {
+                getResources().getString(R.string.gallery),
+                getResources().getString(R.string.take_picture),
+                getResources().getString(R.string.cancel)
+        };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MarkerActivity.this);
-        builder.setTitle("Selecionar");
+        builder.setTitle(getResources().getString(R.string.choose_option));
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Tirar foto"))
+                if (options[item].equals(getResources().getString(R.string.take_picture)))
                 {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     File f = new File(android.os.Environment.getExternalStorageDirectory(), "geocab-temp.jpg");
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                     startActivityForResult(intent, 1);
                 }
-                else if (options[item].equals("Galeria"))
+                else if (options[item].equals(getResources().getString(R.string.gallery)))
                 {
                     Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
                 }
-                else if (options[item].equals("Cancelar")) {
+                else if (options[item].equals(getResources().getString(R.string.cancel))) {
                     dialog.dismiss();
                 }
             }
@@ -361,7 +365,7 @@ public class MarkerActivity extends Activity {
 
         final MarkerDelegate markerDelegate = new MarkerDelegate(this);
         final FileDelegate fileDelegate = new FileDelegate(MarkerActivity.this);
-        markerDelegate.showLoadingDialog("Salvando informações...");
+        markerDelegate.showLoadingDialog(getResources().getString(R.string.saving_informations));
 
         // Chamada ao serviço para persistir o marker
         if ( this.marker.getId() == null || this.marker.getId() == 0 )

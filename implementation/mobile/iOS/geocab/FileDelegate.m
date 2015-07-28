@@ -10,13 +10,15 @@
 
 @implementation FileDelegate
 
-- (void) downloadMarkerAttributePhoto: (NSNumber *) markerId success: (void(^)(AFHTTPRequestOperation *operation, id responseObject)) success fail: (void(^)(AFHTTPRequestOperation *operation, NSError *error)) fail login:(NSString*)login password:(NSString*)password
+extern User *loggedUser;
+
+- (void) downloadMarkerAttributePhoto: (NSNumber *) markerId success: (void(^)(AFHTTPRequestOperation *operation, id responseObject)) success fail: (void(^)(AFHTTPRequestOperation *operation, NSError *error)) fail;
 {
     NSString *urlString = [[self.baseUrl stringByAppendingString:[markerId stringValue]] stringByAppendingString:@"/download"];
     
     NSURL* url = [NSURL URLWithString:urlString];
     RKObjectManager* objectManager = [RKObjectManager managerWithBaseURL:url];
-    [objectManager.HTTPClient setAuthorizationHeaderWithUsername:login password:password];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value: loggedUser.credentials];
     
     NSURLRequest *request = [objectManager requestWithObject:nil method:RKRequestMethodGET path:@"" parameters:nil];
     
@@ -27,7 +29,7 @@
     [objectManager.HTTPClient enqueueHTTPRequestOperation:requestOperation];
 }
 
-- (void) uploadMarkerAttributePhoto:(NSNumber *)markerId image:(UIImage *)image login:(NSString*)login password:(NSString*)password
+- (void) uploadMarkerAttributePhoto:(NSNumber *)markerId image:(UIImage *)image;
 {
     // the server url to which the image (or the media) is uploaded.
     NSString *urlString = [self.baseUrl stringByAppendingString:@"marker/"];
@@ -43,10 +45,7 @@
     
     // create request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *authStr = [NSString stringWithFormat:@"%@:%@", login, password];
-    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
-    [request setValue:authValue forHTTPHeaderField:@"Authorization"];
+    [request setValue:loggedUser.credentials forHTTPHeaderField:@"Authorization"];
     
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [request setHTTPShouldHandleCookies:NO];

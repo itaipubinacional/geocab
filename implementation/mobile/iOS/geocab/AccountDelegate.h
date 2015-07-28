@@ -7,13 +7,12 @@
 //
 
 #import "AbstractDelegate.h"
+#import "User.h"
 
 @interface AccountDelegate : AbstractDelegate
 
 - (RKObjectMapping *) mapping;
 
-- (void) loginWithEmail: (NSString *)email password: (NSString *)password successBlock: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failureBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failureBlock;
-
-- (void) socialAuthenticate: (NSString *)email name: (NSString *)name successBlock: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failureBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failureBlock;
+- (void) userWithEmail: (User *)user successBlock: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failureBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failureBlock;
 
 @end

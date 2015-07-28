@@ -21,28 +21,15 @@
 
 
 
-- (void) loginWithEmail: (NSString *)email password: (NSString *)password successBlock: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failureBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failureBlock
+- (void) userWithEmail: (User *)user successBlock: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failureBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failureBlock
 {
-    NSString *credentials = [[email stringByAppendingString:@":"] stringByAppendingString:password];
-    NSData *credentialsData = [credentials dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *credentialsEncoded = [credentialsData base64EncodedStringWithOptions:0];
-    
-    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:credentialsEncoded, @"credentials", nil];
+    NSDictionary *params = @{@"username":user.email};
     
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:self.mapping method:RKRequestMethodPOST pathPattern:nil keyPath:nil statusCodes:nil];
     
+    [[RKObjectManager sharedManager].HTTPClient setDefaultHeader:@"Authorization" value:user.credentials];
     [[RKObjectManager sharedManager] addResponseDescriptor:responseDescriptor];
-    [[RKObjectManager sharedManager] postObject:nil path:@"check" parameters:params success:successBlock failure:failureBlock];
-}
-
-- (void) socialAuthenticate: (NSString *)email name: (NSString *)name successBlock: (void (^)(RKObjectRequestOperation *operation, RKMappingResult *result)) successBlock failureBlock: (void (^)(RKObjectRequestOperation *operation, NSError *error)) failureBlock
-{
-    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:email, @"email", name, @"name", nil];
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:self.mapping method:RKRequestMethodPOST pathPattern:nil keyPath:nil statusCodes:nil];
-    
-    [[RKObjectManager sharedManager] addResponseDescriptor:responseDescriptor];
-    [[RKObjectManager sharedManager] postObject:nil path:@"" parameters:params success:successBlock failure:failureBlock];
+    [[RKObjectManager sharedManager] postObject:nil path:@"user" parameters:params success:successBlock failure:failureBlock];
 }
 
 @end

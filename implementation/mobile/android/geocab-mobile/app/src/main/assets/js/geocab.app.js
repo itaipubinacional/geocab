@@ -10,6 +10,7 @@ var geocabapp = function(){
 	var map;
 	var nativeInterface;
     var assetsPath = '';
+    var i18n = false;
 	
 	/**
 	 * Inicializa atributos
@@ -146,7 +147,7 @@ var geocabapp = function(){
 		},
 
 		/**
-		 * Mostra um marcador no mapa de acordo com sua localização
+		 * Mostra um marcador no mapa de acordo com sua localizaï¿½ï¿½o
 		 */
 		addMarker : function(marker) {
 		
@@ -248,7 +249,7 @@ var geocabapp = function(){
 		},
 		
 		/**
-		 * Aproxima a área de visualização
+		 * Aproxima a ï¿½rea de visualizaï¿½ï¿½o
 		 */		
 		zoomToArea : function(latitude, longitude) {
 			var pan = ol.animation.pan({ source: view.getCenter() });
@@ -259,7 +260,7 @@ var geocabapp = function(){
 		},
 
 		/**
-		 * Mudança de estados
+		 * Mudanï¿½a de estados
 		 */	
 		changeToActionState : function(){
 			$("#action-state").show();
@@ -279,7 +280,30 @@ var geocabapp = function(){
 		hideStates : function(){
 			$("#action-state").hide();
 			$("#add-state").hide();
-		}
+		},
+
+        initialize_i18n : function(messages, locale){
+            if ( i18n )
+                return;
+
+            var tokens = messages.split(";");
+
+            $.each(tokens, function( index, value ) {
+                var values = value.split(":");
+                $( ".i18n."+values[0] ).replaceWith( values[1] );
+            });
+
+            if ( locale != 'pt' && locale != 'en' ){
+                locale = 'pt';
+            }
+
+            $(".i18n.image").each(function(){
+                var newSrc = $(this).attr('src') + locale.toLowerCase() + ".png";
+                $(this).attr('src', newSrc);
+            });
+
+            i18n = true;
+        }
 	
 	};
 

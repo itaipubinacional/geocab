@@ -13,6 +13,7 @@
 #import "MarkerAttribute.h"
 #import "Attribute.h"
 #import "AttributeType.h"
+#import "MBProgressHUD.h"
 #define MAXLENGTH 250
 
 @interface AddNewMarkerViewController()
@@ -36,8 +37,6 @@ extern NSUserDefaults *defaults;
 @end
 
 @implementation AddNewMarkerViewController
-
-UIActivityIndicatorView *indicator;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -76,15 +75,6 @@ UIActivityIndicatorView *indicator;
     self.navigationItem.rightBarButtonItem = buttonItem;
     self.navigationItem.hidesBackButton = YES;
     
-    // Loading
-    indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [indicator setBackgroundColor:[UIColor lightTextColor]];
-    indicator.frame = CGRectMake(0.0, 0.0, 45.0, 45.0);
-    indicator.center = self.view.center;
-    [self.view addSubview:indicator];
-    [indicator bringSubviewToFront:self.view];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = TRUE;
-
 }
 
 - (IBAction)takePhotoOrChoseFromLibrary:(id)sender {
@@ -136,7 +126,7 @@ UIActivityIndicatorView *indicator;
         MarkerDelegate *markerDelegate = [[MarkerDelegate alloc] initWithUrl:@""];
         FileDelegate *fileDelegate = [[FileDelegate alloc] initWithUrl:@"files/"];
         
-        [indicator startAnimating];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
         // Chamada ao serviço para persistir o marker
         if ( self.marker.id == nil || self.marker.id == 0 ){
@@ -154,14 +144,14 @@ UIActivityIndicatorView *indicator;
                 
                 // Faz upload da imagem do marker
                 if ( self.marker.imageUI != nil ){
-                    [fileDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+                    [fileDelegate uploadMarkerAttributePhoto: markerResponse.id image: self.marker.imageUI];
                     
                 }
                      
-                [indicator stopAnimating];
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
                 [self didFinish];
                 
-            } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] marker:self.marker];
+            } marker:self.marker];
             
         } else {
             
@@ -172,13 +162,13 @@ UIActivityIndicatorView *indicator;
                 // Faz upload da imagem do marker
                 if ( self.marker.imageUI != nil ){
                     
-                    [fileDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+                    [fileDelegate uploadMarkerAttributePhoto: self.marker.id image: self.marker.imageUI];
                     
                 }
                 
                 [self listAttributes:markerResponse];
                 
-            } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] marker:self.marker];
+            } marker:self.marker];
             
         }
 
@@ -210,7 +200,7 @@ UIActivityIndicatorView *indicator;
             
             [_webView stringByEvaluatingJavaScriptFromString:functionCall];
             
-            [indicator stopAnimating];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
             [self didFinish];
             
         } fail:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -219,13 +209,13 @@ UIActivityIndicatorView *indicator;
             
             [_webView stringByEvaluatingJavaScriptFromString:functionCall];
             
-            [indicator stopAnimating];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
             [self didFinish];
             
-        } login:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"]];
+        }];
         
         
-    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] markerId:self.marker.id];
+    } markerId:self.marker.id];
     
 }
 
@@ -269,7 +259,7 @@ UIActivityIndicatorView *indicator;
     
     if ( self.marker.layer == nil ){
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Dado não informado" message: @"Selecione a camada" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"field-missing", @"") message:NSLocalizedString(@"select-layer", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
         
         return NO;
@@ -282,9 +272,9 @@ UIActivityIndicatorView *indicator;
         
         if ( attribute.required && (fieldValue == nil || [fieldValue isEqualToString:@""]) ) {
             
-            NSString *message = [NSString stringWithFormat:@"Preencha o campo %@", attribute.name];
+            NSString *message = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"inform-field", @""), attribute.name];
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Dado não informado" message: message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"field-missing", @"") message: message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
             
             return NO;
@@ -423,7 +413,7 @@ UIActivityIndicatorView *indicator;
         }
 
         
-    } userName:[defaults objectForKey:@"email"] password:[defaults objectForKey:@"password"] layerId:layer.id];
+    } layerId:layer.id];
     
     
 }
@@ -494,7 +484,7 @@ UIActivityIndicatorView *indicator;
     self.removeImage = [UIButton buttonWithType:UIButtonTypeCustom];
     self.removeImage.translatesAutoresizingMaskIntoConstraints = NO;
     [self.removeImage.titleLabel setFont:[UIFont systemFontOfSize:12]];
-    [self.removeImage setTitle: @"Remover Imagem" forState:UIControlStateNormal];
+    [self.removeImage setTitle:NSLocalizedString(@"remove-image", @"") forState:UIControlStateNormal];
     [self.removeImage setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.removeImage addTarget:self action:@selector(removeMarkerImage:)
           forControlEvents:UIControlEventTouchUpInside];

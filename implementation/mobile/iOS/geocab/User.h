@@ -18,6 +18,7 @@
 @property (retain, nonatomic) NSDate *updated;
 @property (retain, nonatomic) NSString *username;
 @property (retain, nonatomic) NSString *password;
+@property (retain, nonatomic) NSString *credentials;
 @property (retain, nonatomic) NSArray *authorities;
 @property (retain, nonatomic) NSString *role;
 @property (nonatomic) BOOL enabled;
@@ -25,5 +26,7 @@
 @property (nonatomic) BOOL accountNonExpired;
 
 + (NSDictionary *) generateDictionary;
+- (void)setAccessTokenAuthorization:(NSString *)accessToken provider: (NSString *)provider;
+- (void)setBasicAuthorization;
 
 @end

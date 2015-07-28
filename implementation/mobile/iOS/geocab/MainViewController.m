@@ -8,6 +8,8 @@
 
 #import "MainViewController.h"
 #import "User.h"
+#import "MBProgressHUD.h"
+#import "AccountDelegate.h"
 
 @interface MainViewController ()
 
@@ -22,13 +24,29 @@ extern User *loggedUser;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    if ( [defaults objectForKey:@"name"] != NULL
-        && [defaults objectForKey:@"email"] != NULL )
+    if ( [defaults objectForKey:@"auth"] != NULL )
     {
+        loggedUser = [[User alloc] init];
         loggedUser.name = [defaults objectForKey:@"name"];
         loggedUser.email = [defaults objectForKey:@"email"];
         loggedUser.password = [defaults objectForKey:@"password"];
-        [self performSegueWithIdentifier:@"mainSegue" sender:self];
+        loggedUser.role = [defaults objectForKey:@"userRole"];
+        loggedUser.id = [defaults objectForKey:@"userId"];
+        [loggedUser setBasicAuthorization];
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/"];
+        [accountDelegate userWithEmail:loggedUser successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+            
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+			[self performSegueWithIdentifier:@"mainSegue" sender:self];
+            
+        } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+			[self performSegueWithIdentifier:@"loginSegue" sender:nil];
+        }];
+        
     }
     else
     {

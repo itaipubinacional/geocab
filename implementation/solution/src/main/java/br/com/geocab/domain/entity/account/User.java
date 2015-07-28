@@ -109,6 +109,17 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	
 	/**
 	 * 
+	 * @param name
+	 * @param email
+	 */
+	public User( String name, String email )
+	{
+		this.email = email;
+		this.name = name;
+	}	
+	
+	/**
+	 * 
 	 * @param id
 	 */
 	public User( Long id, String name, String email , boolean enabled )

@@ -7,19 +7,18 @@
 //
 
 #import "LoginViewController.h"
-#import "GTLPlusConstants.h"
-#import <GooglePlus/GooglePlus.h>
-#import <GoogleOpenSource/GoogleOpenSource.h>
+#import <GoogleSignIn/GoogleSignIn.h>
 #import "AppDelegate.h"
 #import "User.h"
 #import "ControllerUtil.h"
 #import "AccountDelegate.h"
+#import "MBProgressHUD.h"
 
 @interface LoginViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *username;
 @property (weak, nonatomic) IBOutlet UITextField *password;
-@property (copy) GPPSignIn *signIn;
+@property (copy) GIDSignIn *signIn;
 @property (weak, nonatomic) IBOutlet UIButton *standardLoginButton;
 
 extern NSUserDefaults *defaults;
@@ -34,21 +33,16 @@ extern User *loggedUser;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _signIn = [GPPSignIn sharedInstance];
+    _signIn = [GIDSignIn sharedInstance];
+	_signIn.shouldFetchBasicProfile = YES;
+    _signIn.clientID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"kClientId"];
+    _signIn.scopes = @[ @"https://www.googleapis.com/auth/plus.login" ];
+    _signIn.delegate = self;
+    _signIn.uiDelegate = self;
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     
-    _signIn.clientID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"kClientId"];
-    _signIn.scopes = [NSArray arrayWithObjects:kGTLAuthScopePlusLogin,
-                     nil];
-    _signIn.shouldFetchGooglePlusUser = YES;
-    _signIn.shouldFetchGoogleUserEmail = YES;
-    _signIn.shouldFetchGoogleUserID = YES;
-    _signIn.delegate = self;
-    
     _standardLoginButton.backgroundColor = [ControllerUtil colorWithHexString:@"27a7c6"];
-    
-    //[self.signInButton setStyle:(GPPSignInButtonStyle)];
     
     _username.delegate = self;
     _password.delegate = self;
@@ -62,6 +56,13 @@ extern User *loggedUser;
             loginLabel.text = @"Facebook";
         }
     }
+    
+    [[GIDSignIn sharedInstance] signInSilently];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.fbLoginView.delegate = nil;
 }
 
 //Method to make the keyboard disappear when touch happens out of the text field
@@ -81,13 +82,25 @@ extern User *loggedUser;
 - (IBAction)login:(id)sender {
     
     if ( [ControllerUtil verifyInternetConection] && self.isFormValid ) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        User *authUser = [[User alloc] init];
+        [authUser setEmail:_username.text];
+        [authUser setPassword:_password.text];
+        [authUser setBasicAuthorization];
+        
         AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/"];
-        [accountDelegate loginWithEmail:_username.text password:_password.text successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+        [accountDelegate userWithEmail:authUser successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+            
             User *loggedUser = [[User alloc] init];
             loggedUser = [[result array] objectAtIndex:0];
-            [loggedUser setPassword:_password.text];
+            loggedUser.password = authUser.password;
+            loggedUser.credentials = authUser.credentials;
+            [defaults setObject:@"basic" forKey:@"auth"];
             [self authenticateUser:loggedUser];
+            
         } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
             UIAlertView *errorMessage = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"") message:NSLocalizedString(@"login.error.message", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [errorMessage show];
         }];
@@ -99,21 +112,20 @@ extern User *loggedUser;
 
     [defaults setObject:user.name forKey:@"name"];
     [defaults setObject:user.email forKey:@"email"];
+    [defaults setObject:user.password forKey:@"password"];
     [defaults setObject:user.id forKey:@"userId"];
     [defaults setObject:user.role forKey:@"userRole"];
     
-    NSString *password = [_password.text isEqualToString:@""] ? user.password : _password.text;
-    [defaults setObject:password forKey:@"password"];
     loggedUser = user;
     [defaults synchronize];
-    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [self performSegueWithIdentifier:@"loginToMainSegue" sender:self];
 }
 
 - (BOOL)isFormValid {
     if ([_username.text isEqual:@""] || [_password.text isEqual:@""]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Erro"
-                                                        message:@"Verifique se os campos estão preenchidos corretamente."
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"")
+                                                        message:NSLocalizedString(@"verify-form-fields", @"")
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
@@ -125,40 +137,74 @@ extern User *loggedUser;
 }
 
 //Google plus login callback
-- (void)finishedWithAuth:(GTMOAuth2Authentication *)auth error:(NSError *)error {
+- (void)signIn:(GIDSignIn *)signIn didSignInForUser:(GIDGoogleUser *)user withError:(NSError *)error {
     if (error) {
-        NSLog(@"Received error %@ and auth object %@", error, auth);
+        NSLog(@"Received error %@ and auth object %@", error, signIn);
     } else {
         
-        [[[GPPSignIn sharedInstance] plusService] executeQuery:[GTLQueryPlus queryForPeopleGetWithUserId:_signIn.userID] completionHandler:^(GTLServiceTicket *ticket, GTLPlusPerson *person, NSError *error)
-         {
-             [self clearTextInputs];
-             AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/create"];
-             [accountDelegate socialAuthenticate:[[GPPSignIn sharedInstance] userEmail] name:person.displayName successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
-                 User *loggedUser = (User*)[result firstObject];
-                 loggedUser.password = @"none";
-                 [self authenticateUser:loggedUser];
-             } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
-                 NSLog(@"Google plus login error");
-             }];
-         }];
+		[self clearTextInputs];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        NSString *accessToken = user.authentication.accessToken;
+        User *authUser = [[User alloc] init];
+        [authUser setEmail:user.profile.email];
+        [authUser setAccessTokenAuthorization:accessToken provider:@"googleplus" ];
+        
+        AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/"];
+		[accountDelegate userWithEmail:authUser successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+                 
+			User *loggedUser = (User*)[result firstObject];
+            loggedUser.credentials = authUser.credentials;
+            [self authenticateUser:loggedUser];
+                 
+		} failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            UIAlertView *errorMessage = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"") message:NSLocalizedString(@"login.error.message", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [errorMessage show];
+		}];
+        
     }
     
 }
 
 //Facebook login callback
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user {
-    [self clearTextInputs];
-    AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/create"];
-    [accountDelegate socialAuthenticate:[user objectForKey:@"email"] name:user.name successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
-        User *loggedUser = (User*)[result firstObject];
-        loggedUser.password = @"none";
-        [self authenticateUser:loggedUser];
-    } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Facebook login error");
-    }];
-
+    
+    if ([self facebookCounter] > 0)
+        return;
+    else
+    {
+        self.facebookCounter++;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            
+            [self clearTextInputs];
+            
+            NSString *accessToken = [[[FBSession activeSession] accessTokenData] accessToken];
+            User *authUser = [[User alloc] init];
+            [authUser setEmail:[user objectForKey:@"email"]];
+            [authUser setAccessTokenAuthorization:accessToken provider:@"facebook" ];
+            
+            AccountDelegate *accountDelegate = [[AccountDelegate alloc] initWithUrl:@"authentication/"];
+            [accountDelegate userWithEmail:authUser successBlock:^(RKObjectRequestOperation *operation, RKMappingResult *result) {
+                
+                User *loggedUser = (User*)[result firstObject];
+                loggedUser.credentials = authUser.credentials;
+                [self authenticateUser:loggedUser];
+                [self setFacebookCounter:0];
+                
+            } failureBlock:^(RKObjectRequestOperation *operation, NSError *error) {
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                UIAlertView *errorMessage = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error", @"") message:NSLocalizedString(@"login.error.message", @"") delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [errorMessage show];
+            }];
+            
+        });
+    }
 }
+
+
 
 - (void)presentSignInViewController: (UIViewController *)viewController {
     [[self navigationController] pushViewController:viewController animated:YES];

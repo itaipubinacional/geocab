@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -157,9 +158,9 @@ public class MapActivity extends Activity
         webViewMap.addJavascriptInterface(this, "Android");
         webViewMap.setWebChromeClient(new WebChromeClient());
 
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-//            WebView.setWebContentsDebuggingEnabled(true);
-//        }
+/*        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }*/
 
         // Guarda a referência do webview na main controller
         AppController.getInstance().setWebViewMap(webViewMap);
@@ -273,6 +274,17 @@ public class MapActivity extends Activity
 
     }
 
+    private void loadInternationalization(){
+        String i18n = "cancel:" + getResources().getString(R.string.cancel)
+            + ";motive:" + getResources().getString(R.string.motive)
+            + ";refuse:" + getResources().getString(R.string.refuse)
+            + ";confirm:" + getResources().getString(R.string.confirm)
+            + ";confirm_remove:" + getResources().getString(R.string.confirm_remove);
+
+        String locale = Locale.getDefault().getLanguage();
+        this.webViewMap.loadUrl("javascript:geocabapp.initialize_i18n('"+i18n+"','"+locale+"')");
+    }
+
     /**
      * Dialog para sair ou permanecer na aplicação
      * @param view
@@ -281,9 +293,9 @@ public class MapActivity extends Activity
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapActivity.this);
 
         alertDialogBuilder.setTitle("Logout");
-        alertDialogBuilder.setMessage("Tem certeza que deseja sair?");
+        alertDialogBuilder.setMessage(R.string.confirm_exit);
         // set positive button: Yes message
-        alertDialogBuilder.setPositiveButton("Sim",new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
 
             if (Session.getActiveSession() != null)
@@ -297,13 +309,15 @@ public class MapActivity extends Activity
             SplashScreenActivity.prefEditor.putString("password", null);
             SplashScreenActivity.prefEditor.commit();
 
-            startActivity(new Intent(MapActivity.this, AuthenticationActivity.class));
+            Intent intent = new Intent(MapActivity.this, AuthenticationActivity.class);
+            intent.putExtra("logout", "logout");
+            startActivity(intent);
             finish();
 
             }
         });
         // set negative button: No message
-        alertDialogBuilder.setNegativeButton("Não",new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.no,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
                 // cancel the alert box and put a Toast to the user
                 dialog.cancel();
@@ -338,6 +352,8 @@ public class MapActivity extends Activity
 
     public void showLayerMarker( final long markerId, final String[] layersUrl )
     {
+        this.loadInternationalization();
+
         // Verifica se existem camadas sendo mostradas
         if ( layersUrl != null && layersUrl.length > 0 )
         {
@@ -365,7 +381,7 @@ public class MapActivity extends Activity
         final Marker marker = new Marker(markerId);
         final FileDelegate fileDelegate = new FileDelegate(MapActivity.this.getApplicationContext());
 
-        this.markerDelegate.showLoadingDialog("Carregando postagem...");
+        this.markerDelegate.showLoadingDialog(getResources().getString(R.string.loading_marker));
 
         this.markerDelegate.listMarkerAttributesByMarker(marker, new DelegateHandler<String>() {
             @Override
@@ -425,7 +441,7 @@ public class MapActivity extends Activity
         final Gson gson = new GsonBuilder().create();
         final Marker marker = gson.fromJson(markerJson, Marker.class);
 
-        this.markerDelegate.showLoadingDialog("Aprovando postagem...");
+        this.markerDelegate.showLoadingDialog(getResources().getString(R.string.approving_marker));
         this.markerDelegate.approveMarker(marker.getId(), new DelegateHandler() {
             @Override
             public void responseHandler(Object result) {
@@ -443,7 +459,7 @@ public class MapActivity extends Activity
         final Marker marker = gson.fromJson(markerJson, Marker.class);
         final MotiveMarkerModeration motiveMarker = gson.fromJson(motiveMarkerJSON, MotiveMarkerModeration.class);
 
-        this.markerDelegate.showLoadingDialog("Recusando postagem...");
+        this.markerDelegate.showLoadingDialog(getResources().getString(R.string.refusing_marker));
         this.markerDelegate.refuseMarker(marker.getId(), motiveMarker   ,  new DelegateHandler() {
             @Override
             public void responseHandler(Object result) {
@@ -460,7 +476,7 @@ public class MapActivity extends Activity
         final Gson gson = new GsonBuilder().create();
         final Marker marker = gson.fromJson(markerJson, Marker.class);
 
-        this.markerDelegate.showLoadingDialog("Removendo postagem...");
+        this.markerDelegate.showLoadingDialog(getResources().getString(R.string.removing_marker));
         this.markerDelegate.removeMarker(marker.getId(), new DelegateHandler() {
             @Override
             public void responseHandler(Object result) {
