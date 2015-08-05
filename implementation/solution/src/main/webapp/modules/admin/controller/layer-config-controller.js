@@ -568,6 +568,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.listLayersByFilters = function (filter, pageRequest) {
     	
+    	var order = new Order();
+        order.direction = 'ASC';
+        order.property = 'id';
+
+        pageRequest.sort = new Sort();
+        pageRequest.sort.orders = [order];
+        
         layerGroupService.listLayersByFilters(filter, pageRequest, {
             callback: function (result) {
                 $scope.currentPage = result;
