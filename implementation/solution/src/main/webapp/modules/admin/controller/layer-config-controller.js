@@ -609,6 +609,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         }
         
         if ($scope.currentEntity.dataSource.url == null) {
+        	layer.name = $scope.currentEntity.title
         	
         	for (var k = 0; k < $scope.currentPage.content.length; k++ ){
         		if ( $scope.currentEntity.title.toUpperCase() == $scope.currentPage.content[k].title.toUpperCase() ){
@@ -626,7 +627,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         	$scope.fadeMsg();
         	return;
         }
-        
+
         if ( layer.legend == null ) {
             
             angular.forEach($scope.attributes, function(value, index){
