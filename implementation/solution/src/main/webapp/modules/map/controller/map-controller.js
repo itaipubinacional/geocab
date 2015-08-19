@@ -953,6 +953,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     		$scope.addInternalLayerSearch(i);
                     	} else {
                     		$scope.map.removeLayer(node.wmsLayer);
+                    		
+                    		//Add in the list each selected layer
+                            $scope.layers.push({'wmsLayer': $scope.allSearchs[0].children[i].wmsLayer, 'wmsSource': $scope.allSearchs[0].children[i].wmsSource, "name":node.name, "titulo":node.label});
+                            
                             $scope.map.addLayer($scope.allSearchs[0].children[i].wmsLayer);	
                     	}
                     }
@@ -976,6 +980,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     	
 	                        //Is external layer
 	                        $scope.map.removeLayer($scope.allSearchs[0].children[i].wmsLayer);
+	                        $scope.layers.splice(i,1);
+
                     	}
 
                     }
@@ -1719,6 +1725,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 			});
 
 			 $scope.map.addLayer(wmsLayer);
+			 $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":$scope.currentCustomSearch.layer.name, "titulo":$scope.currentCustomSearch.layer.title});
 		} else {
 			//If internal layer...
 		
