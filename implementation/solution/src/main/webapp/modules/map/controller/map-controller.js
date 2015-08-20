@@ -621,6 +621,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     $scope.changeToScreen = function(screen) {
     	$scope.screen = screen;
     }
+    
+    $scope.objectKeys = function(obj){
+    	return Object.keys(obj);
+    }
 
     /**
      * Function that makes request to geo server to bring the features

@@ -58,6 +58,7 @@
 							ng-options="user.email for user in selectUsers "
 							ng-model="filter.user" chosen class="form-control"
 							>
+						<option value=""><spring:message code="admin.marker-moderation.All-users"/></option>
 					</select>
 				</div>
 			

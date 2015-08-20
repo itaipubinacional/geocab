@@ -191,8 +191,8 @@
 				               </span>
 				               
 				               <span ng-if="feature.type == 'external'">
-					               <span ng-repeat="(key, value) in feature.feature.fields" >
-					                   <b>{{key}}</b> - {{value}}
+					               <span ng-repeat="key in objectKeys(feature.feature.fields)" >
+					                   <b>{{key}}</b> - {{feature.feature.fields[key]}}
 					                   </br>
 					               </span>
 				               </span>
