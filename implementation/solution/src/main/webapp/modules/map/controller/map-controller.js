@@ -1000,7 +1000,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     	
 	                        //Is external layer
 	                        $scope.map.removeLayer($scope.allSearchs[0].children[i].wmsLayer);
-	                        //$scope.layers.splice(i,1);
+	                        $scope.layers.splice(i,1);
 
                     	}
 

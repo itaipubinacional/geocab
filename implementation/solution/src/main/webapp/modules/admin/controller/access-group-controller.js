@@ -26,7 +26,12 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
      */
     $scope.$on('ngGridEventSorted', function (event, sort) {
-
+    	
+    	if(event.targetScope.gridId != $scope.gridOptions.gridId)
+        {
+            return;
+        }
+    	
         // compara os objetos para garantir que o evento seja executado somente uma vez q não entre em loop
         if (!angular.equals(sort, $scope.gridOptions.sortInfo)) {
             $scope.gridOptions.sortInfo = angular.copy(sort);

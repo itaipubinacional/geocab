@@ -231,7 +231,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         },
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '30%'},
-            {displayName: $translate('Type'), cellTemplate:TYPE_COLUMN ,  width: '30%'},
+            {displayName: $translate('Type'), field: 'type', cellTemplate:TYPE_COLUMN ,  width: '30%'},
             {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: REQUIRED_COLUMN}, 
 //            	'<div>' +
 //                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
