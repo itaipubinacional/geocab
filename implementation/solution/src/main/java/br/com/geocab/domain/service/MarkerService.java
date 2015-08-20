@@ -188,7 +188,15 @@ public class MarkerService
 			}
 
 			marker.setLocation(markerTemporary.getLocation());
-
+			
+			marker.setStatus(MarkerStatus.PENDING);
+			
+			MarkerModeration markerModeration = new MarkerModeration();
+			markerModeration.setMarker(marker);
+			markerModeration.setStatus(MarkerStatus.PENDING);
+			
+			this.markerModerationRepository.save(markerModeration);
+			
 			marker = this.markerRepository.save(marker);
 		}
 		catch (DataIntegrityViolationException e)
