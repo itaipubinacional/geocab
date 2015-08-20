@@ -954,8 +954,24 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     	} else {
                     		$scope.map.removeLayer(node.wmsLayer);
                     		
+                    		//verify if layer already exists in array
+                    		var isAdded = false;
+                    		for(var i=0; i < $scope.layers.length; i++)
+                            {
+                                if($scope.layers[i].name == node.name)
+                                {
+                                    isAdded = true;
+                                }
+                            }
+
+                            if( !isAdded )
+                            {
+                                //Add in the list each selected layer
+                            	$scope.layers.push({'wmsLayer': $scope.allSearchs[0].children[i].wmsLayer, 'wmsSource': $scope.allSearchs[0].children[i].wmsSource, "name":node.name, "titulo":node.label});
+                            }
+                    		
                     		//Add in the list each selected layer
-                            $scope.layers.push({'wmsLayer': $scope.allSearchs[0].children[i].wmsLayer, 'wmsSource': $scope.allSearchs[0].children[i].wmsSource, "name":node.name, "titulo":node.label});
+                            
                             
                             $scope.map.addLayer($scope.allSearchs[0].children[i].wmsLayer);	
                     	}
@@ -980,7 +996,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     	
 	                        //Is external layer
 	                        $scope.map.removeLayer($scope.allSearchs[0].children[i].wmsLayer);
-	                        $scope.layers.splice(i,1);
+	                        //$scope.layers.splice(i,1);
 
                     	}
 
@@ -1725,7 +1741,22 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 			});
 
 			 $scope.map.addLayer(wmsLayer);
-			 $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":$scope.currentCustomSearch.layer.name, "titulo":$scope.currentCustomSearch.layer.title});
+			 
+			//verify if layer already exists in array
+			var isAdded = false;
+     		for(var i=0; i < $scope.layers.length; i++)
+            {
+                if($scope.layers[i].name == $scope.currentCustomSearch.layer.name)
+                {
+                    isAdded = true;
+                }
+            }
+
+            if( !isAdded )
+            {
+            	$scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":$scope.currentCustomSearch.layer.name, "titulo":$scope.currentCustomSearch.layer.title});
+            }
+			 
 		} else {
 			//If internal layer...
 		
@@ -2321,6 +2352,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	if($scope.slideActived == '#sidebar-marker-detail-update') return;
     	
     	if($scope.slideActived == '#sidebar-layers') {
+    		//If menu layer or search is open, close it and open marker detail
     		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
     		
     		$timeout(function(){
@@ -2343,7 +2375,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.toggleSidebar = function (time, element, slide){
-	    time = time != null ? 300 : time;
+	    time = 150;
 	    
 	    //Checks whether the animation is to open or close the sidebar by her current position.
 	    var closed = $('.menu-sidebar-container').css('right') == '3px';
@@ -2368,12 +2400,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	    }
 	    $scope.lastActive = element;
 	    
-	    if(element == "closeButton" || !closed){
-	    	$scope.slideActived = '';
-	    } else {
-	    	$scope.slideActived = slide;
-	    }
-	    
+	    $scope.slideActived = element == 'closeButton' ? '' : slide;	    
     }
 
     /*-------------------------------------------------------------------
