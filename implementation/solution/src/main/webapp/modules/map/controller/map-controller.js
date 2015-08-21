@@ -462,8 +462,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
          */
         $scope.map.on('click', function(evt) {
         	
-        	
-        	
         	 if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
              	$scope.screenMarkerOpenned = true;
                  $scope.toggleSidebarMarkerCreate(300);
@@ -479,7 +477,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
                  var iconFeature = new ol.Feature({
                      geometry: new ol.geom.Point([  evt.coordinate[0] , evt.coordinate[1]])
-                     
                  });	
 
                 var layer = new ol.layer.Vector({
@@ -491,21 +488,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                  $scope.currentCreatingInternalLayer = layer;
                  $scope.map.addLayer(layer);
                  $scope.$apply();
-                /*
-                 $scope.marker = new ol.Overlay({
-                     position: evt.coordinate,
-                     positioning: 'center-center',
-                     element: document.getElementById('marker-point'),
-                     stopEvent: false
-                 });
-                 $scope.map.addOverlay($scope.marker);*/
                  
                  $scope.currentEntity.latitude = evt.coordinate[0];
                  $scope.currentEntity.longitude = evt.coordinate[1];
                  
                  layerGroupService.listAllInternalLayerGroups({
              		callback : function(result) {
-                         //$scope.layersGroups = result;
                          $scope.selectLayerGroup = [];
                          
                          angular.forEach(result, function(layer,index){
@@ -542,14 +530,62 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
          	/*It is used to check if the user has clicked on the map or on the feature.*/
          	$scope.feature = feature;
          	
+         	/*Search*/
+         	/*if($scope.allSearchs.length) {
+         	 	if ($scope.allSearchs[0].children.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
+	
+         	 		var hasExternalSearchLayer = false;
+	                var listUrls = [];
+	
+	                for(var i =0; i < $scope.allSearchs[0].children.length; i++)
+	                {
+	                	if($scope.allSearchs[0].children[i].wmsSource) {
+	                		hasExternalSearchLayer = true;
+	                		var url = $scope.allSearchs[0].children[i].wmsSource.getGetFeatureInfoUrl(
+    	                        evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(),
+    	                        {'INFO_FORMAT': 'application/json'});
+    	
+    	                    listUrls.push(decodeURIComponent(url));
+	                	}
+	                }
+	
+	                if(hasExternalSearchLayer) {
+	                if( $scope.screenMarkerOpenned ) {
+						$scope.clearFcMarker();
+					}
+	                
+	                listAllFeatures(listUrls);
+	                
+	                $scope.screen = 'detail';
+	                }
+	            }
+         	}*/
+     	
+         	/*No Search*/
          	if(($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia) || feature) {
                 $scope.features = [];
          	}
          	
-            if ($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
+        	//var hasSearch  = $scope.allSearchs.length ? $scope.allSearchs[0].children.length > 0 : false;
+        
+            if (($scope.layers.length > 0 || hasSearch ) && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
 
                 var listUrls = [];
 
+                /*if(hasSearch){
+	                for(var i =0; i < $scope.allSearchs[0].children.length; i++)
+	                {
+	                	if($scope.allSearchs[0].children[i].wmsSource) {
+	                		//hasExternalSearchLayer = true;
+	                		var url = $scope.allSearchs[0].children[i].wmsSource.getGetFeatureInfoUrl(
+		                        evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(),
+		                        {'INFO_FORMAT': 'application/json'});
+		
+		                    listUrls.push(decodeURIComponent(url));
+	                	}
+	                }
+                }*/
+                
                 for(var i =0; i < $scope.layers.length; i++)
                 {
                     var url = $scope.layers[i].wmsSource.getGetFeatureInfoUrl(
@@ -925,7 +961,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             {
             	for(var i=0; i < $scope.layers.length; i++)
                 {
-                    if( $scope.layers[i].name == node.name )
+                    if( $scope.layers[i].name == node.name && !$scope.layers[i].searchId )
                     {
                         //Removes the user-desselecionadas layers
                         $scope.map.removeLayer($scope.layers[i].wmsLayer);
@@ -942,7 +978,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
     	if(typeof node == 'undefined') return false;
     	
-        if( node && node.type == 'layer' && $scope.allSearchs[0]){
+        if( node && node.type == 'layer' && $scope.allSearchs[0] && node.searchId >= 0 ){
 
             if( node.selected ){
 
@@ -959,7 +995,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     		$scope.map.removeLayer(node.wmsLayer);
                     		
                     		//verify if layer already exists in array
-                    		var isAdded = false;
+                    		/*var isAdded = false;
                     		for(var i=0; i < $scope.layers.length; i++)
                             {
                                 if($scope.layers[i].name == node.name)
@@ -969,10 +1005,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                             }
 
                             if( !isAdded )
-                            {
+                            {*/
+                    		
+                    		//retirar
                                 //Add in the list each selected layer
-                            	$scope.layers.push({'wmsLayer': $scope.allSearchs[0].children[i].wmsLayer, 'wmsSource': $scope.allSearchs[0].children[i].wmsSource, "name":node.name, "titulo":node.label});
-                            }
+                            	$scope.layers.push({'wmsLayer': $scope.allSearchs[0].children[i].wmsLayer, 'wmsSource': $scope.allSearchs[0].children[i].wmsSource, "name":node.name, "titulo":node.label, 'searchId': node.searchId});
+                           //}
                     		
                     		//Add in the list each selected layer
                             
@@ -985,6 +1023,18 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             else
             {
 
+            	for (var i = 0; i < $scope.layers.length; i++)
+                {
+            		if( $scope.layers[i].searchId == node.searchId )
+                    {
+	            		//Is external layer
+	                    $scope.map.removeLayer($scope.layers[i].wmsLayer);
+	                    
+	                    //retirar
+	                    $scope.layers.splice(i,1);
+                    }
+                }
+            	
                 for (var i = 0; i < $scope.allSearchs[0].children.length; i++)
                 {
                     if( $scope.allSearchs[0].children[i].name == node.name )
@@ -996,13 +1046,15 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     		
                     			//$scope.removeInternalLayerSearch($scope.allSearchs[0].children[i].pesquisa.searchId);
                     			$scope.removeInternalLayerSearch(i, $scope.allSearchs[0].children[i].search.layer.id);
-                    	} else {
+                    	} /*else {
                     	
-	                        //Is external layer
+                    		//Is external layer
 	                        $scope.map.removeLayer($scope.allSearchs[0].children[i].wmsLayer);
+	                        
+	                        //retirar
 	                        $scope.layers.splice(i,1);
 
-                    	}
+                    	}*/
 
                     }
                 }
@@ -1747,7 +1799,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 			 $scope.map.addLayer(wmsLayer);
 			 
 			//verify if layer already exists in array
-			var isAdded = false;
+			/*var isAdded = false;
      		for(var i=0; i < $scope.layers.length; i++)
             {
                 if($scope.layers[i].name == $scope.currentCustomSearch.layer.name)
@@ -1759,7 +1811,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             if( !isAdded )
             {
             	$scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":$scope.currentCustomSearch.layer.name, "titulo":$scope.currentCustomSearch.layer.title});
-            }
+            }*/
+			 
+			 $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":$scope.currentCustomSearch.layer.name, "titulo":$scope.currentCustomSearch.layer.title, 'searchId': ($scope.allSearchs.length ? $scope.allSearchs[0].children.length : 0)});
 			 
 		} else {
 			//If internal layer...
@@ -1878,8 +1932,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				               
 				               var location = new ol.format.WKT().readGeometry(marker.location.coordinateString);
 				               
-				               $scope.internalLayers.push({"layer": layer, "id": layerId, "location": location, 'searchId': $scope.searchId});
-				               $scope.internalLayersSearch.push({"layer": layer, "layerId": layerId, "searchId": $scope.searchId, "location": location});
+				               $scope.internalLayers.push({"layer": layer, "id": layerId, "location": location, 'searchId': $scope.allSearchs[0].children.length - 1});
+				               $scope.internalLayersSearch.push({"layer": layer, "layerId": layerId, "searchId": $scope.allSearchs[0].children.length - 1, "location": location});
 			     			});
 			
 						$scope.searchId++;
@@ -1912,9 +1966,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        {
 	        	
 	        	$scope.searchs[i].id = (i+1).toString();
-	            $scope.searchs[i].label = "Pesquisa "+ (i+1);
+	        	$scope.searchs[i].searchId = (i+1).toString();
+	        	$scope.searchs[i].label = "Pesquisa "+ (i+1);
 	            $scope.searchs[i].type = 'layer';
 	            $scope.searchs[i].name = "pesquisa"+ (i+1);
+	            
 	            
 	            if ( $scope.searchs[i].search.layer != null ){
 	            	$scope.allLayersSearches[i] = $scope.searchs[i].search.layer;	            		            	
@@ -2015,6 +2071,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.searchs[i].label = "Pesquisa "+ (i+1);
             $scope.searchs[i].type = 'layer';
             $scope.searchs[i].name = "pesquisa"+ (i+1);
+            $scope.searchs[i].searchId = i;
             
             if ( $scope.searchs[i].search.layer != null ){
             		$scope.allLayersSearches[i] = $scope.searchs[i].search.layer;
@@ -2780,7 +2837,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	var enterIn = true;
     	angular.forEach($scope.internalLayersSearch, function(internalLayerSearch, index){	
     		// verifica qual é a pesquisa selecionada...
-    		if ( (internalLayerSearch.searchId - 1) == searchId){  
+    		if ( internalLayerSearch.searchId == searchId){  
     			
     			
     			if(enterIn) {
@@ -2812,7 +2869,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	var internalLayersSearch =  $.extend([], $scope.internalLayersSearch);
     		
 	   angular.forEach(internalLayersSearch, function(internalLayerSearch, index){
-			 if(internalLayerSearch.searchId == searchId + 1) {
+			 if(internalLayerSearch.searchId == searchId) {
 				$scope.map.removeLayer(internalLayerSearch.layer);
 			 }		  
 	   });
