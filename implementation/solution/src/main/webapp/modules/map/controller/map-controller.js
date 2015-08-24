@@ -633,49 +633,68 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                     };
                     
                     try{
-                    angular.forEach(JSON.parse(result[i]).features, function(value, key) {
-                        angular.forEach(value.properties, function(value, key) {
-
-                            try {
-                                feature.fields[decodeURIComponent( escape(key))] = decodeURIComponent( escape(value));
-                            }
-                            catch(e) {
-                                feature.fields[key] = value;
-                            }
-
-                        });
-
-                        var insere = false;
-                        for (var propriedade in feature.fields) {
-                            insere = true;
-                            break;
-                        }
-
-                        if (insere){
-                            $scope.features.push({"feature": feature, "type":"external"});
-                        }
-                        
-                        if( $scope.features.length > 0 ) {
-                            
-        	                $timeout(function(){
-        	        			$scope.toggleSidebarMarkerDetailUpdate(300);
-        	        			
-        	        			//.panel-collapse 
-        	        			$('.min-height-accordion').find('.panel-body').css('height', 
-        	        															parseInt($('#sidebar-marker-detail-update').height()) - 
-        	        															parseInt( ( ( $scope.features.length) * 37 ) + 40 ) + 'px'
-        	        														  );
-        	    	    	}, 400)
-        	    	    	
-                        }
-                        
-                        if($scope.features.length > 1) {
-                        	$timeout(function(){
-                            	$(".min-height-accordion .panel-collapse .panel-body").css("min-height","300px")
-                        	}, 700)
-                    	}
-
-                    });
+	                    angular.forEach(JSON.parse(result[i]).features, function(value, key) {
+	                        angular.forEach(value.properties, function(value, key) {
+	
+	                            try {
+	                                feature.fields[decodeURIComponent( escape(key))] = decodeURIComponent( escape(value));
+	                            }
+	                            catch(e) {
+	                                feature.fields[key] = value;
+	                            }
+	
+	                        });
+	
+	                        var insere = false;
+	                        for (var propriedade in feature.fields) {
+	                            insere = true;
+	                            break;
+	                        }
+	
+	                        if (insere){
+	                        	
+	                        	if($scope.features.length) {
+	                        		var alreadyExistLayer = false;
+	                        		
+	                        		angular.forEach($scope.features, function(value, key){
+	                        			
+	                        			if(value.feature.layer.name == feature.layer.name) {
+	                        				alreadyExistLayer =  true;
+	                        			}
+	                        			
+	                        		});
+	                        		
+	                        		if(!alreadyExistLayer) {
+	                        			$scope.features.push({"feature": feature, "type":"external"});
+	                        		}
+	                        		
+	                        	} else {
+	                        		$scope.features.push({"feature": feature, "type":"external"});
+	                        	}
+	                        	
+	                        }
+	                        
+	                        if( $scope.features.length > 0 ) {
+	                            
+	        	                $timeout(function(){
+	        	        			$scope.toggleSidebarMarkerDetailUpdate(300);
+	        	        			
+	        	        			//.panel-collapse 
+	        	        			$('.min-height-accordion').find('.panel-body').css('height', 
+	        	        															parseInt($('#sidebar-marker-detail-update').height()) - 
+	        	        															parseInt( ( ( $scope.features.length) * 37 ) + 40 ) + 'px'
+	        	        														  );
+	        	    	    	}, 400)
+	        	    	    	
+	                        }
+	                        
+	                        if($scope.features.length > 1) {
+	                        	$timeout(function(){
+	                            	$(".min-height-accordion .panel-collapse .panel-body").css("min-height","300px")
+	                        	}, 700)
+	                    	}
+	
+	                    });
                     } catch(e){
                     	continue;
                     }
