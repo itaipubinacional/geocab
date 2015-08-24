@@ -910,30 +910,30 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                      minResolution: maxEscalaToMinResolutionn(node.maximumScaleMap)
                 });
 
-                var isAdded = false;
-
-                for(var i=0; i < $scope.layers.length; i++)
-                {
-                    if($scope.layers[i].name == node.name)
-                    {
-                        isAdded = true;
-                    }
-                }
-
-                if( !isAdded )
-                {
+//                var isAdded = false;
+//
+//                for(var i=0; i < $scope.layers.length; i++)
+//                {
+//                    if($scope.layers[i].name == node.name)
+//                    {
+//                        isAdded = true;
+//                    }
+//                }
+//
+//                if( !isAdded )
+//                {
                     //Add in the list each selected layer
                     $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":node.name, "titulo":node.label});
 
                     //Adds the selected layers in the map
                     $scope.map.addLayer(wmsLayer);
-                }
+//                }
             }
             else
             {
             	for(var i=0; i < $scope.layers.length; i++)
                 {
-                    if( $scope.layers[i].name == node.name && !$scope.layers[i].searchId )
+                    if( $scope.layers[i].name == node.name && $scope.layers[i].searchId == undefined )
                     {
                         //Removes the user-desselecionadas layers
                         $scope.map.removeLayer($scope.layers[i].wmsLayer);
@@ -943,11 +943,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             }
         }
     }
-    
-    $scope.$watch('searchs[0].search.layer', function(newValue, oldValue) {
-    	  console.log(newValue);
-    	  console.log(oldValue);
-    });
     
     $scope.getSelectedSearchNode = function(node) {
 
