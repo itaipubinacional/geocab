@@ -1770,6 +1770,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		///$scope.allSearchs[0].children[index].selected = false;
     		
     		if ( $scope.currentCustomSearch.name == $scope.allSearchs[0].children[index].search.name ){
+    			for (var i = 0; i < $scope.layers.length; i ++){
+    				if ($scope.allSearchs[0].children[index].searchId == $scope.layers[i].searchId ){
+    					$scope.layers.splice(i,1);
+    				}
+    			}
     		   	$scope.allSearchs[0].children[index].selected = false;
     		}else{
     		   	if ( $scope.allSearchs[0].children[index].selected == true ){
@@ -2072,6 +2077,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.searchs[i].type = 'layer';
             $scope.searchs[i].name = "pesquisa"+ (i+1);
             $scope.searchs[i].searchId = i;
+            
+           
             
             if ( $scope.searchs[i].search.layer != null ){
             		$scope.allLayersSearches[i] = $scope.searchs[i].search.layer;
