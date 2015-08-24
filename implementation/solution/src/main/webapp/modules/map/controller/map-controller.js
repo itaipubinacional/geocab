@@ -526,42 +526,9 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
  		        return feature;
  		      });
          	
-         	
          	/*It is used to check if the user has clicked on the map or on the feature.*/
          	$scope.feature = feature;
-         	
-         	/*Search*/
-         	/*if($scope.allSearchs.length) {
-         	 	if ($scope.allSearchs[0].children.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
-	
-         	 		var hasExternalSearchLayer = false;
-	                var listUrls = [];
-	
-	                for(var i =0; i < $scope.allSearchs[0].children.length; i++)
-	                {
-	                	if($scope.allSearchs[0].children[i].wmsSource) {
-	                		hasExternalSearchLayer = true;
-	                		var url = $scope.allSearchs[0].children[i].wmsSource.getGetFeatureInfoUrl(
-    	                        evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(),
-    	                        {'INFO_FORMAT': 'application/json'});
-    	
-    	                    listUrls.push(decodeURIComponent(url));
-	                	}
-	                }
-	
-	                if(hasExternalSearchLayer) {
-	                if( $scope.screenMarkerOpenned ) {
-						$scope.clearFcMarker();
-					}
-	                
-	                listAllFeatures(listUrls);
-	                
-	                $scope.screen = 'detail';
-	                }
-	            }
-         	}*/
-     	
-         	/*No Search*/
+        
          	if(($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia) || feature) {
                 $scope.features = [];
          	}
@@ -571,20 +538,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             if (($scope.layers.length > 0 || hasSearch ) && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
 
                 var listUrls = [];
-
-                /*if(hasSearch){
-	                for(var i =0; i < $scope.allSearchs[0].children.length; i++)
-	                {
-	                	if($scope.allSearchs[0].children[i].wmsSource) {
-	                		//hasExternalSearchLayer = true;
-	                		var url = $scope.allSearchs[0].children[i].wmsSource.getGetFeatureInfoUrl(
-		                        evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(),
-		                        {'INFO_FORMAT': 'application/json'});
-		
-		                    listUrls.push(decodeURIComponent(url));
-	                	}
-	                }
-                }*/
                 
                 for(var i =0; i < $scope.layers.length; i++)
                 {
@@ -1007,14 +960,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                             if( !isAdded )
                             {*/
                     		
-                    		//retirar
                                 //Add in the list each selected layer
-                            	$scope.layers.push({'wmsLayer': $scope.allSearchs[0].children[i].wmsLayer, 'wmsSource': $scope.allSearchs[0].children[i].wmsSource, "name":node.name, "titulo":node.label, 'searchId': node.searchId});
+                            	$scope.layers.push({'wmsLayer': $scope.allSearchs[0].children[i].wmsLayer, 'wmsSource': $scope.allSearchs[0].children[i].wmsSource, "name":node.search.layer.name, "titulo":node.search.layer.title, 'searchId': node.searchId});
                            //}
                     		
                     		//Add in the list each selected layer
-                            
-                            
                             $scope.map.addLayer($scope.allSearchs[0].children[i].wmsLayer);	
                     	}
                     }
@@ -1770,6 +1720,11 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		///$scope.allSearchs[0].children[index].selected = false;
     		
     		if ( $scope.currentCustomSearch.name == $scope.allSearchs[0].children[index].search.name ){
+    			for (var i = 0; i < $scope.layers.length; i ++){
+    				if ($scope.allSearchs[0].children[index].searchId == $scope.layers[i].searchId ){
+    					$scope.layers.splice(i,1);
+    				}
+    			}
     		   	$scope.allSearchs[0].children[index].selected = false;
     		}else{
     		   	if ( $scope.allSearchs[0].children[index].selected == true ){
@@ -2072,6 +2027,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             $scope.searchs[i].type = 'layer';
             $scope.searchs[i].name = "pesquisa"+ (i+1);
             $scope.searchs[i].searchId = i;
+            
+           
             
             if ( $scope.searchs[i].search.layer != null ){
             		$scope.allLayersSearches[i] = $scope.searchs[i].search.layer;
