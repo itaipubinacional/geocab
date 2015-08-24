@@ -892,7 +892,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		return;
     	}
     	
-        if( node && node.type == 'layer' && !node.search){
+        if( node && node.type == 'layer' && !node.search) {
             if( node.selected ){
 
                 var item = $scope.formatUrl(node,false);
@@ -942,11 +942,14 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 }
             }
         }
-
-
     }
     
-    $scope.getSelectedSearchNode = function(node){
+    $scope.$watch('searchs[0].search.layer', function(newValue, oldValue) {
+    	  console.log(newValue);
+    	  console.log(oldValue);
+    });
+    
+    $scope.getSelectedSearchNode = function(node) {
 
     	if(typeof node == 'undefined') return false;
     	
@@ -1029,8 +1032,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 }
             }
         }
-
-}
+    }
     
     /**
      * Treat the selection and deselection of each of the kml tree
@@ -1735,6 +1737,12 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
         // deselect the old research and remove the map
     	angular.forEach($scope.searchs, function(search, index){
+    		
+    		if(search.search.layer.name != $scope.currentCustomSearch.layer.name)
+    		{
+    			return true;
+    		}
+    		
     		$scope.map.removeLayer(search.wmsLayer);
     		///$scope.allSearchs[0].children[index].selected = false;
     		
@@ -1771,21 +1779,6 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 			});
 
 			 $scope.map.addLayer(wmsLayer);
-			 
-			//verify if layer already exists in array
-			/*var isAdded = false;
-     		for(var i=0; i < $scope.layers.length; i++)
-            {
-                if($scope.layers[i].name == $scope.currentCustomSearch.layer.name)
-                {
-                    isAdded = true;
-                }
-            }
-
-            if( !isAdded )
-            {
-            	$scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":$scope.currentCustomSearch.layer.name, "titulo":$scope.currentCustomSearch.layer.title});
-            }*/
 			 
 			 $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":$scope.currentCustomSearch.layer.name, "titulo":$scope.currentCustomSearch.layer.title, 'searchId': ($scope.allSearchs.length ? $scope.allSearchs[0].children.length : 0)});
 			 
@@ -2030,7 +2023,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             wmsSource.updateParams(filterParams);
         }
 
-        $scope.searchs.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'search': $scope.currentCustomSearch});
+        $scope.searchs.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'search': $.extend([], $scope.currentCustomSearch)});
 
         var item = {};
         item.label = 'Resultado pesquisas';
