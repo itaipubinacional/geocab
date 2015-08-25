@@ -1011,7 +1011,7 @@ public class LayerGroupService
 			
 			for(Attribute attributeInLayer : layer.getAttributes()) 
 			{
-				attributeInLayer.setId(attributeInLayer.getTemporaryId());
+				attributeInLayer.setId(attribute.getTemporaryId());
 				if(	attributeInLayer.getId().equals(attribute.getTemporaryId()) ) 
 				{
 					attributeDeleted = false;

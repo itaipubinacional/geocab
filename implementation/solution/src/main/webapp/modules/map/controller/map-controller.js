@@ -931,14 +931,21 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             }
             else
             {
-            	for(var i=0; i < $scope.layers.length; i++)
+            	for(var i=0; i <= $scope.layers.length; i++)
                 {
-                    if( $scope.layers[i].name == node.name && $scope.layers[i].searchId == undefined )
-                    {
-                        //Removes the user-desselecionadas layers
-                        $scope.map.removeLayer($scope.layers[i].wmsLayer);
-                        $scope.layers.splice(i,1);
-                    }
+            		if ( i == $scope.layers.length ){
+            			if ($scope.layers[i - 1].name == node.name && $scope.layers[i - 1].searchId == undefined){
+            				$scope.map.removeLayer($scope.layers[i - 1].wmsLayer);
+                            $scope.layers.splice(i - 1,1);
+            			}
+            		} else {
+            			if( $scope.layers[i].name == node.name && $scope.layers[i].searchId == undefined )
+                        {
+                            //Removes the user-desselecionadas layers
+                            $scope.map.removeLayer($scope.layers[i].wmsLayer);
+                            $scope.layers.splice(i,1);
+                        }
+            		}                    
                 }
             }
         }
@@ -1841,8 +1848,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 				    			
 				    			});
 				    			
-				    			if($scope.canRemoveMarker) {
-				    				delete $scope.markersByLayer[index];
+				    			if($scope.canRemoveMarker) {				    				
+				    				delete $scope.markersByLayer[index];				    				
 				    			}
 				    		});
 				    		
@@ -2713,7 +2720,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	var internalLayers =  $.extend([], $scope.internalLayers);
     	
     	angular.forEach(internalLayers, function(value, index){
-			  if(value.id == layerId) {
+			  if(value.id == layerId || value.layerId == layerId ) {
 				  $scope.map.removeLayer(value.layer);
 				  var len = $scope.internalLayers.length;
 				  
@@ -2811,7 +2818,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     				
     				//Percorre a lista das layers existentes no mapa...
 	    			angular.forEach(internalLayers, function(internalLayer, index){
-	    				if(internalLayer.id == internalLayerSearch.layerId && !internalLayer.searchId) {
+	    				if(internalLayer.id == internalLayerSearch.layerId && internalLayer.searchId >= 0) {
 	    					$scope.map.removeLayer(internalLayer.layer);
 	    					
 	    				} else {
@@ -2823,6 +2830,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     			  			
     			
     			$scope.map.addLayer(internalLayerSearch.layer);
+    			$scope.internalLayers.push(internalLayerSearch);
     		}	
     	});
     	
