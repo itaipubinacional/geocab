@@ -1928,7 +1928,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 	        {
 	        	
 	        	$scope.searchs[i].id = (i+1).toString();
-	        	$scope.searchs[i].searchId = (i+1).toString();
+	        	$scope.searchs[i].searchId = i;
 	        	$scope.searchs[i].label = "Pesquisa "+ (i+1);
 	            $scope.searchs[i].type = 'layer';
 	            $scope.searchs[i].name = "pesquisa"+ (i+1);
@@ -2138,6 +2138,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 vectorSource.getExtent(), ($scope.map.getSize()));
 
             var item = {};
+            item.id = 'kmlLayers'
             item.label = 'Camadas KML';
             item.type = 'kml';
 
@@ -2145,7 +2146,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 
             for(var i =0; i < $scope.kmlLayers.length ; ++i)
             {
-
+            	$scope.kmlLayers[i].id = (i+1).toString();
                 $scope.kmlLayers[i].label = "Camada "+ (i+1);
                 $scope.kmlLayers[i].type = 'kml';
                 $scope.kmlLayers[i].name = "Camada"+ (i+1);
