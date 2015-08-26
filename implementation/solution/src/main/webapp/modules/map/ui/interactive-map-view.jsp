@@ -637,7 +637,7 @@
 									style="overflow-x: auto; position: absolute; top: 210px; bottom: 0px; left: 20px; right: 0px;">
 		
 									<div ng-show="allLayers.length > 0">
-										<input type="text" ng-model="bagSearch"
+										<input maxlength="144" type="text" ng-model="bagSearch"
 											placeholder="<spring:message code="map.Group-or-layer"/>"
 											class="sidebar-content-search form-control" />
 									</div>
