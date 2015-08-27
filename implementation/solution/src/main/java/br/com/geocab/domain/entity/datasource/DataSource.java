@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.URL;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
@@ -50,6 +51,7 @@ public class DataSource extends AbstractEntity implements Serializable
 	/**
 	 * URL of {@link DataSource}
 	 */
+	@URL
 	@Column(nullable=true, length=255  )
 	private String url;
 	/**

@@ -395,12 +395,14 @@ public class LayerGroupService
 		// faz a recurs�o para atualizar todos os filhos
 		if ( layerGroupPublished.getLayersGroup() != null)
 		{
-			for ( LayerGroup layerGroupOriginalChild : layerGroupOriginal.getLayersGroup() )
+			if ( layerGroupOriginal.getLayersGroup() != null )
 			{
-				this.recursive( layerGroupOriginalChild, layerGroupPublished );
+				for ( LayerGroup layerGroupOriginalChild : layerGroupOriginal.getLayersGroup() )
+				{
+					this.recursive( layerGroupOriginalChild, layerGroupPublished );
+				}
 			}
-		}
-		
+		}					
 	}
 
 	/**

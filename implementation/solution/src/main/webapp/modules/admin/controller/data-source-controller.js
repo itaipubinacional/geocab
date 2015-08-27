@@ -242,6 +242,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 		dataSourceService.findDataSourceById( $state.params.id, {
 			callback : function(result) {
 				$scope.currentEntity = result;
+				$scope.url = result.url;
 				$scope.currentState = $scope.UPDATE_STATE;
 				$state.go($scope.UPDATE_STATE);
 				$scope.$apply();
@@ -423,13 +424,26 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 		}
 
 		dataSourceService.updateDataSource( $scope.currentEntity , {
-			callback : function() {
-			
-				$scope.currentState = $scope.LIST_STATE;
-				$state.go($scope.LIST_STATE);
-				$scope.msg = {type:"success", text: $translate("admin.datasource.Geographic-data-source-successfully-updated")+"!", dismiss:true};
-				$scope.fadeMsg();
-				$scope.$apply();
+			callback : function(result) {
+				var newMessage = null;
+				
+				if (!$scope.url && $scope.currentEntity.url !=null ){
+					newMessage = $translate("admin.datasource.Is-not-possible-to-change-an-internal-data-source-that-already-contain-layers-into-a-external-data-source")+"!"
+				}else if ( $scope.url && $scope.currentEntity.url == null ) {
+					newMessage = $translate("admin.datasource.Is-not-possible-to-change-an-external-data-source-that-already-contain-layers-into-a-internal-data-source")+"!"					
+				}
+								
+				if (result == null){
+					$scope.msg = {type:"danger", text: newMessage, dismiss:true};
+					$scope.fadeMsg();
+					$scope.$apply();
+				} else {
+					$scope.currentState = $scope.LIST_STATE;
+					$state.go($scope.LIST_STATE);
+					$scope.msg = {type:"success", text: $translate("admin.datasource.Geographic-data-source-successfully-updated")+"!", dismiss:true};
+					$scope.fadeMsg();
+					$scope.$apply();
+				}			
 			},
 			errorHandler : function(message, exception) {
 				if (exception.message.indexOf("ConstraintViolationException") > -1){
