@@ -24,4 +24,4 @@
     <item android:state_focused="true"                                                             android:drawable="@drawable/com_facebook_picker_list_focused" />
     <item                                                                                          android:drawable="@android:color/transparent" />
 </selector>
-<!-- From: file:/D:/JOAZ/DEV/MOBILE/geocab-scm/itaipu-geocab/implementation/mobile/android/geocab-mobile/libraries/facebook/res/drawable/com_facebook_picker_item_background.xml -->
+<!-- From: file:/Users/henriquelobatozago/Development/workspaces/itaipu-geocab/implementation/mobile/android/geocab-mobile/libraries/facebook/res/drawable/com_facebook_picker_item_background.xml -->

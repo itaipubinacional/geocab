@@ -21,4 +21,4 @@
           android:drawable="@drawable/com_facebook_button_grey_focused" />
     <item android:drawable="@drawable/com_facebook_button_grey_normal" />
 </selector>
-<!-- From: file:/D:/JOAZ/DEV/MOBILE/geocab-scm/itaipu-geocab/implementation/mobile/android/geocab-mobile/libraries/facebook/res/drawable/com_facebook_loginbutton_silver.xml -->
+<!-- From: file:/Users/henriquelobatozago/Development/workspaces/itaipu-geocab/implementation/mobile/android/geocab-mobile/libraries/facebook/res/drawable/com_facebook_loginbutton_silver.xml -->
