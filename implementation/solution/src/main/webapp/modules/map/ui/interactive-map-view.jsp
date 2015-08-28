@@ -637,7 +637,7 @@
 									style="overflow-x: auto; position: absolute; top: 210px; bottom: 0px; left: 20px; right: 0px;">
 		
 									<div ng-show="allLayers.length > 0">
-										<input type="text" ng-model="bagSearch"
+										<input maxlength="144" type="text" ng-model="bagSearch"
 											placeholder="<spring:message code="map.Group-or-layer"/>"
 											class="sidebar-content-search form-control" />
 									</div>
@@ -750,17 +750,16 @@
 		
 		                    <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
 		                    	<spring:message code="map.None-KML-file-enabled"/>
-		                    </div>
-		
-		                    <div style="overflow-x: auto;position: absolute;top: 110px;bottom: 0px;left: 20px;right: 0px;">
+		                    </div>		
+		                    <div style="overflow: auto;top: 110px;bottom: 0px;left: 20px;right: 0px;">
 		                        <div id="tree-kml"
 		                             ivh-treeview="allLayersKML"
 		                             ivh-fn="getSelectedKMLNode"
 		                             ivh-treeview-label-attribute="'label'"
-		                             ivh-treeview-children-attribute="'children'">
+		                             ivh-treeview-children-attribute="'children'"
+		                            >
 		                        </div>
-		                    </div>
-		
+		                    </div>		
 		                </div>
 	              </div>
 	              <div class='rui-resizable-handle' style="background: #0077bf; width: 3px"></div>
