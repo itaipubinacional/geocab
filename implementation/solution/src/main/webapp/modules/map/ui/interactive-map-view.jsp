@@ -72,13 +72,13 @@
 										></span>
 							</div>			
 						<accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret" heightStyle="content">
-				            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' }"> 
+				            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' || feature.type == 'external' }"> 
 				            
 				                <accordion-heading>
 				                    <div style="cursor:pointer; padding: 10px 0;">
 				                    	<i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
 				                        <span ng-if="feature.type == 'internal'" style="overflow:auto" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
-				                        <span ng-if="feature.type == 'external'">{{feature.feature.layer.titulo}}</span>
+				                        <span ng-if="feature.type == 'external'" style="overflow:auto" ng-click="calculo()">{{feature.feature.layer.titulo}}</span>
 				                        
 				                    </div>
 				                </accordion-heading>
@@ -546,28 +546,30 @@
 	
 							<img class="marker-image" ng-show="imgResult" style="width: 100%; height: 200px; margin-top: 12px;"> <br>
 							<hr>
-	
-							<input type="file" id="upload-input" style="display: none;"
+							
+							<div ng-if="currentEntity.layer">
+								<input type="file" id="upload-input" style="display: none;"
 								accept="image/*"
 								onchange="angular.element(this).scope().setPhotoMarker(this)" />
-	
-							<button class="btn btn-default"
-								onclick="angular.element('#upload-input').click();"
-								style="float: left;"
-								title="<spring:message code="map.Picture" />"
-								>
-								<span class="glyphicon glyphicon-picture"></span>
-							</button>
-	
-							<button 
-								id="buttonInsert" 
-								class="btn btn-primary"
-								ng-click="insertMarker()" 
-								style="float: right"
-								title="<spring:message code="map.Submit" />"
-								>
-								<spring:message code="map.Submit" />					
-							</button>
+		
+								<button  class="btn btn-default"
+									onclick="angular.element('#upload-input').click();"
+									style="float: left;"
+									title="<spring:message code="map.Picture" />"
+									>
+									<span class="glyphicon glyphicon-picture"></span>
+								</button>
+		
+								<button 
+									id="buttonInsert" 
+									class="btn btn-primary"
+									ng-click="insertMarker()" 
+									style="float: right"
+									title="<spring:message code="map.Submit" />"
+									>
+									<spring:message code="map.Submit" />					
+								</button>
+							</div>							
 						</div>
 					</div>
 				</form>

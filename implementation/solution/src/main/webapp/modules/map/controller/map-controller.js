@@ -209,6 +209,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      */
     $scope.features = [];
 
+    $scope.currentEntity = {};
     /*-------------------------------------------------------------------
      * 		            PERMISSIONS FOR THE TOOLS
      *-------------------------------------------------------------------*/
@@ -2374,7 +2375,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     }
     
     $scope.toggleSidebar = function (time, element, slide){
-	    time = 150;
+	    time = 300;
 	    
 	    //Checks whether the animation is to open or close the sidebar by her current position.
 	    var closed = $('.menu-sidebar-container').css('right') == '3px';
@@ -2890,8 +2891,17 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     }
     
+    
+    
     $scope.setPhotoMarker = function(element) {
-    	if (!(/\.(gif|jpg|jpeg|bmp|png)$/i).test(element.value)){
+    	
+    	if (element.value == ""){    
+    		$scope.imgResult = null;
+    		$scope.$apply();
+    		return false;
+    	}
+    	
+    	if (!(/\.(gif|jpg|jpeg|bmp|png)$/i).test(element.value) && element.value != ""){
     		$("#upload-input").val("");
             $scope.msg = {text: $translate("map.The-selected-file-is-invalid"), type: "danger", dismiss: true};
             $("div.msgMap").show();
@@ -2903,10 +2913,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
             return false;
         }
     	
-    	
-    	$scope.currentEntity.image = element;
-    	
-    	$scope.readURL(element);
+		$scope.currentEntity.image = element;
+		$scope.readURL(element);    
     }
     
     $scope.enableMarker = function() {
