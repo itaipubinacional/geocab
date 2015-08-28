@@ -77,6 +77,8 @@ geocabapp.marker = function(){
 		$(".marker-info-action").hide();
 		$(".marker-action").hide();
 		$(".marker-status").hide();
+                              
+        
 		
 		if ((currentUser.role == 'ADMINISTRATOR' || currentUser.role == 'MODERATOR') || 
 			(marker.status == 'PENDING' && currentUser.id == marker.user.id)){
@@ -88,7 +90,6 @@ geocabapp.marker = function(){
 		if ((currentUser.role == 'ADMINISTRATOR' || currentUser.role == 'MODERATOR') || 
 			(marker.status == 'PENDING' && currentUser.id == marker.user.id)){
             $(".marker-info-action").show();
-			$(".marker-action.update").show();
 			$(".marker-status").show();
 		}
 		
@@ -103,6 +104,10 @@ geocabapp.marker = function(){
             $(".marker-info-action").show();
 			$(".marker-action.approve").show();
 		}
+
+        if (marker.status != 'ACCEPTED' && currentUser.id == marker.user.id){
+            $(".marker-action.update").show();
+        }
 		
 		var status = { PENDING : 'STATUS PENDENTE', REFUSED : 'STATUS RECUSADO', ACCEPTED : 'STATUS APROVADO' };
 		$(".marker-status", element).html(status[marker.status]);

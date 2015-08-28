@@ -36,8 +36,7 @@ public abstract class AbstractDelegate
     /**
      *
      */
-    public AbstractDelegate(String urlPath, Context context)
-    {
+    public AbstractDelegate(String urlPath, Context context){
         this.urlPath = urlPath;
         this.context = context;
     }
@@ -47,8 +46,7 @@ public abstract class AbstractDelegate
 	 *-------------------------------------------------------------------*/
 
 
-    protected String getUrl()
-    {
+    protected String getUrl(){
         return "https://geocab.itaipu.gov.br/api/" + urlPath;
         //return "http://geocab.sbox.me/api/" + urlPath;
     }
