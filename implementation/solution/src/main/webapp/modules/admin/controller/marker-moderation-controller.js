@@ -219,6 +219,19 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	};
     
     /**
+     * Setting the mouse position control
+     */
+    $scope.mousePositionControl = new ol.control.MousePosition({
+        coordinateFormat: ol.coordinate.createStringXY(4),
+        projection: 'EPSG:4326',
+        // comment the following two lines to have the mouse position
+        // be placed within the map.
+        className: 'custom-mouse-position',
+//            target: document.getElementById('info'),
+        undefinedHTML: '&nbsp;'
+    });
+    
+    /**
      * The configuration view of the map
      */
     $scope.view = new ol.View({
@@ -424,7 +437,55 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     /*-------------------------------------------------------------------
 	 * 		 				 	  BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	
+	/**
+     * Responsible method to display on the map the mouse pointer coordinates
+     */
+    function enableMouseCoordinates() {
 
+        /**
+         * Variable that has the element that contains the tooltip
+         */
+        var info = $('#info');
+
+        /**
+         * Method that shows the mouse coordinates on the map
+         */
+        var displayCoordinateMouse = function(pixel) {
+
+            info.html("<p>" + formatCoordinate($scope.mousePositionControl.l) + "</p>");
+            info.css("display","block");
+
+        };
+        
+        /**
+         * Method that formats the coordinate of the mouse
+         */
+        var formatCoordinate = function( coord ){
+
+            var posVirgula = coord.indexOf(",");
+
+            var part1 = coord.slice(0,posVirgula);
+            var part2 = coord.slice(posVirgula+2);
+
+            var posPonto = part1.indexOf(".");
+            var latitude = part1.slice(0,posPonto) + "°" + part1.slice(posPonto+1, posPonto+3) + "'" + part1.slice(posPonto+3) + '"';
+
+            posPonto = part2.indexOf(".");
+            var longitude = part2.slice(0,posPonto) + "°" + part2.slice(posPonto+1, posPonto+3) + "'" + part2.slice(posPonto+3) + '"';
+
+            return latitude + ", " + longitude;
+
+        }
+        
+        /**
+         * Events to display coordinate of the mouse
+         */
+        $($scope.map.getViewport()).on('mousemove', function(evt) {
+        	displayCoordinateMouse($scope.map.getEventPixel(evt.originalEvent));
+        });
+    }
+	
     /**     
      * List all the internal layers
      */
@@ -736,16 +797,23 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
          * Openlayers map configuration
          */
         $scope.olMapDiv = document.getElementById('olmap');
-        $scope.map = new ol.Map({
-
+        $scope.map = new ol.Map({        	        	
+        	
+        	controls: [
+                       $scope.mousePositionControl
+                   ],
+                   
             layers: [
                  new ol.layer.Tile({
                    source: new ol.source.OSM()
                  })
-               ],
+               ],                       
+               
             target: $scope.olMapDiv,
             view: $scope.view
         });
+        
+        enableMouseCoordinates();
         
         $scope.map.on('click', function(evt) {
         	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
