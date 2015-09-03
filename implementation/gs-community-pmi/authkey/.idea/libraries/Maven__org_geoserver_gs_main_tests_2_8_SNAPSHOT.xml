@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.geoserver:gs-main:tests:2.8-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geoserver/gs-main/2.8-SNAPSHOT/gs-main-2.8-20150829.024904-529-tests.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geoserver/gs-main/2.8-SNAPSHOT/gs-main-2.8-20150829.024904-529-test-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geoserver/gs-main/2.8-SNAPSHOT/gs-main-2.8-20150829.024904-529-test-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

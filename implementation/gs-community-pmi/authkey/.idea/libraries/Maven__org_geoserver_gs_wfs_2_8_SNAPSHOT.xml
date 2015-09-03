@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.geoserver:gs-wfs:2.8-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geoserver/gs-wfs/2.8-SNAPSHOT/gs-wfs-2.8-20150829.024925-529.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geoserver/gs-wfs/2.8-SNAPSHOT/gs-wfs-2.8-20150829.024925-529-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geoserver/gs-wfs/2.8-SNAPSHOT/gs-wfs-2.8-20150829.024925-529-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

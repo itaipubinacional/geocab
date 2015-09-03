@@ -509,7 +509,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                          })
                          
                          $scope.currentState = $scope.LIST_STATE;
-                         $state.go( $scope.LIST_STATE );
+                         
                          $scope.$apply();
                      },
                      errorHandler : function(message, exception) {

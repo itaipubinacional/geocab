@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.geotools:gt-property:14-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geotools/gt-property/14-SNAPSHOT/gt-property-14-20150828.171811-219.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geotools/gt-property/14-SNAPSHOT/gt-property-14-20150828.171811-219-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geotools/gt-property/14-SNAPSHOT/gt-property-14-20150828.171811-219-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
