@@ -2349,7 +2349,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	 * If the marker tab is open, close it and wait to open the new.
     	 * */
     	
-    	if($scope.slideActived == '#sidebar-marker-detail-update') return;
+    	if($scope.slideActived == '#sidebar-marker-detail-update'){
+    		$(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
+    		return
+    	}
     	
     	if($scope.slideActived == '#sidebar-layers') {
     		//If menu layer or search is open, close it and open marker detail
@@ -2366,8 +2369,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	if ( $('#sidebar-marker-detail').css("display") == 'none' ){
     		
     	}*/
-    	$scope.resolveDatepicker();
-    	
+    	$scope.resolveDatepicker();    	
+    	$(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
     };
     
     $scope.clearDetailMarker = function() {
