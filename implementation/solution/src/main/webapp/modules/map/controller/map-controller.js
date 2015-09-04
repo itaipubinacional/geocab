@@ -558,7 +558,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.screen = 'detail';
                
             }
-
+            
         	/* if click on the marker */
         	if( feature ){
         		if( typeof feature.getProperties().marker != "undefined" ) {
@@ -896,15 +896,21 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
         if( node && node.type == 'layer' && !node.search) {
             if( node.selected ){
 
-                var item = $scope.formatUrl(node,false);
-
-                var wmsSource = new ol.source.TileWMS({
-                    url: item.url,
-                    params:{
-                        'LAYERS': item.name
-                    }
-                });
-
+                var item = $scope.formatUrl(node,false);                                
+                
+                var wmsOptions = {
+                        url: item.url,
+                        params:{
+                            'LAYERS': item.name
+                        }
+                	};
+                
+                if(node.dataSourceUrl.match(/&authkey=(.*)/)) {
+                	wmsOptions.url += "?" + node.dataSourceUrl.match(/&authkey=(.*)/)[0];
+                }
+                
+                var wmsSource = new ol.source.TileWMS(wmsOptions);
+                              
                 var wmsLayer = new ol.layer.Tile({
                 	 source: wmsSource,
                      maxResolution: minEscalaToMaxResolutionn(node.minimumScaleMap),
@@ -1741,6 +1747,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 					'LAYERS': $scope.currentCustomSearch.layer.name
 				}
 			});
+			
+			if($scope.customSearch.layer.dataSource.token) {
+				wmsSource.url += "?&authkey=" + $scope.currentCusomSearch.layer.dataSource.token;
+	        }
 
 			var wmsLayer = new ol.layer.Tile({
 				source: wmsSource
@@ -3053,6 +3063,10 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	
     	return $scope.ok;
     }
+    
+    $scope.$watch('layers', function(oldValue, newValue){
+    	console.log('dsad');
+    })
     
     $scope.resolveDatepicker = function(){
     	

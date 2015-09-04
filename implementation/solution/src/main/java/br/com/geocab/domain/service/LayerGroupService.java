@@ -854,6 +854,10 @@ public class LayerGroupService
 		
 		sUrl = urlGeoserver + ExternalLayer.CAMPO_CAMADA_URL + layer.getName();
 		
+		if ( layer.getDataSource().getToken() != null ){
+			sUrl = sUrl.concat("&authkey=" + layer.getDataSource().getToken() );
+		}					
+		
 		BufferedReader reader = null;
 	    try 
 	    {
