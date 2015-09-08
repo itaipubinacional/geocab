@@ -1740,18 +1740,15 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     	//If external layer...
         if($scope.currentCustomSearch.layer.dataSource.url != null ){
         	var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
-
-			var wmsSource = new ol.source.TileWMS({
-				url: item.url,
-				params:{
-					'LAYERS': $scope.currentCustomSearch.layer.name
-				}
-			});
-			
-			if($scope.customSearch.layer.dataSource.token) {
-				wmsSource.url += "?&authkey=" + $scope.currentCusomSearch.layer.dataSource.token;
+        	
+        	var wmsOptions = {url: item.url, params: {'LAYERS': $scope.currentCustomSearch.layer.name}};
+        	
+        	if($scope.currentCustomSearch.layer.dataSource.token) {
+        		wmsOptions.url += "?&authkey=" + $scope.currentCustomSearch.layer.dataSource.token;
 	        }
-
+        	
+			var wmsSource = new ol.source.TileWMS(wmsOptions);
+						
 			var wmsLayer = new ol.layer.Tile({
 				source: wmsSource
 			});

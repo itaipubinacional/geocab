@@ -481,6 +481,9 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
+				if (message == 'no connection'){
+					message = $translate("admin.datasource.Could-not-connect-to-the-geographic-data-source");
+				}
 				$scope.msg = {type:"danger", text: message, dismiss:true};
 				$scope.fadeMsg();
 				$scope.$apply();

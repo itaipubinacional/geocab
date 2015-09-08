@@ -725,6 +725,15 @@ public class LayerGroupService
 	
 	//Camadas
 	
+	private String getUrl(Layer layer, String sUrl)
+	{
+		if(layer.getDataSource().getToken()!= null)
+		{
+			sUrl += "&authkey=" + layer.getDataSource().getToken();	
+		}	
+		return sUrl;
+	}
+	
 	/**
 	 * 
 	 * @param filter
@@ -846,17 +855,10 @@ public class LayerGroupService
 			return layerFields;
 		}
 		
-		String sUrl;
-		
 		int position = layer.getDataSource().getUrl().lastIndexOf("ows?");
-		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position);
+		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position);				
 		
-		
-		sUrl = urlGeoserver + ExternalLayer.CAMPO_CAMADA_URL + layer.getName();
-		
-		if ( layer.getDataSource().getToken() != null ){
-			sUrl = sUrl.concat("&authkey=" + layer.getDataSource().getToken() );
-		}					
+		String sUrl = this.getUrl(layer,urlGeoserver + ExternalLayer.CAMPO_CAMADA_URL + layer.getName() );
 		
 		BufferedReader reader = null;
 	    try 
@@ -1214,7 +1216,16 @@ public class LayerGroupService
 		
 		for (String url : listUrls)
 		{
-			listFeatures.add(this.template.getForObject(url, String.class));
+			try
+			{
+				listFeatures.add(this.template.getForObject(url, String.class));
+			}
+			catch (Exception e)
+			{
+				System.out.println(e.getMessage()	);
+				continue;
+			}
+			
 		}
 		
 		return listFeatures;
