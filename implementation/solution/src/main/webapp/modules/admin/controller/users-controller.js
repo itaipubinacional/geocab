@@ -31,11 +31,14 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 	 *  and call the query again, also considering the state of the filter (@see $scope.data.filter)
 	 */
 	$scope.$on('ngGridEventSorted', function(event, sort) {
-
+		
+		 if(event.targetScope.gridId != $scope.gridOptions.gridId) {
+			 return;
+	     }
+		
 		//run only once
 		if ( !angular.equals(sort, $scope.gridOptions.sortInfo) ) {
 			$scope.gridOptions.sortInfo = angular.copy(sort);
-
 				
 			//Order do spring-data
 			var order = new Order();
@@ -164,6 +167,10 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
 		var state = $state.current.name;
 		
+		if( $scope.gridOptions.sortInfo ){
+			delete $scope.gridOptions.sortInfo;
+		}
+		
 		$log.info('Starting the front controller. Users');
 
 		switch (state) {
@@ -201,6 +208,8 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 		pageRequest.size = 10;
 		$scope.pageRequest = pageRequest;
 		$scope.listUsersByFilters( null, pageRequest );
+		
+		$scope.currentState = $scope.LIST_STATE;
 	};
 	
 	/**
@@ -211,7 +220,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 		$log.info("changeToInsert");
 
 		//Clear current entity
-		$scope.currentEntity = {};
+		$scope.currentEntity = new User;
 		
 		
 		//Default role value

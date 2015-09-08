@@ -3059,11 +3059,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		});
     	
     	return $scope.ok;
-    }
-    
-    $scope.$watch('layers', function(oldValue, newValue){
-    	console.log('dsad');
-    })
+    }    
     
     $scope.resolveDatepicker = function(){
     	
