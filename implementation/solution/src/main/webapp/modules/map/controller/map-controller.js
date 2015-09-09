@@ -2202,6 +2202,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
      * @param element Name of the element that is calling the function.
      */
     $scope.toggleSidebarMarkerCreate = function (time, element){
+    	$scope.attributesByLayer = [];
     	$scope.imgResult = "";
     	$scope.$apply();
     	

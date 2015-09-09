@@ -67,12 +67,6 @@ public class DataSource extends AbstractEntity implements Serializable
 	 */
 	@Column(nullable=true, length=144)
 	private String password;
-	
-	/**
-	 * Token {@link DataSource}
-	 */
-	@Column(nullable=true, length=255)
-	private String token;
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -195,17 +189,6 @@ public class DataSource extends AbstractEntity implements Serializable
 			return PublicKeyGenerator.generateKey(this.getLogin());
 		}
 		return null;
-	}
-
-	/**
-	 * @param token the token to set
-	 */
-	public void setToken(String token)
-	{
-		if(token==null){
-			token = this.getToken();
-		}
-		this.token = token; 
 	}
 	
 	/**
