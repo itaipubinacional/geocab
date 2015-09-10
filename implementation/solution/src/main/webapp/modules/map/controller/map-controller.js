@@ -2366,6 +2366,8 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     		//If menu layer or search is open, close it and open marker detail
     		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
     		
+    		$("#sidebar-marker-detail-update").height($("#sidebar-layers").height());
+    		
     		$timeout(function(){
         		$scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
         	}, 400);
