@@ -73,7 +73,8 @@
         	</activation>
 			<properties>
 				<!-- Database -->
-				<mvn.jdbc.jdbcUrl>jdbc:postgresql://geocab.prognus.com.br:5432/geocab</mvn.jdbc.jdbcUrl>
+				<mvn.jdbc.jdbcUrl>jdbc:postgresql://geocab/geocab</mvn.jdbc.jdbcUrl>
+				<!-- <mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/geocab</mvn.jdbc.jdbcUrl> -->
 				<mvn.jdbc.username>geocab</mvn.jdbc.username>
 				<mvn.jdbc.password>geocab</mvn.jdbc.password>
 
