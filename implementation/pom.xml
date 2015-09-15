@@ -28,6 +28,9 @@
 		<hibernate.version>4.3.5.Final</hibernate.version>
 		<hibernatevalidator.version>5.1.1.Final</hibernatevalidator.version>
 		<!-- ModeShape -->
+		<mvn.jcr.indexes>/tmp/geocab/indexes</mvn.jcr.indexes>
+		<mvn.jcr.files>/tmp/geocab/files</mvn.jcr.files>
+		<mvn.jcr.caches>/tmp/geocab/files</mvn.jcr.caches>
 		<modeshape.version>3.6.0.Final</modeshape.version>
 		<infinispan.version>5.3.0.Final</infinispan.version>
 		<!-- Testing -->
@@ -73,7 +76,7 @@
         	</activation>
 			<properties>
 				<!-- Database -->
-				<mvn.jdbc.jdbcUrl>jdbc:postgresql://geocab.prognus.com.br:5432/geocab</mvn.jdbc.jdbcUrl>
+				<mvn.jdbc.jdbcUrl>jdbc:postgresql://127.0.0.1:5432/geocab</mvn.jdbc.jdbcUrl>
 				<mvn.jdbc.username>geocab</mvn.jdbc.username>
 				<mvn.jdbc.password>geocab</mvn.jdbc.password>
 

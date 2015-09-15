@@ -15,7 +15,7 @@
         "cacheName" : "geocab-repository-cache",
         "binaryStorage" : {
             "type" : "file",
-            "directory": "/sistemas/geocab/upload",
+            "directory": "@mvn.jcr.files@",
             "minimumBinarySizeInBytes" : 40
         }
     },
@@ -23,7 +23,7 @@
         "enabled" : true,
         "indexStorage" : {
             "type" : "filesystem",
-            "location" : "/tmp/geocab/indexes"
+            "location" : "@mvn.jcr.indexes@",
         },
         "indexing" : {
             "rebuildOnStartup" : {
