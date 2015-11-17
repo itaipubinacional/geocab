@@ -1,371 +1,382 @@
 ﻿'use strict';
 
 /**
- * 
+ *
  * @param $scope
  * @param $log
  * @param $location
  */
-function MapController( $scope, $injector, $log, $state, $timeout, $modal, $location, $http , $importService, $translate) {
-	
-	/**
-	 * 
-	 * Injects the methods, attributes and inherited states of AbstractCRUDController States.
-	 * @see AbstractCRUDController
-	 */
-	$injector.invoke(AbstractCRUDController, this, {$scope: $scope});
+function MapController($scope, $injector, $log, $state, $timeout, $modal, $location, $http, $importService, $translate) {
 
-	/**
-	 * Include services
-	 */
-	$importService("layerGroupService");
-	$importService("markerService");
-	$importService("customSearchService");
-	$importService("markerModerationService");
-	
-	/*-------------------------------------------------------------------
-	 * 		 				 	EVENT HANDLERS
-	 *-------------------------------------------------------------------*/
+  /**
+   *
+   * Injects the methods, attributes and inherited states of AbstractCRUDController States.
+   * @see AbstractCRUDController
+   */
+  $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 
-	/*-------------------------------------------------------------------
-	 * 		 				 	ATTRIBUTES
-	 *-------------------------------------------------------------------*/
+  /**
+   * Include services
+   */
+  $importService("layerGroupService");
+  $importService("markerService");
+  $importService("customSearchService");
+  $importService("markerModerationService");
 
-    // CONSTANTES
-	
-	
+  /*-------------------------------------------------------------------
+   * 		 				 	EVENT HANDLERS
+   *-------------------------------------------------------------------*/
 
-    /**
-     * Google Maps
-     */
-    $scope.MAP_TYPE_GMAP = 'gmap'
+  /*-------------------------------------------------------------------
+   * 		 				 	ATTRIBUTES
+   *-------------------------------------------------------------------*/
 
-    /**
-     * Open Street Maps
-     */
-    $scope.MAP_TYPE_OSM = 'osm'
-
-    /**
-     * MapQuest OSM
-     */
-    $scope.MAP_TYPE_MAPQUEST_OSM = 'mapQuest_osm'
-
-    /**
-     * MapQuest SATELITE
-     */
-	 $scope.MAP_TYPE_MAPQUEST_SAT = 'mapQuest_sat'
-
-    /**
-     *
-     * @type {string}
-     */
-    $scope.LAYER_MENU_STATE = '';
-
-    /**
-     *
-     * @type {string}
-     */
-    $scope.LAYER_MENU_LIST = 'list';
-
-    /**
-     *
-     * @type {string}
-     */
-    $scope.LAYER_MENU_LEGEND_DETAIL = 'legend_detail';
-    
-    /**
-     * */
-    $scope.attributesByLayer = [];
-
-    /*
-    *
-    * */
-    $scope.screenMarkerOpenned = false;
-    
-    $scope.marker;
-    
-    /**
-     * User credentials
-     * */
-    $scope.userMe;
-
-    /**
-     * Variable that stores the type of the map selected by the user - GMAP ou OSM
-     * Will also contain the selected module - Warren, Satellite, Hybrid, etc.
-     */
-    $scope.mapConf = {
-        type : $scope.MAP_TYPE_OSM,
-        ativo : null,
-        modo : null
-    };
+  // CONSTANTES
 
 
-    /**
-     * Variable that stores the settings from google map
-     */
-    $scope.mapGoogleOptions = {};
+  /**
+   * Google Maps
+   */
+  $scope.MAP_TYPE_GMAP = 'gmap'
 
-    /**
-     * Variable that represents o google map
-     */
-    $scope.mapGoogle = {};
+  /**
+   * Open Street Maps
+   */
+  $scope.MAP_TYPE_OSM = 'osm'
 
-    /**
-     * Variable representing the openlayers map
-     */
-    $scope.map = {};
+  /**
+   * MapQuest OSM
+   */
+  $scope.MAP_TYPE_MAPQUEST_OSM = 'mapQuest_osm'
 
-    /**
-     * Responsible for controlling variable if the functionalities are active or not
-     */
-    $scope.menu = {
-        fcDistancia : false,
-        fcArea : false,
-        fcKml :  false,
-        fcMarker: false
-    };
+  /**
+   * MapQuest SATELITE
+   */
+  $scope.MAP_TYPE_MAPQUEST_SAT = 'mapQuest_sat'
 
-    /**
-     * Variable that stores the list of layer groups with user access profile
-     * @type {Array}
-     */
-    $scope.allLayers = [];
+  /**
+   *
+   * @type {string}
+   */
+  $scope.LAYER_MENU_STATE = '';
 
-    /**
-     * Variable that stores all layers selected by the user
-     * @type {Array}
-     */
-    $scope.layers = [];
-    
-    /**
-     * Variable that stores the active kml layers on a map
-     */
-    $scope.kmlLayers = [];
+  /**
+   *
+   * @type {string}
+   */
+  $scope.LAYER_MENU_LIST = 'list';
 
-    /**
-     * Variable that stores all the inner layers selected by the user
-     * @type {Array}
-     */
-    $scope.internalLayers = [];
-    
-    /**
-     * Variable that stores all the inner layers selected by the user Search
-     * @type {Array}
-     */
-    $scope.internalLayersSearch = [];
-  
-    /**
-    *
-    */
-    $scope.allLayersKML = []
-    
-    /**
-     * Variable that stores the inner layer being created
-     * @type {Array}
-     */
-    $scope.currentCreatingInternalLayer;
-    
-    /**
-     * Variable that stores the slider that is active
-     * @type {Array}
-     */
-    $scope.slideActived;
+  /**
+   *
+   * @type {string}
+   */
+  $scope.LAYER_MENU_LEGEND_DETAIL = 'legend_detail';
 
-	/**
-     *
-     */
-    $scope.customSearches;
+  /**
+   * */
+  $scope.attributesByLayer = [];
 
-    /**
-     *
-     */
-    $scope.currentCustomSearch = {};
+  /*
+   *
+   * */
+  $scope.screenMarkerOpenned = false;
 
-    /**
-     *
-     */
-    $scope.currentLayerField = {};
-    
-    /**
-    *
-    * @type {Array}
-    */
-   $scope.searchs = [];
+  $scope.marker;
 
-   /**
-    *
-    * @type {Array}
-    */
-   $scope.allSearchs = [];
-   
-   /**
-    * 
-    */
-   $scope.allLayersSearches = [];
-   
-    /**
-     *
-     * @type {Array}
-     */
-    $scope.features = [];
+  /**
+   * User credentials
+   * */
+  $scope.userMe;
 
-    $scope.currentEntity = {};
-    /*-------------------------------------------------------------------
-     * 		            PERMISSIONS FOR THE TOOLS
-     *-------------------------------------------------------------------*/
-
-    //Allowed distance calculation
-    /**
-     *
-     * @type {boolean}
-     */
-    $scope.hasPermissionCalculoDistancia = false;
-    /**
-     *
-     * @type {number}
-     */
-    $scope.PERMISSION_CALCULO_DISTANCIA = 1;
-    
-    //Permission area calculation
-    /**
-     *
-     * @type {boolean}
-     */
-    $scope.hasPermissionCalculoArea = false;
-    /**
-     *
-     * @type {number}
-     */
-    $scope.PERMISSION_CALCULO_AREA = 2;
-
-    //Permission area calculation
-    /**
-     *
-     * @type {boolean}
-     */
-    $scope.hasPermissionKML = false;
-    /**
-     *
-     * @type {number}
-     */
-    $scope.PERMISSION_KML = 3;
-    
-    /**
-     * Variable used to internal layer
-     * @type {number}
-     * */
-    $scope.searchId = 1;
-
-    /*-------------------------------------------------------------------
-     * 		 				 	 CONFIGURATION VARIABLES MAP
-     *-------------------------------------------------------------------*/
-
-    /**
-     * The configuration view of the map
-     */
-    $scope.view = new ol.View({
-        center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
-        zoom: 9,
-        minZoom: 3
-    })
-
-    // view events
-    $scope.view.on('change:center', function() {
-
-        // Changes the view of the google map if the map is active the gmap
-        if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
-            var center = ol.proj.transform($scope.view.getCenter(), 'EPSG:3857', 'EPSG:4326');
-            $scope.mapGoogle.setCenter(new google.maps.LatLng(center[1], center[0]));
-        }
-
-    });
-    
-    $scope.view.on('change:resolution', function() {
-
-        //Changes the view of the google map if the map is active the gmap
-        if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
-            $scope.mapGoogle.setZoom($scope.view.getZoom());
-        }
-
-    });
+  /**
+   * Variable that stores the type of the map selected by the user - GMAP ou OSM
+   * Will also contain the selected module - Warren, Satellite, Hybrid, etc.
+   */
+  $scope.mapConf = {
+    type: $scope.MAP_TYPE_OSM,
+    ativo: null,
+    modo: null
+  };
 
 
-    /**
-     * Setting the background layer - OSM
-     */
-    $scope.rasterOSM = new ol.layer.Tile({
-        source: new ol.source.OSM()
-        //source: new ol.source.MapQuest({layer: 'osm'})
-    });
+  /**
+   * Variable that stores the settings from google map
+   */
+  $scope.mapGoogleOptions = {};
 
-    /**
-     * Setting the background layer - MAPQUEST OSM
-     */
-    $scope.rasterMapQuestOSM = new ol.layer.Tile({
-        source: new ol.source.MapQuest({layer: 'osm'})
-    });
+  /**
+   * Variable that represents o google map
+   */
+  $scope.mapGoogle = {};
 
-    /**mapConf.type
-     * Setting the background layer - MAPQUEST SAT
-     */
-    $scope.rasterMapQuestSAT = new ol.layer.Tile({
-        source: new ol.source.MapQuest({layer: 'sat'})
-    });
+  /**
+   * Variable representing the openlayers map
+   */
+  $scope.map = {};
+
+  /**
+   * Responsible for controlling variable if the functionalities are active or not
+   */
+  $scope.menu = {
+    fcDistancia: false,
+    fcArea: false,
+    fcKml: false,
+    fcMarker: false
+  };
+
+  /**
+   * Variable that stores the list of layer groups with user access profile
+   * @type {Array}
+   */
+  $scope.allLayers = [];
+
+  /**
+   * Variable that stores all layers selected by the user
+   * @type {Array}
+   */
+  $scope.layers = [];
+
+  /**
+   * Variable that stores the active kml layers on a map
+   */
+  $scope.kmlLayers = [];
+
+  /**
+   * Variable that stores all the inner layers selected by the user
+   * @type {Array}
+   */
+  $scope.internalLayers = [];
+
+  /**
+   * Variable that stores all the inner layers selected by the user Search
+   * @type {Array}
+   */
+  $scope.internalLayersSearch = [];
+
+  /**
+   *
+   */
+  $scope.allLayersKML = []
+
+  /**
+   * Variable that stores the inner layer being created
+   * @type {Array}
+   */
+  $scope.currentCreatingInternalLayer;
+
+  /**
+   * Variable that stores the slider that is active
+   * @type {Array}
+   */
+  $scope.slideActived;
+
+  /**
+   *
+   */
+  $scope.customSearches;
+
+  /**
+   *
+   */
+  $scope.currentCustomSearch = {};
+
+  /**
+   *
+   */
+  $scope.currentLayerField = {};
+
+  /**
+   *
+   * @type {Array}
+   */
+  $scope.searchs = [];
+
+  /**
+   *
+   * @type {Array}
+   */
+  $scope.allSearchs = [];
+
+  /**
+   *
+   */
+  $scope.allLayersSearches = [];
+
+  /**
+   *
+   * @type {Array}
+   */
+  $scope.features = [];
+
+  $scope.currentEntity = {};
+  /*-------------------------------------------------------------------
+   * 		            PERMISSIONS FOR THE TOOLS
+   *-------------------------------------------------------------------*/
+
+  //Allowed distance calculation
+  /**
+   *
+   * @type {boolean}
+   */
+  $scope.hasPermissionCalculoDistancia = false;
+  /**
+   *
+   * @type {number}
+   */
+  $scope.PERMISSION_CALCULO_DISTANCIA = 1;
+
+  //Permission area calculation
+  /**
+   *
+   * @type {boolean}
+   */
+  $scope.hasPermissionCalculoArea = false;
+  /**
+   *
+   * @type {number}
+   */
+  $scope.PERMISSION_CALCULO_AREA = 2;
+
+  //Permission KML
+  /**
+   *
+   * @type {boolean}
+   */
+  $scope.hasPermissionKML = false;
+  /**
+   *
+   * @type {number}
+   */
+  $scope.PERMISSION_KML = 3;
+
+  //Permission SHP
+  /**
+   *
+   * @type {boolean}
+   */
+  $scope.hasPermissionSHP = false;
+  /**
+   *
+   * @type {number}
+   */
+  $scope.PERMISSION_SHP = 4;
+
+  /**
+   * Variable used to internal layer
+   * @type {number}
+   * */
+  $scope.searchId = 1;
+
+  /*-------------------------------------------------------------------
+   * 		 				 	 CONFIGURATION VARIABLES MAP
+   *-------------------------------------------------------------------*/
+
+  /**
+   * The configuration view of the map
+   */
+  $scope.view = new ol.View({
+    center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 9,
+    minZoom: 3
+  })
+
+  // view events
+  $scope.view.on('change:center', function () {
+
+    // Changes the view of the google map if the map is active the gmap
+    if ($scope.mapConf.active == $scope.MAP_TYPE_GMAP) {
+      var center = ol.proj.transform($scope.view.getCenter(), 'EPSG:3857', 'EPSG:4326');
+      $scope.mapGoogle.setCenter(new google.maps.LatLng(center[1], center[0]));
+    }
+
+  });
+
+  $scope.view.on('change:resolution', function () {
+
+    //Changes the view of the google map if the map is active the gmap
+    if ($scope.mapConf.active == $scope.MAP_TYPE_GMAP) {
+      $scope.mapGoogle.setZoom($scope.view.getZoom());
+    }
+
+  });
 
 
-    // Rotate Interaction
-    $scope.dragRotateAndZoom = new ol.interaction.DragRotateAndZoom();
+  /**
+   * Setting the background layer - OSM
+   */
+  $scope.rasterOSM = new ol.layer.Tile({
+    source: new ol.source.OSM()
+    //source: new ol.source.MapQuest({layer: 'osm'})
+  });
+
+  /**
+   * Setting the background layer - MAPQUEST OSM
+   */
+  $scope.rasterMapQuestOSM = new ol.layer.Tile({
+    source: new ol.source.MapQuest({layer: 'osm'})
+  });
+
+  /**mapConf.type
+   * Setting the background layer - MAPQUEST SAT
+   */
+  $scope.rasterMapQuestSAT = new ol.layer.Tile({
+    source: new ol.source.MapQuest({layer: 'sat'})
+  });
 
 
-    /**
-     * Setting the mouse position control
-     */
-    $scope.mousePositionControl = new ol.control.MousePosition({
-        coordinateFormat: ol.coordinate.createStringXY(4),
-        projection: 'EPSG:4326',
-        // comment the following two lines to have the mouse position
-        // be placed within the map.
-        className: 'custom-mouse-position',
+  // Rotate Interaction
+  $scope.dragRotateAndZoom = new ol.interaction.DragRotateAndZoom();
+
+
+  /**
+   * Setting the mouse position control
+   */
+  $scope.mousePositionControl = new ol.control.MousePosition({
+    coordinateFormat: ol.coordinate.createStringXY(4),
+    projection: 'EPSG:4326',
+    // comment the following two lines to have the mouse position
+    // be placed within the map.
+    className: 'custom-mouse-position',
 //            target: document.getElementById('info'),
-        undefinedHTML: '&nbsp;'
+    undefinedHTML: '&nbsp;'
+  });
+
+  $scope.firstTime = true;
+
+  /*-------------------------------------------------------------------
+   * 		 				 	  NAVIGATIONS
+   *-------------------------------------------------------------------*/
+  /**
+   * Method executed upon entering the controller, apór load the DOM of the page
+   *
+   */
+  $scope.initialize = function (toState, toParams, fromState, fromParams) {
+
+
+    /**
+     * Menu setting
+     */
+    $("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").css("max-width", parseInt($(window).width()) - 68);
+    $("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").resize(function () {
+      if (!$scope.firstTime)
+        $(".menu-sidebar-container").css("right", parseInt($(this).css("width")) + 5);
+
+      $scope.firstTime = false;
     });
 
-    $scope.firstTime = true;
 
-    /*-------------------------------------------------------------------
-	 * 		 				 	  NAVIGATIONS
-	 *-------------------------------------------------------------------*/
-	/**
-     * Method executed upon entering the controller, apór load the DOM of the page
-     *
-	 */
-	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
-		
-		
-		/**
-		 * Menu setting
-		 */
-			$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").css("max-width", parseInt($(window).width()) - 68 );
-			$("#sidebar-marker-create, #sidebar-marker-detail-update, #sidebar-layers").resize(function() { 
-				if(!$scope.firstTime)
-					$(".menu-sidebar-container").css("right",parseInt($(this).css("width")) + 5); 
-				
-				$scope.firstTime = false;
-			});
-		
-		
-		/**
-		 * If doesn't have a nav bar
-		 * */
-		if( !$("#navbar-administrator").length && !$("#navbar-user").length ) {
-			$(".sidebar-style").css("top","60px");
-		}
-		
-        /**
-         * Openlayers map configuration
-         */
-        $scope.olMapDiv = document.getElementById('olmap');
-        $scope.map = new ol.Map({
+    /**
+     * If doesn't have a nav bar
+     * */
+    if (!$("#navbar-administrator").length && !$("#navbar-user").length) {
+      $(".sidebar-style").css("top", "60px");
+    }
+
+    /**
+     * Openlayers map configuration
+     */
+    $scope.olMapDiv = document.getElementById('olmap');
+    $scope.map = new ol.Map({
 
 //            controls: ol.control.defaults({
 //                attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
@@ -373,1694 +384,1677 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 //                })
 //            }).extend([$scope.mousePositionControl, new ol.control.FullScreen()]),
 
-            controls: [
-                $scope.mousePositionControl
-            ],
+      controls: [
+        $scope.mousePositionControl
+      ],
 
-            // rotation
-            interactions: ol.interaction.defaults({
-                dragPan: false
-            }).extend([
+      // rotation
+      interactions: ol.interaction.defaults({
+        dragPan: false
+      }).extend([
 //                    $scope.dragRotateAndZoom,
-                    dragAndDropInteraction,
-                    new ol.interaction.DragPan({kinetic: null})
-                ]),
+        dragAndDropInteraction,
+        new ol.interaction.DragPan({kinetic: null})
+      ]),
 
-            target: $scope.olMapDiv,
-            view: $scope.view
-        });
+      target: $scope.olMapDiv,
+      view: $scope.view
+    });
 
-        
-        
-        // add OSM layer
-        $scope.map.addLayer($scope.rasterOSM);
-        $scope.rasterOSM.setVisible(false);
 
-        // add  MapQuest OSM layer
-        $scope.map.addLayer($scope.rasterMapQuestOSM);
-        $scope.rasterMapQuestOSM.setVisible(false);
+    // add OSM layer
+    $scope.map.addLayer($scope.rasterOSM);
+    $scope.rasterOSM.setVisible(false);
 
-        // add MapQuest layer OSM
-        $scope.map.addLayer($scope.rasterMapQuestSAT);
-        $scope.rasterMapQuestSAT.setVisible(false);
-        
-        // Registers the posts on a map
-        //$scope.loadMarkers();
+    // add  MapQuest OSM layer
+    $scope.map.addLayer($scope.rasterMapQuestOSM);
+    $scope.rasterMapQuestOSM.setVisible(false);
 
-        /**
-         * Map configuration GMAP
-         */
-        $scope.mapGoogleOptions = {
-            mapTypeControlOptions: {
-                mapTypeIds: [google.maps.MapTypeId.ROADMAP,
-                    google.maps.MapTypeId.SATELLITE,
-                    google.maps.MapTypeId.HYBRID,
-                    google.maps.MapTypeId.TERRAIN],
-                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                position: google.maps.ControlPosition.RIGHT_TOP
-            },
-            zoomControl: false,
-            panControl: false,
-            scaleControl: false,
-            keyboardShortcuts: false,
-            draggable: false,
-            disableDoubleClickZoom: true,
-            scrollwheel: false,
-            heading: 90
-        };
+    // add MapQuest layer OSM
+    $scope.map.addLayer($scope.rasterMapQuestSAT);
+    $scope.rasterMapQuestSAT.setVisible(false);
+
+    // Registers the posts on a map
+    //$scope.loadMarkers();
+
+    /**
+     * Map configuration GMAP
+     */
+    $scope.mapGoogleOptions = {
+      mapTypeControlOptions: {
+        mapTypeIds: [google.maps.MapTypeId.ROADMAP,
+          google.maps.MapTypeId.SATELLITE,
+          google.maps.MapTypeId.HYBRID,
+          google.maps.MapTypeId.TERRAIN],
+        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: google.maps.ControlPosition.RIGHT_TOP
+      },
+      zoomControl: false,
+      panControl: false,
+      scaleControl: false,
+      keyboardShortcuts: false,
+      draggable: false,
+      disableDoubleClickZoom: true,
+      scrollwheel: false,
+      heading: 90
+    };
 
 //        set the mapGoogleOptions
 //        $scope.mapGoogle = new google.maps.Map(document.getElementById("gmap"), $scope.mapGoogleOptions);
 
-        // Displays mouse coordinates
-        enableMouseCoordinates();
+    // Displays mouse coordinates
+    enableMouseCoordinates();
 
 
-        $scope.LAYER_MENU_STATE = 'list';
+    $scope.LAYER_MENU_STATE = 'list';
 
-        $scope.listToolsByUser();
+    $scope.listToolsByUser();
 
-        $scope.listPublishedLayersGroup();
+    $scope.listPublishedLayersGroup();
 
-        // Initializes map
-        if ( $scope.mapConf.type == $scope.MAP_TYPE_OSM ){
-            $scope.initializeOSM();
-        } else if ( $scope.mapConf.type == $scope.MAP_TYPE_GMAP ){
-            $scope.initializeGMAP();
-            $scope.mapGoogle.setMapTypeId("hybrid");
-        }
-
-
-        $(function () {
-            $("#sidebar-tabs").tabs({
-            }).addClass("ui-tabs-vertical ui-helper-clearfix");
-            $("#sidebar-tabs li").removeClass("ui-corner-top ui-widget-content").addClass("ui-corner-left");
-        });
-
-
-        /**
-         * Click event to prompt the geoserver the information layer of the clicked coordinat
-         */
-        $scope.map.on('click', function(evt) {
-        	
-        	 if( $scope.menu.fcMarker && !$scope.screenMarkerOpenned ) {
-             	$scope.screenMarkerOpenned = true;
-                 $scope.toggleSidebarMarkerCreate(300);
-
-                 var iconStyle = new ol.style.Style({
-                     image: new ol.style.Icon(({
-                         anchor: [0.5, 1],
-                         anchorXUnits: 'fraction',
-                         anchorYUnits: 'fraction',
-                         src: 'static/images/marker.png'
-                     }))
-                 });
-
-                 var iconFeature = new ol.Feature({
-                     geometry: new ol.geom.Point([  evt.coordinate[0] , evt.coordinate[1]])
-                 });	
-
-                var layer = new ol.layer.Vector({
-                     source: new ol.source.Vector({ features: [iconFeature] })
-                 });
-
-                 layer.setStyle(iconStyle);
-                 
-                 $scope.currentCreatingInternalLayer = layer;
-                 $scope.map.addLayer(layer);
-                 $scope.$apply();
-                 
-                 $scope.currentEntity.latitude = evt.coordinate[0];
-                 $scope.currentEntity.longitude = evt.coordinate[1];
-                 
-                 layerGroupService.listAllInternalLayerGroups({
-             		callback : function(result) {
-                         $scope.selectLayerGroup = [];
-                         
-                         angular.forEach(result, function(layer,index){
-                         	
-                         	$scope.selectLayerGroup.push({
-                         		"layerTitle": layer.title,
-                         		"layerId": layer.id,
-                         		"layerIcon": layer.icon,
-                         		"group": layer.layerGroup.name
-                         	});
-                         	
-                         })
-                         
-                         $scope.currentState = $scope.LIST_STATE;
-                         
-                         $scope.$apply();
-                     },
-                     errorHandler : function(message, exception) {
-                         $scope.message = {type:"error", text: message};
-                         $scope.$apply();
-                     }
-             	});
-              return false;   
-             }
-        	
-        	 
-        	
-            /* get the feature click to open marker detail */
-         	var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
- 		        return feature;
- 		      });
-         	
-         	/*It is used to check if the user has clicked on the map or on the feature.*/
-         	$scope.feature = feature;
-        
-         	if(($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia) || feature) {
-                $scope.features = [];
-         	}
-         	
-        	var hasSearch  = $scope.allSearchs.length ? $scope.allSearchs[0].children.length > 0 : false;
-        
-            if (($scope.layers.length > 0 || hasSearch ) && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
-
-                var listUrls = [];
-                
-                for(var i =0; i < $scope.layers.length; i++)
-                {
-                    var url = $scope.layers[i].wmsSource.getGetFeatureInfoUrl(
-                        evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(),
-                        {'INFO_FORMAT': 'application/json'});
-
-                    listUrls.push(decodeURIComponent(url));
-                }
-
-                if( $scope.screenMarkerOpenned ) {
-					$scope.clearFcMarker();
-				}
-                
-                listAllFeatures(listUrls);
-                
-                $scope.screen = 'detail';
-               
-            }
-            
-        	/* if click on the marker */
-        	if( feature ){
-        		if( typeof feature.getProperties().marker != "undefined" ) {
-        			if( $scope.screenMarkerOpenned ) {
-						$scope.clearFcMarker();
-					}
-        			
-        			$scope.currentCreatingInternalLayer = feature;
-	        		$scope.screen = 'detail';
-				        		
-	        		$scope.marker = feature.getProperties().marker;
-	        		$scope.features.push({"feature": $scope.marker, "type": "internal"});
-        		}
-        	}
-        	
-        	if( $scope.features.length > 0 ) {
-                $timeout(function(){
-        			$scope.toggleSidebarMarkerDetailUpdate(300);	
-    	    	}, 400)
-	    	} 
-        	
-    		
-        	if($scope.features.length == 1) {
-        		$timeout(function(){
-        			
-            		$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
-    	    	}, 100)
-    	    	
-        	}
-           
-        	
-        	$("div.msgMap").css("display","none");
-
-        });
-        /**
-		 * authenticated user
-		 * */
-        markerService.getUserMe({
-    		callback : function(result) {
-    			$scope.userMe = result;
-            },
-            errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
-                $scope.$apply();
-            }
-    	});
-
-    };
-    
-    $scope.changeToScreen = function(screen) {
-    	$scope.screen = screen;
-    }
-    
-    $scope.objectKeys = function(obj){
-    	return Object.keys(obj);
-    }
-
-    /**
-     * Function that makes request to geo server to bring the features
-     * @param url
-     * @param posicao
-     */
-    var listAllFeatures = function (listUrls){
-
-    	layerGroupService.listAllFeatures(listUrls, {
-            callback: function (result) {
-            	
-                for (var i=0; i < result.length; i++){
-
-                    var feature = {
-                        layer : $scope.layers[i],
-                        fields : {}
-                    };
-                    
-                    try{
-	                    angular.forEach(JSON.parse(result[i]).features, function(value, key) {
-	                        angular.forEach(value.properties, function(value, key) {
-	
-	                            try {
-	                                feature.fields[decodeURIComponent( escape(key))] = decodeURIComponent( escape(value));
-	                            }
-	                            catch(e) {
-	                                feature.fields[key] = value;
-	                            }
-	
-	                        });
-	
-	                        var insere = false;
-	                        for (var propriedade in feature.fields) {
-	                            insere = true;
-	                            break;
-	                        }
-	
-	                        if (insere){
-	                        	
-	                        	if($scope.features.length) {
-	                        		var alreadyExistLayer = false;
-	                        		
-	                        		angular.forEach($scope.features, function(value, key){
-	                        			
-	                        			if(value.feature.layer.name == feature.layer.name) {
-	                        				alreadyExistLayer =  true;
-	                        			}
-	                        			
-	                        		});
-	                        		
-	                        		if(!alreadyExistLayer) {
-	                        			$scope.features.push({"feature": feature, "type":"external"});
-	                        		}
-	                        		
-	                        	} else {
-	                        		$scope.features.push({"feature": feature, "type":"external"});
-	                        	}
-	                        	
-	                        }
-	                        
-	                        if( $scope.features.length > 0 ) {
-	                            
-	        	                $timeout(function(){
-	        	        			$scope.toggleSidebarMarkerDetailUpdate(300);
-	        	        			
-	        	        			//.panel-collapse 
-	        	        			$('.min-height-accordion').find('.panel-body').css('height', 
-	        	        															parseInt($('#sidebar-marker-detail-update').height()) - 
-	        	        															parseInt( ( ( $scope.features.length) * 37 ) + 40 ) + 'px'
-	        	        														  );
-	        	    	    	}, 400)
-	        	    	    	
-	                        }
-	                        
-	                        if($scope.features.length > 1) {
-	                        	$timeout(function(){
-	                            	$(".min-height-accordion .panel-collapse .panel-body").css("min-height","300px")
-	                        	}, 700)
-	                    	}
-	
-	                    });
-                    } catch(e){
-                    	continue;
-                    }
-                    
-                }
-                
-                
-                if ( $("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px' ) {
-        			
-        			if($scope.menu.fcMarker){
-        	    		$scope.clearFcMarker();
-        	    	} else if(!$scope.feature) {
-        	    		$scope.clearDetailMarker();
-        	    	}
-                }
-                
-                
-                
-                $scope.$apply();
-
-            },
-            errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
-                $scope.$apply();
-            }
-        });
+    // Initializes map
+    if ($scope.mapConf.type == $scope.MAP_TYPE_OSM) {
+      $scope.initializeOSM();
+    } else if ($scope.mapConf.type == $scope.MAP_TYPE_GMAP) {
+      $scope.initializeGMAP();
+      $scope.mapGoogle.setMapTypeId("hybrid");
     }
 
 
-    /**
-     *
-     */
-    $scope.listToolsByUser = function(){
-    	
-    	layerGroupService.listToolsByUser({
-            callback: function (result) {
-
-                for (var i = 0; i < result.length; i++)
-                {
-                    if(result[i].id == $scope.PERMISSION_CALCULO_DISTANCIA)
-                    {
-                        $scope.hasPermissionCalculoDistancia = true;
-                    }
-                    else if(result[i].id == $scope.PERMISSION_CALCULO_AREA)
-                    {
-                        $scope.hasPermissionCalculoArea = true;
-                    }
-                    else if(result[i].id == $scope.PERMISSION_KML)
-                    {
-                        $scope.hasPermissionKML = true;
-                        enableFileKML();
-                    }
-
-                }
-
-                if ($scope.hasPermissionKML == false){
-                    $("#menu-item-3").remove();
-                    $("#tabs-3").remove();
-                }
-
-                $scope.$apply();
-            },
-            errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
-                $scope.$apply();
-            }
-        });
-
-    }
-
-    /**
-     *
-     */
-    $scope.listPublishedLayersGroup = function(){
-
-        //Lists the groups of layers and layers published according to user access profile
-        layerGroupService.listLayerGroupUpperPublished( {
-            callback: function (result) {
-
-                var parseNode = function( node ) {
-                    var item = {};
-
-                    item.id = (!!node.nodes ? 'grupo' : 'layer') + '_' + node.id.toString();
-                    item.label =  !!node.nodes ? node.name : node.title;
-                    item.name =  !!node.nodes ? '' : node.name;
-                    item.legenda =  !!node.nodes ? '' : node.legend;
-                    item.selected =  !!node.nodes ? '' : node.startEnabled;
-                    item.dataSourceUrl =  !!node.nodes ? '' : node.dataSource.url;
-                    item.value = node.id;
-                    item.type = !!node.nodes ? 'grupo' : 'layer';
-
-                    item.maximumScaleMap = !!node.nodes ? '' : node.maximumScaleMap;
-                    item.minimumScaleMap= !!node.nodes ? '' : node.minimumScaleMap;
-                    
-                    if( item.selected ){
-                        $scope.getSelectedNode(item);
-                    }
-
-                    item.children = [];
-
-                    if(  !!node.nodes ) {
-                        for(var i =0; i < node.nodes.length; ++i) {
-                        	item.children.push(parseNode(node.nodes[i]));
-//                            if( true === node.nodes[i].startVisible ) {
-//                                item.children.push(parseNode(node.nodes[i]));
-//                            }
-                        }
-                    }
-                    return item;
-                }
-
-                $scope.allLayers = [];
-
-                for(var i =0; i < result.length ; ++i){
-                   $scope.allLayers.push( parseNode( result[i] ) )
-                }
-
-                if( $scope.allLayers[0] )
-                {
-                    for (var i in $scope.allLayers[0].children)
-                    {
-                        if ($scope.allLayers[0].children.length == 1 && $scope.allLayers[0].children[i].selected )
-                        {
-                            $scope.allLayers[0].selected = true;
-                            $scope.allLayers[0].children[i].selected = true;
-                        }
-                        else if ( !$scope.allLayers[0].children[i].selected )
-                        {
-                            $scope.allLayers[0].selected = false;
-                        }
-                        else
-                        {
-                            $scope.allLayers[0].selected = true;
-                        }
-                    }
-                }
-
-
-                $scope.$apply();
-            },
-            errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
-                $scope.$apply();
-            }
-        });
-
-    }
-
-    /**
-     * Formats the url with the name of the layer for each data source
-     * @param node
-     * @returns {{name: string, url: string}}
-     */
-    $scope.formatUrl = function(node, isSearch) {
-
-        if( isSearch )
-        {
-            var index = node.name.indexOf(":");
-            var dataSourceAddress = node.dataSource.url.lastIndexOf("ows?");
-            
-            var layerType = node.name.substring(0,index);
-            var layerName = node.name.substring(index+1,node.name.length);
-            var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress)+layerType+'/wms';
-        }
-        else
-        {
-            var index = node.name.indexOf(":");
-            var dataSourceAddress = node.dataSourceUrl.lastIndexOf("ows?");
-            var layerType = node.name.substring(0,index);
-            var layerName = node.name.substring(index+1,node.name.length);
-            var formattedUrl = node.dataSourceUrl.substring(0, dataSourceAddress)+layerType+'/wms';
-        }
-
-        return {'name': layerName, 'url': formattedUrl};
-
-    }
-
-  
-
-    /**
-     * Treat the selection and deselection of each of the tree
-     * @param node
-     */
-    $scope.getSelectedNode = function(node){
-    	
-    	if(typeof node == 'undefined' || node.search) return false;
-    	
-    	/* Check if it is an internal layer */
-    	if(typeof node.dataSourceUrl != 'undefined' && node.dataSourceUrl == null) {
-    		if( node.selected ) {
-    			$scope.addInternalLayer(node.value);
-    		} else {
-    			$scope.removeInternalLayer(node.value);
-    		}
-    		return;
-    	}
-    	
-        if( node && node.type == 'layer' && !node.search) {
-            if( node.selected ){
-
-                var item = $scope.formatUrl(node,false);                                
-                
-                var wmsOptions = {
-                        url: item.url,
-                        params:{
-                            'LAYERS': item.name
-                        }
-                	};
-                
-                if(node.dataSourceUrl.match(/&authkey=(.*)/)) {
-                	wmsOptions.url += "?" + node.dataSourceUrl.match(/&authkey=(.*)/)[0];
-                }
-                
-                var wmsSource = new ol.source.TileWMS(wmsOptions);
-                              
-                var wmsLayer = new ol.layer.Tile({
-                	 source: wmsSource,
-                     maxResolution: minEscalaToMaxResolutionn(node.minimumScaleMap),
-                     minResolution: maxEscalaToMinResolutionn(node.maximumScaleMap)
-                });
-
-                    $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":node.name, "titulo":node.label});
-
-                    //Adds the selected layers in the map
-                    $scope.map.addLayer(wmsLayer);
-            }
-            else
-            {
-            	for(var i=0; i <= $scope.layers.length; i++)
-                {
-            		if ( i == $scope.layers.length ){
-            			if ($scope.layers[i - 1].name == node.name && $scope.layers[i - 1].searchId == undefined){
-            				$scope.map.removeLayer($scope.layers[i - 1].wmsLayer);
-                            $scope.layers.splice(i - 1,1);
-            			}
-            		} else {
-            			if( $scope.layers[i].name == node.name && $scope.layers[i].searchId == undefined )
-                        {
-                            //Removes the user-desselecionadas layers
-                            $scope.map.removeLayer($scope.layers[i].wmsLayer);
-                            $scope.layers.splice(i,1);
-                        }
-            		}                    
-                }
-            }
-        }
-    }
-    
-    $scope.getSelectedSearchNode = function(node) {
-
-    	if(typeof node == 'undefined') return false;
-    	
-        if( node && node.type == 'layer' && $scope.allSearchs[0] && node.searchId >= 0 ){
-
-            if( node.selected ){
-
-                for (var i = 0; i < $scope.allSearchs[0].children.length; i++)
-                {
-                    if($scope.allSearchs[0].children[i].name == node.name)
-                    {
-                    	//Is internal layer
-                    	if( $scope.allSearchs[0].children[i].search.layer.dataSource.url == null ) {
-                    		
-                    		//$scope.addInternalLayerSearch($scope.allSearchs[0].children[i].pesquisa.searchId);
-                    		$scope.addInternalLayerSearch(i);
-                    	} else {
-                    		$scope.map.removeLayer(node.wmsLayer);
-                    		                    		
-                            	$scope.layers.push({'wmsLayer': $scope.allSearchs[0].children[i].wmsLayer, 'wmsSource': $scope.allSearchs[0].children[i].wmsSource, "name":node.search.layer.name, "titulo":node.search.layer.title, 'searchId': node.searchId});
-                    		
-                    		//Add in the list each selected layer
-                            $scope.map.addLayer($scope.allSearchs[0].children[i].wmsLayer);	
-                    	}
-                    }
-                }
-            }
-            else
-            {
-
-            	for (var i = 0; i < $scope.layers.length; i++)
-                {
-            		if( $scope.layers[i].searchId == node.searchId )
-                    {
-	            		//Is external layer
-	                    $scope.map.removeLayer($scope.layers[i].wmsLayer);
-	                    
-	                    //retirar
-	                    $scope.layers.splice(i,1);
-                    }
-                }
-            	
-                for (var i = 0; i < $scope.allSearchs[0].children.length; i++)
-                {
-                    if( $scope.allSearchs[0].children[i].name == node.name )
-                    {
-                    	//Remove layers selected by user 
-                    	
-                    	//Is internal layer
-                    	if( $scope.allSearchs[0].children[i].search.layer.dataSource.url == null ) {
-                    		
-                    			//$scope.removeInternalLayerSearch($scope.allSearchs[0].children[i].pesquisa.searchId);
-                    			$scope.removeInternalLayerSearch(i, $scope.allSearchs[0].children[i].search.layer.id);
-                    	} 
-
-                    }
-                }
-            }
-        }
-    }
-    
-    /**
-     * Treat the selection and deselection of each of the kml tree
-     * @param node
-     */
-    $scope.getSelectedKMLNode = function(node){
-
-
-        if( node && node.type == 'kml' && $scope.allLayersKML[0]){
-
-            if( node.selected ){
-
-            	for(var i=0; i < $scope.allLayersKML[0].children.length; i++)
-                {
-                    if($scope.allLayersKML[0].children[i].name == node.name)
-                    {
-                        $scope.map.removeLayer(node.layer);
-                        $scope.map.addLayer($scope.allLayersKML[0].children[i].layer);
-                    }
-                }
-            }
-            else
-            {
-                for(var i=0; i < $scope.allLayersKML[0].children.length; i++)
-                {
-                    if( $scope.allLayersKML[0].children[i].name == node.name )
-                    {
-                        //Remove as camadas desselecionadas pelo usuário
-                        $scope.map.removeLayer($scope.allLayersKML[0].children[i].layer);
-
-                    }
-                }
-            }
-        }
-
-    }
-    
-
-    /**
-       Converts the value scale stored in the db to open layes zoom format
-     */
-    var minEscalaToMaxResolutionn = function ( minEscalaMapa ){
- 
-        switch (minEscalaMapa){
-            case 'UM500km':
-                return 78271.51696402048;
-            case 'UM200km':
-                return 78271.51696402048;
-            case 'UM100km':
-                return 4891.96981025128;
-            case 'UM50km':
-                return 2445.98490512564;
-            case 'UM20km':
-                return 1222.99245256282;
-            case 'UM10km':
-                return 611.49622628141;
-            case 'UM5km':
-                return 152.8740565703525;
-            case 'UM2km':
-                return 76.43702828517625;
-            case 'UM1km':
-                return 38.21851414258813;
-            case 'UM500m':
-                return 19.109257071294063;
-            case 'UM200m':
-                return 9.554628535647032;
-            case 'UM100m':
-                return 4.777314267823516;
-            case 'UM50m':
-                return 2.388657133911758;
-            case 'UM20m':
-                return 1.194328566955879;
-            default :
-                return 78271.51696402048;
-        }
-    }
- 
-    /**
-     Converts the value scale stored in the db to open layes zoom forma
-     */
-    var maxEscalaToMinResolutionn = function ( maxEscalaMapa ){
- 
-        switch (maxEscalaMapa){
-            case 'UM500km':
-                return 19567.87924100512;
-            case 'UM200km':
-                return 4891.96981025128;
-            case 'UM100km':
-                return 2445.98490512564;
-            case 'UM50km':
-                return 1222.99245256282;
-            case 'UM20km':
-                return 305.748113140705;
-            case 'UM10km':
-                return 152.8740565703525;
-            case 'UM5km':
-                return 76.43702828517625;
-            case 'UM2km':
-                return 38.21851414258813;
-            case 'UM1km':
-                return 19.109257071294063;
-            case 'UM500m':
-                return 9.554628535647032;
-            case 'UM200m':
-                return 4.777314267823516;
-            case 'UM100m':
-                return 2.388657133911758;
-            case 'UM50m':
-                return 1.194328566955879;
-            case 'UM20m':
-                return 0.0005831682455839253;
-            default :
-                return 0.0005831682455839253;
-        }
-    }
-
-    /*-------------------------------------------------------------------
-     * 		 			GOOGLE MAPS CONFIGURATION
-     *-------------------------------------------------------------------*/
-
-    /**
-     * Method that initializes the Google Maps map and its settings
-     */
-    $scope.initializeGMAP = function initializeGMAP() {
-
-        // only runs if the currently active forest is not google maps
-        if ( $scope.mapConf.active != $scope.MAP_TYPE_GMAP ){
-
-
-            // case map active MAP QUEST OSM
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM ){
-                $scope.rasterMapQuestOSM.setVisible(false);
-            }
-
-            // If map QUEST MAP SAT active
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_SAT ){
-                $scope.rasterMapQuestSAT.setVisible(false);
-            }
-
-            // case map active MAP QUEST OSM
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_OSM ){
-                $scope.rasterOSM.setVisible(false);
-            }
-
-            //adjust div css gmap-to show it
-            $("#gmap").css({"width":"100%","height":"100%"})
-
-            // set the mapGoogleOptions
-            $scope.mapGoogle = new google.maps.Map(document.getElementById("gmap"), $scope.mapGoogleOptions);
-
-
-            $scope.olMapDiv.parentNode.removeChild($scope.olMapDiv);
-            $scope.mapGoogle.controls[google.maps.ControlPosition.RIGHT_TOP].push($scope.olMapDiv)
-
-            // Removes the interaction of rotate
-            $scope.map.removeInteraction($scope.dragRotateAndZoom);
-
-            // Remove the rotation
-            $scope.map.getView().setRotation(0);
-
-
-            $scope.mapConf.active = $scope.MAP_TYPE_GMAP;
-
-            // set the view from google maps
-            $scope.view.setCenter($scope.view.getCenter());
-            $scope.view.setZoom($scope.view.getZoom());
-
-
-        }
-
-    }
-
-
-    /**
-     * Method that initializes the Open Street Map map and its settings
-     */
-    $scope.initializeOSM = function initializeOSM() {
-
-        // only runs if the map currently active is not the OSM
-        if ( $scope.mapConf.active != $scope.MAP_TYPE_OSM ){
-
-           if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
-
-               //adjust div css gmap-not to show it
-               $("#gmap").css({"width":"0","height":"0"})
-
-               // Removes the element from the olmap div of google maps
-               var element = document.getElementById("main-content");
-               $scope.olMapDiv.style.position = "relative";
-               $scope.olMapDiv.style.top = "0";
-               element.appendChild($scope.olMapDiv);
-
-               // Adds interaction to rotate
-               $scope.map.addInteraction($scope.dragRotateAndZoom);
-           }
-
-            // case map active MAP QUEST OSM
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM ){
-                $scope.rasterMapQuestOSM.setVisible(false);
-            }
-
-            // If map QUEST MAP SAT active
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_SAT ){
-                $scope.rasterMapQuestSAT.setVisible(false);
-            }
-
-
-            //$scope.map.addLayer($scope.raster);
-            $scope.rasterOSM.setVisible(true);
-
-            $scope.mapConf.active = $scope.MAP_TYPE_OSM;
-
-        }
-
-    }
-
-
-    /**
-     *
-     */
-    $scope.initializeMapQuestOSM = function() {
-
-        // only runs if the map active in memento is not the OSM
-        if ( $scope.mapConf.active != $scope.MAP_TYPE_MAPQUEST_OSM ){
-
-            // If active map for google maps
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
-
-                //adjust div css gmap-not to show it
-                $("#gmap").css({"width":"0","height":"0"})
-
-                // Removes the element from the olmap div of google maps
-                var element = document.getElementById("main-content");
-                $scope.olMapDiv.style.position = "relative";
-                $scope.olMapDiv.style.top = "0";
-                element.appendChild($scope.olMapDiv);
-
-                // Adds interaction to rotate
-                $scope.map.addInteraction($scope.dragRotateAndZoom);
-            }
-
-            // If active map for OSM
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_OSM ){
-                $scope.rasterOSM.setVisible(false);
-            }
-
-            // If active map for MAPQUEST SAT
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_SAT ){
-                $scope.rasterMapQuestSAT.setVisible(false);
-            }
-
-            // sets the map map quest osm
-            $scope.rasterMapQuestOSM.setVisible(true);
-
-            $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_OSM;
-
-        }
-    }
-
-
-    /**
-     *
-     */
-    $scope.initializeMapQuestSAT = function() {
-
-        // only runs if the map active in memento is not the OSM
-        if ( $scope.mapConf.active != $scope.MAP_TYPE_MAPQUEST_SAT ){
-
-            // If active map is google maps
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_GMAP ){
-
-                //adjust div css gmap-not to show it
-                $("#gmap").css({"width":"0","height":"0"})
-
-                // Removes the element from the olmap div of google maps
-                var element = document.getElementById("main-content");
-                $scope.olMapDiv.style.position = "relative";
-                $scope.olMapDiv.style.top = "0";
-                element.appendChild($scope.olMapDiv);
-
-                // Adds interaction to rotate
-                $scope.map.addInteraction($scope.dragRotateAndZoom);
-            }
-
-            // If active map is OSM
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_OSM ){
-                $scope.rasterOSM.setVisible(false);
-            }
-
-            // case map active is MAP QUEST OSM
-            if ( $scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM ){
-                $scope.rasterMapQuestOSM.setVisible(false);
-            }
-
-
-            // set the map to map quest osm
-            $scope.rasterMapQuestSAT.setVisible(true);
-
-            $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_SAT;
-
-        }
-    }
-
-
-
-    /*-------------------------------------------------------------------
-     * 		 		FUNCTIONALITY VIEW MOUSE COORDINATESE
-     *-------------------------------------------------------------------*/
-
-
-    /**
-     * Responsible method to display on the map the mouse pointer coordinates
-     */
-    function enableMouseCoordinates() {
-
-        /**
-         * Variable that has the element that contains the tooltip
-         */
-        var info = $('#info');
-
-        /**
-         * Method that shows the mouse coordinates on the map
-         */
-        var displayCoordinateMouse = function(pixel) {
-
-            info.html("<p>" + formatCoordinate($scope.mousePositionControl.l) + "</p>");
-            info.css("display","block");
-
-        };
-        
-        /**
-         * Method that formats the coordinate of the mouse
-         */
-        var formatCoordinate = function( coord ){
-
-            var posVirgula = coord.indexOf(",");
-
-            var part1 = coord.slice(0,posVirgula);
-            var part2 = coord.slice(posVirgula+2);
-
-            var posPonto = part1.indexOf(".");
-            var latitude = part1.slice(0,posPonto) + "°" + part1.slice(posPonto+1, posPonto+3) + "'" + part1.slice(posPonto+3) + '"';
-
-            posPonto = part2.indexOf(".");
-            var longitude = part2.slice(0,posPonto) + "°" + part2.slice(posPonto+1, posPonto+3) + "'" + part2.slice(posPonto+3) + '"';
-
-            return latitude + ", " + longitude;
-
-        }
-        
-        /**
-         * Events to display coordinate of the mouse
-         */
-        $($scope.map.getViewport()).on('mousemove', function(evt) {
-        	displayCoordinateMouse($scope.map.getEventPixel(evt.originalEvent));
-        });
-    }
-
-
-    /**
-     * Function that hides the mouse position
-     */
-    $scope.hideMousePosition = function (){
-        var info = $('#info');
-        info.tooltip('hide');
-    }
-
-
-    /*-------------------------------------------------------------------
-     * 		 	    FUNCTIONALITY TO CALCULATE DISTANCE AND AREA
-     *-------------------------------------------------------------------*/
-
-
-    /**
-     * Method that calculates the distance of points on interactive map
-     */
-    $scope.initializeDistanceCalc = function () {
-
-    	if($scope.menu.fcMarker){
-    		$scope.clearFcMarker();
-    	} else if ( $("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px' ) {
-    		$scope.clearDetailMarker();
-    	}
-    	
-    	
-        // checks whether any functionality is already active
-        if ($scope.menu.fcDistancia || $scope.menu.fcArea){
-
-            // If this functionality is active is necessary to leave the funcionality
-            $scope.map.removeInteraction(draw);
-            source.clear();
-            $scope.map.removeLayer(vector);
-            $('#popup').css("display","none");
-            sketch = null;
-
-
-        }
-
-        //If this functionality is active: deactivates and leavecaso mapa ativo for o google maps
-        if ($scope.menu.fcDistancia){
-
-            $scope.menu.fcDistancia = false;
-            return;
-
-        } else {
-
-        	// active functionality and disables the other to only have one active at a time
-            $scope.menu = {
-                fcDistancia : true,
-                fcArea : false,
-                fcKml :  false,
-                fcMarker: false
-            };
-
-            // add the measuring layer on a map
-            $scope.map.addLayer(vector);
-
-            // adds the event on the map
-            $($scope.map.getViewport()).on('mousemove', mouseMoveHandler);
-
-            // initializes the interaction
-            addInteraction( 'LineString' );
-        }
-    }
-
-
-    $scope.initializeMarker = function () {
-    	
-    	if($("#sidebar-marker-detail-update").css("display") == 'block') {
-    		$scope.clearDetailMarker();
-    	}
-    	
-    	 $scope.map.removeInteraction(draw);
-         source.clear();
-         $scope.map.removeLayer(vector);
-         $('#popup').css("display","none");
-         sketch = null;
-         
-         
-    	if ($scope.menu.fcMarker){
-
-    		$scope.clearFcMarker();
-            return;
-
-        } else {
-        	
-
-        	//$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
-        	$scope.currentEntity = new Marker();
-        	
-            // active functionality and disables the other to only have one active at a time
-            $scope.menu = {
-                fcDistancia : false,
-                fcArea : false,
-                fcKml :  false,
-                fcMarker: true
-            };
-         
-        }
-    }
-    
-    /**
-     * Method that calculates the area of points on interactive map
-     */
-    $scope.initializeAreaCalc = function () {
-
-    	if($scope.menu.fcMarker){
-    		$scope.clearFcMarker();
-    	} else if ( $("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px' ) {
-    		$scope.clearDetailMarker();
-    	}
-    	
-    	
-
-        // checks whether any functionality is already active
-        if ($scope.menu.fcArea || $scope.menu.fcDistancia || $scope.menu.fcMarker){
-
-            // If this functionality is necessary to leave the active functionality
-            $scope.map.removeInteraction(draw);
-            source.clear();
-            $scope.map.removeLayer(vector);
-            $('#popup').css("display","none");
-            sketch = null;
-
-        }
-
-        // If this functionality turns on: deactivates and goes out
-        if ($scope.menu.fcArea){
-
-            $scope.menu.fcArea = false;
-            return;
-
-        } else {
-
-            // activates and deactivates the other functionality to just have an active at a time
-            $scope.menu = {
-                fcDistancia : false,
-                fcArea : true,
-                fcKml :  false,
-                fcMarker: false
-            };
-
-            // Add the layer of measurement on the map
-            $scope.map.addLayer(vector);
-
-            // Add event on a map
-            $($scope.map.getViewport()).on('mousemove', mouseMoveHandler);
-
-            // Initializes the interaction
-            addInteraction( 'Polygon' );
-        }
-
-    }
-
-  
-    /**
-     * Source of measuring layer
-     */
-    var source = new ol.source.Vector();
-
-    /**
-     * Measuring layer configuration
-     */
-    var vector = new ol.layer.Vector({
-        source: source,
-        style: new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: 'rgba(255, 255, 255, 0.2)'
-            }),
-            stroke: new ol.style.Stroke({
-                color: '#ffcc33',
-                width: 2
-            }),
-            image: new ol.style.Circle({
-                radius: 7,
-                fill: new ol.style.Fill({
-                    color: '#ffcc33'
-                })
-            })
-        })
+    $(function () {
+      $("#sidebar-tabs").tabs({}).addClass("ui-tabs-vertical ui-helper-clearfix");
+      $("#sidebar-tabs li").removeClass("ui-corner-top ui-widget-content").addClass("ui-corner-left");
     });
 
 
     /**
-     * Currently drawed feature
-     * @type {ol.Feature}
+     * Click event to prompt the geoserver the information layer of the clicked coordinat
      */
-    var sketch;
+    $scope.map.on('click', function (evt) {
 
+      if ($scope.menu.fcMarker && !$scope.screenMarkerOpenned) {
+        $scope.screenMarkerOpenned = true;
+        $scope.toggleSidebarMarkerCreate(300);
+
+        var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon(({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: 'static/images/marker.png'
+          }))
+        });
+
+        var iconFeature = new ol.Feature({
+          geometry: new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]])
+        });
+
+        var layer = new ol.layer.Vector({
+          source: new ol.source.Vector({features: [iconFeature]})
+        });
+
+        layer.setStyle(iconStyle);
+
+        $scope.currentCreatingInternalLayer = layer;
+        $scope.map.addLayer(layer);
+        $scope.$apply();
+
+        $scope.currentEntity.latitude = evt.coordinate[0];
+        $scope.currentEntity.longitude = evt.coordinate[1];
+
+        layerGroupService.listAllInternalLayerGroups({
+          callback: function (result) {
+            $scope.selectLayerGroup = [];
+
+            angular.forEach(result, function (layer, index) {
+
+              $scope.selectLayerGroup.push({
+                "layerTitle": layer.title,
+                "layerId": layer.id,
+                "layerIcon": layer.icon,
+                "group": layer.layerGroup.name
+              });
+
+            })
+
+            $scope.currentState = $scope.LIST_STATE;
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+          }
+        });
+        return false;
+      }
+
+
+      /* get the feature click to open marker detail */
+      var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+        return feature;
+      });
+
+      /*It is used to check if the user has clicked on the map or on the feature.*/
+      $scope.feature = feature;
+
+      if (($scope.layers.length > 0 && !$scope.menu.fcArea && !$scope.menu.fcDistancia) || feature) {
+        $scope.features = [];
+      }
+
+      var hasSearch = $scope.allSearchs.length ? $scope.allSearchs[0].children.length > 0 : false;
+
+      if (($scope.layers.length > 0 || hasSearch ) && !$scope.menu.fcArea && !$scope.menu.fcDistancia) {
+
+        var listUrls = [];
+
+        for (var i = 0; i < $scope.layers.length; i++) {
+          var url = $scope.layers[i].wmsSource.getGetFeatureInfoUrl(
+            evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(),
+            {'INFO_FORMAT': 'application/json'});
+
+          listUrls.push(decodeURIComponent(url));
+        }
+
+        if ($scope.screenMarkerOpenned) {
+          $scope.clearFcMarker();
+        }
+
+        listAllFeatures(listUrls);
+
+        $scope.screen = 'detail';
+
+      }
+
+      /* if click on the marker */
+      if (feature) {
+        if (typeof feature.getProperties().marker != "undefined") {
+          if ($scope.screenMarkerOpenned) {
+            $scope.clearFcMarker();
+          }
+
+          $scope.currentCreatingInternalLayer = feature;
+          $scope.screen = 'detail';
+
+          $scope.marker = feature.getProperties().marker;
+          $scope.features.push({"feature": $scope.marker, "type": "internal"});
+        }
+      }
+
+      if ($scope.features.length > 0) {
+        $timeout(function () {
+          $scope.toggleSidebarMarkerDetailUpdate(300);
+        }, 400)
+      }
+
+
+      if ($scope.features.length == 1) {
+        $timeout(function () {
+
+          $(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
+        }, 100)
+
+      }
+
+
+      $("div.msgMap").css("display", "none");
+
+    });
     /**
-     * Variable that will contain the instance of ol.interaction.Draw
-     */
-    var draw;
+     * authenticated user
+     * */
+    markerService.getUserMe({
+      callback: function (result) {
+        $scope.userMe = result;
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+
+  };
+
+  $scope.changeToScreen = function (screen) {
+    $scope.screen = screen;
+  }
+
+  $scope.objectKeys = function (obj) {
+    return Object.keys(obj);
+  }
+
+  /**
+   * Function that makes request to geo server to bring the features
+   * @param url
+   * @param posicao
+   */
+  var listAllFeatures = function (listUrls) {
+
+    layerGroupService.listAllFeatures(listUrls, {
+      callback: function (result) {
+
+        for (var i = 0; i < result.length; i++) {
+
+          var feature = {
+            layer: $scope.layers[i],
+            fields: {}
+          };
+
+          try {
+            angular.forEach(JSON.parse(result[i]).features, function (value, key) {
+              angular.forEach(value.properties, function (value, key) {
+
+                try {
+                  feature.fields[decodeURIComponent(escape(key))] = decodeURIComponent(escape(value));
+                }
+                catch (e) {
+                  feature.fields[key] = value;
+                }
+
+              });
+
+              var insere = false;
+              for (var propriedade in feature.fields) {
+                insere = true;
+                break;
+              }
+
+              if (insere) {
+
+                if ($scope.features.length) {
+                  var alreadyExistLayer = false;
+
+                  angular.forEach($scope.features, function (value, key) {
+
+                    if (value.feature.layer.name == feature.layer.name) {
+                      alreadyExistLayer = true;
+                    }
+
+                  });
+
+                  if (!alreadyExistLayer) {
+                    $scope.features.push({"feature": feature, "type": "external"});
+                  }
+
+                } else {
+                  $scope.features.push({"feature": feature, "type": "external"});
+                }
+
+              }
+
+              if ($scope.features.length > 0) {
+
+                $timeout(function () {
+                  $scope.toggleSidebarMarkerDetailUpdate(300);
+
+                  //.panel-collapse 
+                  $('.min-height-accordion').find('.panel-body').css('height',
+                    parseInt($('#sidebar-marker-detail-update').height()) -
+                    parseInt(( ( $scope.features.length) * 37 ) + 40) + 'px'
+                  );
+                }, 400)
+
+              }
+
+              if ($scope.features.length > 1) {
+                $timeout(function () {
+                  $(".min-height-accordion .panel-collapse .panel-body").css("min-height", "300px")
+                }, 700)
+              }
+
+            });
+          } catch (e) {
+            continue;
+          }
+
+        }
 
 
-    // EVENTS
-    /**
-     * handle pointer move
-     * @param {Event} evt
-     */
-    var mouseMoveHandler = function(evt) {
-        if (sketch && ( $scope.menu.fcArea || $scope.menu.fcDistancia ) ) {
-            var output;
-            var geom = (sketch.getGeometry());
-            if (geom instanceof ol.geom.Polygon) {
-                output = formatArea(/** @type {ol.geom.Polygon} */ (geom));
+        if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
 
-            } else if (geom instanceof ol.geom.LineString) {
-                output = formatLength( /** @type {ol.geom.LineString} */ (geom));
+          if ($scope.menu.fcMarker) {
+            $scope.clearFcMarker();
+          } else if (!$scope.feature) {
+            $scope.clearDetailMarker();
+          }
+        }
+
+
+        $scope.$apply();
+
+      },
+      errorHandler: function (message, exception) {
+        $scope.msg = {type: "danger", text: message, dismiss: true};
+        $scope.$apply();
+      }
+    });
+  }
+
+
+  /**
+   *
+   */
+  $scope.listToolsByUser = function () {
+
+    layerGroupService.listToolsByUser({
+      callback: function (result) {
+
+        for (var i = 0; i < result.length; i++) {
+          if (result[i].id == $scope.PERMISSION_CALCULO_DISTANCIA) {
+            $scope.hasPermissionCalculoDistancia = true;
+          }
+          else if (result[i].id == $scope.PERMISSION_CALCULO_AREA) {
+            $scope.hasPermissionCalculoArea = true;
+          }
+          else if (result[i].id == $scope.PERMISSION_KML) {
+            $scope.hasPermissionKML = true;
+            enableFileKML();
+          }
+
+        }
+
+        if ($scope.hasPermissionKML == false) {
+          $("#menu-item-3").remove();
+          $("#tabs-3").remove();
+        }
+
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.msg = {type: "danger", text: message, dismiss: true};
+        $scope.$apply();
+      }
+    });
+
+  }
+
+  /**
+   *
+   */
+  $scope.listPublishedLayersGroup = function () {
+
+    //Lists the groups of layers and layers published according to user access profile
+    layerGroupService.listLayerGroupUpperPublished({
+      callback: function (result) {
+
+        var parseNode = function (node) {
+          var item = {};
+
+          item.id = (!!node.nodes ? 'grupo' : 'layer') + '_' + node.id.toString();
+          item.label = !!node.nodes ? node.name : node.title;
+          item.name = !!node.nodes ? '' : node.name;
+          item.legenda = !!node.nodes ? '' : node.legend;
+          item.selected = !!node.nodes ? '' : node.startEnabled;
+          item.dataSourceUrl = !!node.nodes ? '' : node.dataSource.url;
+          item.value = node.id;
+          item.type = !!node.nodes ? 'grupo' : 'layer';
+
+          item.maximumScaleMap = !!node.nodes ? '' : node.maximumScaleMap;
+          item.minimumScaleMap = !!node.nodes ? '' : node.minimumScaleMap;
+
+          if (item.selected) {
+            $scope.getSelectedNode(item);
+          }
+
+          item.children = [];
+
+          if (!!node.nodes) {
+            for (var i = 0; i < node.nodes.length; ++i) {
+              item.children.push(parseNode(node.nodes[i]));
+//                            if( true === node.nodes[i].startVisible ) {
+//                                item.children.push(parseNode(node.nodes[i]));
+//                            }
+            }
+          }
+          return item;
+        }
+
+        $scope.allLayers = [];
+
+        for (var i = 0; i < result.length; ++i) {
+          $scope.allLayers.push(parseNode(result[i]))
+        }
+
+        if ($scope.allLayers[0]) {
+          for (var i in $scope.allLayers[0].children) {
+            if ($scope.allLayers[0].children.length == 1 && $scope.allLayers[0].children[i].selected) {
+              $scope.allLayers[0].selected = true;
+              $scope.allLayers[0].children[i].selected = true;
+            }
+            else if (!$scope.allLayers[0].children[i].selected) {
+              $scope.allLayers[0].selected = false;
+            }
+            else {
+              $scope.allLayers[0].selected = true;
+            }
+          }
+        }
+
+
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.msg = {type: "danger", text: message, dismiss: true};
+        $scope.$apply();
+      }
+    });
+
+  }
+
+  /**
+   * Formats the url with the name of the layer for each data source
+   * @param node
+   * @returns {{name: string, url: string}}
+   */
+  $scope.formatUrl = function (node, isSearch) {
+
+    if (isSearch) {
+      var index = node.name.indexOf(":");
+      var dataSourceAddress = node.dataSource.url.lastIndexOf("ows?");
+
+      var layerType = node.name.substring(0, index);
+      var layerName = node.name.substring(index + 1, node.name.length);
+      var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress) + layerType + '/wms';
+    }
+    else {
+      var index = node.name.indexOf(":");
+      var dataSourceAddress = node.dataSourceUrl.lastIndexOf("ows?");
+      var layerType = node.name.substring(0, index);
+      var layerName = node.name.substring(index + 1, node.name.length);
+      var formattedUrl = node.dataSourceUrl.substring(0, dataSourceAddress) + layerType + '/wms';
+    }
+
+    return {'name': layerName, 'url': formattedUrl};
+
+  }
+
+
+  /**
+   * Treat the selection and deselection of each of the tree
+   * @param node
+   */
+  $scope.getSelectedNode = function (node) {
+
+    if (typeof node == 'undefined' || node.search) return false;
+
+    /* Check if it is an internal layer */
+    if (typeof node.dataSourceUrl != 'undefined' && node.dataSourceUrl == null) {
+      if (node.selected) {
+        $scope.addInternalLayer(node.value);
+      } else {
+        $scope.removeInternalLayer(node.value);
+      }
+      return;
+    }
+
+    if (node && node.type == 'layer' && !node.search) {
+      if (node.selected) {
+
+        var item = $scope.formatUrl(node, false);
+
+        var wmsOptions = {
+          url: item.url,
+          params: {
+            'LAYERS': item.name
+          }
+        };
+
+        if (node.dataSourceUrl.match(/&authkey=(.*)/)) {
+          wmsOptions.url += "?" + node.dataSourceUrl.match(/&authkey=(.*)/)[0];
+        }
+
+        var wmsSource = new ol.source.TileWMS(wmsOptions);
+
+        var wmsLayer = new ol.layer.Tile({
+          source: wmsSource,
+          maxResolution: minEscalaToMaxResolutionn(node.minimumScaleMap),
+          minResolution: maxEscalaToMinResolutionn(node.maximumScaleMap)
+        });
+
+        $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name": node.name, "titulo": node.label});
+
+        //Adds the selected layers in the map
+        $scope.map.addLayer(wmsLayer);
+      }
+      else {
+        for (var i = 0; i <= $scope.layers.length; i++) {
+          if (i == $scope.layers.length) {
+            if ($scope.layers[i - 1].name == node.name && $scope.layers[i - 1].searchId == undefined) {
+              $scope.map.removeLayer($scope.layers[i - 1].wmsLayer);
+              $scope.layers.splice(i - 1, 1);
+            }
+          } else {
+            if ($scope.layers[i].name == node.name && $scope.layers[i].searchId == undefined) {
+              //Removes the user-desselecionadas layers
+              $scope.map.removeLayer($scope.layers[i].wmsLayer);
+              $scope.layers.splice(i, 1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  $scope.getSelectedSearchNode = function (node) {
+
+    if (typeof node == 'undefined') return false;
+
+    if (node && node.type == 'layer' && $scope.allSearchs[0] && node.searchId >= 0) {
+
+      if (node.selected) {
+
+        for (var i = 0; i < $scope.allSearchs[0].children.length; i++) {
+          if ($scope.allSearchs[0].children[i].name == node.name) {
+            //Is internal layer
+            if ($scope.allSearchs[0].children[i].search.layer.dataSource.url == null) {
+
+              //$scope.addInternalLayerSearch($scope.allSearchs[0].children[i].pesquisa.searchId);
+              $scope.addInternalLayerSearch(i);
+            } else {
+              $scope.map.removeLayer(node.wmsLayer);
+
+              $scope.layers.push({
+                'wmsLayer': $scope.allSearchs[0].children[i].wmsLayer,
+                'wmsSource': $scope.allSearchs[0].children[i].wmsSource,
+                "name": node.search.layer.name,
+                "titulo": node.search.layer.title,
+                'searchId': node.searchId
+              });
+
+              //Add in the list each selected layer
+              $scope.map.addLayer($scope.allSearchs[0].children[i].wmsLayer);
+            }
+          }
+        }
+      }
+      else {
+
+        for (var i = 0; i < $scope.layers.length; i++) {
+          if ($scope.layers[i].searchId == node.searchId) {
+            //Is external layer
+            $scope.map.removeLayer($scope.layers[i].wmsLayer);
+
+            //retirar
+            $scope.layers.splice(i, 1);
+          }
+        }
+
+        for (var i = 0; i < $scope.allSearchs[0].children.length; i++) {
+          if ($scope.allSearchs[0].children[i].name == node.name) {
+            //Remove layers selected by user 
+
+            //Is internal layer
+            if ($scope.allSearchs[0].children[i].search.layer.dataSource.url == null) {
+
+              //$scope.removeInternalLayerSearch($scope.allSearchs[0].children[i].pesquisa.searchId);
+              $scope.removeInternalLayerSearch(i, $scope.allSearchs[0].children[i].search.layer.id);
             }
 
-            $('#popup-content').html("<p>" + output + "</p>");
-            $('#popup').css("display","block");
+          }
         }
-    };
+      }
+    }
+  }
+
+  /**
+   * Treat the selection and deselection of each of the kml tree
+   * @param node
+   */
+  $scope.getSelectedKMLNode = function (node) {
 
 
+    if (node && node.type == 'kml' && $scope.allLayersKML[0]) {
+
+      if (node.selected) {
+
+        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
+          if ($scope.allLayersKML[0].children[i].name == node.name) {
+            $scope.map.removeLayer(node.layer);
+            $scope.map.addLayer($scope.allLayersKML[0].children[i].layer);
+          }
+        }
+      }
+      else {
+        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
+          if ($scope.allLayersKML[0].children[i].name == node.name) {
+            //Remove as camadas desselecionadas pelo usuário
+            $scope.map.removeLayer($scope.allLayersKML[0].children[i].layer);
+
+          }
+        }
+      }
+    }
+
+  }
+
+
+  /**
+   Converts the value scale stored in the db to open layes zoom format
+   */
+  var minEscalaToMaxResolutionn = function (minEscalaMapa) {
+
+    switch (minEscalaMapa) {
+      case 'UM500km':
+        return 78271.51696402048;
+      case 'UM200km':
+        return 78271.51696402048;
+      case 'UM100km':
+        return 4891.96981025128;
+      case 'UM50km':
+        return 2445.98490512564;
+      case 'UM20km':
+        return 1222.99245256282;
+      case 'UM10km':
+        return 611.49622628141;
+      case 'UM5km':
+        return 152.8740565703525;
+      case 'UM2km':
+        return 76.43702828517625;
+      case 'UM1km':
+        return 38.21851414258813;
+      case 'UM500m':
+        return 19.109257071294063;
+      case 'UM200m':
+        return 9.554628535647032;
+      case 'UM100m':
+        return 4.777314267823516;
+      case 'UM50m':
+        return 2.388657133911758;
+      case 'UM20m':
+        return 1.194328566955879;
+      default :
+        return 78271.51696402048;
+    }
+  }
+
+  /**
+   Converts the value scale stored in the db to open layes zoom forma
+   */
+  var maxEscalaToMinResolutionn = function (maxEscalaMapa) {
+
+    switch (maxEscalaMapa) {
+      case 'UM500km':
+        return 19567.87924100512;
+      case 'UM200km':
+        return 4891.96981025128;
+      case 'UM100km':
+        return 2445.98490512564;
+      case 'UM50km':
+        return 1222.99245256282;
+      case 'UM20km':
+        return 305.748113140705;
+      case 'UM10km':
+        return 152.8740565703525;
+      case 'UM5km':
+        return 76.43702828517625;
+      case 'UM2km':
+        return 38.21851414258813;
+      case 'UM1km':
+        return 19.109257071294063;
+      case 'UM500m':
+        return 9.554628535647032;
+      case 'UM200m':
+        return 4.777314267823516;
+      case 'UM100m':
+        return 2.388657133911758;
+      case 'UM50m':
+        return 1.194328566955879;
+      case 'UM20m':
+        return 0.0005831682455839253;
+      default :
+        return 0.0005831682455839253;
+    }
+  }
+
+  /*-------------------------------------------------------------------
+   * 		 			GOOGLE MAPS CONFIGURATION
+   *-------------------------------------------------------------------*/
+
+  /**
+   * Method that initializes the Google Maps map and its settings
+   */
+  $scope.initializeGMAP = function initializeGMAP() {
+
+    // only runs if the currently active forest is not google maps
+    if ($scope.mapConf.active != $scope.MAP_TYPE_GMAP) {
+
+
+      // case map active MAP QUEST OSM
+      if ($scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM) {
+        $scope.rasterMapQuestOSM.setVisible(false);
+      }
+
+      // If map QUEST MAP SAT active
+      if ($scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_SAT) {
+        $scope.rasterMapQuestSAT.setVisible(false);
+      }
+
+      // case map active MAP QUEST OSM
+      if ($scope.mapConf.active == $scope.MAP_TYPE_OSM) {
+        $scope.rasterOSM.setVisible(false);
+      }
+
+      //adjust div css gmap-to show it
+      $("#gmap").css({"width": "100%", "height": "100%"})
+
+      // set the mapGoogleOptions
+      $scope.mapGoogle = new google.maps.Map(document.getElementById("gmap"), $scope.mapGoogleOptions);
+
+
+      $scope.olMapDiv.parentNode.removeChild($scope.olMapDiv);
+      $scope.mapGoogle.controls[google.maps.ControlPosition.RIGHT_TOP].push($scope.olMapDiv)
+
+      // Removes the interaction of rotate
+      $scope.map.removeInteraction($scope.dragRotateAndZoom);
+
+      // Remove the rotation
+      $scope.map.getView().setRotation(0);
+
+
+      $scope.mapConf.active = $scope.MAP_TYPE_GMAP;
+
+      // set the view from google maps
+      $scope.view.setCenter($scope.view.getCenter());
+      $scope.view.setZoom($scope.view.getZoom());
+
+
+    }
+
+  }
+
+
+  /**
+   * Method that initializes the Open Street Map map and its settings
+   */
+  $scope.initializeOSM = function initializeOSM() {
+
+    // only runs if the map currently active is not the OSM
+    if ($scope.mapConf.active != $scope.MAP_TYPE_OSM) {
+
+      if ($scope.mapConf.active == $scope.MAP_TYPE_GMAP) {
+
+        //adjust div css gmap-not to show it
+        $("#gmap").css({"width": "0", "height": "0"})
+
+        // Removes the element from the olmap div of google maps
+        var element = document.getElementById("main-content");
+        $scope.olMapDiv.style.position = "relative";
+        $scope.olMapDiv.style.top = "0";
+        element.appendChild($scope.olMapDiv);
+
+        // Adds interaction to rotate
+        $scope.map.addInteraction($scope.dragRotateAndZoom);
+      }
+
+      // case map active MAP QUEST OSM
+      if ($scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM) {
+        $scope.rasterMapQuestOSM.setVisible(false);
+      }
+
+      // If map QUEST MAP SAT active
+      if ($scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_SAT) {
+        $scope.rasterMapQuestSAT.setVisible(false);
+      }
+
+
+      //$scope.map.addLayer($scope.raster);
+      $scope.rasterOSM.setVisible(true);
+
+      $scope.mapConf.active = $scope.MAP_TYPE_OSM;
+
+    }
+
+  }
+
+
+  /**
+   *
+   */
+  $scope.initializeMapQuestOSM = function () {
+
+    // only runs if the map active in memento is not the OSM
+    if ($scope.mapConf.active != $scope.MAP_TYPE_MAPQUEST_OSM) {
+
+      // If active map for google maps
+      if ($scope.mapConf.active == $scope.MAP_TYPE_GMAP) {
+
+        //adjust div css gmap-not to show it
+        $("#gmap").css({"width": "0", "height": "0"})
+
+        // Removes the element from the olmap div of google maps
+        var element = document.getElementById("main-content");
+        $scope.olMapDiv.style.position = "relative";
+        $scope.olMapDiv.style.top = "0";
+        element.appendChild($scope.olMapDiv);
+
+        // Adds interaction to rotate
+        $scope.map.addInteraction($scope.dragRotateAndZoom);
+      }
+
+      // If active map for OSM
+      if ($scope.mapConf.active == $scope.MAP_TYPE_OSM) {
+        $scope.rasterOSM.setVisible(false);
+      }
+
+      // If active map for MAPQUEST SAT
+      if ($scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_SAT) {
+        $scope.rasterMapQuestSAT.setVisible(false);
+      }
+
+      // sets the map map quest osm
+      $scope.rasterMapQuestOSM.setVisible(true);
+
+      $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_OSM;
+
+    }
+  }
+
+
+  /**
+   *
+   */
+  $scope.initializeMapQuestSAT = function () {
+
+    // only runs if the map active in memento is not the OSM
+    if ($scope.mapConf.active != $scope.MAP_TYPE_MAPQUEST_SAT) {
+
+      // If active map is google maps
+      if ($scope.mapConf.active == $scope.MAP_TYPE_GMAP) {
+
+        //adjust div css gmap-not to show it
+        $("#gmap").css({"width": "0", "height": "0"})
+
+        // Removes the element from the olmap div of google maps
+        var element = document.getElementById("main-content");
+        $scope.olMapDiv.style.position = "relative";
+        $scope.olMapDiv.style.top = "0";
+        element.appendChild($scope.olMapDiv);
+
+        // Adds interaction to rotate
+        $scope.map.addInteraction($scope.dragRotateAndZoom);
+      }
+
+      // If active map is OSM
+      if ($scope.mapConf.active == $scope.MAP_TYPE_OSM) {
+        $scope.rasterOSM.setVisible(false);
+      }
+
+      // case map active is MAP QUEST OSM
+      if ($scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM) {
+        $scope.rasterMapQuestOSM.setVisible(false);
+      }
+
+
+      // set the map to map quest osm
+      $scope.rasterMapQuestSAT.setVisible(true);
+
+      $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_SAT;
+
+    }
+  }
+
+
+  /*-------------------------------------------------------------------
+   * 		 		FUNCTIONALITY VIEW MOUSE COORDINATESE
+   *-------------------------------------------------------------------*/
+
+
+  /**
+   * Responsible method to display on the map the mouse pointer coordinates
+   */
+  function enableMouseCoordinates() {
 
     /**
-     * Method that adds a user interaction on a map
+     * Variable that has the element that contains the tooltip
      */
-    function addInteraction( type ) {
-        // tipos : 'Polygon' e 'LineString'
-        draw = new ol.interaction.Draw({
-            source: source,
-            type: /** @type {ol.geom.GeometryType} */ (type)
-        });
-        $scope.map.addInteraction(draw);
+    var info = $('#info');
 
-        draw.on('drawstart',
-            function(evt) {
-                // set sketch
-                sketch = evt.feature;
+    /**
+     * Method that shows the mouse coordinates on the map
+     */
+    var displayCoordinateMouse = function (pixel) {
 
-                // clean the ancient markings
-                source.clear();
+      info.html("<p>" + formatCoordinate($scope.mousePositionControl.l) + "</p>");
+      info.css("display", "block");
 
-            }, this);
+    };
 
-        draw.on('drawend',
-            function(evt) {
-                // unset sketch
-                sketch = null;
+    /**
+     * Method that formats the coordinate of the mouse
+     */
+    var formatCoordinate = function (coord) {
 
-            }, this);
+      var posVirgula = coord.indexOf(",");
+
+      var part1 = coord.slice(0, posVirgula);
+      var part2 = coord.slice(posVirgula + 2);
+
+      var posPonto = part1.indexOf(".");
+      var latitude = part1.slice(0, posPonto) + "°" + part1.slice(posPonto + 1, posPonto + 3) + "'" + part1.slice(posPonto + 3) + '"';
+
+      posPonto = part2.indexOf(".");
+      var longitude = part2.slice(0, posPonto) + "°" + part2.slice(posPonto + 1, posPonto + 3) + "'" + part2.slice(posPonto + 3) + '"';
+
+      return latitude + ", " + longitude;
+
+    }
+
+    /**
+     * Events to display coordinate of the mouse
+     */
+    $($scope.map.getViewport()).on('mousemove', function (evt) {
+      displayCoordinateMouse($scope.map.getEventPixel(evt.originalEvent));
+    });
+  }
+
+
+  /**
+   * Function that hides the mouse position
+   */
+  $scope.hideMousePosition = function () {
+    var info = $('#info');
+    info.tooltip('hide');
+  }
+
+
+  /*-------------------------------------------------------------------
+   * 		 	    FUNCTIONALITY TO CALCULATE DISTANCE AND AREA
+   *-------------------------------------------------------------------*/
+
+
+  /**
+   * Method that calculates the distance of points on interactive map
+   */
+  $scope.initializeDistanceCalc = function () {
+
+    if ($scope.menu.fcMarker) {
+      $scope.clearFcMarker();
+    } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
+      $scope.clearDetailMarker();
     }
 
 
-    /**
-     * Method that generates the output format of distance measurement
-     */
-    var formatLength = function(line) {
-        var length = Math.round(line.getLength() * 100) / 100;
-        var output;
-        if (length > 100) {
-            output = (Math.round(length / 1000 * 100) / 100) +
-                ' ' + 'km';
-        } else {
-            output = (Math.round(length * 100) / 100) +
-                ' ' + 'm';
-        }
-        return output;
-    };
+    // checks whether any functionality is already active
+    if ($scope.menu.fcDistancia || $scope.menu.fcArea) {
+
+      // If this functionality is active is necessary to leave the funcionality
+      $scope.map.removeInteraction(draw);
+      source.clear();
+      $scope.map.removeLayer(vector);
+      $('#popup').css("display", "none");
+      sketch = null;
 
 
-    /**
-     * Method that generates the input format of measuring area
-     */
-    var formatArea = function(polygon) {
-        var area = polygon.getArea();
-        var output;
-        if (area > 10000) {
-            output = (Math.round(area / 1000000 * 100) / 100) +
-                ' ' + 'km<sup>2</sup>';
-        } else {
-            output = (Math.round(area * 100) / 100) +
-                ' ' + 'm<sup>2</sup>';
-        }
-        return output;
-    };
-    
-    /*-------------------------------------------------------------------
-     * 		 			CUSTOM SEARCH FUNCTIONALITY
-     *-------------------------------------------------------------------*/
-    $scope.listCustomSearchByUser = function(){
-
-        // resets the fields of the last selected search
-        $scope.currentCustomSearch.layer = null;
-        $scope.currentCustomSearch.layerFields = {};
-        $scope.searchMsg = null;
-
-        // List custom searches based on user access profile
-        customSearchService.listCustomSearchsByUser( {
-            callback: function (result) {
-
-                $scope.customSearchs = result;
-                
-                $scope.toggleSidebarMenu(300, '#menu-item-2');
-                
-                $scope.$apply();
-
-            },
-            errorHandler: function (message, exception) {
-
-                $scope.toggleSidebarMenu(300, '#menu-item-2');
-
-                $scope.msg = {type: "danger", text: message, dismiss: true};
-                $scope.$apply();
-            }
-        });
-                
     }
-    
-    /**
-     * The custom search receive the selected value
-     * @param customSearch
-     */
-     $scope.selectCustomSearch = function(customSearch) {
-         $scope.currentCustomSearch = customSearch;
-         
-         $timeout(function(){
-	         $('.datepicker').datepicker({ 
-				dateFormat: 'dd/mm/yy',
-				dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
-			    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-			    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-			    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-			    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-			    nextText: 'Próximo',
-			    prevText: 'Anterior'
-			});	
-	
-			$('.datepicker').mask("99/99/9999");
-         });
-    };
-    
-    
-    /**
-     *  List the layers of custom search fields
-     */
-    $scope.listFieldsLayersSearch = function(){
-    	
-    	$scope.hasSearch = null;
-    	$scope.hasSearch = true;
-        // deselect the old research and remove the map
-    	angular.forEach($scope.searchs, function(search, index){
-    		
-    		if(search.search.layer.name != $scope.currentCustomSearch.layer.name)
-    		{
-    			return true;
-    		}
-    		
-    		$scope.map.removeLayer(search.wmsLayer);
-    		///$scope.allSearchs[0].children[index].selected = false;
-    		
-    		if ( $scope.currentCustomSearch.name == $scope.allSearchs[0].children[index].search.name ){
-    			for (var i = 0; i < $scope.layers.length; i ++){
-    				if ($scope.allSearchs[0].children[index].searchId == $scope.layers[i].searchId ){
-    					$scope.layers.splice(i,1);
-    				}
-    			}
-    		   	$scope.allSearchs[0].children[index].selected = false;
-    		}else{
-    		   	if ( $scope.allSearchs[0].children[index].selected == true ){
-    		   		$scope.allSearchs[0].children[index].selected = true;
-    		   	}else{
-    		   		$scope.allSearchs[0].children[index].selected = false;
-    		   	}
-    		}
-    		
-    	});
 
-    	//If external layer...
-        if($scope.currentCustomSearch.layer.dataSource.url != null ){
-        	var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
-        	
-        	var wmsOptions = {url: item.url, params: {'LAYERS': $scope.currentCustomSearch.layer.name}};
-        	
-        	if($scope.currentCustomSearch.layer.dataSource.token) {
-        		wmsOptions.url += "?&authkey=" + $scope.currentCustomSearch.layer.dataSource.token;
-	        }
-        	
-			var wmsSource = new ol.source.TileWMS(wmsOptions);
-						
-			var wmsLayer = new ol.layer.Tile({
-				source: wmsSource
-			});
+    //If this functionality is active: deactivates and leavecaso mapa ativo for o google maps
+    if ($scope.menu.fcDistancia) {
 
-			 $scope.map.addLayer(wmsLayer);
-			 
-			 $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name":$scope.currentCustomSearch.layer.name, "titulo":$scope.currentCustomSearch.layer.title, 'searchId': ($scope.allSearchs.length ? $scope.allSearchs[0].children.length : 0)});
-			 
-		} else {
-			//If internal layer...
-		
-			$scope.removeInternalLayer($scope.currentCustomSearch.layer.id, function(layerId){
-				$scope.hasSearch = false;
-				var fields = $scope.currentCustomSearch.layerFields;
-				
-				for(var field in fields) {
-					if($scope.currentCustomSearch.layerFields[field].type == 'BOOLEAN'){
-						$scope.currentCustomSearch.layerFields[field].value = $($scope.isChecked()).val() ;
-					} else
-						$scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
-				}
-				
-				markerService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, {
-				    callback: function (results) {
-				    	
-				    	$scope.markersByLayer = results;
-				    	
-				    	$scope.allFieldEmpty = true;
-				    	angular.forEach($scope.currentCustomSearch.layerFields, function(field, index){
-				    		if(field.value != "" && field.value != undefined) {
-				    			$scope.allFieldEmpty = false;
-	    					}
-				    	});
-				    	
-				    	if(!$scope.allFieldEmpty){
-				    		
-				    		angular.forEach(results, function(result, index){
-				    			$scope.canRemoveMarker = null;
-				    			
-				    			
-				    			angular.forEach($scope.currentCustomSearch.layerFields, function(field, index){	
-				    				
-				    				if($scope.canRemoveMarker == true) return false;
-				    				
-				    				//Se campo colocado na pesquisa realmente possuir um valor, ele deve ser processado!
-				    				//If the field in the search has a value, it need to be proccesed 
-				    				var enter = false;
-				    				
-				    				angular.forEach(result.markerAttribute, function(markerAttribute, index){
-				    				
-					    				if(field.attributeId == markerAttribute.attribute.id && $scope.canRemoveMarker != true ){
-					    					enter = true;
-					    					
-					    					if (field.value != "" && field.value != undefined) {
-					    						if ( markerAttribute.value.toUpperCase().indexOf(field.value.toUpperCase()) != -1 ){
-					    							$scope.canRemoveMarker = false;
-					    						}else{
-					    							$scope.canRemoveMarker = true;
-					    							return false;
-					    						}
-					    					}
-					    				}
-				    				
-				    				});
-				    				
-				    				//Se caso o valor não for processado dentro do foreach acima, e caso esse valor campo não esteja vazio, deve-se remover o marcador do mapa.
-				    				//Case the value isn't processed inside the foreach above, and case this value isn't empty, so the marker need to be removed of the map. 
-				    				if(!enter && (field.value != "" && field.value != undefined) ) {
-				    					$scope.canRemoveMarker = true;
-				    				}
-				    			
-				    			});
-				    			
-				    			if($scope.canRemoveMarker) {				    				
-				    				delete $scope.markersByLayer[index];				    				
-				    			}
-				    		});
-				    		
-				    	}
-			    		
-				    	var normalizeArray = $scope.markersByLayer;
-				    	$scope.markersByLayer = [];
-				    	
-			    		angular.forEach(normalizeArray, function(value, index){
+      $scope.menu.fcDistancia = false;
+      return;
 
-				    		if(value != undefined){
-				    			$scope.markersByLayer.push(value);
-				    		} 
-			    			
-			    		});
-				    	
-		    			var iconPath = "static/images/marker.png";
-						 
-						if($scope.markersByLayer.length > 0) {
-							iconPath = $scope.markersByLayer[0].layer.icon;
-						}
-						
-						var iconStyle = new ol.style.Style({
-		                   image: new ol.style.Icon(({
-		                       anchor: [0.5, 1],
-		                       anchorXUnits: 'fraction',
-		                       anchorYUnits: 'fraction',
-		                       src: iconPath
-		                    
-		                   }))
-		               });
-					
-						angular.forEach($scope.markersByLayer, function(marker, index){
-			                   var iconFeature = new ol.Feature({
-			                       geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
-			                       marker: marker,
-			                   });	
-			                  
-			                   var layer = new ol.layer.Vector({
-				                   source: new ol.source.Vector({ features: [iconFeature] }),
-				                   
-				                   maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
-				                   minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
-				               });
-				
-				               layer.setStyle(iconStyle);
-				
-				               $scope.map.addLayer(layer);
-				               
-				               var location = new ol.format.WKT().readGeometry(marker.location.coordinateString);
-				               
-				               $scope.internalLayers.push({"layer": layer, "id": layerId, "location": location, 'searchId': $scope.allSearchs[0].children.length - 1});
-				               $scope.internalLayersSearch.push({"layer": layer, "id":layerId, "layerId": layerId, "searchId": $scope.allSearchs[0].children.length - 1, "location": location});
-			     			});
-			
-						$scope.searchId++;
-						
-						$scope.$apply();
-			    	
-				    		
-		            },
-		            errorHandler: function (message, exception) {
+    } else {
 
-		                $scope.msg = {type: "danger", text: message, dismiss: true};
-		                $scope.$apply();
-		            }
-		        });
-			})						
-			
-			
-			$scope.searchs.push({'search': $.extend([], $scope.currentCustomSearch)});
-			
-			var item = {};
-			item.id = 'results';
-	        item.label = 'Resultado pesquisas';
-	        item.type = 'grupo';
-	
-	        item.children = [];
+      // active functionality and disables the other to only have one active at a time
+      $scope.menu = {
+        fcDistancia: true,
+        fcArea: false,
+        fcKml: false,
+        fcMarker: false
+      };
 
-	        	        
-	        var lastSearchName = "";
-	        for(var i =0; i < $scope.searchs.length ; ++i)
-	        {
-	        	
-	        	$scope.searchs[i].id = (i+1).toString();
-	        	$scope.searchs[i].searchId = i;
-	        	$scope.searchs[i].label = "Pesquisa "+ (i+1);
-	            $scope.searchs[i].type = 'layer';
-	            $scope.searchs[i].name = "pesquisa"+ (i+1);
-	            
-	            
-	            if ( $scope.searchs[i].search.layer != null ){
-	            	$scope.allLayersSearches[i] = $scope.searchs[i].search.layer;	            		            	
-	            } else {
-	            	$scope.searchs[i].search.layer = $scope.allLayersSearches[i];
-	            }
-	            
-	            item.children.push($scope.searchs[i]);
-	            lastSearchName = "Pesquisa "+ (i+1);
-	        }
-	
-	        // seleciona a ultima pesquisa
-	        item.children[item.children.length-1].selected = true;
-	
-	        // seleciona o grupo pai caso so tenha uma pesquisa
-	        if (item.children.length == 1) item.selected = true;
-	
-	        // Abre a tree de pesquisas
-	        $timeout(function(){
-	            $('#tree-pesquisas').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
-	        });
-	
-	        $scope.allSearchs = [];
-	        $scope.allSearchs.push(item);
-	        $scope.searchMsg = lastSearchName + ' - Realizada com sucesso';
-	
-	        $("#alertPesquisa").show();
-	
-	        setTimeout(function(){
-	            $("#alertPesquisa").fadeOut();
-	        }, 2000);
-			
-			return false;
-		}
+      // add the measuring layer on a map
+      $scope.map.addLayer(vector);
 
-        var filterParams = {'CQL_FILTER' : null};
-        var filterList = '';
-        var firstTime = true;
+      // adds the event on the map
+      $($scope.map.getViewport()).on('mousemove', mouseMoveHandler);
 
+      // initializes the interaction
+      addInteraction('LineString');
+    }
+  }
+
+
+  $scope.initializeMarker = function () {
+
+    if ($("#sidebar-marker-detail-update").css("display") == 'block') {
+      $scope.clearDetailMarker();
+    }
+
+    $scope.map.removeInteraction(draw);
+    source.clear();
+    $scope.map.removeLayer(vector);
+    $('#popup').css("display", "none");
+    sketch = null;
+
+
+    if ($scope.menu.fcMarker) {
+
+      $scope.clearFcMarker();
+      return;
+
+    } else {
+
+
+      //$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
+      $scope.currentEntity = new Marker();
+
+      // active functionality and disables the other to only have one active at a time
+      $scope.menu = {
+        fcDistancia: false,
+        fcArea: false,
+        fcKml: false,
+        fcMarker: true
+      };
+
+    }
+  }
+
+  /**
+   * Method that calculates the area of points on interactive map
+   */
+  $scope.initializeAreaCalc = function () {
+
+    if ($scope.menu.fcMarker) {
+      $scope.clearFcMarker();
+    } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
+      $scope.clearDetailMarker();
+    }
+
+
+    // checks whether any functionality is already active
+    if ($scope.menu.fcArea || $scope.menu.fcDistancia || $scope.menu.fcMarker) {
+
+      // If this functionality is necessary to leave the active functionality
+      $scope.map.removeInteraction(draw);
+      source.clear();
+      $scope.map.removeLayer(vector);
+      $('#popup').css("display", "none");
+      sketch = null;
+
+    }
+
+    // If this functionality turns on: deactivates and goes out
+    if ($scope.menu.fcArea) {
+
+      $scope.menu.fcArea = false;
+      return;
+
+    } else {
+
+      // activates and deactivates the other functionality to just have an active at a time
+      $scope.menu = {
+        fcDistancia: false,
+        fcArea: true,
+        fcKml: false,
+        fcMarker: false
+      };
+
+      // Add the layer of measurement on the map
+      $scope.map.addLayer(vector);
+
+      // Add event on a map
+      $($scope.map.getViewport()).on('mousemove', mouseMoveHandler);
+
+      // Initializes the interaction
+      addInteraction('Polygon');
+    }
+
+  }
+
+
+  /**
+   * Source of measuring layer
+   */
+  var source = new ol.source.Vector();
+
+  /**
+   * Measuring layer configuration
+   */
+  var vector = new ol.layer.Vector({
+    source: source,
+    style: new ol.style.Style({
+      fill: new ol.style.Fill({
+        color: 'rgba(255, 255, 255, 0.2)'
+      }),
+      stroke: new ol.style.Stroke({
+        color: '#ffcc33',
+        width: 2
+      }),
+      image: new ol.style.Circle({
+        radius: 7,
+        fill: new ol.style.Fill({
+          color: '#ffcc33'
+        })
+      })
+    })
+  });
+
+
+  /**
+   * Currently drawed feature
+   * @type {ol.Feature}
+   */
+  var sketch;
+
+  /**
+   * Variable that will contain the instance of ol.interaction.Draw
+   */
+  var draw;
+
+
+  // EVENTS
+  /**
+   * handle pointer move
+   * @param {Event} evt
+   */
+  var mouseMoveHandler = function (evt) {
+    if (sketch && ( $scope.menu.fcArea || $scope.menu.fcDistancia )) {
+      var output;
+      var geom = (sketch.getGeometry());
+      if (geom instanceof ol.geom.Polygon) {
+        output = formatArea(/** @type {ol.geom.Polygon} */ (geom));
+
+      } else if (geom instanceof ol.geom.LineString) {
+        output = formatLength(/** @type {ol.geom.LineString} */ (geom));
+      }
+
+      $('#popup-content').html("<p>" + output + "</p>");
+      $('#popup').css("display", "block");
+    }
+  };
+
+
+  /**
+   * Method that adds a user interaction on a map
+   */
+  function addInteraction(type) {
+    // tipos : 'Polygon' e 'LineString'
+    draw = new ol.interaction.Draw({
+      source: source,
+      type: /** @type {ol.geom.GeometryType} */ (type)
+    });
+    $scope.map.addInteraction(draw);
+
+    draw.on('drawstart',
+      function (evt) {
+        // set sketch
+        sketch = evt.feature;
+
+        // clean the ancient markings
+        source.clear();
+
+      }, this);
+
+    draw.on('drawend',
+      function (evt) {
+        // unset sketch
+        sketch = null;
+
+      }, this);
+  }
+
+
+  /**
+   * Method that generates the output format of distance measurement
+   */
+  var formatLength = function (line) {
+    var length = Math.round(line.getLength() * 100) / 100;
+    var output;
+    if (length > 100) {
+      output = (Math.round(length / 1000 * 100) / 100) +
+        ' ' + 'km';
+    } else {
+      output = (Math.round(length * 100) / 100) +
+        ' ' + 'm';
+    }
+    return output;
+  };
+
+
+  /**
+   * Method that generates the input format of measuring area
+   */
+  var formatArea = function (polygon) {
+    var area = polygon.getArea();
+    var output;
+    if (area > 10000) {
+      output = (Math.round(area / 1000000 * 100) / 100) +
+        ' ' + 'km<sup>2</sup>';
+    } else {
+      output = (Math.round(area * 100) / 100) +
+        ' ' + 'm<sup>2</sup>';
+    }
+    return output;
+  };
+
+  /*-------------------------------------------------------------------
+   * 		 			CUSTOM SEARCH FUNCTIONALITY
+   *-------------------------------------------------------------------*/
+  $scope.listCustomSearchByUser = function () {
+
+    // resets the fields of the last selected search
+    $scope.currentCustomSearch.layer = null;
+    $scope.currentCustomSearch.layerFields = {};
+    $scope.searchMsg = null;
+
+    // List custom searches based on user access profile
+    customSearchService.listCustomSearchsByUser({
+      callback: function (result) {
+
+        $scope.customSearchs = result;
+
+        $scope.toggleSidebarMenu(300, '#menu-item-2');
+
+        $scope.$apply();
+
+      },
+      errorHandler: function (message, exception) {
+
+        $scope.toggleSidebarMenu(300, '#menu-item-2');
+
+        $scope.msg = {type: "danger", text: message, dismiss: true};
+        $scope.$apply();
+      }
+    });
+
+  }
+
+  /**
+   * The custom search receive the selected value
+   * @param customSearch
+   */
+  $scope.selectCustomSearch = function (customSearch) {
+    $scope.currentCustomSearch = customSearch;
+
+    $timeout(function () {
+      $('.datepicker').datepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+        dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior'
+      });
+
+      $('.datepicker').mask("99/99/9999");
+    });
+  };
+
+
+  /**
+   *  List the layers of custom search fields
+   */
+  $scope.listFieldsLayersSearch = function () {
+
+    $scope.hasSearch = null;
+    $scope.hasSearch = true;
+    // deselect the old research and remove the map
+    angular.forEach($scope.searchs, function (search, index) {
+
+      if (search.search.layer.name != $scope.currentCustomSearch.layer.name) {
+        return true;
+      }
+
+      $scope.map.removeLayer(search.wmsLayer);
+      ///$scope.allSearchs[0].children[index].selected = false;
+
+      if ($scope.currentCustomSearch.name == $scope.allSearchs[0].children[index].search.name) {
+        for (var i = 0; i < $scope.layers.length; i++) {
+          if ($scope.allSearchs[0].children[index].searchId == $scope.layers[i].searchId) {
+            $scope.layers.splice(i, 1);
+          }
+        }
+        $scope.allSearchs[0].children[index].selected = false;
+      } else {
+        if ($scope.allSearchs[0].children[index].selected == true) {
+          $scope.allSearchs[0].children[index].selected = true;
+        } else {
+          $scope.allSearchs[0].children[index].selected = false;
+        }
+      }
+
+    });
+
+    //If external layer...
+    if ($scope.currentCustomSearch.layer.dataSource.url != null) {
+      var item = $scope.formatUrl($scope.currentCustomSearch.layer, true);
+
+      var wmsOptions = {url: item.url, params: {'LAYERS': $scope.currentCustomSearch.layer.name}};
+
+      if ($scope.currentCustomSearch.layer.dataSource.token) {
+        wmsOptions.url += "?&authkey=" + $scope.currentCustomSearch.layer.dataSource.token;
+      }
+
+      var wmsSource = new ol.source.TileWMS(wmsOptions);
+
+      var wmsLayer = new ol.layer.Tile({
+        source: wmsSource
+      });
+
+      $scope.map.addLayer(wmsLayer);
+
+      $scope.layers.push({
+        'wmsLayer': wmsLayer,
+        'wmsSource': wmsSource,
+        "name": $scope.currentCustomSearch.layer.name,
+        "titulo": $scope.currentCustomSearch.layer.title,
+        'searchId': ($scope.allSearchs.length ? $scope.allSearchs[0].children.length : 0)
+      });
+
+    } else {
+      //If internal layer...
+
+      $scope.removeInternalLayer($scope.currentCustomSearch.layer.id, function (layerId) {
+        $scope.hasSearch = false;
         var fields = $scope.currentCustomSearch.layerFields;
 
-        var conectorLike;
-        for (var i = 0; i < fields.length; i++)
-        { 
-        	
-            fields[i].searchValue = '';
-
-            if( $("#item_"+i).val() != '' )
-            {
-                fields[i].searchValue = $("#item_"+i).val();
- 
-                if (fields[i].tipo != "INT"){
-                    conectorLike = true;
-                } else {
-                    conectorLike = false;
-                }
-                if( firstTime )
-                {
-                    if (conectorLike){
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
-                    } else {
-                        filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
-                    }
- 
-                    firstTime = false;
-                }
-                else
-                {
-                    if (conectorLike){
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'%" + $("#item_"+i).val().toLowerCase() + "%'");
-                    } else {
-                        filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'" + $("#item_"+i).val().toLowerCase() + "'");
-                    }
- 
-                }
-            }
-        }
- 
-        filterParams.CQL_FILTER = filterList;
-
-        if( filterList != '' )
-        {
-            wmsSource.updateParams(filterParams);
+        for (var field in fields) {
+          if ($scope.currentCustomSearch.layerFields[field].type == 'BOOLEAN') {
+            $scope.currentCustomSearch.layerFields[field].value = $($scope.isChecked()).val();
+          } else
+            $scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
         }
 
-        $scope.searchs.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, 'search': $.extend([], $scope.currentCustomSearch)});
+        markerService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, {
+          callback: function (results) {
 
-        var item = {};
-        item.label = 'Resultado pesquisas';
-        item.type = 'grupo';
+            $scope.markersByLayer = results;
 
-        item.children = [];
+            $scope.allFieldEmpty = true;
+            angular.forEach($scope.currentCustomSearch.layerFields, function (field, index) {
+              if (field.value != "" && field.value != undefined) {
+                $scope.allFieldEmpty = false;
+              }
+            });
 
-        var lastSearchName;
-        for(var i =0; i < $scope.searchs.length ; ++i)
-        {
-        	$scope.searchs[i].id = (i+1).toString();
-            $scope.searchs[i].label = "Pesquisa "+ (i+1);
-            $scope.searchs[i].type = 'layer';
-            $scope.searchs[i].name = "pesquisa"+ (i+1);
-            $scope.searchs[i].searchId = i;
-            
-           
-            
-            if ( $scope.searchs[i].search.layer != null ){
-            		$scope.allLayersSearches[i] = $scope.searchs[i].search.layer;
-            		            		            	
-            } else {
-            	$scope.searchs[i].search.layer = $scope.allLayersSearches[i];
+            if (!$scope.allFieldEmpty) {
+
+              angular.forEach(results, function (result, index) {
+                $scope.canRemoveMarker = null;
+
+
+                angular.forEach($scope.currentCustomSearch.layerFields, function (field, index) {
+
+                  if ($scope.canRemoveMarker == true) return false;
+
+                  //Se campo colocado na pesquisa realmente possuir um valor, ele deve ser processado!
+                  //If the field in the search has a value, it need to be proccesed 
+                  var enter = false;
+
+                  angular.forEach(result.markerAttribute, function (markerAttribute, index) {
+
+                    if (field.attributeId == markerAttribute.attribute.id && $scope.canRemoveMarker != true) {
+                      enter = true;
+
+                      if (field.value != "" && field.value != undefined) {
+                        if (markerAttribute.value.toUpperCase().indexOf(field.value.toUpperCase()) != -1) {
+                          $scope.canRemoveMarker = false;
+                        } else {
+                          $scope.canRemoveMarker = true;
+                          return false;
+                        }
+                      }
+                    }
+
+                  });
+
+                  //Se caso o valor não for processado dentro do foreach acima, e caso esse valor campo não esteja vazio, deve-se remover o marcador do mapa.
+                  //Case the value isn't processed inside the foreach above, and case this value isn't empty, so the marker need to be removed of the map. 
+                  if (!enter && (field.value != "" && field.value != undefined)) {
+                    $scope.canRemoveMarker = true;
+                  }
+
+                });
+
+                if ($scope.canRemoveMarker) {
+                  delete $scope.markersByLayer[index];
+                }
+              });
+
             }
 
-            item.children.push($scope.searchs[i]);
-            lastSearchName = "Pesquisa "+ (i+1);
-        }
+            var normalizeArray = $scope.markersByLayer;
+            $scope.markersByLayer = [];
 
-        // seleciona a ultima pesquisa
-        item.children[item.children.length-1].selected = true;
+            angular.forEach(normalizeArray, function (value, index) {
 
-        // seleciona o grupo pai caso so tenha uma pesquisa
-        if (item.children.length == 1) item.selected = true;
+              if (value != undefined) {
+                $scope.markersByLayer.push(value);
+              }
 
-        // Abre a tree de pesquisas
-        $timeout(function(){
-            $('#tree-pesquisas').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
+            });
+
+            var iconPath = "static/images/marker.png";
+
+            if ($scope.markersByLayer.length > 0) {
+              iconPath = $scope.markersByLayer[0].layer.icon;
+            }
+
+            var iconStyle = new ol.style.Style({
+              image: new ol.style.Icon(({
+                anchor: [0.5, 1],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                src: iconPath
+
+              }))
+            });
+
+            angular.forEach($scope.markersByLayer, function (marker, index) {
+              var iconFeature = new ol.Feature({
+                geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
+                marker: marker,
+              });
+
+              var layer = new ol.layer.Vector({
+                source: new ol.source.Vector({features: [iconFeature]}),
+
+                maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
+                minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
+              });
+
+              layer.setStyle(iconStyle);
+
+              $scope.map.addLayer(layer);
+
+              var location = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+
+              $scope.internalLayers.push({
+                "layer": layer,
+                "id": layerId,
+                "location": location,
+                'searchId': $scope.allSearchs[0].children.length - 1
+              });
+              $scope.internalLayersSearch.push({
+                "layer": layer,
+                "id": layerId,
+                "layerId": layerId,
+                "searchId": $scope.allSearchs[0].children.length - 1,
+                "location": location
+              });
+            });
+
+            $scope.searchId++;
+
+            $scope.$apply();
+
+
+          },
+          errorHandler: function (message, exception) {
+
+            $scope.msg = {type: "danger", text: message, dismiss: true};
+            $scope.$apply();
+          }
         });
-
-        $scope.allSearchs = [];
-        $scope.allSearchs.push(item);
-        $scope.searchMsg = lastSearchName + ' - Realizada com sucesso'
-
-        $("#alertPesquisa").show();
-
-        setTimeout(function(){
-            $("#alertPesquisa").fadeOut();
-        }, 2000)
+      })
 
 
+      $scope.searchs.push({'search': $.extend([], $scope.currentCustomSearch)});
+
+      var item = {};
+      item.id = 'results';
+      item.label = 'Resultado pesquisas';
+      item.type = 'grupo';
+
+      item.children = [];
+
+
+      var lastSearchName = "";
+      for (var i = 0; i < $scope.searchs.length; ++i) {
+
+        $scope.searchs[i].id = (i + 1).toString();
+        $scope.searchs[i].searchId = i;
+        $scope.searchs[i].label = "Pesquisa " + (i + 1);
+        $scope.searchs[i].type = 'layer';
+        $scope.searchs[i].name = "pesquisa" + (i + 1);
+
+
+        if ($scope.searchs[i].search.layer != null) {
+          $scope.allLayersSearches[i] = $scope.searchs[i].search.layer;
+        } else {
+          $scope.searchs[i].search.layer = $scope.allLayersSearches[i];
+        }
+
+        item.children.push($scope.searchs[i]);
+        lastSearchName = "Pesquisa " + (i + 1);
+      }
+
+      // seleciona a ultima pesquisa
+      item.children[item.children.length - 1].selected = true;
+
+      // seleciona o grupo pai caso so tenha uma pesquisa
+      if (item.children.length == 1) item.selected = true;
+
+      // Abre a tree de pesquisas
+      $timeout(function () {
+        $('#tree-pesquisas').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
+      });
+
+      $scope.allSearchs = [];
+      $scope.allSearchs.push(item);
+      $scope.searchMsg = lastSearchName + ' - Realizada com sucesso';
+
+      $("#alertPesquisa").show();
+
+      setTimeout(function () {
+        $("#alertPesquisa").fadeOut();
+      }, 2000);
+
+      return false;
     }
 
-    /*-------------------------------------------------------------------
-     * 		 			KML FUNCTIONALITY
-     *-------------------------------------------------------------------*/
+    var filterParams = {'CQL_FILTER': null};
+    var filterList = '';
+    var firstTime = true;
+
+    var fields = $scope.currentCustomSearch.layerFields;
+
+    var conectorLike;
+    for (var i = 0; i < fields.length; i++) {
+
+      fields[i].searchValue = '';
+
+      if ($("#item_" + i).val() != '') {
+        fields[i].searchValue = $("#item_" + i).val();
+
+        if (fields[i].tipo != "INT") {
+          conectorLike = true;
+        } else {
+          conectorLike = false;
+        }
+        if (firstTime) {
+          if (conectorLike) {
+            filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+          } else {
+            filterList = filterList.concat('strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+          }
+
+          firstTime = false;
+        }
+        else {
+          if (conectorLike) {
+            filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') LIKE ' + "'%" + $("#item_" + i).val().toLowerCase() + "%'");
+          } else {
+            filterList = filterList.concat(' AND strToLowerCase(' + '\"' + fields[i].name + '\"' + ') = ' + "'" + $("#item_" + i).val().toLowerCase() + "'");
+          }
+
+        }
+      }
+    }
+
+    filterParams.CQL_FILTER = filterList;
+
+    if (filterList != '') {
+      wmsSource.updateParams(filterParams);
+    }
+
+    $scope.searchs.push({
+      'wmsLayer': wmsLayer,
+      'wmsSource': wmsSource,
+      'search': $.extend([], $scope.currentCustomSearch)
+    });
+
+    var item = {};
+    item.label = 'Resultado pesquisas';
+    item.type = 'grupo';
+
+    item.children = [];
+
+    var lastSearchName;
+    for (var i = 0; i < $scope.searchs.length; ++i) {
+      $scope.searchs[i].id = (i + 1).toString();
+      $scope.searchs[i].label = "Pesquisa " + (i + 1);
+      $scope.searchs[i].type = 'layer';
+      $scope.searchs[i].name = "pesquisa" + (i + 1);
+      $scope.searchs[i].searchId = i;
 
 
-    /**
-     * Method that allowed drag a KML file to the interactive map
-     */
+      if ($scope.searchs[i].search.layer != null) {
+        $scope.allLayersSearches[i] = $scope.searchs[i].search.layer;
+
+      } else {
+        $scope.searchs[i].search.layer = $scope.allLayersSearches[i];
+      }
+
+      item.children.push($scope.searchs[i]);
+      lastSearchName = "Pesquisa " + (i + 1);
+    }
+
+    // seleciona a ultima pesquisa
+    item.children[item.children.length - 1].selected = true;
+
+    // seleciona o grupo pai caso so tenha uma pesquisa
+    if (item.children.length == 1) item.selected = true;
+
+    // Abre a tree de pesquisas
+    $timeout(function () {
+      $('#tree-pesquisas').find('.ivh-treeview-node-collapsed').removeClass('ivh-treeview-node-collapsed');
+    });
+
+    $scope.allSearchs = [];
+    $scope.allSearchs.push(item);
+    $scope.searchMsg = lastSearchName + ' - Realizada com sucesso'
+
+    $("#alertPesquisa").show();
+
+    setTimeout(function () {
+      $("#alertPesquisa").fadeOut();
+    }, 2000)
+
+
+  }
+
+  /*-------------------------------------------------------------------
+   * 		 			KML FUNCTIONALITY
+   *-------------------------------------------------------------------*/
+
+
+  /**
+   * Method that allowed drag a KML file to the interactive map
+   */
 //    function enableFileKML()
 //    {
 //        //Controla o drag and drop do arquivo KML no mapa
@@ -2080,122 +2074,1036 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
 //        });
 //
 //    }
-    
-    /*-------------------------------------------------------------------
-     * 		 			KML FUNCTIONALITY
-     *-------------------------------------------------------------------*/
 
-    //Allowed formats to be dragged on a map
-    var dragAndDropInteraction = new ol.interaction.DragAndDrop({
-        formatConstructors: [
-            ol.format.KML
-        ]
+  /*-------------------------------------------------------------------
+   * 		 			KML FUNCTIONALITY
+   *-------------------------------------------------------------------*/
+
+  //Allowed formats to be dragged on a map
+  var dragAndDropInteraction = new ol.interaction.DragAndDrop({
+    formatConstructors: [
+      ol.format.KML
+    ]
+  });
+
+
+  /**
+   * Method that allowed drag a KML file to the interactive map
+   */
+  function enableFileKML() {
+    //Controls the drag and drop the KML file on a map
+    dragAndDropInteraction.on('addfeatures', function (event) {
+      var vectorSource = new ol.source.Vector({
+        features: event.features,
+        projection: event.projection
+      });
+
+      var kmlLayer = new ol.layer.Vector({
+        source: vectorSource
+      });
+
+      $scope.kmlLayers.push({layer: kmlLayer})
+
+      $scope.map.getLayers().push(kmlLayer);
+
+      //Redirects to the point that the KML file is dragged
+      var view = $scope.map.getView();
+      view.fitExtent(
+        vectorSource.getExtent(), ($scope.map.getSize()));
+
+      var item = {};
+      item.id = 'kmlLayers'
+      item.label = 'Camadas KML';
+      item.type = 'kml';
+
+      item.children = [];
+
+      for (var i = 0; i < $scope.kmlLayers.length; ++i) {
+        $scope.kmlLayers[i].id = (i + 1).toString();
+        $scope.kmlLayers[i].label = "Camada " + (i + 1);
+        $scope.kmlLayers[i].type = 'kml';
+        $scope.kmlLayers[i].name = "Camada" + (i + 1);
+
+        item.children.push($scope.kmlLayers[i]);
+      }
+
+      // selects the last search
+      item.children[item.children.length - 1].selected = true;
+
+      // Select the parent group
+      var selectItemPai = true;
+      for (var i in item.children) {
+        if (item.children[i].selected != true) {
+          selectItemPai = false
+        }
+      }
+
+      // Select the parent group
+      if (selectItemPai) item.selected = true;
+
+      $scope.allLayersKML = [];
+      $scope.allLayersKML.push(item);
+
+
     });
 
 
+  }
+
+  /*-------------------------------------------------------------------
+   * 		 			BEHAVIOR OF THE SIDEBAR
+   *-------------------------------------------------------------------*/
+
+  /**
+   * Function that manages the Sidebar
+   * @param time Time animation plays.
+   * @param element Element name that is calling the function.
+   */
+  $scope.toggleSidebarMenu = function (time, element) {
+    if ($("#sidebar-marker-detail-update").css("display") == 'block') {
+      $scope.clearDetailMarker();
+
+      $timeout(function () {
+        $scope.toggleSidebar(time, element, '#sidebar-layers');
+      }, 400)
+    }
     /**
-     * Method that allowed drag a KML file to the interactive map
-     */
-    function enableFileKML()
-    {
-        //Controls the drag and drop the KML file on a map
-        dragAndDropInteraction.on('addfeatures', function(event) {
-            var vectorSource = new ol.source.Vector({
-                features: event.features,
-                projection: event.projection
-            });
+     * If the marker tab is open, close it and wait to open the new.
+     * */
+    if ($scope.menu.fcMarker) {
+      $scope.clearFcMarker();
 
-            var kmlLayer = new ol.layer.Vector({
-                source: vectorSource
-            });
+      $timeout(function () {
+        $scope.toggleSidebar(time, element, '#sidebar-layers');
+      }, 400)
 
-            $scope.kmlLayers.push({layer : kmlLayer})
+    } else {
 
-            $scope.map.getLayers().push(kmlLayer);
-
-            //Redirects to the point that the KML file is dragged
-            var view = $scope.map.getView();
-            view.fitExtent(
-                vectorSource.getExtent(), ($scope.map.getSize()));
-
-            var item = {};
-            item.id = 'kmlLayers'
-            item.label = 'Camadas KML';
-            item.type = 'kml';
-
-            item.children = [];
-
-            for(var i =0; i < $scope.kmlLayers.length ; ++i)
-            {
-            	$scope.kmlLayers[i].id = (i+1).toString();
-                $scope.kmlLayers[i].label = "Camada "+ (i+1);
-                $scope.kmlLayers[i].type = 'kml';
-                $scope.kmlLayers[i].name = "Camada"+ (i+1);
-
-                item.children.push($scope.kmlLayers[i]);
-            }
-
-            // selects the last search
-            item.children[item.children.length-1].selected = true;
-
-            // Select the parent group
-            var selectItemPai = true;
-            for( var i in item.children )
-            {
-                if (item.children[i].selected != true){
-                    selectItemPai = false
-                }
-            }
-
-            // Select the parent group
-            if (selectItemPai) item.selected = true;
-
-            $scope.allLayersKML = [];
-            $scope.allLayersKML.push(item);
-
-
-
-        });
-
-
+      $scope.toggleSidebar(time, element, '#sidebar-layers');
     }
 
-    /*-------------------------------------------------------------------
-     * 		 			BEHAVIOR OF THE SIDEBAR
-     *-------------------------------------------------------------------*/
+
+  };
+
+
+  /**
+   * Function that manages the Sidebar
+   * @param time Execution time of the animation.
+   * @param element Name of the element that is calling the function.
+   */
+  $scope.toggleSidebarMarkerCreate = function (time, element) {
+    $scope.attributesByLayer = [];
+    $scope.imgResult = "";
+    $scope.$apply();
+
+    if (element == "closeButton") {
+      $scope.screenMarkerOpenned = false;
+    }
 
     /**
-     * Function that manages the Sidebar
-     * @param time Time animation plays.
-     * @param element Element name that is calling the function.
-     */
-    $scope.toggleSidebarMenu = function (time, element){
-    	if($("#sidebar-marker-detail-update").css("display") == 'block') {
-    		$scope.clearDetailMarker();
-    		
-    		$timeout(function(){
-	    		$scope.toggleSidebar(time, element, '#sidebar-layers');
-	    	}, 400)
-    	}
-    	/**
-    	 * If the marker tab is open, close it and wait to open the new.
-    	 * */
-    	if( $scope.menu.fcMarker ) {
-    		$scope.clearFcMarker();
-    	
-	    	$timeout(function(){
-	    		$scope.toggleSidebar(time, element, '#sidebar-layers');
-	    	}, 400)
-	    	
-    	} else {
-    		
-    		$scope.toggleSidebar(time, element, '#sidebar-layers');
-    	}
-		
-    	
-    };
+     * If the marker tab is open, close it and wait to open the new.
+     * */
+    if ($scope.slideActived == '#sidebar-layers') {
+      $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
+
+      $timeout(function () {
+        $scope.toggleSidebar(time, element, '#sidebar-marker-create');
+      }, 400)
+    } else {
+
+      $scope.toggleSidebar(time, element, '#sidebar-marker-create');
+    }
+
+    $scope.resolveDatepicker();
+
+  };
+
+  $scope.toggleSidebarMarkerDetailUpdate = function (time, element) {
+    $scope.currentEntity = $scope.marker;
+
+    if (element == "closeButton") {
+      $scope.screenMarkerOpenned = false;
+      $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
+      return;
+    }
+
+    if (typeof $scope.marker != "undefined") {
+      markerService.findImgByMarker($scope.marker.id, {
+        callback: function (result) {
+
+          $scope.imgResult = result;
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
+
+      $scope.attributesByLayer = [];
+      $scope.showNewAttributes = false;
+
+      markerService.listAttributeByMarker($scope.marker.id, {
+        callback: function (result) {
+          $scope.attributesByMarker = result;
+
+          layerGroupService.listAttributesByLayer($scope.marker.layer.id, {
+            callback: function (result) {
+              $scope.attributesByLayer = [];
+
+              angular.forEach(result, function (attribute, index) {
+
+                var exist = false;
+
+                angular.forEach($scope.attributesByMarker, function (attributeByMarker, index) {
+
+                  if (attributeByMarker.attribute.id == attribute.id) {
+                    exist = true;
+                  }
+                });
+
+                if (!exist) {
+                  $scope.attributesByLayer.push(attribute);
+                  $scope.showNewAttributes = true;
+                }
+
+              });
+
+              $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+              $scope.message = {type: "error", text: message};
+              $scope.$apply();
+            }
+          });
+
+          angular.forEach(result, function (markerAttribute, index) {
+            if (markerAttribute.attribute.type == "NUMBER") {
+              markerAttribute.value = parseInt(markerAttribute.value);
+            }
+          })
 
 
+          $scope.$apply();
+
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
+    }
+    /* List for the edit */
+    layerGroupService.listAllInternalLayerGroups({
+      callback: function (result) {
+        // $scope.layersGroups = result;
+
+        $scope.selectLayerGroup = [];
+
+        angular.forEach(result, function (layer, index) {
+
+          $scope.selectLayerGroup.push($.extend(layer, {
+            "layerTitle": layer.title,
+            "layerId": layer.id,
+            "group": layer.layerGroup.name
+          }));
+
+        })
+
+        markerService.listAttributeByMarker($scope.currentEntity.id, {
+          callback: function (result) {
+            $scope.attributesByMarker = result;
+
+            angular.forEach(result, function (markerAttribute, index) {
+              if (markerAttribute.attribute.type == "NUMBER") {
+                markerAttribute.value = parseInt(markerAttribute.value);
+              }
+            })
+
+            angular.forEach($scope.selectLayerGroup, function (layer, index) {
+              if (layer.layerId == $scope.currentEntity.layer.id) {
+                layer.created = $scope.currentEntity.layer.created;
+                $scope.currentEntity.layer = layer;
+
+                return false;
+              }
+            })
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+          }
+        });
+
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+
+    /**
+     * If the marker tab is open, close it and wait to open the new.
+     * */
+
+    if ($scope.slideActived == '#sidebar-marker-detail-update') {
+      $(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
+      return
+    }
+
+    if ($scope.slideActived == '#sidebar-layers') {
+      //If menu layer or search is open, close it and open marker detail
+      $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
+
+      $("#sidebar-marker-detail-update").height($("#sidebar-layers").height());
+
+      $timeout(function () {
+        $scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
+      }, 400);
+
+    } else {
+      $scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
+    }
+    /*
+     if ( $('#sidebar-marker-detail').css("display") == 'none' ){
+
+     }*/
+    $scope.resolveDatepicker();
+    $(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
+  };
+
+  $scope.clearDetailMarker = function () {
+    $scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail-update');
+  }
+
+  $scope.toggleSidebar = function (time, element, slide) {
+    time = 300;
+
+    //Checks whether the animation is to open or close the sidebar by her current position.
+    var closed = $('.menu-sidebar-container').css('right') == '3px';
+
+    // Checks whether the user has clicked a button that is active and the bar's sample, if it is open or if the click left of the close button.
+    if ((element == $scope.lastActive && !closed) || (closed) || (element == "closeButton")) {
+
+      //Manages the class ' bg-inactive ' which activates and deactivates the buttons.
+      if (closed) {
+        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+      } else {
+        $(".menu-item").addClass("bg-inactive");
+      }
+      //Performs the animation
+
+      $(slide).toggle('slide', {direction: 'right'}, time);
+      $('.menu-sidebar-container').animate({
+        'right': closed ? $(slide).width() : '3px'
+      }, time);
+    } else {
+      if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+    }
+    $scope.lastActive = element;
+
+    $scope.slideActived = element == 'closeButton' ? '' : slide;
+  }
+
+  /*-------------------------------------------------------------------
+   * 		 			SIDE MENU MAP
+   *-------------------------------------------------------------------*/
+
+  /**
+   * Function that decreases the zoom map
+   */
+  $scope.diminuirZoom = function () {
+    $scope.map.getView().setZoom($scope.map.getView().getZoom() - 1);
+  }
+
+  /**
+   * Function that increases the zoom map
+   */
+  $scope.aumentarZoom = function () {
+    $scope.map.getView().setZoom($scope.map.getView().getZoom() + 1);
+  }
+
+  /**
+   *
+   */
+  $scope.showMapInfo = function (features) {
+    var dialog = $modal.open({
+      templateUrl: 'modules/map/ui/popup/map-info-popup.jsp',
+      controller: MapInfoPopUpController,
+      resolve: {
+        features: function () {
+          return features
+        }
+      }
+    });
+  }
+
+  /**
+   *
+   * @param camada
+   */
+  $scope.showLegendDetail = function (treeItem) {
+    $scope.legendDetailTitle = treeItem.label;
+    $scope.legendDetailImage = treeItem.legenda;
+    $scope.LAYER_MENU_STATE = 'legend_detail';
+  }
+
+  /**
+   *
+   */
+  $scope.exitLegendDetail = function () {
+    $scope.LAYER_MENU_STATE = 'list';
+  }
+
+  $scope.clearFcMarker = function () {
+    $scope.currentEntity = new Marker();
+
+    $scope.menu.fcMarker = false;
+
+    if ($scope.screenMarkerOpenned)
+      $scope.toggleSidebar('300', 'closeButton', $scope.slideActived);
+
+    $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+
+    $scope.screenMarkerOpenned = false;
+    $scope.attributesByLayer = [];
+  }
+
+  $scope.updateMarker = function () {
+
+    if (!$scope.form('sidebarMarkerUpdate').$valid) {
+      $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
+      return;
+    }
+
+    if ($scope.currentEntity.layer == null) {
+      var layer = new Layer();
+      layer.id = $scope.currentEntity.layer;
+      $scope.currentEntity.layer = layer;
+    }
+
+    var i = 0;
+
+    angular.forEach($scope.attributesByMarker, function () {
+
+      if ($scope.attributesByMarker[i].value == null) {
+        $scope.attributesByMarker[i].value = "";
+      }
+
+      i++;
+    });
+
+    $scope.currentEntity.markerAttribute = $scope.attributesByMarker;
+
+    angular.forEach($scope.attributesByLayer, function (val, ind) {
+
+      var attribute = new Attribute();
+      attribute.id = val.id;
+
+      var markerAttribute = new MarkerAttribute();
+      if (val.value != "" && val.value != undefined) {
+        markerAttribute.value = val.value;
+      } else {
+        markerAttribute.value = "";
+      }
+
+      markerAttribute.attribute = attribute
+      markerAttribute.marker = $scope.currentEntity;
+      $scope.currentEntity.markerAttribute.push(markerAttribute);
+
+    });
+
+    markerService.updateMarker($scope.currentEntity, {
+      callback: function (result) {
+
+        $scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
+
+        $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully"), dismiss: true};
+        $("div.msgMap").show();
+
+        setTimeout(function () {
+          $("div.msgMap").fadeOut();
+        }, 5000);
+
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+
+  }
+
+  $scope.insertMarker = function () {
+    if (!$scope.isBooleanValid()) {
+      return false;
+    }
+    if (!$scope.form('sidebarMarker').$valid) {
+
+      return;
+    }
+
+    var layer = new Layer();
+    layer.id = $scope.currentEntity.layer.layerId;
+    $scope.currentEntity.layer = layer;
+
+    $scope.currentEntity.markerAttribute = [];
+    angular.forEach($scope.attributesByLayer, function (val, ind) {
+
+      var attribute = new Attribute();
+      attribute.id = val.id;
+
+      var markerAttribute = new MarkerAttribute();
+      if (val.value != "" && val.value != undefined) {
+        markerAttribute.value = val.value;
+      } else {
+        markerAttribute.value = "";
+      }
+
+      markerAttribute.attribute = attribute
+      markerAttribute.marker = $scope.currentEntity;
+      $scope.currentEntity.markerAttribute.push(markerAttribute);
+
+    });
+
+    $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
+
+    markerService.insertMarker($scope.currentEntity, {
+      callback: function (result) {
+
+        $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+
+        $scope.removeInternalLayer($scope.currentEntity.layer.id, function (layerId) {
+          $scope.addInternalLayer(layerId);
+        })
+
+        $scope.clearFcMarker();
+
+        $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully"), dismiss: true};
+        $("div.msgMap").show();
+
+        setTimeout(function () {
+          $("div.msgMap").fadeOut();
+        }, 5000);
+
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+
+  }
+
+  $scope.showAttributesAlone = false;
+  $scope.showNewAttributes = false;
+  $scope.listAttributesByLayerUpdate = function () {
+
+    var iconStyle = new ol.style.Style({
+      image: new ol.style.Icon(({
+        anchor: [0.5, 1],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'fraction',
+        src: $scope.currentEntity.layer.icon
+      }))
+    });
+    $scope.currentCreatingInternalLayer.setStyle(iconStyle);
+
+    $scope.showAttributesAlone = true;
+
+    if ($scope.attributesByMarker.length > 0) {
+      if ($scope.attributesByMarker[0].marker.layer.id == $scope.currentEntity.layer.layerId) {
+        $scope.showAttributesAlone = false;
+
+        layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId, {
+          callback: function (result) {
+            $scope.attributesByLayer = [];
+
+            angular.forEach(result, function (attribute, index) {
+
+              var exist = false;
+
+              angular.forEach($scope.attributesByMarker, function (attributeByMarker, index) {
+
+                if (attributeByMarker.attribute.id == attribute.id) {
+                  exist = true;
+                }
+              });
+
+              if (!exist) {
+                $scope.attributesByLayer.push(attribute);
+                $scope.showNewAttributes = true;
+              }
+
+            });
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+          }
+        });
+
+        return false;
+      }
+    }
+
+    layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId, {
+      callback: function (result) {
+        $scope.attributesByLayer = result;
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+  }
+
+  $scope.listAttributesByLayer = function () {
+    var iconStyle = new ol.style.Style({
+      image: new ol.style.Icon(({
+        anchor: [0.5, 1],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'fraction',
+        src: $scope.currentEntity.layer.layerIcon
+      }))
+    });
+    $scope.currentCreatingInternalLayer.setStyle(iconStyle);
+
+    layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId, {
+      callback: function (result) {
+        $scope.attributesByLayer = result;
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+  }
+
+  $scope.removeInternalLayer = function (layerId, callback) {
+    var callBackHasExecuted = false;
+    var internalLayers = $.extend([], $scope.internalLayers);
+
+    angular.forEach(internalLayers, function (value, index) {
+      if ($scope.hasSearch) {
+        if (value.id == layerId || value.layerId == layerId) {
+          $scope.map.removeLayer(value.layer);
+          var len = $scope.internalLayers.length;
+
+          for (var i = 0; i < len; i++) {
+            if (value.id == $scope.internalLayers[i].id) {
+              $scope.internalLayers.splice(i, 1);
+              return;
+            }
+          }
+
+          if (typeof callback != 'undefined' && !callBackHasExecuted) {
+            callback(value.id);
+            callBackHasExecuted = true;
+          }
+        }
+      } else {
+        if ((value.id == layerId || value.layerId == layerId) && value.searchId == undefined) {
+          $scope.map.removeLayer(value.layer);
+          var len = $scope.internalLayers.length;
+
+          for (var i = 0; i < len; i++) {
+            if (value.id == $scope.internalLayers[i].id) {
+              $scope.internalLayers.splice(i, 1);
+              return;
+            }
+          }
+
+          if (typeof callback != 'undefined' && !callBackHasExecuted) {
+            callback(value.id);
+            callBackHasExecuted = true;
+          }
+        }
+      }
+    });
+
+    if (!callBackHasExecuted) {
+      if (typeof callback != 'undefined') {
+        callback(layerId);
+      }
+    }
+  }
+
+  $scope.addInternalLayer = function (layerId) {
+
+    markerService.listMarkerByLayer(layerId, {
+      callback: function (result) {
+
+        var iconPath = "static/images/marker.png";
+
+        if (result.length > 0) {
+          iconPath = result[0].layer.icon
+        }
+
+        var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon(({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: iconPath
+
+          }))
+        });
+
+        var icons = [];
+
+        angular.forEach(result, function (marker, index) {
+          /* var iconFeature = new ol.Feature({
+           geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
+           marker: marker,
+           });*/
+
+          var iconFeature = new ol.Feature({
+            geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
+            marker: marker,
+          });
+
+          var layer = new ol.layer.Vector({
+            source: new ol.source.Vector({features: [iconFeature]}),
+
+            maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
+            minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
+          });
+
+          layer.setStyle(iconStyle);
+
+          $scope.map.addLayer(layer);
+
+          $scope.internalLayers.push({"layer": layer, "id": layerId});
+        });
+
+        $scope.$apply();
+
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+
+  }
+
+  $scope.addInternalLayerSearch = function (searchId) {
+
+    var enterIn = true;
+    angular.forEach($scope.internalLayersSearch, function (internalLayerSearch, index) {
+      // verifica qual é a pesquisa selecionada...
+      if (internalLayerSearch.searchId == searchId) {
+
+
+        if (enterIn) {
+          var internalLayers = $.extend([], $scope.internalLayers);
+          $scope.internalLayers = [];
+
+          //Percorre a lista das layers existentes no mapa...
+          angular.forEach(internalLayers, function (internalLayer, index) {
+            if (internalLayer.id == internalLayerSearch.layerId &&
+              (internalLayer.searchId == internalLayerSearch.searchId || internalLayer.searchId == undefined)) {
+              $scope.map.removeLayer(internalLayer.layer);
+
+            } else {
+              $scope.internalLayers.push(internalLayer);
+            }
+          });
+          enterIn = false;
+        }
+
+
+        $scope.map.addLayer(internalLayerSearch.layer);
+        $scope.internalLayers.push(internalLayerSearch);
+      }
+    });
+
+    $scope.$apply();
+
+  }
+
+  $scope.removeInternalLayerSearch = function (searchId, layerId) {
+    var internalLayersSearch = $.extend([], $scope.internalLayersSearch);
+
+    angular.forEach(internalLayersSearch, function (internalLayerSearch, index) {
+      if (internalLayerSearch.searchId == searchId) {
+        $scope.map.removeLayer(internalLayerSearch.layer);
+
+        angular.forEach($scope.internalLayers, function (internalLayer, index) {
+          if (internalLayerSearch.searchId == internalLayer.searchId) {
+            $scope.internalLayers.splice(index, 1);
+            return false;
+          }
+
+        });
+      }
+    });
+
+  }
+
+
+  $scope.removeMarker = function () {
+
+    var dialog = $modal.open({
+      templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+      controller: DialogController,
+      windowClass: 'dialog-enable',
+      resolve: {
+        title: function () {
+          return $translate("map.Delete-mark")
+        },
+        message: function () {
+          return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"
+        },
+        buttons: function () {
+          return [{
+            label: $translate("layer-group-popup.Delete"),
+            css: 'btn btn-danger'
+          }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
+        }
+      }
+    });
+
+    dialog.result.then(function (result) {
+
+      markerService.removeMarker($scope.marker.id, {
+        callback: function (result) {
+          //$scope.map.removeOverlay($scope.markerDetail.overlay);
+
+
+          $scope.removeInternalLayer($scope.marker.layer.id, function (layerId) {
+            $scope.addInternalLayer(layerId);
+          })
+
+          $scope.features = [];
+
+          $scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton');
+
+          $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
+          $("div.msgMap").show();
+
+          setTimeout(function () {
+            $("div.msgMap").fadeOut();
+          }, 5000);
+
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
+
+    });
+
+  }
+
+
+  $scope.setPhotoMarker = function (element) {
+
+    if (element.value == "") {
+      $scope.imgResult = null;
+      $scope.$apply();
+      return false;
+    }
+
+    if (!(/\.(gif|jpg|jpeg|bmp|png)$/i).test(element.value) && element.value != "") {
+      $("#upload-input").val("");
+      $scope.msg = {text: $translate("map.The-selected-file-is-invalid"), type: "danger", dismiss: true};
+      $("div.msgMap").show();
+
+      setTimeout(function () {
+        $("div.msgMap").fadeOut();
+      }, 3500);
+      $scope.$apply();
+      return false;
+    }
+
+    $scope.currentEntity.image = element;
+    $scope.readURL(element);
+  }
+
+  $scope.enableMarker = function () {
+
+    var dialog = $modal.open({
+      templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+      controller: DialogController,
+      windowClass: 'dialog-success',
+      resolve: {
+        title: function () {
+          return $translate('admin.marker-moderation.Confirm-approve');
+        },
+        message: function () {
+          return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + ' ? <br/>.';
+        },
+        buttons: function () {
+          return [
+            {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
+            {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+          ];
+        }
+      }
+    });
+
+    dialog.result.then(function () {
+
+      markerModerationService.acceptMarker($scope.marker.id, {
+        callback: function (result) {
+          $scope.marker.status = "ACCEPTED";
+
+          $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-enabled"), dismiss: true};
+          $("div.msgMap").show();
+
+          setTimeout(function () {
+            $("div.msgMap").fadeOut();
+          }, 5000);
+
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
+
+    });
+
+  }
+
+  $scope.disableMarker = function () {
+
+    var dialog = $modal.open({
+      templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
+      controller: RefuseMarkerController,
+      windowClass: 'dialog-delete',
+      resolve: {
+        motive: function () {
+          return $scope.motive;
+        }
+      }
+    });
+
+
+    dialog.result.then(function (result) {
+      $scope.refuseMarkerModeration($scope.currentEntity.id, result.motive, result.description);
+    });
+  }
+
+  $scope.refuseMarkerModeration = function (id, motive, description) {
+
+    markerModerationService.refuseMarker(id, motive, description, {
+      callback: function (result) {
+        console.log(result);
+        $scope.marker.status = "REFUSED";
+        $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
+        $("div.msgMap").show();
+
+        setTimeout(function () {
+          $("div.msgMap").fadeOut();
+        }, 5000);
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+  };
+
+  $scope.readURL = function (input) {
+
+    if (input.files && input.files[0] && input.files[0].size < 2000000) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        console.log(e);
+        $scope.imgResult = e.target.result;
+        $scope.$apply();
+        $('.marker-image').attr('src', e.target.result);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  $scope.openImgModal = function () {
+    var dialog = $modal.open({
+      templateUrl: 'modules/map/ui/popup/img-popup.jsp',
+      controller: ImgPopUpController,
+      resolve: {
+        img: function () {
+          return $scope.imgResult
+        }
+      }
+    });
+  }
+
+  $scope.isBooleanValid = function () {
+
+    $scope.ok = true;
+    $.each($(".boolean").parent().parent(), function (index, value) {
+      if ($(this).attr("required")) {
+
+
+        if (!$(this).find(".boolean-1").is(":checked") && !$(this).find(".boolean-2").is(":checked")) {
+          $scope.ok = false;
+
+          $(this).find(".required-boolean").css("border", "1px solid red");
+          $(this).find(".required-boolean").css("border-radius", "5px");
+          $(this).prepend('<span class="tooltip-validation"style="top: 3px">' + $translate("map.Field-required") + '</span>');
+        }
+
+
+      }
+    });
+
+    return $scope.ok;
+  }
+
+  $scope.resolveDatepicker = function () {
+
+    $scope.$watch('attributesByLayer', function (oldValue, newValue) {
+      $timeout(function () {
+        $('.datepicker').datepicker({
+          dateFormat: 'dd/mm/yy',
+          dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+          dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+          dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+          monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+          monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+          nextText: 'Próximo',
+          prevText: 'Anterior'
+        });
+
+        $('.datepicker').mask("99/99/9999");
+      }, 200);
+    })
+    $scope.$watch('screen', function (oldValue, newValue) {
+      $timeout(function () {
+        $('.datepicker').datepicker({
+          dateFormat: 'dd/mm/yy',
+          dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+          dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+          dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+          monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+          monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+          nextText: 'Próximo',
+          prevText: 'Anterior'
+        });
+
+        $('.datepicker').mask("99/99/9999");
+      }, 200);
+    })
+
+  }
+
+<<<<<<< HEAD
     /**
      * Function that manages the Sidebar
      * @param time Execution time of the animation.
@@ -2383,739 +3291,43 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
     
     $scope.clearDetailMarker = function() {
     	$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail-update');
-    }
-    
-    $scope.toggleSidebar = function (time, element, slide){
-	    time = 300;
-	    
-	    //Checks whether the animation is to open or close the sidebar by her current position.
-	    var closed = $('.menu-sidebar-container').css('right') == '3px';
-	
-	    // Checks whether the user has clicked a button that is active and the bar's sample, if it is open or if the click left of the close button.
-	    if ((element == $scope.lastActive && !closed) || (closed) || (element == "closeButton")) {
-	
-	        //Manages the class ' bg-inactive ' which activates and deactivates the buttons.
-	        if (closed) {
-	            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-	        } else {
-	            $(".menu-item").addClass("bg-inactive");
-	        }
-	        //Performs the animation
-	        
-	        $(slide).toggle('slide', { direction: 'right' }, time);
-	        $('.menu-sidebar-container').animate({
-	            'right' : closed ? $(slide).width() : '3px'
-	        }, time);
-	    } else {
-	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-	    }
-	    $scope.lastActive = element;
-	    
-	    $scope.slideActived = element == 'closeButton' ? '' : slide;	    
+=======
+  $scope.isChecked = function () {
+    if ($(".yes").is(':checked')) {
+      return ".yes";
+>>>>>>> ba2cb9f61700c13f3b3ee0ee9f8cbaa753e1c9ee
     }
 
-    /*-------------------------------------------------------------------
-     * 		 			SIDE MENU MAP
-     *-------------------------------------------------------------------*/
+    if ($(".no").is(':checked')) {
+      return ".no";
+    }
+  }
 
-    /**
-     * Function that decreases the zoom map
-     */
-    $scope.diminuirZoom = function (){
-        $scope.map.getView().setZoom($scope.map.getView().getZoom() - 1);
-    }
 
-    /**
-     * Function that increases the zoom map
-     */
-    $scope.aumentarZoom = function (){
-        $scope.map.getView().setZoom($scope.map.getView().getZoom() + 1);
-    }
+  /* EXPORTAR IMPORTAR SHAPEFILE */
 
-    /**
-     *
-     */
-    $scope.showMapInfo = function(features) {
-        var dialog = $modal.open({
-            templateUrl: 'modules/map/ui/popup/map-info-popup.jsp',
-            controller: MapInfoPopUpController,
-            resolve : {
-                features: function(){ return features }
-            }
-        });
-    }
+  $scope.shapeFile = {};
 
-    /**
-     *
-     * @param camada
-     */
-    $scope.showLegendDetail = function(treeItem) {
-        $scope.legendDetailTitle = treeItem.label;
-        $scope.legendDetailImage = treeItem.legenda;
-        $scope.LAYER_MENU_STATE = 'legend_detail';
-    }
+  $scope.isImport = false;
+  $scope.isExport = false;
 
-    /**
-     *
-     */
-    $scope.exitLegendDetail = function (){
-        $scope.LAYER_MENU_STATE = 'list';
+  $scope.setAction = function(type) {
+    if(type == 'import') {
+      $scope.isImport = true;
+      $scope.isExport = false;
+    }else {
+      $scope.isImport = false;
+      $scope.isExport = true;
     }
-    
-    $scope.clearFcMarker = function() {
-    	$scope.currentEntity = new Marker();
-    	
-    	$scope.menu.fcMarker = false;
-    	
-    	if($scope.screenMarkerOpenned)
-    		$scope.toggleSidebar('300', 'closeButton', $scope.slideActived);
+  }
 
-    	$scope.map.removeLayer($scope.currentCreatingInternalLayer);
-    	
-        $scope.screenMarkerOpenned = false;
-        $scope.attributesByLayer = [];
-    }
-    
-    $scope.updateMarker = function(){
-    	
-    	if (!$scope.form('sidebarMarkerUpdate').$valid){
-    		 $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
-    		return;
-    	}
-    	
-    	if( $scope.currentEntity.layer == null ) {
-    		var layer = new Layer();
-        	layer.id = $scope.currentEntity.layer;
-        	$scope.currentEntity.layer = layer;	
-    	}
-    	
-    	var i=0;
-    	
-    	angular.forEach($scope.attributesByMarker, function(){
-    		
-    		if ($scope.attributesByMarker[i].value == null){
-    			$scope.attributesByMarker[i].value = "";
-    		}
-    		
-    		i++;    		
-    	});
 
-    	$scope.currentEntity.markerAttribute = $scope.attributesByMarker;
-    	
-    	angular.forEach($scope.attributesByLayer, function(val,ind){
-    		
-    		var attribute = new Attribute();
-    		attribute.id = val.id;
-
-    		var markerAttribute = new MarkerAttribute();
-    		if (val.value != "" && val.value != undefined){
-    			markerAttribute.value = val.value;
-    		} else {
-    			markerAttribute.value = "";
-    		}
-    		
-    		markerAttribute.attribute = attribute
-    		markerAttribute.marker = $scope.currentEntity;
-    		$scope.currentEntity.markerAttribute.push(markerAttribute);
-    		
-    	});
-    	
-    	markerService.updateMarker($scope.currentEntity,{
-      		callback : function(result) {
-      		      			
-      			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
-      			
-      			 $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully") , dismiss: true};      			  
-     			  $("div.msgMap").show();
-     			  
-     			  setTimeout(function(){
-     				  $("div.msgMap").fadeOut();
-     			  }, 5000);
-      			
-                  $scope.$apply();
-              },
-              errorHandler : function(message, exception) {
-        		  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
-              }
-      	});
-
-    }
-    
-    $scope.insertMarker = function(){    	
-    	if( !$scope.isBooleanValid() ) {
-    		return false;
-    	}
-    	if (!$scope.form('sidebarMarker').$valid){
-    		 
-    		return;
-    	}
-    	
-    	var layer = new Layer();
-    	layer.id = $scope.currentEntity.layer.layerId;
-    	$scope.currentEntity.layer = layer;
-    	
-    	$scope.currentEntity.markerAttribute = [];
-    	angular.forEach($scope.attributesByLayer, function(val,ind){
-    		
-    		var attribute = new Attribute();
-    		attribute.id = val.id;
-
-    		var markerAttribute = new MarkerAttribute();
-    		if (val.value != "" && val.value != undefined){
-    			markerAttribute.value = val.value;
-    		} else {
-    			markerAttribute.value = "";
-    		}
-    		
-    		markerAttribute.attribute = attribute
-    		markerAttribute.marker = $scope.currentEntity;
-    		$scope.currentEntity.markerAttribute.push(markerAttribute);
-    		
-    	});
-    	
-    	$scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry( new ol.geom.Point([  $scope.currentEntity.latitude , $scope.currentEntity.longitude ]) );
-    	
-    	markerService.insertMarker($scope.currentEntity,{
-      		callback : function(result) {
-      			  
-      			  $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-      			  
-      			  $scope.removeInternalLayer($scope.currentEntity.layer.id, function(layerId){
-      				   $scope.addInternalLayer(layerId);
-      			  })
-
-      			$scope.clearFcMarker();
-    			  
-    			  $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully") , dismiss: true};      			  
-    			  $("div.msgMap").show();
-    			  
-    			  setTimeout(function(){
-    				  $("div.msgMap").fadeOut();
-    			  }, 5000);
-      			  
-                  $scope.$apply();
-              },
-              errorHandler : function(message, exception) {
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
-              }
-      	});
-
-    }
-    
-    $scope.showAttributesAlone = false;
-    $scope.showNewAttributes = false;
-    $scope.listAttributesByLayerUpdate = function(){
-    	
-    	var iconStyle = new ol.style.Style({
-            image: new ol.style.Icon(({
-                anchor: [0.5, 1],
-                anchorXUnits: 'fraction',
-                anchorYUnits: 'fraction',
-                src: $scope.currentEntity.layer.icon
-            }))
-        });
-    	$scope.currentCreatingInternalLayer.setStyle(iconStyle);
-    	
-    	$scope.showAttributesAlone = true;
-    	
-    	if($scope.attributesByMarker.length > 0) {
-	    	if($scope.attributesByMarker[0].marker.layer.id == $scope.currentEntity.layer.layerId) {
-	    		$scope.showAttributesAlone = false;
-	    		
-	    		layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
-	          		callback : function(result) {
-	          			$scope.attributesByLayer = [];
-	          			
-	          			angular.forEach(result, function(attribute, index){
-		          				
-	          					var exist = false;
-	          					
-	          					angular.forEach($scope.attributesByMarker, function(attributeByMarker, index){
-	          					
-		          					if(attributeByMarker.attribute.id == attribute.id){
-		          						exist = true;
-		          					}
-		          				});
-		          				
-		          				if( !exist ) {
-		          					$scope.attributesByLayer.push(attribute);
-		          					$scope.showNewAttributes = true;
-		          				}
-		          				
-		          			});
-	          			
-	                      $scope.$apply();
-	                  },
-	                  errorHandler : function(message, exception) {
-	                      $scope.message = {type:"error", text: message};
-	                      $scope.$apply();
-	                  }
-	          	});
-	    		
-	    		return false;
-	    	}
-    	}
-    	 
-    	  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
-      		callback : function(result) {
-                  $scope.attributesByLayer = result;
-                  $scope.$apply();
-              },
-              errorHandler : function(message, exception) {
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
-              }
-      	});
-    }
-    
-    $scope.listAttributesByLayer = function(){
-    	var iconStyle = new ol.style.Style({
-            image: new ol.style.Icon(({
-                anchor: [0.5, 1],
-                anchorXUnits: 'fraction',
-                anchorYUnits: 'fraction',
-                src: $scope.currentEntity.layer.layerIcon
-            }))
-        });
-    	$scope.currentCreatingInternalLayer.setStyle(iconStyle);
-    	 
-    	  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId,{
-      		callback : function(result) {
-                  $scope.attributesByLayer = result;
-                  $scope.$apply();
-              },
-              errorHandler : function(message, exception) {
-                  $scope.message = {type:"error", text: message};
-                  $scope.$apply();
-              }
-      	});
-    }
-    
-    $scope.removeInternalLayer = function(layerId, callback){
-    	var callBackHasExecuted = false;
-    	var internalLayers =  $.extend([], $scope.internalLayers);
-    	
-    	angular.forEach(internalLayers, function(value, index){ 
-    		  if ($scope.hasSearch){
-    			  if(value.id == layerId || value.layerId == layerId) {
-    				  $scope.map.removeLayer(value.layer);
-    				  var len = $scope.internalLayers.length;
-    				  
-    				  for (var i = 0; i < len; i++){
-    					  if(value.id == $scope.internalLayers[i].id ){
-    						  $scope.internalLayers.splice(i, 1);
-    						  return;
-    					  }
-    				  }
-    				  	
-    				 if(typeof callback != 'undefined' && !callBackHasExecuted) {
-    					 callback(value.id);
-    					 callBackHasExecuted = true;
-    				 }
-    			  }
-    		  }	else {
-    			  if((value.id == layerId || value.layerId == layerId) && value.searchId == undefined) {
-    				  $scope.map.removeLayer(value.layer);
-    				  var len = $scope.internalLayers.length;
-    				  
-    				  for (var i = 0; i < len; i++){
-    					  if(value.id == $scope.internalLayers[i].id ){
-    						  $scope.internalLayers.splice(i, 1);
-    						  return;
-    					  }
-    				  }
-    				  	
-    				 if(typeof callback != 'undefined' && !callBackHasExecuted) {
-    					 callback(value.id);
-    					 callBackHasExecuted = true;
-    				 }
-    			  }
-    		  }		    		  
-		  });
-    	
-    	if( !callBackHasExecuted ) {
-    		if(typeof callback != 'undefined') {
-    			callback(layerId);
-    		}
-    	}
-    }
-    
-    $scope.addInternalLayer = function( layerId ) {
-    	
-    	markerService.listMarkerByLayer(layerId, {
-				 callback : function(result) {
-					 
-					var iconPath = "static/images/marker.png";
-					 
-					if(result.length > 0) {
-						iconPath = result[0].layer.icon
-					}
-					
-					var iconStyle = new ol.style.Style({
-	                   image: new ol.style.Icon(({
-	                       anchor: [0.5, 1],
-	                       anchorXUnits: 'fraction',
-	                       anchorYUnits: 'fraction',
-	                       src: iconPath
-	                    
-	                   }))
-	               });
-	
-					var icons = [];
-					
-					angular.forEach(result, function(marker, index){
-		                  /* var iconFeature = new ol.Feature({
-		                       geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
-		                       marker: marker,
-		                   });*/
-		                   
-						   var iconFeature = new ol.Feature({
-		                       geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
-		                       marker: marker,
-		                   });
-		                  
-		                   var layer = new ol.layer.Vector({
-			                   source: new ol.source.Vector({ features: [iconFeature] }),
-			                   
-			                   maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
-			                   minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
-			               });
-			
-			               layer.setStyle(iconStyle);
-			
-			               $scope.map.addLayer(layer);
-			               
-			               $scope.internalLayers.push({"layer": layer, "id": layerId});
-		     			});
-		
-	               $scope.$apply();
-	 		
-		          },
-		          errorHandler : function(message, exception) {
-		              $scope.message = {type:"error", text: message};
-		              $scope.$apply();
-		          }
-		});
-    	
-    } 
-   
-    $scope.addInternalLayerSearch = function( searchId ) {
-    	
-    	var enterIn = true;
-    	angular.forEach($scope.internalLayersSearch, function(internalLayerSearch, index){	
-    		// verifica qual é a pesquisa selecionada...
-    		if ( internalLayerSearch.searchId == searchId){  
-    			
-    			
-    			if(enterIn) {
-    				var internalLayers = $.extend([], $scope.internalLayers);
-    				$scope.internalLayers = [];
-    				
-    				//Percorre a lista das layers existentes no mapa...
-	    			angular.forEach(internalLayers, function(internalLayer, index){
-	    				if(internalLayer.id == internalLayerSearch.layerId && 
-	    						(internalLayer.searchId == internalLayerSearch.searchId || internalLayer.searchId == undefined) ) {
-	    					$scope.map.removeLayer(internalLayer.layer);
-	    					
-	    				} else {
-	    					$scope.internalLayers.push(internalLayer);
-	    				}
-	    			});
-	    			enterIn = false;
-    			}
-    			  			
-    			
-    			$scope.map.addLayer(internalLayerSearch.layer);
-    			$scope.internalLayers.push(internalLayerSearch);
-    		}	
-    	});
-    	
-    	$scope.$apply();
-    	
-    } 
-    
-    $scope.removeInternalLayerSearch = function(searchId, layerId){
-    	var internalLayersSearch =  $.extend([], $scope.internalLayersSearch);
-    		
-	   angular.forEach(internalLayersSearch, function(internalLayerSearch, index){
-			 if(internalLayerSearch.searchId == searchId) {
-				$scope.map.removeLayer(internalLayerSearch.layer);
-				
-				angular.forEach($scope.internalLayers, function(internalLayer, index){ 
-					 if(internalLayerSearch.searchId == internalLayer.searchId) {
-						 $scope.internalLayers.splice(index , 1);
-						 return false;
-					 }
-					 
-				 });
-			 }		  			 
-	   });
- 	
-    }
-    
-    
-    $scope.removeMarker = function(){
-    	
-		var dialog = $modal.open( {
-			templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-			controller: DialogController,
-			windowClass: 'dialog-enable',
-			resolve: {
-				title: function(){return $translate("map.Delete-mark")},
-				message: function(){return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"},
-				buttons: function(){return [ {label:$translate("layer-group-popup.Delete"), css:'btn btn-danger'}, {label: $translate("admin.users.Cancel"), css:'btn btn-default', dismiss:true} ];}
-			}
-		});
-	    	
-		dialog.result.then( function(result) {
-	
-	    	markerService.removeMarker($scope.marker.id, {
-	      		  callback : function(result) {
-	      			//$scope.map.removeOverlay($scope.markerDetail.overlay);
-	      			  
-	      			
-		  			$scope.removeInternalLayer($scope.marker.layer.id, function(layerId){
-	   				   	$scope.addInternalLayer(layerId);
-	    			})
-	      			
-	    			$scope.features = [];
-	    			
-	    			$scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton');  
-	    			  
-	      			$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
-	      			$("div.msgMap").show();
-	      			  
-	      			setTimeout(function(){
-	      			  $("div.msgMap").fadeOut();
-	      			}, 5000);
-	      			
-		          },
-		          errorHandler : function(message, exception) {
-		              $scope.message = {type:"error", text: message};
-		              $scope.$apply();
-		          }
-	      	});
-				
-		});
-    
-    }
-    
-    
-    
-    $scope.setPhotoMarker = function(element) {
-    	
-    	if (element.value == ""){    
-    		$scope.imgResult = null;
-    		$scope.$apply();
-    		return false;
-    	}
-    	
-    	if (!(/\.(gif|jpg|jpeg|bmp|png)$/i).test(element.value) && element.value != ""){
-    		$("#upload-input").val("");
-            $scope.msg = {text: $translate("map.The-selected-file-is-invalid"), type: "danger", dismiss: true};
-            $("div.msgMap").show();
-			  
-  			setTimeout(function(){
-  			  $("div.msgMap").fadeOut();
-  			}, 3500);
-            $scope.$apply();
-            return false;
-        }
-    	
-		$scope.currentEntity.image = element;
-		$scope.readURL(element);    
-    }
-    
-    $scope.enableMarker = function() {
-    	
-    	var dialog = $modal.open({
-            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-            controller: DialogController,
-            windowClass: 'dialog-success',
-            resolve: {
-                title: function () {
-                    return $translate('admin.marker-moderation.Confirm-approve');
-                },
-                message: function () {
-                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker')+' ? <br/>.';
-                },
-                buttons: function () {
-                    return [
-                        {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
-                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
-                    ];
-                }
-            }
-        });
-    	
-    	dialog.result.then(function () {
-    		
-    		markerModerationService.acceptMarker( $scope.marker.id, {
-    			callback : function(result) {
-  				$scope.marker.status = "ACCEPTED";
-  				
-  				$scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-enabled"), dismiss: true};
-      			$("div.msgMap").show();
-      			
-      			setTimeout(function(){
-      			  $("div.msgMap").fadeOut();
-      			}, 5000);
-  				
-      			$scope.$apply();
-  	          },
-    	         errorHandler : function(message, exception) {
-    	             $scope.message = {type:"error", text: message};
-    	             $scope.$apply();
-    	         }
-    	     });
-    		
-        });
-    	
-    }
-    
-    $scope.disableMarker = function() {
-    	
-    	var dialog = $modal.open({
-            templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
-            controller: RefuseMarkerController,
-            windowClass: 'dialog-delete',
-            resolve: {
-                motive: function () {
-                    return $scope.motive;
-                }
-            }
-        });
-    	
-    	
-    	dialog.result.then(function (result) {
-    		$scope.refuseMarkerModeration($scope.currentEntity.id, result.motive, result.description );
-        });    	
-    }
-    
-    $scope.refuseMarkerModeration = function( id, motive, description ) {
-		
-		markerModerationService.refuseMarker( id, motive, description, {
-         callback : function(result) {
-            console.log(result);
-            $scope.marker.status = "REFUSED";
-            $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
-			$("div.msgMap").show();
-			
-			setTimeout(function(){
-			  $("div.msgMap").fadeOut();
-			}, 5000);
-            $scope.$apply();
-         },
-         errorHandler : function(message, exception) {
-             $scope.message = {type:"error", text: message};
-             $scope.$apply();
-         }
-     });
-	};
-    
-    $scope.readURL = function(input){
-
-        if (input.files && input.files[0] && input.files[0].size < 2000000) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-            	console.log(e);
-            	$scope.imgResult = e.target.result;
-            	$scope.$apply();
-                $('.marker-image').attr('src', e.target.result);
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    
-    $scope.openImgModal = function() {
-    	var dialog = $modal.open({
-            templateUrl: 'modules/map/ui/popup/img-popup.jsp',
-            controller: ImgPopUpController,
-            resolve : {
-            	img: function(){ return $scope.imgResult }
-            }
-        });
-    }
-    
-    $scope.isBooleanValid = function(){
-    	
-    	$scope.ok = true;
-    	$.each($(".boolean").parent().parent(), function(index, value){  
-    		if( $(this).attr("required") ){  
-    			
-    			
-    			if( !$(this).find(".boolean-1").is(":checked") && !$(this).find(".boolean-2").is(":checked") ) {
-    				$scope.ok = false;
-    				
-    				$(this).find(".required-boolean").css("border", "1px solid red");
-    				$(this).find(".required-boolean").css("border-radius", "5px");
-    				$(this).prepend('<span class="tooltip-validation"style="top: 3px">'+ $translate("map.Field-required") +'</span>') ; 
-    			}
-    			
-    			  
-    			}   
-    		});
-    	
-    	return $scope.ok;
-    }    
-    
-    $scope.resolveDatepicker = function(){
-    	
-		$scope.$watch('attributesByLayer', function(oldValue, newValue){
-			$timeout(function(){
-				$('.datepicker').datepicker({ 
-					dateFormat: 'dd/mm/yy',
-					dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
-				    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-				    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-				    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-				    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-				    nextText: 'Próximo',
-				    prevText: 'Anterior'
-				});	
-
-				$('.datepicker').mask("99/99/9999");
-			}, 200);
-		})
-		$scope.$watch('screen', function(oldValue, newValue){
-			$timeout(function(){
-				$('.datepicker').datepicker({ 
-					dateFormat: 'dd/mm/yy',
-					dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
-				    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-				    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-				    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-				    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-				    nextText: 'Próximo',
-				    prevText: 'Anterior'
-				});		
-
-				$('.datepicker').mask("99/99/9999");
-			}, 200);
-		})
-	
-    }
-    
-    $scope.isChecked = function(){
-    	if($(".yes").is(':checked')){
-    		return ".yes";
-    	}
-    	
-    	if($(".no").is(':checked')){
-    		return ".no";
-    	}
-    }
-    
 };
 
 
-
-function isBooleanChecked(that){
-	$(that).parent().css("border", "0");
-	$(that).parent().parent().find("span.tooltip-validation").remove();
+function isBooleanChecked(that) {
+  $(that).parent().css("border", "0");
+  $(that).parent().parent().find("span.tooltip-validation").remove();
 }
 
 /**
