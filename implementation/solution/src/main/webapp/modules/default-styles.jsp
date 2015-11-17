@@ -21,7 +21,6 @@
 <link href="<c:url value="/static/style/global.css"/>" type="text/css" rel="stylesheet" />
 
 <link href="<c:url value="/static/libs/angular-ui-tree/css/angular-ui-tree.min.css"/>" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="<c:url value="/static/libs/angular-ui-tree/js/angular-ui-tree.min.js"/>"></script>
 <link href="<c:url value="/static/libs/angular-nav-tree/abn_tree.css"/>" type="text/css" rel="stylesheet" />
 
 <!-- chosen -->
