@@ -45,6 +45,9 @@
 <!-- Bootstrap -->
 <script type="text/javascript" src="<c:url value="/webjars/bootstrap/3.2.0/js/bootstrap.min.js"/>"></script>
 
+<!-- ui tree -->
+<script type="text/javascript" src="<c:url value="/static/libs/angular-ui-tree/js/angular-ui-tree.min.js"/>"></script>
+
 <!-- DWR -->
 <script type="text/javascript" src="<c:url value="/broker/engine.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/broker/util.js"/>"></script>

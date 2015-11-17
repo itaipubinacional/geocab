@@ -534,7 +534,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
                 $scope.features = [];
          	}
          	
-        	//var hasSearch  = $scope.allSearchs.length ? $scope.allSearchs[0].children.length > 0 : false;
+        	var hasSearch  = $scope.allSearchs.length ? $scope.allSearchs[0].children.length > 0 : false;
         
             if (($scope.layers.length > 0 || hasSearch ) && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
 
