@@ -85,8 +85,7 @@
 	
 	<!-- Social -->
 	<facebook:config app-id="${social.facebook.app-id}" app-secret="${social.facebook.app-secret}"/>
-	<facebook:config app-id="${social.facebook.app-id}"  app-secret="${social.facebook.app-secret}"/>
-	<google:config app-id="${social.google.app-id}" app-secret="${social.google.app-secret}" />
+	<google:config app-id="${social.google.app-id}" app-secret="${social.google.app-secret}"/>
 		
 	<bean id="usersConnectionRepository" 
 		class="br.com.geocab.infrastructure.social.PersistentUsersConnectionRepository">
