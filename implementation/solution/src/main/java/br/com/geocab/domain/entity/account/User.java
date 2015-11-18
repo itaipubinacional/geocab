@@ -21,154 +21,196 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.account.preferences.BackgroundMap;
+import br.com.geocab.domain.entity.account.preferences.Coordinates;
 
 /**
  * 
- * @author Vagner BC
- * @since 02/06/2014
- * @version 1.0
- * @category
+ * @author Vagner BC @since 02/06/2014 @version 1.0 @category
  */
 @Entity
 @Audited
-@DataTransferObject(javascript="User")
+@DataTransferObject(javascript = "User")
 public class User extends AbstractEntity implements Serializable, UserDetails
 {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= -4052986759552589018L;
-	
-	//----
+	private static final long serialVersionUID = -4052986759552589018L;
+
+	// ----
 	// Default user
-	//----
-	public static final User ADMINISTRATOR = new User(1L, "Administrator", "admin@geocab.com.br"  , true , UserRole.ADMINISTRATOR , "admin");
-	public static final User ANONYMOUS = new User(0L, "Anonymous", null, true , UserRole.ANONYMOUS , "anonymous");
-	
+	// ----
+	public static final User ADMINISTRATOR = new User(1L, "Administrator",
+			"admin@geocab.com.br", true, UserRole.ADMINISTRATOR, "admin");
+	public static final User ANONYMOUS = new User(0L, "Anonymous", null, true,
+			UserRole.ANONYMOUS, "anonymous");
+
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	
-	//Basic
+
+	// Basic
 	/**
 	 * 
 	 */
 	@NotEmpty
-	@Column(nullable=false, length=50)
+	@Column(nullable = false, length = 50)
 	private String name;
 	/**
 	 * 
 	 */
 	@Email
 	@NotNull
-	@Column(nullable=false, length=144, unique=true)
+	@Column(nullable = false, length = 144, unique = true)
 	private String email;
 	/**
 	 * 
 	 */
 	@NotNull
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private Boolean enabled;
 	/**
 	 * 
 	 */
 	@NotBlank
-	@Length(min=8)
-	@Column(nullable=false, length=100)
+	@Length(min = 8)
+	@Column(nullable = false, length = 100)
 	private String password;
-	
+	/**
+	 * 
+	 */
 	@Transient
 	private String newPassword;
 	/**
 	 * 
 	 */
 	@NotNull
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Enumerated(EnumType.ORDINAL)
 	private UserRole role;
-	
+
+	/**
+	 * 
+	 */
+	@NotNull
+	@Column(nullable = false)
+	@Enumerated(EnumType.ORDINAL)
+	private BackgroundMap backgroundMap;
+
+	/**
+	 * 
+	 */
+	@NotNull
+	@Column(nullable = false)
+	@Enumerated(EnumType.ORDINAL)
+	private Coordinates coordinates;
+
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
-	
+
 	/**
 	 * 
 	 */
 	public User()
 	{
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 */
-	public User( Long id )
+	public User(Long id)
 	{
-		super( id );
+		super(id);
 	}
-	
+
 	/**
 	 * 
 	 * @param name
 	 * @param email
 	 */
-	public User( String name, String email )
+	public User(String name, String email)
 	{
 		this.email = email;
 		this.name = name;
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param id
 	 */
-	public User( Long id, String name, String email , boolean enabled )
+	public User(Long id, String name, String email, boolean enabled)
 	{
-		super( id );
+		super(id);
 		this.email = email;
 		this.name = name;
 		this.enabled = enabled;
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 */
-	public User( Long id, String name, String email , boolean enabled , UserRole role )
+	public User(Long id, String name, String email, boolean enabled,
+			UserRole role)
 	{
-		super( id );
+		super(id);
 		this.email = email;
 		this.name = name;
 		this.enabled = enabled;
 		this.role = role;
 	}
 
-
-	
 	/**
 	 * 
 	 * @param id
 	 */
-	public User( Long id, String name, String email,  boolean enabled ,  UserRole role , String password  )
+	public User(Long id, String name, String email, boolean enabled,
+			UserRole role, String password)
 	{
-		super( id );
+		super(id);
 		this.email = email;
 		this.name = name;
 		this.enabled = enabled;
 		this.password = password;
 		this.role = role;
 	}
-	
-	
+
+	/**
+	 * @param name
+	 * @param email
+	 * @param enabled
+	 * @param password
+	 * @param newPassword
+	 * @param role
+	 * @param backgroundMap
+	 * @param coordinates
+	 */
+	public User(String name, String email, Boolean enabled, String password,
+			String newPassword, UserRole role, BackgroundMap backgroundMap,
+			Coordinates coordinates)
+	{
+		super();
+		this.name = name;
+		this.email = email;
+		this.enabled = enabled;
+		this.password = password;
+		this.newPassword = newPassword;
+		this.role = role;
+		this.backgroundMap = backgroundMap;
+		this.coordinates = coordinates;
+	}
 
 	/*-------------------------------------------------------------------
 	 *							BEHAVIORS
 	 *-------------------------------------------------------------------*/
-	
+
 	/*-------------------------------------------------------------------
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
-	
+
 	/**
 	 * 
 	 */
@@ -177,30 +219,30 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	public Set<GrantedAuthority> getAuthorities()
 	{
 		final Set<GrantedAuthority> authorities = new HashSet<>();
-		
-		if ( role == null )
+
+		if (role == null)
 		{
 			return null;
 		}
-		
-		if ( role.equals( UserRole.ADMINISTRATOR ) ) 
+
+		if (role.equals(UserRole.ADMINISTRATOR))
 		{
-			authorities.add( UserRole.ADMINISTRATOR );
+			authorities.add(UserRole.ADMINISTRATOR);
 		}
-		
-		if ( role.equals( UserRole.MODERATOR ) ) 
+
+		if (role.equals(UserRole.MODERATOR))
 		{
-			authorities.add( UserRole.MODERATOR );
+			authorities.add(UserRole.MODERATOR);
 		}
-		
-		if ( role.equals( UserRole.USER ) ) 
+
+		if (role.equals(UserRole.USER))
 		{
-			authorities.add( UserRole.USER );
+			authorities.add(UserRole.USER);
 		}
 
 		return authorities;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -210,7 +252,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	{
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -220,7 +262,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	{
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -230,7 +272,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	{
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -241,10 +283,10 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		return this.enabled;
 	}
 
-	/* 
-	 *
+	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.security.core.userdetails.UserDetails#getPassword()
+	 * @see
+	 * org.springframework.security.core.userdetails.UserDetails#getPassword()
 	 */
 	@Override
 	@Transient
@@ -253,10 +295,10 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		return this.password;
 	}
 
-	/* 
-	 *
+	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.security.core.userdetails.UserDetails#getUsername()
+	 * @see
+	 * org.springframework.security.core.userdetails.UserDetails#getUsername()
 	 */
 	@Override
 	@Transient
@@ -272,9 +314,10 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	{
 		return name;
 	}
-	
+
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name)
 	{
@@ -290,7 +333,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	}
 
 	/**
-	 * @param email the email to set
+	 * @param email
+	 *            the email to set
 	 */
 	public void setEmail(String email)
 	{
@@ -306,7 +350,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	}
 
 	/**
-	 * @param enabled the enabled to set
+	 * @param enabled
+	 *            the enabled to set
 	 */
 	public void setEnabled(Boolean enabled)
 	{
@@ -322,7 +367,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	}
 
 	/**
-	 * @param role the role to set
+	 * @param role
+	 *            the role to set
 	 */
 	public void setRole(UserRole userRole)
 	{
@@ -330,7 +376,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	}
 
 	/**
-	 * @param password the password to set
+	 * @param password
+	 *            the password to set
 	 */
 	public void setPassword(String password)
 	{
@@ -346,12 +393,29 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	}
 
 	/**
-	 * @param newPassword the newPassword to set
+	 * @param newPassword
+	 *            the newPassword to set
 	 */
 	public void setNewPassword(String newPassword)
 	{
 		this.newPassword = newPassword;
 	}
-	
-	
+
+	/**
+	 * @return the backgroundMap
+	 */
+	public BackgroundMap getBackgroundMap()
+	{
+		return backgroundMap;
+	}
+
+	/**
+	 * @param backgroundMap
+	 *            the backgroundMap to set
+	 */
+	public void setBackgroundMap(BackgroundMap backgroundMap)
+	{
+		this.backgroundMap = backgroundMap;
+	}
+
 }
