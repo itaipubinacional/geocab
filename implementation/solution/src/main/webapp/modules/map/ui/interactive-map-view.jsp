@@ -705,7 +705,7 @@ uri="http://www.springframework.org/security/tags"%>
             <hr style="border-color: #d9d9d9; position: absolute;top: 155px;right: 15px;left: 15px;"/>
 
             <button class="btn btn-primary" ng-disabled="currentCustomSearch == null || currentCustomSearch.layer == null"
-                    style="width: 90px; height: 30px; position: absolute;top: 190px;" ng-click="listFieldsLayersSearch()"><spring:message code="admin.custom-search.Search" /></button>
+                    style="width: 90px; position: absolute;top: 190px;" ng-click="listFieldsLayersSearch()"><spring:message code="admin.custom-search.Search" /></button>
             <br/>
             <div style="overflow-y: auto;position: absolute;top: 250px;bottom: 0px;left: 20px;right: 0px;">
               <div ng-repeat="search in currentCustomSearch.layerFields" style="width: 90%;">
@@ -769,17 +769,17 @@ uri="http://www.springframework.org/security/tags"%>
             </div>
           </div>
 
-          <div id="tabs-4" style="position: absolute; top:0; right:0; left:0; bottom:0">
+          <div id="tabs-4" style="position: absolute; top:0; right:0; left:0; bottom:0;">
 
             <div class="sidebar-content-header"><spring:message code="map.SHP-export-import"/></div>
             <br style="clear: both; ">
 
             <div style="text-align: center">
 
-              <button style="width: 300px; margin: 10px 0; height: 30px" class="btn btn-primary"
+              <button style="width: 300px; margin: 10px 0;" class="btn btn-primary"
                       ng-click="setAction('export')"><spring:message code="admin.shape-file.Export" /></button>
 
-              <button style="width: 300px; height: 30px" class="btn btn-primary"
+              <button style="width: 300px;" class="btn btn-primary"
                       ng-click="setAction('import')"><spring:message code="admin.shape-file.Import" /></button>
 
               <hr style="border-color: #d9d9d9;"/>
@@ -787,7 +787,42 @@ uri="http://www.springframework.org/security/tags"%>
             </div>
             <div ng-if="isExport">
 
-              Export
+              <p>Filtros</p>
+
+              <div>
+                <input auto-complete autocomplete="off" type="text" class="form-control"
+                       typeahead-wait-ms="500" ng-model="filter.layer" placeholder="<spring:message code='admin.marker-moderation.Layer' />"
+                       typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2">
+              </div>
+
+              <div style="margin-top:10px;">
+
+                <select class="form-control" ng-model="filter.status" style="width:100%;">
+                  <option value="" ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
+                  <option value="PENDING"><spring:message code="admin.marker-moderation.Pending" /></option>
+                  <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
+                  <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
+                </select>
+              </div>
+
+              <div style="margin-top:10px;float: left">
+                <input ng-model="filter.dateStart" class="form-control datepicker" style="float: left;width:130px;margin-right:10px" placeholder="<spring:message code='admin.marker-moderation.Beginning'/>"/>
+                <input ng-model="filter.dateEnd" class="form-control datepicker" style="float: left;width:130px;margin-right:10px" placeholder="<spring:message code='admin.marker-moderation.Ending'/>"/>
+              </div>
+
+              <div style="float:left;width:100%;margin-top:10px;">
+                <select data-placeholder="<spring:message code='admin.marker-moderation.Users'/>" name="layer"
+                        ng-options="user.email for user in selectUsers "
+                        ng-model="filter.user" chosen class="form-control">
+                <option value=""><spring:message code="admin.marker-moderation.All-users"/></option>
+                </select>
+              </div>
+
+              <div style="float: left;margin-top: 10px">
+                <span ng-click="clearFilters()">Limpar Filtros</span>
+                <input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code='Filter'/>"
+                       title="<spring:message code='Search'/>" class="btn btn-default"/>
+              </div>
 
             </div>
             <!-- #export-shape-file -->
@@ -806,17 +841,16 @@ uri="http://www.springframework.org/security/tags"%>
                   class="radio-label" for="new-layer"> Nova camada</label>
               </div>
 
-              <div class="form-item position-relative" style="width: 350px;">
+              <div class="form-item position-relative">
                 <label class="detail-label" required><spring:message code="admin.datasource.Data-Source"/></label>
                 <div class="input-group position-relative">
                   <input name="dataSource" type="text" disabled class="form-control"
-                         ng-model="shapeFile.form.dataSource"
+                         ng-model="shapeFile.form.dataSource.name"
                          placeholder="<spring:message code='admin.layer-config.Enter-the-data-source' />" maxlength="144"
                          ng-minlength="1"
                          ng-hover
                          required
-                         ng-class="{ngInvalid:form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)}"
-                      >
+                         ng-class="{ngInvalid:form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)}">
                     <span class="input-group-btn">
                         <button style="height: 34px" ng-click="selectDataSource()" title="<spring:message code='admin.layer-config.Enter-the-data-source' />" class="btn btn-default"
                                 type="button" ng-disabled="currentEntity.id != null">
@@ -828,11 +862,11 @@ uri="http://www.springframework.org/security/tags"%>
                 <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
               </div>
 
-              <div class="form-item position-relative" style="width: 350px;">
+              <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative">
                 <label class="detail-label" required><spring:message code="admin.custom-search.Layer"/></label>
                 <div class="input-group">
                   <input name="layerGroup" type="text" class="form-control"
-                         ng-model="currentEntity.layer.name"
+                         ng-model="shapeFile.form.layer.name"
                          disabled
                          placeholder="<spring:message code='admin.custom-search.Enter-the-Layer'/>"
                          maxlength="144"
@@ -841,7 +875,7 @@ uri="http://www.springframework.org/security/tags"%>
                          required>
                     <span class="input-group-btn">
                         <button style="height: 34px" ng-click="selectLayerConfig()" class="btn btn-default" type="button"
-                                ng-disabled="data.dataSource == null || currentEntity.id != null">
+                                ng-disabled="shapeFile.form.dataSource == null">
                           <i class="icon-plus-sign icon-large"></i>
                         </button>
                     </span>
@@ -852,13 +886,13 @@ uri="http://www.springframework.org/security/tags"%>
 
               </div>
 
-              <div ng-if="shapeFile.layerType == 'new'" class="position-relative input-group" style="width: 350px;margin-bottom: 10px">
+              <div ng-if="shapeFile.layerType == 'new'" class="position-relative input-group" style="margin-bottom: 10px">
                 <label class="detail-label" required>
                   <spring:message code="Title"/>
                 </label>
 
                 <input name="title" type="text" class="form-control"
-                       ng-model="currentEntity.title"
+                       ng-model="shapeFile.form.title"
                        placeholder="Informe o título"
                        maxlength="144" ng-minlength="1"
                        ng-hover
@@ -871,7 +905,7 @@ uri="http://www.springframework.org/security/tags"%>
               </div>
 
               <div style="margin-bottom: 10px">
-                <button style="height: 31px" ng-click="addAttribute()" title="<spring:message code='admin.layer-config.Add-attributes' />"
+                <button ng-click="addAttribute()" title="<spring:message code='admin.layer-config.Add-attributes' />"
                         class="btn btn-primary" style="margin-bottom: 5px">
                   <spring:message code="admin.layer-config.Add-attributes"/>
                 </button>
@@ -881,16 +915,16 @@ uri="http://www.springframework.org/security/tags"%>
                 <div style="float: left;">
                   <img ng-src="{{currentEntity.icon}}"/>
                 </div>
-                <button style="height: 31px" class="btn btn-primary" style="margin-top:15px" ng-click="moreIcons()" >
+                <button class="btn btn-primary" ng-click="moreIcons()" >
                   <spring:message code="admin.layer-config.More-icons"/>
                 </button>
               </div>
 
-              <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative" style="width: 350px;">
+              <div style="margin-top: 10px" ng-if="shapeFile.layerType == 'new'" class="form-item position-relative">
                 <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
                 <div class="input-group">
                   <input name="layerGroup" type="text" disabled class="form-control"
-                         ng-model="currentEntity.layerGroup.name"
+                         ng-model="shapeFile.form.layerGroup.name"
                          placeholder="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
                          maxlength="144"
                          ng-minlength="1"
@@ -909,7 +943,7 @@ uri="http://www.springframework.org/security/tags"%>
               </div>
 
               <div ng-if="shapeFile.layerType == 'new'">
-                <div class="position-relative" scale-slider ng-model="layers" style="width: 350px;"></div>
+                <div class="position-relative" scale-slider ng-model="layers"></div>
                 <div style="width: 350px;">
                   <label style="float: left">{{layers.values[0]}}</label>
                   <label style="float: right;">{{layers.values[1]}}</label>
@@ -917,27 +951,27 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <div class="form-item position-relative" style="width: 300px;">
                   <label><input type="checkbox" id="grupo" style="width: 20px;"
-                         ng-model="currentEntity.startEnabled"> <spring:message code="admin.layer-config.Start-allowed-in-map"/></label>
+                         ng-model="shapeFile.form.startEnabled"> <spring:message code="admin.layer-config.Start-allowed-in-map"/></label>
                 </div>
 
                 <div class="form-item position-relative" style="width: 300px;">
                   <label><input type="checkbox" style="width: 20px;"
-                         ng-model="currentEntity.startVisible"> <spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
+                         ng-model="shapeFile.form.startVisible"> <spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
                 </div>
 
                 <div class="form-item position-relative" style="width: 300px;">
                   <label><input type="checkbox" style="width: 20px;"
-                         ng-model="currentEntity.enabled"> <spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
+                         ng-model="shapeFile.form.enabled"> <spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
                 </div>
 
                 <div>
-                  <button ng-click="selectAccessGroups()" type="button" style="height: 31px; margin: 6px 0 20px 0;" class="btn btn-primary">Associar grupo</button>
+                  <button ng-click="selectAccessGroups()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary">Associar grupo</button>
                 </div>
 
               </div>
 
               <div>
-                <button ng-click="saveImportExport()" type="button" style="height: 31px; margin: 6px 0 20px 0;" class="btn btn-success">Salvar</button>
+                <button ng-click="saveImportExport()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success">Salvar</button>
               </div>
 
             </div>

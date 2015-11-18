@@ -559,8 +559,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	});
     	
     };
-    
-    /**
+
+   /**
 	 * Performs the query logs, considering filter, paging and sorting. 
 	 * When ok, change the state of the screen to list.
 	 * 

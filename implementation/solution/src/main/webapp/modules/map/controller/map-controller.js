@@ -22,6 +22,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $importService("markerService");
   $importService("customSearchService");
   $importService("markerModerationService");
+  $importService("accountService");
 
   /*-------------------------------------------------------------------
    * 		 				 	EVENT HANDLERS
@@ -3306,6 +3307,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   /* EXPORTAR IMPORTAR SHAPEFILE */
 
   $scope.shapeFile = {};
+  $scope.shapeFile.form = {};
 
   $scope.shapeFile.layerType = 'layer';
 
@@ -3313,18 +3315,49 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.isExport = false;
 
   $scope.setAction = function (type) {
+
     if (type == 'import') {
+
       $scope.isImport = true;
       $scope.isExport = false;
+
+      /**
+       *
+       * @type {Array}
+       */
+      $scope.selectedGroups = [];
+
     } else {
+
       $scope.isImport = false;
       $scope.isExport = true;
+
+      $scope.currentPage = {};
+
+      $scope.currentPage.pageable = null;
+
+      /**
+       * filter
+       */
+      $scope.filter = {
+        'layer': null,
+        'status': null,
+        'dateStart': null,
+        'dateEnd': null,
+        'user': null
+      };
+
+      if (  $scope.filter.user == null ){
+        $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, null, $scope.currentPage.pageable);
+      } else {
+        $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user.email, $scope.currentPage.pageable);
+      }
+
+      $scope.listAllUsers();
+
+
     }
   };
-
-  /*$scope.setLayerType = function() {
-    $scope.layerType = $scope.lay
-  };*/
 
   //DATA GRID
   /**
@@ -3486,6 +3519,132 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.currentPage;
 
   /**
+   * Filter
+   */
+  $scope.bindFilter = function() {
+    var pageRequest = new PageRequest();
+    pageRequest.size = 10;
+    $scope.pageRequest = pageRequest;
+
+    if($scope.filter.status == "")
+      $scope.filter.status = null;
+    if($scope.filter.user != null)
+      var userEmail = $scope.filter.user.email;
+    if ($scope.filter.dateStart == "")
+      $scope.filter.dateStart = null;
+    if ($scope.filter.dateEnd == "")
+      $scope.filter.dateEnd = null;
+
+    $scope.listMarkerByFilters( $scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest );
+    $scope.listMarkerByFiltersMap($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);
+    $scope.dragMarkers = null;
+    $scope.hasSearch = true;
+  };
+
+  /**
+   * Performs the query logs, considering filter, paging and sorting.
+   * When ok, change the state of the screen to list.
+   *
+   * @see data.filter
+   * @see currentPage
+   */
+  $scope.listMarkerByFilters = function( layer, status, dateStart, dateEnd, user, pageRequest ) {
+
+    markerService.listMarkerByFilters( layer, status, dateStart, dateEnd, user, pageRequest, {
+      callback : function(result) {
+
+        $scope.currentPage = result;
+        $scope.currentPage.pageable.pageNumber++;
+        $scope.currentState = $scope.LIST_STATE;
+        $scope.$apply();
+      },
+      errorHandler : function(message, exception) {
+        $scope.msg = {type:"danger", text: message, dismiss:true};
+        $scope.fadeMsg();
+        $scope.$apply();
+      }
+    });
+  };
+
+  /**
+   * Performs the query logs, considering filter, paging and sorting.
+   * When ok, change the state of the screen to list.
+   *
+   * @see data.filter
+   * @see currentPage
+   */
+  $scope.listMarkerByFiltersMap = function( layer, status, dateStart, dateEnd, user ) {
+
+    markerService.listMarkerByFiltersMap( layer, status, dateStart, dateEnd, user, {
+      callback : function(result) {
+        if($scope.features.length) {
+          $scope.clearFeatures();
+          $scope.removeLayers();
+        }
+        var markers = { 'content' : null };
+        markers.content = result;
+        $scope.buildVectorMarker(markers);
+        $scope.$apply();
+      },
+      errorHandler : function(message, exception) {
+        $scope.msg = {type:"danger", text: message, dismiss:true};
+        $scope.fadeMsg();
+        $scope.$apply();
+      }
+    });
+  };
+
+  $scope.clearFilters = function(){
+
+    var pageRequest = new PageRequest();
+    pageRequest.size = 10;
+    $scope.pageRequest = pageRequest;
+
+    if ( $scope.dragMarkers != null ){
+      $scope.dragMarkers = null;
+    }
+
+    $scope.filter.layer = null;
+    $scope.filter.status = null;
+    $scope.filter.dateStart= null;
+    $scope.filter.dateEnd= null;
+    $scope.filter.user= null;
+
+    $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
+    $scope.listMarkerByFiltersMap( null, null, null, null, null);
+    $scope.hasSearch = false;
+
+  };
+
+  /**
+   * List all the Users
+   */
+  $scope.listAllUsers = function() {
+
+    accountService.listAllUsers({
+      callback: function (result) {
+        $scope.selectUsers = [];
+
+        angular.forEach(result, function (user, index) {
+
+          $scope.selectUsers.push({
+            "name": user.name,
+            "email": user.email,
+            "userName": user.username,
+          });
+
+        });
+
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+  };
+
+  /**
    *
    */
   $scope.selectDataSource = function () {
@@ -3494,7 +3653,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       controller: SelectDataSourcePopUpController,
       resolve: {
         dataSourceSelected: function () {
-          return $scope.currentEntity.dataSource;
+          return $scope.shapeFile.form.dataSource;
         }
       }
     });
@@ -3503,15 +3662,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       // assigns the selected data
 
-      if( $scope.currentEntity.dataSource && $scope.currentEntity.dataSource.id != result.id )
+      if( $scope.shapeFile.form.dataSource && $scope.shapeFile.form.dataSource.id != result.id )
       {
-        $scope.currentEntity.dataSource = result;
-        $scope.currentEntity.title = null;
-        $scope.currentEntity.name = null;
+        $scope.shapeFile.form.dataSource = result;
+        $scope.shapeFile.form.title = null;
+        $scope.shapeFile.form.name = null;
       }
       else
       {
-        $scope.currentEntity.dataSource = result;
+        $scope.shapeFile.form.dataSource = result;
       }
 
     });
@@ -3532,7 +3691,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           return $scope.data.dataSource;
         },
         selectedLayer : function () {
-          return $scope.currentEntity.layer;
+          return $scope.shapeFile.form.layer;
         }
       }
     });
@@ -3540,7 +3699,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     dialog.result.then(function (result) {
 
       if (result) {
-        $scope.currentEntity.layer = result;
+        $scope.shapeFile.form.layer = result;
       }
 
     });
@@ -3585,10 +3744,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       windowClass: 'xx-dialog',
       resolve: {
         currentState: function(){
-          return $scope.currentState;
+          return $scope.shapeFile.form;
         },
         currentEntity: function () {
-          return $scope.currentEntity;
+          return $scope.shapeFile.form;
         }
       }
     });
@@ -3596,9 +3755,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     dialog.result.then(function (result) {
 
       if (result) {
-        $scope.currentEntity.name = result.name;
-        $scope.currentEntity.title = result.title;
-        $scope.currentEntity.legend = result.legend;
+        $scope.shapeFile.form.name = result.name;
+        $scope.shapeFile.form.title = result.title;
+        $scope.shapeFile.form.legend = result.legend;
       }
 
     });
@@ -3621,7 +3780,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
               return result;
             },
             currentLayerGroup: function () {
-              return $scope.currentEntity.layerGroup;
+              return $scope.shapeFile.form.layerGroup;
             }
           }
         });
@@ -3629,8 +3788,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         dialog.result.then(function (result) {
 
           if (result) {
-            $scope.currentEntity.layerGroup = result;
-            $scope.currentEntity.layerGroup.name = result.label;
+            $scope.shapeFile.form.layerGroup = result;
+            $scope.shapeFile.form.layerGroup.name = result.label;
           }
 
         });
@@ -3642,7 +3801,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     };
 
-    layerGroupService.listSupervisorsFilter($scope.currentEntity.name, $scope.currentEntity.dataSource.id, request);
+    layerGroupService.listSupervisorsFilter($scope.shapeFile.form.name, $scope.shapeFile.form.dataSource.id, request);
 
   };
 
