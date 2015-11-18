@@ -34,11 +34,15 @@
 		<!-- Controllers -->		
 		<!-- Main -->
 		<script type="text/javascript" src="modules/map/map-main.js"></script>
-   		<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
+   	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/map-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/refuse-marker-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/select-access-group-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/select-layer-config-popup-controller.js"></script>
 
    		<!-- Treeview -->
 		<script type="text/javascript"
