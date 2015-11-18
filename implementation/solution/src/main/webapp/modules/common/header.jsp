@@ -23,6 +23,13 @@
 			</div>
 
 			<ul class="nav navbar-nav pull-right right-side">
+
+				<li>
+					<div class="user-logout">
+						<a href="<c:url value='/user#/contact'/>"><spring:message code="contact.Contact" /></a>
+					</div>
+				</li>
+
 				<li><a href="#" class="active box-separator"
 					style="border: none; margin-top: 7px;"> <span
 						style="color: #000000" > <security:authorize access="isAuthenticated()"> <sec:authentication  property="principal.name"/> </security:authorize> </span>
