@@ -19,13 +19,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.geocab.application.security.ContextHolder;
-import br.com.geocab.domain.entity.account.IAccountMailRepository;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.entity.markermoderation.Motive;
 import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
+import br.com.geocab.domain.repository.IAccountMailRepository;
 import br.com.geocab.domain.repository.account.IUserRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
