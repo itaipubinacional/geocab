@@ -3307,6 +3307,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.shapeFile = {};
 
+  $scope.shapeFile.layerType = 'layer';
+
   $scope.isImport = false;
   $scope.isExport = false;
 
@@ -3319,6 +3321,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.isExport = true;
     }
   };
+
+  /*$scope.setLayerType = function() {
+    $scope.layerType = $scope.lay
+  };*/
 
   //DATA GRID
   /**
@@ -3511,6 +3517,67 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
   };
 
+  /*-------------------------------------------------------------------
+   *                 POPUP - CONFIGURAÇÕES DE CAMADA
+   *-------------------------------------------------------------------*/
+  $scope.selectLayerConfig = function () {
+
+    //Função responsável por chamar a popup de configurações de camada para associação.
+    var dialog = $modal.open({
+      templateUrl: 'modules/admin/ui/custom-search/popup/layer-config-popup.jsp',
+      controller: SelectLayerConfigPopUpController,
+      windowClass: 'xx-dialog',
+      resolve: {
+        dataSource : function () {
+          return $scope.data.dataSource;
+        },
+        selectedLayer : function () {
+          return $scope.currentEntity.layer;
+        }
+      }
+    });
+
+    dialog.result.then(function (result) {
+
+      if (result) {
+        $scope.currentEntity.layer = result;
+      }
+
+    });
+
+  };
+
+  /**
+   * Add attribute
+   * */
+  $scope.addAttribute = function() {
+    var dialog = $modal.open({
+      templateUrl: "modules/admin/ui/layer-config/popup/add-attribute-import-popup.jsp",
+      controller: AddAttributeImportPopUpController,
+      windowClass: 'xx-dialog',
+      resolve: {
+        attributes: function () {
+          return $scope.attributes;
+        }
+      }
+    });
+
+    dialog.result.then(function (result) {
+
+      if (result) {
+        $scope.currentEntity.name = result.name;
+        $scope.currentEntity.title = result.title;
+        $scope.currentEntity.legend = result.legend;
+      }
+
+      for(var i = 0; i < $scope.attributes.length; i++)
+      {
+        $scope.attributes[i].orderAttribute = i;
+      }
+
+    });
+  };
+
   $scope.moreIcons = function() {
     var dialog = $modal.open({
       templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
@@ -3535,6 +3602,48 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
 
     });
+  };
+
+  /**
+   *
+   */
+  $scope.selectLayerGroup = function () {
+
+    var request = {
+      callback: function (result) {
+
+        var dialog = $modal.open({
+          templateUrl: "modules/admin/ui/layer-config/popup/layer-group-popup.jsp",
+          controller: SelectLayerGroupPopUpController,
+          windowClass: 'xx-dialog grupo-camada-dialog',
+          resolve: {
+            layerGroups: function () {
+              return result;
+            },
+            currentLayerGroup: function () {
+              return $scope.currentEntity.layerGroup;
+            }
+          }
+        });
+
+        dialog.result.then(function (result) {
+
+          if (result) {
+            $scope.currentEntity.layerGroup = result;
+            $scope.currentEntity.layerGroup.name = result.label;
+          }
+
+        });
+
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    };
+
+    layerGroupService.listSupervisorsFilter($scope.currentEntity.name, $scope.currentEntity.dataSource.id, request);
+
   };
 
   $scope.selectAccessGroups = function() {
