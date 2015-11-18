@@ -47,7 +47,14 @@ function ContactController( $scope, $injector, $log, $state, $timeout, $modal, $
 	 *
 	 */
 	$scope.sendForm = function(){
-		console.log("");
+
+		if ( !$scope.form().$valid ) {
+			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
+			$scope.fadeMsg();
+		}else{
+			console.log("TESTES");
+		}
+
 	};
 
 
