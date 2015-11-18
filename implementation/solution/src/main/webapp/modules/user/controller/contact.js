@@ -16,9 +16,9 @@ function ContactController( $scope, $injector, $log, $state, $timeout, $modal, $
 	$injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 	
 	/**
-	 * Include accountService class
+	 * Include contactService class
 	 */
-	$importService("accountService");
+	$importService("contactService");
 	
 	
 	/*-------------------------------------------------------------------
@@ -57,9 +57,9 @@ function ContactController( $scope, $injector, $log, $state, $timeout, $modal, $
 		 /**
 		 * authenticated user
 		 * */
-		accountService.getUserAuthenticated({
+		contactService.getLoggedUser({
     		callback : function(result) {
-    			$scope.currentEntity = result;
+    			$scope.contactForm = result;
     			$scope.$apply();
             },
             errorHandler : function(message, exception) {
