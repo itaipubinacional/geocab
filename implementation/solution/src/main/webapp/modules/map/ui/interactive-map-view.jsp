@@ -818,7 +818,7 @@ uri="http://www.springframework.org/security/tags"%>
                          ng-class="{ngInvalid:form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)}"
                       >
                     <span class="input-group-btn">
-                        <button ng-click="selectDataSource()" title="<spring:message code='admin.layer-config.Enter-the-data-source' />" class="btn btn-default"
+                        <button style="height: 34px" ng-click="selectDataSource()" title="<spring:message code='admin.layer-config.Enter-the-data-source' />" class="btn btn-default"
                                 type="button" ng-disabled="currentEntity.id != null">
                           <i class="icon-plus-sign icon-large"></i>
                         </button>
@@ -828,7 +828,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
               </div>
 
-              <div class="position-relative input-group" style="width: 350px;">
+              <div class="position-relative input-group" style="width: 350px;margin-bottom: 10px">
                 <label class="detail-label" required>
                   <spring:message code="Title"/>
                 </label>
@@ -846,31 +846,81 @@ uri="http://www.springframework.org/security/tags"%>
                         class="tooltip-validation"><spring:message code="admin.layer-config.Title-required"/></span>
               </div>
 
-              <div class="form-item position-relative" style="width: 300px;"
-                   ng-if="currentState">
-                <input type="checkbox" id="grupo" style="width: 20px;"
-                       ng-model="currentEntity.startEnabled"> <label><spring:message code="admin.layer-config.Start-allowed-in-map"/></label>
+              <div style="margin-bottom: 10px">
+                <button style="height: 31px" ng-click="addAttribute()" title="<spring:message code='admin.layer-config.Add-attributes' />"
+                        class="btn btn-primary" style="margin-bottom: 5px">
+                  <spring:message code="admin.layer-config.Add-attributes"/>
+                </button>
+              </div>
 
+              <div>
+                <div style="float: left;">
+                  <img ng-src="{{currentEntity.icon}}"/>
+                </div>
+                <button style="height: 31px" class="btn btn-primary" style="margin-top:15px" ng-click="moreIcons()" >
+                  <spring:message code="admin.layer-config.More-icons"/>
+                </button>
               </div>
 
               <br/>
 
-              <div class="form-item position-relative" style="width: 300px;"
-                   ng-if="currentState">
-                <input type="checkbox" style="width: 20px;"
-                       ng-model="currentEntity.startVisible"
-                       ng-disabled="currentState == DETAIL_STATE"> <label><spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
+              <div class="form-item position-relative" style="width: 350px;">
+                <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
+                <div class="input-group">
+                  <input name="layerGroup" type="text" disabled class="form-control"
+                         ng-model="currentEntity.layerGroup.name"
+                         placeholder="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
+                         maxlength="144"
+                         ng-minlength="1"
+                         required
+                         ng-class="{ ngInvalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)}" class="tooltip-validation}">
+                    <span class="input-group-btn">
+                        <button style="height: 34px" ng-click="selectLayerGroup()" class="btn btn-default"
+                                title="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
+                                type="button">
+                            <i class="icon-plus-sign icon-large"></i>
+                      </button>
+                    </span>
+                </div>
+
+                <span ng-show="form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation"><spring:message code="admin.layer-config.Layer-group"/>  <spring:message code="required"/> </span>
               </div>
 
-              <div ng-if="!currentEntity.dataSource.url && currentState" class="form-item position-relative" style="width: 300px;">
-                <input type="checkbox" style="width: 20px;"
-                       ng-model="currentEntity.enabled"
-                       ng-disabled="currentState == DETAIL_STATE"> <label><spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
+              <br/>
+
+              <div class="position-relative" scale-slider ng-model="layers" style="width: 350px;"></div>
+              <div style="width: 350px;">
+                <label style="float: left">{{layers.values[0]}}</label>
+                <label style="float: right;">{{layers.values[1]}}</label>
+              </div>
+
+              <div class="form-item position-relative" style="width: 300px;">
+                <label><input type="checkbox" id="grupo" style="width: 20px;"
+                       ng-model="currentEntity.startEnabled"> <spring:message code="admin.layer-config.Start-allowed-in-map"/></label>
+              </div>
+
+              <br/>
+
+              <div class="form-item position-relative" style="width: 300px;">
+                <label><input type="checkbox" style="width: 20px;"
+                       ng-model="currentEntity.startVisible"> <spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
+              </div>
+
+              <div class="form-item position-relative" style="width: 300px;">
+                <label><input type="checkbox" style="width: 20px;"
+                       ng-model="currentEntity.enabled"> <spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
+              </div>
+
+              <div>
+                <button ng-click="selectAccessGroups()" type="button" style="height: 31px; margin: 6px 0 20px 0;" class="btn btn-primary">Associar grupo</button>
+              </div>
+
+              <div>
+                <button ng-click="saveImportExport()" type="button" style="height: 31px; margin: 6px 0 20px 0;" class="btn btn-success">Salvar</button>
               </div>
 
             </div>
             <!-- #import-shape-file -->
-
 
           </div>
         </div>
