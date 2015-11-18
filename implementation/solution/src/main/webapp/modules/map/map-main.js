@@ -2,7 +2,7 @@
 	"use strict"; 
 
 	//Start the AngularJS
-	var projectModule = angular.module("map", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker" , "eits-angular-translate" , "ivh.treeview", "ivh.treeview-extend",'eits-default-button', 'localytics.directives'])
+	var projectModule = angular.module("map", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker" , "eits-angular-translate" , "ivh.treeview", "ivh.treeview-extend",'eits-default-button', 'localytics.directives', 'ui-scaleSlider'])
 
 	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider ,$translateProvider) {
 		//-------

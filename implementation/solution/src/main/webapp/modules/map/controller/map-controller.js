@@ -3068,240 +3068,239 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.resolveDatepicker = function () {
 
-    $scope.$watch('attributesByLayer', function (oldValue, newValue) {
-      $timeout(function () {
-        $('.datepicker').datepicker({
-          dateFormat: 'dd/mm/yy',
-          dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-          dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-          dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-          monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-          monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-          nextText: 'Próximo',
-          prevText: 'Anterior'
-        });
+      $scope.$watch('attributesByLayer', function (oldValue, newValue) {
+        $timeout(function () {
+          $('.datepicker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior'
+          });
 
-        $('.datepicker').mask("99/99/9999");
-      }, 200);
-    })
-    $scope.$watch('screen', function (oldValue, newValue) {
-      $timeout(function () {
-        $('.datepicker').datepicker({
-          dateFormat: 'dd/mm/yy',
-          dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-          dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-          dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-          monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-          monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-          nextText: 'Próximo',
-          prevText: 'Anterior'
-        });
+          $('.datepicker').mask("99/99/9999");
+        }, 200);
+      })
+      $scope.$watch('screen', function (oldValue, newValue) {
+        $timeout(function () {
+          $('.datepicker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior'
+          });
 
-        $('.datepicker').mask("99/99/9999");
-      }, 200);
-    })
+          $('.datepicker').mask("99/99/9999");
+        }, 200);
+      })
 
-  }
+    }
 
-<<<<<<< HEAD
+  /**
+   * Function that manages the Sidebar
+   * @param time Execution time of the animation.
+   * @param element Name of the element that is calling the function.
+   */
+  $scope.toggleSidebarMarkerCreate = function (time, element) {
+    $scope.attributesByLayer = [];
+    $scope.imgResult = "";
+    $scope.$apply();
+
+    if (element == "closeButton") {
+      $scope.screenMarkerOpenned = false;
+    }
+
     /**
-     * Function that manages the Sidebar
-     * @param time Execution time of the animation.
-     * @param element Name of the element that is calling the function.
-     */
-    $scope.toggleSidebarMarkerCreate = function (time, element){
-    	$scope.attributesByLayer = [];
-    	$scope.imgResult = "";
-    	$scope.$apply();
-    	
-    	if(element == "closeButton") {
-            $scope.screenMarkerOpenned = false;
+     * If the marker tab is open, close it and wait to open the new.
+     * */
+    if ($scope.slideActived == '#sidebar-layers') {
+      $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
+
+      $timeout(function () {
+        $scope.toggleSidebar(time, element, '#sidebar-marker-create');
+      }, 400)
+    } else {
+
+      $scope.toggleSidebar(time, element, '#sidebar-marker-create');
+    }
+
+    $scope.resolveDatepicker();
+
+  };
+
+  $scope.toggleSidebarMarkerDetailUpdate = function (time, element) {
+    $scope.currentEntity = $scope.marker;
+
+    if (element == "closeButton") {
+      $scope.screenMarkerOpenned = false;
+      $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
+      return;
+    }
+
+    if (typeof $scope.marker != "undefined") {
+      markerService.findImgByMarker($scope.marker.id, {
+        callback: function (result) {
+
+          $scope.imgResult = result;
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
         }
-    	
-    	/**
-    	 * If the marker tab is open, close it and wait to open the new.
-    	 * */
-    	if($scope.slideActived == '#sidebar-layers') {
-    		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
-    		
-    		$timeout(function(){
-        		$scope.toggleSidebar(time, element, '#sidebar-marker-create');
-        	}, 400)
-    	} else {
-    		
-    		$scope.toggleSidebar(time, element, '#sidebar-marker-create');
-    	}
-    	
-    	$scope.resolveDatepicker();
-    	
-    };
-    
-    $scope.toggleSidebarMarkerDetailUpdate = function (time, element){
-    	$scope.currentEntity = $scope.marker;
-    	
-    	if(element == "closeButton") {
-            $scope.screenMarkerOpenned = false;
-            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
-            return;
-        }
-    	
-    	if( typeof $scope.marker != "undefined" ) {
-	    	markerService.findImgByMarker($scope.marker.id, {
-	 			 callback : function(result) {
-	 				 
-	 				 $scope.imgResult = result;
-	 	          },
-	 	          errorHandler : function(message, exception) {
-	 	              $scope.message = {type:"error", text: message};
-	 	              $scope.$apply();
-	 	          }
-		    	});
-	    	
-	    	$scope.attributesByLayer = [];
-			$scope.showNewAttributes = false;
-	    	
-	    	markerService.listAttributeByMarker($scope.marker.id, {
-			  callback : function(result) {
-				  $scope.attributesByMarker = result;   
-				  
-				  layerGroupService.listAttributesByLayer($scope.marker.layer.id,{
-		          		callback : function(result) {
-		          			$scope.attributesByLayer = [];
-		          			
-		          			angular.forEach(result, function(attribute, index){
-			          				
-		          					var exist = false;
-		          					
-		          					angular.forEach($scope.attributesByMarker, function(attributeByMarker, index){
-		          					
-			          					if(attributeByMarker.attribute.id == attribute.id){
-			          						exist = true;
-			          					}
-			          				});
-			          				
-			          				if( !exist ) {
-			          					$scope.attributesByLayer.push(attribute);
-			          					$scope.showNewAttributes = true;
-			          				}
-			          				
-			          			});
-		          			
-		                      $scope.$apply();
-		                  },
-		                  errorHandler : function(message, exception) {
-		                      $scope.message = {type:"error", text: message};
-		                      $scope.$apply();
-		                  }
-		          	});
-				  
-				  angular.forEach(result,function(markerAttribute,index){
-					if (markerAttribute.attribute.type == "NUMBER") {
-						markerAttribute.value = parseInt(markerAttribute.value);
-					}  
-				  })
-				  
-				 
-				  $scope.$apply();
-				 
-	          },
-	          errorHandler : function(message, exception) {
-	              $scope.message = {type:"error", text: message};
-	              $scope.$apply();
-	          }
-	    	});
-    	}
-    	/* List for the edit */
-    	layerGroupService.listAllInternalLayerGroups({
-    		callback : function(result) {
-               // $scope.layersGroups = result;
-                
-                $scope.selectLayerGroup = [];
-                        
-                angular.forEach(result, function(layer,index){
-                	
-                	$scope.selectLayerGroup.push($.extend(layer, {
-                		"layerTitle": layer.title,
-                		"layerId": layer.id,
-                		"group": layer.layerGroup.name
-                	}));
-                	
-                })
-                
-                markerService.listAttributeByMarker($scope.currentEntity.id, {
-	       			 callback : function(result) {
-	       				$scope.attributesByMarker = result;
-	       				
-	       				angular.forEach(result,function(markerAttribute,index){
-	       					if (markerAttribute.attribute.type == "NUMBER") {
-	       						markerAttribute.value = parseInt(markerAttribute.value);
-	       					}  
-	       				  })
-	  
-                        angular.forEach($scope.selectLayerGroup, function(layer,index){
-                        		if( layer.layerId == $scope.currentEntity.layer.id ) {
-                        			layer.created = $scope.currentEntity.layer.created;
-	       							$scope.currentEntity.layer = layer;
-	       							
-	       							return false;
-	           					}
-                        })
-	       				 
-	       				 $scope.$apply();
-	       	          },
-	       	          errorHandler : function(message, exception) {
-	       	              $scope.message = {type:"error", text: message};
-	       	              $scope.$apply();
-	       	          }
-       	    	});
-                
+      });
+
+      $scope.attributesByLayer = [];
+      $scope.showNewAttributes = false;
+
+      markerService.listAttributeByMarker($scope.marker.id, {
+        callback: function (result) {
+          $scope.attributesByMarker = result;
+
+          layerGroupService.listAttributesByLayer($scope.marker.layer.id, {
+            callback: function (result) {
+              $scope.attributesByLayer = [];
+
+              angular.forEach(result, function (attribute, index) {
+
+                var exist = false;
+
+                angular.forEach($scope.attributesByMarker, function (attributeByMarker, index) {
+
+                  if (attributeByMarker.attribute.id == attribute.id) {
+                    exist = true;
+                  }
+                });
+
+                if (!exist) {
+                  $scope.attributesByLayer.push(attribute);
+                  $scope.showNewAttributes = true;
+                }
+
+              });
+
+              $scope.$apply();
             },
-            errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
-                $scope.$apply();
+            errorHandler: function (message, exception) {
+              $scope.message = {type: "error", text: message};
+              $scope.$apply();
             }
-    	});    	
-    	
-    	/**
-    	 * If the marker tab is open, close it and wait to open the new.
-    	 * */
-    	
-    	if($scope.slideActived == '#sidebar-marker-detail-update'){
-    		$(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
-    		return
-    	}
-    	
-    	if($scope.slideActived == '#sidebar-layers') {
-    		//If menu layer or search is open, close it and open marker detail
-    		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
-    		
-    		$timeout(function(){
-        		$scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
-        	}, 400);
-    		
-    	} else {
-    		$scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
-    	}
-    	/*
-    	if ( $('#sidebar-marker-detail').css("display") == 'none' ){
-    		
-    	}*/
-    	$scope.resolveDatepicker();    	
-    	$(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
-    };
-    
-    $scope.clearDetailMarker = function() {
-    	$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail-update');
-=======
+          });
+
+          angular.forEach(result, function (markerAttribute, index) {
+            if (markerAttribute.attribute.type == "NUMBER") {
+              markerAttribute.value = parseInt(markerAttribute.value);
+            }
+          })
+
+
+          $scope.$apply();
+
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
+    }
+    /* List for the edit */
+    layerGroupService.listAllInternalLayerGroups({
+      callback: function (result) {
+        // $scope.layersGroups = result;
+
+        $scope.selectLayerGroup = [];
+
+        angular.forEach(result, function (layer, index) {
+
+          $scope.selectLayerGroup.push($.extend(layer, {
+            "layerTitle": layer.title,
+            "layerId": layer.id,
+            "group": layer.layerGroup.name
+          }));
+
+        })
+
+        markerService.listAttributeByMarker($scope.currentEntity.id, {
+          callback: function (result) {
+            $scope.attributesByMarker = result;
+
+            angular.forEach(result, function (markerAttribute, index) {
+              if (markerAttribute.attribute.type == "NUMBER") {
+                markerAttribute.value = parseInt(markerAttribute.value);
+              }
+            })
+
+            angular.forEach($scope.selectLayerGroup, function (layer, index) {
+              if (layer.layerId == $scope.currentEntity.layer.id) {
+                layer.created = $scope.currentEntity.layer.created;
+                $scope.currentEntity.layer = layer;
+
+                return false;
+              }
+            })
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+          }
+        });
+
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+
+    /**
+     * If the marker tab is open, close it and wait to open the new.
+     * */
+
+    if ($scope.slideActived == '#sidebar-marker-detail-update') {
+      $(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
+      return
+    }
+
+    if ($scope.slideActived == '#sidebar-layers') {
+      //If menu layer or search is open, close it and open marker detail
+      $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
+
+      $timeout(function () {
+        $scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
+      }, 400);
+
+    } else {
+      $scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
+    }
+    /*
+     if ( $('#sidebar-marker-detail').css("display") == 'none' ){
+
+     }*/
+    $scope.resolveDatepicker();
+    $(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
+  };
+
+  $scope.clearDetailMarker = function () {
+    $scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail-update');
+  };
+
   $scope.isChecked = function () {
     if ($(".yes").is(':checked')) {
       return ".yes";
->>>>>>> ba2cb9f61700c13f3b3ee0ee9f8cbaa753e1c9ee
     }
 
     if ($(".no").is(':checked')) {
       return ".no";
     }
-  }
+  };
 
 
   /* EXPORTAR IMPORTAR SHAPEFILE */
@@ -3311,15 +3310,289 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.isImport = false;
   $scope.isExport = false;
 
-  $scope.setAction = function(type) {
-    if(type == 'import') {
+  $scope.setAction = function (type) {
+    if (type == 'import') {
       $scope.isImport = true;
       $scope.isExport = false;
-    }else {
+    } else {
       $scope.isImport = false;
       $scope.isExport = true;
     }
-  }
+  };
+
+  //DATA GRID
+  /**
+   * Static variable coms stock grid buttons
+   * The Edit button navigates via URL (sref) why editing is done in another page,
+   * Since the delete button calls a method directly via ng-click why does not have a specific screen state.
+   */
+  var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
+    '<a ui-sref="layer-config.update({id:row.entity.id})"  " title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+    '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    '</div>';
+
+  var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
+    '<span ng-if="!row.entity.dataSource.url" ng-cell-text="" class="ng-binding">Camada interna</span>' +
+    '<span ng-if="row.entity.dataSource.url" ng-cell-text="" class="ng-binding">{{ row.entity.name }}</span>' +
+    '</div>';
+
+
+  var MARKER_BUTTONS = '<div  class="cell-centered">' +
+    '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == false" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
+    '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == true" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
+    '<a ng-if="row.entity.dataSource.url" class="btn btn-mini"><i style="font-size: 16px; color: blue" class="glyphicon glyphicon glyphicon-minus"></i></a>'+
+    '</div>';
+
+  var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+    '<img ng-if="row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
+    '<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.icon}}"/>' +
+    '</div>';
+
+  /**
+   * General settings in the ng-grid.
+   * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
+   */
+  $scope.gridOptions = {
+    data: 'currentPage.content',
+    multiSelect: false,
+    useExternalSorting: true,
+    headerRowHeight: 45,
+    rowHeight: 45,
+    beforeSelectionChange: function (row, event) {
+      //avoids calling the selecao, when clicked in an action button.
+      if ($(event.target).is("a") || $(event.target).is("i")) return false;
+      $state.go($scope.DETAIL_STATE, {id: row.entity.id});
+    },
+    columnDefs: [
+      {displayName: 'Postagem', sortable: false, cellTemplate: MARKER_BUTTONS, width: '6%'},
+      {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '6%', cellTemplate: IMAGE_LEGEND},
+      {displayName: $translate('Title'), field: 'title', width: '19%'},
+      //{displayName: $translate('Layer'), field: 'name', width: '19%'},
+      {displayName: $translate('Layer'), cellTemplate: LAYER_TYPE_NAME, width: '19%'},
+      {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name', width: '30%'},
+      {displayName: $translate('admin.layer-config.Layer-group'), field: 'layerGroup.name', width: '13%'},
+      {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '7%'}
+    ]
+  };
+
+  var GRID_ACTION_ACCESS_BUTTONS = '<div class="cell-centered">' +
+    '<a ng-click="removeAccessGroup(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    '</div>';
+
+  /**
+   * General settings of ng-grid.
+   * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
+   */
+
+  $scope.gridAccessOptions = {
+    data: 'selectedGroups',
+    multiSelect: false,
+    headerRowHeight: 45,
+    rowHeight: 45,
+    beforeSelectionChange: function (row, event) {
+      return false;
+    },
+    columnDefs: [
+      {displayName:$translate('Name'), field:'name'},
+      {displayName:$translate('Description'), field:'description'},
+      {displayName: '',sortable: false, cellTemplate: GRID_ACTION_ACCESS_BUTTONS, width: '100px'}
+    ]
+  };
+
+  var GRID_ACTION_ATTRIBUTES_BUTTONS = '<div class="cell-centered">' +
+    '<a ng-if="!row.entity.attributeDefault" ng-click="updateAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Update" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
+    '<a ng-if="!row.entity.attributeDefault" ng-click="removeAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
+    '</div>';
+
+  var TYPE_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'DATE\'" >'+ $translate("admin.layer-config.DATE") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'BOOLEAN\'" >'+ $translate("admin.layer-config.BOOLEAN") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'TEXT\'" >'+ $translate("admin.layer-config.TEXT") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'NUMBER\'" >'+ $translate("admin.layer-config.NUMBER") +'</span>' +
+    '</div>';
+
+  var REQUIRED_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == false" >'+ $translate("admin.layer-config.false") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == true" >'+ $translate("admin.layer-config.true") +'</span>' +
+    '</div>';
+
+  /**
+   * Configurações gerais da ng-grid.
+   * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
+   */
+  $scope.gridAttributes = {
+    data: 'attributes',
+    useExternalSorting: false,
+    multiSelect: false,
+    headerRowHeight: 45,
+    rowHeight: 45,
+    beforeSelectionChange: function(row) {
+      row.changed = true;
+      return true;
+    },
+    afterSelectionChange: function (row, event) {
+      if (row.changed){
+        $scope.currentAttribute = row.entity;
+        row.changed = false;
+      }
+    },
+    columnDefs: [
+      {displayName: $translate('Name'), field: 'name', width: '30%'},
+      {displayName: $translate('Type'), field: 'type', cellTemplate:TYPE_COLUMN ,  width: '30%'},
+      {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: REQUIRED_COLUMN},
+//            	'<div>' +
+//                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
+//                '</div>', width: '30%'},
+      {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ATTRIBUTES_BUTTONS, width: '10%'}
+    ]
+  };
+
+
+  /**
+   * Configurações gerais da ng-grid.
+   * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
+   */
+  $scope.gridAttributesDetail = {
+    data: 'attributes',
+    useExternalSorting: false,
+    multiSelect: false,
+    headerRowHeight: 45,
+    rowHeight: 45,
+    beforeSelectionChange: function (row, event) {
+      //evita chamar a selecao, quando clicado em um action button.
+      /*f ( $(event.target).is("a") || $(event.target).is("i") ) return false;
+       $state.go($scope.DETAIL_STATE, {id:row.entity.id});*/
+    },
+    columnDefs: [
+      {displayName: $translate('Name'), field: 'name', width: '33%'},
+      {displayName: $translate('Type'),  cellTemplate: TYPE_COLUMN ,  width: '33%'},
+      {displayName: $translate('Required'), cellTemplate: REQUIRED_COLUMN,  width: '33%'},
+    ]
+  };
+
+  /**
+   * Variable that stores the State of the paging
+   * to render the pager and also to make requisitions of
+   * new pages, containing the State of the Sort included.
+   *
+   * @type PageRequest
+   */
+  $scope.currentPage;
+
+  /**
+   *
+   */
+  $scope.selectDataSource = function () {
+    var dialog = $modal.open({
+      templateUrl: "modules/admin/ui/layer-config/popup/data-source-popup.jsp",
+      controller: SelectDataSourcePopUpController,
+      resolve: {
+        dataSourceSelected: function () {
+          return $scope.currentEntity.dataSource;
+        }
+      }
+    });
+
+    dialog.result.then(function (result) {
+
+      // assigns the selected data
+
+      if( $scope.currentEntity.dataSource && $scope.currentEntity.dataSource.id != result.id )
+      {
+        $scope.currentEntity.dataSource = result;
+        $scope.currentEntity.title = null;
+        $scope.currentEntity.name = null;
+      }
+      else
+      {
+        $scope.currentEntity.dataSource = result;
+      }
+
+    });
+  };
+
+  $scope.moreIcons = function() {
+    var dialog = $modal.open({
+      templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
+      controller: MorePopupController,
+      windowClass: 'xx-dialog',
+      resolve: {
+        currentState: function(){
+          return $scope.currentState;
+        },
+        currentEntity: function () {
+          return $scope.currentEntity;
+        }
+      }
+    });
+
+    dialog.result.then(function (result) {
+
+      if (result) {
+        $scope.currentEntity.name = result.name;
+        $scope.currentEntity.title = result.title;
+        $scope.currentEntity.legend = result.legend;
+      }
+
+    });
+  };
+
+  $scope.selectAccessGroups = function() {
+    var dialog = $modal.open({
+      templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
+      controller: SelectAccessGroupPopUpController,
+      resolve: {
+        selectedGroups : function () {
+          return $scope.selectedGroups;
+        }
+      }
+    });
+
+    dialog.result.then(function (result) {
+
+      if (result) {
+        for (var i = 0; i < result.length; i++) {
+          var index = $scope.findByIdInArray($scope.selectedGroups, result[i]);
+          var index2 = $scope.findByIdInArray($scope.originalGroups, result[i]);
+          var index3 = $scope.findByIdInArray($scope.removeGroups, result[i]);
+
+          //Identifica se marcou novos registros
+          if (index == -1 && index2 == -1) {
+            var indexAdd = $scope.findByIdInArray($scope.addGroups, result[i]);
+            if (indexAdd == -1)
+              $scope.addGroups.push(result[i]);
+          }
+
+          if (index3 > -1) {
+            $scope.removeGroups.splice(index3, 1);
+          }
+
+        }
+        for (var i = 0; i < $scope.selectedGroups.length; i++) {
+
+          var index = $scope.findByIdInArray(result, $scope.selectedGroups[i]);
+
+          if (index == -1) {
+            var index2 = $scope.findByIdInArray($scope.addGroups, $scope.selectedGroups[i]);
+            var index3 = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+            var index4 = $scope.findByIdInArray($scope.originalGroups, $scope.selectedGroups[i]);
+
+            if (index2 > -1){
+              var indexAdd = $scope.findByIdInArray($scope.removeGroups, $scope.selectedGroups[i]);
+              if (indexAdd > -1)
+                $scope.adicionarGrupos.splice(indexAdd, 1);
+            }
+            if (index3 == -1 && index4 > -1) {
+              $scope.removeGroups.push($scope.selectedGroups[i]);
+            }
+
+          }
+        }
+        $scope.selectedGroups = result;
+      }
+
+    });
+  };
 
 
 };
@@ -3328,7 +3601,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 function isBooleanChecked(that) {
   $(that).parent().css("border", "0");
   $(that).parent().parent().find("span.tooltip-validation").remove();
-}
+};
 
 /**
  * Function responsible for loading the user photo on the screen at the time it was selected
