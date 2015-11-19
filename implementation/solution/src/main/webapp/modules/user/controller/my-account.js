@@ -144,12 +144,12 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	
 	$scope.updateUser = function() {
 		
-		if(!$scope.form('form').$valid ){
+		if(!$scope.form('form').$valid){
 			$scope.msg = {type:"danger", text: $translate("admin.users.The-highlighted-fields-are-required") , dismiss:true};
 			$scope.fadeMsg();
 			return;
 		}
-		
+
 		if($scope.currentEntity.newPassword == ""){
 			$scope.currentEntity.newPassword = null;
 		}
