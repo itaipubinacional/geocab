@@ -27,6 +27,10 @@
 			url : "/account",
 			templateUrl : "modules/user/ui/my-account/my-account-view.jsp",
 			controller : MyAccountController
+		}).state('my-preferences', {
+			url : "/preferences",
+			templateUrl : "modules/user/ui/my-account/my-preferences-form.jsp",
+
 		}).state('my-account.form', {
 			url: "/form",
 			menu: "my-account"

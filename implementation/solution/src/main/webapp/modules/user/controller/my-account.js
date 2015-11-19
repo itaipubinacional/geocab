@@ -137,6 +137,10 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		
 		$scope.currentState = $scope.UPDATE_STATE;
 	};
+
+	$scope.changeForm = function(form){
+		$scope.currentState = form;
+	};
 	
 	$scope.updateUser = function() {
 		
