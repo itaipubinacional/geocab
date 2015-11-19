@@ -3323,8 +3323,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.shapeFile.form.icon = 'static/icons/default_blue.png';
 
-      console.log($scope.shapeFile.form.icon);
-
       /**
        * @type {Array}
        * */
@@ -3901,6 +3899,111 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
   };
 
+  /**
+   * Performs the insertion of a new record
+   * and in the success, modifies the State of the screen for the detail.
+   */
+  $scope.importShapeFile = function () {
+
+    $scope.shapeFile.form.minimumScaleMap = 'UM'+$scope.layers.values[0].substring(2);
+    $scope.shapeFile.form.maximumScaleMap = 'UM'+$scope.layers.values[1].substring(2);
+
+    if (!$scope.form().$valid) {
+      $scope.msg = {type: "danger", text: $translate("admin.layer-config.The-highlighted-fields-are-required"), dismiss: true};
+      $scope.fadeMsg();
+      return;
+    }
+
+    $scope.shapeFile.form.name = $scope.shapeFile.form.title;
+
+    /*for (var k = 0; k < $scope.currentPage.content.length; k++ ){
+      if ( $scope.currentEntity.title.toUpperCase() == $scope.currentPage.content[k].title.toUpperCase() ){
+        $scope.msg = {type:"danger", text: $translate('admin.layer-config.The-field-name-already-exists,-change-and-try-again'), dismiss : true };
+        $scope.fadeMsg();
+        return;
+      }
+    }*/
+
+    if( ($scope.shapeFile.form.dataSource.url == null) && ($scope.shapeFile.form.icon == undefined) ){
+      $scope.msg = {type:"danger", text:$translate("admin.layer-config.Choose-an-icon"),dissmiss:true };
+      $scope.fadeMsg();
+      return;
+    }
+
+    if ( $scope.shapeFile.form.legend == null ) {
+
+      angular.forEach($scope.attributes, function(value, index){
+        value.layer = layer;
+      })
+
+      $scope.shapeFile.form.attributes = $scope.attributes;
+    }
+
+    layerGroupService.insertLayer(layer, {
+      callback: function (result) {
+        $scope.currentState = $scope.LIST_STATE;
+        $scope.currentEntity = result;
+        $state.go($scope.LIST_STATE);
+        $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
+        $scope.$apply();
+        $scope.saveGroups();
+      },
+      errorHandler: function (message, exception) {
+        $scope.msg = {type: "danger", text: message, dismiss: true};
+        $scope.$apply();
+      }
+    });
+  };
+
+  /**
+   *
+   */
+  $scope.saveGroups = function() {
+    if ($scope.addGroups.length > 0) {
+      $scope.linkGroups();
+    }
+    if ($scope.removeGroups.length > 0) {
+      $scope.unlinkGroups();
+    }
+  }
+
+  /**
+   *
+   */
+  $scope.linkGroups = function() {
+    layerGroupService.linkAccessGroup($scope.addGroups, $scope.currentEntity.id, {
+      callback: function(){
+        $scope.addGroups = [];
+        $scope.$apply();
+      },
+      errorHandler: function(error){
+        $log.error(error);
+      }
+    })
+  };
+
+  /**
+   *
+   */
+  $scope.unlinkGroups = function() {
+    layerGroupService.unlinkAccessGroup($scope.removeGroups, $scope.currentEntity.id, {
+      callback: function(){
+        $scope.removeGroups = [];
+        $scope.$apply();
+      },
+      errorHandler: function(error){
+        $log.error(error);
+      }
+    });
+  };
+
+  $scope.fadeMsg = function(){
+    $("div.msg").show();
+
+    setTimeout(function(){
+      $("div.msg").fadeOut();
+    }, 5000);
+  };
 
 };
 

@@ -845,146 +845,148 @@ uri="http://www.springframework.org/security/tags"%>
 
             <div style="text-align: left;float:left; width: 100%" ng-if="isImport">
 
-              <div class="form-item-horizontal radio">
-                <input type="radio" id="layer" ng-model="shapeFile.layerType"
-                       value="layer" ng-change="setLayerType()"> <label
-                  class="radio-label" for="layer"> Camada existente</label>
-              </div>
-
-              <div class="form-item-horizontal radio">
-                <input type="radio" id="new-layer" ng-model="shapeFile.layerType"
-                       value="new" ng-change="setLayerType()"> <label
-                  class="radio-label" for="new-layer"> Nova camada</label>
-              </div>
-
-              <div class="form-item position-relative">
-                <label class="detail-label" required><spring:message code="admin.datasource.Data-Source"/></label>
-                <div class="input-group position-relative">
-                  <input name="dataSource" type="text" disabled class="form-control"
-                         ng-model="shapeFile.form.dataSource.name"
-                         placeholder="<spring:message code='admin.layer-config.Enter-the-data-source' />" maxlength="144"
-                         ng-minlength="1"
-                         ng-hover
-                         required
-                         ng-class="{ngInvalid:form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)}">
-                    <span class="input-group-btn">
-                        <button style="height: 34px" ng-click="selectDataSource()" title="<spring:message code='admin.layer-config.Enter-the-data-source' />" class="btn btn-default"
-                                type="button" ng-disabled="currentEntity.id != null">
-                          <i class="icon-plus-sign icon-large"></i>
-                        </button>
-                    </span>
+              <form novalidate name="form">
+                <div class="form-item-horizontal radio">
+                  <input type="radio" id="layer" ng-model="shapeFile.layerType"
+                         value="layer" ng-change="setLayerType()"> <label
+                    class="radio-label" for="layer"> Camada existente</label>
                 </div>
-                <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
-              </div>
 
-              <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative">
-                <label class="detail-label" required><spring:message code="admin.custom-search.Layer"/></label>
-                <div class="input-group">
-                  <input name="layerGroup" type="text" class="form-control"
-                         ng-model="shapeFile.form.layer.name"
-                         disabled
-                         placeholder="<spring:message code='admin.custom-search.Enter-the-Layer'/>"
-                         maxlength="144"
-                         ng-minlength="1"
-                         ng-hover
-                         required>
-                    <span class="input-group-btn">
-                        <button style="height: 34px" ng-click="selectLayerConfig()" class="btn btn-default" type="button"
-                                ng-disabled="shapeFile.form.dataSource == null">
-                          <i class="icon-plus-sign icon-large"></i>
-                        </button>
-                    </span>
+                <div class="form-item-horizontal radio">
+                  <input type="radio" id="new-layer" ng-model="shapeFile.layerType"
+                         value="new" ng-change="setLayerType()"> <label
+                    class="radio-label" for="new-layer"> Nova camada</label>
                 </div>
-                <span ng-show="form.layerGroup.$error.required && form.$submitted"
-                      class="tooltip-validation"><spring:message code="admin.custom-search.Layer-required"/></span>
-              </div>
 
-              <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
-                <label class="detail-label" required>
-                  <spring:message code="Title"/>
-                </label>
-                <input name="title" type="text" class="form-control"
-                       ng-model="shapeFile.form.title"
-                       placeholder="Informe o título"
-                       maxlength="144" ng-minlength="1"
-                       ng-hover
-                       required
-                       ng-class="{ngInvalid:form.title.$error.required && (form.$submitted || form.title.$dirty) }"/>
-                  <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty) "
-                        class="tooltip-validation"><spring:message code="admin.layer-config.Title-required"/></span>
-              </div>
-
-              <div style="margin-bottom: 10px">
-                <button ng-click="addAttribute()" title="<spring:message code='admin.layer-config.Add-attributes' />"
-                        class="btn btn-primary" style="margin-bottom: 5px">
-                  <spring:message code="admin.layer-config.Add-attributes"/>
-                </button>
-              </div>
-
-              <div ng-if="shapeFile.layerType == 'new'">
-                <div>
-                  <div style="float: left;">
-                    <img ng-src="{{ shapeFile.form.icon}}"/>
-                  </div>
-                  <button class="btn btn-primary" ng-click="moreIcons()" >
-                    <spring:message code="admin.layer-config.More-icons"/>
-                  </button>
-                </div>
-                <div style="margin-top: 10px" class="form-item position-relative">
-                  <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
-                  <div class="input-group">
-                    <input name="layerGroup" type="text" disabled class="form-control"
-                           ng-model="shapeFile.form.layerGroup.name"
-                           placeholder="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
-                           maxlength="144"
+                <div class="form-item position-relative">
+                  <label class="detail-label" required><spring:message code="admin.datasource.Data-Source"/></label>
+                  <div class="input-group position-relative">
+                    <input name="dataSource" type="text" disabled class="form-control"
+                           ng-model="shapeFile.form.dataSource.name"
+                           placeholder="<spring:message code='admin.layer-config.Enter-the-data-source' />" maxlength="144"
                            ng-minlength="1"
+                           ng-hover
                            required
-                           ng-class="{ ngInvalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)}" class="tooltip-validation}">
+                           ng-class="{ngInvalid:form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)}">
                       <span class="input-group-btn">
-                          <button style="height: 34px" ng-click="selectLayerGroup()" class="btn btn-default"
-                                  title="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
-                                  type="button"
-                                  ng-disabled="shapeFile.form.dataSource == null">
-                              <i class="icon-plus-sign icon-large"></i>
-                        </button>
+                          <button style="height: 34px" ng-click="selectDataSource()" title="<spring:message code='admin.layer-config.Enter-the-data-source' />" class="btn btn-default"
+                                  type="button" ng-disabled="currentEntity.id != null">
+                            <i class="icon-plus-sign icon-large"></i>
+                          </button>
                       </span>
                   </div>
-                  <span ng-show="form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation"><spring:message code="admin.layer-config.Layer-group"/>  <spring:message code="required"/> </span>
+                  <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
                 </div>
 
-                <div style="float: left; width: 100%;padding: 0 20px 0 5px;">
-                  <div class="position-relative" scale-slider ng-model="layers"></div>
-                  <div style="width: 350px;">
-                    <label style="float: left">{{layers.values[0]}}</label>
-                    <label style="float: right;">{{layers.values[1]}}</label>
+                <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative">
+                  <label class="detail-label" required><spring:message code="admin.custom-search.Layer"/></label>
+                  <div class="input-group">
+                    <input name="layerGroup" type="text" class="form-control"
+                           ng-model="shapeFile.form.layer.name"
+                           disabled
+                           placeholder="<spring:message code='admin.custom-search.Enter-the-Layer'/>"
+                           maxlength="144"
+                           ng-minlength="1"
+                           ng-hover
+                           required>
+                      <span class="input-group-btn">
+                          <button style="height: 34px" ng-click="selectLayerConfig()" class="btn btn-default" type="button"
+                                  ng-disabled="shapeFile.form.dataSource == null">
+                            <i class="icon-plus-sign icon-large"></i>
+                          </button>
+                      </span>
                   </div>
+                  <span ng-show="form.layerGroup.$error.required && form.$submitted"
+                        class="tooltip-validation"><spring:message code="admin.custom-search.Layer-required"/></span>
                 </div>
 
-                <div class="form-item position-relative" style="width: 300px;">
-                  <label><input type="checkbox" id="grupo" style="width: 20px;"
-                         ng-model="shapeFile.form.startEnabled"> <spring:message code="admin.layer-config.Start-allowed-in-map"/></label>
+                <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
+                  <label class="detail-label" required>
+                    <spring:message code="Title"/>
+                  </label>
+                  <input name="title" type="text" class="form-control"
+                         ng-model="shapeFile.form.title"
+                         placeholder="Informe o título"
+                         maxlength="144" ng-minlength="1"
+                         ng-hover
+                         required
+                         ng-class="{ngInvalid:form.title.$error.required && (form.$submitted || form.title.$dirty) }"/>
+                    <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty) "
+                          class="tooltip-validation"><spring:message code="admin.layer-config.Title-required"/></span>
                 </div>
 
-                <div class="form-item position-relative" style="width: 300px;">
-                  <label><input type="checkbox" style="width: 20px;"
-                         ng-model="shapeFile.form.startVisible"> <spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
+                <div style="margin-bottom: 10px">
+                  <button ng-click="addAttribute()" title="<spring:message code='admin.layer-config.Add-attributes' />"
+                          class="btn btn-primary" style="margin-bottom: 5px">
+                    <spring:message code="admin.layer-config.Add-attributes"/>
+                  </button>
                 </div>
 
-                <div class="form-item position-relative" style="width: 300px;">
-                  <label><input type="checkbox" style="width: 20px;"
-                         ng-model="shapeFile.form.enabled"> <spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
+                <div ng-if="shapeFile.layerType == 'new'">
+                  <div>
+                    <div style="float: left;">
+                      <img ng-src="{{ shapeFile.form.icon}}"/>
+                    </div>
+                    <button class="btn btn-primary" ng-click="moreIcons()" >
+                      <spring:message code="admin.layer-config.More-icons"/>
+                    </button>
+                  </div>
+                  <div style="margin-top: 10px" class="form-item position-relative">
+                    <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
+                    <div class="input-group">
+                      <input name="layerGroup" type="text" disabled class="form-control"
+                             ng-model="shapeFile.form.layerGroup.name"
+                             placeholder="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
+                             maxlength="144"
+                             ng-minlength="1"
+                             required
+                             ng-class="{ ngInvalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)}" class="tooltip-validation}">
+                        <span class="input-group-btn">
+                            <button style="height: 34px" ng-click="selectLayerGroup()" class="btn btn-default"
+                                    title="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
+                                    type="button"
+                                    ng-disabled="shapeFile.form.dataSource == null">
+                                <i class="icon-plus-sign icon-large"></i>
+                          </button>
+                        </span>
+                    </div>
+                    <span ng-show="form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation"><spring:message code="admin.layer-config.Layer-group"/>  <spring:message code="required"/> </span>
+                  </div>
+
+                  <div style="float: left; width: 100%;padding: 0 20px 0 5px;">
+                    <div class="position-relative" scale-slider ng-model="layers"></div>
+                    <div style="width: 350px;">
+                      <label style="float: left">{{layers.values[0]}}</label>
+                      <label style="float: right;">{{layers.values[1]}}</label>
+                    </div>
+                  </div>
+
+                  <div class="form-item position-relative" style="width: 300px;">
+                    <label><input type="checkbox" id="grupo" style="width: 20px;"
+                           ng-model="shapeFile.form.startEnabled"> <spring:message code="admin.layer-config.Start-allowed-in-map"/></label>
+                  </div>
+
+                  <div class="form-item position-relative" style="width: 300px;">
+                    <label><input type="checkbox" style="width: 20px;"
+                           ng-model="shapeFile.form.startVisible"> <spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
+                  </div>
+
+                  <div class="form-item position-relative" style="width: 300px;">
+                    <label><input type="checkbox" style="width: 20px;"
+                           ng-model="shapeFile.form.enabled"> <spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
+                  </div>
+
+                  <div>
+                    <button ng-click="selectAccessGroups()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary">Associar grupo</button>
+                  </div>
+
                 </div>
 
                 <div>
-                  <button ng-click="selectAccessGroups()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary">Associar grupo</button>
+                  <button ng-click="importShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success">Salvar</button>
                 </div>
 
-              </div>
-
-              <div>
-                <button ng-click="importShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success">Salvar</button>
-              </div>
-
+              </form>
             </div>
             <!-- #import-shape-file -->
 
