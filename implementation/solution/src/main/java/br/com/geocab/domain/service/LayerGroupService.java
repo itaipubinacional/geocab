@@ -33,6 +33,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
 import br.com.geocab.domain.entity.accessgroup.AccessGroupLayer;
@@ -57,8 +59,6 @@ import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.tool.IToolRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
-
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * 

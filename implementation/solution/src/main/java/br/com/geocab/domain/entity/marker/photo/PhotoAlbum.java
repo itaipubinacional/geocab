@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.domain.entity.layer.photo;
+package br.com.geocab.domain.entity.marker.photo;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -16,7 +16,7 @@ import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
-import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 
 /**
  * @author emanuelvictor
@@ -42,7 +42,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 * Um album de fotos deve estar vinculado á um atributo de uma camada
 	 */
 	@OneToOne(optional = false)
-	private Attribute attribute;
+	private MarkerAttribute markerAttribute;
 
 	/**
 	 * Um album de fotos pode ter zero ou muitas fotos
@@ -75,25 +75,25 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param attribute
+	 * @param markerAttribute
 	 * @param photos
 	 */
-	public PhotoAlbum(Attribute attribute, Set<Photo> photos)
+	public PhotoAlbum(MarkerAttribute markerAttribute, Set<Photo> photos)
 	{
 		super();
-		this.attribute = new Attribute(attribute.getId());
+		this.markerAttribute = new MarkerAttribute(markerAttribute.getId());
 		this.photos = photos;
 	}
 
 	/**
-	 * @param attribute
+	 * @param markerAttribute
 	 * @param photos
 	 * @param identifier
 	 */
-	public PhotoAlbum(Attribute attribute, Set<Photo> photos, String identifier)
+	public PhotoAlbum(MarkerAttribute markerAttribute, Set<Photo> photos, String identifier)
 	{
 		super();
-		this.attribute = attribute;
+		this.markerAttribute = markerAttribute;
 		this.photos = photos;
 		this.identifier = identifier;
 	}
@@ -119,9 +119,10 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 */
 	private void generateIdentifier()
 	{
-		this.identifier = this.getAttribute().getLayer().getId().toString();
+		this.identifier = this.getMarkerAttribute().getMarker().getId()
+				.toString();
 		this.identifier = this.identifier + '/'
-				+ this.getAttribute().getId().toString();
+				+ this.getMarkerAttribute().getId().toString();
 		this.identifier = this.identifier + '/' + this.getId().toString();
 	}
 
@@ -129,20 +130,20 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 *								SETTERS/GETTERS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * @return the attribute
+	 * @return the markerAttribute
 	 */
-	public Attribute getAttribute()
+	public MarkerAttribute getMarkerAttribute()
 	{
-		return attribute;
+		return markerAttribute;
 	}
 
 	/**
-	 * @param attribute
-	 *            the attribute to set
+	 * @param markerAttribute
+	 *            the markerAttribute to set
 	 */
-	public void setAttribute(Attribute attribute)
+	public void setMarkerAttribute(MarkerAttribute markerAttribute)
 	{
-		this.attribute = attribute;
+		this.markerAttribute = markerAttribute;
 	}
 
 	/**

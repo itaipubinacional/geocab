@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.domain.entity.layer.photo;
+package br.com.geocab.domain.entity.marker.photo;
 
 import org.directwebremoting.annotations.DataTransferObject;
 

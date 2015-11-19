@@ -4,14 +4,15 @@ import org.junit.Test;
 
 import com.vividsolutions.jts.util.Assert;
 
-import br.com.geocab.domain.entity.layer.Attribute;
-import br.com.geocab.domain.entity.layer.Layer;
-import br.com.geocab.domain.entity.layer.photo.Photo;
-import br.com.geocab.domain.entity.layer.photo.PhotoAlbum;
+import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
+import br.com.geocab.domain.entity.marker.photo.Photo;
+import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 
 /**
+ * 
+ * @author emanuelvictor
  *
- * @author Cristiano Correa @since 09/05/2013 @version 1.0 @category
  */
 public class PhotoAlbumTest
 {
@@ -26,13 +27,13 @@ public class PhotoAlbumTest
 	@Test
 	public void testGenerateIdentifierPhotoAlbum()
 	{
-		Layer layer = new Layer(100L);
+		Marker marker = new Marker(100L);
 
-		Attribute attribute = new Attribute(200L);
-		attribute.setLayer(layer);
+		MarkerAttribute markerAttribute = new MarkerAttribute(200L);
+		markerAttribute.setMarker(marker);
 
 		PhotoAlbum photoAlbum = new PhotoAlbum(300L);
-		photoAlbum.setAttribute(attribute);
+		photoAlbum.setMarkerAttribute(markerAttribute);
 
 		Assert.equals("100/200/300", photoAlbum.getIdentifier());
 	}
@@ -40,13 +41,13 @@ public class PhotoAlbumTest
 	@Test
 	public void testGetIdentifierPhoto()
 	{
-		Layer layer = new Layer(100L);
+		Marker marker = new Marker(100L);
 
-		Attribute attribute = new Attribute(200L);
-		attribute.setLayer(layer);
+		MarkerAttribute attribute = new MarkerAttribute(200L);
+		attribute.setMarker(marker);
 
 		PhotoAlbum photoAlbum = new PhotoAlbum(300L);
-		photoAlbum.setAttribute(attribute);
+		photoAlbum.setMarkerAttribute(attribute);
 
 		Photo photo = new Photo("400");
 		photo.setPhotoAlbum(photoAlbum);

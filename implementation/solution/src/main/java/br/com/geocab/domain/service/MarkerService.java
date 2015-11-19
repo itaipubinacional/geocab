@@ -130,6 +130,7 @@ public class MarkerService
 				this.uploadImg(marker.getImage(), marker.getId());
 			}
 
+
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
 			markerModeration.setStatus(MarkerStatus.PENDING);
@@ -459,8 +460,7 @@ public class MarkerService
 
 		// return this.markerRepository.listByFilters(layer, status, dStart,
 		// dEnd, user, pageable);
-		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,
-				user, pageable);
+		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,	user, pageable);
 		
 	}
 
@@ -496,8 +496,7 @@ public class MarkerService
 			dEnd.setTime(dEnd.getTime());
 		}
 
-		return this.markerRepository.listByFiltersMap(layer, status, dStart,
-				dEnd, user);
+		return this.markerRepository.listByFiltersMap(layer, status, dStart, dEnd, user);
 	}
 
 	/**

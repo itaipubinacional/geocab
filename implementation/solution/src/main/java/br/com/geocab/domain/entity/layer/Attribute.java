@@ -13,7 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -25,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.IEntity;
-import br.com.geocab.domain.entity.layer.photo.PhotoAlbum;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 
 /**
@@ -73,6 +71,12 @@ public class Attribute extends AbstractEntity implements Serializable
 	private Boolean required;
 
 	/**
+	 * Visible {@link Attribute}
+	 */
+	@NotNull
+	private Boolean visible;
+
+	/**
 	 * 
 	 */
 	private Boolean attributeDefault;
@@ -84,23 +88,19 @@ public class Attribute extends AbstractEntity implements Serializable
 	private int orderAttribute;
 
 	/**
-	 * PhotoAlbum
-	 */
-	@OneToOne(optional = true, cascade = { CascadeType.ALL })
-	private PhotoAlbum photoAlbum;
-
-	/**
 	 * Layer {@link Layer}
 	 */
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade =
+	{ CascadeType.ALL })
 	private Layer layer;
 
 	/**
 	 * 
 	 */
 	@JsonIgnore
-	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
+	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade =
+	{ CascadeType.REMOVE })
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
 
 	/*-------------------------------------------------------------------
@@ -309,20 +309,20 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @return the photoAlbum
+	 * @return the visible
 	 */
-	public PhotoAlbum getPhotoAlbum()
+	public Boolean getVisible()
 	{
-		return photoAlbum;
+		return visible;
 	}
 
 	/**
-	 * @param photoAlbum
-	 *            the photoAlbum to set
+	 * @param visible
+	 *            the visible to set
 	 */
-	public void setPhotoAlbum(PhotoAlbum photoAlbum)
+	public void setVisible(Boolean visible)
 	{
-		this.photoAlbum = photoAlbum;
+		this.visible = visible;
 	}
 
 }
