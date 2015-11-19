@@ -8,25 +8,40 @@
 <html>
 <!-- Data source - Main View -->
 <div>
-	<div class="navbar">			  
-		
-		<div class="navbar-inner navbar-container">
-			  <div class="navbar-title"><span class="ng-scope"><spring:message code="admin.users.Account-information"/></span></div>
-			  <button ng-show="currentState == UPDATE_STATE" style="float: right;"
-                class="btn btn-success"
-                id="buttonUpdate"
-                title="<spring:message code="admin.users.Save"/>"
-                ng-click="updateUser()"><spring:message code="admin.users.Save"/>
+    <div class="navbar">
+
+        <div class="navbar-inner navbar-container row" >
+            <div class="col-md-5">
+                <div class="navbar-title">
+                    <p style="text-transform:uppercase;cursor:pointer;" class="ng-scope" ng-click="changeForm('my-account.form')">
+                        <spring:message code="admin.users.Account-information"/>
+                    </p>
+                </div>
+                <div class="navbar-title">
+                    <p style="text-transform:uppercase;cursor:pointer;" class="ng-scope" ng-click="changeForm('my-preferences.form')">
+                        <spring:message code="admin.users.Account-preferences"/>
+                    </p>
+                </div>
+            </div>
+            <button ng-show="currentState == UPDATE_STATE" style="float: right;"
+                    class="btn btn-success"
+                    id="buttonUpdate"
+                    title="<spring:message code='admin.users.Save'/>"
+                    ng-click="updateUser()">
+                <spring:message code="admin.users.Save"/>
             </button>
         </div>
-     </div>    
+    </div>
     <!-- Partial views of states -->
-	<div ng-switch on="currentState">
+    <div ng-switch on="currentState">
         <div ng-switch-when="my-account.form">
-        	<div ng-include="'modules/user/ui/my-account/my-account-form.jsp'"></div>
+            <div ng-include="'modules/user/ui/my-account/my-account-form.jsp'"></div>
+        </div>
+        <div ng-switch-when="my-preferences.form">
+            <div ng-include="'modules/user/ui/my-account/my-preferences-form.jsp'"></div>
         </div>
         <div ng-switch-default>
-        	<div ng-include="'modules/loading.html'"></div>
+            <div ng-include="'modules/loading.html'"></div>
         </div>
     </div>
 </div>
