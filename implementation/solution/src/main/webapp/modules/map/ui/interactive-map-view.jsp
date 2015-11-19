@@ -769,7 +769,7 @@ uri="http://www.springframework.org/security/tags"%>
             </div>
           </div>
 
-          <div id="tabs-4" style="position: absolute; top:0; right:0; left:0; bottom:0;">
+          <div id="tabs-4" style="min-width: 338px; position: absolute; top:0; right:0; left:0; bottom:0;">
 
             <div class="sidebar-content-header"><spring:message code="map.SHP-export-import"/></div>
             <br style="clear: both; ">
@@ -790,9 +790,16 @@ uri="http://www.springframework.org/security/tags"%>
               <p>Filtros</p>
 
               <div>
-                <input auto-complete autocomplete="off" type="text" class="form-control"
+                <!--<input auto-complete autocomplete="off" type="text" class="form-control"
                        typeahead-wait-ms="500" ng-model="filter.layer" placeholder="<spring:message code='admin.marker-moderation.Layer' />"
-                       typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2">
+                       typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2">-->
+
+                <select data-placeholder="<spring:message code='admin.marker-moderation.Users'/>" name="layer"
+                        ng-options="layer.name for layer in shapeFile.layers"
+                        ng-model="shapeFile.filter.layer.name" chosen class="form-control">
+                  <option value=""><spring:message code='admin.marker-moderation.Layer'/></option>
+                </select>
+
               </div>
 
               <div style="margin-top:10px;">
@@ -806,14 +813,14 @@ uri="http://www.springframework.org/security/tags"%>
               </div>
 
               <div style="margin-top:10px;float: left">
-                <input ng-model="filter.dateStart" class="form-control datepicker" style="float: left;width:130px;margin-right:10px" placeholder="<spring:message code='admin.marker-moderation.Beginning'/>"/>
-                <input ng-model="filter.dateEnd" class="form-control datepicker" style="float: left;width:130px;margin-right:10px" placeholder="<spring:message code='admin.marker-moderation.Ending'/>"/>
+                <input ng-model="shapeFile.filter.dateStart" class="form-control datepicker" style="float: left;width:130px;margin-right:10px" placeholder="<spring:message code='admin.marker-moderation.Beginning'/>"/>
+                <input ng-model="shapeFile.filter.dateEnd" class="form-control datepicker" style="float: left;width:130px;margin-right:10px" placeholder="<spring:message code='admin.marker-moderation.Ending'/>"/>
               </div>
 
-              <div style="float:left;width:100%;margin-top:10px;">
-                <select data-placeholder="<spring:message code='admin.marker-moderation.Users'/>" name="layer"
-                        ng-options="user.email for user in selectUsers "
-                        ng-model="filter.user" chosen class="form-control">
+              <div ng-if="userMe.role == 'ADMINISTRATOR'" style="float:left;width:100%;margin-top:10px;">
+                <select data-placeholder="<spring:message code='admin.marker-moderation.Users'/>" name="user"
+                        ng-options="user.email for user in selectUsers"
+                        ng-model="shapeFile.filter.user" chosen class="form-control">
                 <option value=""><spring:message code="admin.marker-moderation.All-users"/></option>
                 </select>
               </div>
@@ -822,6 +829,10 @@ uri="http://www.springframework.org/security/tags"%>
                 <span ng-click="clearFilters()">Limpar Filtros</span>
                 <input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code='Filter'/>"
                        title="<spring:message code='Search'/>" class="btn btn-default"/>
+              </div>
+
+              <div style="float: left;clear: both">
+                <button ng-click="exportShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success">Exportar</button>
               </div>
 
             </div>
@@ -933,7 +944,8 @@ uri="http://www.springframework.org/security/tags"%>
                     <span class="input-group-btn">
                         <button style="height: 34px" ng-click="selectLayerGroup()" class="btn btn-default"
                                 title="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
-                                type="button">
+                                type="button"
+                                ng-disabled="shapeFile.form.dataSource == null">
                             <i class="icon-plus-sign icon-large"></i>
                       </button>
                     </span>
@@ -971,7 +983,7 @@ uri="http://www.springframework.org/security/tags"%>
               </div>
 
               <div>
-                <button ng-click="saveImportExport()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success">Salvar</button>
+                <button ng-click="importShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success">Salvar</button>
               </div>
 
             </div>

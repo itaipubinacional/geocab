@@ -509,7 +509,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     	layerGroupService.listAllInternalLayerGroups({
      		callback : function(result) {
                  $scope.selectLayerGroup = [];
-                 
+
                  angular.forEach(result, function(layer,index){
                  	
                  	$scope.selectLayerGroup.push({

@@ -134,7 +134,7 @@
     border-top-right-radius: 5px;
 }
 
-#sidebar-tabs li {
+#sidebar-tabs ul.map-menu-items li {
     background: rgba(0, 0, 0,0.6);
 }
 

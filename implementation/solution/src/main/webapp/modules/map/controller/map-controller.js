@@ -3321,11 +3321,36 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.isImport = true;
       $scope.isExport = false;
 
+      $scope.shapeFile.form.icon = 'static/icons/default_blue.png';
+
+      /**
+       * @type {Array}
+       * */
+      $scope.attributes = [];
+
       /**
        *
        * @type {Array}
        */
       $scope.selectedGroups = [];
+
+      /**
+       *
+       * @type {Array}
+       */
+      $scope.originalGroups = [];
+
+      /**
+       *
+       * @type {Array}
+       */
+      $scope.removeGroups = [];
+
+      /**
+       *
+       * @type {Array}
+       */
+      $scope.addGroups = [];
 
     } else {
 
@@ -3339,7 +3364,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       /**
        * filter
        */
-      $scope.filter = {
+      $scope.shapeFile.filter = {
         'layer': null,
         'status': null,
         'dateStart': null,
@@ -3347,14 +3372,21 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         'user': null
       };
 
-      if (  $scope.filter.user == null ){
-        $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, null, $scope.currentPage.pageable);
-      } else {
-        $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user.email, $scope.currentPage.pageable);
-      }
-
       $scope.listAllUsers();
 
+      layerGroupService.listLayersByFilters( null, null, {
+
+        callback: function (result) {
+
+          $scope.shapeFile.layers = result.content;
+
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
 
     }
   };
@@ -3526,17 +3558,17 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     pageRequest.size = 10;
     $scope.pageRequest = pageRequest;
 
-    if($scope.filter.status == "")
-      $scope.filter.status = null;
-    if($scope.filter.user != null)
-      var userEmail = $scope.filter.user.email;
-    if ($scope.filter.dateStart == "")
-      $scope.filter.dateStart = null;
-    if ($scope.filter.dateEnd == "")
-      $scope.filter.dateEnd = null;
+    if($scope.shapeFile.filter.status == "")
+      $scope.shapeFile.filter.status = null;
+    if($scope.shapeFile.filter.user != null)
+      var userEmail = $scope.shapeFile.filter.user.email;
+    if ($scope.shapeFile.filter.dateStart == "")
+      $scope.shapeFile.filter.dateStart = null;
+    if ($scope.shapeFile.filter.dateEnd == "")
+      $scope.shapeFile.filter.dateEnd = null;
 
-    $scope.listMarkerByFilters( $scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest );
-    $scope.listMarkerByFiltersMap($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);
+    $scope.listMarkerByFilters( $scope.shapeFile.filter.layer, $scope.shapeFile.filter.status, $scope.shapeFile.filter.dateStart, $scope.shapeFile.filter.dateEnd, userEmail, pageRequest );
+    $scope.listMarkerByFiltersMap($scope.shapeFile.filter.layer, $scope.shapeFile.filter.status, $scope.shapeFile.filter.dateStart, $scope.shapeFile.filter.dateEnd, userEmail);
     $scope.dragMarkers = null;
     $scope.hasSearch = true;
   };
@@ -3604,11 +3636,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.dragMarkers = null;
     }
 
-    $scope.filter.layer = null;
-    $scope.filter.status = null;
-    $scope.filter.dateStart= null;
-    $scope.filter.dateEnd= null;
-    $scope.filter.user= null;
+    $scope.shapeFile.filter.layer = null;
+    $scope.shapeFile.filter.status = null;
+    $scope.shapeFile.filter.dateStart= null;
+    $scope.shapeFile.filter.dateEnd= null;
+    $scope.shapeFile.filter.user= null;
 
     $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
     $scope.listMarkerByFiltersMap( null, null, null, null, null);
@@ -3688,7 +3720,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       windowClass: 'xx-dialog',
       resolve: {
         dataSource : function () {
-          return $scope.data.dataSource;
+          return $scope.shapeFile.form.dataSource;
         },
         selectedLayer : function () {
           return $scope.shapeFile.form.layer;
@@ -3744,7 +3776,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       windowClass: 'xx-dialog',
       resolve: {
         currentState: function(){
-          return $scope.shapeFile.form;
+          return "layer-config.create";
         },
         currentEntity: function () {
           return $scope.shapeFile.form;
@@ -3801,7 +3833,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     };
 
-    layerGroupService.listSupervisorsFilter($scope.shapeFile.form.name, $scope.shapeFile.form.dataSource.id, request);
+    // checks if is internal layer
+    if($scope.shapeFile.form.dataSource.url == null){
+      layerGroupService.listLayersGroupUpper(request);
+    } else {
+      layerGroupService.listSupervisorsFilter($scope.shapeFile.form.name, $scope.shapeFile.form.dataSource.id, request);
+    }
 
   };
 
