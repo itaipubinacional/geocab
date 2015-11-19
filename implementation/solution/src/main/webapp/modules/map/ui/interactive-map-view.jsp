@@ -600,7 +600,7 @@ uri="http://www.springframework.org/security/tags"%>
 
         <li class="menu-item" id="menu-item-4" ng-click="toggleSidebarMenu(300, '#menu-item-4');" title="<spring:message code="map.SHP-enabled" />">
         <a href="#tabs-4">
-          <div class="icon itaipu-icon-kml sidebar-icon"></div>
+          <div style="font-size:25px" class="icon itaipu-icon-shp sidebar-icon"></div>
         </a>
         </li>
       </ul>
@@ -774,13 +774,18 @@ uri="http://www.springframework.org/security/tags"%>
             <div class="sidebar-content-header"><spring:message code="map.SHP-export-import"/></div>
             <br style="clear: both; ">
 
-            <div style="text-align: center">
+            <div>
 
-              <button style="width: 300px; margin: 10px 0;" class="btn btn-primary"
-                      ng-click="setAction('export')"><spring:message code="admin.shape-file.Export" /></button>
+              <button style="margin: 10px 0;" class="btn btn-primary"
+                      ng-click="setAction('export')">
+                <i class="icon-upload icon-large"></i>
+                <spring:message code="admin.shape-file.Export" />
+              </button>
 
-              <button style="width: 300px;" class="btn btn-primary"
-                      ng-click="setAction('import')"><spring:message code="admin.shape-file.Import" /></button>
+              <button class="btn btn-primary"
+                      ng-click="setAction('import')">
+                <i class="icon-download icon-large"></i>
+                <spring:message code="admin.shape-file.Import" /></button>
 
               <hr style="border-color: #d9d9d9;"/>
 
@@ -869,7 +874,6 @@ uri="http://www.springframework.org/security/tags"%>
                         </button>
                     </span>
                 </div>
-
                 <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
               </div>
 
@@ -891,26 +895,21 @@ uri="http://www.springframework.org/security/tags"%>
                         </button>
                     </span>
                 </div>
-
                 <span ng-show="form.layerGroup.$error.required && form.$submitted"
-                      class="tooltip-validation"><spring:message code="admin.custom-search.Layer-required"/> </span>
-
+                      class="tooltip-validation"><spring:message code="admin.custom-search.Layer-required"/></span>
               </div>
 
-              <div ng-if="shapeFile.layerType == 'new'" class="position-relative input-group" style="margin-bottom: 10px">
+              <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
                 <label class="detail-label" required>
                   <spring:message code="Title"/>
                 </label>
-
                 <input name="title" type="text" class="form-control"
                        ng-model="shapeFile.form.title"
                        placeholder="Informe o título"
                        maxlength="144" ng-minlength="1"
                        ng-hover
                        required
-                       ng-class="{ngInvalid:form.title.$error.required && (form.$submitted || form.title.$dirty) }"
-                    />
-
+                       ng-class="{ngInvalid:form.title.$error.required && (form.$submitted || form.title.$dirty) }"/>
                   <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty) "
                         class="tooltip-validation"><spring:message code="admin.layer-config.Title-required"/></span>
               </div>
@@ -923,42 +922,42 @@ uri="http://www.springframework.org/security/tags"%>
               </div>
 
               <div ng-if="shapeFile.layerType == 'new'">
-                <div style="float: left;">
-                  <img ng-src="{{currentEntity.icon}}"/>
+                <div>
+                  <div style="float: left;">
+                    <img ng-src="{{ shapeFile.form.icon}}"/>
+                  </div>
+                  <button class="btn btn-primary" ng-click="moreIcons()" >
+                    <spring:message code="admin.layer-config.More-icons"/>
+                  </button>
                 </div>
-                <button class="btn btn-primary" ng-click="moreIcons()" >
-                  <spring:message code="admin.layer-config.More-icons"/>
-                </button>
-              </div>
-
-              <div style="margin-top: 10px" ng-if="shapeFile.layerType == 'new'" class="form-item position-relative">
-                <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
-                <div class="input-group">
-                  <input name="layerGroup" type="text" disabled class="form-control"
-                         ng-model="shapeFile.form.layerGroup.name"
-                         placeholder="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
-                         maxlength="144"
-                         ng-minlength="1"
-                         required
-                         ng-class="{ ngInvalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)}" class="tooltip-validation}">
-                    <span class="input-group-btn">
-                        <button style="height: 34px" ng-click="selectLayerGroup()" class="btn btn-default"
-                                title="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
-                                type="button"
-                                ng-disabled="shapeFile.form.dataSource == null">
-                            <i class="icon-plus-sign icon-large"></i>
-                      </button>
-                    </span>
+                <div style="margin-top: 10px" class="form-item position-relative">
+                  <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
+                  <div class="input-group">
+                    <input name="layerGroup" type="text" disabled class="form-control"
+                           ng-model="shapeFile.form.layerGroup.name"
+                           placeholder="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
+                           maxlength="144"
+                           ng-minlength="1"
+                           required
+                           ng-class="{ ngInvalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)}" class="tooltip-validation}">
+                      <span class="input-group-btn">
+                          <button style="height: 34px" ng-click="selectLayerGroup()" class="btn btn-default"
+                                  title="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
+                                  type="button"
+                                  ng-disabled="shapeFile.form.dataSource == null">
+                              <i class="icon-plus-sign icon-large"></i>
+                        </button>
+                      </span>
+                  </div>
+                  <span ng-show="form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation"><spring:message code="admin.layer-config.Layer-group"/>  <spring:message code="required"/> </span>
                 </div>
 
-                <span ng-show="form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation"><spring:message code="admin.layer-config.Layer-group"/>  <spring:message code="required"/> </span>
-              </div>
-
-              <div ng-if="shapeFile.layerType == 'new'">
-                <div class="position-relative" scale-slider ng-model="layers"></div>
-                <div style="width: 350px;">
-                  <label style="float: left">{{layers.values[0]}}</label>
-                  <label style="float: right;">{{layers.values[1]}}</label>
+                <div style="float: left; width: 100%;padding: 0 20px 0 5px;">
+                  <div class="position-relative" scale-slider ng-model="layers"></div>
+                  <div style="width: 350px;">
+                    <label style="float: left">{{layers.values[0]}}</label>
+                    <label style="float: right;">{{layers.values[1]}}</label>
+                  </div>
                 </div>
 
                 <div class="form-item position-relative" style="width: 300px;">

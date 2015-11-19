@@ -3323,6 +3323,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.shapeFile.form.icon = 'static/icons/default_blue.png';
 
+      console.log($scope.shapeFile.form.icon);
+
       /**
        * @type {Array}
        * */
