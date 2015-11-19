@@ -23,7 +23,7 @@
                     </p>
                 </div>
             </div>
-            <button ng-show="currentState == UPDATE_STATE" style="float: right;"
+            <button ng-show="currentState == UPDATE_STATE || currentState== 'my-preferences.form'" style="float: right;"
                     class="btn btn-success"
                     id="buttonUpdate"
                     title="<spring:message code='admin.users.Save'/>"
