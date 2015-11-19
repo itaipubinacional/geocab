@@ -237,7 +237,8 @@ public class AccountService
 		u.setName(user.getName());
 		u.setRole(user.getRole());
 		u.setUpdated(user.getUpdated());
-		
+		u.setBackgroundMap(user.getBackgroundMap());
+		u.setCoordinates(user.getCoordinates());
 		return u;
 	}
 	
