@@ -9,7 +9,7 @@ import org.directwebremoting.annotations.DataTransferObject;
  * @author emanuelvictor
  *
  */
-@DataTransferObject
+@DataTransferObject(type="enum", javascript="Coordinates")
 public enum Coordinates
 {
 
