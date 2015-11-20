@@ -165,7 +165,7 @@ public class Marker extends AbstractEntity implements Serializable
 		this.setId(id);
 		this.setStatus(status);
 		user.setPassword("");
-		user.setEmail("");
+		//user.setEmail("");
 		this.setUser(user);
 		this.setLayer(layer);
 		this.setCreated(created);
@@ -188,7 +188,7 @@ public class Marker extends AbstractEntity implements Serializable
 		this.setId(id);
 		this.setStatus(status);
 		user.setPassword("");
-		user.setEmail("");
+	//	user.setEmail("");
 		this.setUser(user);
 		layer.setMarkers(null);
 		this.setLayer(layer);
