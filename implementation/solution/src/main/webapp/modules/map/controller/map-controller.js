@@ -3303,7 +3303,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
   };
 
-
   /* EXPORTAR IMPORTAR SHAPEFILE */
 
   $scope.shapeFile = {};
@@ -3313,6 +3312,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.isImport = false;
   $scope.isExport = false;
+
+  var uploadButton = angular.element('#upload');
+
+  $scope.clickUpload = function(){
+    angular.element('#upload').trigger('click');
+  };
 
   $scope.setAction = function (type) {
 
@@ -3352,6 +3357,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
        */
       $scope.addGroups = [];
 
+      $scope.$apply();
+
     } else {
 
       $scope.isImport = false;
@@ -3374,11 +3381,36 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.listAllUsers();
 
-      layerGroupService.listLayersByFilters( null, null, {
+      /*layerGroupService.listLayersByFilters( null, null, {
 
         callback: function (result) {
 
           $scope.shapeFile.layers = result.content;
+
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });*/
+
+      layerGroupService.listAllInternalLayerGroups({
+        callback: function (result) {
+          $scope.selectLayerGroup = [];
+
+          angular.forEach(result, function (layer, index) {
+
+            $scope.selectLayerGroup.push({
+              "layerTitle": layer.title,
+              "layerId": layer.id,
+              "layerIcon": layer.icon,
+              "group": layer.layerGroup.name
+            });
+
+          })
+
+          $scope.currentState = $scope.LIST_STATE;
 
           $scope.$apply();
         },
@@ -4004,6 +4036,60 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $("div.msg").fadeOut();
     }, 5000);
   };
+
+  $scope.clearFilters = function(){
+
+    var pageRequest = new PageRequest();
+    pageRequest.size = 10;
+    $scope.pageRequest = pageRequest;
+
+    if ( $scope.dragMarkers != null ){
+      $scope.dragMarkers = null;
+    }
+
+    $scope.shapeFile.filter.layer = null;
+    $scope.shapeFile.filter.status = null;
+    $scope.shapeFile.filter.dateStart= null;
+    $scope.shapeFile.filter.dateEnd= null;
+    $scope.shapeFile.filter.user= null;
+
+    $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
+    $scope.listMarkerByFiltersMap( null, null, null, null, null);
+
+  };
+
+  $scope.onFileChange = function(input){
+
+    $scope.setAction('import');
+
+    if (!(/\.(shp)$/i).test(input.value)){
+
+      console.log('File type error');
+      return false;
+    }
+
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+
+        var data = { "name": input.files[0].name, "size": input.files[0].size ,"type": input.files[0].type, "shp": e.target.result};
+
+        if(input.files[0].size < 1073741824){
+          var bytes = (input.files[0].size / 1048576).toFixed(3);
+          if(bytes > 10){
+
+            console.log('Size error');
+            return false;
+          }
+        }
+
+        uploadButton.val('');
+      };
+
+      reader.readAsBinaryString(input.files[0]);
+
+    }
+  }
 
 };
 

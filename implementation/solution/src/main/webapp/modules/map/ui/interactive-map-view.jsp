@@ -465,8 +465,7 @@ uri="http://www.springframework.org/security/tags"%>
                       ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                       ng-model="currentEntity.layer" chosen class="form-control"
                       ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
-                      required
-                  >
+                      required>
                 <option value=""></option>
               </select>
 							
@@ -783,9 +782,13 @@ uri="http://www.springframework.org/security/tags"%>
               </button>
 
               <button class="btn btn-primary"
-                      ng-click="setAction('import')">
+                      ng-click="clickUpload()">
                 <i class="icon-download icon-large"></i>
                 <spring:message code="admin.shape-file.Import" /></button>
+
+              <input style="display:none" id="upload" multiple="true" type="file" name="upload[]" onchange="angular.element(this).scope().onFileChange(this)">
+              <input style="display:none" id="upload1" multiple="true" type="file" name="upload[]">
+              <input style="display:none" id="upload2" multiple="true" type="file" name="upload[]">
 
               <hr style="border-color: #d9d9d9;"/>
 
@@ -795,21 +798,19 @@ uri="http://www.springframework.org/security/tags"%>
               <p>Filtros</p>
 
               <div>
-                <!--<input auto-complete autocomplete="off" type="text" class="form-control"
-                       typeahead-wait-ms="500" ng-model="filter.layer" placeholder="<spring:message code='admin.marker-moderation.Layer' />"
-                       typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2">-->
-
-                <select data-placeholder="<spring:message code='admin.marker-moderation.Users'/>" name="layer"
-                        ng-options="layer.name for layer in shapeFile.layers"
-                        ng-model="shapeFile.filter.layer.name" chosen class="form-control">
-                  <option value=""><spring:message code='admin.marker-moderation.Layer'/></option>
+                <select ng-change="listAttributesByLayer()"
+                        data-placeholder="Selecione uma camada" name="camada"
+                        ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
+                        ng-model="shapeFile.filter.layer" chosen class="form-control"
+                        ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+                        required>
+                  <option value=""></option>
                 </select>
-
               </div>
 
               <div style="margin-top:10px;">
 
-                <select class="form-control" ng-model="filter.status" style="width:100%;">
+                <select class="form-control" ng-model="shapeFile.filter.status" style="width:100%;">
                   <option value="" ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
                   <option value="PENDING"><spring:message code="admin.marker-moderation.Pending" /></option>
                   <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
