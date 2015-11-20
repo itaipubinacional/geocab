@@ -1,49 +1,56 @@
-(function(window, angular, undefined) {
-	"use strict"; 
+(function (window, angular, undefined) {
+  "use strict";
 
-	//Start the AngularJS
-	var projectModule = angular.module("map", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker" , "eits-angular-translate" , "ivh.treeview", "ivh.treeview-extend",'eits-default-button', 'localytics.directives', 'ui-scaleSlider', 'angularBootstrapNavTree'])
+  //Start the AngularJS
+  var projectModule = angular.module("map", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", "ivh.treeview", "ivh.treeview-extend", 'eits-default-button', 'localytics.directives', 'ui-scaleSlider', 'angularBootstrapNavTree'])
 
-	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider ,$translateProvider) {
-		//-------
-		//Broker configuration
-		//-------
-		$importServiceProvider.setBrokerURL("broker/interface");
+  projectModule.config(function ($stateProvider, $urlRouterProvider, $importServiceProvider, $translateProvider) {
+    //-------
+    //Broker configuration
+    //-------
+    $importServiceProvider.setBrokerURL("broker/interface");
 
-		//-------
-		//Translate configuration
-		//-------
-		$translateProvider.useURL('./bundles');
+    //-------
+    //Translate configuration
+    //-------
+    $translateProvider.useURL('./bundles');
 
-		//-------
-		//URL Router
-		//-------
+    //-------
+    //URL Router
+    //-------
 
-		//HOME
-        $urlRouterProvider.otherwise("/");
+    //HOME
+    $urlRouterProvider.otherwise("/");
 
-        //------
-        //Scheduler
-        //------
-        //Resource Sheet
-        //------
-        $stateProvider.state('users', {
-			url : "/",
-			templateUrl : "modules/map/ui/interactive-map-view.jsp",
-			controller : MapController
-		})
-	});
+    //------
+    //Scheduler
+    //------
+    //Resource Sheet
+    //------
+    $stateProvider.state('map', {
+      url: "/",
+      templateUrl: "modules/map/ui/interactive-map-view.jsp",
+      controller: MapController
+    });
 
-	projectModule.run( function( $rootScope, $state, $stateParams ) {
-		$rootScope.$state = $state;
-	    $rootScope.$stateParams = $stateParams;
-	});
+    $stateProvider.state('contact', {
+      url: "/contact",
+      templateUrl: "modules/map/ui/contact-view.jsp",
+      controller: ContactController
+    });
 
-	/**
-	 *
-	 */
-	angular.element(document).ready( function() {
-		angular.bootstrap(document, ['map']);
-	});
-	
+  });
+
+  projectModule.run(function ($rootScope, $state, $stateParams) {
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
+  });
+
+  /**
+   *
+   */
+  angular.element(document).ready(function () {
+    angular.bootstrap(document, ['map']);
+  });
+
 })(window, window.angular);

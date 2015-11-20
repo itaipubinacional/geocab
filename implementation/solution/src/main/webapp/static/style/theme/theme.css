@@ -530,6 +530,11 @@ input:-moz-placeholder {
 }
 
 /* CONTENT */
+.map-content {
+	width: 100%;
+	height: 100%;
+}
+
 .content {
 	position: relative;
 	margin: 20px auto;

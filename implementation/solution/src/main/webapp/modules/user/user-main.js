@@ -34,13 +34,6 @@
 		}).state('my-account.form', {
 			url: "/form",
 			menu: "my-account"
-		}).state('contact', {
-			url : "/contact",
-			templateUrl : "modules/user/ui/contact/contact-view.jsp",
-			controller : ContactController
-		}).state('contact.form', {
-			url: "/form",
-			menu: "contact"
 		});
     	
 	});
