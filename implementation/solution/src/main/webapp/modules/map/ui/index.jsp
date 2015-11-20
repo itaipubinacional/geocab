@@ -36,7 +36,7 @@
 		<script type="text/javascript" src="modules/map/map-main.js"></script>
    	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/map-controller.js"></script>
-		<script type="text/javascript" src="modules/map/controller/contact.js"></script>
+		<script type="text/javascript" src="modules/map/controller/contact-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/refuse-marker-controller.js"></script>

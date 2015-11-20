@@ -89,7 +89,7 @@
             <ul class="nav navbar-nav">
 
               <li class="position-relative"><a href="./"
-                                               style="width: 50px;" ng-class="{active: menuActive == null}"><span
+                                               style="width: 50px;" ng-class="{active: menuActive == 'map'}"><span
                   class="icon-mapa-interativo"></span></a></li>
 
               <li class="position-relative"><a

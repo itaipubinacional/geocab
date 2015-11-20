@@ -94,7 +94,7 @@
       <button class="btn btn-success"
               id="buttonUpdate"
               title="<spring:message code='contact.Send'/>"
-              ng-click="sendForm()">
+              ng-click="sendForm(form)">
         <spring:message code="contact.Send"/>
       </button>
 

@@ -7,10 +7,10 @@
  * @param $location
  */
 function ContactController( $scope, $injector, $log, $state, $timeout, $modal, $location, $importService , $translate) {
-	
-	
+
+
 	/**
-	 * Inject methods, attributes and states inherited of the AbstractCRUDController 
+	 * Inject methods, attributes and states inherited of the AbstractCRUDController
 	 * @see AbstractCRUDController
 	 */
 	$injector.invoke(AbstractCRUDController, this, {$scope: $scope});
@@ -29,44 +29,54 @@ function ContactController( $scope, $injector, $log, $state, $timeout, $modal, $
 	/*-------------------------------------------------------------------
 	 * 		 				 	ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	
-	
-	//STATES
 
-	
-	/**
-	 * Store current User entity for update
-	 */
 	$scope.contactForm = {};
-	
-	
-	/*-------------------------------------------------------------------
-	 * 		 				 	  NAVIGATIONS
-	 *-------------------------------------------------------------------*/
+
+
+
 	/**
 	 *
 	 */
 	$scope.sendForm = function(){
 
-		if ( !$scope.form().$valid ) {
+		if ( !$scope.form.$valid ) {
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
 			$scope.fadeMsg();
 		}else{
 			console.log("TESTES");
+
+			contactService.contactUs( $scope.contactForm, {
+				callback : function(result) {
+
+					console.log(result);
+					$scope.$apply();
+				},
+				errorHandler : function(message, exception) {
+					$scope.message = {type:"error", text: message};
+					$scope.$apply();
+				}
+			});
+
 		}
 
 	};
 
 
 	$scope.initialize = function( toState, toParams, fromState, fromParams ) {
-		var state = $state.current.name;
 		
 		 /**
 		 * authenticated user
 		 * */
 		contactService.getLoggedUser({
     		callback : function(result) {
-    			$scope.contactForm = result;
+    			//$scope.contactForm = result;
+
+					$scope.contactForm.email = 'admin@email.com';
+					$scope.contactForm.name = 'Subject';
+					$scope.contactForm.subject = 'Subject';
+					$scope.contactForm.message = 'Message';
+					$scope.contactForm.isBot = false;
+
     			$scope.$apply();
             },
             errorHandler : function(message, exception) {
