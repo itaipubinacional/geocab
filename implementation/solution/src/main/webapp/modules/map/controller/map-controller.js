@@ -23,6 +23,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $importService("customSearchService");
   $importService("markerModerationService");
   $importService("accountService");
+  $importService("shapeFileService");
 
   /*-------------------------------------------------------------------
    * 		 				 	EVENT HANDLERS
@@ -4072,7 +4073,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       var reader = new FileReader();
       reader.onload = function (e) {
 
-        var data = { "name": input.files[0].name, "size": input.files[0].size ,"type": input.files[0].type, "shp": e.target.result};
+        var base64 = e.target.result.split('base64,');
+        var data = { name: input.files[0].name, size: input.files[0].size, type: input.files[0].type, shp: base64[1]};
 
         if(input.files[0].size < 1073741824){
           var bytes = (input.files[0].size / 1048576).toFixed(3);
@@ -4083,10 +4085,21 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           }
         }
 
+        shapeFileService.importShapeFile( data, {
+          callback: function (result) {
+            console.log(result);
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            alert(message);
+            $scope.$apply();
+          }
+        });
+
         uploadButton.val('');
       };
 
-      reader.readAsBinaryString(input.files[0]);
+      reader.readAsDataURL(input.files[0]);
 
     }
   }
