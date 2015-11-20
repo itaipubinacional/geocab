@@ -163,7 +163,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>'+
     '<a ng-if="row.entity.status == \'REFUSED\' " class="icon-refuse-moderation"></a>'+
     '</div>';
-    
+
     $scope.gridOptions = {
 			data: 'currentPage.content',
 			multiSelect: false,
@@ -171,51 +171,56 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             headerRowHeight: 45,
             rowHeight: 45,
 			beforeSelectionChange: function (row, event) {
-				 
+
 				//avoids call a selection , when clicked in a action button.
 				if ( $(event.target).is("a") || $(event.target).is("i") ) return false;
-				
-				$scope.clearFeatures();
-				
-				if(row.selected) {
-					$scope.gridOptions.selectRow(row.rowIndex, false);
-					
-					return false;
-				} else {
-					
-					$scope.gridOptions.selectRow(row.rowIndex, true);
-				}
-				
-				
-				angular.forEach($scope.features, function(feature, index){
-					var geometry = new ol.format.WKT().readGeometry(row.entity.location.coordinateString);
-					if(ol.extent.equals(feature.extent, geometry.getExtent())){
-						var marker = feature.feature.getProperties().marker;
-						$scope.selectMarker(marker);
-						
-						 var pan = ol.animation.pan({
-							    duration: 500,
-							    source: /** @type {ol.Coordinate} */ ($scope.view.getCenter())
-							  });
-							  $scope.map.beforeRender(pan);
-						
-						$scope.view.setCenter(geometry.getCoordinates());
-						
-						angular.forEach($scope.selectedFeatures, function(selected, index){
-							if(selected.marker.id == marker.id){
-								selected.feature.push(feature.feature);
-							}
-						});
-						
-					}
-				});
+
+                $scope.changeToDetail(row.entity);
+
+				//$scope.clearFeatures();
+				//
+				//if(row.selected) {
+				//	$scope.gridOptions.selectRow(row.rowIndex, false);
+				//
+				//	return false;
+				//} else {
+				//
+				//	$scope.gridOptions.selectRow(row.rowIndex, true);
+				//}
+				//
+				//
+				//angular.forEach($scope.features, function(feature, index){
+				//	var geometry = new ol.format.WKT().readGeometry(row.entity.location.coordinateString);
+				//	if(ol.extent.equals(feature.extent, geometry.getExtent())){
+				//		var marker = feature.feature.getProperties().marker;
+				//		$scope.selectMarker(marker);
+				//
+				//		 var pan = ol.animation.pan({
+				//			    duration: 500,
+				//			    source: /** @type {ol.Coordinate} */ ($scope.view.getCenter())
+				//			  });
+				//			  $scope.map.beforeRender(pan);
+				//
+				//		$scope.view.setCenter(geometry.getCoordinates());
+				//
+				//		angular.forEach($scope.selectedFeatures, function(selected, index){
+				//			if(selected.marker.id == marker.id){
+				//				selected.feature.push(feature.feature);
+				//			}
+				//		});
+				//
+				//	}
+				//});
 				
 			},
-			columnDefs: [
-			             {displayName: $translate('admin.marker-moderation.Layer'), field:'layer.title'}, 
-			             {displayName: $translate('admin.marker-moderation.Situation'), cellTemplate: IMAGE_MODERATION},
-			             {displayName: $translate('Actions'), sortable:false, cellTemplate: GRID_ACTION_BUTTONS, width:'100px'}            
-			             ]
+
+            columnDefs: [
+                {displayName: $translate('admin.marker-moderation.Layer'), field: 'layer.title'},
+                {displayName: $translate('admin.marker-moderation.Email'), field: 'layer.email'},
+                {displayName: $translate('admin.marker-moderation.Date-posting'), width: '150px', field: 'layer.created | date:"dd/MM/yyyy"' },
+                {displayName: $translate('admin.marker-moderation.Situation'), cellTemplate: IMAGE_MODERATION, width: '100px'}//,
+           //     {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
+            ]
 	};
     
     /**
