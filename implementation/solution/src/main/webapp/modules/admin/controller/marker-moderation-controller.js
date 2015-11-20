@@ -217,7 +217,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             columnDefs: [
                 {displayName: $translate('admin.marker-moderation.Layer'), field: 'layer.title'},
                 {displayName: $translate('admin.marker-moderation.Email'), field: 'user.email'},
-                {displayName: $translate('admin.marker-moderation.Date-posting'), width: '150px', field: 'layer.created | date:"dd/MM/yyyy"' },
+                {displayName: $translate('admin.marker-moderation.Date-posting'), width: '150px', field: 'created | date:"dd/MM/yyyy"' },
                 {displayName: $translate('admin.marker-moderation.Situation'), cellTemplate: IMAGE_MODERATION, width: '100px'}//,
            //     {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
             ]
