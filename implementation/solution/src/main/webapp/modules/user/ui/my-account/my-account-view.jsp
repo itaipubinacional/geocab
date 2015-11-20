@@ -10,9 +10,11 @@
 <div>
     <div class="navbar">
 
+
+
         <div class="navbar-inner navbar-container row" >
             <div class="col-md-5">
-                <div class="navbar-title">
+                <!--<div class="navbar-title">
                     <p style="text-transform:uppercase;cursor:pointer;" class="ng-scope" ng-click="changeForm('my-account.form')">
                         <spring:message code="admin.users.Account-information"/>
                     </p>
@@ -21,7 +23,16 @@
                     <p style="text-transform:uppercase;cursor:pointer;" class="ng-scope" ng-click="changeForm('my-preferences.form')">
                         <spring:message code="admin.users.Account-preferences"/>
                     </p>
-                </div>
+                </div>-->
+
+                <tabset>
+                    <tab heading="<spring:message code='admin.users.Account-information'/>">
+                        <div ng-include="'modules/user/ui/my-account/my-account-form.jsp'"></div>
+                    </tab>
+                    <tab heading="<spring:message code='admin.users.Account-preferences'/>">
+                        <div ng-include="'modules/user/ui/my-account/my-preferences-form.jsp'"></div>
+                    </tab>
+                </tabset>
             </div>
             <button ng-show="currentState == UPDATE_STATE || currentState== 'my-preferences.form'" style="float: right;"
                     class="btn btn-success"
@@ -33,7 +44,7 @@
         </div>
     </div>
     <!-- Partial views of states -->
-    <div ng-switch on="currentState">
+    <!--<div ng-switch on="currentState">
         <div ng-switch-when="my-account.form">
             <div ng-include="'modules/user/ui/my-account/my-account-form.jsp'"></div>
         </div>
@@ -43,6 +54,6 @@
         <div ng-switch-default>
             <div ng-include="'modules/loading.html'"></div>
         </div>
-    </div>
+    </div>-->
 </div>
 </html>
