@@ -24,15 +24,19 @@
 				
 				</div>					                        
 								
-				<a class="btn btn-mini" ng-show="visible"   ng-click="visible = false" ><i class="glyphicon glyphicon-chevron-up"></i></a>													    
-		    	<a class="btn btn-mini" ng-show="!visible" 	ng-click="visible = true"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
+
 		    	
 		    	<input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
 			       />		    			    	
 		    	
 		    	<input type="button" ng-click="clearFilters()" value="Limpar Filtros" class="btn btn-default" ng-disabled="currentPage == null"
-			       />		    			    	
-		
+			       />
+
+
+				<a class="btn btn-mini" ng-show="visible"   ng-click="visible = false" ><i class="glyphicon glyphicon-chevron-up"></i></a>
+				<a class="btn btn-mini" ng-show="!visible" 	ng-click="visible = true"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
+
+
 			<div style="margin-top:10px; display:flex" ng-show="visible">
 			
        	 			<select class="form-control" ng-model="filter.status" style="width:30%;margin-right:10px">

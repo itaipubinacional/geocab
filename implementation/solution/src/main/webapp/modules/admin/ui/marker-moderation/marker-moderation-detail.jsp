@@ -37,7 +37,7 @@
 		        </div>									
 				
 				 <div style="float:right">
-			        	<span><b>{{ currentEntity.user.name}} - </b></span> 
+			        	<span><b>{{ currentEntity.user.name}} - {{ currentEntity.user.email}}</b></span>
 			    		<span>{{ currentEntity.created | date:'dd/MM/yyyy' }}</span>
 			     </div>	  
 				
