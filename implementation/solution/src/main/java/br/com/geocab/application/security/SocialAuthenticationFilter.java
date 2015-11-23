@@ -29,7 +29,6 @@ import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
 
 import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.repository.account.IUserRepository;
 import br.com.geocab.domain.service.LoginService;
 
 /**

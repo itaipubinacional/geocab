@@ -10,18 +10,16 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * 
@@ -35,7 +33,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Audited
 @DataTransferObject(javascript="MarkerModeration")
-@Table(schema=IEntity.SCHEMA)
 public class MarkerModeration extends AbstractEntity implements Serializable
 {
 	/*-------------------------------------------------------------------

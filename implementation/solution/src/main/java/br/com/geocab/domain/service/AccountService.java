@@ -210,8 +210,8 @@ public class AccountService
 		}
 		catch ( DataIntegrityViolationException e )
 		{
-			LOG.info( e.getMessage() );
 			final String error = e.getCause().getCause().getMessage();
+			LOG.info( error );
 		}
 		
 		return user;

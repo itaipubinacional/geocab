@@ -27,7 +27,6 @@ import javax.xml.bind.JAXBException;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +38,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
@@ -92,11 +90,11 @@ public class MarkerService
 	@Autowired
 	private IMarkerModerationRepository markerModerationRepository;
 
-	/**
-	 * I18n
-	 */
-	@Autowired
-	private MessageSource messages;
+//	/**
+//	 * I18n
+//	 */
+//	@Autowired
+//	private MessageSource messages;
 
 	@Autowired
 	private IMetaFileRepository metaFileRepository;
@@ -392,16 +390,16 @@ public class MarkerService
 		return geom;
 	}
 
-	/**
-	 * 
-	 * @param geometry
-	 * @return
-	 */
-	private String geometryToWkt(Geometry geometry)
-	{
-		WKTWriter geom = new WKTWriter();
-		return geom.write(geometry);
-	}
+//	/**
+//	 * 
+//	 * @param geometry
+//	 * @return
+//	 */
+//	private String geometryToWkt(Geometry geometry)
+//	{
+//		WKTWriter geom = new WKTWriter();
+//		return geom.write(geometry);
+//	}
 
 	/**
 	 * Method to list all {@link Marker}

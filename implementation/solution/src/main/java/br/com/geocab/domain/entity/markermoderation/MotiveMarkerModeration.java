@@ -9,16 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
-import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import br.com.geocab.domain.entity.AbstractEntity;
 
 /**
  * @author Vinicius Ramos Kawamoto
@@ -29,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Audited
 @DataTransferObject(javascript="MotiveMarkerModeration")
-@Table(schema=IEntity.SCHEMA)
 public class MotiveMarkerModeration extends AbstractEntity implements Serializable
 {
 	

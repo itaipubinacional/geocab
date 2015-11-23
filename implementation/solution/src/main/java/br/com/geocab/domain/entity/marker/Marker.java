@@ -14,7 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -31,7 +30,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
@@ -48,7 +46,6 @@ import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 @Entity
 @Audited
 @DataTransferObject(javascript = "Marker")
-@Table(schema = IEntity.SCHEMA)
 @TypeDef(name = "geometry", typeClass = GeometryType.class)
 public class Marker extends AbstractEntity implements Serializable
 {

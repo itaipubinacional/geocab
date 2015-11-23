@@ -13,7 +13,6 @@ import org.springframework.data.repository.query.Param;
 
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
-import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**
