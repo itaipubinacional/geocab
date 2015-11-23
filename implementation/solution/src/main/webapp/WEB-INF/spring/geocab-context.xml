@@ -126,6 +126,8 @@
 		<dwr:convert type="enum" class="org.springframework.data.domain.Sort$Direction"/>
 		<dwr:convert type="enum" class="org.springframework.data.domain.Sort$NullHandling"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.Sort$Order" javascript="Order"/>
+		<dwr:convert type="enum" class="org.geotools.data.shapefile.files.ShpFileType" javascript="ShpFileType"/>
+		
 		
 		<dwr:convert type="bean" class="com.vividsolutions.jts.geom.Point" javascript="Point">
   			<dwr:include method="coordinateString"/>

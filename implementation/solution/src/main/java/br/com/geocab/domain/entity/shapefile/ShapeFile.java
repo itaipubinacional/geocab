@@ -4,6 +4,7 @@
 package br.com.geocab.domain.entity.shapefile;
 
 import org.directwebremoting.annotations.DataTransferObject;
+import org.geotools.data.shapefile.files.ShpFileType;
 
 /**
  * @author emanuelvictor
@@ -17,7 +18,7 @@ public class ShapeFile
 
 	private Long size;
 
-	private String type;
+	private ShpFileType type;
 
 	private String shp;
 
@@ -35,7 +36,7 @@ public class ShapeFile
 	 * @param type
 	 * @param shp
 	 */
-	public ShapeFile(String name, Long size, String type, String shp)
+	public ShapeFile(String name, Long size, ShpFileType type, String shp)
 	{
 		super();
 		this.name = name;
@@ -81,7 +82,7 @@ public class ShapeFile
 	/**
 	 * @return the type
 	 */
-	public String getType()
+	public ShpFileType getType()
 	{
 		return type;
 	}
@@ -90,7 +91,7 @@ public class ShapeFile
 	 * @param type
 	 *            the type to set
 	 */
-	public void setType(String type)
+	public void setType(ShpFileType type)
 	{
 		this.type = type;
 	}

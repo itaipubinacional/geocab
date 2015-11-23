@@ -257,18 +257,6 @@
 				<version>${springsocialgoogle.version}</version>
 			</dependency>
 
-			<!-- geotools version -->
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-shapefile</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.geotools</groupId>
-				<artifactId>gt-swing</artifactId>
-				<version>${geotools.version}</version>
-			</dependency>
-
 			<!-- AspectJ -->
 			<dependency>
 				<groupId>org.aspectj</groupId>

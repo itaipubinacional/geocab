@@ -4074,7 +4074,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       reader.onload = function (e) {
 
         var base64 = e.target.result.split('base64,');
-        var data = { name: input.files[0].name, size: input.files[0].size, type: input.files[0].type, shp: base64[1]};
+        var data = { name: input.files[0].name, size: input.files[0].size, shpFileType: input.files[0].type, shp: base64[1]};
 
         if(input.files[0].size < 1073741824){
           var bytes = (input.files[0].size / 1048576).toFixed(3);
