@@ -92,7 +92,7 @@ public class AccountService
 		
 		if (user.getCoordinates() == null)
 		{
-			user.setCoordinates(Coordinates.DEGRESS_MINUTES_SECONDS);
+			user.setCoordinates(Coordinates.DEGREES_MINUTES_SECONDS);
 		}
 		
 		if (user.getBackgroundMap() == null)
