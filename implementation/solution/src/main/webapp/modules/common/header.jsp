@@ -146,7 +146,7 @@
               <li class="position-relative"><a
                   href="user#/account"
                   ng-class="{active: menuActive == 'my-account'}"
-                  style="width: 150px;">Minha conta</a></li>
+                  style="width: 150px;"><spring:message code="admin.my-account.My-account"/></a></li>
             </ul>
 
           </div>
