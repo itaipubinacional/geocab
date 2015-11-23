@@ -85,7 +85,11 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	$scope.currentEntity = {};
 
 	$scope.backgroundMap = [];
-	
+
+	$scope.backgroundMap.type = [];
+
+	$scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
+	$scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
 	
 	/*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS
@@ -135,20 +139,45 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		$scope.flag = 0;
 	};
 
+	$scope.setType = function(newVal){
+		angular.forEach(Object.keys(newVal), function(type, index){
+			if(newVal[type])
+				$scope.setBackgroundMap(type);
+		});
+	};
+
+	$scope.$watch('backgroundMap.subType', function(newVal, oldVal){
+
+		$scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
+		$scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
+
+		if(newVal != oldVal)
+			$scope.setBackgroundMap(newVal);
+	});
+
+	$scope.$watch('currentEntity.backgroundMap', function(newVal, oldVal){
+		if(newVal != oldVal)
+			$scope.setBackgroundMap(newVal);
+	});
+
 	$scope.setBackgroundMap = function(backgroundMap){
 
 		if(backgroundMap.match(/GOOGLE/ig))
 			$scope.currentEntity.backgroundMap = 'GOOGLE';
 
-		if(backgroundMap.match(/MAP_QUEST/ig)) {
+		if(backgroundMap.match(/MAP_QUEST/ig))
 			$scope.currentEntity.backgroundMap = 'MAP_QUEST';
-			$scope.backgroundMap.subType = 'MAP_QUEST_OSM';
-		}
 
-		if(backgroundMap.match(/GOOGLE_MAP/ig))
+		if(backgroundMap.match(/MAP_QUEST|MAP_QUEST_OSM/ig) && backgroundMap != 'MAP_QUEST_SAT')
+			$scope.backgroundMap.subType = 'MAP_QUEST_OSM';
+
+		if(backgroundMap.match(/MAP_QUEST_SAT/i))
+			$scope.backgroundMap.subType = 'MAP_QUEST_SAT';
+
+		if(backgroundMap.match(/GOOGLE|GOOGLE_MAP/i))
 			$scope.backgroundMap.subType = 'GOOGLE_MAP';
 
-		if(backgroundMap.match(/GOOGLE_SATELLITE/ig))
+		if(backgroundMap.match(/GOOGLE_SATELLITE/i))
 			$scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
 
 		if(backgroundMap == 'GOOGLE_MAP_TERRAIN')
@@ -156,6 +185,8 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 
 		if(backgroundMap == 'GOOGLE_SATELLITE_LABELS')
 			$scope.backgroundMap.typeLabels = true;
+
+		console.log(backgroundMap);
 
 	};
 	

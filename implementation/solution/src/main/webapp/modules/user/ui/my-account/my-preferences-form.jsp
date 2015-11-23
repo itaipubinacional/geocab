@@ -97,43 +97,46 @@
 
                 </div>
 
-                <div class="col-md-2" ng-if="currentEntity.backgroundMap == 'GOOGLE'">
+                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="currentEntity.backgroundMap == 'GOOGLE'">
 
                     <div>
                         <div class="form-item-horizontal radio" style="margin-left: 0;">
-                            <input type="radio" id="Map" ng-model="backgroundMap.subType" ng-change="setBackgroundMap()" value="GOOGLE_MAP"
+                            <input type="radio" id="Map" ng-model="backgroundMap.subType" value="GOOGLE_MAP"
                                    name="Map">
-                            <label class="radio-label" for="Map"> Map </label>
+                            <label class="radio-label" for="Map"> <spring:message code='admin.users.Map'/> </label>
                         </div>
 
                         <div class="form-item-horizontal radio" style="margin-left: 0;">
-                            <input type="radio" id="Satellite" ng-model="backgroundMap.subType" ng-change="setBackgroundMap()" value="GOOGLE_SATELLITE"
+                            <input type="radio" id="Satellite" ng-model="backgroundMap.subType" value="GOOGLE_SATELLITE"
                                    name="Satellite">
-                            <label class="radio-label" for="Satellite"> Satellite </label>
+                            <label class="radio-label" for="Satellite"> <spring:message code='admin.users.Satellite'/> </label>
                         </div>
                     </div>
 
-                    <div>
-                        <input name="Terrain" type="checkbox"
-                               ng-model="backgroundMap.typeTerrain" ng-change="setBackgroundMap()" value="GOOGLE_MAP_TERRAIN">
-                        Terrain
-
-                        <input name="Labels" type="checkbox" style="margin-left: 20px "
-                               ng-model="backgroundMap.typeLabels" ng-change="setBackgroundMap()" value="GOOGLE_SATELLITE_LABELS">
-                        Labels
+                    <div style="margin-left: 30px" ng-if="backgroundMap.subType == 'GOOGLE_MAP'">
+                        <label><input ng-change="setType(backgroundMap.type)" name="GOOGLE_MAP_TERRAIN" type="checkbox"
+                               ng-model="backgroundMap.type.GOOGLE_MAP_TERRAIN" value="GOOGLE_MAP_TERRAIN">
+                            <spring:message code='admin.users.Terrain'/>
+                        </label>
+                    </div>
+                    <div style="margin-left: 130px" ng-if="backgroundMap.subType == 'GOOGLE_SATELLITE'">
+                        <label><input ng-change="setType(backgroundMap.type)" name="GOOGLE_SATELLITE_LABELS" type="checkbox" style="margin-left: 20px "
+                               ng-model="backgroundMap.type.GOOGLE_SATELLITE_LABELS" value="GOOGLE_SATELLITE_LABELS">
+                            <spring:message code='admin.users.Labels'/>
+                        </label>
                     </div>
                 </div>
 
-                <div class="col-md-2" ng-if="currentEntity.backgroundMap == 'MAP_QUEST'">
+                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="currentEntity.backgroundMap == 'MAP_QUEST'">
 
                     <div class="form-item-horizontal radio" style="margin-left: 0;">
-                        <input type="radio" id="OSM" ng-model="backgroundMap.subType" ng-change="setBackgroundMap()" value="MAP_QUEST_OSM"
+                        <input type="radio" id="OSM" ng-model="backgroundMap.subType" value="MAP_QUEST_OSM"
                                name="OSM">
                         <label class="radio-label" for="OSM"> OSM </label>
                     </div>
 
                     <div class="form-item-horizontal radio" style="margin-left: 0;">
-                        <input type="radio" id="SAT" ng-model="backgroundMap.subType" ng-change="setBackgroundMap()" value="MAP_QUEST_SAT"
+                        <input type="radio" id="SAT" ng-model="backgroundMap.subType" value="MAP_QUEST_SAT"
                                name="SAT">
                         <label class="radio-label" for="SAT"> SAT </label>
                     </div>
