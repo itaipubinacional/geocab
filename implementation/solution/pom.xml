@@ -268,6 +268,22 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/gs-authkey-pmi-2.8-SNAPSHOT.jar</systemPath>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.liferay</groupId>
+			<artifactId>nl.captcha.simplecaptcha</artifactId>
+			<version>1.2.1</version> 
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/simplecaptcha-1.2.1.jar</systemPath>
+		</dependency>
+
+		<!-- simple captcha version -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.liferay</groupId> -->
+<!-- 			<artifactId>nl.captcha.simplecaptcha</artifactId> -->
+<!-- 			<version>1.1.1</version> -->
+<!-- 		</dependency> -->
+
 
 
 		<!-- geotools version -->
@@ -281,7 +297,8 @@
 			<artifactId>gt-swing</artifactId>
 			<version>${geotools.version}</version>
 		</dependency>
-		
+
+
 	</dependencies>
 
 </project>

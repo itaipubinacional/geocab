@@ -4,6 +4,10 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="nl.captcha.Captcha" %>
+
+
+
 <!DOCTYPE html>
 <html>
 <style>
@@ -11,7 +15,6 @@
 <!-- My account - Update -->
 <div>
 
-	
 	<!--Mensagens-->
     <div class="alert" ng-class="{'alert-dismissable': msg.dismiss, 'danger' : (msg.type == 'danger'), 'info' : (msg.type == 'info'), 'warning' : (msg.type == 'warning'), 'success' : (msg.type == 'success')}" ng-show="msg != null">
 	    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button> 

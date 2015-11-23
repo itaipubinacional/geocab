@@ -6,6 +6,8 @@ package br.com.geocab.domain.entity.account;
 import org.directwebremoting.annotations.DataTransferObject;
 import org.springframework.util.Assert;
 
+import nl.captcha.Captcha;
+
 /**
  * @author emanuelvictor
  * 
@@ -13,16 +15,31 @@ import org.springframework.util.Assert;
 @DataTransferObject(javascript = "Email")
 public class Email
 {
+	/**
+	 * 
+	 */
 	private String name;
 
+	/**
+	 * 
+	 */
 	@org.hibernate.validator.constraints.Email
 	private String email;
-
+	
+	/**
+	 * 
+	 */
 	private String subject;
 
+	/**
+	 * 
+	 */
 	private String message;
 
-	private Boolean isBot;
+	/**
+	 * 
+	 */
+	private String answer;
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -40,17 +57,16 @@ public class Email
 	 * @param email
 	 * @param subject
 	 * @param message
-	 * @param isBot
+	 * @param answer
 	 */
-	public Email(String name, String email, String subject, String message,
-			Boolean isBot)
+	public Email(String name, String email, String subject, String message, String answer)
 	{
 		super();
 		this.name = name;
 		this.email = email;
 		this.subject = subject;
 		this.message = message;
-		this.isBot = isBot;
+		this.answer = answer;
 	}
 
 	/*-------------------------------------------------------------------
@@ -58,28 +74,28 @@ public class Email
 	 *-------------------------------------------------------------------*/
 
 	/**
-	 * @return the isBot
+	 * FIXME ALTERAR PARA MENSAGENS INTERNACIONALIZADAS Valida o email
 	 */
-	public Boolean isBot()
+	public void validate(Captcha captcha)
 	{
-		return isBot;
-	}
+		Assert.isTrue(captcha.isCorrect(this.getAnswer()), "You are a robot?");
 
+		this.validate();
+	}
+	
 	/**
-	 * FIXME ALTERAR PARA MENSAGENS INTERNACIONALIZADAS
-	 * Valida o email
+	 * FIXME ALTERAR PARA MENSAGENS INTERNACIONALIZADAS Valida o email
 	 */
 	public void validate()
 	{
-		Assert.isTrue(!this.isBot(), "I are a robot?");
-		
-		//Verificar se o @Email vai funcionar, se não funcionar fazer função validadora
+		// Verificar se o @Email vai funcionar, se não funcionar fazer função
+		// validadora
 		Assert.isTrue(this.getEmail() != null, "Insira o email");
-		
+
 		Assert.isTrue(this.getName() != null, "Insira o nome");
-		
+
 		Assert.isTrue(this.getSubject() != null, "Insira o assunto");
-		
+
 		Assert.isTrue(this.getMessage() != null, "Insira a mensagem");
 	}
 
@@ -156,20 +172,20 @@ public class Email
 	}
 
 	/**
-	 * @return the isBot
+	 * @return the answer
 	 */
-	public Boolean getIsBot()
+	public String getAnswer()
 	{
-		return isBot;
+		return answer;
 	}
 
 	/**
-	 * @param isBot
-	 *            the isBot to set
+	 * @param answer
+	 *            the answer to set
 	 */
-	public void setIsBot(Boolean isBot)
+	public void setAnswer(String answer)
 	{
-		this.isBot = isBot;
+		this.answer = answer;
 	}
 
 }

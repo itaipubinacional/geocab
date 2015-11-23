@@ -110,6 +110,10 @@
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
+				
+				<!-- jcaptcha version -->
+				<jcaptcha.version>1.0</jcaptcha.version>
+				
 			</properties>
 		</profile>
 
@@ -150,6 +154,10 @@
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
+				
+				<!-- jcaptcha version -->
+				<jcaptcha.version>1.0</jcaptcha.version>
+				
 			</properties>
 		</profile>
 

@@ -5,6 +5,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
+<%@ page import="nl.captcha.Captcha" %>
+
 <!DOCTYPE html>
 <html>
 <!-- Data source - Main View -->
@@ -21,6 +23,7 @@
 
   <form name="form" novalidate>
 
+   
     <div>
       <div class="form-item position-relative" style="width: 300px;">
         <label class="detail-label">
@@ -91,13 +94,31 @@
     </div>
 
     <div>
-      <button class="btn btn-success"
+      
+      <div>
+      <div class="form-item position-relative" style="width: 300px;">
+        <label class="detail-label">
+          <spring:message code="contact.securityVerification"/>
+          *</label>
+        <input name="subject" type="text" class="form-control"
+               ng-model="contactForm.answer"
+               required maxlength="144" ng-minlength="1"
+               ng-class="{ ngInvalid: form.subject.$error.required && (form.$submitted || form.name.$dirty) }"
+               autofocus
+               autocomplete="off"
+               ng-hover>
+                   <span ng-show="form.subject.$error.required && (form.$submitted || form.subject.$dirty)"
+                         class="tooltip-validation"><spring:message code="contact.securityVerification"/> <spring:message
+                       code="admin.users.required"/></span>
+      </div>
+      <img ng-src="/geocab/stickyImg" />
+    </div>
+		 <button class="btn btn-success"
               id="buttonUpdate"
               title="<spring:message code='contact.Send'/>"
               ng-click="sendForm(form)">
         <spring:message code="contact.Send"/>
       </button>
-
     </div>
   </form>
 

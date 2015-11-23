@@ -43,7 +43,6 @@ function ContactController( $scope, $injector, $log, $state, $timeout, $modal, $
 			$scope.msg = {type:"danger", text: $scope.INVALID_FORM_MESSAGE, dismiss:true};
 			$scope.fadeMsg();
 		}else{
-			console.log("TESTES");
 
 			contactService.contactUs( $scope.contactForm, {
 				callback : function(result) {
@@ -52,6 +51,7 @@ function ContactController( $scope, $injector, $log, $state, $timeout, $modal, $
 					$scope.$apply();
 				},
 				errorHandler : function(message, exception) {
+					alert(message);
 					$scope.message = {type:"error", text: message};
 					$scope.$apply();
 				}
@@ -75,12 +75,11 @@ function ContactController( $scope, $injector, $log, $state, $timeout, $modal, $
 					$scope.contactForm.name = 'Subject';
 					$scope.contactForm.subject = 'Subject';
 					$scope.contactForm.message = 'Message';
-					$scope.contactForm.isBot = false;
 
     			$scope.$apply();
             },
             errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
+            	$scope.message = {type:"error", text: message};
                 $scope.$apply();
             }
     	});

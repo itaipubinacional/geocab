@@ -109,7 +109,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public Attribute()
 	{
-
+		
 	}
 
 	/**
