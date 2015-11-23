@@ -87,14 +87,6 @@
             </a>
         </li>
     </ul>
-    <ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
-        <li class="menu-item" id="menu-item-3" ng-click="toggleSidebarMenu(300, '#menu-item-3');"
-            title="<spring:message code='map.KML-enabled'/>">
-            <a href="#tabs-3">
-                <div class="icon itaipu-icon-kml sidebar-icon"></div>
-            </a>
-        </li>
-    </ul>
 </div>
 
 
