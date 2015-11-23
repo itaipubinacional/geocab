@@ -31,19 +31,37 @@
             <label class="detail-label">
                 <spring:message code="admin.users.Account-coordinates"/>
             </label>
-            <br>
-            <label>
-                <input name="<spring:message code='admin.users.coordinatesDMS'/>" type="radio"
+
+            <i class="icon-question-sign icon-large" tooltip-placement="right" tooltip="<spring:message code='admin.users.Coordinates-info'/>"></i>
+
+            <br />
+
+            <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
+                <input type="radio" id="DMS" ng-model="currentEntity.coordinates" value="DMS"
+                       name="DMS">
+                <label class="radio-label" for="DMS"> <spring:message code='admin.users.coordinatesDMS'/> </label>
+            </div>
+
+            <br />
+
+            <div class="form-item-horizontal radio" style="margin-left: 0;">
+                <input type="radio" id="DD" ng-model="currentEntity.coordinates" value="DD"
+                       name="DD">
+                <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDegree'/> </label>
+            </div>
+
+            <!--<label>
+                <input name="DMS" type="radio"
                        ng-model="currentEntity.coordinates" value="DEGRESS_MINUTES_SECONDS">
                 <spring:message code='admin.users.coordinatesDMS'/>
             </label>
             <br>
             <label>
-                <input name="<spring:message code='admin.users.coordinatesDMS'/>" type="radio"
+                <input name="DD" type="radio"
                        ng-model="currentEntity.coordinates" value="DEGRESS_DECIMAL">
                 <spring:message code='admin.users.coordinatesDegree'/>
             </label>
-            <br>
+            <br>-->
             <hr>
 
             <!-- BACKGROUND MAP -->
@@ -54,36 +72,47 @@
 
             <div class="row">
                 <div class="col-md-2">
-                    <label>
-                        <input name="Google Maps" type="radio"
-                               ng-model="currentEntity.backgroundMap" value="GOOGLE">
-                        Google Maps
-                    </label>
-                    <br>
-                    <label>
-                        <input name="MapQuest" type="radio"
-                               ng-model="currentEntity.backgroundMap" value="MAP_QUEST">
-                        MapQuest
-                    </label>
 
-                    <br>
-                    <label>
-                        <input name="Open Street View" type="radio"
-                               ng-model="currentEntity.backgroundMap" value="OPEN_STREET_MAP">
-                        Open Street
-                    </label>
+                    <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
+                        <input type="radio" id="GOOGLE" ng-model="currentEntity.backgroundMap" value="GOOGLE"
+                               name="GOOGLE">
+                        <label class="radio-label" for="GOOGLE"> Google Maps </label>
+                    </div>
+
+                    <br />
+
+                    <div class="form-item-horizontal radio" style="margin-left: 0">
+                        <input type="radio" id="MAP_QUEST" ng-model="currentEntity.backgroundMap" value="MAP_QUEST"
+                               name="MAP_QUEST">
+                        <label class="radio-label" for="MAP_QUEST"> MapQuest </label>
+                    </div>
+
+                    <br />
+
+                    <div class="form-item-horizontal radio" style="margin-left: 0;">
+                        <input type="radio" id="OPEN_STREET_MAP" ng-model="currentEntity.backgroundMap" value="OPEN_STREET_MAP"
+                               name="OPEN_STREET_MAP">
+                        <label class="radio-label" for="OPEN_STREET_MAP"> Open Street </label>
+                    </div>
+
                 </div>
 
                 <div class="col-md-2" ng-if="currentEntity.backgroundMap == 'GOOGLE'">
-                    <div>
-                        <input name="Map" type="radio"
-                               ng-model="currentEntity.backgroundType" value="GOOGLE_MAP">
-                        Map
 
-                        <input name="Satelite" type="radio" style="margin-left: 20px "
-                               ng-model="currentEntity.backgroundType" ng-value="GOOGLE_SATELITE">
-                        Satelite
+                    <div>
+                        <div class="form-item-horizontal radio" style="margin-left: 0;">
+                            <input type="radio" id="Map" ng-model="currentEntity.backgroundMap" value="Map"
+                                   name="Map">
+                            <label class="radio-label" for="Map"> Map </label>
+                        </div>
+
+                        <div class="form-item-horizontal radio" style="margin-left: 0;">
+                            <input type="radio" id="Satellite" ng-model="currentEntity.backgroundMap" value="Satellite"
+                                   name="Satellite">
+                            <label class="radio-label" for="Satellite"> Satellite </label>
+                        </div>
                     </div>
+
                     <div>
                         <input name="Terrain" type="checkbox"
                                ng-model="currentEntity.backgroundTypeTerrain" value="GOOGLE_MAP_TERRAIN">
@@ -96,13 +125,19 @@
                 </div>
 
                 <div class="col-md-2" ng-if="currentEntity.backgroundMap == 'MAP_QUEST'">
-                    <input name="Osm" type="radio"
-                           ng-model="currentEntity.backgroundType" value="OSM">
-                    OSM
 
-                    <input name="Sat" type="radio"
-                           ng-model="currentEntity.backgroundType" value="SAT">
-                    SAT
+                    <div class="form-item-horizontal radio" style="margin-left: 0;">
+                        <input type="radio" id="OSM" ng-model="currentEntity.backgroundMap" value="OSM"
+                               name="OSM">
+                        <label class="radio-label" for="OSM"> OSM </label>
+                    </div>
+
+                    <div class="form-item-horizontal radio" style="margin-left: 0;">
+                        <input type="radio" id="SAT" ng-model="currentEntity.backgroundMap" value="SAT"
+                               name="SAT">
+                        <label class="radio-label" for="SAT"> SAT </label>
+                    </div>
+
                 </div>
             </div>
         </div>
