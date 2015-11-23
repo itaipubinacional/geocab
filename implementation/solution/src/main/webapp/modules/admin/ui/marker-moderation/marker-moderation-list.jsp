@@ -40,10 +40,11 @@
 			<div style="margin-top:10px; display:flex" ng-show="visible">
 
        	 			<select class="form-control" ng-model="filter.status" style="width:30%;margin-right:10px">
-                         <option value="" ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
-                         <option value="PENDING"><spring:message code="admin.marker-moderation.Pending" /></option>
+                         <option value=""><spring:message code="admin.marker-moderation.All-status" /></option>
+                         <option value="PENDING" ng-selected="true"><spring:message code="admin.marker-moderation.Pending" /></option>
                          <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
-                         <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
+					 	 <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
+						 <option value="CANCELED"><spring:message code="admin.marker-moderation.Canceled"/></option>
                      </select>
 
 					<!--
@@ -58,7 +59,7 @@
 				</div>
 
 				<div style="margin-top:10px; display:flex" ng-show="visible">
-					 <select data-placeholder="<spring:message code="admin.marker-moderation.Users"/>" name="layer"
+					 <select data-placeholder="<spring:message code='admin.marker-moderation.Users'/>" name="layer"
 							ng-options="user.email for user in selectUsers "
 							ng-model="filter.user" chosen class="form-control"
 							>
