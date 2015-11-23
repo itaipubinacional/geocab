@@ -16,7 +16,6 @@ public enum Coordinates
 	/*-------------------------------------------------------------------
 	 *								ENUMS
 	 *-------------------------------------------------------------------*/
-	DEGRESS, // 0
-	DEGRESS_DECIMAL, // 1
-	DEGRESS_MINUTES_SECONDS; // 2
+	DEGREES_DECIMAL, // 0
+	DEGREES_MINUTES_SECONDS; // 1
 }
