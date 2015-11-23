@@ -740,6 +740,27 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
          }
      });
 	};
+
+    /**
+     * Accept status marker moderation
+     */
+    $scope.cancelMarkerModeration = function( id ) {
+        $scope.msg = {type:"success", text: $translate('admin.marker-moderation.Marker-successfully-canceled') , dismiss:true};
+        //markerModerationService.cancelMarkerModeration( id, {
+        //    callback : function(result) {
+        //        console.log(result);
+        //        $scope.currentEntity = result.marker;
+        //        $scope.updateStatus();
+        //        $scope.changeToList($scope.currentPage);
+        //
+        //        $scope.$apply();
+        //    },
+        //    errorHandler : function(message, exception) {
+        //        $scope.message = {type:"error", text: message};
+        //        $scope.$apply();
+        //    }
+        //});
+    };
 	
 	/**
 	 * Refuse status marker moderation
@@ -1110,6 +1131,44 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     		
     	}
     	
+    };
+
+    /**
+     * Calls the modal to refuse a marker
+     */
+    $scope.cancelMarker = function() {
+        if ($scope.currentEntity.status != 'CANCELED') {
+
+            var dialog = $modal.open({
+
+                templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+                controller: DialogController,
+                windowClass: 'dialog-success',
+                resolve: {
+                    title: function () {
+                        return $translate('admin.marker-moderation.Confirm-cancel');
+                    },
+                    message: function () {
+                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-cancel-this-marker')+' ? <br/>.';
+                    },
+                    buttons: function () {
+                        return [
+                            {label: $translate('admin.marker-moderation.Confirm-cancel'), css: 'btn btn-danger'},
+                            {label: $translate('layer-group-popup.Close'), css: 'btn btn-default', dismiss: true}
+                        ];
+                    }
+                }
+            });
+
+            dialog.result.then(function () {
+
+                //$scope.acceptMarkerModeration($scope.currentEntity.id);
+                $scope.cancelMarkerModeration($scope.currentEntity.id);
+
+            });
+
+        }
+
     };
 
     
