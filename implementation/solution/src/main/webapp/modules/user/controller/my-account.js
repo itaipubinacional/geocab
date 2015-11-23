@@ -115,7 +115,6 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 
 					$scope.setBackgroundMap(result.backgroundMap);
 
-
     			$scope.$apply();
             },
             errorHandler : function(message, exception) {
@@ -141,8 +140,10 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 
 	$scope.setType = function(newVal){
 		angular.forEach(Object.keys(newVal), function(type, index){
-			if(newVal[type])
+			if(newVal[type]) {
+				$scope.currentEntity.backgroundMap = type;
 				$scope.setBackgroundMap(type);
+			}
 		});
 	};
 
@@ -151,25 +152,31 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		$scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
 		$scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
 
-		if(newVal != oldVal)
+		if(newVal != oldVal) {
+			$scope.currentEntity.backgroundMap = newVal;
 			$scope.setBackgroundMap(newVal);
+		}
 	});
 
-	$scope.$watch('currentEntity.backgroundMap', function(newVal, oldVal){
-		if(newVal != oldVal)
+	$scope.$watch('backgroundMap.map', function(newVal, oldVal){
+		if(newVal != oldVal) {
+			$scope.currentEntity.backgroundMap = newVal;
 			$scope.setBackgroundMap(newVal);
+		}
 	});
 
 	$scope.setBackgroundMap = function(backgroundMap){
 
-		if(backgroundMap.match(/GOOGLE/ig))
-			$scope.currentEntity.backgroundMap = 'GOOGLE';
+		if(backgroundMap.match(/GOOGLE/i))
+			$scope.backgroundMap.map = 'GOOGLE';
 
-		if(backgroundMap.match(/MAP_QUEST/ig))
-			$scope.currentEntity.backgroundMap = 'MAP_QUEST';
+		if(backgroundMap.match(/MAP_QUEST/i))
+			$scope.backgroundMap.map = 'MAP_QUEST';
 
-		if(backgroundMap.match(/MAP_QUEST|MAP_QUEST_OSM/ig) && backgroundMap != 'MAP_QUEST_SAT')
+		if(backgroundMap.match(/MAP_QUEST|MAP_QUEST_OSM/i) && backgroundMap != 'MAP_QUEST_SAT') {
+			$scope.currentEntity.backgroundMap = 'MAP_QUEST_OSM';
 			$scope.backgroundMap.subType = 'MAP_QUEST_OSM';
+		}
 
 		if(backgroundMap.match(/MAP_QUEST_SAT/i))
 			$scope.backgroundMap.subType = 'MAP_QUEST_SAT';
@@ -186,7 +193,7 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		if(backgroundMap == 'GOOGLE_SATELLITE_LABELS')
 			$scope.backgroundMap.typeLabels = true;
 
-		console.log(backgroundMap);
+		console.log($scope.currentEntity.backgroundMap);
 
 	};
 	

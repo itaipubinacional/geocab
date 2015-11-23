@@ -74,7 +74,7 @@
                 <div class="col-md-2">
 
                     <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
-                        <input type="radio" id="GOOGLE" ng-model="currentEntity.backgroundMap" value="GOOGLE"
+                        <input type="radio" id="GOOGLE" ng-model="backgroundMap.map" value="GOOGLE"
                                name="GOOGLE">
                         <label class="radio-label" for="GOOGLE"> Google Maps </label>
                     </div>
@@ -82,7 +82,7 @@
                     <br />
 
                     <div class="form-item-horizontal radio" style="margin-left: 0">
-                        <input type="radio" id="MAP_QUEST" ng-model="currentEntity.backgroundMap" value="MAP_QUEST"
+                        <input type="radio" id="MAP_QUEST" ng-model="backgroundMap.map" value="MAP_QUEST"
                                name="MAP_QUEST">
                         <label class="radio-label" for="MAP_QUEST"> MapQuest </label>
                     </div>
@@ -90,14 +90,14 @@
                     <br />
 
                     <div class="form-item-horizontal radio" style="margin-left: 0;">
-                        <input type="radio" id="OPEN_STREET_MAP" ng-model="currentEntity.backgroundMap" value="OPEN_STREET_MAP"
+                        <input type="radio" id="OPEN_STREET_MAP" ng-model="backgroundMap.map" value="OPEN_STREET_MAP"
                                name="OPEN_STREET_MAP">
                         <label class="radio-label" for="OPEN_STREET_MAP"> Open Street </label>
                     </div>
 
                 </div>
 
-                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="currentEntity.backgroundMap == 'GOOGLE'">
+                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="backgroundMap.map == 'GOOGLE'">
 
                     <div>
                         <div class="form-item-horizontal radio" style="margin-left: 0;">
@@ -127,7 +127,7 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="currentEntity.backgroundMap == 'MAP_QUEST'">
+                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="backgroundMap.map == 'MAP_QUEST'">
 
                     <div class="form-item-horizontal radio" style="margin-left: 0;">
                         <input type="radio" id="OSM" ng-model="backgroundMap.subType" value="MAP_QUEST_OSM"
