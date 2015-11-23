@@ -2,13 +2,10 @@ package br.com.geocab.domain.repository.attribute;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.geocab.domain.entity.layer.Attribute;
-import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**

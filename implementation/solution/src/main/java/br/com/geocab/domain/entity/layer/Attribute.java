@@ -13,19 +13,16 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
-import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
-import br.com.geocab.domain.entity.marker.MarkerAttribute;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -34,94 +31,161 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Audited
-@DataTransferObject(javascript="Attribute")
-@Table(schema=IEntity.SCHEMA)
+@DataTransferObject(javascript = "Attribute")
 public class Attribute extends AbstractEntity implements Serializable
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 754889878712215160L;
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	
+
+	/**
+	 * 
+	 */
 	@Transient
 	private Long temporaryId;
-	
+
 	/**
 	 * Name {@link Attribute}
-	 * */
+	 */
 	@NotNull
 	private String name;
+
 	/**
 	 * Type {@link Attribute}
-	 * */
+	 */
 	@NotNull
 	private AttributeType type;
+
 	/**
 	 * Required {@link Attribute}
-	 * */
+	 */
 	@NotNull
 	private Boolean required;
-	
-	private Boolean attributeDefault; 
-	
+
+	/**
+	 * Visible {@link Attribute}
+	 */
+	@NotNull
+	private Boolean visible;
+
+	/**
+	 * 
+	 */
+	private Boolean attributeDefault;
+
 	/**
 	 * Order {@link Attribute}
 	 */
 	@Column
 	private int orderAttribute;
-	
+
 	/**
 	 * Layer {@link Layer}
-	 * */
+	 */
 	@JsonIgnore
-	@ManyToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
+	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade =
+	{ CascadeType.ALL })
 	private Layer layer;
-	
+
+	/**
+	 * 
+	 */
 	@JsonIgnore
-	@OneToMany(mappedBy="attribute", fetch=FetchType.EAGER, cascade={CascadeType.REMOVE})
+	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade =
+	{ CascadeType.REMOVE })
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
 
-	public Attribute(){
-		
+	/*-------------------------------------------------------------------
+	 *								CONSTRUCTORS
+	 *-------------------------------------------------------------------*/
+
+	/**
+	 * 
+	 */
+	public Attribute()
+	{
+
 	}
-	
-	public Attribute( Long id )
+
+	/**
+	 * 
+	 * @param id
+	 */
+	public Attribute(Long id)
 	{
 		super(id);
 	}
-	
-	public Attribute(Long id, String name, AttributeType type, Boolean required, int orderAttribute){
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param type
+	 * @param required
+	 * @param orderAttribute
+	 */
+	public Attribute(Long id, String name, AttributeType type, Boolean required,
+			int orderAttribute)
+	{
 		super(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
 		this.setOrderAttribute(orderAttribute);
 	}
-	
-	public Attribute(String name){
-		//this.setTemporaryId(id);
+
+	/**
+	 * 
+	 * @param name
+	 */
+	public Attribute(String name)
+	{
+		// this.setTemporaryId(id);
 		this.setName(name);
 	}
-	
-	public Attribute(Long id, String name, Boolean required, AttributeType type, int orderAttribute){
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param required
+	 * @param type
+	 * @param orderAttribute
+	 */
+	public Attribute(Long id, String name, Boolean required, AttributeType type,
+			int orderAttribute)
+	{
 		this.setTemporaryId(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
 		this.setOrderAttribute(orderAttribute);
 	}
-	
-	public Attribute(Long id, String name, AttributeType type, Layer layer){
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param type
+	 * @param layer
+	 */
+	public Attribute(Long id, String name, AttributeType type, Layer layer)
+	{
 		super(id);
 		this.setType(type);
 		this.setName(name);
-	    this.setLayer(layer);
+		this.setLayer(layer);
 	}
-	
+
+	/*-------------------------------------------------------------------
+	 *								SETTERS/GETTERS
+	 *-------------------------------------------------------------------*/
+
 	/**
 	 * @return the name
 	 */
@@ -129,13 +193,16 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		return name;
 	}
+
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name)
 	{
 		this.name = name;
 	}
+
 	/**
 	 * @return the type
 	 */
@@ -143,13 +210,16 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		return type;
 	}
+
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(AttributeType type)
 	{
 		this.type = type;
 	}
+
 	/**
 	 * @return the layer
 	 */
@@ -157,8 +227,10 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		return layer;
 	}
+
 	/**
-	 * @param layer the layer to set
+	 * @param layer
+	 *            the layer to set
 	 */
 	public void setLayer(Layer layer)
 	{
@@ -174,7 +246,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param required the required to set
+	 * @param required
+	 *            the required to set
 	 */
 	public void setRequired(Boolean required)
 	{
@@ -190,7 +263,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param attributeDefault the attributeDefault to set
+	 * @param attributeDefault
+	 *            the attributeDefault to set
 	 */
 	public void setAttributeDefault(Boolean attributeDefault)
 	{
@@ -206,7 +280,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param temporaryId the temporaryId to set
+	 * @param temporaryId
+	 *            the temporaryId to set
 	 */
 	public void setTemporaryId(Long temporaryId)
 	{
@@ -222,11 +297,29 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param orderAttribute the orderAttribute to set
+	 * @param orderAttribute
+	 *            the orderAttribute to set
 	 */
 	public void setOrderAttribute(int orderAttribute)
 	{
 		this.orderAttribute = orderAttribute;
 	}
-	
+
+	/**
+	 * @return the visible
+	 */
+	public Boolean getVisible()
+	{
+		return visible;
+	}
+
+	/**
+	 * @param visible
+	 *            the visible to set
+	 */
+	public void setVisible(Boolean visible)
+	{
+		this.visible = visible;
+	}
+
 }

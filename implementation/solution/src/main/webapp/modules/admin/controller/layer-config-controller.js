@@ -208,6 +208,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == false" >'+ $translate("admin.layer-config.false") +'</span>' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == true" >'+ $translate("admin.layer-config.true") +'</span>' +
     '</div>';
+
+    var VISIBLE_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.visible == false" >'+ $translate("admin.layer-config.false") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.visible == true" >'+ $translate("admin.layer-config.true") +'</span>' +
+    '</div>';
     
     /**
      * Configurações gerais da ng-grid.
@@ -233,6 +238,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             {displayName: $translate('Name'), field: 'name', width: '30%'},
             {displayName: $translate('Type'), field: 'type', cellTemplate:TYPE_COLUMN ,  width: '30%'},
             {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: REQUIRED_COLUMN}, 
+            {displayName: $translate('Visible'),field: 'visible', sortable: false, cellTemplate: VISIBLE_COLUMN},
 //            	'<div>' +
 //                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
 //                '</div>', width: '30%'},
@@ -257,9 +263,10 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 				$state.go($scope.DETAIL_STATE, {id:row.entity.id});*/
         },
         columnDefs: [
-            {displayName: $translate('Name'), field: 'name', width: '33%'},
-            {displayName: $translate('Type'),  cellTemplate: TYPE_COLUMN ,  width: '33%'},
-            {displayName: $translate('Required'), cellTemplate: REQUIRED_COLUMN,  width: '33%'},
+            {displayName: $translate('Name'), field: 'name', width: '30%'},
+            {displayName: $translate('Type'),  cellTemplate: TYPE_COLUMN ,  width: '30%'},
+            {displayName: $translate('Required'), cellTemplate: REQUIRED_COLUMN,  width: '20%'},
+            {displayName: $translate('Visible'), cellTemplate: VISIBLE_COLUMN,  width: '20%'}
         ]
     };
 

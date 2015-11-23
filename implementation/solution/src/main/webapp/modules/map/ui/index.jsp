@@ -34,11 +34,18 @@
 		<!-- Controllers -->		
 		<!-- Main -->
 		<script type="text/javascript" src="modules/map/map-main.js"></script>
-   		<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
+   	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/map-controller.js"></script>
+		<script type="text/javascript" src="modules/map/controller/contact-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/refuse-marker-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/select-access-group-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/select-layer-config-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/select-layer-group-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/add-attribute-import-popup-controller.js"></script>
 
    		<!-- Treeview -->
 		<script type="text/javascript"
@@ -69,9 +76,13 @@
 			<header>
 				<jsp:include page="../../common/header.jsp"/>
 			</header>
-		
+
 			<!-- content -->
-			<security:authorize ifAnyGranted="ADMINISTRATOR">
+			<div ui-view class="map-content"></div>
+			<!-- /content -->
+
+			<!-- content -->
+			<!--<security:authorize ifAnyGranted="ADMINISTRATOR">
 			    <div  id="sb-site"  ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 116px; left: 0; right: 0;" ng-controller="MapController"></div>
 			</security:authorize>
 			
@@ -86,7 +97,7 @@
 			
 			<security:authorize access="!isAuthenticated()">
 				<div  id="sb-site" ng-include="'modules/map/ui/interactive-map-view.jsp'" style="position: absolute; bottom: 0; top: 60px; left: 0; right: 0;" ng-controller="MapController"></div>
-			</security:authorize>
+			</security:authorize>-->
 		
 			<!-- /content -->
 		       

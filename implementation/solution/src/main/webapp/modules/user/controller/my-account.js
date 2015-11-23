@@ -83,6 +83,8 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	 * Store current User entity for update
 	 */
 	$scope.currentEntity = {};
+
+	$scope.backgroundMap = [];
 	
 	
 	/*-------------------------------------------------------------------
@@ -106,6 +108,10 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		accountService.getUserAuthenticated({
     		callback : function(result) {
     			$scope.currentEntity = result;
+
+					$scope.setBackgroundMap(result.backgroundMap);
+
+
     			$scope.$apply();
             },
             errorHandler : function(message, exception) {
@@ -128,6 +134,30 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		
 		$scope.flag = 0;
 	};
+
+	$scope.setBackgroundMap = function(backgroundMap){
+
+		if(backgroundMap.match(/GOOGLE/ig))
+			$scope.currentEntity.backgroundMap = 'GOOGLE';
+
+		if(backgroundMap.match(/MAP_QUEST/ig)) {
+			$scope.currentEntity.backgroundMap = 'MAP_QUEST';
+			$scope.backgroundMap.subType = 'MAP_QUEST_OSM';
+		}
+
+		if(backgroundMap.match(/GOOGLE_MAP/ig))
+			$scope.backgroundMap.subType = 'GOOGLE_MAP';
+
+		if(backgroundMap.match(/GOOGLE_SATELLITE/ig))
+			$scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
+
+		if(backgroundMap == 'GOOGLE_MAP_TERRAIN')
+			$scope.backgroundMap.typeTerrain = true;
+
+		if(backgroundMap == 'GOOGLE_SATELLITE_LABELS')
+			$scope.backgroundMap.typeLabels = true;
+
+	};
 	
 	/**
 	 * Boot the state users.update 
@@ -137,15 +167,19 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		
 		$scope.currentState = $scope.UPDATE_STATE;
 	};
+
+	$scope.changeForm = function(form){
+		$scope.currentState = form;
+	};
 	
 	$scope.updateUser = function() {
 		
-		if(!$scope.form('form').$valid ){
+		if(!$scope.form('form').$valid){
 			$scope.msg = {type:"danger", text: $translate("admin.users.The-highlighted-fields-are-required") , dismiss:true};
 			$scope.fadeMsg();
 			return;
 		}
-		
+
 		if($scope.currentEntity.newPassword == ""){
 			$scope.currentEntity.newPassword = null;
 		}

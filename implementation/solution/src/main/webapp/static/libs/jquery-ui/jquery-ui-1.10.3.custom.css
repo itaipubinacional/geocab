@@ -797,7 +797,7 @@ body .ui-tooltip {
 .ui-widget textarea,
 .ui-widget button {
 	font-family: Helvetica,Arial,sans-serif;
-	font-size: 1em;
+	/*font-size: 1em;*/ /* conflit with bootstrap */
 }
 .ui-widget-content {
 	border: 1px solid #dddddd;

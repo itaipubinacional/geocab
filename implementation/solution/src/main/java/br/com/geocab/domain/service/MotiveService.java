@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.entity.markermoderation.Motive;
-import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
-import br.com.geocab.domain.repository.motive.IMotiveMarkerModerationRepository;
 import br.com.geocab.domain.repository.motive.IMotiveRepository;
 
 /**
@@ -40,14 +37,11 @@ public class MotiveService
 	@Autowired
 	private IMotiveRepository motiveRepository;
 	
-	/**
-	 * 
-	 */
-	@Autowired
-	private IMotiveMarkerModerationRepository motiveMarkerModerationRepository;
-	
-	
-	
+//	/**
+//	 * 
+//	 */
+//	@Autowired
+//	private IMotiveMarkerModerationRepository motiveMarkerModerationRepository;
 	
 	
 	/*-------------------------------------------------------------------

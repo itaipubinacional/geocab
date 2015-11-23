@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -17,9 +16,7 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import br.com.geocab.application.ResourceBundleMessageSource;
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 
 /**
  * 
@@ -33,7 +30,6 @@ import br.com.geocab.domain.entity.IEntity;
 @Entity
 @Audited
 @DataTransferObject
-@Table(schema=IEntity.SCHEMA)
 public class LayerField extends AbstractEntity implements Serializable
 {
 	/*-------------------------------------------------------------------

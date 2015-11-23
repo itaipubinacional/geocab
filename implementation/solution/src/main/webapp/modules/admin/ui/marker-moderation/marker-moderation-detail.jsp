@@ -32,13 +32,22 @@
 						<a style="font-size:14px;text-decoration:none;color:black" ng-if="currentEntity.status != 'REFUSED'" ><spring:message code="admin.marker-moderation.Refuse" /></a>
 						<a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%" ng-if="currentEntity.status == 'REFUSED'" ><spring:message code="admin.marker-moderation.Refused" /></a>
 					
-					</div></br> 					       													
-		        
-		        </div>									
+					</div></br>
+
+					<div class="btn btn-default" name="btnCancel"
+						 ng-class="{refuse: currentEntity.status == 'PENDING' || currentEntity.status == 'ACCEPTED' , refuse1: currentEntity.status == 'REFUSED' }"
+						 ng-click="refuseMarker()" style="position:relative;margin-top:15px; width:75px; height:58px; line-height : 75px" >
+
+						<a style="font-size:14px;text-decoration:none;color:black" ng-if="currentEntity.status != 'REFUSED'" ><spring:message code="admin.marker-moderation.Refuse" /></a>
+						<a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%" ng-if="currentEntity.status == 'REFUSED'" ><spring:message code="admin.marker-moderation.Refused" /></a>
+
+					</div></br>
+
+				</div>
 				
 				 <div style="float:right">
-			        	<span><b>{{ currentEntity.user.name}} - </b></span> 
-			    		<span>{{ currentEntity.created | date:'dd/MM/yyyy' }}</span>
+			        	<span><b>{{ currentEntity.user.name}} ({{ currentEntity.user.email}})</b></span>
+			    		<span>em {{ currentEntity.created | date:'dd/MM/yyyy' }}</span>
 			     </div>	  
 				
 				<form>

@@ -25,13 +25,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
@@ -58,8 +59,6 @@ import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.tool.IToolRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-
 /**
  * 
  * @author Vinicius Ramos Kawamoto
@@ -78,11 +77,11 @@ public class LayerGroupService
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
 	
-	/**
-	 * I18n 
-	 */
-	@Autowired
-	private MessageSource messages;
+//	/**
+//	 * I18n 
+//	 */
+//	@Autowired
+//	private MessageSource messages;
 	
 	/**
 	 * 

@@ -23,7 +23,6 @@ import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 
 /**
  * @author Vinicius Ramos Kawamoto
@@ -35,7 +34,7 @@ import br.com.geocab.domain.entity.IEntity;
 @Entity
 @Audited
 @DataTransferObject(javascript="LayerGroup")
-@Table(schema=IEntity.SCHEMA, uniqueConstraints= @UniqueConstraint(columnNames={"name", "layer_group_upper_id"}))
+@Table(uniqueConstraints= @UniqueConstraint(columnNames={"name", "layer_group_upper_id"}))
 public class LayerGroup extends AbstractEntity implements Serializable, ITreeNode
 {
 

@@ -84,12 +84,8 @@
 	</security:authentication-manager>
 	
 	<!-- Social -->
-<<<<<<< HEAD
 	<facebook:config app-id="${social.facebook.app-id}" app-secret="${social.facebook.app-secret}"/>
-=======
-	<facebook:config app-id="${social.facebook.app-id}"  app-secret="${social.facebook.app-secret}"/>
->>>>>>> 46d427fcb44ff8a1a06efc9f8be0f3663278cf40
-	<google:config app-id="${social.google.app-id}" app-secret="${social.google.app-secret}" />
+	<google:config app-id="${social.google.app-id}" app-secret="${social.google.app-secret}"/>
 		
 	<bean id="usersConnectionRepository" 
 		class="br.com.geocab.infrastructure.social.PersistentUsersConnectionRepository">
@@ -130,6 +126,8 @@
 		<dwr:convert type="enum" class="org.springframework.data.domain.Sort$Direction"/>
 		<dwr:convert type="enum" class="org.springframework.data.domain.Sort$NullHandling"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.Sort$Order" javascript="Order"/>
+		<dwr:convert type="enum" class="org.geotools.data.shapefile.files.ShpFileType" javascript="ShpFileType"/>
+		
 		
 		<dwr:convert type="bean" class="com.vividsolutions.jts.geom.Point" javascript="Point">
   			<dwr:include method="coordinateString"/>

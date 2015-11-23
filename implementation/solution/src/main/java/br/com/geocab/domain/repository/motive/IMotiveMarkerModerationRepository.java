@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import br.com.geocab.domain.entity.accessgroup.AccessGroupLayer;
 import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 

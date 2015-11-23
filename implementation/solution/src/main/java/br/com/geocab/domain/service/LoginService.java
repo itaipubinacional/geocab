@@ -7,10 +7,7 @@ package br.com.geocab.domain.service;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SaltSource;
@@ -23,9 +20,9 @@ import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
-import br.com.geocab.domain.entity.account.IAccountMailRepository;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
+import br.com.geocab.domain.repository.IAccountMailRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.account.IUserRepository;
 

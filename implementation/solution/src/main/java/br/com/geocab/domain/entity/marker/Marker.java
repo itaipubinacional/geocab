@@ -14,7 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -25,20 +24,19 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.envers.Audited;
 import org.hibernate.spatial.GeometryType;
 
-import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.layer.Layer;
-import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
+import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
+
 /**
  * 
- *  {@link Marker}
+ * {@link Marker}
  * 
  * @author Thiago Rossetto Afonso
  * @since 03/10/2014
@@ -47,13 +45,11 @@ import com.vividsolutions.jts.geom.Point;
  */
 @Entity
 @Audited
-@DataTransferObject(javascript="Marker")
-@Table(schema=IEntity.SCHEMA)
-@TypeDef(name="geometry", typeClass=GeometryType.class)
+@DataTransferObject(javascript = "Marker")
+@TypeDef(name = "geometry", typeClass = GeometryType.class)
 public class Marker extends AbstractEntity implements Serializable
 {
-	
-	
+
 	/**
 	 * 
 	 */
@@ -61,44 +57,46 @@ public class Marker extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
-	public static final String PICTURE_PATH = PICTURE_FOLDER+"/%d";
+	public static final String PICTURE_PATH = PICTURE_FOLDER + "/%d";
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1806026076674494131L;
-	
+
 	@Transient
 	private FileTransfer image;
-	
+
 	@Transient
 	private Boolean imageToDelete;
-	
+
 	@Transient
 	private String wktCoordenate;
 
 	@Column(nullable = true)
-	@Type(type="org.hibernate.spatial.GeometryType")
+	@Type(type = "org.hibernate.spatial.GeometryType")
 	@JsonIgnore
 	private Point location;
-	
+
 	@NotNull
 	private MarkerStatus status;
-	
+
 	private Boolean deleted;
-	
-	@ManyToOne(fetch=FetchType.EAGER, optional=true)
+
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	private Layer layer;
-	
-	@ManyToOne(fetch=FetchType.EAGER, optional=true)
+
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	private User user;
-	
+
 	@JsonManagedReference
-	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@OneToMany(mappedBy = "marker", fetch = FetchType.EAGER, cascade =
+	{ CascadeType.ALL })
 	private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="marker", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@OneToMany(mappedBy = "marker", fetch = FetchType.EAGER, cascade =
+	{ CascadeType.ALL })
 	private List<MarkerModeration> markerModeration = new ArrayList<MarkerModeration>();
 
 	/*-------------------------------------------------------------------
@@ -109,19 +107,19 @@ public class Marker extends AbstractEntity implements Serializable
 	 */
 	public Marker()
 	{
-		
+
 	}
-	
+
 	/**
 	 * 
 	 *
 	 * @param id
 	 */
-	public Marker( Long id )
+	public Marker(Long id)
 	{
 		this.setId(id);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
@@ -129,12 +127,12 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param longitude
 	 * @param status
 	 */
-	public Marker( Long id, MarkerStatus status)
+	public Marker(Long id, MarkerStatus status)
 	{
 		this.setId(id);
 		this.setStatus(status);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
@@ -142,11 +140,11 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param longitude
 	 * @param status
 	 */
-	public Marker( Long id, MarkerStatus status, Geometry location, Layer layer)
+	public Marker(Long id, MarkerStatus status, Geometry location, Layer layer)
 	{
 		this.setId(id);
 		this.setStatus(status);
-		this.setLocation( (Point) location);
+		this.setLocation((Point) location);
 		this.setLayer(layer);
 	}
 
@@ -158,17 +156,17 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param status
 	 * @param user
 	 */
-	public Marker( Long id, MarkerStatus status, Calendar created, Layer layer, User user)
+	public Marker(Long id, MarkerStatus status, Calendar created, Layer layer,
+			User user)
 	{
 		this.setId(id);
 		this.setStatus(status);
 		user.setPassword("");
-		user.setEmail("");
+		//user.setEmail("");
 		this.setUser(user);
 		this.setLayer(layer);
 		this.setCreated(created);
 	}
-	
 
 	/**
 	 * 
@@ -181,19 +179,20 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param layer
 	 * @param user
 	 */
-	public Marker( Long id, MarkerStatus status, Calendar created, Geometry location, Layer layer, User user)
+	public Marker(Long id, MarkerStatus status, Calendar created,
+			Geometry location, Layer layer, User user)
 	{
 		this.setId(id);
 		this.setStatus(status);
 		user.setPassword("");
-		user.setEmail("");
+	//	user.setEmail("");
 		this.setUser(user);
 		layer.setMarkers(null);
 		this.setLayer(layer);
-		this.setLocation( (Point) location );
+		this.setLocation((Point) location);
 		this.setCreated(created);
 	}
-	
+
 	/**
 	 * @return the status
 	 */
@@ -201,8 +200,10 @@ public class Marker extends AbstractEntity implements Serializable
 	{
 		return status;
 	}
+
 	/**
-	 * @param status the status to set
+	 * @param status
+	 *            the status to set
 	 */
 	public void setStatus(MarkerStatus status)
 	{
@@ -218,7 +219,8 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param layer the layer to set
+	 * @param layer
+	 *            the layer to set
 	 */
 	public void setLayer(Layer layer)
 	{
@@ -234,7 +236,8 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param markerAttributes the markerAttribute to set
+	 * @param markerAttributes
+	 *            the markerAttribute to set
 	 */
 	public void setMarkerAttribute(List<MarkerAttribute> markerAttributes)
 	{
@@ -250,7 +253,8 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param image the image to set
+	 * @param image
+	 *            the image to set
 	 */
 	public void setImage(FileTransfer image)
 	{
@@ -266,7 +270,8 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param user the user to set
+	 * @param user
+	 *            the user to set
 	 */
 	public void setUser(User user)
 	{
@@ -282,7 +287,8 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param deleted the deleted to set
+	 * @param deleted
+	 *            the deleted to set
 	 */
 	public void setDeleted(Boolean deleted)
 	{
@@ -298,7 +304,8 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param imageToDelete the imageToDelete to set
+	 * @param imageToDelete
+	 *            the imageToDelete to set
 	 */
 	public void setImageToDelete(Boolean imageToDelete)
 	{
@@ -314,12 +321,14 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param wktCoordenate the wktCoordenate to set
+	 * @param wktCoordenate
+	 *            the wktCoordenate to set
 	 */
 	public void setWktCoordenate(String wktCoordenate)
 	{
 		this.wktCoordenate = wktCoordenate;
 	}
+
 	/**
 	 * @return the location
 	 */
@@ -329,7 +338,8 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param location the location to set
+	 * @param location
+	 *            the location to set
 	 */
 	public void setLocation(Point location)
 	{
@@ -345,11 +355,12 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param markerModeration the markerModeration to set
+	 * @param markerModeration
+	 *            the markerModeration to set
 	 */
 	public void setMarkerModeration(List<MarkerModeration> markerModeration)
 	{
 		this.markerModeration = markerModeration;
 	}
-	
+
 }

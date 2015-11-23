@@ -27,13 +27,17 @@ import javax.xml.bind.JAXBException;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
@@ -48,12 +52,6 @@ import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -92,11 +90,11 @@ public class MarkerService
 	@Autowired
 	private IMarkerModerationRepository markerModerationRepository;
 
-	/**
-	 * I18n
-	 */
-	@Autowired
-	private MessageSource messages;
+//	/**
+//	 * I18n
+//	 */
+//	@Autowired
+//	private MessageSource messages;
 
 	@Autowired
 	private IMetaFileRepository metaFileRepository;
@@ -129,6 +127,7 @@ public class MarkerService
 			{
 				this.uploadImg(marker.getImage(), marker.getId());
 			}
+
 
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
@@ -391,16 +390,16 @@ public class MarkerService
 		return geom;
 	}
 
-	/**
-	 * 
-	 * @param geometry
-	 * @return
-	 */
-	private String geometryToWkt(Geometry geometry)
-	{
-		WKTWriter geom = new WKTWriter();
-		return geom.write(geometry);
-	}
+//	/**
+//	 * 
+//	 * @param geometry
+//	 * @return
+//	 */
+//	private String geometryToWkt(Geometry geometry)
+//	{
+//		WKTWriter geom = new WKTWriter();
+//		return geom.write(geometry);
+//	}
 
 	/**
 	 * Method to list all {@link Marker}
@@ -459,8 +458,7 @@ public class MarkerService
 
 		// return this.markerRepository.listByFilters(layer, status, dStart,
 		// dEnd, user, pageable);
-		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,
-				user, pageable);
+		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,	user, pageable);
 		
 	}
 
@@ -496,8 +494,7 @@ public class MarkerService
 			dEnd.setTime(dEnd.getTime());
 		}
 
-		return this.markerRepository.listByFiltersMap(layer, status, dStart,
-				dEnd, user);
+		return this.markerRepository.listByFiltersMap(layer, status, dStart, dEnd, user);
 	}
 
 	/**
@@ -615,6 +612,15 @@ public class MarkerService
 		{
 			return null;
 		}
+	}
+	
+	/**
+	 * Retorna os status possíveis das postagens para o front-end
+	 * @return
+	 */
+	public MarkerStatus[] getMarkerStatus()
+	{
+		return MarkerStatus.values();
 	}
 
 }
