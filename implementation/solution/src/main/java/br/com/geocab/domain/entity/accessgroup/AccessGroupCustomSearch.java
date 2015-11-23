@@ -8,13 +8,11 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.layer.CustomSearch;
 
 /**
@@ -28,7 +26,6 @@ import br.com.geocab.domain.entity.layer.CustomSearch;
 @Entity
 @Audited
 @DataTransferObject(javascript="AccessGroupCustomSearch")
-@Table(schema=IEntity.SCHEMA)
 public class AccessGroupCustomSearch extends AbstractEntity implements Serializable
 {
 

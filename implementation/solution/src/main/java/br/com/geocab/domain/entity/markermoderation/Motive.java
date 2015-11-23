@@ -12,16 +12,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
-import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.geocab.domain.entity.AbstractEntity;
 
 /**
  * @author Vinicius Ramos Kawamoto
@@ -31,7 +29,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Audited
 @DataTransferObject(javascript="Motive")
-@Table(schema=IEntity.SCHEMA)
 public class Motive extends AbstractEntity implements Serializable
 {
 	

@@ -3,13 +3,10 @@
  */
 package br.com.geocab.domain.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
-
-import net.opengis.wms.v_1_3_0.Exception;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,6 @@ import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.repository.datasource.IDataSourceRepository;
-import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 
 /**

@@ -92,7 +92,7 @@ public class AccountService
 		
 		if (user.getCoordinates() == null)
 		{
-			user.setCoordinates(Coordinates.DEGRESS_MINUTES_SECONDS);
+			user.setCoordinates(Coordinates.DEGREES_MINUTES_SECONDS);
 		}
 		
 		if (user.getBackgroundMap() == null)
@@ -210,8 +210,8 @@ public class AccountService
 		}
 		catch ( DataIntegrityViolationException e )
 		{
-			LOG.info( e.getMessage() );
 			final String error = e.getCause().getCause().getMessage();
+			LOG.info( error );
 		}
 		
 		return user;

@@ -6,7 +6,6 @@ import org.springframework.social.connect.UserProfile;
 
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
-import br.com.geocab.domain.repository.account.IUserRepository;
 import br.com.geocab.domain.service.LoginService;
 
 /**

@@ -12,13 +12,12 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.web.ServletTestExecutionListener;
 
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.repository.account.IUserRepository;
-import br.com.geocab.domain.service.DataSourceService;
-
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+
+import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.repository.account.IUserRepository;
 
 /**
  * @author Rodrigo P. Fraga

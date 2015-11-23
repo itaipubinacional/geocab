@@ -25,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,11 +77,11 @@ public class LayerGroupService
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
 	
-	/**
-	 * I18n 
-	 */
-	@Autowired
-	private MessageSource messages;
+//	/**
+//	 * I18n 
+//	 */
+//	@Autowired
+//	private MessageSource messages;
 	
 	/**
 	 * 

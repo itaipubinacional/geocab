@@ -7,10 +7,7 @@ package br.com.geocab.domain.service;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SaltSource;

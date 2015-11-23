@@ -35,15 +35,16 @@ import org.hibernate.engine.spi.Mapping;
  * @author Gavin King
  * @author Brett Meyer
  */
+@SuppressWarnings(
+{ "rawtypes", "unchecked" })
 public abstract class Constraint implements RelationalModel, Serializable
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 9067630692598930493L;
-	
+
 	private String name;
-	@SuppressWarnings("rawtypes")
 	private final ArrayList columns = new ArrayList();
 	private Table table;
 
@@ -212,10 +213,9 @@ public abstract class Constraint implements RelationalModel, Serializable
 	{
 		if (isGenerated(dialect))
 		{
-			return new StringBuilder()
-					.append("alter table ")
-					.append(getTable().getQualifiedName(dialect,
-							defaultCatalog, defaultSchema))
+			return new StringBuilder().append("alter table ")
+					.append(getTable().getQualifiedName(dialect, defaultCatalog,
+							defaultSchema))
 					.append(" drop constraint ")
 					.append(dialect.quote(getName())).toString();
 		}
@@ -233,9 +233,10 @@ public abstract class Constraint implements RelationalModel, Serializable
 		{
 			String constraintString = sqlConstraintString(dialect, getName(),
 					defaultCatalog, defaultSchema);
-			StringBuilder buf = new StringBuilder("alter table ").append(
-					getTable().getQualifiedName(dialect, defaultCatalog,
-							defaultSchema)).append(constraintString);
+			StringBuilder buf = new StringBuilder("alter table ")
+					.append(getTable().getQualifiedName(dialect, defaultCatalog,
+							defaultSchema))
+					.append(constraintString);
 			return buf.toString();
 		}
 		else
@@ -249,8 +250,8 @@ public abstract class Constraint implements RelationalModel, Serializable
 		return columns;
 	}
 
-	public abstract String sqlConstraintString(Dialect d,
-			String constraintName, String defaultCatalog, String defaultSchema);
+	public abstract String sqlConstraintString(Dialect d, String constraintName,
+			String defaultCatalog, String defaultSchema);
 
 	@Override
 	public String toString()

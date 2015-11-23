@@ -10,14 +10,6 @@ import java.io.Serializable;
  */
 public interface IEntity<ID extends Serializable> extends Serializable
 {
-	/**
-	 * Core schema
-	 */
-	public static final String SCHEMA = "geocab";
-	/**
-	 * Audit schema
-	 */
-	public static final String AUDIT_SCHEMA = "geocab_auditoria";
 	
 	/*-------------------------------------------------------------------
 	 * 		 				GETTERS AND SETTERS
