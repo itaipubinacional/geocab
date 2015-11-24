@@ -163,13 +163,21 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         '<a ng-click="changeToDetail(row.entity)" title="' + $translate("admin.layer-config.Update") + '" class="btn btn-mini"><i style="color: #333; font-size: 18px" class="glyphicon glyphicon-eye-open"></i></a>' +
         '</div>';
 
-    //TODO ICON CANCELED
+    //var IMAGE_MODERATION = '<div  class="cell-centered">' +
+    //    '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>' +
+    //    '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>' +
+    //    '<a ng-if="row.entity.status == \'REFUSED\' " class="icon-refuse-moderation"></a>' +
+    //    '<a ng-if="row.entity.status == \'CANCELED\' " class="icon-refuse-moderation"></a>' +
+    //    '</div>';
     var IMAGE_MODERATION = '<div  class="cell-centered">' +
-        '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>' +
-        '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>' +
-        '<a ng-if="row.entity.status == \'REFUSED\' " class="icon-refuse-moderation"></a>' +
-        '<a ng-if="row.entity.status == \'CANCELED\' " class="icon-refuse-moderation"></a>' +
+        '<a ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></a>' +
+        '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></a>' +
+        '<a ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></a>' +
+        '<a ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></a>' +
         '</div>';
+
+
+
 
     $scope.gridOptions = {
         data: 'currentPage.content',

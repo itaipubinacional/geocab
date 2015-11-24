@@ -7,10 +7,10 @@
 <!DOCTYPE html>
 <html style="overflow:hidden" xmlns="http://www.w3.org/1999/html">
 <div style="width:36%; height: 100%; float:left; margin: 20px;">
-    <div class="content-tab" style="height:76vh; overflow:auto">
+    <div style="height:76vh; overflow:auto">
         <div>
             <span style="cursor:pointer" ng-click="changeToList(currentPage)"
-                  class="icon itaipu-icon-close">
+                  class="icon itaipu-icon-arrow-left-1">
             </span>
 
             <span style=" font-weight: bold; font-size: 18px; margin-left: 20px">
@@ -25,7 +25,7 @@
         </div>
 
 
-        <form >
+        <form>
 
             <div id="left-content" style="float:left; margin-bottom: 70px">
 
@@ -35,6 +35,9 @@
 
 
                 <div class="col-md-10" style="float:left">
+                    <span><b>Status</b></span>
+                    {{currentEntity.status}}
+
                     <div ng-repeat="markerAttribute in attributesByMarker track by $index"
                          style="position: relative;margin-bottom:15px;">
 
@@ -93,61 +96,43 @@
 
 
         <!--BUTTONS-->
-        <div class="row" style="position:fixed;background-color: #FFFFFF ; height: 80px;bottom: 25px; width: 30%;
-            padding-top: 20px; border-top: 1px solid #696969">
-            <div class=" col-md-3">
+        <div class="row" style="position:fixed;background-color: #FFFFFF ; height: 80px;bottom: 25px; width: 37%;
+            padding-top: 20px; border-top: 1px solid #a4a4a4">
+            <div class=" col-md-2">
                 <a class="btn btn-default icon itaipu-icon-book" ng-click="changeToHistory(row.entity.marker)"
                    style="width:75px; height:58px;">
                     </br>
                     <spring:message code="admin.marker-moderation.History"/>
                 </a>
             </div>
-            <div class="col-md-3">
-                <div class="btn btn-default icon itaipu-icon-alert" name="btnApprove"
+            <div class="col-md-2">
+                <div class="btn btn-default icon itaipu-icon-like-filled" name="btnApprove"
                      ng-click="approveMarker()"
                      style="width:75px; height:58px;">
                     </br>
-                    <a style="font-size:14px;text-decoration:none;color:black"
-                       ng-if="currentEntity.status != 'ACCEPTED'">
+                    <a style="font-size:14px;text-decoration:none;color:black">
                         <spring:message code="admin.marker-moderation.Approve"/>
-                    </a>
-                    <a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%"
-                       ng-if="currentEntity.status == 'ACCEPTED'">
-                        <spring:message code="admin.marker-moderation.Approved"/>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="btn btn-default icon itaipu-icon-reset" name="btnRefuse"
-                      ng-click="refuseMarker()"
-                     style="width:75px; height:58px">
-                    </br>
-                    <a style="font-size:14px;text-decoration:none;color:black"
-                       ng-if="currentEntity.status != 'REFUSED'">
-                        <spring:message code="admin.marker-moderation.Refuse"/>
-                    </a>
-                    <a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%"
-                       ng-if="currentEntity.status == 'REFUSED'">
-                        <spring:message code="admin.marker-moderation.Refused"/>
                     </a>
 
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
+                <div class="btn btn-default icon itaipu-icon-dislike" name="btnRefuse" ng-click="refuseMarker()"
+                     style="width:75px; height:58px">
+                    </br>
+                    <a style="font-size:14px;text-decoration:none;color:black">
+                        <spring:message code="admin.marker-moderation.Refuse"/>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-2">
                 <div class="btn btn-default icon itaipu-icon-close" name="btnRefuse"
                      ng-click="cancelMarker()"
                      style="width:75px; height:58px">
-
                     </br>
-                    <a style="font-size:14px;text-decoration:none;color:black"
-                       ng-if="currentEntity.status != 'CANCELED'">
+                    <a style="font-size:14px;text-decoration:none;color:black">
                         <spring:message code="admin.marker-moderation.Cancel"/>
                     </a>
-                    <a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%"
-                       ng-if="currentEntity.status == 'CANCELED'">
-                        <spring:message code="admin.marker-moderation.CANCELED"/>
-                    </a>
-
                 </div>
             </div>
         </div>

@@ -4,9 +4,9 @@
   font-family: "itaipu-icons";
   src:url("fonts/itaipu-icons.eot");
   src:url("fonts/itaipu-icons.eot?#iefix") format("embedded-opentype"),
-  url("fonts/itaipu-icons.woff") format("woff"),
-  url("fonts/itaipu-icons.ttf") format("truetype"),
-  url("fonts/itaipu-icons.svg#itaipu-icons") format("svg");
+    url("fonts/itaipu-icons.woff") format("woff"),
+    url("fonts/itaipu-icons.ttf") format("truetype"),
+    url("fonts/itaipu-icons.svg#itaipu-icons") format("svg");
   font-weight: normal;
   font-style: normal;
 
@@ -151,4 +151,7 @@
 }
 .itaipu-icon-book:before {
   content: "J";
+}
+.itaipu-icon-arrow-left-1:before {
+  content: "M";
 }

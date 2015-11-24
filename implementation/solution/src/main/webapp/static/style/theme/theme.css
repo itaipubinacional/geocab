@@ -894,6 +894,21 @@ input:-moz-placeholder {
 	color: #D44545
 }
 
+.itaipu-icon-schedules, .itaipu-icon-schedules:hover {
+	color: #d4c200
+}
+.itaipu-icon-like-filled, .itaipu-icon-like-filled:hover {
+	color: #00d402;
+}
+ .itaipu-icon-dislike, .itaipu-icon-dislike:hover {
+	color: #d45a05
+}
+.itaipu-icon-close, .itaipu-icon-close:hover {
+	color: #d40004
+}
+
+
+
 .tree-itaipu-icon:hover {
     cursor: pointer;
     text-decoration: none;
