@@ -88,14 +88,15 @@
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
-
-				<!-- Mail server -->
+				
+				<!-- Mail -->
 				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
 				<mvn.mail.port>25</mvn.mail.port>
 				<mvn.mail.username>no-reply</mvn.mail.username>
+				<mvn.mail.protocol>smtp</mvn.mail.protocol>
 				<mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
 				<mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
-				<mvn.mail.ttls>false</mvn.mail.ttls>
+				<mvn.mail.tls>false</mvn.mail.tls>
 				<mvn.mail.ssl>false</mvn.mail.ssl>
 				<mvn.mail.debug>true</mvn.mail.debug>
 

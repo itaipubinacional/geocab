@@ -40,8 +40,7 @@ public class ContactService
 	 */
 	public Email contactUs(Email email)
 	{
-		if (this.getLoggedUser().getUsername() != null
-				&& !this.getLoggedUser().getRole().equals(User.ANONYMOUS))
+		if (this.getLoggedUser() != null)
 		{
 			email.setEmail(ContextHolder.getAuthenticatedUser().getUsername());
 			email.setName(ContextHolder.getAuthenticatedUser().getName());
@@ -67,7 +66,13 @@ public class ContactService
 	 */
 	public User getLoggedUser()
 	{
-		return ContextHolder.getAuthenticatedUser();
+		User user = ContextHolder.getAuthenticatedUser();
+		if (user == null || user.getName().equals("Anonymous"))
+		{
+			return null;
+		}
+		user.setPassword(null);
+		return user;
 	}
 
 	/**

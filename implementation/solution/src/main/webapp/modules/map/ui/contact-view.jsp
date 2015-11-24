@@ -5,7 +5,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
-<%@ page import="nl.captcha.Captcha" %>
 
 <!DOCTYPE html>
 <html>
@@ -21,8 +20,7 @@
   </div>
 
 
-  <form name="form" novalidate>
-
+  <form name="form" ng-submit="sendForm()" role="form">
    
     <div>
       <div class="form-item position-relative" style="width: 300px;">
@@ -31,7 +29,7 @@
           *</label>
         <input name="name" type="text" class="form-control"
                ng-model="contactForm.name"
-               ng-disabled="contactForm.role != ''"
+               ng-disabled="user.enabled"
                required maxlength="144" ng-minlength="1"
                ng-class="{ ngInvalid: form.name.$error.required && (form.$submitted || form.name.$dirty) }"
                autofocus
@@ -46,7 +44,7 @@
         <label class="detail-label"> Email*</label>
         <input name="email" type="email" class="form-control"
                ng-model="contactForm.email"
-               ng-disabled="contactForm.role != ''"
+               ng-disabled="user.enabled"
                required maxlength="144" ng-minlength="1"
                ng-class="{ ngInvalid: form.email.$error.required && (form.$submitted || form.name.$dirty) }"
                autofocus
@@ -116,7 +114,7 @@
 		 <button class="btn btn-success"
               id="buttonUpdate"
               title="<spring:message code='contact.Send'/>"
-              ng-click="sendForm(form)">
+              type="submit">
         <spring:message code="contact.Send"/>
       </button>
     </div>
