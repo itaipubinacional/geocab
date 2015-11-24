@@ -57,12 +57,12 @@
     <ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
         <li ng-click="eventIncreaseZoom()" title="<spring:message code='map.Zoom-in'/>">
             <a href="#tabs-2">
-                <div class="icon itaipu-icon-plus sidebar-icon"></div>
+                <div class="icon itaipu-icon-zoom-in sidebar-icon"></div>
             </a>
         </li>
         <li ng-click="eventDecreaseZoom()" title="<spring:message code='map.Zoom-out'/>">
             <a>
-                <div class="icon itaipu-icon-minus sidebar-icon"></div>
+                <div class="icon itaipu-icon-zoom-out sidebar-icon"></div>
             </a>
         </li>
         <li ng-click="eventMarkerTool()"

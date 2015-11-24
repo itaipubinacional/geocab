@@ -13,7 +13,6 @@
                   class="icon itaipu-icon-close">
             </span>
 
-
             <span style=" font-weight: bold; font-size: 18px; margin-left: 20px">
                 {{currentEntity.layer.title }}
             </span>
@@ -26,9 +25,9 @@
         </div>
 
 
-        <form>
+        <form >
 
-            <div id="left-content" style="float:left">
+            <div id="left-content" style="float:left; margin-bottom: 70px">
 
                 <span style="font-weight: bold; font-size: 18px; margin: 20px 0 20px 0; float: left;">Informações</span>
 
@@ -83,7 +82,7 @@
                     </div>
                 </div>
 
-                <div style="text-align:center; margin-bottom: 70px">
+                <div style="text-align:center;">
                     <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
                          style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px"> <br>
 
