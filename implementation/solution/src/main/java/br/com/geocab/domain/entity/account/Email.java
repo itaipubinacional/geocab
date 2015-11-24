@@ -88,7 +88,7 @@ public class Email
 	 */
 	public void validate()
 	{
-		// Verificar se o @Email vai funcionar, se não funcionar fazer função
+		// Verificar se o TODO @Email vai funcionar, se não funcionar fazer função
 		// validadora
 		Assert.isTrue(this.getEmail() != null, "Insira o email");
 

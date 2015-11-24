@@ -9,7 +9,7 @@ import org.directwebremoting.annotations.DataTransferObject;
  * @author emanuelvictor
  *
  */
-@DataTransferObject(type="enum", javascript="BackgroundMap")
+@DataTransferObject(type = "enum", javascript = "BackgroundMap")
 public enum BackgroundMap
 {
 
@@ -18,18 +18,16 @@ public enum BackgroundMap
 	 *-------------------------------------------------------------------*/
 
 	// GOOGLE MAPS CONFIGURATIONS
-	GOOGLE, // 0
-	GOOGLE_MAP, // 1
-	GOOGLE_MAP_TERRAIN, // 2
-	GOOGLE_SATELLITE, // 3
-	GOOGLE_SATELLITE_LABELS, // 4
+	GOOGLE_MAP, // 0
+	GOOGLE_MAP_TERRAIN, // 1
+	GOOGLE_SATELLITE, // 2
+	GOOGLE_SATELLITE_LABELS, // 3
 
 	// MAP QUEST
-	MAP_QUEST, // 5
-	MAP_QUEST_OSM, // 6
-	MAP_QUEST_SAT, // 7
+	MAP_QUEST_OSM, // 4
+	MAP_QUEST_SAT, // 5
 
 	// OPEN STREET MAP
-	OPEN_STREET_MAP; // 8
+	OPEN_STREET_MAP; // 6
 
 }
