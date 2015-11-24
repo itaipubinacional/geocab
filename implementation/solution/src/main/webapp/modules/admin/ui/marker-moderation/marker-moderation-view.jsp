@@ -76,7 +76,7 @@
             ng-click="initializeDistanceCalc()"
             ng-class="{ferramenta_active : menu.fcDistancia}">
             <a>
-                <div class="icon itaipu-icon-ruler-1 sidebar-icon"></div>
+                <div class="icon itaipu-icon-ruler sidebar-icon"></div>
             </a>
         </li>
         <li ng-click="initializeAreaCalc()"

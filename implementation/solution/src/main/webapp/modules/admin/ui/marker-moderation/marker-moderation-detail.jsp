@@ -5,93 +5,35 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html style="overflow:hidden">
+<html style="overflow:hidden" xmlns="http://www.w3.org/1999/html">
 <div style="width:36%; height: 100%; float:left; margin: 20px;">
     <div class="content-tab" style="height:76vh; overflow:auto">
-        <span style="z-index: 1000;float:right;cursor:pointer" ng-click="changeToList(currentPage)"
-              class="icon itaipu-icon-close"></span>
-        <br>
+        <div>
+            <span style="cursor:pointer" ng-click="changeToList(currentPage)"
+                  class="icon itaipu-icon-close">
+            </span>
 
-        <div style="float: right" id="right-buttons">
-            </br>
-            <a class="btn btn-default history" ng-click="changeToHistory(row.entity.marker)"
-               style="margin-top:80px; width:75px; height:58px; line-height : 75px">
-                <spring:message code="admin.marker-moderation.History"/>
-            </a></br>
 
-            <div class="btn btn-default" name="btnApprove"
-                 ng-class="{approve: currentEntity.status == 'PENDING' || currentEntity.status == 'REFUSED' , approve1: currentEntity.status == 'ACCEPTED' }"
-                 ng-click="approveMarker()"
-                 style="position:relative;margin-top:15px; width:75px; height:58px; line-height : 75px">
+            <span style=" font-weight: bold; font-size: 18px; margin-left: 20px">
+                {{currentEntity.layer.title }}
+            </span>
 
-                <a style="font-size:14px;text-decoration:none;color:black" ng-if="currentEntity.status != 'ACCEPTED'">
-                    <spring:message code="admin.marker-moderation.Approve"/>
-                </a>
-                <a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%"
-                   ng-if="currentEntity.status == 'ACCEPTED'">
-                    <spring:message code="admin.marker-moderation.Approved"/>
-                </a>
-
+            <div style="margin-left: 35px">
+                <span><b>{{ currentEntity.user.name}} ({{ currentEntity.user.email}})</b></span>
+                <span>em {{ currentEntity.created | date:'dd/MM/yyyy' }}</span>
             </div>
-            </br>
-
-
-            <div class="btn btn-default" name="btnRefuse"
-                 ng-class="{refuse: currentEntity.status == 'PENDING' || currentEntity.status == 'ACCEPTED' , refuse1: currentEntity.status == 'REFUSED' }"
-                 ng-click="refuseMarker()"
-                 style="position:relative;margin-top:15px; width:75px; height:58px; line-height : 75px">
-
-                <a style="font-size:14px;text-decoration:none;color:black" ng-if="currentEntity.status != 'REFUSED'">
-                    <spring:message code="admin.marker-moderation.Refuse"/>
-                </a>
-                <a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%"
-                   ng-if="currentEntity.status == 'REFUSED'">
-                    <spring:message code="admin.marker-moderation.Refused"/>
-                </a>
-
-            </div>
-            </br>
-
-
-            <div class="btn btn-default cancel" name="btnRefuse"
-                 ng-class="{refuse: currentEntity.status == 'PENDING' || currentEntity.status == 'ACCEPTED' , cancel: currentEntity.status == 'REFUSED' }"
-                 ng-click="cancelMarker()"
-                 style="position:relative;margin-top:15px; width:75px; height:58px; line-height : 75px">
-
-
-                <a style="font-size:14px;text-decoration:none;color:black" ng-if="currentEntity.status != 'CANCELED'">
-                    <spring:message code="admin.marker-moderation.Cancel"/>
-                </a>
-                <a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%"
-                   ng-if="currentEntity.status == 'CANCELED'">
-                    <spring:message code="admin.marker-moderation.CANCELED"/>
-                </a>
-
-            </div>
-            </br>
-
 
         </div>
 
-        <div style="float:right">
-            <span><b>{{ currentEntity.user.name}} ({{ currentEntity.user.email}})</b></span>
-            <span>em {{ currentEntity.created | date:'dd/MM/yyyy' }}</span>
-        </div>
 
         <form>
 
             <div id="left-content" style="float:left">
-						<span
-                                style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{currentEntity.layer.title }}
-						</span>
+
+                <span style="font-weight: bold; font-size: 18px; margin: 20px 0 20px 0; float: left;">Informações</span>
 
                 </br>
 
-                <div style="text-align:center">
-                    <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-                         style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px"> <br>
-
-                </div>
 
                 <div class="col-md-10" style="float:left">
                     <div ng-repeat="markerAttribute in attributesByMarker track by $index"
@@ -103,32 +45,29 @@
                                 type="number" name="number1"
                                 ng-if="markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '' "
                                 class="form-control" ng-model="markerAttribute.value"
-                                required ng-disabled="true"
-                                >
+                                required ng-disabled="true">
 
                         <input
                                 name="date1"
                                 ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
                                 class="form-control datepicker" ng-model="markerAttribute.value"
                                 required
-                                ng-disabled="true"
-                                >
+                                ng-disabled="true">
 
                         <div ng-if="markerAttribute.attribute.type == 'BOOLEAN' && !markerAttribute.value == ''">
                             <input
                                     ng-disabled="true" type="radio"
                                     ng-checked="markerAttribute.value == 'Yes'"
                                     ng-model="markerAttribute.value"
-                                    value="Yes"
-                                    >
+                                    value="Yes">
                             <spring:message code="map.Yes"/>
 
                             <input
                                     ng-disabled="true" type="radio"
                                     ng-checked="markerAttribute.value == 'No'"
                                     ng-model="markerAttribute.value"
-                                    value="No"
-                                    >
+                                    value="No">
+
                             <spring:message code="map.No"/>
                         </div>
 
@@ -143,9 +82,77 @@
 
                     </div>
                 </div>
+
+                <div style="text-align:center; margin-bottom: 70px">
+                    <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+                         style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px"> <br>
+
+                </div>
             </div>
 
         </form>
+
+
+        <!--BUTTONS-->
+        <div class="row" style="position:fixed;background-color: #FFFFFF ; height: 80px;bottom: 25px; width: 30%;
+            padding-top: 20px; border-top: 1px solid #696969">
+            <div class=" col-md-3">
+                <a class="btn btn-default icon itaipu-icon-book" ng-click="changeToHistory(row.entity.marker)"
+                   style="width:75px; height:58px;">
+                    </br>
+                    <spring:message code="admin.marker-moderation.History"/>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <div class="btn btn-default icon itaipu-icon-alert" name="btnApprove"
+                     ng-click="approveMarker()"
+                     style="width:75px; height:58px;">
+                    </br>
+                    <a style="font-size:14px;text-decoration:none;color:black"
+                       ng-if="currentEntity.status != 'ACCEPTED'">
+                        <spring:message code="admin.marker-moderation.Approve"/>
+                    </a>
+                    <a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%"
+                       ng-if="currentEntity.status == 'ACCEPTED'">
+                        <spring:message code="admin.marker-moderation.Approved"/>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="btn btn-default icon itaipu-icon-reset" name="btnRefuse"
+                      ng-click="refuseMarker()"
+                     style="width:75px; height:58px">
+                    </br>
+                    <a style="font-size:14px;text-decoration:none;color:black"
+                       ng-if="currentEntity.status != 'REFUSED'">
+                        <spring:message code="admin.marker-moderation.Refuse"/>
+                    </a>
+                    <a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%"
+                       ng-if="currentEntity.status == 'REFUSED'">
+                        <spring:message code="admin.marker-moderation.Refused"/>
+                    </a>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="btn btn-default icon itaipu-icon-close" name="btnRefuse"
+                     ng-click="cancelMarker()"
+                     style="width:75px; height:58px">
+
+                    </br>
+                    <a style="font-size:14px;text-decoration:none;color:black"
+                       ng-if="currentEntity.status != 'CANCELED'">
+                        <spring:message code="admin.marker-moderation.Cancel"/>
+                    </a>
+                    <a style="font-size:14px;text-decoration:none;color:white;position:absolute;left:8%"
+                       ng-if="currentEntity.status == 'CANCELED'">
+                        <spring:message code="admin.marker-moderation.CANCELED"/>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        </br>
 
     </div>
 </div>
