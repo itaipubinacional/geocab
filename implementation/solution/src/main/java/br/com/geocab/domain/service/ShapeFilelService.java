@@ -13,10 +13,6 @@ import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
-import org.geotools.data.FileDataStore;
-import org.geotools.data.FileDataStoreFinder;
-import org.geotools.data.shapefile.files.ShpFiles;
-import org.geotools.data.simple.SimpleFeatureSource;
 import org.springframework.stereotype.Service;
 
 import br.com.geocab.domain.entity.marker.Marker;
@@ -54,10 +50,10 @@ public class ShapeFilelService
 		{
 			// Lê o arquivo
 			File file = this.readFile(shapeFile);
-			// ShpFiles shpFiles = new ShpFiles(file);
-			//
-			// FileDataStore store = FileDataStoreFinder.getDataStore(file);
-			// SimpleFeatureSource featureSource = store.getFeatureSource();
+//			 ShpFiles shpFiles = new ShpFiles(file);
+//			
+//			 FileDataStore store = FileDataStoreFinder.getDataStore(file);
+//			 SimpleFeatureSource featureSource = store.getFeatureSource();
 
 			// Deleta o arquivo
 			file.delete();

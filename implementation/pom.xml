@@ -134,15 +134,15 @@
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
 
 				<!-- Mail server -->
-				<mvn.mail.protocol>smtp</mvn.mail.protocol>
-				<mvn.mail.host>email-smtp.us-east-1.amazonaws.com</mvn.mail.host>
+				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
 				<mvn.mail.port>25</mvn.mail.port>
-				<mvn.mail.user>AKIAJEL3OJOERLDVB7UQ</mvn.mail.user>
-				<mvn.mail.password>AkUvBlbMRLfzA3QkB12Ju8+v05vVibbga3E/aEs+ZTZ0</mvn.mail.password>
+				<mvn.mail.username>no-reply</mvn.mail.username>
+				<mvn.mail.protocol>smtp</mvn.mail.protocol>
+				<mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
+				<mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
 				<mvn.mail.tls>false</mvn.mail.tls>
 				<mvn.mail.ssl>false</mvn.mail.ssl>
 				<mvn.mail.debug>true</mvn.mail.debug>
-				<mvn.mail.from>no-reply@eits.com.br</mvn.mail.from>
 
 				<!-- Social -->
 				<!-- Facebook -->
