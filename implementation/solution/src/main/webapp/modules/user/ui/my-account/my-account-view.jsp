@@ -10,6 +10,15 @@
 <div>
     <div class="navbar">
 
+        <!--Mensagens-->
+
+        <div class="alert"
+             ng-class="{'alert-dismissable': msg.dismiss, 'danger' : (msg.type == 'danger'), 'info' : (msg.type == 'info'), 'warning' : (msg.type == 'warning'), 'success' : (msg.type == 'success')}"
+             ng-show="msg != null">
+            <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+            {{msg.text}}
+        </div>
+
         <div class="navbar-inner navbar-container row" >
             <div class="col-md-5">
                 <div class="navbar-title">
@@ -34,15 +43,12 @@
     </div>
 
     <tabset>
-
-        <tab heading="<spring:message code='admin.users.Account-preferences'/>">
-            <div ng-include="'modules/user/ui/my-account/my-preferences-form.jsp'"></div>
-        </tab>
-
         <tab heading="<spring:message code='admin.users.Account-information'/>">
             <div ng-include="'modules/user/ui/my-account/my-account-form.jsp'"></div>
         </tab>
-
+        <tab heading="<spring:message code='admin.users.Account-preferences'/>">
+            <div ng-include="'modules/user/ui/my-account/my-preferences-form.jsp'"></div>
+        </tab>
     </tabset>
     <!-- Partial views of states -->
     <!--<div ng-switch on="currentState">

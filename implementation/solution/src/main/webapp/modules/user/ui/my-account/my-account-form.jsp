@@ -11,12 +11,7 @@
 <!-- My account - Update -->
 <div>
 
-	
-	<!--Mensagens-->
-    <div class="alert" ng-class="{'alert-dismissable': msg.dismiss, 'danger' : (msg.type == 'danger'), 'info' : (msg.type == 'info'), 'warning' : (msg.type == 'warning'), 'success' : (msg.type == 'success')}" ng-show="msg != null">
-	    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button> 
-	    {{msg.text}}
-	</div>
+
     <form name="form" novalidate default-button="buttonUpdate">
         <div class="content-tab">
       		

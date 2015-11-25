@@ -269,6 +269,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * */
   $scope.searchId = 1;
 
+  $scope.backgroundMap = [];
+
+  $scope.backgroundMap.type = [];
+
+  $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
+  $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
+
   /*-------------------------------------------------------------------
    * 		 				 	 CONFIGURATION VARIABLES MAP
    *-------------------------------------------------------------------*/
@@ -468,6 +475,64 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $("#sidebar-tabs li").removeClass("ui-corner-top ui-widget-content").addClass("ui-corner-left");
     });
 
+    $scope.setType = function(type, status) {
+      if(status) {
+        if (type == 'GOOGLE_SATELLITE_LABELS') {
+          $scope.currentEntity.backgroundMap = type;
+        } else {
+          $scope.currentEntity.backgroundMap = type;
+        }
+      } else {
+        $scope.currentEntity.backgroundMap = $scope.backgroundMap.subType;
+      }
+    };
+
+    $scope.setBackgroundMap = function(backgroundMap){
+
+      $scope.currentEntity.backgroundMap = backgroundMap;
+
+      if(backgroundMap.match(/GOOGLE/i))
+        $scope.backgroundMap.map = 'GOOGLE';
+
+      if(backgroundMap.match(/MAP_QUEST/i))
+        $scope.backgroundMap.map = 'MAP_QUEST';
+
+      if(backgroundMap.match(/OPEN_STREET_MAP/i)) {
+        $scope.initializeOSM();
+        $scope.backgroundMap.map = 'OPEN_STREET_MAP';
+      }
+
+      if(backgroundMap.match(/MAP_QUEST|MAP_QUEST_OSM/i) && backgroundMap != 'MAP_QUEST_SAT') {
+        $scope.initializeMapQuestOSM();
+        $scope.currentEntity.backgroundMap = 'MAP_QUEST_OSM';
+        $scope.backgroundMap.subType = 'MAP_QUEST_OSM';
+      }
+
+      if(backgroundMap.match(/MAP_QUEST_SAT/i))
+        $scope.backgroundMap.subType = 'MAP_QUEST_SAT';
+
+      if(backgroundMap == 'GOOGLE_MAP' && backgroundMap != 'GOOGLE_SATELLITE') {
+        $scope.initializeGMAP();
+        $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
+        $scope.backgroundMap.subType = 'GOOGLE_MAP';
+      }
+
+      if(backgroundMap == 'GOOGLE_SATELLITE') {
+        $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
+        $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
+      }
+
+      if(backgroundMap == 'GOOGLE_MAP_TERRAIN') {
+        $scope.backgroundMap.subType = 'GOOGLE_MAP';
+        $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = true;
+      }
+
+      if(backgroundMap == 'GOOGLE_SATELLITE_LABELS') {
+        $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
+        $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = true;
+      }
+
+    };
 
     /**
      * Click event to prompt the geoserver the information layer of the clicked coordinat
@@ -602,10 +667,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $("div.msgMap").css("display", "none");
 
     });
+
     /**
      * authenticated user
      * */
-    markerService.getUserMe({
+    accountService.getUserAuthenticated({
+      callback : function(result) {
+        $scope.userMe = result;
+        $scope.setBackgroundMap(result.backgroundMap);
+        $scope.$apply();
+      },
+      errorHandler : function(message, exception) {
+        $scope.message = {type:"error", text: message};
+        $scope.$apply();
+      }
+    });
+
+    /*markerService.getUserMe({
       callback: function (result) {
         $scope.userMe = result;
       },
@@ -613,7 +691,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.message = {type: "error", text: message};
         $scope.$apply();
       }
-    });
+    });*/
 
   };
 
@@ -1326,7 +1404,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
      */
     var formatCoordinate = function (coord) {
 
-      var posVirgula = coord.indexOf(",");
+      if($scope.userMe.coordinates == 'DEGREES_DECIMAL') {
+        return coord;
+      } else {
+        return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
+      }
+
+      /*var posVirgula = coord.indexOf(",");
 
       var part1 = coord.slice(0, posVirgula);
       var part2 = coord.slice(posVirgula + 2);
@@ -1337,7 +1421,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       posPonto = part2.indexOf(".");
       var longitude = part2.slice(0, posPonto) + "°" + part2.slice(posPonto + 1, posPonto + 3) + "'" + part2.slice(posPonto + 3) + '"';
 
-      return latitude + ", " + longitude;
+      return latitude + ", " + longitude;*/
 
     }
 
