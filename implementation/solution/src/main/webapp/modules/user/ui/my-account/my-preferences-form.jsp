@@ -10,11 +10,6 @@
 </style>
 <!-- My account - Update -->
 <div>
-
-
-
-
-
     <form name="form" novalidate default-button="buttonUpdate">
 
         <div class="content-tab">
@@ -43,18 +38,6 @@
                 <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDegree'/> </label>
             </div>
 
-            <!--<label>
-                <input name="DMS" type="radio"
-                       ng-model="currentEntity.coordinates" value="DEGRESS_MINUTES_SECONDS">
-                <spring:message code='admin.users.coordinatesDMS'/>
-            </label>
-            <br>
-            <label>
-                <input name="DD" type="radio"
-                       ng-model="currentEntity.coordinates" value="DEGRESS_DECIMAL">
-                <spring:message code='admin.users.coordinatesDegree'/>
-            </label>
-            <br>-->
             <hr>
 
             <!-- BACKGROUND MAP -->
@@ -138,7 +121,5 @@
             </div>
         </div>
     </form>
-
-
 </div>
 </html>

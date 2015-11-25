@@ -43,15 +43,12 @@
     </div>
 
     <tabset>
-
-        <tab heading="<spring:message code='admin.users.Account-preferences'/>">
-            <div ng-include="'modules/user/ui/my-account/my-preferences-form.jsp'"></div>
-        </tab>
-
         <tab heading="<spring:message code='admin.users.Account-information'/>">
             <div ng-include="'modules/user/ui/my-account/my-account-form.jsp'"></div>
         </tab>
-
+        <tab heading="<spring:message code='admin.users.Account-preferences'/>">
+            <div ng-include="'modules/user/ui/my-account/my-preferences-form.jsp'"></div>
+        </tab>
     </tabset>
     <!-- Partial views of states -->
     <!--<div ng-switch on="currentState">

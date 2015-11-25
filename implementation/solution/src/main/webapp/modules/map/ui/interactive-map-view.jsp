@@ -11,7 +11,7 @@ uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 
-<div  id="sb-site" style="position: relative;width: 100%;height: 100%;">
+<div id="sb-site" class="map-content">
 
   <span id="marker-point"
         class="glyphicon glyphicon-map-marker sidebar-icon"

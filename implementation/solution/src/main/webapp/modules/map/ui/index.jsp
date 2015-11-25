@@ -71,14 +71,30 @@
 	    </style>
 	</head> 
 	
-	<body class="overflow-hidden">
-		<div class="container-fluid" style="height: 100%;"> 
+	<body class="overflow-hidden container-fluid" style="height: 100%;">
 			<header>
 				<jsp:include page="../../common/header.jsp"/>
 			</header>
 
+			<security:authorize ifAnyGranted="ADMINISTRATOR">
+				<style>.map-content{position: absolute; bottom: 0; top: 116px; left: 0; right: 0;}</style>
+			</security:authorize>
+
+			<security:authorize ifAnyGranted="USER,MODERATOR">
+				<sec:authorize access="principal.password != 'no password'">
+					<style>.map-content{position: absolute; bottom: 0; top: 116px; left: 0; right: 0;}</style>
+				</sec:authorize>
+				<sec:authorize access="principal.password == 'no password'">
+					<style>.map-content{position: absolute; bottom: 0; top: 60px; left: 0; right: 0;}</style>
+				</sec:authorize>
+			</security:authorize>
+
+			<security:authorize access="!isAuthenticated()">
+				<style>.map-content{position: absolute; bottom: 0; top: 60px; left: 0; right: 0;}</style>
+			</security:authorize>
+
 			<!-- content -->
-			<div ui-view class="map-content"></div>
+			<div ui-view></div>
 			<!-- /content -->
 
 			<!-- content -->
