@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function MarkerModerationController($scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate) {
+function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate) {
 
     /**
      * Inject the methods, attributes and its states inherited from AbstractCRUDController.
@@ -163,18 +163,13 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         '<a ng-click="changeToDetail(row.entity)" title="' + $translate("admin.layer-config.Update") + '" class="btn btn-mini"><i style="color: #333; font-size: 18px" class="glyphicon glyphicon-eye-open"></i></a>' +
         '</div>';
 
-    //var IMAGE_MODERATION = '<div  class="cell-centered">' +
-    //    '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>' +
-    //    '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>' +
-    //    '<a ng-if="row.entity.status == \'REFUSED\' " class="icon-refuse-moderation"></a>' +
-    //    '<a ng-if="row.entity.status == \'CANCELED\' " class="icon-refuse-moderation"></a>' +
-    //    '</div>';
     var IMAGE_MODERATION = '<div  class="cell-centered">' +
-        '<a ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></a>' +
-        '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></a>' +
-        '<a ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></a>' +
-        '<a ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></a>' +
+        '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>' +
+        '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>' +
+        '<a ng-if="row.entity.status == \'REFUSED\' " class="icon-refuse-moderation"></a>' +
+        '<a ng-if="row.entity.status == \'CANCELED\' " class="icon-refuse-moderation"></a>' +
         '</div>';
+
 
 
 
@@ -231,7 +226,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
         columnDefs: [
             {displayName: $translate('admin.marker-moderation.Layer'), field: 'layer.title'},
-            {displayName: $translate('admin.marker-moderation.Email'), field: 'user.email'},
             {
                 displayName: $translate('admin.marker-moderation.Date-posting'),
                 width: '150px',
