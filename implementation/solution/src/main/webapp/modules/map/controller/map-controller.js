@@ -4016,6 +4016,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
   };
 
+  $scope.exportShapeFile= function (){
+	  shapeFileService.exportShapeFile( null, {
+           callback: function (result) {
+                $('body').append('<a id="map-download" href="' + result + '"></a>');
+                $('#map-download')[0].click();
+             $('#map-download').remove();
+             
+             $scope.$apply();
+           },
+           errorHandler: function (message, exception) {
+            alert(message);
+            $scope.$apply();
+           }
+        });
+	  }
+
+  
   /**
    * Performs the insertion of a new record
    * and in the success, modifies the State of the screen for the detail.
