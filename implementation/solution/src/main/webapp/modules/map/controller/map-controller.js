@@ -667,10 +667,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $("div.msgMap").css("display", "none");
 
     });
+
     /**
      * authenticated user
      * */
-    markerService.getUserMe({
+    accountService.getUserAuthenticated({
+      callback : function(result) {
+        $scope.userMe = result;
+        $scope.setBackgroundMap(result.backgroundMap);
+        $scope.$apply();
+      },
+      errorHandler : function(message, exception) {
+        $scope.message = {type:"error", text: message};
+        $scope.$apply();
+      }
+    });
+
+    /*markerService.getUserMe({
       callback: function (result) {
         $scope.userMe = result;
       },
@@ -678,7 +691,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.message = {type: "error", text: message};
         $scope.$apply();
       }
-    });
+    });*/
 
   };
 
@@ -1391,7 +1404,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
      */
     var formatCoordinate = function (coord) {
 
-      var posVirgula = coord.indexOf(",");
+      if($scope.userMe.coordinates == 'DEGREES_DECIMAL') {
+        return coord;
+      } else {
+        return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
+      }
+
+      /*var posVirgula = coord.indexOf(",");
 
       var part1 = coord.slice(0, posVirgula);
       var part2 = coord.slice(posVirgula + 2);
@@ -1402,7 +1421,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       posPonto = part2.indexOf(".");
       var longitude = part2.slice(0, posPonto) + "°" + part2.slice(posPonto + 1, posPonto + 3) + "'" + part2.slice(posPonto + 3) + '"';
 
-      return latitude + ", " + longitude;
+      return latitude + ", " + longitude;*/
 
     }
 

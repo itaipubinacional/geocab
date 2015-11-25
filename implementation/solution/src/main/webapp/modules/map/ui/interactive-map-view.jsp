@@ -583,7 +583,7 @@ uri="http://www.springframework.org/security/tags"%>
 
           <li class="menu-item bg-inactive" id="menu-item-5" ng-click="toggleSidebarMenu(300, '#menu-item-5');" title="<spring:message code='map.SHP-enabled'/>">
           <a href="#tabs-5">
-            <div style="font-size:25px" class="icon itaipu-icon-shp sidebar-icon"></div>
+            <div style="font-size:25px" class="icon itaipu-icon-globe-world sidebar-icon"></div>
           </a>
           </li>
 
