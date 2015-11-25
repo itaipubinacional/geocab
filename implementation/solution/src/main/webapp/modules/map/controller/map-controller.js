@@ -393,9 +393,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 //                })
 //            }).extend([$scope.mousePositionControl, new ol.control.FullScreen()]),
 
-      controls: [
-        $scope.mousePositionControl
-      ],
+      controls: ol.control.defaults().extend([
+        new ol.control.ScaleLine(), $scope.mousePositionControl
+      ]),
+
 
       // rotation
       interactions: ol.interaction.defaults({
@@ -1404,7 +1405,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
      */
     var formatCoordinate = function (coord) {
 
-      if($scope.userMe.coordinates == 'DEGREES_DECIMAL') {
+      if($scope.userMe && $scope.userMe.coordinates == 'DEGREES_DECIMAL') {
         return coord;
       } else {
         return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
@@ -4186,7 +4187,28 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       reader.readAsDataURL(input.files[0]);
 
     }
-  }
+  };
+
+  /* GALLERY */
+
+  $scope.showGallery = function(){
+
+    var dialog = $modal.open({
+      templateUrl: "modules/map/ui/popup/gallery-popup.jsp",
+      controller: GalleryPopUpController,
+      resolve: {
+
+      }
+    });
+
+
+    dialog.result.then(function (result) {
+
+    });
+
+  };
+
+  //$scope.showGallery();
 
 };
 

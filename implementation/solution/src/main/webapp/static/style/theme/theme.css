@@ -2450,8 +2450,7 @@ ul.abn-tree li.abn-tree-row a {
 	margin-bottom: 15px;
 }
 
-
-
-
-
-
+.ol-scale-line {
+	color: #000;
+	left: 75px;
+}

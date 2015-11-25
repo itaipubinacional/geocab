@@ -39,6 +39,7 @@
 		<script type="text/javascript" src="modules/map/controller/contact-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
+		<script type="text/javascript" src="modules/map/controller/popup/gallery-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/refuse-marker-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
@@ -68,6 +69,12 @@
 	            height:200px;
 	            border-radius:5px;
 	        }
+					.ol-scale-line {
+						background: none;
+						color: #000;
+						left: 75px;
+					}
+					.ol-scale-line-inner{color: #333; border-color: #333}
 	    </style>
 	</head> 
 	
