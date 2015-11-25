@@ -269,6 +269,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * */
   $scope.searchId = 1;
 
+  $scope.backgroundMap = [];
+
+  $scope.backgroundMap.type = [];
+
+  $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
+  $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
+
   /*-------------------------------------------------------------------
    * 		 				 	 CONFIGURATION VARIABLES MAP
    *-------------------------------------------------------------------*/
@@ -468,6 +475,64 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $("#sidebar-tabs li").removeClass("ui-corner-top ui-widget-content").addClass("ui-corner-left");
     });
 
+    $scope.setType = function(type, status) {
+      if(status) {
+        if (type == 'GOOGLE_SATELLITE_LABELS') {
+          $scope.currentEntity.backgroundMap = type;
+        } else {
+          $scope.currentEntity.backgroundMap = type;
+        }
+      } else {
+        $scope.currentEntity.backgroundMap = $scope.backgroundMap.subType;
+      }
+    };
+
+    $scope.setBackgroundMap = function(backgroundMap){
+
+      $scope.currentEntity.backgroundMap = backgroundMap;
+
+      if(backgroundMap.match(/GOOGLE/i))
+        $scope.backgroundMap.map = 'GOOGLE';
+
+      if(backgroundMap.match(/MAP_QUEST/i))
+        $scope.backgroundMap.map = 'MAP_QUEST';
+
+      if(backgroundMap.match(/OPEN_STREET_MAP/i)) {
+        $scope.initializeOSM();
+        $scope.backgroundMap.map = 'OPEN_STREET_MAP';
+      }
+
+      if(backgroundMap.match(/MAP_QUEST|MAP_QUEST_OSM/i) && backgroundMap != 'MAP_QUEST_SAT') {
+        $scope.initializeMapQuestOSM();
+        $scope.currentEntity.backgroundMap = 'MAP_QUEST_OSM';
+        $scope.backgroundMap.subType = 'MAP_QUEST_OSM';
+      }
+
+      if(backgroundMap.match(/MAP_QUEST_SAT/i))
+        $scope.backgroundMap.subType = 'MAP_QUEST_SAT';
+
+      if(backgroundMap == 'GOOGLE_MAP' && backgroundMap != 'GOOGLE_SATELLITE') {
+        $scope.initializeGMAP();
+        $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
+        $scope.backgroundMap.subType = 'GOOGLE_MAP';
+      }
+
+      if(backgroundMap == 'GOOGLE_SATELLITE') {
+        $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
+        $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
+      }
+
+      if(backgroundMap == 'GOOGLE_MAP_TERRAIN') {
+        $scope.backgroundMap.subType = 'GOOGLE_MAP';
+        $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = true;
+      }
+
+      if(backgroundMap == 'GOOGLE_SATELLITE_LABELS') {
+        $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
+        $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = true;
+      }
+
+    };
 
     /**
      * Click event to prompt the geoserver the information layer of the clicked coordinat

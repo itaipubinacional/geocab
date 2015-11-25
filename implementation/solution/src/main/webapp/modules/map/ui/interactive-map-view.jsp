@@ -580,10 +580,15 @@ uri="http://www.springframework.org/security/tags"%>
 
       <div id="sidebar-tabs" style="float: left;">
         <ul class="map-menu-items tab-flag" id="menu-sidebar-2" style="padding:6px">
+
+          <li class="menu-item bg-inactive" id="menu-item-5" ng-click="toggleSidebarMenu(300, '#menu-item-5');" title="<spring:message code='map.SHP-enabled'/>">
+          <a href="#tabs-5">
+            <div style="font-size:25px" class="icon itaipu-icon-shp sidebar-icon"></div>
+          </a>
+          </li>
+
           <li id="menu-item-1"
-              title="<spring:message code="map.Layer-menu" />"
-          ng-click="toggleSidebarMenu(300, '#menu-item-1');"
-          class="menu-item bg-inactive">
+              title="<spring:message code='map.Layer-menu' />" ng-click="toggleSidebarMenu(300, '#menu-item-1');" class="menu-item">
           <a href="#tabs-1">
             <div class="icon itaipu-icon-layers sidebar-icon"></div>
           </a>
@@ -614,35 +619,93 @@ uri="http://www.springframework.org/security/tags"%>
               <span style="z-index: 1000;" ng-click="toggleSidebarMenu(300, 'closeButton')"
                     class="icon itaipu-icon-close sidebar-close"></span>
 
-            <div id="tabs-1" ng-switch="LAYER_MENU_STATE" style="position: absolute; top:0; right:0; left:0; bottom:0">
+            <div id="tabs-5" ng-switch="LAYER_MENU_STATE" style="position: absolute; top:0; right:0; left:0; bottom:0">
               <div ng-switch-when="list">
                 <div id="layer-list">
                   <div>
-                    <div class="sidebar-content-header"><spring:message code="map.Layers"/></div>
+                    <div class="sidebar-content-header"><spring:message code="map.Background"/></div>
                     <br style="clear: both;">
                     <div class="form-item-horizontal radio"
                          style="margin-left: 0; margin-top: 40px">
                       <input type="radio" id="osm" ng-model="mapConf.type"
-                             value="osm" ng-click="initializeOSM()"> <label
+                             value="osm" ng-click="setBackgroundMap('OPEN_STREET_MAP')"> <label
                         class="radio-label" for="osm"> Open Street View </label>
                     </div>
                     <br />
                     <div class="form-item-horizontal radio" style="margin-left: 0;">
                       <input type="radio" id="googleMap" ng-model="mapConf.type"
-                             value="gmap" ng-click="initializeGMAP()"> <label
+                             value="gmap" ng-click="setBackgroundMap('GOOGLE_MAP')"> <label
                         class="radio-label" for="googleMap"> Google Maps </label>
                     </div>
                     <br />
                     <div class="form-item-horizontal radio" style="margin-left: 0;">
                       <input type="radio" id="mapQuest" ng-model="mapConf.type"
-                             value="mapQuest" ng-click="initializeMapQuestOSM()"> <label
+                             value="mapQuest" ng-click="setBackgroundMap('MAP_QUEST_OSM')"> <label
                         class="radio-label" for="mapQuest"> MapQuest </label>
                     </div>
-                  </div>
-                </div>
 
-                <div
-                    style="overflow-x: auto; position: absolute; top: 210px; bottom: 0px; left: 20px; right: 0px;">
+                    <hr style="border-color: #d9d9d9;"/>
+
+                    <div style="margin-top: 12px" ng-if="backgroundMap.map == 'GOOGLE'">
+
+                      <div>
+                        <div class="form-item-horizontal radio" style="margin-left: 0;">
+                          <input type="radio" id="Map" ng-click="setBackgroundMap('GOOGLE_MAP')" ng-model="backgroundMap.subType" value="GOOGLE_MAP"
+                                 name="Map">
+                          <label class="radio-label" for="Map"> <spring:message code='admin.users.Map'/> </label>
+                        </div>
+
+                        <div class="form-item-horizontal radio" style="margin-left: 0;">
+                          <input type="radio" id="Satellite" ng-click="setBackgroundMap('GOOGLE_SATELLITE')" ng-model="backgroundMap.subType" value="GOOGLE_SATELLITE"
+                                 name="Satellite">
+                          <label class="radio-label" for="Satellite"> <spring:message code='admin.users.Satellite'/> </label>
+                        </div>
+                      </div>
+
+                      <div style="margin-left: 30px" ng-if="backgroundMap.subType == 'GOOGLE_MAP'">
+                        <label><input ng-change="setType('GOOGLE_MAP_TERRAIN', backgroundMap.type.GOOGLE_MAP_TERRAIN)" name="GOOGLE_MAP_TERRAIN" type="checkbox"
+                                      ng-model="backgroundMap.type.GOOGLE_MAP_TERRAIN" value="GOOGLE_MAP_TERRAIN">
+                          <spring:message code='admin.users.Terrain'/>
+                        </label>
+                      </div>
+                      <div style="margin-left: 130px" ng-if="backgroundMap.subType == 'GOOGLE_SATELLITE'">
+                        <label><input ng-change="setType('GOOGLE_SATELLITE_LABELS', backgroundMap.type.GOOGLE_SATELLITE_LABELS)" name="GOOGLE_SATELLITE_LABELS" type="checkbox" style="margin-left: 20px "
+                                      ng-model="backgroundMap.type.GOOGLE_SATELLITE_LABELS" value="GOOGLE_SATELLITE_LABELS">
+                          <spring:message code='admin.users.Labels'/>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div style="margin-top: 12px;" ng-if="backgroundMap.map == 'MAP_QUEST'">
+
+                      <div class="form-item-horizontal radio" style="margin-left: 0;">
+                        <input type="radio" id="OSM" ng-click="setBackgroundMap('MAP_QUEST_OSM')" ng-model="backgroundMap.subType" value="MAP_QUEST_OSM"
+                               name="OSM">
+                        <label class="radio-label" for="OSM"> OSM </label>
+                      </div>
+
+                      <div class="form-item-horizontal radio" style="margin-left: 0;">
+                        <input type="radio" id="SAT" ng-click="setBackgroundMap('MAP_QUEST_SAT')" ng-model="backgroundMap.subType" value="MAP_QUEST_SAT"
+                               name="SAT">
+                        <label class="radio-label" for="SAT"> SAT </label>
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  </div>
+
+              </div>
+            </div>
+            <div id="tabs-1" ng-switch="LAYER_MENU_STATE" style="position: absolute; top:0; right:0; left:0; bottom:0">
+              <div ng-switch-when="list">
+
+                <div>
+
+                  <div class="sidebar-content-header"><spring:message code="map.Layers"/></div>
+
+                  <br style="clear: both;">
 
                   <div ng-show="allLayers.length > 0">
                     <input maxlength="144" type="text" ng-model="bagSearch"
@@ -666,8 +729,6 @@ uri="http://www.springframework.org/security/tags"%>
                        ivh-treeview-label-attribute="'label'"
                        ivh-treeview-children-attribute="'children'">
                   </div>
-
-
                   <br />
                 </div>
               </div>
