@@ -140,13 +140,23 @@
                   style="width: 150px;">
                 <spring:message code="admin.marker-moderation.marker-moderation"/>
               </a></li>
+                <li class="position-relative">
+                    <a      href="admin#/markers"
+                            ng-class="{active: menuActive == 'markers'}"
+                            style="width: 150px;">MARKERS
+                    </a>
+                </li>
 
             </ul>
             <ul class="nav navbar-nav" style="float: right">
-              <li class="position-relative"><a
-                  href="user#/account"
-                  ng-class="{active: menuActive == 'my-account'}"
-                  style="width: 150px;"><spring:message code="admin.my-account.My-account"/></a></li>
+                <li class="position-relative">
+                    <a  href="user#/account"
+                        ng-class="{active: menuActive == 'my-account'}"
+                        style="width: 150px;">
+                        <spring:message code="admin.my-account.My-account"/>
+                    </a>
+                </li>
+
             </ul>
 
           </div>

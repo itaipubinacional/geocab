@@ -153,6 +153,15 @@
 			controller : MarkerModerationController,
 			menu: 'marker-moderation'
 		});
+
+		//Markers
+		$stateProvider.state('markers', {
+			url : "/markers",
+			templateUrl : "modules/admin/ui/markers/markers-view.jsp",
+			//templateUrl : "modules/admin/ui/marker-moderation/marker-moderation-view.jsp",
+			controller : MarkersController,
+			menu: 'markers'
+		});
 		
 	});
 	

@@ -35,8 +35,16 @@
 
 
                 <div class="col-md-10" style="float:left">
-                    <span><b>Status</b></span>
-                    {{currentEntity.status}}
+                    <div>
+                        <span><b>Status</b></span>
+                        {{translateByStatus(currentEntity.status)}}
+
+                        <a ng-if="currentEntity.status == 'PENDING' " class="icon itaipu-icon-schedules"></a>
+                        <a ng-if="currentEntity.status == 'ACCEPTED' " class="icon itaipu-icon-like-filled"></a>
+                        <a ng-if="currentEntity.status == 'REFUSED' " class="icon itaipu-icon-dislike"></a>
+                        <a ng-if="currentEntity.status == 'CANCELED' " class="icon itaipu-icon-close"></a>
+                    </div>
+                    </br></br>
 
                     <div ng-repeat="markerAttribute in attributesByMarker track by $index"
                          style="position: relative;margin-bottom:15px;">
