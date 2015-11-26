@@ -51,6 +51,7 @@
 				<option value="NUMBER"><spring:message code="admin.layer-config.Number" /></option>
 				<option value="DATE"><spring:message code="admin.layer-config.Date" /></option>
 				<option value="BOOLEAN"><spring:message code="admin.layer-config.Boolean" /></option>
+				<option value="PHOTO_ALBUM"><spring:message code="admin.layer-config.Photo-album" /></option>
 			</select>
 			</div>
 			

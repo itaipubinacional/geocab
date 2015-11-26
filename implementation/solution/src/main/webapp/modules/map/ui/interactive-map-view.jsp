@@ -143,7 +143,14 @@ uri="http://www.springframework.org/security/tags"%>
                       <div style=" overflow: auto;">
                         <div ng-repeat="markerAttribute in attributesByMarker track by $index" style="position: relative;margin-bottom:15px">
 
+                          <button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
+                                  onclick="angular.element('#upload-input').click();"
+                                  style="float: left;"
+                                  title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
+                          </button>
+
                           <label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == '' || markerAttribute.value == '0'">{{ markerAttribute.attribute.name }}</label>
+
                           <input
                               type="number" name="number1"
                               ng-if="(markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '') || markerAttribute.value == '0' "
@@ -248,6 +255,13 @@ uri="http://www.springframework.org/security/tags"%>
                      style="position: relative;margin-bottom:15px;">
 
                   <ng-form name="ngSideMarker" default-button="buttonUpdate">
+
+                    <button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
+                            onclick="angular.element('#upload-input').click();"
+                            style="float: left;"
+                            title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
+                    </button>
+
                     <label  ng-style="$index > 0 ? {'margin-top':'15px'} : '' ">{{ markerAttribute.attribute.name }}</label>
 
                     <input
@@ -323,12 +337,19 @@ uri="http://www.springframework.org/security/tags"%>
                     <ng-form>
 
                 </div>
-
                 <div ng-repeat="attribute in attributesByLayer"
                      ng-if="showAttributesAlone || showNewAttributes"
                      style="position: relative">
 
                   <ng-form name="ngSideMarker" default-button="buttonInsert">
+
+                    {{ attribute.type }}
+                    <button ng-if="attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
+                            onclick="angular.element('#upload-input').click();"
+                            style="float: left;"
+                            title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
+                    </button>
+
                     <label style="margin-top: 15px">{{ attribute.name }}</label>
 
                     <input type="number"
@@ -369,6 +390,8 @@ uri="http://www.springframework.org/security/tags"%>
                            ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
                            ng-required="attribute.required"
                         >
+
+
 
                     <span
                         class="tooltip-validation"
@@ -476,9 +499,16 @@ uri="http://www.springframework.org/security/tags"%>
                       style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
 
                 <div ng-repeat="attribute in attributesByLayer track by $index"
-                     style="position: relative">
+                     style="float: left;width: 100%;" class="form-group">
 
                   <ng-form name="ngSideMarker" default-button="buttonInsert">
+
+                    <button ng-if="attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
+                            ng-click="showGallery()"
+                            style="float: left;"
+                            title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
+                    </button>
+
                     <label style="margin-top: 15px">{{ attribute.name }}</label>
 
                     <input type="number"

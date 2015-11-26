@@ -202,6 +202,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'BOOLEAN\'" >'+ $translate("admin.layer-config.BOOLEAN") +'</span>' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'TEXT\'" >'+ $translate("admin.layer-config.TEXT") +'</span>' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'NUMBER\'" >'+ $translate("admin.layer-config.NUMBER") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'PHOTO_ALBUM\'" >'+ $translate("admin.layer-config.PHOTO_ALBUM") +'</span>' +
     '</div>';
     
     var REQUIRED_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
