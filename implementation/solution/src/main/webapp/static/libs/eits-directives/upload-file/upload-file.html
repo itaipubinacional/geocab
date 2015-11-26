@@ -6,23 +6,21 @@
     <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
   </div>
   <p>{{ files.length | json }}</p>
-  <div ng-if="files.length">
-    <div class="col-xs-6 col-md-3" ng-repeat="file in files.slice(0)">
+  <div ng-if="files.length" style="width: 100%;float: left;">
+    <div class="row">
+      <div style="float:left;margin:5px; width: 140px; height: 130px" ng-repeat="file in files">
 
-      <div class="thumbnail">
-        <img ng-src="{{ file.src }}" alt="">
-        <div class="caption">
-          <p>Checkbox</p>
-          <p>Thumbnail label</p>
+        <div class="thumbnail">
+          <img style="max-width: 125px;max-height: 125px;" ng-src="{{ file.src }}" alt="{{ file.name }}">
+          <div class="caption">
+            <p>{{file.webkitRelativePath || file.name}}</p>
+          </div>
         </div>
+
       </div>
 
-      <span>{{file.webkitRelativePath || file.name}}</span>
-      (<span ng-switch="file.size > 1024*1024">
-                  <span ng-switch-when="true">{{file.size / 1024 / 1024 | number:2}} MB</span>
-                  <span ng-switch-default>{{file.size / 1024 | number:2}} kB</span>
-              </span>)
     </div>
+
     <input type="button" ng-click="uploadFile()" value="Upload" />
     <div ng-show="progressVisible">
       <div class="percent">{{progress}}%</div>
@@ -30,5 +28,6 @@
         <div class="uploaded" ng-style="{'width': progress+'%'}"></div>
       </div>
     </div>
+
   </div>
 </div>

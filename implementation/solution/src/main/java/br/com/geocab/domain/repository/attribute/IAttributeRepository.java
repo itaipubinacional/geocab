@@ -25,7 +25,7 @@ public interface IAttributeRepository extends IDataRepository<Attribute, Long>
 	 * @param layerId
 	 * @return
 	 */
-	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.type, attribute.required, attribute.orderAttribute ) " +
+	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.type, attribute.required, attribute.orderAttribute, attribute.visible ) " +
 				"FROM Attribute attribute " +
 				"LEFT OUTER JOIN attribute.layer layer " + 
 				"WHERE ( layer.id = :layerId ) "+ 
@@ -36,7 +36,7 @@ public interface IAttributeRepository extends IDataRepository<Attribute, Long>
 	 * @param layerId
 	 * @return
 	 */
-	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.required, attribute.type, attribute.orderAttribute ) " +
+	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.required, attribute.type, attribute.orderAttribute, attribute.visible ) " +
 				"FROM Attribute attribute " +
 				"LEFT OUTER JOIN attribute.layer layer " + 
 				"WHERE ( layer.id = :layerId ) "+ 

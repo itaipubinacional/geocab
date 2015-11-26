@@ -4213,6 +4213,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     var dialog = $modal.open({
       templateUrl: "modules/map/ui/popup/gallery-popup.jsp",
       controller: GalleryPopUpController,
+      size: 'lg',
       resolve: {
 
       }
@@ -4226,8 +4227,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   //$scope.showGallery();
-
-
 
 };
 

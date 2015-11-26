@@ -11,10 +11,10 @@
 	<div class="modal-header">
 		<h3 class="modal-title">Inserir imagens</h3>
 	</div>
-	<div class="modal-body" ng-init="initialize();" style="max-height: 550px; min-height: 500px">
+	<div class="modal-body" ng-init="initialize();" style="overflow: auto;max-height: 550px; min-height: 500px">
 
     <div>
-      <div class="col-md-8">
+      <div class="col-md-10">
 
         <!--<div id="photos">
 
@@ -50,7 +50,7 @@
         <upload-file></upload-file>
 
       </div>
-      <div id="sidenav" class="col-md-4">
+      <div id="sidenav" class="col-md-2">
 
         <ul>
           <li>Atributo 1</li>

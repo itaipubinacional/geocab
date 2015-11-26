@@ -128,15 +128,16 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param type
 	 * @param required
 	 * @param orderAttribute
+	 * @param visible
 	 */
-	public Attribute(Long id, String name, AttributeType type, Boolean required,
-			int orderAttribute)
+	public Attribute(Long id, String name, AttributeType type, Boolean required, int orderAttribute, Boolean visible)
 	{
 		super(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
 		this.setOrderAttribute(orderAttribute);
+		this.setVisible(visible);
 	}
 
 	/**
@@ -156,15 +157,16 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param required
 	 * @param type
 	 * @param orderAttribute
+	 * @param visible
 	 */
-	public Attribute(Long id, String name, Boolean required, AttributeType type,
-			int orderAttribute)
+	public Attribute(Long id, String name, Boolean required, AttributeType type, int orderAttribute, Boolean visible)
 	{
 		this.setTemporaryId(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
 		this.setOrderAttribute(orderAttribute);
+		this.setVisible(visible);
 	}
 
 	/**

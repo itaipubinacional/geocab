@@ -43,30 +43,34 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       }, false);
 
       dropbox.addEventListener("drop", function (evt) {
-        console.log('drop evt:', JSON.parse(JSON.stringify(evt.dataTransfer)))
-        evt.stopPropagation()
-        evt.preventDefault()
+        console.log('drop evt:', JSON.parse(JSON.stringify(evt.dataTransfer)));
+        evt.stopPropagation();
+        evt.preventDefault();
         scope.$apply(function () {
           scope.dropText = 'Drop files here...'
           scope.dropClass = ''
-        })
+        });
         var files = evt.dataTransfer.files;
         if (files.length > 0) {
-          scope.$apply(function () {
-            scope.files = []
+          //scope.$apply(function () {
+            scope.files = [];
             for (var i = 0, file; file = files[i]; i++) {
 
-              scope.files.push(files[i]);
+              //scope.files.push(files[i]);
+
 
               var reader = new FileReader();
 
-              reader.onloadend = (function (file) {
+              reader.onloadend = (function (readFile) {
                 return function(e) {
 
                   console.log(e.target.result);
-                  file.src = e.target.result;
+                  readFile.src = e.target.result;
 
-                  scope.$apply();
+                  scope.files.push({name: readFile.name, src: e.target.result});
+
+                  if(files.length == i)
+                    scope.$apply();
                 }
               })(file);
 
@@ -75,8 +79,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
             console.log(scope.files);
 
-            scope.$apply();
-          })
+            //scope.$apply();
+          //})
         }
       }, false);
 
