@@ -104,8 +104,7 @@
 
 
         <!--BUTTONS-->
-        <div class="row" style="position:fixed;background-color: #FFFFFF ; height: 80px;bottom: 25px; width: 37%;
-            padding-top: 20px; border-top: 1px solid #a4a4a4">
+        <div class="row" style=" position: fixed; background-color: #FFFFFF; height: 80px; bottom: 0; width: 36%; padding-top: 10px; border-top: 1px solid #a4a4a4">
             <div class=" col-md-2">
                 <a class="btn btn-default icon itaipu-icon-book" ng-click="changeToHistory(row.entity.marker)"
                    style="width:75px; height:58px;">

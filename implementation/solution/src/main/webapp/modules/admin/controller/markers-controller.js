@@ -15,6 +15,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 
     $importService("markerModerationService");
+    $importService("myMarkersService");
     $importService("layerGroupService");
     $importService("markerService");
     $importService("accountService");
@@ -95,16 +96,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.selectedMotive;
 
-    /**
-     * filter
-     */
-    $scope.filter = {
-        'layer': null,
-        'status': null,
-        'dateStart': null,
-        'dateEnd': null,
-        'user': null
-    };
 
     //FORM
     /**
@@ -116,8 +107,20 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         allStatus: [],
         status: null,
         user: null
-
     };
+    /**
+     * filter
+     */
+    $scope.filter = {
+        'layer': null,
+        'status': null,
+        'dateStart': null,
+        'dateEnd': null,
+        'user': null
+    };
+
+
+
 
     /**
      * select Marker tool
@@ -163,13 +166,19 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         '<a ng-click="changeToDetail(row.entity)" title="' + $translate("admin.layer-config.Update") + '" class="btn btn-mini"><i style="color: #333; font-size: 18px" class="glyphicon glyphicon-eye-open"></i></a>' +
         '</div>';
 
-    var IMAGE_MODERATION = '<div  class="cell-centered">' +
-        '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>' +
-        '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>' +
-        '<a ng-if="row.entity.status == \'REFUSED\' " class="icon-refuse-moderation"></a>' +
-        '<a ng-if="row.entity.status == \'CANCELED\' " class="icon-refuse-moderation"></a>' +
-        '</div>';
+    //var IMAGE_MODERATION = '<div  class="cell-centered">' +
+    //    '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>' +
+    //    '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon-accept-moderation"></a>' +
+    //    '<a ng-if="row.entity.status == \'REFUSED\' " class="icon-refuse-moderation"></a>' +
+    //    '<a ng-if="row.entity.status == \'CANCELED\' " class="icon-refuse-moderation"></a>' +
+    //    '</div>';
 
+    var IMAGE_MODERATION = '<div  class="cell-centered">' +
+        '<a ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></a>' +
+        '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></a>' +
+        '<a ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></a>' +
+        '<a ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></a>' +
+        '</div>';
 
 
 
@@ -304,15 +313,14 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         $scope.currentState = $scope.LIST_STATE;
 
         $scope.listAllInternalLayerGroups();
-        $scope.listAllUsers();
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
         if (typeof markers == 'undefined') {
-            $scope.listMarkerByFilters(null, null, null, null, null, pageRequest);
-            $scope.listMarkerByFiltersMap(null, null, null, null);
+            $scope.listMarkerByFilters(null, null, null, null,pageRequest);
+            $scope.listMarkerByFiltersMap(null, null, null,null);
         } else if (typeof markers.content != 'undefined') {
 
             var markersId = [];
@@ -328,22 +336,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             $scope.listMarkerByMarkers(markers, pageRequest);
         }
 
-    };
-
-    /**
-     * Performs initial procedures (prepares the State)
-     * for screen and after that, change the State to insert.
-     * @see INSERT_STATE
-     * @see $stateChangeSuccess
-     *
-     * To change to this State, you must first instantiate a new currentEntity,
-     * to clear fields and configure defaults values.
-     */
-    $scope.changeToInsert = function () {
-        $log.info("changeToInsert");
-
-
-        $scope.currentState = $scope.INSERT_STATE;
     };
 
     /**
@@ -422,14 +414,11 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.changeToRemove = function (layer) {
         $log.info("changeToRemove");
-
     };
 
     $scope.changeToHistory = function () {
         $log.info("changeToHistory");
-
         var pageRequest = new PageRequest();
-
         $scope.listMarkerModerationByMarker($scope.currentEntity.id, pageRequest);
 
     };
@@ -447,11 +436,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         if ($scope.dragMarkers != null) {
             $scope.listMarkerByMarkers($scope.dragMarkers, $scope.currentPage.pageable);
         } else {
-            if ($scope.filter.user == null) {
-                $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, null, $scope.currentPage.pageable);
-            } else {
-                $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user.email, $scope.currentPage.pageable);
-            }
+            $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.currentPage.pageable);
         }
 
     };
@@ -555,34 +540,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
     };
 
-    /**
-     * List all the Users
-     */
-    $scope.listAllUsers = function () {
-
-        accountService.listAllUsers({
-            callback: function (result) {
-                $scope.selectUsers = [];
-
-                angular.forEach(result, function (user, index) {
-
-                    $scope.selectUsers.push({
-                        "name": user.name,
-                        "email": user.email,
-                        "userName": user.username,
-                    });
-
-                });
-
-                $scope.$apply();
-            },
-            errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
-                $scope.$apply();
-            }
-        });
-
-    };
 
     /**
      * Performs the query logs, considering filter, paging and sorting.
@@ -591,9 +548,9 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * @see data.filter
      * @see currentPage
      */
-    $scope.listMarkerByFiltersMap = function (layer, status, dateStart, dateEnd, user) {
+    $scope.listMarkerByFiltersMap = function (layer, status, dateStart, dateEnd) {
 
-        markerService.listMarkerByFiltersMap(layer, status, dateStart, dateEnd, user, {
+        myMarkersService.listMarkerByFiltersMapByUser(layer, status, dateStart, dateEnd, {
             callback: function (result) {
                 if ($scope.features.length) {
                     $scope.clearFeatures();
@@ -619,9 +576,9 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * @see data.filter
      * @see currentPage
      */
-    $scope.listMarkerByFilters = function (layer, status, dateStart, dateEnd, user, pageRequest) {
+    $scope.listMarkerByFilters = function (layer, status, dateStart, dateEnd, pageRequest) {
 
-        markerService.listMarkerByFilters(layer, status, dateStart, dateEnd, user, pageRequest, {
+        myMarkersService.listMarkerByFiltersByUser(layer, status, dateStart, dateEnd, pageRequest, {
             callback: function (result) {
 
                 $scope.currentPage = result;
@@ -660,36 +617,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         });
     };
 
-    /**
-     * Calls the dialog to accept a marker
-     */
-    $scope.approveMarker = function () {
-
-        var dialog = $modal.open({
-            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-            controller: DialogController,
-            windowClass: 'dialog-success',
-            resolve: {
-                title: function () {
-                    return $translate('admin.marker-moderation.Confirm-approve');
-                },
-                message: function () {
-                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + ' ? <br/>.';
-                },
-                buttons: function () {
-                    return [
-                        {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
-                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
-                    ];
-                }
-            }
-        });
-
-        dialog.result.then(function () {
-            $scope.acceptMarkerModeration($scope.currentEntity.id);
-        });
-
-    };
 
     /**
      * Update the status of the marker in the listView
@@ -707,19 +634,19 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     /*
      * List motives of marker moderation
      */
-    $scope.listMotivesByMarkerModeration = function (markerModerationId) {
-        markerModerationService.listMotivesByMarkerModerationId(markerModerationId, {
-            callback: function (result) {
-                $scope.motiveMarkerModeration = result;
-                $scope.$apply();
-            },
-            errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
-                $scope.fadeMsg();
-                $scope.$apply();
-            }
-        });
-    };
+    //$scope.listMotivesByMarkerModeration = function (markerModerationId) {
+    //    markerModerationService.listMotivesByMarkerModerationId(markerModerationId, {
+    //        callback: function (result) {
+    //            $scope.motiveMarkerModeration = result;
+    //            $scope.$apply();
+    //        },
+    //        errorHandler: function (message, exception) {
+    //            $scope.msg = {type: "danger", text: message, dismiss: true};
+    //            $scope.fadeMsg();
+    //            $scope.$apply();
+    //        }
+    //    });
+    //};
 
     $scope.refreshMap = function (markers) {
 
@@ -739,80 +666,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
     }
 
-    /**
-     * Accept status marker moderation
-     */
-    $scope.acceptMarkerModeration = function (id) {
-
-        markerModerationService.acceptMarker(id, {
-            callback: function (result) {
-                console.log(result);
-                $scope.currentEntity = result.marker;
-                $scope.updateStatus();
-                $scope.changeToList($scope.currentPage);
-                $scope.msg = {
-                    type: "success",
-                    text: $translate('admin.marker-moderation.Marker-successfully-approved'),
-                    dismiss: true
-                };
-                $scope.$apply();
-            },
-            errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
-                $scope.$apply();
-            }
-        });
-    };
-
-    /**
-     * Accept status marker moderation
-     */
-    $scope.cancelMarkerModeration = function (id) {
-        $scope.msg = {
-            type: "success",
-            text: $translate('admin.marker-moderation.Marker-successfully-canceled'),
-            dismiss: true
-        };
-        //markerModerationService.cancelMarkerModeration( id, {
-        //    callback : function(result) {
-        //        console.log(result);
-        //        $scope.currentEntity = result.marker;
-        //        $scope.updateStatus();
-        //        $scope.changeToList($scope.currentPage);
-        //
-        //        $scope.$apply();
-        //    },
-        //    errorHandler : function(message, exception) {
-        //        $scope.message = {type:"error", text: message};
-        //        $scope.$apply();
-        //    }
-        //});
-    };
-
-    /**
-     * Refuse status marker moderation
-     */
-    $scope.refuseMarkerModeration = function (id, motive, description) {
-
-        markerModerationService.refuseMarker(id, motive, description, {
-            callback: function (result) {
-                console.log(result);
-                $scope.currentEntity = result.marker;
-                $scope.updateStatus();
-                $scope.changeToList($scope.currentPage);
-                $scope.msg = {
-                    type: "danger",
-                    text: $translate('admin.marker-moderation.Marker-successfully-refused'),
-                    dismiss: true
-                };
-                $scope.$apply();
-            },
-            errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
-                $scope.$apply();
-            }
-        });
-    };
 
 
     /**
@@ -1131,9 +984,9 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     /**
      * Calls the dialog to accept a marker
      */
-    $scope.approveMarker = function () {
+    $scope.saveMarkerModal = function () {
 
-        if ($scope.currentEntity.status != 'ACCEPTED') {
+        //if ($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.REFUSED ) {
 
             var dialog = $modal.open({
                 templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
@@ -1141,14 +994,14 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
                 windowClass: 'dialog-success',
                 resolve: {
                     title: function () {
-                        return $translate('admin.marker-moderation.Confirm-approve');
+                        return $translate('admin.marker-moderation.Save-marker');
                     },
                     message: function () {
-                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + ' ? <br/>.';
+                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-save-this-marker') + ' ?';
                     },
                     buttons: function () {
                         return [
-                            {label: $translate('admin.marker-moderation.Approve'), css: 'btn btn-success'},
+                            {label: $translate('admin.marker-moderation.Save-marker'), css: 'btn btn-success'},
                             {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
                         ];
                     }
@@ -1157,10 +1010,65 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
             dialog.result.then(function () {
 
-                $scope.acceptMarkerModeration($scope.currentEntity.id);
+                $scope.updateMarker();
+
             });
 
+        //}
+
+    };
+
+    $scope.updateMarker = function () {
+
+        if ($scope.currentEntity.layer == null) {
+            var layer = new Layer();
+            layer.id = $scope.currentEntity.layer;
+            $scope.currentEntity.layer = layer;
         }
+
+        var i = 0;
+
+        angular.forEach($scope.attributesByMarker, function () {
+
+            if ($scope.attributesByMarker[i].value == null) {
+                $scope.attributesByMarker[i].value = "";
+            }
+
+            i++;
+        });
+
+        $scope.currentEntity.markerAttribute = $scope.attributesByMarker;
+
+        angular.forEach($scope.attributesByLayer, function (val, ind) {
+
+            var attribute = new Attribute();
+            attribute.id = val.id;
+
+            var markerAttribute = new MarkerAttribute();
+            if (val.value != "" && val.value != undefined) {
+                markerAttribute.value = val.value;
+            } else {
+                markerAttribute.value = "";
+            }
+
+            markerAttribute.attribute = attribute;
+            markerAttribute.marker = $scope.currentEntity;
+            $scope.currentEntity.markerAttribute.push(markerAttribute);
+
+        });
+
+        myMarkersService.updateMarker($scope.currentEntity, {
+            callback: function (result) {
+
+                $scope.changeToList();
+
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+            }
+        });
 
     };
 
@@ -1192,15 +1100,12 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             });
 
             dialog.result.then(function () {
-
-                //$scope.acceptMarkerModeration($scope.currentEntity.id);
                 $scope.cancelMarkerModeration($scope.currentEntity.id);
-
             });
-
         }
-
     };
+
+
 
 
     /**
@@ -1372,15 +1277,13 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
         if ($scope.filter.status == "")
             $scope.filter.status = null;
-        if ($scope.filter.user != null)
-            var userEmail = $scope.filter.user.email;
         if ($scope.filter.dateStart == "")
             $scope.filter.dateStart = null;
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
 
-        $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest);
-        $scope.listMarkerByFiltersMap($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);
+        $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, pageRequest);
+        $scope.listMarkerByFiltersMap($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd);
         $scope.dragMarkers = null;
         $scope.hasSearch = true;
     };
@@ -1401,8 +1304,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         $scope.filter.dateEnd = null;
         $scope.filter.user = null;
 
-        $scope.listMarkerByFilters(null, null, null, null, null, pageRequest);
-        $scope.listMarkerByFiltersMap(null, null, null, null, null);
+        $scope.listMarkerByFilters(null, null, null, null, pageRequest);
+        $scope.listMarkerByFiltersMap(null, null, null, null);
         $scope.hasSearch = false;
 
     };
