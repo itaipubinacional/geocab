@@ -16,7 +16,7 @@
     <div>
       <div class="col-md-8">
 
-        <div id="photos">
+        <!--<div id="photos">
 
           <div class="form-item position-relative">
             <label class="detail-label" required>
@@ -45,19 +45,7 @@
             </div>
           </div>
 
-        </div>
-
-        <div id="upload" style="text-align: center">
-
-          <h2>Solte os arquivos em qualquer lugar para fazer o upload</h2>
-          <h4>ou</h4>
-
-          <button>Selecionar arquivos</button>
-
-          <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
-
-        </div>
-
+        </div>-->
 
         <upload-file></upload-file>
 

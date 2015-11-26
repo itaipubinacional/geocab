@@ -12,6 +12,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
     templateUrl: 'static/libs/eits-directives/upload-file/upload-file.html',
     link: function(scope, element, attrs){
 
+      scope.files = [];
+
       //============== DRAG & DROP =============
       // source for drag&drop: http://www.webappers.com/2011/09/28/drag-drop-file-upload-with-html5-javascript/
       var dropbox = document.getElementById("dropbox");
@@ -25,7 +27,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
           scope.dropText = 'Drop files here...'
           scope.dropClass = ''
         })
-      }
+      };
 
       dropbox.addEventListener("dragenter", dragEnterLeave, false)
       dropbox.addEventListener("dragleave", dragEnterLeave, false)
@@ -38,7 +40,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
           scope.dropText = ok ? 'Drop files here...' : 'Only files are allowed!'
           scope.dropClass = ok ? 'over' : 'not-available'
         })
-      }, false)
+      }, false);
+
       dropbox.addEventListener("drop", function (evt) {
         console.log('drop evt:', JSON.parse(JSON.stringify(evt.dataTransfer)))
         evt.stopPropagation()
@@ -47,16 +50,36 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
           scope.dropText = 'Drop files here...'
           scope.dropClass = ''
         })
-        var files = evt.dataTransfer.files
+        var files = evt.dataTransfer.files;
         if (files.length > 0) {
           scope.$apply(function () {
             scope.files = []
-            for (var i = 0; i < files.length; i++) {
-              scope.files.push(files[i])
+            for (var i = 0, file; file = files[i]; i++) {
+
+              scope.files.push(files[i]);
+
+              var reader = new FileReader();
+
+              reader.onloadend = (function (file) {
+                return function(e) {
+
+                  console.log(e.target.result);
+                  file.src = e.target.result;
+
+                  scope.$apply();
+                }
+              })(file);
+
+              reader.readAsDataURL(file);
             }
+
+            console.log(scope.files);
+
+            scope.$apply();
           })
         }
-      }, false)
+      }, false);
+
       //============== DRAG & DROP =============
 
       scope.setFiles = function (element) {
@@ -84,7 +107,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         xhr.open("POST", "/fileupload")
         scope.progressVisible = true
         xhr.send(fd)
-      }
+      };
+
 
       function uploadProgress(evt) {
         scope.$apply(function () {

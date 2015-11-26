@@ -4225,7 +4225,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
-  $scope.showGallery();
+  //$scope.showGallery();
 
 
 

@@ -1,21 +1,34 @@
-<div class="row">
-  <label for="fileToUpload">Select a File to Upload</label><br />
-  <input type="file" ng-model-instant id="fileToUpload" multiple onchange="angular.element(this).scope().setFiles(this)" />
-</div>
-<div id="dropbox" class="dropbox" ng-class="dropClass"><span>{{dropText}}</span></div>
-<div ng-show="files.length">
-  <div ng-repeat="file in files.slice(0)">
-    <span>{{file.webkitRelativePath || file.name}}</span>
-    (<span ng-switch="file.size > 1024*1024">
-                <span ng-switch-when="true">{{file.size / 1024 / 1024 | number:2}} MB</span>
-                <span ng-switch-default>{{file.size / 1024 | number:2}} kB</span>
-            </span>)
+<div>
+  <div style="text-align: center" class="row" id="dropbox" class="dropbox" ng-class="dropClass">
+    <h2>Solte os arquivos em qualquer lugar para fazer o upload</h2>
+    <h4>ou</h4>
+    <input type="file" ng-model-instant id="fileToUpload" multiple onchange="angular.element(this).scope().setFiles(this)" />
+    <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
   </div>
-  <input type="button" ng-click="uploadFile()" value="Upload" />
-  <div ng-show="progressVisible">
-    <div class="percent">{{progress}}%</div>
-    <div class="progress-bar">
-      <div class="uploaded" ng-style="{'width': progress+'%'}"></div>
+  <p>{{ files.length | json }}</p>
+  <div ng-if="files.length">
+    <div class="col-xs-6 col-md-3" ng-repeat="file in files.slice(0)">
+
+      <div class="thumbnail">
+        <img ng-src="{{ file.src }}" alt="">
+        <div class="caption">
+          <p>Checkbox</p>
+          <p>Thumbnail label</p>
+        </div>
+      </div>
+
+      <span>{{file.webkitRelativePath || file.name}}</span>
+      (<span ng-switch="file.size > 1024*1024">
+                  <span ng-switch-when="true">{{file.size / 1024 / 1024 | number:2}} MB</span>
+                  <span ng-switch-default>{{file.size / 1024 | number:2}} kB</span>
+              </span>)
+    </div>
+    <input type="button" ng-click="uploadFile()" value="Upload" />
+    <div ng-show="progressVisible">
+      <div class="percent">{{progress}}%</div>
+      <div class="progress-bar">
+        <div class="uploaded" ng-style="{'width': progress+'%'}"></div>
+      </div>
     </div>
   </div>
 </div>
