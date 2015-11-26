@@ -30,14 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
@@ -53,15 +47,11 @@ import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
 
-/**
- * @author Thiago Rossetto Afonso
- * @since 30/09/2014
- * @version 1.0
- */
+
 @Service
 @Transactional
-@RemoteProxy(name = "markerService")
-public class MarkerService
+@RemoteProxy(name = "myMarkersService")
+public class MyMarkersService
 {
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
@@ -90,9 +80,7 @@ public class MarkerService
 	@Autowired
 	private IMarkerModerationRepository markerModerationRepository;
 
-//	/**
-//	 * I18n
-//	 */
+
 //	@Autowired
 //	private MessageSource messages;
 
@@ -103,47 +91,6 @@ public class MarkerService
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Method to insert an {@link Marker}
-	 * 
-	 * @param Marker
-	 * @return Marker
-	 * @throws RepositoryException
-	 * @throws IOException
-	 */
-	public Marker insertMarker(Marker marker) throws IOException,
-			RepositoryException
-	{
-		try
-		{
-			User user = ContextHolder.getAuthenticatedUser();
-
-			marker.setLocation((Point) this.wktToGeometry(marker
-					.getWktCoordenate()));
-
-			marker.setStatus(MarkerStatus.PENDING);
-			marker.setUser(user);
-			marker = this.markerRepository.save(marker);
-			if (marker.getImage() != null && marker.getImage().getFilename() != "")
-			{
-				this.uploadImg(marker.getImage(), marker.getId());
-			}
-
-
-			MarkerModeration markerModeration = new MarkerModeration();
-			markerModeration.setMarker(marker);
-			markerModeration.setStatus(MarkerStatus.PENDING);
-			this.markerModerationRepository.save(markerModeration);
-
-		}
-		catch (DataIntegrityViolationException e)
-		{
-			LOG.info(e.getMessage());
-			final String error = e.getCause().getCause().getMessage();
-
-			this.dataIntegrityViolationException(error);
-		}
-		return marker;
-	}
 
 	/**
 	 * Method to update an {@link Marker}
@@ -153,7 +100,15 @@ public class MarkerService
 	 * @throws RepositoryException
 	 * @throws IOException
 	 */
-	// @PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
+	/**
+	 * Method to update an {@link Marker}
+	 * 
+	 * @param Marker
+	 * @return Marker
+	 * @throws RepositoryException
+	 * @throws IOException
+	 */
+
 	public Marker updateMarker(Marker marker) throws IOException,
 			RepositoryException
 	{
@@ -188,11 +143,12 @@ public class MarkerService
 
 			marker.setLocation(markerTemporary.getLocation());
 			
-			marker.setStatus(MarkerStatus.PENDING);
+//			marker.setStatus(MarkerStatus.PENDING);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
-			markerModeration.setStatus(MarkerStatus.PENDING);
+//			
+			markerModeration.setStatus(marker.getStatus());
 			
 			this.markerModerationRepository.save(markerModeration);
 			
@@ -201,74 +157,21 @@ public class MarkerService
 		catch (DataIntegrityViolationException e)
 		{
 			LOG.info(e.getMessage());
-			final String error = e.getCause().getCause().getMessage();
-
-			this.dataIntegrityViolationException(error);
 		}
 		return marker;
 	}
+	
 
 	/**
 	 * Method to remove an {@link Marker}
 	 * 
 	 * @param id
 	 */
-	//@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"+ UserRole.MODERATOR_VALUE + "')")
 	public void removeMarker(Long id)
 	{
 		Marker marker = this.findMarkerById(id);
 		marker.setDeleted(true);
 		this.markerRepository.save(marker);
-	}
-
-	/**
-	 * Method to block an {@link Marker}
-	 * 
-	 * @param Marker
-	 *            marker
-	 */
-	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
-			+ UserRole.MODERATOR_VALUE + "')")
-	public void enableMarker(Long id)
-	{
-		try
-		{
-			Marker marker = this.findMarkerById(id);
-			marker.setStatus(MarkerStatus.ACCEPTED);
-			marker = this.markerRepository.save(marker);
-		}
-		catch (DataIntegrityViolationException e)
-		{
-			LOG.info(e.getMessage());
-			final String error = e.getCause().getCause().getMessage();
-
-			this.dataIntegrityViolationException(error);
-		}
-	}
-
-	/**
-	 * Method to unblock an {@link Marker}
-	 * 
-	 * @param Marker
-	 *            marker
-	 */
-	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
-			+ UserRole.MODERATOR_VALUE + "')")
-	public void disableMarker(Long id)
-	{
-		try
-		{
-			Marker marker = this.findMarkerById(id);
-			marker.setStatus(MarkerStatus.REFUSED);
-			marker = this.markerRepository.save(marker);
-		}
-		catch (DataIntegrityViolationException e)
-		{
-			LOG.info(e.getMessage());
-			final String error = e.getCause().getCause().getMessage();
-
-			this.dataIntegrityViolationException(error);
-		}
 	}
 
 	/**
@@ -370,36 +273,7 @@ public class MarkerService
 		return listMarker;
 	}
 
-	/**
-	 * 
-	 * @param wktPoint
-	 * @return
-	 */
-	private Geometry wktToGeometry(String wktPoint)
-	{
-		WKTReader fromText = new WKTReader();
-		Geometry geom = null;
-		try
-		{
-			geom = fromText.read(wktPoint);
-		}
-		catch (ParseException e)
-		{
-			throw new RuntimeException("Not a WKT string:" + wktPoint);
-		}
-		return geom;
-	}
 
-//	/**
-//	 * 
-//	 * @param geometry
-//	 * @return
-//	 */
-//	private String geometryToWkt(Geometry geometry)
-//	{
-//		WKTWriter geom = new WKTWriter();
-//		return geom.write(geometry);
-//	}
 
 	/**
 	 * Method to list all {@link Marker}
@@ -466,8 +340,6 @@ public class MarkerService
 			System.out.println(dEnd);
 		}
 
-		// return this.markerRepository.listByFilters(layer, status, dStart,
-		// dEnd, user, pageable);
 		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,	user, pageable);
 		
 	}
@@ -530,27 +402,6 @@ public class MarkerService
 		return this.markerRepository.listByMarkers(ids, pageable);
 	}
 
-	/**
-	 * Method to verify DataIntegrityViolations and throw
-	 * IllegalArgumentException with the field name
-	 * 
-	 * @param error
-	 * @throws IllegalArgumentException
-	 * @return void
-	 */
-	private void dataIntegrityViolationException(String error)
-	{
-		/*
-		 * String fieldError = ""; if(error.contains("uk_data_source_name")) {
-		 * fieldError = this.messages.getMessage("Name", new Object [] {}, null
-		 * ); } else if(error.contains("uk_data_source_url")) { fieldError =
-		 * this.messages.getMessage("Address", new Object [] {}, null ); }
-		 * if(!fieldError.isEmpty()){ throw new IllegalArgumentException(
-		 * this.messages
-		 * .getMessage("The-field-entered-already-exists,-change-and-try-again",
-		 * new Object [] {fieldError}, null) ); }
-		 */
-	}
 
 	/**
 	 * 
@@ -630,6 +481,7 @@ public class MarkerService
 		}
 		catch (PathNotFoundException e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}

@@ -41,7 +41,7 @@
 
        	 			<select class="form-control" ng-model="filter.status" style="width:30%;margin-right:10px">
                          <option value=""><spring:message code="admin.marker-moderation.All-status" /></option>
-                         <option value="PENDING" ng-selected="true"><spring:message code="admin.marker-moderation.Pending" /></option>
+                         <option value="PENDING" ><spring:message code="admin.marker-moderation.Pending" /></option>
                          <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
 					 	 <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
 						 <option value="CANCELED"><spring:message code="admin.marker-moderation.Canceled"/></option>

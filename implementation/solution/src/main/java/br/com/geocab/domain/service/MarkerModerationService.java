@@ -143,8 +143,6 @@ public class MarkerModerationService
 			LOG.info( e.getMessage() );
 		}
 		
-		
-		
 		return null;
 	}
 	

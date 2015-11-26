@@ -95,17 +95,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.selectedMotive;
 
-    /**
-     * filter
-     */
-    $scope.filter = {
-        'layer': null,
-        'status': null,
-        'dateStart': null,
-        'dateEnd': null,
-        'user': null
-    };
-
     //FORM
     /**
      * Variable that stores the query filter
@@ -119,6 +108,17 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     };
 
+    /**
+     * filter
+     */
+
+    $scope.filter = {
+        'layer': null,
+        'status': $scope.PENDING,
+        'dateStart': null,
+        'dateEnd': null,
+        'user': null
+    };
     /**
      * select Marker tool
      * */
@@ -317,8 +317,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.pageRequest = pageRequest;
 
         if (typeof markers == 'undefined') {
-            $scope.listMarkerByFilters(null, null, null, null, null, pageRequest);
-            $scope.listMarkerByFiltersMap(null, null, null, null);
+            $scope.listMarkerByFilters(null, $scope.PENDING, null, null, null, pageRequest);
+            $scope.listMarkerByFiltersMap(null,$scope.PENDING,null, null, null);
         } else if (typeof markers.content != 'undefined') {
 
             var markersId = [];
@@ -1402,7 +1402,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         }
 
         $scope.filter.layer = null;
-        $scope.filter.status = null;
+        $scope.filter.status = "";
         $scope.filter.dateStart = null;
         $scope.filter.dateEnd = null;
         $scope.filter.user = null;

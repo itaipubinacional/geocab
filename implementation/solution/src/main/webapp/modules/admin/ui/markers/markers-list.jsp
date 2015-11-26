@@ -39,8 +39,8 @@
 			<div style="margin-top:10px; display:flex" ng-show="visible">
 
        	 			<select class="form-control" ng-model="filter.status" style="width:30%;margin-right:10px">
-                         <option value=""><spring:message code="admin.marker-moderation.All-status" /></option>
-                         <option value="PENDING" ng-selected="true"><spring:message code="admin.marker-moderation.Pending" /></option>
+                         <option value="" ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
+                         <option value="PENDING"><spring:message code="admin.marker-moderation.Pending" /></option>
                          <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
 					 	 <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
 						 <option value="CANCELED"><spring:message code="admin.marker-moderation.Canceled"/></option>
@@ -57,14 +57,6 @@
 					<input ng-model="filter.dateEnd" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>"/>
 				</div>
 
-				<div style="margin-top:10px; display:flex" ng-show="visible">
-					 <select data-placeholder="<spring:message code='admin.marker-moderation.Users'/>" name="layer"
-							ng-options="user.email for user in selectUsers "
-							ng-model="filter.user" chosen class="form-control"
-							>
-						<option value=""><spring:message code="admin.marker-moderation.All-users"/></option>
-					</select>
-				</div>
 
 			 </form>
 
