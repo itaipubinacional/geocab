@@ -4208,19 +4208,32 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   /* GALLERY */
 
-  $scope.showGallery = function(){
+  $scope.showGallery = function(attribute){
+
+    var attribute = attribute;
 
     var dialog = $modal.open({
       templateUrl: "modules/map/ui/popup/gallery-popup.jsp",
       controller: GalleryPopUpController,
       size: 'lg',
       resolve: {
+        layer: function(){
+          return $scope.currentEntity.layer;
+        },
+        attribute: function(){
+          return attribute;
+        },
+        attributesByLayer: function(){
+          return $scope.attributesByLayer;
+        }
 
       }
     });
 
 
     dialog.result.then(function (result) {
+
+      console.log(result);
 
     });
 

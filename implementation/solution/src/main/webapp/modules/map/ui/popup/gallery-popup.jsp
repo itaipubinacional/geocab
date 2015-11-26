@@ -47,17 +47,17 @@
 
         </div>-->
 
-        <upload-file></upload-file>
+        <upload-file on-success="onSuccess(files)"></upload-file>
 
       </div>
       <div id="sidenav" class="col-md-2">
 
-        <ul>
-          <li>Atributo 1</li>
-          <li>Atributo 2</li>
+        <ul ng-repeat="attribute in attributesByLayer">
+          <li> {{ attribute.name }} </li>
         </ul>
 
       </div>
+      {{ attributesByLayer | json }}
     </div>
 
 	</div>

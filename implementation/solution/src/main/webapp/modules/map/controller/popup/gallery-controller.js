@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function GalleryPopUpController($scope, $modalInstance, $log) {
+function GalleryPopUpController($scope, $modalInstance, $log, layer, attribute, attributesByLayer) {
 
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
@@ -21,12 +21,11 @@ function GalleryPopUpController($scope, $modalInstance, $log) {
     /**
      *
      */
-    $scope.currentEntity;
+    $scope.layer = layer;
 
-    /**
-     *
-     */
-    $scope.features = [];
+    $scope.attribute = attribute;
+
+    $scope.attributesByLayer = attributesByLayer;
 
 
     /*-------------------------------------------------------------------
@@ -45,6 +44,16 @@ function GalleryPopUpController($scope, $modalInstance, $log) {
 
     };
 
+    $scope.onSuccess = function(files) {
+
+      console.log(files);
+
+      $scope.attribute.files = files;
+
+        $scope.attributesByLayer[0].files = files;
+    };
+
+
     /*-------------------------------------------------------------------
      * 		 				 	  BEHAVIORS
      *-------------------------------------------------------------------*/
@@ -52,10 +61,14 @@ function GalleryPopUpController($scope, $modalInstance, $log) {
     /**
      *
      */
-    $scope.close = function()
+    $scope.close = function(fechar)
     {
-        $scope.msg = null;
-        $modalInstance.close(null);
+        // verifica se o usuário selecionou a opção de fechar ou selecionar na pop up
+        if (fechar){
+            $modalInstance.close();
+        } else {
+            $modalInstance.close($scope.attributesByLayer);
+        }
     };
     
     

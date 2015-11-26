@@ -10,6 +10,9 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
   return {
     restrict: 'AE',
     templateUrl: 'static/libs/eits-directives/upload-file/upload-file.html',
+    scope: {
+      onSuccess: '&'
+    },
     link: function(scope, element, attrs){
 
       scope.files = [];
@@ -69,8 +72,12 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
                   scope.files.push({name: readFile.name, src: e.target.result});
 
-                  if(files.length == i)
+                  if(files.length == i) {
                     scope.$apply();
+                    scope.onSuccess({
+                      files: scope.files
+                    });
+                  }
                 }
               })(file);
 
