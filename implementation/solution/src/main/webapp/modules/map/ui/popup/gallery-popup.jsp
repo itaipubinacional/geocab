@@ -57,6 +57,10 @@
           <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
 
         </div>
+
+
+        <upload-file></upload-file>
+
       </div>
       <div id="sidenav" class="col-md-4">
 

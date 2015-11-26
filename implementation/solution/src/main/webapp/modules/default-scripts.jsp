@@ -41,6 +41,7 @@
 <!-- Directives -->
 <script type="text/javascript" src="<c:url value="/static/libs/angular-nav-tree/abn_tree_directive.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/static/libs/angular-rangeslider/js/scaleSlider-directive.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/static/libs/eits-directives/upload-file/upload-file.js"/>"></script>
 
 <!-- Bootstrap -->
 <script type="text/javascript" src="<c:url value="/webjars/bootstrap/3.2.0/js/bootstrap.min.js"/>"></script>
