@@ -2655,7 +2655,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var photo = new Photo();
         photo.image = val.photoAlbum;
 
-        photoAlbum.photo = photo;
+        photoAlbum.photos = photo;
 
         markerAttribute.photoAlbum = photoAlbum;
       }
