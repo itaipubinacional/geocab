@@ -8,14 +8,16 @@
 angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
   return {
-    restrict: 'AE',
+    restrict: 'E',
+    priority: -1000,
     templateUrl: 'static/libs/eits-directives/upload-file/upload-file.html',
     scope: {
+      attribute: '=',
       onSuccess: '&'
     },
     link: function(scope, element, attrs){
 
-      scope.files = [];
+      scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
 
       //============== DRAG & DROP =============
       // source for drag&drop: http://www.webappers.com/2011/09/28/drag-drop-file-upload-with-html5-javascript/
@@ -55,39 +57,32 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         });
         var files = evt.dataTransfer.files;
         if (files.length > 0) {
-          //scope.$apply(function () {
-            scope.files = [];
-            for (var i = 0, file; file = files[i]; i++) {
+          for (var i = 0, file; file = files[i]; i++) {
 
-              //scope.files.push(files[i]);
+            //scope.files.push(files[i]);
+            var reader = new FileReader();
 
+            reader.onloadend = (function (readFile) {
+              return function(e) {
 
-              var reader = new FileReader();
+                console.log(e.target.result);
+                readFile.src = e.target.result;
 
-              reader.onloadend = (function (readFile) {
-                return function(e) {
+                scope.files.push({name: readFile.name, src: e.target.result});
 
-                  console.log(e.target.result);
-                  readFile.src = e.target.result;
-
-                  scope.files.push({name: readFile.name, src: e.target.result});
-
-                  if(files.length == i) {
-                    scope.$apply();
-                    scope.onSuccess({
-                      files: scope.files
-                    });
-                  }
+                if(files.length == i) {
+                  scope.$apply();
+                  scope.onSuccess({
+                    files: scope.files
+                  });
                 }
-              })(file);
+              }
+            })(file);
 
-              reader.readAsDataURL(file);
-            }
+            reader.readAsDataURL(file);
+          }
 
-            console.log(scope.files);
-
-            //scope.$apply();
-          //})
+          console.log(scope.files);
         }
       }, false);
 
@@ -120,7 +115,6 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         xhr.send(fd)
       };
 
-
       function uploadProgress(evt) {
         scope.$apply(function () {
           if (evt.lengthComputable) {
@@ -128,7 +122,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
           } else {
             scope.progress = 'unable to compute'
           }
-        })
+        });
       }
 
       function uploadComplete(evt) {
@@ -143,7 +137,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       function uploadCanceled(evt) {
         scope.$apply(function () {
           scope.progressVisible = false
-        })
+        });
         alert("The upload has been canceled by the user or the browser dropped the connection.")
       }
 

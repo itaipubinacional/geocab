@@ -13,6 +13,15 @@
 	</div>
 	<div class="modal-body" ng-init="initialize();" style="overflow: auto;max-height: 550px; min-height: 500px">
 
+    <!--<tabset>
+      <tab heading="Enviar arquivos">
+        <div></div>
+      </tab>
+      <tab heading="Fotos do atributo">
+        <div></div>
+      </tab>
+    </tabset>-->
+
     <div>
       <div class="col-md-10">
 
@@ -47,17 +56,27 @@
 
         </div>-->
 
-        <upload-file on-success="onSuccess(files)"></upload-file>
+        <!--<div ng-if="attribute.files.length" style="width: 100%;float: left;">
+          <div class="row">
+            <div style="float:left;margin:5px; width: 140px; height: 130px" ng-repeat="file in attribute.files">
+              <div class="thumbnail">
+                <img style="max-width: 125px;max-height: 125px;" ng-src="{{ file.src }}" alt="{{ file.name }}">
+                <div class="caption">
+                  <p>{{ file.name}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>-->
+        {{ attribute | json }}
+        <upload-file on-success="onSuccess(files)" attribute="attribute"></upload-file>
 
       </div>
       <div id="sidenav" class="col-md-2">
-
         <ul ng-repeat="attribute in attributesByLayer">
           <li> {{ attribute.name }} </li>
         </ul>
-
       </div>
-      {{ attributesByLayer | json }}
     </div>
 
 	</div>
