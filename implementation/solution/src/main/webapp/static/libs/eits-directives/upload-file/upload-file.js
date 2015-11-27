@@ -19,6 +19,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
 
+      var inputFiles = document.getElementById('files');
       //============== DRAG & DROP =============
       // source for drag&drop: http://www.webappers.com/2011/09/28/drag-drop-file-upload-with-html5-javascript/
       var dropbox = document.getElementById("dropbox");
@@ -56,6 +57,9 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
           scope.dropClass = ''
         });
         var files = evt.dataTransfer.files;
+
+        document.getElementById('files').files = files;
+
         if (files.length > 0) {
           for (var i = 0, file; file = files[i]; i++) {
 
@@ -101,7 +105,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       };
 
       scope.uploadFile = function () {
-        var fd = new FormData()
+        var fd = new FormData();
         for (var i in scope.files) {
           fd.append("uploadedFile", scope.files[i])
         }

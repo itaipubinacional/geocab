@@ -123,6 +123,9 @@ public class MarkerService
 			marker.setStatus(MarkerStatus.PENDING);
 			marker.setUser(user);
 			marker = this.markerRepository.save(marker);
+			
+			marker.getMarkerAttribute().get(0).getPhotoAlbum().getPhotos();
+			
 			if (marker.getImage() != null && marker.getImage().getFilename() != "")
 			{
 				this.uploadImg(marker.getImage(), marker.getId());

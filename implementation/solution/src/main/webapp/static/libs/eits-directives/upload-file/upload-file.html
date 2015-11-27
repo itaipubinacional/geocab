@@ -2,7 +2,7 @@
   <div style="text-align: center" class="row" id="dropbox" class="dropbox" ng-class="dropClass">
     <h2>Solte os arquivos em qualquer lugar para fazer o upload</h2>
     <h4>ou</h4>
-    <input type="file" ng-model-instant id="fileToUpload" multiple onchange="angular.element(this).scope().setFiles(this)" />
+    <input type="file" ng-model-instant id="files" multiple onchange="angular.element(this).scope().setFiles(this)" />
     <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
   </div>
   <p>{{ files.length | json }}</p>

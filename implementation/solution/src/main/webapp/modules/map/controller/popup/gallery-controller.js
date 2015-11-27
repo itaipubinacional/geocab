@@ -45,22 +45,14 @@ function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, at
 
     };
 
-    $scope.test = function() {
-
-      console.log('teste');
-    };
-
-
-    $scope.onSuccess = function(files, $filter) {
+    $scope.onSuccess = function(files) {
 
       console.log(files);
 
       $scope.attribute.files = files;
 
-      $scope.filter('filter')($scope.attributesByLayer, {id: $scope.attribute.id}, true)[0].files = files;
-      //$scope.attributesByLayer[0].files = files;
-
-      $scope.test();
+      //$scope.filter('filter')($scope.attributesByLayer, {id: $scope.attribute.id}, true)[0].files = files;
+      $scope.filter('filter')($scope.attributesByLayer, {id: $scope.attribute.id}, true)[0].photoAlbum = document.getElementById('files');
     };
 
 

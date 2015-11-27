@@ -2649,7 +2649,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         markerAttribute.value = "";
       }
 
-      markerAttribute.attribute = attribute
+      if(val.photoAlbum) {
+        var photoAlbum = new PhotoAlbum();
+
+        var photo = new Photo();
+        photo.image = val.photoAlbum;
+
+        photoAlbum.photo = photo;
+
+        markerAttribute.photoAlbum = photoAlbum;
+      }
+
+      markerAttribute.attribute = attribute;
       markerAttribute.marker = $scope.currentEntity;
       $scope.currentEntity.markerAttribute.push(markerAttribute);
 
@@ -2990,8 +3001,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     });
 
-  }
-
+  };
 
   $scope.setPhotoMarker = function (element) {
 
@@ -3015,7 +3025,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.currentEntity.image = element;
     $scope.readURL(element);
-  }
+  };
 
   $scope.enableMarker = function () {
 
