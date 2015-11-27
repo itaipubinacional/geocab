@@ -3,7 +3,10 @@
  */
 package br.com.geocab.domain.entity.marker.photo;
 
+import javax.persistence.Transient;
+
 import org.directwebremoting.annotations.DataTransferObject;
+import org.directwebremoting.io.FileTransfer;
 
 import br.com.geocab.domain.entity.MetaFile;
 
@@ -31,6 +34,9 @@ public class Photo extends MetaFile// extends AbstractEntity implements
 	 */
 	// @ManyToOne(optional = false)
 	private PhotoAlbum photoAlbum;
+
+	@Transient
+	private FileTransfer image;
 	/**
 	 * 
 	 */
@@ -64,6 +70,19 @@ public class Photo extends MetaFile// extends AbstractEntity implements
 	{
 		super();
 		this.photoAlbum = new PhotoAlbum(photoAlbum.getId());
+		this.identifier = identifier;
+	}
+
+	/**
+	 * @param photoAlbum
+	 * @param image
+	 * @param identifier
+	 */
+	public Photo(PhotoAlbum photoAlbum, FileTransfer image, String identifier)
+	{
+		super();
+		this.photoAlbum = photoAlbum;
+		this.image = image;
 		this.identifier = identifier;
 	}
 
@@ -119,6 +138,23 @@ public class Photo extends MetaFile// extends AbstractEntity implements
 	public void setIdentifier(String identifier)
 	{
 		this.identifier = identifier;
+	}
+
+	/**
+	 * @return the image
+	 */
+	public FileTransfer getImage()
+	{
+		return image;
+	}
+
+	/**
+	 * @param image
+	 *            the image to set
+	 */
+	public void setImage(FileTransfer image)
+	{
+		this.image = image;
 	}
 
 }
