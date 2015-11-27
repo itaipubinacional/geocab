@@ -103,43 +103,49 @@
 
 
         <!--BUTTONS-->
-        <div class="row " style=" position: fixed; background-color: #FFFFFF; height: 80px; bottom: 0; width: 36%; padding-top: 10px; border-top: 1px solid #a4a4a4">
-            <div class=" col-md-2">
-                <a class="btn btn-default icon itaipu-icon-book" ng-click="changeToHistory(row.entity.marker)"
-                   style="width:75px; height:58px;">
-                    </br>
-                    <spring:message code="admin.marker-moderation.History"/>
-                </a>
-            </div>
-            <div class="col-md-2">
-                <div class="btn btn-default icon itaipu-icon-save" name="btnSave"
-                     ng-click="saveMarkerModal()"
-                     style="width:75px; height:58px;">
-                    </br>
-                    <a style="font-size:14px;text-decoration:none;color:black">
-                        <spring:message code="admin.access-group.Save"/>
-                    </a>
+        <div class="row"
+             style=" position: fixed; background-color: #FFFFFF; height: 80px; bottom: 0; width: 36%; padding-top: 10px; border-top: 1px solid #a4a4a4">
 
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="btn btn-default icon itaipu-icon-export" name="btnRefuse" ng-click="refuseMarker()"
-                     style="width:75px; height:58px">
-                    </br>
-                    <a style="font-size:14px;text-decoration:none;color:black">
-                        <spring:message code="layer-group-view.Post"/>
+            <div class="col-md-10">
+                <div class="col-md-3">
+                    <a class="btn btn-default icon itaipu-icon-book" ng-click="changeToHistory(row.entity.marker)"
+                       style="width:75px; height:58px;">
+                        </br>
+                        <spring:message code="admin.marker-moderation.History"/>
                     </a>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <div class="btn btn-default icon itaipu-icon-delete" name="btnDelete"
-                     ng-click="cancelMarker()"
-                     style="width:75px; height:58px">
-                    </br>
-                    <a style="font-size:14px;text-decoration:none;color:black">
-                        <spring:message code="map.Delete"/>
-                    </a>
+                <div class="col-md-3">
+                    <div class="btn btn-default icon itaipu-icon-save" name="btnSave"
+                         ng-click="saveMarkerModal()"
+                         style="width:75px; height:58px;">
+                        </br>
+                        <a style="font-size:14px;text-decoration:none;color:black">
+                            <spring:message code="admin.access-group.Save"/>
+                        </a>
+
+                    </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="btn btn-default icon itaipu-icon-export" name="btnRefuse"
+                         ng-click="postMarkerModal()"
+                         style="width:75px; height:58px">
+                        </br>
+                        <a style="font-size:14px;text-decoration:none;color:black">
+                            <spring:message code="layer-group-view.Post"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="btn btn-default icon itaipu-icon-delete" name="btnDelete"
+                         ng-click="removeMarkerModal()"
+                         style="width:75px; height:58px">
+                        </br>
+                        <a style="font-size:14px;text-decoration:none;color:black">
+                            <spring:message code="map.Delete"/>
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
         </br>

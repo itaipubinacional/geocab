@@ -20,8 +20,8 @@ public enum MarkerStatus
 	 *				 		     ENUMS
 	 *-------------------------------------------------------------------*/
 	//Do not change this order
-	PENDING, ACCEPTED, REFUSED, SAVED;
-	
+	PENDING, ACCEPTED, REFUSED, SAVED, CANCELED;
+//	YELLOW    GREEN    ORANGE    GRAY   RED
 	/**
 	 *
 	 * @return value of enum

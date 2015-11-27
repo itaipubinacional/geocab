@@ -958,29 +958,154 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     /**
      * Calls the modal to refuse a marker
      */
-    $scope.refuseMarker = function () {
+    $scope.postMarkerModal = function () {
 
-        if ($scope.currentEntity.status != 'REFUSED') {
+        //if ($scope.currentEntity.status != 'REFUSED') {
 
-            var dialog = $modal.open({
-                templateUrl: "modules/admin/ui/marker-moderation/popup/refuse-marker.jsp",
-                controller: RefuseMarkerController,
-                windowClass: 'dialog-delete',
-                resolve: {
-                    motive: function () {
-                        return $scope.motive;
-                    }
+        var dialog = $modal.open({
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+            controller: DialogController,
+            windowClass: 'dialog-success',
+            resolve: {
+                title: function () {
+                    return $translate('layer-group-view.Post');
+                },
+                message: function () {
+                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-post-this-marker') + ' ?';
+                },
+                buttons: function () {
+                    return [
+                        {label: $translate('layer-group-view.Post'), css: 'btn btn-success'},
+                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                    ];
                 }
-            });
+            }
+        });
 
-            dialog.result.then(function (result) {
+        dialog.result.then(function () {
 
-                $scope.refuseMarkerModeration($scope.currentEntity.id, result.motive, result.description);
-            });
+            $scope.postMarker();
 
-        }
+        });
+
+        //}
     };
 
+
+    $scope.postMarker = function () {
+
+        myMarkersService.postMarker($scope.currentEntity, {
+            callback: function (result) {
+
+                $scope.changeToList();
+
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+
+            }
+        });
+    };
+
+    $scope.removeMarkerModal = function () {
+
+        var dialog = $modal.open({
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+            controller: DialogController,
+            windowClass: 'dialog-enable',
+            resolve: {
+                title: function () {
+                    return $translate("map.Delete-mark")
+                },
+                message: function () {
+                    return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"
+                },
+                buttons: function () {
+                    return [{
+                        label: $translate("layer-group-popup.Delete"),
+                        css: 'btn btn-danger'
+                    }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+            $scope.removeMarker();
+
+        });
+
+    };
+
+    $scope.removeMarker = function () {
+        markerService.removeMarker($scope.currentEntity.id, {
+            callback: function (result) {
+
+                //$scope.removeInternalLayer($scope.marker.layer.id, function (layerId) {
+                //    $scope.addInternalLayer(layerId);
+                //});
+
+                $scope.changeToList();
+
+                $scope.apply();
+
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+            }
+        });
+    }
+
+    $scope.removeMarkerModal = function () {
+
+        var dialog = $modal.open({
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+            controller: DialogController,
+            windowClass: 'dialog-enable',
+            resolve: {
+                title: function () {
+                    return $translate("map.Delete-mark")
+                },
+                message: function () {
+                    return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"
+                },
+                buttons: function () {
+                    return [{
+                        label: $translate("layer-group-popup.Delete"),
+                        css: 'btn btn-danger'
+                    }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+            $scope.removeMarker();
+
+        });
+
+    };
+
+    $scope.removeMarker = function () {
+        markerService.removeMarker($scope.currentEntity.id, {
+            callback: function (result) {
+
+                //$scope.removeInternalLayer($scope.marker.layer.id, function (layerId) {
+                //    $scope.addInternalLayer(layerId);
+                //});
+
+                $scope.changeToList();
+
+                $scope.apply();
+
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+            }
+        });
+    }
     /**
      * Calls the dialog to accept a marker
      */
@@ -1075,7 +1200,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     /**
      * Calls the modal to refuse a marker
      */
-    $scope.cancelMarker = function () {
+    $scope.cancelMarkerModal = function () {
         if ($scope.currentEntity.status != 'CANCELED') {
 
             var dialog = $modal.open({
@@ -1100,12 +1225,28 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             });
 
             dialog.result.then(function () {
-                $scope.cancelMarkerModeration($scope.currentEntity.id);
+                $scope.cancelMaker($scope.currentEntity.id);
             });
         }
     };
 
+    $scope.cancelMaker = function () {
 
+
+        myMarkersService.cancelMaker($scope.currentEntity, {
+            callback: function (result) {
+
+                $scope.changeToList();
+
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+            }
+        });
+
+    };
 
 
     /**
