@@ -2490,3 +2490,5 @@ ul.abn-tree li.abn-tree-row a {
 .dropbox.over {
 	background-color: #bfb;
 }
+
+div.thumbnail.active{border: 2px solid #428bca;}

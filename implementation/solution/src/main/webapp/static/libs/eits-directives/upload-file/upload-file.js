@@ -17,6 +17,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
     },
     link: function(scope, element, attrs){
 
+      scope.image = {};
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
 
       var inputFiles = document.getElementById('files');
@@ -34,6 +35,21 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
           scope.dropClass = ''
         })
       };
+
+      scope.setImage = function(file){
+        scope.image = file;
+        //scope.file.description = file.name;
+      };
+
+      scope.removeChecked = function(){
+
+        angular.forEach(scope.files, function(file, index){
+          if(file.checked)
+            scope.files.splice(file, 1);
+        })
+
+      };
+
 
       dropbox.addEventListener("dragenter", dragEnterLeave, false)
       dropbox.addEventListener("dragleave", dragEnterLeave, false)
@@ -75,6 +91,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                 scope.files.push(readFile);
 
                 if(files.length == i) {
+                  scope.image = scope.files[0];
                   scope.$apply();
                   scope.onSuccess({
                     files: scope.files
@@ -86,7 +103,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
             reader.readAsDataURL(file);
           }
 
-          console.log(scope.files);
+          //console.log(scope.files);
         }
       }, false);
 
@@ -96,9 +113,33 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         scope.$apply(function (scope) {
           console.log('files:', element.files);
           // Turn the FileList object into an Array
-          scope.files = []
-          for (var i = 0; i < element.files.length; i++) {
-            scope.files.push(element.files[i])
+
+          var files = element.files;
+
+          for (var i = 0, file; file = files[i]; i++) {
+
+            var reader = new FileReader();
+
+            reader.onloadend = (function (readFile) {
+              return function(e) {
+
+                console.log(e.target.result);
+                readFile.src = e.target.result;
+
+                scope.files.push(readFile);
+
+                if(files.length == i) {
+                  scope.image = scope.files[0];
+                  scope.$apply();
+                  scope.onSuccess({
+                    files: scope.files
+                  });
+                }
+              }
+            })(file);
+
+            reader.readAsDataURL(file);
+
           }
           scope.progressVisible = false
         });
