@@ -62,9 +62,19 @@
 
 		</div>
 
-		<div ng-grid="gridOptions" style="height: 499px;border: 1px solid rgb(212,212,212);"></div>
+        <div style="height: 30px;">
+            <div ng-if="!itensMarcados.length">
+                <h3 style="margin: 0">MARKERS</h3>
+            </div>
+            <div class="row" style="height: 60px" ng-if="itensMarcados.length">
+                <h3 style="margin: 0" class="col-md-6">{{itensMarcados.length}} itens selecionados </h3>
+                <button class="col-md-3" ng-disabled="!disableButtonPost" ng-click="postMarkersModal()">POST</button>
+                <button class="col-md-3" ng-disabled="!disableButtonDelete">DELETE</button>
+            </div>
+        </div>
+        <div ng-grid="gridOptions" style="height: 499px;border: 1px solid rgb(212,212,212);"></div>
 
-		<div class="gridFooterDiv">
+        <div class="gridFooterDiv">
 		       <pagination style="text-align: center; margin-top:45px"
 		                   total-items="currentPage.total" rotate="false"
 		                   items-per-page="currentPage.size"

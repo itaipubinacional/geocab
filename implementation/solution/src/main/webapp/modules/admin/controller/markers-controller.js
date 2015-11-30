@@ -44,6 +44,11 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.PENDING = "PENDING";
 
+    /**
+     * Save
+     */
+    $scope.SAVED = "SAVED";
+
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
@@ -97,6 +102,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     $scope.selectedMotive;
 
 
+    $scope.itensMarcados = [];
     //FORM
     /**
      * Variable that stores the query filter
@@ -185,16 +191,64 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
     $scope.gridOptions = {
         data: 'currentPage.content',
-        multiSelect: false,
+        multiSelect: true,
+        showSelectionCheckbox: true,
         useExternalSorting: true,
         headerRowHeight: 45,
+        keepLastSelected: false,
         rowHeight: 45,
-        beforeSelectionChange: function (row, event) {
+        selectedItems: [],
+
+
+        afterSelectionChange: function (row) {
 
             //avoids call a selection , when clicked in a action button.
-            if ($(event.target).is("a") || $(event.target).is("i")) return false;
+            if (!($(event.target).is("a") || $(event.target).is("i") || $(event.target).is("input"))) {
 
-            $scope.changeToDetail(row.entity);
+                $scope.changeToDetail(row.entity);
+
+            }
+
+            if (row.length > 0) {
+
+                var i;
+                for (var rowItemIndex = 0; rowItemIndex < rowItem.length; rowItemIndex++) {
+                    if (row[rowItemIndex].selected) {
+                        i = $scope.findByIdInArray($scope.itensMarcados, row[rowItemIndex].entity);
+                        if (i == -1)
+                            $scope.itensMarcados.push(row[rowItemIndex].entity);
+                    } else {
+                        i = $scope.findByIdInArray($scope.itensMarcados, row[rowItemIndex].entity);
+                        if (i > -1)
+                            $scope.itensMarcados.splice(i, 1);
+                    }
+                }
+            } else {
+
+                var i;
+                if (row.selected) {
+                    i = $scope.findByIdInArray($scope.itensMarcados, row.entity);
+                    if (i == -1){
+                        $scope.itensMarcados.push(row.entity);
+                    }
+                } else {
+                    i = $scope.findByIdInArray($scope.itensMarcados, row.entity);
+                    if (i > -1)
+                        $scope.itensMarcados.splice(i, 1);
+                }
+            }
+            $scope.disableButtonPost = true;
+            $scope.disableButtonDelete = true;
+
+            for (var i = 0; i < $scope.itensMarcados.length; i++) {
+                if(!( $scope.itensMarcados[i].status == $scope.REFUSED || $scope.itensMarcados[i].status == $scope.SAVED )){
+                    $scope.disableButtonPost = false;
+                }
+                if(!( $scope.itensMarcados[i].status == $scope.REFUSED || $scope.itensMarcados[i].status == $scope.SAVED || $scope.itensMarcados[i].status == $scope.CANCELED)){
+                    $scope.disableButtonPost = false;
+                }
+            }
+
 
             //$scope.clearFeatures();
             //
@@ -232,7 +286,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             //});
 
         },
-
+        enableRowSelection: true,
         columnDefs: [
             {displayName: $translate('admin.marker-moderation.Layer'), field: 'layer.title'},
             {
@@ -248,6 +302,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             //     {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
         ]
     };
+
 
     /**
      * Setting the mouse position control
@@ -292,6 +347,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
          */
 
         $log.info("Starting the front controller.");
+
+        //$scope.itensMarcados = selectedGroups.slice(0);
 
         $scope.changeToList();
 
@@ -958,6 +1015,41 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     /**
      * Calls the modal to refuse a marker
      */
+    $scope.postMarkersModal = function () {
+
+        var dialog = $modal.open({
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+            controller: DialogController,
+            windowClass: 'dialog-success',
+            resolve: {
+                title: function () {
+                    return $translate('layer-group-view.Post');
+                },
+                message: function () {
+                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-post-this-marker') + ' ?';
+                },
+                buttons: function () {
+                    return [
+                        {label: $translate('layer-group-view.Post'), css: 'btn btn-success'},
+                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                    ];
+                }
+            }
+        });
+
+        dialog.result.then(function () {
+
+            $scope.postMarkers();
+
+        });
+
+        //}
+    };
+
+
+    /**
+     * Calls the modal to refuse a marker
+     */
     $scope.postMarkerModal = function () {
 
         //if ($scope.currentEntity.status != 'REFUSED') {
@@ -991,6 +1083,29 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         //}
     };
 
+    $scope.postMarkers = function () {
+
+        var markersId = [];
+        for (var i = 0; i < $scope.itensMarcados.length; i++) {
+            markersId[i] = $scope.itensMarcados[i].id;
+        }
+
+        myMarkersService.postMarkers( markersId, {
+            callback: function (result) {
+
+                $scope.changeToList();
+
+                $scope.itensMarcados = [];
+
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+
+            }
+        });
+    };
 
     $scope.postMarker = function () {
 
@@ -998,6 +1113,30 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             callback: function (result) {
 
                 $scope.changeToList();
+
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+
+            }
+        });
+    };
+
+    $scope.removeMarkers = function () {
+
+        var markersId = [];
+        for (var i = 0; i < $scope.itensMarcados.length; i++) {
+            markersId[i] = $scope.itensMarcados[i].id;
+        }
+
+        myMarkersService.removeMarkers( markersId, {
+            callback: function (result) {
+
+                $scope.changeToList();
+
+                $scope.itensMarcados = [];
 
                 $scope.$apply();
             },
