@@ -135,8 +135,7 @@ public class MarkerService
 		{
 			User user = ContextHolder.getAuthenticatedUser();
 
-			marker.setLocation(
-					(Point) this.wktToGeometry(marker.getWktCoordenate()));
+			marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
 
 			marker.setStatus(MarkerStatus.PENDING);
 			marker.setUser(user);
@@ -179,11 +178,9 @@ public class MarkerService
 
 		for (MarkerAttribute markerAttribute : markersAttributes)
 		{
-			markerAttribute = this.markerAttributeRepository
-					.save(markerAttribute);
+			markerAttribute = this.markerAttributeRepository.save(markerAttribute);
 
-			if (markerAttribute.getAttribute()
-					.getType() == AttributeType.PHOTO_ALBUM)
+			if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
 			{
 				markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
 				
@@ -221,11 +218,8 @@ public class MarkerService
 
 	/**
 	 * Salva todas as fotos no sistema de arquivos
-	 * 
 	 * @param photos
 	 * @return
-	 * @throws IOException
-	 * @throws RepositoryException
 	 */
 	public Set<Photo> uploadPhoto(Set<Photo> photos)
 	{
@@ -233,7 +227,7 @@ public class MarkerService
 		{
 			photo = this.photoRepository.save(photo);
 
-			photo.setImage(this.uploadImg(photo));
+			photo = this.uploadImg(photo);
 		}
 		return photos;
 	}
@@ -251,18 +245,15 @@ public class MarkerService
 	{
 		try
 		{
-			Marker markerTemporary = this.markerRepository
-					.findOne(marker.getId());
+			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
 
 			if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
 			{
-				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository
-						.listAttributeByMarker(marker.getId());
+				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
 
 				if (markerAttributes != null)
 				{
-					this.markerAttributeRepository
-							.deleteInBatch(markerAttributes);
+					this.markerAttributeRepository.deleteInBatch(markerAttributes);
 				}
 			}
 
@@ -290,7 +281,7 @@ public class MarkerService
 
 			marker = this.markerRepository.save(marker);
 		}
-		catch (DataIntegrityViolationException | IOException | RepositoryException e)
+		catch (DataIntegrityViolationException | RepositoryException e)
 		{
 			LOG.info(e.getMessage());
 			final String error = e.getCause().getCause().getMessage();
@@ -320,8 +311,7 @@ public class MarkerService
 	 * @param Marker
 	 *            marker
 	 */
-	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
-			+ UserRole.MODERATOR_VALUE + "')")
+	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','" + UserRole.MODERATOR_VALUE + "')")
 	public void enableMarker(Long id)
 	{
 		try
@@ -345,8 +335,7 @@ public class MarkerService
 	 * @param Marker
 	 *            marker
 	 */
-	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"
-			+ UserRole.MODERATOR_VALUE + "')")
+	@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','" + UserRole.MODERATOR_VALUE + "')")
 	public void disableMarker(Long id)
 	{
 		try
@@ -376,7 +365,11 @@ public class MarkerService
 	{
 		return this.markerRepository.findOne(id);
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public User getUserMe()
 	{
 		return ContextHolder.getAuthenticatedUser();
@@ -559,10 +552,8 @@ public class MarkerService
 			System.out.println(dEnd);
 		}
 
-		// return this.markerRepository.listByFilters(layer, status, dStart,
-		// dEnd, user, pageable);
-		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,
-				user, pageable);
+		
+		return this.markerRepository.listByFilters(layer, status, dStart, dEnd, user, pageable);
 
 	}
 
@@ -608,8 +599,7 @@ public class MarkerService
 			dEnd.setTime(dEnd.getTime());
 		}
 
-		return this.markerRepository.listByFiltersMap(layer, status, dStart,
-				dEnd, user);
+		return this.markerRepository.listByFiltersMap(layer, status, dStart, dEnd, user);
 	}
 
 	/**
@@ -620,8 +610,7 @@ public class MarkerService
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public Page<Marker> listMarkerByMarkers(List<Long> ids,
-			PageRequest pageable)
+	public Page<Marker> listMarkerByMarkers(List<Long> ids, PageRequest pageable)
 	{
 		return this.markerRepository.listByMarkers(ids, pageable);
 	}
@@ -654,25 +643,30 @@ public class MarkerService
 	 * @throws IOException
 	 * @throws RepositoryException
 	 */
-	public void removeImg(String metaFileId)
-			throws IOException, RepositoryException
+	public void removeImg(String metaFileId) 
 	{
-
-		this.metaFileRepository.remove(metaFileId);
+		try
+		{
+			this.metaFileRepository.remove(metaFileId);
+		}
+		catch (RepositoryException e)
+		{
+			LOG.info(e.getMessage());	
+		}
 	}
 
 	/**
 	 * Salva uma foto e devolve o objeto foto
-	 * 
-	 * @param fileTransfer
-	 * @param path
+	 * @param photo
 	 * @return
-	 * @throws IOException
-	 * @throws RepositoryException
 	 */
-	public FileTransfer uploadImg(Photo photo) throws IOException, RepositoryException
+	public Photo uploadImg(Photo photo)
 	{
 
+		try
+		{
+			
+		
 		final String mimeType = photo.getImage().getMimeType();
 
 		final List<String> validMimeTypes = new ArrayList<String>();
@@ -686,10 +680,8 @@ public class MarkerService
 			throw new IllegalArgumentException("Formato inválido!");
 		}
 
-		InputStream is = new BufferedInputStream(
-				photo.getImage().getInputStream());
-		final BufferedImage bufferedImage = new BufferedImage(640, 480,
-				BufferedImage.TYPE_INT_RGB);
+		InputStream is = new BufferedInputStream(photo.getImage().getInputStream());
+		final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
 		Image image = ImageIO.read(is);
 		Graphics2D g = bufferedImage.createGraphics();
 		g.drawImage(image, 0, 0, 640, 480, null);
@@ -709,8 +701,14 @@ public class MarkerService
 		metaFile.setName(photo.getImage().getFilename());
 
 		this.metaFileRepository.insert(metaFile);
+		
+		}
+		catch (IOException | RepositoryException e)
+		{
+			LOG.info(e.getMessage());
+		}
 
-		return photo.getImage();
+		return photo;
 	}
 
 	/**
@@ -721,43 +719,49 @@ public class MarkerService
 	 * @throws RepositoryException
 	 */
 	public void uploadImg(FileTransfer fileTransfer, Long markerId)
-			throws IOException, RepositoryException
 	{
-
-		final String mimeType = fileTransfer.getMimeType();
-
-		final List<String> validMimeTypes = new ArrayList<String>();
-		validMimeTypes.add("image/gif");
-		validMimeTypes.add("image/jpeg");
-		validMimeTypes.add("image/bmp");
-		validMimeTypes.add("image/png");
-
-		if (mimeType == null || !validMimeTypes.contains(mimeType))
+		try
 		{
-			throw new IllegalArgumentException("Formato inválido!");
+			final String mimeType = fileTransfer.getMimeType();
+	
+			final List<String> validMimeTypes = new ArrayList<String>();
+			validMimeTypes.add("image/gif");
+			validMimeTypes.add("image/jpeg");
+			validMimeTypes.add("image/bmp");
+			validMimeTypes.add("image/png");
+	
+			if (mimeType == null || !validMimeTypes.contains(mimeType))
+			{
+				throw new IllegalArgumentException("Formato inválido!");
+			}
+	
+			InputStream is = new BufferedInputStream(fileTransfer.getInputStream());
+			
+			final BufferedImage bufferedImage = new BufferedImage(640, 480,
+					BufferedImage.TYPE_INT_RGB);
+			Image image = ImageIO.read(is);
+			Graphics2D g = bufferedImage.createGraphics();
+			g.drawImage(image, 0, 0, 640, 480, null);
+			g.dispose();
+	
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			ImageIO.write(bufferedImage, "png", os);
+			InputStream isteam = new ByteArrayInputStream(os.toByteArray());
+	
+			MetaFile metaFile = new MetaFile();
+			metaFile.setId(String.valueOf(markerId));
+			metaFile.setContentType(fileTransfer.getMimeType());
+			metaFile.setContentLength(fileTransfer.getSize());
+			metaFile.setFolder("/marker/" + markerId);
+			metaFile.setInputStream(isteam);
+			metaFile.setName(fileTransfer.getFilename());
+	
+			this.metaFileRepository.insert(metaFile);
 		}
-
-		InputStream is = new BufferedInputStream(fileTransfer.getInputStream());
-		final BufferedImage bufferedImage = new BufferedImage(640, 480,
-				BufferedImage.TYPE_INT_RGB);
-		Image image = ImageIO.read(is);
-		Graphics2D g = bufferedImage.createGraphics();
-		g.drawImage(image, 0, 0, 640, 480, null);
-		g.dispose();
-
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		ImageIO.write(bufferedImage, "png", os);
-		InputStream isteam = new ByteArrayInputStream(os.toByteArray());
-
-		MetaFile metaFile = new MetaFile();
-		metaFile.setId(String.valueOf(markerId));
-		metaFile.setContentType(fileTransfer.getMimeType());
-		metaFile.setContentLength(fileTransfer.getSize());
-		metaFile.setFolder("/marker/" + markerId);
-		metaFile.setInputStream(isteam);
-		metaFile.setName(fileTransfer.getFilename());
-
-		this.metaFileRepository.insert(metaFile);
+		catch (IOException | RepositoryException e)
+		{
+			LOG.info(e.getMessage());
+		}
 	}
 
 	/**
