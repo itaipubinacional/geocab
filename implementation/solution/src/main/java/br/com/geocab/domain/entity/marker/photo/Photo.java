@@ -5,6 +5,7 @@ package br.com.geocab.domain.entity.marker.photo;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -37,13 +38,15 @@ public class Photo extends AbstractEntity implements Serializable
 	 */
 	@ManyToOne(optional = false)
 	private PhotoAlbum photoAlbum;
-
+	/**
+	 * 
+	 */
 	@Transient
 	private FileTransfer image;
 	/**
 	 * 
 	 */
-	@Transient
+	@Column(length = 50, nullable = false, unique = true)
 	private String identifier;
 
 	/*-------------------------------------------------------------------
