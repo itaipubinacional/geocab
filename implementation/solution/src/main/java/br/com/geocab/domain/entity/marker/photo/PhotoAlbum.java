@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -52,6 +53,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
+	@Column(nullable = false, length = 50, unique = true)
 	private String identifier;
 
 	/*-------------------------------------------------------------------

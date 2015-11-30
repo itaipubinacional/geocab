@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.xml.bind.JAXBException;
 
@@ -231,6 +230,76 @@ public class MarkerService
 		}
 		return photos;
 	}
+	
+	/**
+	 * 
+	 * @param photoAlbumId
+	 * @return
+	 */
+	public Set<Photo> listPhotosByPhotoAlbumId(String photoAlbumId)
+	{
+		Set<Photo> photos = this.photoRepository.findByIdentifierContaining(photoAlbumId);
+		
+		for (Photo photo : photos)
+		{
+			photo.setImage(this.findFileById(photo.getIdentifier()));
+		}
+		return photos;
+	}
+	/**
+	 * Pega os arquivos do sistema de arquivos
+	 * @param id
+	 * @return
+	 */
+	public FileTransfer findFileById(String id)
+	{
+		FileTransfer fileTransfer = null;
+		try
+		{
+			MetaFile metaFile = this.metaFileRepository.findById(id, true);
+			fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
+		}
+		catch (RepositoryException e)
+		{
+			e.printStackTrace();
+		}
+		return fileTransfer;
+	}
+	
+	/**
+	 * 
+	 * @param photoAlbumId
+	 * @return
+	 */
+	public Set<Photo> listPhotosByPhotoAlbumId(Long photoAlbumId)
+	{
+		PhotoAlbum photoAlbum = this.photoAlbumRepository.findOne(photoAlbumId);
+		return this.listPhotosByPhotoAlbumId(photoAlbum.getIdentifier());
+	}
+	
+	/**
+	 * 
+	 * @param photoId
+	 * @return
+	 */
+	public Photo findPhotoById(String photoId)
+	{
+		Photo photo = this.photoRepository.findByIdentifier(photoId);
+		photo.setImage(this.findFileById(photo.getIdentifier()));
+		return photo;
+	}
+	
+	/**
+	 * 
+	 * @param photoId
+	 * @return
+	 */
+	public Photo findPhotoById(Long photoId)
+	{
+		Photo photo = this.photoRepository.findOne(photoId);
+		photo.setImage(findFileById(photo.getIdentifier()));
+		return photo;
+	}
 
 	/**
 	 * Method to update an {@link Marker}
@@ -281,7 +350,7 @@ public class MarkerService
 
 			marker = this.markerRepository.save(marker);
 		}
-		catch (DataIntegrityViolationException | RepositoryException e)
+		catch (DataIntegrityViolationException e)
 		{
 			LOG.info(e.getMessage());
 			final String error = e.getCause().getCause().getMessage();
@@ -771,16 +840,13 @@ public class MarkerService
 	 * @throws RepositoryException
 	 */
 	public FileTransfer findImgByMarker(Long markerId)
-			throws RepositoryException
 	{
 		try
 		{
-			final MetaFile metaFile = this.metaFileRepository
-					.findByPath("/marker/" + markerId + "/" + markerId, true);
-			return new FileTransfer(metaFile.getName(),
-					metaFile.getContentType(), metaFile.getInputStream());
+			final MetaFile metaFile = this.metaFileRepository.findByPath(markerId.toString(), true);
+			return new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
 		}
-		catch (PathNotFoundException e)
+		catch (RepositoryException e)
 		{
 			return null;
 		}
