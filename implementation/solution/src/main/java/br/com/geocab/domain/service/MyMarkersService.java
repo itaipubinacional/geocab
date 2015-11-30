@@ -216,6 +216,49 @@ public class MyMarkersService
 		}
 		return marker;
 	}
+	
+	/**
+	 * Method to remove markers
+	 * 
+	 */
+
+	public void removeMarkers( List<Long> markersId) throws IOException,RepositoryException
+	{
+		try
+		{
+			for (Long markerId : markersId)
+			{
+				this.removeMarker(markerId);
+			}
+		}
+		catch (DataIntegrityViolationException e)
+		{
+			LOG.info(e.getMessage());
+		}
+	}
+
+	/**
+	 * Method to update markers
+	 * 
+	 */
+
+	public void postMarkers( List<Long> markersId) throws IOException,RepositoryException
+	{
+		try
+		{
+			for (Long markerId : markersId)
+			{
+				Marker marker = new Marker(markerId);
+				marker = this.markerRepository.findOne(markerId);
+				this.postMarker(marker);
+			}
+		}
+		catch (DataIntegrityViolationException e)
+		{
+			LOG.info(e.getMessage());
+		}
+	}
+	
 	/**
 	 * Method to update an {@link Marker}
 	 * 
