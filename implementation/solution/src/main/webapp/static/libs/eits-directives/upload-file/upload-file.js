@@ -58,7 +58,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         });
         var files = evt.dataTransfer.files;
 
-        document.getElementById('files').files = files;
+        //document.getElementById('files').files = files;
 
         if (files.length > 0) {
           for (var i = 0, file; file = files[i]; i++) {
@@ -72,7 +72,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                 console.log(e.target.result);
                 readFile.src = e.target.result;
 
-                scope.files.push({name: readFile.name, src: e.target.result});
+                scope.files.push(readFile);
 
                 if(files.length == i) {
                   scope.$apply();

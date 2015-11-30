@@ -2653,9 +2653,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var photoAlbum = new PhotoAlbum();
 
         var photo = new Photo();
+
+        val.photoAlbum.files[0] = val.files[0];
+
+        val.photoAlbum = $scope.currentEntity.image;
+
         photo.image = val.photoAlbum;
 
-        photoAlbum.photos = photo;
+        photoAlbum.photos = [photo];
 
         markerAttribute.photoAlbum = photoAlbum;
       }
