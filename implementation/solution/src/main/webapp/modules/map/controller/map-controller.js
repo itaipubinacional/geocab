@@ -2637,6 +2637,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.currentEntity.layer = layer;
 
     $scope.currentEntity.markerAttribute = [];
+
     angular.forEach($scope.attributesByLayer, function (val, ind) {
 
       var attribute = new Attribute();
@@ -2670,6 +2671,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.currentEntity.markerAttribute.push(markerAttribute);
 
     });
+
+    $scope.currentEntity.markerAttribute[0].attribute.type = "PHOTO_ALBUM";
 
     $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
 
