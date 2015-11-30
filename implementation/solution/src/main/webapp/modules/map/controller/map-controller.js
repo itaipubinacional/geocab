@@ -2651,19 +2651,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
 
       if(val.photoAlbum) {
+
+        attribute.type = "PHOTO_ALBUM";
+
         var photoAlbum = new PhotoAlbum();
 
+        photoAlbum.photos = new Array();
+
         var photo = new Photo();
+        photo.image = $scope.currentEntity.image;
+        photoAlbum.photos.push(photo);
 
-        val.photoAlbum.files[0] = val.files[0];
-
-        val.photoAlbum = $scope.currentEntity.image;
-
-        photo.image = val.photoAlbum;
-
-        photoAlbum.photos = [photo];
+        var photo = new Photo();
+        photo.image = $scope.currentEntity.image;
+        photoAlbum.photos.push(photo);
 
         markerAttribute.photoAlbum = photoAlbum;
+
       }
 
       markerAttribute.attribute = attribute;
@@ -2671,8 +2675,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.currentEntity.markerAttribute.push(markerAttribute);
 
     });
-
-    $scope.currentEntity.markerAttribute[0].attribute.type = "PHOTO_ALBUM";
 
     $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
 
