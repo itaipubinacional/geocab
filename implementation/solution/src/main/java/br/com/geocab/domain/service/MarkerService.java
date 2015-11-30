@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
@@ -44,13 +45,18 @@ import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
+import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
+import br.com.geocab.domain.entity.marker.photo.Photo;
+import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
+import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
+import br.com.geocab.domain.repository.marker.photo.IPhotoRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
 
 /**
@@ -69,8 +75,8 @@ public class MarkerService
 	/**
 	 * Log
 	 */
-	private static final Logger LOG = Logger.getLogger(DataSourceService.class
-			.getName());
+	private static final Logger LOG = Logger
+			.getLogger(DataSourceService.class.getName());
 
 	/**
 	 * Repository of {@link DataSource}
@@ -90,12 +96,25 @@ public class MarkerService
 	@Autowired
 	private IMarkerModerationRepository markerModerationRepository;
 
-//	/**
-//	 * I18n
-//	 */
-//	@Autowired
-//	private MessageSource messages;
+	/**
+	 * 
+	 */
+	@Autowired
+	private IPhotoAlbumRepository photoAlbumRepository;
+	/**
+	 * 
+	 */
+	@Autowired
+	private IPhotoRepository photoRepository;
 
+	// /**
+	// * I18n
+	// */
+	// @Autowired
+	// private MessageSource messages;
+	/**
+	 * 
+	 */
 	@Autowired
 	private IMetaFileRepository metaFileRepository;
 
@@ -110,27 +129,26 @@ public class MarkerService
 	 * @throws RepositoryException
 	 * @throws IOException
 	 */
-	public Marker insertMarker(Marker marker) throws IOException,
-			RepositoryException
+	public Marker insertMarker(Marker marker) 
 	{
 		try
 		{
 			User user = ContextHolder.getAuthenticatedUser();
 
-			marker.setLocation((Point) this.wktToGeometry(marker
-					.getWktCoordenate()));
+			marker.setLocation(
+					(Point) this.wktToGeometry(marker.getWktCoordenate()));
 
 			marker.setStatus(MarkerStatus.PENDING);
 			marker.setUser(user);
+
 			marker = this.markerRepository.save(marker);
-			
-			marker.getMarkerAttribute().get(0).getPhotoAlbum().getPhotos();
-			
+
+			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
+
 			if (marker.getImage() != null && marker.getImage().getFilename() != "")
 			{
 				this.uploadImg(marker.getImage(), marker.getId());
 			}
-
 
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
@@ -149,6 +167,78 @@ public class MarkerService
 	}
 
 	/**
+	 * Salva todos os atributos de um ponto
+	 * 
+	 * @param marker
+	 * @return
+	 * @throws RepositoryException 
+	 * @throws IOException 
+	 */
+	public List<MarkerAttribute> insertMarkersAttributes(List<MarkerAttribute> markersAttributes)
+	{
+
+		for (MarkerAttribute markerAttribute : markersAttributes)
+		{
+			markerAttribute = this.markerAttributeRepository
+					.save(markerAttribute);
+
+			if (markerAttribute.getAttribute()
+					.getType() == AttributeType.PHOTO_ALBUM)
+			{
+				markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
+				
+				markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
+			}
+		}
+		return markersAttributes;
+	}
+
+	/**
+	 * Salva todos os albuns de fotos no banco de dados e todas as fotos nos
+	 * sistemas de arquivos
+	 * 
+	 * @param marker
+	 * @return
+	 * @throws RepositoryException 
+	 * @throws IOException 
+	 */
+	public PhotoAlbum insertPhotoAlbum(PhotoAlbum photoAlbum)
+	{
+		photoAlbum = photoAlbumRepository.save(photoAlbum);
+		// Caso não haja o foto_album dentro da foto, seta lá então.
+		// Caso seja uma inserção de um album de fotos ou uma atualização de um
+		// album de fotos
+		for (Photo photo : photoAlbum.getPhotos())
+		{
+			if (photo.getPhotoAlbum() == null)
+			{
+				photo.setPhotoAlbum(photoAlbum);
+			}
+		}
+		this.uploadPhoto(photoAlbum.getPhotos());
+		return photoAlbum;
+	}
+
+	/**
+	 * Salva todas as fotos no sistema de arquivos
+	 * 
+	 * @param photos
+	 * @return
+	 * @throws IOException
+	 * @throws RepositoryException
+	 */
+	public Set<Photo> uploadPhoto(Set<Photo> photos)
+	{
+		for (Photo photo : photos)
+		{
+			photo = this.photoRepository.save(photo);
+
+			photo.setImage(this.uploadImg(photo));
+		}
+		return photos;
+	}
+
+	/**
 	 * Method to update an {@link Marker}
 	 * 
 	 * @param Marker
@@ -157,13 +247,12 @@ public class MarkerService
 	 * @throws IOException
 	 */
 	// @PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')")
-	public Marker updateMarker(Marker marker) throws IOException,
-			RepositoryException
+	public Marker updateMarker(Marker marker)
 	{
 		try
 		{
-			Marker markerTemporary = this.markerRepository.findOne(marker
-					.getId());
+			Marker markerTemporary = this.markerRepository
+					.findOne(marker.getId());
 
 			if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
 			{
@@ -190,18 +279,18 @@ public class MarkerService
 			}
 
 			marker.setLocation(markerTemporary.getLocation());
-			
+
 			marker.setStatus(MarkerStatus.PENDING);
-			
+
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
 			markerModeration.setStatus(MarkerStatus.PENDING);
-			
+
 			this.markerModerationRepository.save(markerModeration);
-			
+
 			marker = this.markerRepository.save(marker);
 		}
-		catch (DataIntegrityViolationException e)
+		catch (DataIntegrityViolationException | IOException | RepositoryException e)
 		{
 			LOG.info(e.getMessage());
 			final String error = e.getCause().getCause().getMessage();
@@ -216,7 +305,8 @@ public class MarkerService
 	 * 
 	 * @param id
 	 */
-	//@PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"+ UserRole.MODERATOR_VALUE + "')")
+	// @PreAuthorize("hasAnyRole('" + UserRole.ADMINISTRATOR_VALUE + "','"+
+	// UserRole.MODERATOR_VALUE + "')")
 	public void removeMarker(Long id)
 	{
 		Marker marker = this.findMarkerById(id);
@@ -393,16 +483,16 @@ public class MarkerService
 		return geom;
 	}
 
-//	/**
-//	 * 
-//	 * @param geometry
-//	 * @return
-//	 */
-//	private String geometryToWkt(Geometry geometry)
-//	{
-//		WKTWriter geom = new WKTWriter();
-//		return geom.write(geometry);
-//	}
+	// /**
+	// *
+	// * @param geometry
+	// * @return
+	// */
+	// private String geometryToWkt(Geometry geometry)
+	// {
+	// WKTWriter geom = new WKTWriter();
+	// return geom.write(geometry);
+	// }
 
 	/**
 	 * Method to list all {@link Marker}
@@ -428,15 +518,15 @@ public class MarkerService
 	}
 
 	@Transactional(readOnly = true)
-	public Page<Marker> listMarkerByFiltersByUser(String layer, MarkerStatus status,
-			String dateStart, String dateEnd, PageRequest pageable)
-			throws java.text.ParseException
+	public Page<Marker> listMarkerByFiltersByUser(String layer,
+			MarkerStatus status, String dateStart, String dateEnd,
+			PageRequest pageable) throws java.text.ParseException
 	{
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
-		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, user, pageable);
+		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, user,
+				pageable);
 	}
-	
-	
+
 	/**
 	 * Method to list {@link FonteDados} pageable with filter options
 	 * 
@@ -448,7 +538,7 @@ public class MarkerService
 	@Transactional(readOnly = true)
 	public Page<Marker> listMarkerByFilters(String layer, MarkerStatus status,
 			String dateStart, String dateEnd, String user, PageRequest pageable)
-			throws java.text.ParseException
+					throws java.text.ParseException
 	{
 
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -471,8 +561,9 @@ public class MarkerService
 
 		// return this.markerRepository.listByFilters(layer, status, dStart,
 		// dEnd, user, pageable);
-		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,	user, pageable);
-		
+		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,
+				user, pageable);
+
 	}
 
 	@Transactional(readOnly = true)
@@ -481,10 +572,10 @@ public class MarkerService
 			PageRequest pageable) throws java.text.ParseException
 	{
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
-		return this.listMarkerByFiltersMap( layer, status,  dateStart,  dateEnd,  user, pageable);
+		return this.listMarkerByFiltersMap(layer, status, dateStart, dateEnd,
+				user, pageable);
 	}
-	
-	
+
 	/**
 	 * Method to list {@link FonteDados} pageable with filter options
 	 * 
@@ -513,11 +604,12 @@ public class MarkerService
 		{
 			dEnd = Calendar.getInstance();
 			dEnd.setTime((Date) formatter.parse(dateEnd));
-			dEnd.add(Calendar.DAY_OF_MONTH,1);
+			dEnd.add(Calendar.DAY_OF_MONTH, 1);
 			dEnd.setTime(dEnd.getTime());
 		}
 
-		return this.markerRepository.listByFiltersMap(layer, status, dStart, dEnd, user);
+		return this.markerRepository.listByFiltersMap(layer, status, dStart,
+				dEnd, user);
 	}
 
 	/**
@@ -528,7 +620,8 @@ public class MarkerService
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public Page<Marker> listMarkerByMarkers(List<Long> ids, PageRequest pageable)
+	public Page<Marker> listMarkerByMarkers(List<Long> ids,
+			PageRequest pageable)
 	{
 		return this.markerRepository.listByMarkers(ids, pageable);
 	}
@@ -561,11 +654,63 @@ public class MarkerService
 	 * @throws IOException
 	 * @throws RepositoryException
 	 */
-	public void removeImg(String metaFileId) throws IOException,
-			RepositoryException
+	public void removeImg(String metaFileId)
+			throws IOException, RepositoryException
 	{
 
 		this.metaFileRepository.remove(metaFileId);
+	}
+
+	/**
+	 * Salva uma foto e devolve o objeto foto
+	 * 
+	 * @param fileTransfer
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 * @throws RepositoryException
+	 */
+	public FileTransfer uploadImg(Photo photo) throws IOException, RepositoryException
+	{
+
+		final String mimeType = photo.getImage().getMimeType();
+
+		final List<String> validMimeTypes = new ArrayList<String>();
+		validMimeTypes.add("image/gif");
+		validMimeTypes.add("image/jpeg");
+		validMimeTypes.add("image/bmp");
+		validMimeTypes.add("image/png");
+
+		if (mimeType == null || !validMimeTypes.contains(mimeType))
+		{
+			throw new IllegalArgumentException("Formato inválido!");
+		}
+
+		InputStream is = new BufferedInputStream(
+				photo.getImage().getInputStream());
+		final BufferedImage bufferedImage = new BufferedImage(640, 480,
+				BufferedImage.TYPE_INT_RGB);
+		Image image = ImageIO.read(is);
+		Graphics2D g = bufferedImage.createGraphics();
+		g.drawImage(image, 0, 0, 640, 480, null);
+		g.dispose();
+
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, "png", os);
+		InputStream isteam = new ByteArrayInputStream(os.toByteArray());
+
+		MetaFile metaFile = new MetaFile();
+		// Todo pega o ID do ponto
+		metaFile.setId(String.valueOf(photo.getIdentifier()));
+		metaFile.setContentType(photo.getImage().getMimeType());
+		metaFile.setContentLength(photo.getImage().getSize());
+		metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
+		metaFile.setInputStream(isteam);
+		metaFile.setName(photo.getImage().getFilename());
+
+		this.metaFileRepository.insert(metaFile);
+
+		return photo.getImage();
 	}
 
 	/**
@@ -626,8 +771,8 @@ public class MarkerService
 	{
 		try
 		{
-			final MetaFile metaFile = this.metaFileRepository.findByPath(
-					"/marker/" + markerId + "/" + markerId, true);
+			final MetaFile metaFile = this.metaFileRepository
+					.findByPath("/marker/" + markerId + "/" + markerId, true);
 			return new FileTransfer(metaFile.getName(),
 					metaFile.getContentType(), metaFile.getInputStream());
 		}
@@ -636,9 +781,10 @@ public class MarkerService
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Retorna os status possíveis das postagens para o front-end
+	 * 
 	 * @return
 	 */
 	public MarkerStatus[] getMarkerStatus()

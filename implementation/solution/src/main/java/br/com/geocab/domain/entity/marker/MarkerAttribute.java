@@ -53,7 +53,7 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	/**
 	 * PhotoAlbum
 	 */
-	@OneToOne(optional = true, cascade = { CascadeType.ALL })
+	@OneToOne(optional = true, cascade = CascadeType.REMOVE)
 	private PhotoAlbum photoAlbum;
 
 	public MarkerAttribute()

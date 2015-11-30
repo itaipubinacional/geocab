@@ -6,6 +6,7 @@ package br.com.geocab.domain.entity.marker.photo;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -38,12 +39,13 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	/**
 	 * Um album de fotos deve estar vinculado á um atributo de uma camada
 	 */
-	@OneToOne(optional = false)
+	@OneToOne(optional = false, cascade = CascadeType.REMOVE)
 	private MarkerAttribute markerAttribute;
 
 	/**
 	 * Um album de fotos pode ter zero ou muitas fotos
 	 */
+//	@OneToMany(cascade = CascadeType.REMOVE)
 	@Transient
 	private Set<Photo> photos;
 

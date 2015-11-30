@@ -3,23 +3,26 @@
  */
 package br.com.geocab.domain.entity.marker.photo;
 
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.io.FileTransfer;
+import org.hibernate.envers.Audited;
 
-import br.com.geocab.domain.entity.MetaFile;
+import br.com.geocab.domain.entity.AbstractEntity;
 
 /**
  * @author emanuelvictor
  *
  */
-// @Entity
-// @Audited
-// @Table(schema = IEntity.SCHEMA)
+@Entity
+@Audited
 @DataTransferObject(javascript = "Photo")
-public class Photo extends MetaFile// extends AbstractEntity implements
-									// Serializable
+public class Photo extends AbstractEntity implements Serializable
 {
 
 	/**
@@ -32,7 +35,7 @@ public class Photo extends MetaFile// extends AbstractEntity implements
 	/**
 	 * 
 	 */
-	// @ManyToOne(optional = false)
+	@ManyToOne(optional = false)
 	private PhotoAlbum photoAlbum;
 
 	@Transient
@@ -40,6 +43,7 @@ public class Photo extends MetaFile// extends AbstractEntity implements
 	/**
 	 * 
 	 */
+	@Transient
 	private String identifier;
 
 	/*-------------------------------------------------------------------
@@ -57,9 +61,9 @@ public class Photo extends MetaFile// extends AbstractEntity implements
 	/**
 	 * @param id
 	 */
-	public Photo(String id)
+	public Photo(Long id)
 	{
-		this.setId(id);
+		super(id);
 	}
 
 	/**
@@ -107,8 +111,10 @@ public class Photo extends MetaFile// extends AbstractEntity implements
 	 */
 	private void generateIdentifier()
 	{
-		this.identifier = this.getPhotoAlbum().getIdentifier() + '/'
-				+ this.getId();
+		if (this.getId() != null)
+		{
+			this.identifier = this.getPhotoAlbum().getIdentifier() + '/' + this.getId();
+		}
 	}
 
 	/*-------------------------------------------------------------------

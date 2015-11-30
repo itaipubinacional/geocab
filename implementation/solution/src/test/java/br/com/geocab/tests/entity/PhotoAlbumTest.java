@@ -49,7 +49,7 @@ public class PhotoAlbumTest
 		PhotoAlbum photoAlbum = new PhotoAlbum(300L);
 		photoAlbum.setMarkerAttribute(attribute);
 
-		Photo photo = new Photo("400");
+		Photo photo = new Photo(400L);
 		photo.setPhotoAlbum(photoAlbum);
 
 		Assert.equals("100/200/300/400", photo.getIdentifier());

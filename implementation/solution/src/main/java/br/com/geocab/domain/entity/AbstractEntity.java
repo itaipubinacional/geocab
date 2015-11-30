@@ -155,6 +155,9 @@ public abstract class AbstractEntity implements IEntity<Long>
 	{
 		return id;
 	}
+	/**
+	 * 
+	 */
 	@Override
 	public void setId( Long id )
 	{
