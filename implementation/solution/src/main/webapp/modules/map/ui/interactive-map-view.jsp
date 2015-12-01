@@ -611,7 +611,7 @@ uri="http://www.springframework.org/security/tags"%>
       <div id="sidebar-tabs" style="float: left;">
         <ul class="map-menu-items tab-flag" id="menu-sidebar-2" style="padding:6px">
 
-          <li class="menu-item bg-inactive" id="menu-item-5" ng-click="toggleSidebarMenu(300, '#menu-item-5');" title="<spring:message code='map.SHP-enabled'/>">
+          <li class="menu-item bg-inactive" id="menu-item-5" ng-click="toggleSidebarMenu(300, '#menu-item-5');" title="<spring:message code='map.Background'/>">
           <a href="#tabs-5">
             <div style="font-size:25px" class="icon itaipu-icon-globe-world sidebar-icon"></div>
           </a>
@@ -676,7 +676,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                     <hr style="border-color: #d9d9d9;"/>
 
-                    <div style="margin-top: 12px" ng-if="backgroundMap.map == 'GOOGLE'">
+                    <div style="margin-top: 12px" ng-if="mapConf.type == 'gmap'">
 
                       <div>
                         <div class="form-item-horizontal radio" style="margin-left: 0;">
@@ -706,7 +706,7 @@ uri="http://www.springframework.org/security/tags"%>
                       </div>
                     </div>
 
-                    <div style="margin-top: 12px;" ng-if="backgroundMap.map == 'MAP_QUEST'">
+                    <div style="margin-top: 12px;" ng-if="mapConf.type == 'mapQuest'">
 
                       <div class="form-item-horizontal radio" style="margin-left: 0;">
                         <input type="radio" id="OSM" ng-click="setBackgroundMap('MAP_QUEST_OSM')" ng-model="backgroundMap.subType" value="MAP_QUEST_OSM"
