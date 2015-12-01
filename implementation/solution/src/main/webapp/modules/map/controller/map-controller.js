@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿﻿'use strict';
 
 /**
  *
@@ -493,14 +493,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.currentEntity.backgroundMap = backgroundMap;
 
       if(backgroundMap.match(/GOOGLE/i))
-        $scope.mapConf.type = 'gmap';
+        $scope.backgroundMap.map = 'GOOGLE';
 
       if(backgroundMap.match(/MAP_QUEST/i))
-        $scope.mapConf.type = 'mapQuest';
+        $scope.backgroundMap.map = 'MAP_QUEST';
 
       if(backgroundMap.match(/OPEN_STREET_MAP/i)) {
         $scope.initializeOSM();
-        $scope.mapConf.type = 'osm';
+        $scope.backgroundMap.map = 'OPEN_STREET_MAP';
       }
 
       if(backgroundMap.match(/MAP_QUEST|MAP_QUEST_OSM/i) && backgroundMap != 'MAP_QUEST_SAT') {
@@ -4250,230 +4250,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     });
 
-<<<<<<< HEAD
-=======
-    /**
-     * Function that manages the Sidebar
-     * @param time Execution time of the animation.
-     * @param element Name of the element that is calling the function.
-     */
-    $scope.toggleSidebarMarkerCreate = function (time, element){
-    	$scope.attributesByLayer = [];
-    	$scope.imgResult = "";
-    	$scope.$apply();
-    	
-    	if(element == "closeButton") {
-            $scope.screenMarkerOpenned = false;
-        }
-    	
-    	/**
-    	 * If the marker tab is open, close it and wait to open the new.
-    	 * */
-    	if($scope.slideActived == '#sidebar-layers') {
-    		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
-    		
-    		$timeout(function(){
-        		$scope.toggleSidebar(time, element, '#sidebar-marker-create');
-        	}, 400)
-    	} else {
-    		
-    		$scope.toggleSidebar(time, element, '#sidebar-marker-create');
-    	}
-    	
-    	$scope.resolveDatepicker();
-    	
-    };
-    
-    $scope.toggleSidebarMarkerDetailUpdate = function (time, element){
-    	$scope.currentEntity = $scope.marker;
-    	
-    	if(element == "closeButton") {
-            $scope.screenMarkerOpenned = false;
-            $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
-            return;
-        }
-    	
-    	if( typeof $scope.marker != "undefined" ) {
-	    	markerService.findImgByMarker($scope.marker.id, {
-	 			 callback : function(result) {
-	 				 
-	 				 $scope.imgResult = result;
-	 	          },
-	 	          errorHandler : function(message, exception) {
-	 	              $scope.message = {type:"error", text: message};
-	 	              $scope.$apply();
-	 	          }
-		    	});
-	    	
-	    	$scope.attributesByLayer = [];
-			$scope.showNewAttributes = false;
-	    	
-	    	markerService.listAttributeByMarker($scope.marker.id, {
-			  callback : function(result) {
-				  $scope.attributesByMarker = result;   
-				  
-				  layerGroupService.listAttributesByLayer($scope.marker.layer.id,{
-		          		callback : function(result) {
-		          			$scope.attributesByLayer = [];
-		          			
-		          			angular.forEach(result, function(attribute, index){
-			          				
-		          					var exist = false;
-		          					
-		          					angular.forEach($scope.attributesByMarker, function(attributeByMarker, index){
-		          					
-			          					if(attributeByMarker.attribute.id == attribute.id){
-			          						exist = true;
-			          					}
-			          				});
-			          				
-			          				if( !exist ) {
-			          					$scope.attributesByLayer.push(attribute);
-			          					$scope.showNewAttributes = true;
-			          				}
-			          				
-			          			});
-		          			
-		                      $scope.$apply();
-		                  },
-		                  errorHandler : function(message, exception) {
-		                      $scope.message = {type:"error", text: message};
-		                      $scope.$apply();
-		                  }
-		          	});
-				  
-				  angular.forEach(result,function(markerAttribute,index){
-					if (markerAttribute.attribute.type == "NUMBER") {
-						markerAttribute.value = parseInt(markerAttribute.value);
-					}  
-				  })
-				  
-				 
-				  $scope.$apply();
-				 
-	          },
-	          errorHandler : function(message, exception) {
-	              $scope.message = {type:"error", text: message};
-	              $scope.$apply();
-	          }
-	    	});
-    	}
-    	/* List for the edit */
-    	layerGroupService.listAllInternalLayerGroups({
-    		callback : function(result) {
-               // $scope.layersGroups = result;
-                
-                $scope.selectLayerGroup = [];
-                        
-                angular.forEach(result, function(layer,index){
-                	
-                	$scope.selectLayerGroup.push($.extend(layer, {
-                		"layerTitle": layer.title,
-                		"layerId": layer.id,
-                		"group": layer.layerGroup.name
-                	}));
-                	
-                })
-                
-                markerService.listAttributeByMarker($scope.currentEntity.id, {
-	       			 callback : function(result) {
-	       				$scope.attributesByMarker = result;
-	       				
-	       				angular.forEach(result,function(markerAttribute,index){
-	       					if (markerAttribute.attribute.type == "NUMBER") {
-	       						markerAttribute.value = parseInt(markerAttribute.value);
-	       					}  
-	       				  })
-	  
-                        angular.forEach($scope.selectLayerGroup, function(layer,index){
-                        		if( layer.layerId == $scope.currentEntity.layer.id ) {
-                        			layer.created = $scope.currentEntity.layer.created;
-	       							$scope.currentEntity.layer = layer;
-	       							
-	       							return false;
-	           					}
-                        })
-	       				 
-	       				 $scope.$apply();
-	       	          },
-	       	          errorHandler : function(message, exception) {
-	       	              $scope.message = {type:"error", text: message};
-	       	              $scope.$apply();
-	       	          }
-       	    	});
-                
-            },
-            errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
-                $scope.$apply();
-            }
-    	});    	
-    	
-    	/**
-    	 * If the marker tab is open, close it and wait to open the new.
-    	 * */
-    	
-    	if($scope.slideActived == '#sidebar-marker-detail-update'){
-    		$(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
-    		return
-    	}
-    	
-    	if($scope.slideActived == '#sidebar-layers') {
-    		//If menu layer or search is open, close it and open marker detail
-    		$scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
-    		
-    		$timeout(function(){
-        		$scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
-        	}, 400);
-    		
-    	} else {
-    		$scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
-    	}
-    	/*
-    	if ( $('#sidebar-marker-detail').css("display") == 'none' ){
-    		
-    	}*/
-    	$scope.resolveDatepicker();    	
-    	$(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
-    };
-    
-    $scope.clearDetailMarker = function() {
-    	$scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail-update');
-    }
-    
-    $scope.toggleSidebar = function (time, element, slide){
-	    time = 300;
-	    
-	    //Checks whether the animation is to open or close the sidebar by her current position.
-	    var closed = $('.menu-sidebar-container').css('right') == '3px';
-	
-	    // Checks whether the user has clicked a button that is active and the bar's sample, if it is open or if the click left of the close button.
-	    if ((element == $scope.lastActive && !closed) || (closed) || (element == "closeButton")) {
-	
-	        //Manages the class ' bg-inactive ' which activates and deactivates the buttons.
-	        if (closed) {
-	            if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-	        } else {
-	            $(".menu-item").addClass("bg-inactive");
-	        }
-	        //Performs the animation
-	        
-	        $(slide).toggle('slide', { direction: 'right' }, time);
-	        $('.menu-sidebar-container').animate({
-	            'right' : closed ? $(slide).width() : '3px'
-	        }, time);
-	    } else {
-	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-	    }
-	    $scope.lastActive = element;
-	    
-	    $scope.slideActived = element == 'closeButton' ? '' : slide;	    
-    }
-
-    /*-------------------------------------------------------------------
-     * 		 			SIDE MENU MAP
-     *-------------------------------------------------------------------*/
->>>>>>> parent of ce75d19... Ajuste no cálculo de tamanho da tela da ferramenta info.
 
     dialog.result.then(function (result) {
 
@@ -4496,4 +4272,3 @@ function isBooleanChecked(that) {
 /**
  * Function responsible for loading the user photo on the screen at the time it was selected
  */
-
