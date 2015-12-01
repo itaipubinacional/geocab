@@ -259,68 +259,7 @@ public class MyMarkersService
 		}
 	}
 	
-	/**
-	 * Method to update an {@link Marker}
-	 * 
-	 * @param Marker
-	 * @return Marker
-	 * @throws RepositoryException
-	 * @throws IOException
-	 */
-
-	public Marker cancelMarker(Marker marker) throws IOException,
-			RepositoryException
-	{
-		try
-		{
-		
-				Marker markerTemporary = this.markerRepository.findOne(marker.getId());
 	
-				if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
-				{
-					List<MarkerAttribute> markerAttributes = this.markerAttributeRepository
-							.listAttributeByMarker(marker.getId());
-	
-					if (markerAttributes != null)
-					{
-						this.markerAttributeRepository
-								.deleteInBatch(markerAttributes);
-					}
-				}
-	
-				FileTransfer file = this.findImgByMarker(marker.getId());
-	
-				if (file != null && marker.getImage() != null)
-				{
-					this.removeImg(String.valueOf(marker.getId()));
-				}
-	
-				if (marker.getImage() != null)
-				{
-					this.uploadImg(marker.getImage(), marker.getId());
-				}
-	
-				marker.setLocation(markerTemporary.getLocation());
-				
-				marker.setStatus(MarkerStatus.CANCELED);
-				
-				MarkerModeration markerModeration = new MarkerModeration();
-				markerModeration.setMarker(marker);
-				
-				markerModeration.setStatus(marker.getStatus());
-				
-				this.markerModerationRepository.save(markerModeration);
-				
-				marker = this.markerRepository.save(marker);
-			
-		}
-		catch (DataIntegrityViolationException e)
-		{
-			LOG.info(e.getMessage());
-		}
-		return marker;
-	}
-
 	/**
 	 * Method to remove an {@link Marker}
 	 * 

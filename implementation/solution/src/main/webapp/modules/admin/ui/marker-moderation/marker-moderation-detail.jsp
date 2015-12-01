@@ -104,7 +104,7 @@
 
 
         <!--BUTTONS-->
-        <div class="row" style=" position: fixed; background-color: #FFFFFF; height: 80px; bottom: 0; width: 36%; padding-top: 10px; border-top: 1px solid #a4a4a4">
+        <div class="row" style="position: fixed; background-color: #FFFFFF; height: 80px; bottom: 0; width: 36%; padding-top: 10px; border-top: 1px solid #a4a4a4">
             <div class=" col-md-2">
                 <a class="btn btn-default icon itaipu-icon-book" ng-click="changeToHistory(row.entity.marker)"
                    style="width:75px; height:58px;">
@@ -115,6 +115,7 @@
             <div class="col-md-2">
                 <div class="btn btn-default icon itaipu-icon-like-filled" name="btnApprove"
                      ng-click="approveMarker()"
+                     ng-disabled="currentEntity.status == ACCEPTED"
                      style="width:75px; height:58px;">
                     </br>
                     <a style="font-size:14px;text-decoration:none;color:black">
@@ -124,7 +125,9 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <div class="btn btn-default icon itaipu-icon-dislike" name="btnRefuse" ng-click="refuseMarker()"
+                <div class="btn btn-default icon itaipu-icon-dislike" name="btnRefuse"
+                     ng-disabled="currentEntity.status == REFUSED"
+                     ng-click="refuseMarker()"
                      style="width:75px; height:58px">
                     </br>
                     <a style="font-size:14px;text-decoration:none;color:black">
@@ -135,6 +138,7 @@
             <div class="col-md-2">
                 <div class="btn btn-default icon itaipu-icon-close" name="btnRefuse"
                      ng-click="cancelMarker()"
+                     ng-disabled="currentEntity.status == CANCELED"
                      style="width:75px; height:58px">
                     </br>
                     <a style="font-size:14px;text-decoration:none;color:black">

@@ -27,7 +27,7 @@
 
         <form>
 
-            <fieldset ng-disabled="!(currentEntity.status == 'PENDING' || currentEntity.status == 'REFUSED')">
+            <fieldset ng-disabled="!(currentEntity.status == 'PENDING' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED' )">
 
                 <div id="left-content" style="float:left; margin-bottom: 70px">
 
@@ -117,6 +117,7 @@
                 <div class="col-md-3">
                     <div class="btn btn-default icon itaipu-icon-save" name="btnSave"
                          ng-click="saveMarkerModal()"
+                         ng-disabled="currentEntity.status == PENDING ||currentEntity.status == ACCEPTED"
                          style="width:75px; height:58px;">
                         </br>
                         <a style="font-size:14px;text-decoration:none;color:black">
@@ -128,6 +129,7 @@
                 <div class="col-md-3">
                     <div class="btn btn-default icon itaipu-icon-export" name="btnRefuse"
                          ng-click="postMarkerModal()"
+                         ng-disabled="currentEntity.status == PENDING ||currentEntity.status == ACCEPTED ||currentEntity.status == CANCELED"
                          style="width:75px; height:58px">
                         </br>
                         <a style="font-size:14px;text-decoration:none;color:black">

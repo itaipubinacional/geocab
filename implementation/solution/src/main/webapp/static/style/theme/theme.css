@@ -890,18 +890,20 @@ input:-moz-placeholder {
 }
 
 .itaipu-icon-schedules, .itaipu-icon-schedules:hover {
-	color: #d4c200
+	color: #eee400
 }
 .itaipu-icon-like-filled, .itaipu-icon-like-filled:hover {
-	color: #00d402;
+	color: #09ba00;
 }
  .itaipu-icon-dislike, .itaipu-icon-dislike:hover {
 	color: #d45a05
 }
 .itaipu-icon-close, .itaipu-icon-close:hover {
-	color: #d40004
+	color: #ba0000
 }
-
+.itaipu-icon-floppy, .itaipu-icon-floppy:hover {
+	color: #777576
+}
 
 
 .tree-itaipu-icon:hover {

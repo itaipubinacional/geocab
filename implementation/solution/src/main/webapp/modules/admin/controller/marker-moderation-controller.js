@@ -24,7 +24,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * 		 				 	CONSTANTS
      *-------------------------------------------------------------------*/
     /**
-     * Accept
+     * Canceled
      */
     $scope.CANCELED = "CANCELED";
 
@@ -42,6 +42,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Pending
      */
     $scope.PENDING = "PENDING";
+
+    /**
+     * Saved
+     */
+    $scope.SAVED = "SAVED";
 
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
@@ -86,7 +91,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.currentEntity;
 
     /**
-     * visible
+     * visible descriptions
+     */
+    $scope.visibleDescription = false;
+
+    /**
+     * Visible filters
      */
     $scope.visible = true;
 
@@ -107,6 +117,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         user: null
 
     };
+
+    $scope.motiveMarkerModeration = [];
 
     /**
      * filter
@@ -175,7 +187,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         '<a ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></a>' +
         '<a ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></a>' +
         '</div>';
-
 
 
 
@@ -716,7 +727,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.listMotivesByMarkerModeration = function (markerModerationId) {
         markerModerationService.listMotivesByMarkerModerationId(markerModerationId, {
             callback: function (result) {
-                $scope.motiveMarkerModeration = result;
+                console.log(result);
+                $scope.motiveMarkerModeration[markerModerationId] = result;
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
@@ -779,20 +791,20 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             text: $translate('admin.marker-moderation.Marker-successfully-canceled'),
             dismiss: true
         };
-        //markerModerationService.cancelMarkerModeration( id, {
-        //    callback : function(result) {
-        //        console.log(result);
-        //        $scope.currentEntity = result.marker;
-        //        $scope.updateStatus();
-        //        $scope.changeToList($scope.currentPage);
-        //
-        //        $scope.$apply();
-        //    },
-        //    errorHandler : function(message, exception) {
-        //        $scope.message = {type:"error", text: message};
-        //        $scope.$apply();
-        //    }
-        //});
+        markerModerationService.cancelMarkerModeration( id, {
+            callback : function(result) {
+                console.log(result);
+                $scope.currentEntity = result.marker;
+                $scope.updateStatus();
+                $scope.changeToList($scope.currentPage);
+
+                $scope.$apply();
+            },
+            errorHandler : function(message, exception) {
+                $scope.message = {type:"error", text: message};
+                $scope.$apply();
+            }
+        });
     };
 
     /**
@@ -1313,11 +1325,20 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.verifyStatusColor = function (status) {
         var statusColor;
         if (status == $scope.REFUSED) {
-            statusColor = "#ba0000";
+            // ORANGE
+            statusColor = "#d45a05";
         } else if (status == $scope.ACCEPTED) {
+            // GREEN
             statusColor = "#09ba00";
-        } else {
+        } else if(status == $scope.PENDING){
+            // YELLOW
+            statusColor = "#eee400";
+        }else if(status == $scope.SAVED){
+            // GRAY
             statusColor = "#edad09";
+        }else if(status == $scope.CANCELED){
+            // RED
+            statusColor = "#ba0000";
         }
         return statusColor;
     };

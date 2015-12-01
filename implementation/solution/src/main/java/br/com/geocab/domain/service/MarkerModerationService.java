@@ -3,10 +3,14 @@
  */
 package br.com.geocab.domain.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.jcr.RepositoryException;
+
 import org.directwebremoting.annotations.RemoteProxy;
+import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.entity.markermoderation.Motive;
@@ -134,8 +139,6 @@ public class MarkerModerationService
 				this.accountMailRepository.sendMarkerAccepted( user, marker );
 			}
 			
-			
-			
 			return markerModeration;
 		}
 		catch ( DataIntegrityViolationException e )
@@ -165,6 +168,58 @@ public class MarkerModerationService
 		}
 	}
 	
+	
+	   /**
+     * Method to update an {@link Marker}
+     * 
+     * @param Marker
+     * @return Marker
+     * @throws RepositoryException
+     * @throws IOException
+     */
+ 
+    public Marker cancelMarkerModeration (Long id) throws IOException,
+            RepositoryException
+    {
+    	try
+		{
+			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(id).get(0);
+			
+			MarkerModeration markerModeration = new MarkerModeration();
+			
+			if( lastMarkerModeration.getStatus().equals(MarkerStatus.CANCELED) )
+			{
+				throw new IllegalArgumentException("The marker moderation already canceled");
+				
+			}
+			else
+			{
+				Marker marker = markerRepository.findOne(id);
+				User user = this.userRepository.findOne(marker.getUser().getId());
+				
+				marker.setStatus(MarkerStatus.CANCELED);
+				
+				markerModeration.setMarker(marker);
+				markerModeration.setStatus(MarkerStatus.CANCELED);
+				
+				markerModeration = this.markerModerationRepository.save(markerModeration);
+				
+				this.accountMailRepository.sendMarkerAccepted( user, marker );
+				
+				return marker;
+			}
+			
+	
+		}
+		catch ( DataIntegrityViolationException e )
+		{
+			LOG.info( e.getMessage() );
+		}
+		
+		return null;
+    }
+ 
+	
 	/**
 	 * 
 	 * Method to refuse a {@link Marker}
@@ -174,6 +229,8 @@ public class MarkerModerationService
 	 */
 	public MarkerModeration refuseMarker( Long markerId, Motive motive, String description )
 	{			
+		
+		
 		try
 		{
 			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(markerId).get(0);
