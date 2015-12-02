@@ -8,6 +8,11 @@
  */
 function MarkerModerationController($scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate) {
 
+    $scope.breakpoint = function(){
+        console.log("DEBUG");
+    }
+
+
     /**
      * Inject the methods, attributes and its states inherited from AbstractCRUDController.
      * @see AbstractCRUDController
@@ -786,18 +791,17 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Accept status marker moderation
      */
     $scope.cancelMarkerModeration = function (id) {
-        $scope.msg = {
-            type: "success",
-            text: $translate('admin.marker-moderation.Marker-successfully-canceled'),
-            dismiss: true
-        };
         markerModerationService.cancelMarkerModeration( id, {
             callback : function(result) {
                 console.log(result);
-                $scope.currentEntity = result.marker;
+                $scope.currentEntity = result;
                 $scope.updateStatus();
-                $scope.changeToList($scope.currentPage);
-
+                //$scope.changeToList($scope.currentPage);
+                $scope.msg = {
+                    type: "success",
+                    text: $translate('admin.marker-moderation.Marker-successfully-canceled'),
+                    dismiss: true
+                };
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {

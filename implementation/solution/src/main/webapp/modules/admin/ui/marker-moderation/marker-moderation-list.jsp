@@ -30,8 +30,8 @@
 		    	<input type="button" ng-click="clearFilters()" value="Limpar Filtros" class="btn btn-default" ng-disabled="currentPage == null"/>
 
 
-				<a class="btn btn-mini" ng-show="visible"   ng-click="visible = false" ><i class="glyphicon glyphicon-chevron-up"></i></a>
-				<a class="btn btn-mini" ng-show="!visible" 	ng-click="visible = true"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
+				<a class="btn btn-mini" ng-show="visible"   ng-click="visible = false; breakpoint()" ><i class="glyphicon glyphicon-chevron-up"></i></a>
+				<a class="btn btn-mini" ng-show="!visible" 	ng-click="visible = true; breakpoint()"  ><i class="glyphicon glyphicon-chevron-down"></i></a>
 
                 <!--<a class="btn btn-mini" ng-click="visible = !visible">-->
                     <!--<i class="glyphicon glyphicon-chevron-down" ng-show="!visible" ></i>-->
