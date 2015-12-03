@@ -101,6 +101,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.selectedMotive;
 
+    $scope.motiveMarkerModeration = [];
 
     $scope.itensMarcados = [];
     //FORM
@@ -184,6 +185,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></a>' +
         '<a ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></a>' +
         '<a ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></a>' +
+        '<a ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></a>' +
         '</div>';
 
 
@@ -195,7 +197,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         showSelectionCheckbox: true,
         useExternalSorting: true,
         headerRowHeight: 45,
-        keepLastSelected: false,
+        keepLastSelected: true,
         rowHeight: 45,
         selectedItems: [],
 
@@ -212,7 +214,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             if (row.length > 0) {
 
                 var i;
-                for (var rowItemIndex = 0; rowItemIndex < rowItem.length; rowItemIndex++) {
+                for (var rowItemIndex = 0; rowItemIndex < row.length; rowItemIndex++) {
                     if (row[rowItemIndex].selected) {
                         i = $scope.findByIdInArray($scope.itensMarcados, row[rowItemIndex].entity);
                         if (i == -1)
@@ -691,19 +693,20 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     /*
      * List motives of marker moderation
      */
-    //$scope.listMotivesByMarkerModeration = function (markerModerationId) {
-    //    markerModerationService.listMotivesByMarkerModerationId(markerModerationId, {
-    //        callback: function (result) {
-    //            $scope.motiveMarkerModeration = result;
-    //            $scope.$apply();
-    //        },
-    //        errorHandler: function (message, exception) {
-    //            $scope.msg = {type: "danger", text: message, dismiss: true};
-    //            $scope.fadeMsg();
-    //            $scope.$apply();
-    //        }
-    //    });
-    //};
+    $scope.listMotivesByMarkerModeration = function (markerModerationId) {
+        markerModerationService.listMotivesByMarkerModerationId(markerModerationId, {
+            callback: function (result) {
+                console.log(result);
+                $scope.motiveMarkerModeration[markerModerationId] = result;
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.fadeMsg();
+                $scope.$apply();
+            }
+        });
+    };
 
     $scope.refreshMap = function (markers) {
 
@@ -1250,7 +1253,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.saveMarkerModal = function () {
 
-        //if ($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.REFUSED ) {
+        if ($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED ) {
 
             var dialog = $modal.open({
                 templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
@@ -1278,7 +1281,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
             });
 
-        //}
+        }
 
     };
 
@@ -1322,57 +1325,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         });
 
         myMarkersService.updateMarker($scope.currentEntity, {
-            callback: function (result) {
-
-                $scope.changeToList();
-
-                $scope.$apply();
-            },
-            errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
-                $scope.$apply();
-            }
-        });
-
-    };
-
-    /**
-     * Calls the modal to refuse a marker
-     */
-    $scope.cancelMarkerModal = function () {
-        if ($scope.currentEntity.status != 'CANCELED') {
-
-            var dialog = $modal.open({
-
-                templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-                controller: DialogController,
-                windowClass: 'dialog-success',
-                resolve: {
-                    title: function () {
-                        return $translate('admin.marker-moderation.Confirm-cancel');
-                    },
-                    message: function () {
-                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-cancel-this-marker') + ' ? <br/>.';
-                    },
-                    buttons: function () {
-                        return [
-                            {label: $translate('admin.marker-moderation.Confirm-cancel'), css: 'btn btn-danger'},
-                            {label: $translate('layer-group-popup.Close'), css: 'btn btn-default', dismiss: true}
-                        ];
-                    }
-                }
-            });
-
-            dialog.result.then(function () {
-                $scope.cancelMaker($scope.currentEntity.id);
-            });
-        }
-    };
-
-    $scope.cancelMaker = function () {
-
-
-        myMarkersService.cancelMaker($scope.currentEntity, {
             callback: function (result) {
 
                 $scope.changeToList();
@@ -1464,17 +1416,19 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * Return the translated status of the marker
      */
     $scope.translateByStatus = function (status) {
-
-        if ( status == 'PENDING') {
+        if (status == $scope.SAVED) {
+            return $translate('admin.marker-moderation.CANCELED');
+        }
+        if ( status == $scope.PENDING) {
             return $translate('admin.marker-moderation.PENDING');
         }
-        if ( status == 'REFUSED') {
+        if ( status == $scope.REFUSED) {
             return $translate('admin.marker-moderation.REFUSED');
         }
-        if (status == 'ACCEPTED') {
+        if (status == $scope.ACCEPTED) {
             return $translate('admin.marker-moderation.APPROVED');
         }
-        if (status == 'CANCELED') {
+        if (status == $scope.CANCELED) {
             return $translate('admin.marker-moderation.CANCELED');
         }
     };
@@ -1492,11 +1446,20 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     $scope.verifyStatusColor = function (status) {
         var statusColor;
         if (status == $scope.REFUSED) {
-            statusColor = "#ba0000";
+            // ORANGE
+            statusColor = "#FFA500";
         } else if (status == $scope.ACCEPTED) {
+            // GREEN
             statusColor = "#09ba00";
-        } else {
+        } else if(status == $scope.PENDING){
+            // YELLOW
+            statusColor = "#eee400";
+        }else if(status == $scope.SAVED){
+            // GRAY
             statusColor = "#edad09";
+        }else if(status == $scope.CANCELED){
+            // RED
+            statusColor = "#ba0000";
         }
         return statusColor;
     };

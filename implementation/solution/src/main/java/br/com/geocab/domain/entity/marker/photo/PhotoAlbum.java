@@ -4,7 +4,7 @@
 package br.com.geocab.domain.entity.marker.photo;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -48,7 +48,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 */
 //	@OneToMany(cascade = CascadeType.REMOVE)
 	@Transient
-	private Set<Photo> photos;
+	private List<Photo> photos;
 
 	/**
 	 * 
@@ -79,7 +79,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 * @param markerAttribute
 	 * @param photos
 	 */
-	public PhotoAlbum(MarkerAttribute markerAttribute, Set<Photo> photos)
+	public PhotoAlbum(MarkerAttribute markerAttribute, List<Photo> photos)
 	{
 		super();
 		this.markerAttribute = new MarkerAttribute(markerAttribute.getId());
@@ -91,7 +91,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 * @param photos
 	 * @param identifier
 	 */
-	public PhotoAlbum(MarkerAttribute markerAttribute, Set<Photo> photos, String identifier)
+	public PhotoAlbum(MarkerAttribute markerAttribute, List<Photo> photos, String identifier)
 	{
 		super();
 		this.markerAttribute = markerAttribute;
@@ -150,7 +150,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	/**
 	 * @return the photos
 	 */
-	public Set<Photo> getPhotos()
+	public List<Photo> getPhotos()
 	{
 		return photos;
 	}
@@ -159,7 +159,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 * @param photos
 	 *            the photos to set
 	 */
-	public void setPhotos(Set<Photo> photos)
+	public void setPhotos(List<Photo> photos)
 	{
 		this.photos = photos;
 	}

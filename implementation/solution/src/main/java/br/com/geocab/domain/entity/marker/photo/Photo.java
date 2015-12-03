@@ -52,7 +52,7 @@ public class Photo extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
-	@Column(length = 50, nullable = false, unique = true)
+	@Column(length = 50, unique = true)
 	private String identifier;
 
 	/*-------------------------------------------------------------------
@@ -152,7 +152,11 @@ public class Photo extends AbstractEntity implements Serializable
 	 */
 	public void setIdentifier(String identifier)
 	{
-		this.identifier = identifier;
+		if (identifier != null)
+		{
+			this.identifier = identifier;
+		}
+		this.getIdentifier();
 	}
 
 	/**

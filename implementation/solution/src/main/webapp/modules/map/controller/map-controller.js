@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿﻿'use strict';
 
 /**
  *
@@ -493,14 +493,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.currentEntity.backgroundMap = backgroundMap;
 
       if(backgroundMap.match(/GOOGLE/i))
-        $scope.mapConf.type = 'gmap';
+        $scope.backgroundMap.map = 'GOOGLE';
 
       if(backgroundMap.match(/MAP_QUEST/i))
-        $scope.mapConf.type = 'mapQuest';
+        $scope.backgroundMap.map = 'MAP_QUEST';
 
       if(backgroundMap.match(/OPEN_STREET_MAP/i)) {
         $scope.initializeOSM();
-        $scope.mapConf.type = 'osm';
+        $scope.backgroundMap.map = 'OPEN_STREET_MAP';
       }
 
       if(backgroundMap.match(/MAP_QUEST|MAP_QUEST_OSM/i) && backgroundMap != 'MAP_QUEST_SAT') {
@@ -4282,4 +4282,3 @@ function isBooleanChecked(that) {
 /**
  * Function responsible for loading the user photo on the screen at the time it was selected
  */
-

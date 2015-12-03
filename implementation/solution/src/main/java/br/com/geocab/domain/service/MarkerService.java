@@ -223,7 +223,7 @@ public class MarkerService
 	 * @param photos
 	 * @return
 	 */
-	public Set<Photo> uploadPhoto(Set<Photo> photos)
+	public List<Photo> uploadPhoto(List<Photo> photos)
 	{
 		for (Photo photo : photos)
 		{
