@@ -65,9 +65,6 @@ public class Marker extends AbstractEntity implements Serializable
 	private static final long serialVersionUID = 1806026076674494131L;
 
 	@Transient
-	private FileTransfer image;
-
-	@Transient
 	private Boolean imageToDelete;
 
 	@Transient
@@ -240,23 +237,6 @@ public class Marker extends AbstractEntity implements Serializable
 	public void setMarkerAttribute(List<MarkerAttribute> markerAttributes)
 	{
 		this.markerAttributes = markerAttributes;
-	}
-
-	/**
-	 * @return the image
-	 */
-	public FileTransfer getImage()
-	{
-		return image;
-	}
-
-	/**
-	 * @param image
-	 *            the image to set
-	 */
-	public void setImage(FileTransfer image)
-	{
-		this.image = image;
 	}
 
 	/**

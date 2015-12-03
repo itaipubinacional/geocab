@@ -143,11 +143,6 @@ public class MarkerService
 			marker.setUser(user);
 
 			marker = this.markerRepository.save(marker);
-			
-//			if (marker.getImage() != null && marker.getImage().getFilename() != "")
-//			{
-//				this.uploadImg(marker.getImage(), marker.getId());
-//			}
 
 			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
 			
@@ -327,18 +322,6 @@ public class MarkerService
 				{
 					this.markerAttributeRepository.deleteInBatch(markerAttributes);
 				}
-			}
-
-			FileTransfer file = this.findImgByMarker(marker.getId());
-
-			if (file != null && marker.getImage() != null)
-			{
-				this.removeImg(String.valueOf(marker.getId()));
-			}
-
-			if (marker.getImage() != null)
-			{
-				this.uploadImg( marker.getImage(), marker.getId());
 			}
 
 			marker.setLocation(markerTemporary.getLocation());
@@ -772,7 +755,7 @@ public class MarkerService
 			metaFile.setId(String.valueOf(photo.getIdentifier()));
 			metaFile.setContentType("image/png");
 			metaFile.setContentLength(10661);
-			metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
+			metaFile.setFolder("/marker");
 			metaFile.setInputStream(isteam);
 			metaFile.setName("1.png");
 	

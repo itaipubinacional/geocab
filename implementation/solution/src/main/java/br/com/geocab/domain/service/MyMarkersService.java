@@ -122,18 +122,6 @@ public class MyMarkersService
 				}
 			}
 
-			FileTransfer file = this.findImgByMarker(marker.getId());
-
-			if (file != null && marker.getImage() != null)
-			{
-				this.removeImg(String.valueOf(marker.getId()));
-			}
-
-			if (marker.getImage() != null)
-			{
-				this.uploadImg(marker.getImage(), marker.getId());
-			}
-
 			marker.setLocation(markerTemporary.getLocation());
 			
 			MarkerModeration markerModeration = new MarkerModeration();
@@ -182,19 +170,7 @@ public class MyMarkersService
 						this.markerAttributeRepository
 								.deleteInBatch(markerAttributes);
 					}
-				}
-	
-				FileTransfer file = this.findImgByMarker(marker.getId());
-	
-				if (file != null && marker.getImage() != null)
-				{
-					this.removeImg(String.valueOf(marker.getId()));
-				}
-	
-				if (marker.getImage() != null)
-				{
-					this.uploadImg(marker.getImage(), marker.getId());
-				}
+				}				
 	
 				marker.setLocation(markerTemporary.getLocation());
 				
