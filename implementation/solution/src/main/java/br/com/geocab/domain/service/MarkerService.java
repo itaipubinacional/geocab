@@ -753,11 +753,11 @@ public class MarkerService
 			MetaFile metaFile = new MetaFile();
 			// Todo pega o ID do ponto
 			metaFile.setId(String.valueOf(photo.getIdentifier()));
-			metaFile.setContentType("image/png");
-			metaFile.setContentLength(10661);
+			metaFile.setContentType(photo.getMimeType());
+			metaFile.setContentLength(photo.getContentLength());
 			metaFile.setFolder("/marker");
 			metaFile.setInputStream(isteam);
-			metaFile.setName("1.png");
+			metaFile.setName(photo.getName());
 	
 			this.metaFileRepository.insert(metaFile);
 		

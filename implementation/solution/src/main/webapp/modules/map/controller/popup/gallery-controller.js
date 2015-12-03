@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, attribute, attributesByLayer) {
+function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, attribute) {
 
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
@@ -26,7 +26,6 @@ function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, at
 
     $scope.attribute = attribute;
 
-    $scope.attributesByLayer = attributesByLayer;
 
 
     /*-------------------------------------------------------------------
@@ -49,26 +48,7 @@ function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, at
 
       console.log(files);
 
-      $scope.attribute.files = [];
-      $scope.filter('filter')($scope.attributesByLayer, {id: $scope.attribute.id}, true)[0].files = [];
-
-      for (var i = 0, file; file = files[i]; i++) {
-
-          var reader = new FileReader();
-
-          reader.onloadend = (function (readFile) {
-              return function (e) {
-                  readFile.src = e.target.result;
-                  $scope.attribute.files.push(readFile);
-                  //$scope.filter('filter')($scope.attributesByLayer, {id: $scope.attribute.id}, true)[0].files.push(readFile);
-
-                  $scope.$apply();
-
-              }
-          })(file);
-
-          reader.readAsDataURL(file);
-      }
+      $scope.attribute.files = files;
 
     };
 

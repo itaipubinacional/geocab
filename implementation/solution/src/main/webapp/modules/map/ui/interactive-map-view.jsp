@@ -503,12 +503,6 @@ uri="http://www.springframework.org/security/tags"%>
 
                   <ng-form name="ngSideMarker" default-button="buttonInsert">
 
-                    <upload-file on-success="onSuccess(files)" attribute="attribute"></upload-file>
-
-                    <input type="file" id="file1"/>
-
-                    <input type="file" id="file2"/>
-
                     <button ng-if="attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
                             ng-click="showGallery(attribute)"
                             style="float: left;"
@@ -584,7 +578,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <hr>
 
                 <div ng-if="currentEntity.layer">
-                  <input type="file" id="upload-input" style="display: none;"
+                  <!--<input type="file" id="upload-input" style="display: none;"
                          accept="image/*"
                          onchange="angular.element(this).scope().setPhotoMarker(this)" />
 
@@ -594,7 +588,7 @@ uri="http://www.springframework.org/security/tags"%>
                            title="<spring:message code="map.Picture" />"
                   >
                   <span class="glyphicon glyphicon-picture"></span>
-                  </button>
+                  </button>-->
 
                   <button
                       id="buttonInsert"

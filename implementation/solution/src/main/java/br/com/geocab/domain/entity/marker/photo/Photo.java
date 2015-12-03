@@ -37,6 +37,7 @@ public class Photo extends AbstractEntity implements Serializable
 	 */
 	@ManyToOne(optional = false)
 	private PhotoAlbum photoAlbum;
+	
 	/**
 	 * 
 	 */
@@ -48,6 +49,18 @@ public class Photo extends AbstractEntity implements Serializable
 	 */
 	@Transient
 	private String mimeType;
+	
+	/**
+	 * 
+	 */
+	@Transient
+	private Integer contentLength;
+	
+	/**
+	 * 
+	 */
+	@Transient
+	private String name;
 	
 	/**
 	 * 
@@ -191,5 +204,39 @@ public class Photo extends AbstractEntity implements Serializable
 	{
 		this.mimeType = mimeType;
 	}
+
+	/**
+	 * @return the contentLength
+	 */
+	public Integer getContentLength()
+	{
+		return contentLength;
+	}
+
+	/**
+	 * @param contentLength the contentLength to set
+	 */
+	public void setContentLength(Integer contentLength)
+	{
+		this.contentLength = contentLength;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	
+	
 
 }

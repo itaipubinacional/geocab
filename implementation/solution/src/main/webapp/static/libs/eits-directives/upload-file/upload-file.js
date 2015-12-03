@@ -17,12 +17,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
     },
     link: function(scope, element, attrs){
 
-      scope.image = {};
+      scope.fileSelected = {};
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
-
-      angular.forEach(scope.files, function(file){
-        document.getElementById('files').files.push(file);
-      });
 
       var inputFiles = document.getElementById('files');
       //============== DRAG & DROP =============
@@ -78,16 +74,13 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         });
         var files = evt.dataTransfer.files;
 
-        document.getElementById('files').files = files;
+        //document.getElementById('files').files = files;
 
         if (files.length > 0) {
           for (var i = 0, file; file = files[i]; i++) {
 
-            console.log(file);
-
-            $('#file1')[0].files = file;
             //scope.files.push(files[i]);
-            /*var reader = new FileReader();
+            var reader = new FileReader();
 
             reader.onloadend = (function (readFile) {
               return function(e) {
@@ -98,7 +91,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                 scope.files.push(readFile);
 
                 if(files.length == i) {
-                  scope.image = scope.files[0];
+                  scope.fileSelected = scope.files[0];
                   scope.$apply();
                   scope.onSuccess({
                     files: scope.files
@@ -107,7 +100,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
               }
             })(file);
 
-            reader.readAsDataURL(file);*/
+            reader.readAsDataURL(file);
           }
 
           //console.log(scope.files);
@@ -121,17 +114,33 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
           console.log('files:', element.files);
           // Turn the FileList object into an Array
           var files = element.files;
-          scope.progressVisible = false;
 
           for (var i = 0, file; file = files[i]; i++) {
 
-            $('#file1')[0].files = file;
+            var reader = new FileReader();
 
-          };
+            reader.onloadend = (function (readFile) {
+              return function (e) {
 
-          /*scope.onSuccess({
-            files: files
-          });*/
+                console.log(e.target.result);
+                readFile.src = e.target.result;
+
+                scope.files.push(readFile);
+
+                if (files.length == i) {
+                  scope.fileSelected = scope.files[0];
+                  scope.$apply();
+                  scope.onSuccess({
+                    files: scope.files
+                  });
+                }
+              }
+            })(file);
+
+            reader.readAsDataURL(file);
+          }
+
+          scope.progressVisible = false;
 
         });
       };

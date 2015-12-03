@@ -78,7 +78,7 @@
 			</activation>
 			<properties>
 				<!-- Database -->
-				<mvn.jdbc.jdbcUrl>jdbc:postgresql://geocab:5432/geocab</mvn.jdbc.jdbcUrl>
+				<mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/geocab</mvn.jdbc.jdbcUrl>
 				<mvn.jdbc.username>geocab</mvn.jdbc.username>
 				<mvn.jdbc.password>geocab</mvn.jdbc.password>
 

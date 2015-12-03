@@ -2,7 +2,7 @@
   <div style="text-align: center" class="row" id="dropbox" class="dropbox" ng-class="dropClass">
     <h2>Solte os arquivos em qualquer lugar para fazer o upload</h2>
     <h4>ou</h4>
-    <input type="file" ng-model-instant id="files" multiple onchange="angular.element(this).scope().setFiles(this)" />
+    <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" />
     <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
   </div>
   <button class="btn btn-primary" ng-click="removeChecked()">Remover selecionadas</button>
@@ -16,7 +16,7 @@
   <div ng-if="files.length" style="width: 100%;float: left;">
     <div class="row">
       <div class="files" ng-repeat="file in files">
-        <div ng-click="setImage(file)" class="thumbnail" ng-class="{'active': file.name == image.name}">
+        <div ng-click="setImage(file)" class="thumbnail" ng-class="{'active': file.name == fileSelected.name}">
           <img ng-src="{{ file.src }}" alt="{{ file.name }}">
           <div class="caption">
             <input type="checkbox" ng-model="file.checked" name="file_{{ $index }}">

@@ -53,7 +53,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
-	@Column(nullable = false, length = 50, unique = true)
+	@Column(length = 50, unique = true)
 	private String identifier;
 
 	/*-------------------------------------------------------------------

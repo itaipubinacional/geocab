@@ -2650,15 +2650,24 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         markerAttribute.value = "";
       }
 
-      //if(val.photoAlbum) {
+      if(val.files) {
 
         attribute.type = "PHOTO_ALBUM";
 
         var photoAlbum = new PhotoAlbum();
-
         photoAlbum.photos = new Array();
 
-        var img = $scope.imgResult.split(';base64,');
+        angular.forEach(val.files, function(file){
+          var photo = new Photo();
+          var img = file.src.split(';base64,');
+          photo.image = img[1];
+          photo.name = file.name;
+          photo.contentLength = file.size;
+          photo.mimeType = file.type;
+          photoAlbum.photos.push(photo);
+        });
+
+        /*var img = $scope.imgResult.split(';base64,');
 
         var photo = new Photo();
         photo.image = img[1];
@@ -2668,14 +2677,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var photo = new Photo();
         photo.image = img[1];
         photo.mimeType = 'image/png';
-        photoAlbum.photos.push(photo);
+        photoAlbum.photos.push(photo);*/
 
         markerAttribute.photoAlbum = photoAlbum;
 
-
-
-      //$scope.currentEntity.image = $scope.imgResult;
-      //}
+      }
 
       markerAttribute.attribute = attribute;
       markerAttribute.marker = $scope.currentEntity;
