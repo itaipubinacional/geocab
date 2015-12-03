@@ -2650,7 +2650,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         markerAttribute.value = "";
       }
 
-      if(val.photoAlbum) {
+      //if(val.photoAlbum) {
 
         attribute.type = "PHOTO_ALBUM";
 
@@ -2658,17 +2658,24 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         photoAlbum.photos = new Array();
 
+        var img = $scope.imgResult.split(';base64,');
+
         var photo = new Photo();
-        photo.image = $scope.currentEntity.image;
+        photo.image = img[1];
+        photo.mimeType = 'image/png';
         photoAlbum.photos.push(photo);
 
         var photo = new Photo();
-        photo.image = $scope.currentEntity.image;
+        photo.image = img[1];
+        photo.mimeType = 'image/png';
         photoAlbum.photos.push(photo);
 
         markerAttribute.photoAlbum = photoAlbum;
 
-      }
+
+
+      //$scope.currentEntity.image = $scope.imgResult;
+      //}
 
       markerAttribute.attribute = attribute;
       markerAttribute.marker = $scope.currentEntity;
@@ -2678,7 +2685,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
 
-    markerService.insertMarker($scope.currentEntity, {
+    markerService.insertMarker( $scope.currentEntity, {
       callback: function (result) {
 
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
@@ -3033,6 +3040,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       return false;
     }
 
+    $('#files')[0].files = element.files;
+
     $scope.currentEntity.image = element;
     $scope.readURL(element);
   };
@@ -3136,8 +3145,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $('.marker-image').attr('src', e.target.result);
       };
       reader.readAsDataURL(input.files[0]);
+
     }
-  }
+  };
 
   $scope.openImgModal = function () {
     var dialog = $modal.open({
@@ -3149,7 +3159,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
       }
     });
-  }
+  };
 
   $scope.isBooleanValid = function () {
 

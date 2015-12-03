@@ -68,6 +68,7 @@
             </div>
           </div>
         </div>-->
+        {{ attribute | json }}
         <upload-file on-success="onSuccess(files)" attribute="attribute"></upload-file>
 
       </div>

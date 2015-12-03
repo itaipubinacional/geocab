@@ -49,10 +49,27 @@ function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, at
 
       console.log(files);
 
-      $scope.attribute.files = files;
+      $scope.attribute.files = [];
+      $scope.filter('filter')($scope.attributesByLayer, {id: $scope.attribute.id}, true)[0].files = [];
 
-      //$scope.filter('filter')($scope.attributesByLayer, {id: $scope.attribute.id}, true)[0].files = files;
-      $scope.filter('filter')($scope.attributesByLayer, {id: $scope.attribute.id}, true)[0].photoAlbum = document.getElementById('files');
+      for (var i = 0, file; file = files[i]; i++) {
+
+          var reader = new FileReader();
+
+          reader.onloadend = (function (readFile) {
+              return function (e) {
+                  readFile.src = e.target.result;
+                  $scope.attribute.files.push(readFile);
+                  //$scope.filter('filter')($scope.attributesByLayer, {id: $scope.attribute.id}, true)[0].files.push(readFile);
+
+                  $scope.$apply();
+
+              }
+          })(file);
+
+          reader.readAsDataURL(file);
+      }
+
     };
 
 

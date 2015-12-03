@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.directwebremoting.io.FileTransfer;
 import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -42,7 +41,14 @@ public class Photo extends AbstractEntity implements Serializable
 	 * 
 	 */
 	@Transient
-	private FileTransfer image;
+	private String image;
+	
+	/**
+	 * 
+	 */
+	@Transient
+	private String mimeType;
+	
 	/**
 	 * 
 	 */
@@ -85,7 +91,7 @@ public class Photo extends AbstractEntity implements Serializable
 	 * @param image
 	 * @param identifier
 	 */
-	public Photo(PhotoAlbum photoAlbum, FileTransfer image, String identifier)
+	public Photo(PhotoAlbum photoAlbum, String image, String identifier)
 	{
 		super();
 		this.photoAlbum = photoAlbum;
@@ -110,7 +116,7 @@ public class Photo extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * Gera o identificador do caminha da foto
+	 * Gera o identificador do caminho da foto
 	 */
 	private void generateIdentifier()
 	{
@@ -152,7 +158,7 @@ public class Photo extends AbstractEntity implements Serializable
 	/**
 	 * @return the image
 	 */
-	public FileTransfer getImage()
+	public String getImage()
 	{
 		return image;
 	}
@@ -161,9 +167,25 @@ public class Photo extends AbstractEntity implements Serializable
 	 * @param image
 	 *            the image to set
 	 */
-	public void setImage(FileTransfer image)
+	public void setImage(String image)
 	{
 		this.image = image;
+	}
+
+	/**
+	 * @return the mimeType
+	 */
+	public String getMimeType()
+	{
+		return mimeType;
+	}
+
+	/**
+	 * @param mimeType the mimeType to set
+	 */
+	public void setMimeType(String mimeType)
+	{
+		this.mimeType = mimeType;
 	}
 
 }

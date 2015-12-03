@@ -17,12 +17,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
 import javax.xml.bind.JAXBException;
+
+import org.apache.commons.codec.binary.Base64;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
@@ -140,14 +143,14 @@ public class MarkerService
 			marker.setUser(user);
 
 			marker = this.markerRepository.save(marker);
+			
+//			if (marker.getImage() != null && marker.getImage().getFilename() != "")
+//			{
+//				this.uploadImg(marker.getImage(), marker.getId());
+//			}
 
 			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
-
-			if (marker.getImage() != null && marker.getImage().getFilename() != "")
-			{
-				this.uploadImg(marker.getImage(), marker.getId());
-			}
-
+			
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
 			markerModeration.setStatus(MarkerStatus.PENDING);
@@ -242,7 +245,7 @@ public class MarkerService
 		
 		for (Photo photo : photos)
 		{
-			photo.setImage(this.findFileById(photo.getIdentifier()));
+			//photo.setImage(this.findFileById(photo.getIdentifier()));
 		}
 		return photos;
 	}
@@ -285,7 +288,7 @@ public class MarkerService
 	public Photo findPhotoById(String photoId)
 	{
 		Photo photo = this.photoRepository.findByIdentifier(photoId);
-		photo.setImage(this.findFileById(photo.getIdentifier()));
+		//photo.setImage(this.findFileById(photo.getIdentifier()));
 		return photo;
 	}
 	
@@ -297,7 +300,7 @@ public class MarkerService
 	public Photo findPhotoById(Long photoId)
 	{
 		Photo photo = this.photoRepository.findOne(photoId);
-		photo.setImage(findFileById(photo.getIdentifier()));
+		//photo.setImage(findFileById(photo.getIdentifier()));
 		return photo;
 	}
 
@@ -335,7 +338,7 @@ public class MarkerService
 
 			if (marker.getImage() != null)
 			{
-				this.uploadImg(marker.getImage(), marker.getId());
+				this.uploadImg( marker.getImage(), marker.getId());
 			}
 
 			marker.setLocation(markerTemporary.getLocation());
@@ -735,41 +738,45 @@ public class MarkerService
 		try
 		{
 			
-		
-		final String mimeType = photo.getImage().getMimeType();
-
-		final List<String> validMimeTypes = new ArrayList<String>();
-		validMimeTypes.add("image/gif");
-		validMimeTypes.add("image/jpeg");
-		validMimeTypes.add("image/bmp");
-		validMimeTypes.add("image/png");
-
-		if (mimeType == null || !validMimeTypes.contains(mimeType))
-		{
-			throw new IllegalArgumentException("Formato inválido!");
-		}
-
-		InputStream is = new BufferedInputStream(photo.getImage().getInputStream());
-		final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
-		Image image = ImageIO.read(is);
-		Graphics2D g = bufferedImage.createGraphics();
-		g.drawImage(image, 0, 0, 640, 480, null);
-		g.dispose();
-
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		ImageIO.write(bufferedImage, "png", os);
-		InputStream isteam = new ByteArrayInputStream(os.toByteArray());
-
-		MetaFile metaFile = new MetaFile();
-		// Todo pega o ID do ponto
-		metaFile.setId(String.valueOf(photo.getIdentifier()));
-		metaFile.setContentType(photo.getImage().getMimeType());
-		metaFile.setContentLength(photo.getImage().getSize());
-		metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
-		metaFile.setInputStream(isteam);
-		metaFile.setName(photo.getImage().getFilename());
-
-		this.metaFileRepository.insert(metaFile);
+			Base64 photoDecode = new Base64();
+			
+			byte[] data = photoDecode.decode(photo.getImage());
+			InputStream decodedMap = new ByteArrayInputStream(data);	
+			
+			final String mimeType = photo.getMimeType();
+	
+			final List<String> validMimeTypes = new ArrayList<String>();
+			validMimeTypes.add("image/gif");
+			validMimeTypes.add("image/jpeg");
+			validMimeTypes.add("image/bmp");
+			validMimeTypes.add("image/png");
+	
+			if (mimeType == null || !validMimeTypes.contains(mimeType))
+			{
+				throw new IllegalArgumentException("Formato inválido!");
+			}
+	
+			InputStream is = new BufferedInputStream(decodedMap);
+			final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+			Image image = ImageIO.read(is);
+			Graphics2D g = bufferedImage.createGraphics();
+			g.drawImage(image, 0, 0, 640, 480, null);
+			g.dispose();
+	
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			ImageIO.write(bufferedImage, "png", os);
+			InputStream isteam = new ByteArrayInputStream(os.toByteArray());
+	
+			MetaFile metaFile = new MetaFile();
+			// Todo pega o ID do ponto
+			metaFile.setId(String.valueOf(photo.getIdentifier()));
+			metaFile.setContentType("image/png");
+			metaFile.setContentLength(10661);
+			metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
+			metaFile.setInputStream(isteam);
+			metaFile.setName("1.png");
+	
+			this.metaFileRepository.insert(metaFile);
 		
 		}
 		catch (IOException | RepositoryException e)

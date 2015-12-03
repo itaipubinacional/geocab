@@ -422,3 +422,10 @@ ul.ivh-treeview li .ivh-treeview-toggle {
 #tree li, #tree-pesquisas li, #tree-kml li {
     background: none;
 }
+
+div.files{float:left;margin:5px; width: 140px; height: 190px}
+div.files > div.thumbnail{width: 100%; height: 100%;position: relative;}
+div.files > div.thumbnail img{max-width: 125px;max-height: 125px;}
+div.files > div.thumbnail > div.caption{position: absolute; bottom: 0;}
+div.files > div.thumbnail > div.caption input[type=checkbox]{float: left;word-wrap: break-word;margin-top: 2px;}
+div.thumbnail.active{border: 1px solid #428bca;}
