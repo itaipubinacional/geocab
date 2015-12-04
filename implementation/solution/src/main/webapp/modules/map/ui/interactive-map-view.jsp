@@ -505,11 +505,11 @@ uri="http://www.springframework.org/security/tags"%>
 
                     <button ng-if="attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
                             ng-click="showGallery(attribute)"
-                            style="float: left;"
+                            style="float: left;margin-right: 5px"
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>
 
-                    <label style="margin-top: 15px">{{ attribute.name }}</label>
+                    <label style="margin-top: 10px">{{ attribute.name }}</label>
 
                     <input type="number"
                            name="number1" ng-if="attribute.type == 'NUMBER'"

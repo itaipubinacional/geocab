@@ -4248,6 +4248,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     var attribute = attribute;
 
+    var attributesByLayer = function(){
+      var attrs = [];
+      angular.forEach($scope.attributesByLayer, function(attribute){
+        if(attribute.type == 'PHOTO_ALBUM')
+          attrs.push(attribute);
+      });
+      return attrs;
+    };
+
     var dialog = $modal.open({
       templateUrl: "modules/map/ui/popup/gallery-popup.jsp",
       controller: GalleryPopUpController,
@@ -4259,10 +4268,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         attribute: function(){
           return attribute;
         },
-        attributesByLayer: function(){
-          return $scope.attributesByLayer;
-        }
-
+        attributesByLayer: attributesByLayer
       }
     });
 

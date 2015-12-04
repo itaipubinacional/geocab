@@ -423,11 +423,13 @@ ul.ivh-treeview li .ivh-treeview-toggle {
     background: none;
 }
 
-div#sidenav ul{list-style: none}
-div#sidenav ul li{border: 1px solid #ccc}
-div#sidenav li.active{border-left: none}
+div#sidenav ul{list-style: none; margin-top: 25px;}
+div#sidenav ul li{border: 1px solid #ccc; padding: 10px;margin-left: -1px; background-color: #e2e2e2; margin-top: -1px}
+div#sidenav ul li:hover{cursor: pointer}
+div#sidenav li.active{border-left: none; background-color: #fff; font-weight: 900}
 
 div.files{float:left;margin:5px; width: 140px; height: 190px}
+div.files:hover{cursor:pointer}
 div.files > div.thumbnail{width: 100%; height: 100%;position: relative;}
 div.files > div.thumbnail img{max-width: 125px;max-height: 125px;}
 div.files > div.thumbnail > div.caption{position: absolute; bottom: 0;}
