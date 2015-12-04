@@ -5,12 +5,11 @@
     <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" />
     <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
   </div>
-  <button class="btn btn-primary" ng-click="removeChecked()">Remover selecionadas</button>
   <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
     <label class="detail-label">
       Descrição
     </label>
-    <input name="description" type="text" class="form-control" ng-model="image.description"
+    <input onload="loaded()" name="description" type="text" class="form-control" ng-model="fileSelected.description"
            maxlength="144" ng-minlength="1"/>
   </div>
   <div ng-if="files.length" style="width: 100%;float: left;">

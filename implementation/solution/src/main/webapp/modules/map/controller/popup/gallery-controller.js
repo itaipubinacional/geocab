@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, attribute) {
+function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, attribute, attributesByLayer) {
 
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
@@ -26,7 +26,7 @@ function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, at
 
     $scope.attribute = attribute;
 
-
+    $scope.attributesByLayer = attributesByLayer;
 
     /*-------------------------------------------------------------------
      * 		 				 	  NAVIGATIONS
@@ -41,7 +41,7 @@ function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, at
      */
     $scope.initialize = function()
     {
-
+      console.log('initialize');
     };
 
     $scope.onSuccess = function(files) {
@@ -50,6 +50,30 @@ function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, at
 
       $scope.attribute.files = files;
 
+    };
+
+    $scope.removeChecked = function(){
+
+        var i = $scope.attribute.files.length;
+
+        while (i--) {
+            var file = $scope.attribute.files[i];
+
+            if (file.checked) {
+                $scope.attribute.files.splice(i, 1);
+            }
+        }
+    };
+
+    $scope.clearFiles = function(){
+      var i = $scope.attribute.files.length;
+      while (i--) {
+        $scope.attribute.files.splice(i, 1);
+      }
+    };
+
+    $scope.setAttribute = function(attribute) {
+      $scope.attribute = attribute;
     };
 
 

@@ -20,6 +20,28 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       scope.fileSelected = {};
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
 
+      angular.element(document).ready(function() {
+        console.log('ready');
+      });
+
+      scope.loaded = function(){
+        console.log('loaded');
+      };
+
+      scope.$watch('attribute.files', function(n, o){
+          console.log('watch');
+      });
+
+      scope.$watch('attribute', function(newVal, oldVal){
+        console.log('watch');
+        scope.files = newVal.files != undefined ? newVal.files : [];
+
+      });
+
+      scope.$watch('scope', function(n, o){
+        console.log('watch');
+      });
+
       var inputFiles = document.getElementById('files');
       //============== DRAG & DROP =============
       // source for drag&drop: http://www.webappers.com/2011/09/28/drag-drop-file-upload-with-html5-javascript/
@@ -37,19 +59,10 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       };
 
       scope.setImage = function(file){
-        scope.image = file;
+        scope.fileSelected = file;
+        element.find('input[type="text"]').focus();
         //scope.file.description = file.name;
       };
-
-      scope.removeChecked = function(){
-
-        angular.forEach(scope.files, function(file, index){
-          if(file.checked)
-            scope.files.splice(index, 1);
-        })
-
-      };
-
 
       dropbox.addEventListener("dragenter", dragEnterLeave, false)
       dropbox.addEventListener("dragleave", dragEnterLeave, false)
@@ -88,7 +101,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                 console.log(e.target.result);
                 readFile.src = e.target.result;
 
-                scope.files.push(readFile);
+                var fileToObj = angular.copy(readFile);
+                scope.files.push(fileToObj);
 
                 if(files.length == i) {
                   scope.fileSelected = scope.files[0];
@@ -125,7 +139,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                 console.log(e.target.result);
                 readFile.src = e.target.result;
 
-                scope.files.push(readFile);
+                var fileToObj = angular.copy(readFile);
+                scope.files.push(fileToObj);
 
                 if (files.length == i) {
                   scope.fileSelected = scope.files[0];
@@ -159,6 +174,9 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         scope.progressVisible = true
         xhr.send(fd)
       };
+
+      if(!scope.fileSelected.name && scope.files.length > 0)
+        scope.setImage(scope.files[0]);
 
       function uploadProgress(evt) {
         scope.$apply(function () {

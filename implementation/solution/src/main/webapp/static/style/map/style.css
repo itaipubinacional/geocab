@@ -423,6 +423,10 @@ ul.ivh-treeview li .ivh-treeview-toggle {
     background: none;
 }
 
+div#sidenav ul{list-style: none}
+div#sidenav ul li{border: 1px solid #ccc}
+div#sidenav li.active{border-left: none}
+
 div.files{float:left;margin:5px; width: 140px; height: 190px}
 div.files > div.thumbnail{width: 100%; height: 100%;position: relative;}
 div.files > div.thumbnail img{max-width: 125px;max-height: 125px;}

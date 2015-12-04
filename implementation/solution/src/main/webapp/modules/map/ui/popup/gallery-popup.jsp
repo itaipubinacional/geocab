@@ -72,8 +72,8 @@
 
       </div>
       <div id="sidenav" class="col-md-2">
-        <ul ng-repeat="attribute in attributesByLayer">
-          <li> {{ attribute.name }} </li>
+        <ul ng-repeat="attr in attributesByLayer">
+          <li ng-click="setAttribute(attr)" ng-class="{'active': attr.name == attribute.name}"> {{ attr.name }} </li>
         </ul>
       </div>
     </div>
@@ -81,9 +81,10 @@
 	</div>
 
   <div class="modal-footer">
-    <a href="">Limpar todos</a>
+    <a href="#" ng-click="clearFiles()">Limpar todos</a>
+    <button class="btn btn-default" ng-click="removeChecked()">Remover selecionados</button>
     <button id="buttonClose" class="btn btn-primary" ng-click="close(false)">Continuar</button>
-    <button class="btn btn-default" ng-click="close(true)">Fechar</button>
+    <!--<button class="btn btn-default" ng-click="close(true)">Fechar</button>-->
   </div>
 </div>
 
