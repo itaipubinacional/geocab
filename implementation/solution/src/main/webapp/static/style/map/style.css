@@ -433,3 +433,8 @@ div.files > div.thumbnail img{max-width: 125px;max-height: 125px;}
 div.files > div.thumbnail > div.caption{position: absolute; bottom: 0;}
 div.files > div.thumbnail > div.caption input[type=checkbox]{float: left;word-wrap: break-word;margin-top: 2px;}
 div.thumbnail.active{border: 1px solid #428bca;}
+
+div#dropbox{float: left;height: 520px;width: 100%;border: 2px solid #fff;border-right: 1px solid #ccc;position: relative; padding: 15px}
+div#dropbox.over {background-color: #e8f0fe; border: 2px solid #4285f4 }
+div#dropbox > .dropbox {text-align: center;}
+div#dropbox > div#dropbox-over-msg {text-align: center; left: 235px;background-color: #428bca;color: #fff; padding: 15px;position:absolute; bottom:15px; width: 250px}

@@ -20,6 +20,10 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       scope.fileSelected = {};
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
 
+      element.on('load', function (event) {
+        console.log('load');
+      });
+
       angular.element(document).ready(function() {
         console.log('ready');
       });
@@ -42,7 +46,6 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         console.log('watch');
       });
 
-      var inputFiles = document.getElementById('files');
       //============== DRAG & DROP =============
       // source for drag&drop: http://www.webappers.com/2011/09/28/drag-drop-file-upload-with-html5-javascript/
       var dropbox = document.getElementById("dropbox");
@@ -50,11 +53,11 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
       // init event handlers
       function dragEnterLeave(evt) {
-        evt.stopPropagation()
-        evt.preventDefault()
+        evt.stopPropagation();
+        evt.preventDefault();
         scope.$apply(function () {
-          scope.dropText = 'Drop files here...'
-          scope.dropClass = ''
+          scope.dropText = 'Drop files here...';
+          scope.dropClass = '';
         })
       };
 
@@ -64,16 +67,16 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         //scope.file.description = file.name;
       };
 
-      dropbox.addEventListener("dragenter", dragEnterLeave, false)
-      dropbox.addEventListener("dragleave", dragEnterLeave, false)
+      dropbox.addEventListener("dragenter", dragEnterLeave, false);
+      dropbox.addEventListener("dragleave", dragEnterLeave, false);
       dropbox.addEventListener("dragover", function (evt) {
-        evt.stopPropagation()
-        evt.preventDefault()
-        var clazz = 'not-available'
-        var ok = evt.dataTransfer && evt.dataTransfer.types && evt.dataTransfer.types.indexOf('Files') >= 0
+        evt.stopPropagation();
+        evt.preventDefault();
+        var clazz = 'not-available';
+        var ok = evt.dataTransfer && evt.dataTransfer.types && evt.dataTransfer.types.indexOf('Files') >= 0;
         scope.$apply(function () {
-          scope.dropText = ok ? 'Drop files here...' : 'Only files are allowed!'
-          scope.dropClass = ok ? 'over' : 'not-available'
+          scope.dropText = ok ? 'Drop files here...' : 'Only files are allowed!';
+          scope.dropClass = ok ? 'over' : 'not-available';
         })
       }, false);
 
@@ -82,17 +85,14 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         evt.stopPropagation();
         evt.preventDefault();
         scope.$apply(function () {
-          scope.dropText = 'Drop files here...'
-          scope.dropClass = ''
+          scope.dropText = 'Drop files here...';
+          scope.dropClass = '';
         });
         var files = evt.dataTransfer.files;
-
-        //document.getElementById('files').files = files;
 
         if (files.length > 0) {
           for (var i = 0, file; file = files[i]; i++) {
 
-            //scope.files.push(files[i]);
             var reader = new FileReader();
 
             reader.onloadend = (function (readFile) {
@@ -116,8 +116,6 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
             reader.readAsDataURL(file);
           }
-
-          //console.log(scope.files);
         }
       }, false);
 
@@ -160,50 +158,12 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         });
       };
 
-      scope.uploadFile = function () {
-        var fd = new FormData();
-        for (var i in scope.files) {
-          fd.append("uploadedFile", scope.files[i])
-        }
-        var xhr = new XMLHttpRequest()
-        xhr.upload.addEventListener("progress", uploadProgress, false)
-        xhr.addEventListener("load", uploadComplete, false)
-        xhr.addEventListener("error", uploadFailed, false)
-        xhr.addEventListener("abort", uploadCanceled, false)
-        xhr.open("POST", "/fileupload")
-        scope.progressVisible = true
-        xhr.send(fd)
-      };
-
       if(!scope.fileSelected.name && scope.files.length > 0)
         scope.setImage(scope.files[0]);
 
-      function uploadProgress(evt) {
-        scope.$apply(function () {
-          if (evt.lengthComputable) {
-            scope.progress = Math.round(evt.loaded * 100 / evt.total)
-          } else {
-            scope.progress = 'unable to compute'
-          }
-        });
-      }
-
-      function uploadComplete(evt) {
-        /* This event is raised when the server send back a response */
-        alert(evt.target.responseText)
-      }
-
-      function uploadFailed(evt) {
-        alert("There was an error attempting to upload the file.")
-      }
-
-      function uploadCanceled(evt) {
-        scope.$apply(function () {
-          scope.progressVisible = false
-        });
-        alert("The upload has been canceled by the user or the browser dropped the connection.")
-      }
-
+      scope.uploadFile = function(){
+        angular.element('#files').trigger('click');
+      };
     }
   }
 }]);

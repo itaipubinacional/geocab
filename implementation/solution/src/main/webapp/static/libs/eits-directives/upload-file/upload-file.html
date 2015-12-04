@@ -1,20 +1,21 @@
-<div>
-  <div style="text-align: center" class="row" id="dropbox" class="dropbox" ng-class="dropClass">
+<div id="dropbox" ng-class="dropClass">
+  <div ng-if="!files.length" style="text-align: center" class="row dropbox">
     <h2>Solte os arquivos em qualquer lugar para fazer o upload</h2>
     <h4>ou</h4>
-    <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" />
+    <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="Selecionar arquivos"/>
+    <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" style="height: 0;visibility:hidden"/>
     <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
   </div>
-  <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
-    <label class="detail-label">
-      Descrição
-    </label>
-    <input onload="loaded()" name="description" type="text" class="form-control" ng-model="fileSelected.description"
-           maxlength="144" ng-minlength="1"/>
-  </div>
   <div ng-if="files.length" style="width: 100%;float: left;">
-    <div class="row">
-      <div class="files" ng-repeat="file in files">
+    <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
+      <label class="detail-label">
+        Descrição
+      </label>
+      <input name="description" type="text" class="form-control" ng-model="fileSelected.description"
+             maxlength="144" ng-minlength="1"/>
+    </div>
+    <div>
+      <div class="files" ng-repeat="file in files" class="dropbox">
         <div ng-click="setImage(file)" class="thumbnail" ng-class="{'active': file.name == fileSelected.name}">
           <img ng-src="{{ file.src }}" alt="{{ file.name }}">
           <div class="caption">
@@ -31,6 +32,8 @@
         <div class="uploaded" ng-style="{'width': progress+'%'}"></div>
       </div>
     </div>-->
-
+  </div>
+  <div ng-if="dropClass == 'over' && files.length" id="dropbox-over-msg">
+    <span>Solte os arquivos para fazer upload em <br/><b>{{ attribute.name }}</b></span>
   </div>
 </div>
