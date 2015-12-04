@@ -158,6 +158,18 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
     $scope.selectLayerGroup = [];
 
+    accountService.getUserAuthenticated({
+        callback : function(result) {
+            $scope.userMe = result;
+            //$scope.setBackgroundMap(result.backgroundMap);
+            $scope.$apply();
+        },
+        errorHandler : function(message, exception) {
+            $scope.message = {type:"error", text: message};
+            $scope.$apply();
+        }
+    });
+
     /**
      * checks whether any research has been done
      */
@@ -529,18 +541,24 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
          */
         var formatCoordinate = function (coord) {
 
-            var posVirgula = coord.indexOf(",");
+            if($scope.userMe && $scope.userMe.coordinates == 'DEGREES_DECIMAL') {
+                return coord;
+            } else {
+                return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
+            }
 
-            var part1 = coord.slice(0, posVirgula);
-            var part2 = coord.slice(posVirgula + 2);
-
-            var posPonto = part1.indexOf(".");
-            var latitude = part1.slice(0, posPonto) + "°" + part1.slice(posPonto + 1, posPonto + 3) + "'" + part1.slice(posPonto + 3) + '"';
-
-            posPonto = part2.indexOf(".");
-            var longitude = part2.slice(0, posPonto) + "°" + part2.slice(posPonto + 1, posPonto + 3) + "'" + part2.slice(posPonto + 3) + '"';
-
-            return latitude + ", " + longitude;
+            //var posVirgula = coord.indexOf(",");
+            //
+            //var part1 = coord.slice(0, posVirgula);
+            //var part2 = coord.slice(posVirgula + 2);
+            //
+            //var posPonto = part1.indexOf(".");
+            //var latitude = part1.slice(0, posPonto) + "°" + part1.slice(posPonto + 1, posPonto + 3) + "'" + part1.slice(posPonto + 3) + '"';
+            //
+            //posPonto = part2.indexOf(".");
+            //var longitude = part2.slice(0, posPonto) + "°" + part2.slice(posPonto + 1, posPonto + 3) + "'" + part2.slice(posPonto + 3) + '"';
+            //
+            //return latitude + ", " + longitude;
 
         }
 
@@ -1151,6 +1169,36 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         });
     };
 
+
+    $scope.removeMarkersModal = function () {
+
+        var dialog = $modal.open({
+            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+            controller: DialogController,
+            windowClass: 'dialog-enable',
+            resolve: {
+                title: function () {
+                    return $translate("map.Delete-mark")
+                },
+                message: function () {
+                    return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"
+                },
+                buttons: function () {
+                    return [{
+                        label: $translate("layer-group-popup.Delete"),
+                        css: 'btn btn-danger'
+                    }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
+                }
+            }
+        });
+
+        dialog.result.then(function (result) {
+            $scope.removeMarkers();
+
+        });
+
+    };
+
     $scope.removeMarkerModal = function () {
 
         var dialog = $modal.open({
@@ -1253,7 +1301,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.saveMarkerModal = function () {
 
-        if ($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED ) {
+        if (! ($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED)) {
 
             var dialog = $modal.open({
                 templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
@@ -1417,7 +1465,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.translateByStatus = function (status) {
         if (status == $scope.SAVED) {
-            return $translate('admin.marker-moderation.CANCELED');
+            return $translate('admin.marker-moderation.SAVED');
         }
         if ( status == $scope.PENDING) {
             return $translate('admin.marker-moderation.PENDING');

@@ -139,7 +139,7 @@ public class MarkerService
 
 			marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
 
-			marker.setStatus(MarkerStatus.PENDING);
+			marker.setStatus(MarkerStatus.SAVED);
 			marker.setUser(user);
 
 			marker = this.markerRepository.save(marker);
@@ -148,7 +148,7 @@ public class MarkerService
 			
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
-			markerModeration.setStatus(MarkerStatus.PENDING);
+			markerModeration.setStatus(MarkerStatus.SAVED);
 			this.markerModerationRepository.save(markerModeration);
 
 		}

@@ -62,14 +62,26 @@
 
 		</div>
 
-        <div style="height: 30px;">
+        <div style="height: 40px; width: 95%">
             <div ng-if="!itensMarcados.length">
                 <h3 style="margin: 0">MARKERS</h3>
             </div>
             <div class="row" style="height: 60px" ng-if="itensMarcados.length">
                 <h3 style="margin: 0" class="col-md-6">{{itensMarcados.length}} itens selecionados </h3>
-                <button class="col-md-3" ng-disabled="!disableButtonPost" ng-click="postMarkersModal()">POST</button>
-                <button class="col-md-3" ng-disabled="!disableButtonDelete">DELETE</button>
+
+				<div class="btn btn-default col-md-3" name="btnSave"
+					 ng-click="postMarkersModal()" ng-disabled="!disableButtonPost">
+					<a style="font-size:14px;text-decoration:none;color:black">
+						<spring:message code="admin.marker-moderation.Post"/>
+					</a>
+
+				</div>
+				<div class="btn btn-default col-md-3" name="btnSave" ng-click="removeMarkersModal()"
+					 ng-disabled="!disableButtonDelete">
+					<a style="font-size:14px;text-decoration:none;color:black">
+						<spring:message code="admin.marker-moderation.Delete"/>
+					</a>
+				</div>
             </div>
         </div>
         <div ng-grid="gridOptions" style="height: 499px;border: 1px solid rgb(212,212,212);"></div>

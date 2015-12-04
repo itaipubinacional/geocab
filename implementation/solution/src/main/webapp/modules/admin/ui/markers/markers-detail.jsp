@@ -27,7 +27,7 @@
 
         <form>
 
-            <fieldset ng-disabled="!(currentEntity.status == 'PENDING' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED' )">
+            <fieldset ng-disabled="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED' )">
 
                 <div id="left-content" style="float:left; margin-bottom: 70px">
 
@@ -41,6 +41,7 @@
                             <span><b>Status</b></span>
                             {{translateByStatus(currentEntity.status)}}
 
+                            <a ng-if="currentEntity.status == 'SAVED' " class="icon itaipu-icon-save"></a>
                             <a ng-if="currentEntity.status == 'PENDING' " class="icon itaipu-icon-schedules"></a>
                             <a ng-if="currentEntity.status == 'ACCEPTED' " class="icon itaipu-icon-like-filled"></a>
                             <a ng-if="currentEntity.status == 'REFUSED' " class="icon itaipu-icon-dislike"></a>
@@ -51,7 +52,7 @@
                         <div ng-repeat="markerAttribute in attributesByMarker track by $index"
                              style="position: relative;">
                             <label ng-style="$index > 0 ? {'margin-top':'15px'} : ''">
-                                {{markerAttribute.attribute.name }} {{markerAttribute.attribute.required}}
+                                {{markerAttribute.attribute.name }}
                             </label>
 
 
@@ -62,7 +63,7 @@
                                     ng-model="markerAttribute.value"
                                     required="{{markerAttribute.attribute.required}}">
 
-                            <input name="date1"
+                            <input name="date1"  type="date"
                                    ng-if="markerAttribute.attribute.type == 'DATE'"
                                    class="form-control datepicker"
                                    ng-model="markerAttribute.value"

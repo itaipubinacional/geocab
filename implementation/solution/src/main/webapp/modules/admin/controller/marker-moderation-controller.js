@@ -158,6 +158,18 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         selectMarker: false
     };
 
+    accountService.getUserAuthenticated({
+        callback : function(result) {
+            $scope.userMe = result;
+            //$scope.setBackgroundMap(result.backgroundMap);
+            $scope.$apply();
+        },
+        errorHandler : function(message, exception) {
+            $scope.message = {type:"error", text: message};
+            $scope.$apply();
+        }
+    });
+
     /**
      * Markers Moderation
      */
@@ -507,18 +519,25 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
          */
         var formatCoordinate = function (coord) {
 
-            var posVirgula = coord.indexOf(",");
+            if($scope.userMe && $scope.userMe.coordinates == 'DEGREES_DECIMAL') {
+                return coord;
+            } else {
+                return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
+            }
 
-            var part1 = coord.slice(0, posVirgula);
-            var part2 = coord.slice(posVirgula + 2);
 
-            var posPonto = part1.indexOf(".");
-            var latitude = part1.slice(0, posPonto) + "°" + part1.slice(posPonto + 1, posPonto + 3) + "'" + part1.slice(posPonto + 3) + '"';
-
-            posPonto = part2.indexOf(".");
-            var longitude = part2.slice(0, posPonto) + "°" + part2.slice(posPonto + 1, posPonto + 3) + "'" + part2.slice(posPonto + 3) + '"';
-
-            return latitude + ", " + longitude;
+            //var posVirgula = coord.indexOf(",");
+            //
+            //var part1 = coord.slice(0, posVirgula);
+            //var part2 = coord.slice(posVirgula + 2);
+            //
+            //var posPonto = part1.indexOf(".");
+            //var latitude = part1.slice(0, posPonto) + "°" + part1.slice(posPonto + 1, posPonto + 3) + "'" + part1.slice(posPonto + 3) + '"';
+            //
+            //posPonto = part2.indexOf(".");
+            //var longitude = part2.slice(0, posPonto) + "°" + part2.slice(posPonto + 1, posPonto + 3) + "'" + part2.slice(posPonto + 3) + '"';
+            //
+            //return latitude + ", " + longitude;
 
         }
 

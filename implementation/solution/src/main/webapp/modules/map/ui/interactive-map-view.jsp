@@ -542,7 +542,6 @@ uri="http://www.springframework.org/security/tags"%>
                         >
 
 
-
                     <span
                         class="tooltip-validation"
                         ng-show=" (ngSideMarker.texto.$error.required && ngSideMarker.$submitted) "
