@@ -203,6 +203,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></a>' +
         '<a ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></a>' +
         '<a ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></a>' +
+        '<a ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></a>' +
         '</div>';
 
 
@@ -1321,16 +1322,19 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.translateByStatus = function (status) {
 
-        if ( status == 'PENDING') {
+        if (status == $scope.SAVED) {
+            return $translate('admin.marker-moderation.SAVED');
+        }
+        if ( status == $scope.PENDING) {
             return $translate('admin.marker-moderation.PENDING');
         }
-        if ( status == 'REFUSED') {
+        if ( status == $scope.REFUSED) {
             return $translate('admin.marker-moderation.REFUSED');
         }
-        if (status == 'ACCEPTED') {
+        if (status == $scope.ACCEPTED) {
             return $translate('admin.marker-moderation.APPROVED');
         }
-        if (status == 'CANCELED') {
+        if (status == $scope.CANCELED) {
             return $translate('admin.marker-moderation.CANCELED');
         }
     };
@@ -1358,7 +1362,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             statusColor = "#eee400";
         }else if(status == $scope.SAVED){
             // GRAY
-            statusColor = "#edad09";
+            statusColor = "#A3A3A3";
         }else if(status == $scope.CANCELED){
             // RED
             statusColor = "#ba0000";

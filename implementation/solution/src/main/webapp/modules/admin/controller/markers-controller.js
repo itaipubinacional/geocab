@@ -1504,7 +1504,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             statusColor = "#eee400";
         }else if(status == $scope.SAVED){
             // GRAY
-            statusColor = "#edad09";
+            statusColor = "#A3A3A3";
         }else if(status == $scope.CANCELED){
             // RED
             statusColor = "#ba0000";

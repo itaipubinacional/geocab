@@ -27,7 +27,8 @@
 
         <form>
 
-            <fieldset ng-disabled="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED' )">
+            <fieldset
+                    ng-disabled="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED' )">
 
                 <div id="left-content" style="float:left; margin-bottom: 70px">
 
@@ -51,7 +52,8 @@
 
                         <div ng-repeat="markerAttribute in attributesByMarker track by $index"
                              style="position: relative;">
-                            <label ng-style="$index > 0 ? {'margin-top':'15px'} : ''">
+                            <label ng-style="$index > 0 ? {'margin-top':'15px'} : ''"
+                                   ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'">
                                 {{markerAttribute.attribute.name }}
                             </label>
 
@@ -63,11 +65,12 @@
                                     ng-model="markerAttribute.value"
                                     required="{{markerAttribute.attribute.required}}">
 
-                            <input name="date1"  type="date"
+                            <input name="date1" type="date"
                                    ng-if="markerAttribute.attribute.type == 'DATE'"
                                    class="form-control datepicker"
                                    ng-model="markerAttribute.value"
                                    required="{{markerAttribute.attribute.required}}">
+
 
                             <input name="texto"
                                    ng-if="markerAttribute.attribute.type == 'TEXT'"
@@ -91,11 +94,26 @@
                                 <spring:message code="map.No"/>
                             </div>
                         </div>
+
+                        <!-- PHOTO ALBUM-->
+                        <div ng-repeat="markerAttribute in attributesByMarker |  filter :{attribute:{type: 'PHOTO_ALBUM'}}">
+                            <div ng-if="$first">
+                                <label style="margin-top: 30px">
+                                    FOTOS
+                                </label>
+                                <!-- TODO SHOW PHOTO_ALBUM -->
+                                <img ng-click="openImgModal()"
+                                     ng-show="imgResult"
+                                     class="marker-image"
+                                     ng-src="{{ imgResult }}"
+                                     style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px">
+                                <br>
+                            </div>
+                        </div>
                     </div>
 
                     <div style="text-align:center;">
-                        <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-                             style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px"> <br>
+
 
                     </div>
                 </div>
