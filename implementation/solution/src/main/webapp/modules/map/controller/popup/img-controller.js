@@ -6,7 +6,9 @@
  * @param $log
  * @param $location
  */
-function ImgPopUpController($scope, $modalInstance, $log, img) {
+function ImgPopUpController($scope, $modalInstance, $log, photoAlbumIds, $importService) {
+
+    $importService("markerService");
 
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
@@ -26,7 +28,7 @@ function ImgPopUpController($scope, $modalInstance, $log, img) {
     /**
      *
      */
-    $scope.features = [];
+    $scope.photos = [];
 
 
     /*-------------------------------------------------------------------
@@ -42,7 +44,30 @@ function ImgPopUpController($scope, $modalInstance, $log, img) {
      */
     $scope.initialize = function()
     {
-        $scope.img = img;
+        $scope.photoAlbumIds = photoAlbumIds;
+
+        angular.forEach(photoAlbumIds, function (photoAlbumId) {
+
+            markerService.listPhotosByPhotoAlbumId(photoAlbumId, {
+
+                callback: function (result) {
+                    console.log(result);
+
+                    angular.forEach(result, function(photo){
+                        $scope.photos.push(photo);
+                    });
+
+                    $scope.$apply();
+                },
+                errorHandler: function (message, exception) {
+                    $scope.message = {type: "error", text: message};
+                    $scope.$apply();
+                }
+
+            });
+
+
+        });
     };
 
     /*-------------------------------------------------------------------

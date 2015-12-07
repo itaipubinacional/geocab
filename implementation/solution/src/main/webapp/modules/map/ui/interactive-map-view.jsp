@@ -135,8 +135,8 @@ uri="http://www.springframework.org/security/tags"%>
                       </button>
                       <br>
                       <div style="text-align:center">
-                        <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-                             style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px"> <br>
+                        <img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+                             style="width: 100%;margin-top: 12px;cursor: pointer;max-width:360px"> <br>
                       </div>
                       <br>
 
@@ -150,10 +150,6 @@ uri="http://www.springframework.org/security/tags"%>
                           </button>-->
 
                           <label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == '' || markerAttribute.value == '0'">{{ markerAttribute.attribute.name }}</label>
-
-                          <img ng-click="openImgModal()" ng-if="markerAttribute.photoAlbum.photos" class="marker-image" ng-src="{{ markerAttribute.photoAlbum.photos[0].image }}"
-                               style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px">
-
 
                           <input
                               type="number" name="number1"

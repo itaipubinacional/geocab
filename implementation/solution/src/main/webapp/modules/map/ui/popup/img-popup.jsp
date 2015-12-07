@@ -14,7 +14,9 @@
 
 	<div class="modal-body" ng-init="initialize();" style="overflow-y: auto; max-height: 550px;">
 
-       <img ng-src="{{ img }}" style="width: 640px; height: 480px;"> 
+		<div ng-repeat="photo in photos">
+       <img ng-src="{{ photo.image }}" style="max-width: 225px; max-height: 225px;">
+		</div>
         
 	</div>
 </div>

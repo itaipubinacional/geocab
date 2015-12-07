@@ -3155,14 +3155,33 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
   };
 
-  $scope.openImgModal = function () {
+  $scope.openImgModal = function (attributesByMarker) {
+
+    console.log(attributesByMarker);
+
+    var getPhotoAlbumIds = function() {
+
+      var photoAlbumIds = [];
+      angular.forEach(attributesByMarker, function (markerAttribute) {
+        if(markerAttribute.attribute.type == 'PHOTO_ALBUM') {
+
+          angular.forEach(markerAttribute.marker.markerAttribute, function(attribute){
+            if(attribute.photoAlbum != null)
+              photoAlbumIds.push(attribute.photoAlbum.id);
+          });
+
+        }
+
+      });
+
+      return photoAlbumIds;
+    };
+
     var dialog = $modal.open({
       templateUrl: 'modules/map/ui/popup/img-popup.jsp',
       controller: ImgPopUpController,
       resolve: {
-        img: function () {
-          return $scope.imgResult
-        }
+        photoAlbumIds: getPhotoAlbumIds
       }
     });
   };
@@ -3269,10 +3288,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
         $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
 
-        $scope.attributesByMarker[index].photoAlbum = new PhotoAlbum();
+        $scope.attributesByMarker[index].photoAlbum = result[0].photoAlbum;
         $scope.attributesByMarker[index].photoAlbum.photos = result;
 
-        $scope.$apply();
+        $scope.imgResult = result[0].image;
+
+        //$scope.$apply();
       },
       errorHandler: function (message, exception) {
         $scope.message = {type: "error", text: message};
