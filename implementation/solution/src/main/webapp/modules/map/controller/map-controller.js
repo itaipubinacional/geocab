@@ -540,7 +540,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
      */
     $scope.map.on('click', function (evt) {
 
-      if ($scope.menu.fcMarker && !$scope.screenMarkerOpenned) {
+      if ($scope.menu.fcMarker && $scope.screenMarkerOpenned) {
         $scope.screenMarkerOpenned = true;
         $scope.toggleSidebarMarkerCreate(300);
 
@@ -1504,7 +1504,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.initializeMarker = function () {
 
-    if ($("#sidebar-marker-detail-update").css("display") == 'block') {
+    $timeout(function () {
+      $scope.toggleSidebar(300, '', '#sidebar-marker-create');
+    }, 400);
+
+    $scope.menu = {
+      fcDistancia: false,
+      fcArea: false,
+      fcKml: false,
+      fcMarker: true
+    };
+
+    $scope.screenMarkerOpenned = true;
+
+    /*if ($("#sidebar-marker-detail-update").css("display") == 'block') {
       $scope.clearDetailMarker();
     }
 
@@ -1534,8 +1547,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         fcMarker: true
       };
 
-    }
-  }
+    }*/
+  };
 
   /**
    * Method that calculates the area of points on interactive map
@@ -2247,6 +2260,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * @param element Element name that is calling the function.
    */
   $scope.toggleSidebarMenu = function (time, element) {
+
+    if ($scope.slideActived == '#sidebar-layers') {
+      $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
+
+      $timeout(function () {
+        $scope.toggleSidebar(time, element, '#sidebar-marker-create');
+      }, 400)
+    } else {
+
+      $scope.toggleSidebar(time, element, '#sidebar-marker-create');
+    }
+
     if ($("#sidebar-marker-detail-update").css("display") == 'block') {
       $scope.clearDetailMarker();
 
@@ -2279,9 +2304,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * @param element Name of the element that is calling the function.
    */
   $scope.toggleSidebarMarkerCreate = function (time, element) {
+
     $scope.attributesByLayer = [];
     $scope.imgResult = "";
-    $scope.$apply();
+    //$scope.$apply();
 
     if (element == "closeButton") {
       $scope.screenMarkerOpenned = false;
@@ -2290,7 +2316,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     /**
      * If the marker tab is open, close it and wait to open the new.
      * */
-    if ($scope.slideActived == '#sidebar-layers') {
+    /*if ($scope.slideActived == '#sidebar-layers') {
       $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
 
       $timeout(function () {
@@ -2299,7 +2325,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     } else {
 
       $scope.toggleSidebar(time, element, '#sidebar-marker-create');
-    }
+    }*/
 
     $scope.resolveDatepicker();
 
@@ -3210,70 +3236,38 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.resolveDatepicker = function () {
 
-      $scope.$watch('attributesByLayer', function (oldValue, newValue) {
-        $timeout(function () {
-          $('.datepicker').datepicker({
-            dateFormat: 'dd/mm/yy',
-            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            nextText: 'Próximo',
-            prevText: 'Anterior'
-          });
-
-          $('.datepicker').mask("99/99/9999");
-        }, 200);
-      })
-      $scope.$watch('screen', function (oldValue, newValue) {
-        $timeout(function () {
-          $('.datepicker').datepicker({
-            dateFormat: 'dd/mm/yy',
-            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            nextText: 'Próximo',
-            prevText: 'Anterior'
-          });
-
-          $('.datepicker').mask("99/99/9999");
-        }, 200);
-      })
-
-    }
-
-  /**
-   * Function that manages the Sidebar
-   * @param time Execution time of the animation.
-   * @param element Name of the element that is calling the function.
-   */
-  $scope.toggleSidebarMarkerCreate = function (time, element) {
-    $scope.attributesByLayer = [];
-    $scope.imgResult = "";
-    $scope.$apply();
-
-    if (element == "closeButton") {
-      $scope.screenMarkerOpenned = false;
-    }
-
-    /**
-     * If the marker tab is open, close it and wait to open the new.
-     * */
-    if ($scope.slideActived == '#sidebar-layers') {
-      $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
-
+    $scope.$watch('attributesByLayer', function (oldValue, newValue) {
       $timeout(function () {
-        $scope.toggleSidebar(time, element, '#sidebar-marker-create');
-      }, 400)
-    } else {
+        $('.datepicker').datepicker({
+          dateFormat: 'dd/mm/yy',
+          dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+          dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+          dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+          monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+          monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+          nextText: 'Próximo',
+          prevText: 'Anterior'
+        });
 
-      $scope.toggleSidebar(time, element, '#sidebar-marker-create');
-    }
+        $('.datepicker').mask("99/99/9999");
+      }, 200);
+    })
+    $scope.$watch('screen', function (oldValue, newValue) {
+      $timeout(function () {
+        $('.datepicker').datepicker({
+          dateFormat: 'dd/mm/yy',
+          dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+          dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+          dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+          monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+          monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+          nextText: 'Próximo',
+          prevText: 'Anterior'
+        });
 
-    $scope.resolveDatepicker();
+        $('.datepicker').mask("99/99/9999");
+      }, 200);
+    })
 
   };
 
