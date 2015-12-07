@@ -18,7 +18,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.directwebremoting.io.FileTransfer;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.envers.Audited;

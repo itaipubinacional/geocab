@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -26,7 +25,6 @@ import javax.jcr.RepositoryException;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.codec.binary.Base64;
-
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -240,10 +238,11 @@ public class MarkerService
 		
 		for (Photo photo : photos)
 		{
-			//photo.setImage(this.findFileById(photo.getIdentifier()));
+			photo.setImage(this.findFileById(photo.getIdentifier()));
 		}
 		return photos;
 	}
+	
 	/**
 	 * Pega os arquivos do sistema de arquivos
 	 * @param id
@@ -262,6 +261,12 @@ public class MarkerService
 			e.printStackTrace();
 		}
 		return fileTransfer;
+	}
+	
+	public Set<Photo> findPhotoAlbumByAttributeMarkerId(Long markerAttributeId)
+	{
+		PhotoAlbum photoAlbum = this.photoAlbumRepository.findByMarkerAttributeId(markerAttributeId);
+		return this.listPhotosByPhotoAlbumId(photoAlbum.getIdentifier());
 	}
 	
 	/**
@@ -723,7 +728,7 @@ public class MarkerService
 			
 			Base64 photoDecode = new Base64();
 			
-			byte[] data = photoDecode.decode(photo.getImage());
+			byte[] data = photoDecode.decode(photo.getSource());
 			InputStream decodedMap = new ByteArrayInputStream(data);	
 			
 			final String mimeType = photo.getMimeType();
@@ -755,7 +760,7 @@ public class MarkerService
 			metaFile.setId(String.valueOf(photo.getIdentifier()));
 			metaFile.setContentType(photo.getMimeType());
 			metaFile.setContentLength(photo.getContentLength());
-			metaFile.setFolder("/marker");
+			metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
 			metaFile.setInputStream(isteam);
 			metaFile.setName(photo.getName());
 	

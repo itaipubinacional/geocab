@@ -2660,7 +2660,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         angular.forEach(val.files, function(file){
           var photo = new Photo();
           var img = file.src.split(';base64,');
-          photo.image = img[1];
+          photo.source = img[1];
           photo.name = file.name;
           photo.contentLength = file.size;
           photo.mimeType = file.type;
@@ -3258,6 +3258,30 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
+  $scope.getPhotosByAttribute = function(attribute, index){
+
+
+    markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, {
+      callback: function (result) {
+
+        console.log(result);
+
+        /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
+        $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
+
+        $scope.attributesByMarker[index].photoAlbum = new PhotoAlbum();
+        $scope.attributesByMarker[index].photoAlbum.photos = result;
+
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    })
+
+  };
+
   $scope.toggleSidebarMarkerDetailUpdate = function (time, element) {
     $scope.currentEntity = $scope.marker;
 
@@ -3298,7 +3322,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
                   if (attributeByMarker.attribute.id == attribute.id) {
                     exist = true;
+
+                    if(attributeByMarker.attribute.type == 'PHOTO_ALBUM')
+                      $scope.getPhotosByAttribute(attributeByMarker, index);
+
                   }
+
                 });
 
                 if (!exist) {

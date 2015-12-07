@@ -143,13 +143,17 @@ uri="http://www.springframework.org/security/tags"%>
                       <div style=" overflow: auto;">
                         <div ng-repeat="markerAttribute in attributesByMarker track by $index" style="position: relative;margin-bottom:15px">
 
-                          <button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
+                          <!--<button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
                                   onclick="angular.element('#upload-input').click();"
                                   style="float: left;"
                                   title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
-                          </button>
+                          </button>-->
 
                           <label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == '' || markerAttribute.value == '0'">{{ markerAttribute.attribute.name }}</label>
+
+                          <img ng-click="openImgModal()" ng-if="markerAttribute.photoAlbum.photos" class="marker-image" ng-src="{{ markerAttribute.photoAlbum.photos[0].image }}"
+                               style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px">
+
 
                           <input
                               type="number" name="number1"

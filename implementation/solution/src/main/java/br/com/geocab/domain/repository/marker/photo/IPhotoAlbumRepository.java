@@ -13,6 +13,12 @@ import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
  */
 public interface IPhotoAlbumRepository extends IDataRepository<PhotoAlbum, Long>
 {
+
+	/**
+	 * @param markerAttributeId
+	 * @return
+	 */
+	PhotoAlbum findByMarkerAttributeId(Long markerAttributeId);
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/

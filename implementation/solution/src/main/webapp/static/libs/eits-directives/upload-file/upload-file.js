@@ -162,7 +162,10 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         scope.setImage(scope.files[0]);
 
       scope.uploadFile = function(){
-        angular.element('#files').trigger('click');
+        setTimeout( function () {
+          angular.element('#files').trigger('click');
+        }, 0)
+
       };
     }
   }

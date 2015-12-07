@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import org.directwebremoting.annotations.DataTransferObject;
+import org.directwebremoting.io.FileTransfer;
 import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -42,7 +43,13 @@ public class Photo extends AbstractEntity implements Serializable
 	 * 
 	 */
 	@Transient
-	private String image;
+	private FileTransfer image;
+	
+	/**
+	 * 
+	 */
+	@Transient
+	private String source;
 	
 	/**
 	 * 
@@ -101,14 +108,14 @@ public class Photo extends AbstractEntity implements Serializable
 
 	/**
 	 * @param photoAlbum
-	 * @param image
+	 * @param source
 	 * @param identifier
 	 */
-	public Photo(PhotoAlbum photoAlbum, String image, String identifier)
+	public Photo(PhotoAlbum photoAlbum, String source, String identifier)
 	{
 		super();
 		this.photoAlbum = photoAlbum;
-		this.image = image;
+		this.source = source;
 		this.identifier = identifier;
 	}
 
@@ -173,20 +180,20 @@ public class Photo extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @return the image
+	 * @return the source
 	 */
-	public String getImage()
+	public String getSource()
 	{
-		return image;
+		return source;
 	}
 
 	/**
-	 * @param image
-	 *            the image to set
+	 * @param source
+	 *            the source to set
 	 */
-	public void setImage(String image)
+	public void setSource(String source)
 	{
-		this.image = image;
+		this.source = source;
 	}
 
 	/**
@@ -235,6 +242,22 @@ public class Photo extends AbstractEntity implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	/**
+	 * @return the image
+	 */
+	public FileTransfer getImage()
+	{
+		return image;
+	}
+
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(FileTransfer image)
+	{
+		this.image = image;
 	}
 	
 	
