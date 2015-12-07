@@ -238,7 +238,16 @@ public class MarkerService
 		
 		for (Photo photo : photos)
 		{
-			photo.setImage(this.findFileById(photo.getIdentifier()));
+			try
+			{
+				MetaFile metaFile = this.metaFileRepository.findByPath("/" + photo.getIdentifier(), true);
+				FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
+				photo.setImage(fileTransfer);
+			}
+			catch (RepositoryException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		return photos;
 	}
@@ -756,8 +765,10 @@ public class MarkerService
 			InputStream isteam = new ByteArrayInputStream(os.toByteArray());
 	
 			MetaFile metaFile = new MetaFile();
-			// Todo pega o ID do ponto
-			metaFile.setId(String.valueOf(photo.getIdentifier()));
+			
+			photo.getIdentifier();
+			
+			metaFile.setId(String.valueOf(photo.getId()));
 			metaFile.setContentType(photo.getMimeType());
 			metaFile.setContentLength(photo.getContentLength());
 			metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
@@ -769,6 +780,7 @@ public class MarkerService
 		}
 		catch (IOException | RepositoryException e)
 		{
+			e.printStackTrace();
 			LOG.info(e.getMessage());
 		}
 
