@@ -1,8 +1,6 @@
 package br.com.geocab.domain.service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import org.directwebremoting.annotations.RemoteProxy;
@@ -13,16 +11,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
-import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
-import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.layer.LayerGroup;
+import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.account.IUserRepository;
 
@@ -202,8 +198,8 @@ public class AccountService
 		}
 		catch ( DataIntegrityViolationException e )
 		{
-			LOG.info( e.getMessage() );
 			final String error = e.getCause().getCause().getMessage();
+			LOG.info( error );
 		}
 		
 		return user;

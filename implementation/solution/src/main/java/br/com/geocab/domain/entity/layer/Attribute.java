@@ -13,19 +13,16 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
-import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
-import br.com.geocab.domain.entity.marker.MarkerAttribute;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -35,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Audited
 @DataTransferObject(javascript="Attribute")
-@Table(schema=IEntity.SCHEMA)
 public class Attribute extends AbstractEntity implements Serializable
 {
 	/**
@@ -72,7 +68,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * Order {@link Attribute}
 	 */
 	@Column
-	private int orderAttribute;
+	private Integer orderAttribute;
 	
 	/**
 	 * Layer {@link Layer}
@@ -91,11 +87,11 @@ public class Attribute extends AbstractEntity implements Serializable
 	
 	public Attribute( Long id )
 	{
-		super(id);
+		this.setId(id);
 	}
 	
-	public Attribute(Long id, String name, AttributeType type, Boolean required, int orderAttribute){
-		super(id);
+	public Attribute(Long id, String name, AttributeType type, Boolean required, Integer orderAttribute){
+		this.setId(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
@@ -107,7 +103,8 @@ public class Attribute extends AbstractEntity implements Serializable
 		this.setName(name);
 	}
 	
-	public Attribute(Long id, String name, Boolean required, AttributeType type, int orderAttribute){
+	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute){
+		this.setId(id);
 		this.setTemporaryId(id);
 		this.setType(type);
 		this.setName(name);
@@ -116,7 +113,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 	
 	public Attribute(Long id, String name, AttributeType type, Layer layer){
-		super(id);
+		this.setId(id);
 		this.setType(type);
 		this.setName(name);
 	    this.setLayer(layer);
@@ -216,7 +213,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * @return the orderAttribute
 	 */
-	public int getOrderAttribute()
+	public Integer getOrderAttribute()
 	{
 		return orderAttribute;
 	}
@@ -224,7 +221,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * @param orderAttribute the orderAttribute to set
 	 */
-	public void setOrderAttribute(int orderAttribute)
+	public void setOrderAttribute(Integer orderAttribute)
 	{
 		this.orderAttribute = orderAttribute;
 	}

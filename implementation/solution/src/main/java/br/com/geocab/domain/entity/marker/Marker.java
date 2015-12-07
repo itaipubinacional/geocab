@@ -14,7 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -25,16 +24,15 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.envers.Audited;
 import org.hibernate.spatial.GeometryType;
 
-import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.layer.Layer;
-import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+
+import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 
 /**
  * 
@@ -48,7 +46,6 @@ import com.vividsolutions.jts.geom.Point;
 @Entity
 @Audited
 @DataTransferObject(javascript="Marker")
-@Table(schema=IEntity.SCHEMA)
 @TypeDef(name="geometry", typeClass=GeometryType.class)
 public class Marker extends AbstractEntity implements Serializable
 {
@@ -169,6 +166,53 @@ public class Marker extends AbstractEntity implements Serializable
 		this.setCreated(created);
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @param status
+	 * @param created
+	 * @param layerId
+	 * @param layerName
+	 * @param layerTitle
+	 * @param layerIcon
+	 * @param layerPublished
+	 * @param layerStartEnable
+	 * @param layerStartVisible
+	 * @param layerEnabled
+	 * @param layerDataSource
+	 * @param user
+	 */
+	public Marker( Long id, MarkerStatus status, Geometry location, Calendar created, Long layerId, String layerName, String layerTitle, String layerIcon, Boolean layerPublished, Boolean layerStartEnable, Boolean layerStartVisible, Boolean layerEnabled, User user)
+	{
+		this.setId(id);
+		this.setStatus(status);
+		user.setPassword("");
+		this.setUser(user);
+		this.setCreated(created);
+		this.setLocation( (Point) location);
+		
+		Layer layer = new Layer(layerId, layerName, layerTitle, layerIcon, layerStartEnable, layerStartVisible, layerStartEnable, layerPublished, null, null, null, null);
+		
+		this.setLayer(layer);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param status
+	 * @param created
+	 * @param location
+	 */
+	public Marker( Long id, MarkerStatus status, Calendar created, Geometry location)
+	{
+		this.setId(id);
+		this.setStatus(status);
+		user.setPassword("");
+		user.setEmail("");
+		layer.setMarkers(null);
+		this.setLocation( (Point) location );
+		this.setCreated(created);
+	}
 
 	/**
 	 * 

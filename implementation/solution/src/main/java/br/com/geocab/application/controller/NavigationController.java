@@ -6,7 +6,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.geocab.application.ResourceBundleMessageSource;
-import br.com.geocab.domain.service.AccountService;
-import br.com.geocab.infrastructure.social.SpringSecuritySignInAdapter;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 
@@ -39,19 +34,6 @@ public class NavigationController
 	 */
 	@Autowired
 	private ResourceBundleMessageSource messageSource;
-	/**
-	 * 
-	 */
-	@Autowired
-	private SpringSecuritySignInAdapter signInAdapter;
-	
-	@Autowired
-	private AccountService accountService;
-	
-	/**
-	 * 
-	 */
-	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	
 	/*-------------------------------------------------------------------

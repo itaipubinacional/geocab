@@ -3,8 +3,8 @@ package br.com.geocab.tests.repository.mail;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.com.geocab.domain.entity.account.IAccountMailRepository;
 import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.repository.IAccountMailRepository;
 import br.com.geocab.tests.AbstractIntegrationTest;
 
 /**

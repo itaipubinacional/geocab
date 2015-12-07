@@ -17,8 +17,6 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -26,27 +24,24 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * 
- * @author Vinicius Ramos Kawamoto 
+ * @author Vinicius Ramos Kawamoto
  * @since 19/09/2014
  * @version 1.0
  * @category Entity
  */
 @Entity
 @Audited
-@DataTransferObject(javascript="Layer")
-@Table(schema=IEntity.SCHEMA)
+@DataTransferObject(javascript = "Layer")
 public class Layer extends AbstractEntity implements Serializable, ITreeNode
 {
-
 
 	/**
 	 * 
@@ -57,12 +52,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * 
 	 */
 	public static final String LEGEND_GRAPHIC_URL = "ows?service=wms&version=1.3.0&request=GetLegendGraphic&layer=";
-	
+
 	/**
 	 * 
 	 */
 	public static final String LEGEND_GRAPHIC_FORMAT = "&format=image/png";
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
@@ -70,13 +65,13 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * Name {@link Layer}
 	 */
 	@NotEmpty
-	@Column(nullable=false, length=144)
+	@Column(nullable = false, length = 144)
 	private String name;
 	/**
 	 * Title {@link Layer}
 	 */
 	@NotEmpty
-	@Column(nullable=false, length=144)
+	@Column(nullable = false, length = 144)
 	private String title;
 	/**
 	 * Legend {@link Layer}
@@ -87,17 +82,28 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * Indicates that the {@link Layer} will start enabled on map
 	 */
 	@Basic
-	private boolean startEnabled;
+	private Boolean startEnabled;
 	/**
 	 * Indicates that the {@link Layer} will be visible in the layer menu
 	 */
 	@Basic
-	private boolean startVisible;
+	private Boolean startVisible;
+
+	/**
+	 * status
+	 */
+	private Boolean enabled;
+	/**
+	 * Field that informs if the {@link Layer} is published
+	 */
+	@Column
+	private Boolean published;
+
 	/**
 	 * Order of {@link Layer}
 	 */
 	@Column
-	private int orderLayer;
+	private Integer orderLayer;
 	/**
 	 * Icon of {@link Layer}
 	 */
@@ -115,45 +121,36 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	@NotNull
 	@Enumerated(EnumType.ORDINAL)
 	private MapScale maximumScaleMap;
-	
-	/**
-	 * status
-	 */
-	private Boolean enabled;
-	
+
 	/**
 	 * {@link DataSource} of {@link Layer}
 	 */
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private DataSource dataSource;
 	/**
 	 * {@link LayerGroup} of {@link Layer}
 	 */
 	@JsonIgnore
-	@ManyToOne(fetch=FetchType.EAGER, optional=true)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	private LayerGroup layerGroup;
 	/**
 	 * Draft {@link Layer} that originated the published {@link Layer}
 	 */
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
+	@OneToOne(fetch = FetchType.EAGER, optional = true, cascade =
+	{ CascadeType.ALL })
 	private Layer publishedLayer;
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="layer", fetch=FetchType.EAGER, cascade={CascadeType.REMOVE})
+	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade =
+	{ CascadeType.REMOVE })
 	private List<Marker> markers = new ArrayList<Marker>();
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="layer", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade =
+	{ CascadeType.ALL })
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 
-	
-	/**
-	 * Field that informs if the {@link Layer} is published
-	 */
-	@Column
-	private Boolean published;
-	
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -162,73 +159,129 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 */
 	public Layer()
 	{
-		
+
 	}
-	
+
 	/**
 	 * 
 	 *
 	 * @param id
 	 */
-	public Layer( Long id )
+	public Layer(Long id)
 	{
 		this.setId(id);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @param name
 	 * @param order
 	 */
-	public Layer( Long id, String name, int orderLayer )
+	public Layer(Long id, String name, Integer orderLayer)
 	{
 		this.setId(id);
 		this.setName(name);
 		this.setOrderLayer(orderLayer);
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @param title
 	 */
-	public Layer( Long id, String title )
+	public Layer(Long id, String title)
 	{
 		this.setId(id);
 		this.setTitle(title);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @param title
 	 * @param group
 	 */
-	public Layer( Long id, String name, String title, String icon, DataSource dataSource )
+	public Layer(Long id, String name, String title, String icon,
+			Boolean startEnabled, Boolean startVisible, Boolean enabled,
+			Boolean published, DataSource dataSource)
 	{
 		this.setId(id);
 		this.setName(name);
 		this.setTitle(title);
 		this.setIcon(icon);
+		this.setStartEnabled(startEnabled);
+		this.setStartVisible(startVisible);
+		this.setEnabled(enabled);
+		this.setPublished(published);
 		this.setDataSource(dataSource);
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param id
 	 * @param title
-	 * @param group
+	 * @param icon
+	 * @param layerGroupName
 	 */
-	public Layer( Long id, String title, String icon, LayerGroup group )
+	public Layer(Long id, String name, String title, String icon,
+			Boolean startEnabled, Boolean startVisible, Boolean enabled,
+			Boolean published, Long layerGroupId, String layerGroupName,
+			Integer orderLayerGroup)
+	{
+
+		this.setId(id);
+		this.setName(name);
+		this.setTitle(title);
+		this.setIcon(icon);
+		this.setStartEnabled(startEnabled);
+		this.setStartVisible(startVisible);
+		this.setEnabled(enabled);
+		this.setPublished(published);
+
+		LayerGroup layerGroup = new LayerGroup();
+		layerGroup.setId(layerGroupId);
+		layerGroup.setName(layerGroupName);
+		layerGroup.setOrderLayerGroup(orderLayerGroup);
+
+		this.setLayerGroup(layerGroup);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param title
+	 * @param icon
+	 * @param layerGroupId
+	 * @param layerGroupName
+	 * @param orderLayerGroup
+	 * @param dataSource
+	 */
+	public Layer(Long id, String name, String title, String icon,
+			Boolean startEnabled, Boolean startVisible, Boolean enabled,
+			Boolean published, Long layerGroupId, String layerGroupName,
+			Integer orderLayerGroup, DataSource dataSource)
 	{
 		this.setId(id);
+		this.setName(name);
 		this.setTitle(title);
-		this.setLayerGroup(group);
 		this.setIcon(icon);
+		this.setStartEnabled(startEnabled);
+		this.setStartVisible(startVisible);
+		this.setEnabled(enabled);
+		this.setPublished(published);
+
+		LayerGroup layerGroup = new LayerGroup();
+		layerGroup.setId(layerGroupId);
+		layerGroup.setName(layerGroupName);
+		layerGroup.setOrderLayerGroup(orderLayerGroup);
+
+		this.setDataSource(dataSource);
+
+		this.setLayerGroup(layerGroup);
+
 	}
-	
+
 	/**
 	 * 
 	 * @param id
@@ -242,8 +295,10 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, String title, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, DataSource dataSource,
-			LayerGroup layerGroup )
+	public Layer(Long id, String name, String title, Boolean startEnabled,
+			Boolean startVisible, Integer orderLayer, MapScale minimumMapScale,
+			MapScale maximumMapScale, Boolean enabled, DataSource dataSource,
+			LayerGroup layerGroup)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -257,7 +312,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
@@ -273,8 +328,10 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, String icon, String title, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, DataSource dataSource,
-			LayerGroup layerGroup )
+	public Layer(Long id, String name, String title, String icon,
+			Boolean startEnabled, Boolean startVisible, Integer orderLayer,
+			MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled,
+			DataSource dataSource, LayerGroup layerGroup)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -290,7 +347,6 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setIcon(icon);
 	}
 
-	
 	/**
 	 * 
 	 * @param id
@@ -303,7 +359,10 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource, LayerGroup layerGroup )
+	public Layer(Long id, String name, Boolean startEnabled,
+			Boolean startVisible, Integer orderLayer, MapScale minimumMapScale,
+			MapScale maximumMapScale, DataSource dataSource,
+			LayerGroup layerGroup)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -315,93 +374,178 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
 	}
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * @return the legend
 	 */
-	@Override
-	public int hashCode()
+	public String getLegend()
 	{
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result
-				+ ((dataSource == null) ? 0 : dataSource.hashCode());
-		result = prime * result
-				+ ((layerGroup == null) ? 0 : layerGroup.hashCode());
-		result = prime * result + ((legend == null) ? 0 : legend.hashCode());
-		result = prime * result
-				+ ((maximumScaleMap == null) ? 0 : maximumScaleMap.hashCode());
-		result = prime * result
-				+ ((minimumScaleMap == null) ? 0 : minimumScaleMap.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + orderLayer;
-		result = prime * result
-				+ ((published == null) ? 0 : published.hashCode());
-		result = prime * result
-				+ ((publishedLayer == null) ? 0 : publishedLayer.hashCode());
-		result = prime * result + (startEnabled ? 1231 : 1237);
-		result = prime * result + (startVisible ? 1231 : 1237);
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		return result;
+		if (this.legend != null && this.legend.contains("&authkey="))
+		{
+			this.legend = this.legend.replace(
+					this.legend.substring(this.legend.indexOf("&authkey="),
+							this.legend.length()),
+					"");
+		}
+		if (this.dataSource != null && this.dataSource.getToken() != null)
+		{
+			return this.legend + "&authkey=" + this.dataSource.getToken();
+		}
+		return legend;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * @param legend
+	 *            the legend to set
 	 */
-	@Override
-	public boolean equals(Object obj)
+	public void setLegend(String legend)
 	{
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
-		Layer other = (Layer) obj;
-		if (dataSource == null)
+		if (this.legend != null && this.legend.contains("&authkey="))
 		{
-			if (other.dataSource != null) return false;
+			this.legend = this.legend.replace(
+					this.legend.substring(this.legend.indexOf("&authkey="),
+							this.legend.length()),
+					"");
 		}
-		else if (!dataSource.equals(other.dataSource)) return false;
-		if (layerGroup == null)
+		if (legend != null && legend.contains("&authkey="))
 		{
-			if (other.layerGroup != null) return false;
+			legend = legend.replace(legend.substring(
+					legend.indexOf("&authkey="), legend.length()), "");
 		}
-		else if (!layerGroup.equals(other.layerGroup)) return false;
-		if (legend == null)
+		if (this.dataSource != null && this.dataSource.getToken() != null)
 		{
-			if (other.legend != null) return false;
+			legend += "&authkey=" + this.dataSource.getToken();
 		}
-		else if (!legend.equals(other.legend)) return false;
-		if (maximumScaleMap != other.maximumScaleMap) return false;
-		if (minimumScaleMap != other.minimumScaleMap) return false;
-		if (name == null)
+		this.legend = legend;
+	}
+
+	/**
+	 * @return the startEnabled
+	 */
+	public Boolean isStartEnabled()
+	{
+		if (startEnabled == null)
 		{
-			if (other.name != null) return false;
+			this.startEnabled = false;
 		}
-		else if (!name.equals(other.name)) return false;
-		if (orderLayer != other.orderLayer) return false;
+		return startEnabled;
+	}
+
+	/**
+	 * @param startEnabled
+	 *            the startEnabled to set
+	 */
+	public void setStartEnabled(Boolean startEnabled)
+	{
+		if (startEnabled == null)
+		{
+			this.startEnabled = false;
+		}
+		this.startEnabled = startEnabled;
+	}
+
+	/**
+	 * @return the published
+	 */
+	public Boolean getPublished()
+	{
 		if (published == null)
 		{
-			if (other.published != null) return false;
+			this.published = false;
 		}
-		else if (!published.equals(other.published)) return false;
-		if (publishedLayer == null)
+		return published;
+	}
+
+	/**
+	 * @param published
+	 *            the published to set
+	 */
+	public void setPublished(Boolean published)
+	{
+		if (published == null)
 		{
-			if (other.publishedLayer != null) return false;
+			this.published = false;
 		}
-		else if (!publishedLayer.equals(other.publishedLayer)) return false;
-		if (startEnabled != other.startEnabled) return false;
-		if (startVisible != other.startVisible) return false;
-		if (title == null)
+		this.published = published;
+	}
+
+	/**
+	 * @return the enabled
+	 */
+	public Boolean getEnabled()
+	{
+		if (enabled == null)
 		{
-			if (other.title != null) return false;
+			this.enabled = false;
 		}
-		else if (!title.equals(other.title)) return false;
-		return true;
+		return enabled;
+	}
+
+	/**
+	 * @param enabled
+	 *            the enabled to set
+	 */
+	public void setEnabled(Boolean enabled)
+	{
+		this.enabled = enabled;
+		if (enabled == null)
+		{
+			this.enabled = false;
+		}
+	}
+
+	/**
+	 * @return the startVisible
+	 */
+	public Boolean isStartVisible()
+	{
+		if (startVisible == null)
+		{
+			this.startVisible = false;
+		}
+		return startVisible;
+	}
+
+	/**
+	 * @param startVisible
+	 *            the startVisible to set
+	 */
+	public void setStartVisible(Boolean startVisible)
+	{
+		if (startVisible == null)
+		{
+			this.startVisible = false;
+		}
+		this.startVisible = startVisible;
 	}
 	
+	/**
+	 * @return the startEnabled
+	 */
+	public Boolean getStartEnabled()
+	{
+		if (startEnabled == null)
+		{
+			startEnabled = false;
+		}
+		return startEnabled;
+	}
+
+	/**
+	 * @return the startVisible
+	 */
+	public Boolean getStartVisible()
+	{
+		if (startVisible == null)
+		{
+			startVisible = false;
+		}
+		return startVisible;
+	}
+
 	/*-------------------------------------------------------------------
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
@@ -424,7 +568,16 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param maximumScaleMap the maximumScaleMap to set
+	 */
+	public void setMaximumScaleMap(MapScale maximumScaleMap)
+	{
+		this.maximumScaleMap = maximumScaleMap;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name)
 	{
@@ -440,7 +593,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param title the title to set
+	 * @param title
+	 *            the title to set
 	 */
 	public void setTitle(String title)
 	{
@@ -448,89 +602,18 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @return the legend
-	 */
-	public String getLegend()
-	{
-		if (this.legend != null && this.legend.contains("&authkey="))
-		{
-			this.legend = this.legend.replace(
-					this.legend.substring(this.legend.indexOf("&authkey="),
-							this.legend.length()), "");
-		}
-		if(this.dataSource != null  && this.dataSource.getToken()!= null){
-			return this.legend + "&authkey=" + this.dataSource.getToken(); 
-		}
-		return legend;
-	}
-
-	/**
-	 * @param legend the legend to set
-	 */
-	public void setLegend(String legend)
-	{
-		if (this.legend != null && this.legend.contains("&authkey="))
-		{
-			this.legend = this.legend.replace(
-					this.legend.substring(this.legend.indexOf("&authkey="),
-							this.legend.length()), "");
-		}
-		if (legend != null && legend.contains("&authkey="))
-		{
-			legend = legend.replace(
-					legend.substring(legend.indexOf("&authkey="),
-							legend.length()), "");
-		}
-		if(this.dataSource != null  && this.dataSource.getToken()!= null){
-			legend += "&authkey=" + this.dataSource.getToken(); 
-		}
-		this.legend = legend;
-	}
-
-	/**
-	 * @return the startEnabled
-	 */
-	public boolean isStartEnabled()
-	{
-		return startEnabled;
-	}
-
-	/**
-	 * @param startEnabled the startEnabled to set
-	 */
-	public void setStartEnabled(boolean startEnabled)
-	{
-		this.startEnabled = startEnabled;
-	}
-
-	/**
-	 * @return the startVisible
-	 */
-	public boolean isStartVisible()
-	{
-		return startVisible;
-	}
-
-	/**
-	 * @param startVisible the startVisible to set
-	 */
-	public void setStartVisible(boolean startVisible)
-	{
-		this.startVisible = startVisible;
-	}
-
-	/**
 	 * @return the order
 	 */
-	public int getOrderLayer()
+	public Integer getOrderLayer()
 	{
 		return orderLayer;
 	}
 
 	/**
-	 * @param order the order to set
+	 * @param order
+	 *            the order to set
 	 */
-	public void setOrderLayer(int orderLayer)
+	public void setOrderLayer(Integer orderLayer)
 	{
 		this.orderLayer = orderLayer;
 	}
@@ -544,7 +627,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param minimumScaleMap the minimumScaleMap to set
+	 * @param minimumScaleMap
+	 *            the minimumScaleMap to set
 	 */
 	public void setMinimumScaleMap(MapScale minimumScaleMap)
 	{
@@ -560,9 +644,10 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param maximumScaleMap the maximumScaleMap to set
+	 * @param maximumScaleMap
+	 *            the maximumScaleMap to set
 	 */
-	public void setMaximumScaleMap(MapScale maximumScaleMap)
+	public void setMafindLayerByIdximumScaleMap(MapScale maximumScaleMap)
 	{
 		this.maximumScaleMap = maximumScaleMap;
 	}
@@ -576,7 +661,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param dataSource the dataSource to set
+	 * @param dataSource
+	 *            the dataSource to set
 	 */
 	public void setDataSource(DataSource dataSource)
 	{
@@ -592,7 +678,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param layerGroup the layerGroup to set
+	 * @param layerGroup
+	 *            the layerGroup to set
 	 */
 	public void setLayerGroup(LayerGroup layerGroup)
 	{
@@ -608,27 +695,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param publishedLayer the publishedLayer to set
+	 * @param publishedLayer
+	 *            the publishedLayer to set
 	 */
 	public void setPublishedLayer(Layer publishedLayer)
 	{
 		this.publishedLayer = publishedLayer;
-	}
-
-	/**
-	 * @return the published
-	 */
-	public Boolean getPublished()
-	{
-		return published;
-	}
-
-	/**
-	 * @param published the published to set
-	 */
-	public void setPublished(Boolean published)
-	{
-		this.published = published;
 	}
 
 	/**
@@ -640,7 +712,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param attributes the attributes to set
+	 * @param attributes
+	 *            the attributes to set
 	 */
 	public void setAttributes(List<Attribute> attributes)
 	{
@@ -656,27 +729,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param icon the icon to set
+	 * @param icon
+	 *            the icon to set
 	 */
 	public void setIcon(String icon)
 	{
 		this.icon = icon;
-	}
-
-	/**
-	 * @return the enabled
-	 */
-	public Boolean getEnabled()
-	{
-		return enabled;
-	}
-
-	/**
-	 * @param enabled the enabled to set
-	 */
-	public void setEnabled(Boolean enabled)
-	{
-		this.enabled = enabled;
 	}
 
 	/**
@@ -688,11 +746,136 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param markers the markers to set
+	 * @param markers
+	 *            the markers to set
 	 */
 	public void setMarkers(List<Marker> markers)
 	{
 		this.markers = markers;
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((attributes == null) ? 0 : attributes.hashCode());
+		result = prime * result
+				+ ((dataSource == null) ? 0 : dataSource.hashCode());
+		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
+		result = prime * result + ((icon == null) ? 0 : icon.hashCode());
+		result = prime * result
+				+ ((layerGroup == null) ? 0 : layerGroup.hashCode());
+		result = prime * result + ((legend == null) ? 0 : legend.hashCode());
+		result = prime * result + ((markers == null) ? 0 : markers.hashCode());
+		result = prime * result
+				+ ((maximumScaleMap == null) ? 0 : maximumScaleMap.hashCode());
+		result = prime * result
+				+ ((minimumScaleMap == null) ? 0 : minimumScaleMap.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((orderLayer == null) ? 0 : orderLayer.hashCode());
+		result = prime * result
+				+ ((published == null) ? 0 : published.hashCode());
+		result = prime * result
+				+ ((publishedLayer == null) ? 0 : publishedLayer.hashCode());
+		result = prime * result
+				+ ((startEnabled == null) ? 0 : startEnabled.hashCode());
+		result = prime * result
+				+ ((startVisible == null) ? 0 : startVisible.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
+		Layer other = (Layer) obj;
+		if (attributes == null)
+		{
+			if (other.attributes != null) return false;
+		}
+		else if (!attributes.equals(other.attributes)) return false;
+		if (dataSource == null)
+		{
+			if (other.dataSource != null) return false;
+		}
+		else if (!dataSource.equals(other.dataSource)) return false;
+		if (enabled == null)
+		{
+			if (other.enabled != null) return false;
+		}
+		else if (!enabled.equals(other.enabled)) return false;
+		if (icon == null)
+		{
+			if (other.icon != null) return false;
+		}
+		else if (!icon.equals(other.icon)) return false;
+		if (layerGroup == null)
+		{
+			if (other.layerGroup != null) return false;
+		}
+		else if (!layerGroup.equals(other.layerGroup)) return false;
+		if (legend == null)
+		{
+			if (other.legend != null) return false;
+		}
+		else if (!legend.equals(other.legend)) return false;
+		if (markers == null)
+		{
+			if (other.markers != null) return false;
+		}
+		else if (!markers.equals(other.markers)) return false;
+		if (maximumScaleMap != other.maximumScaleMap) return false;
+		if (minimumScaleMap != other.minimumScaleMap) return false;
+		if (name == null)
+		{
+			if (other.name != null) return false;
+		}
+		else if (!name.equals(other.name)) return false;
+		if (orderLayer == null)
+		{
+			if (other.orderLayer != null) return false;
+		}
+		else if (!orderLayer.equals(other.orderLayer)) return false;
+		if (published == null)
+		{
+			if (other.published != null) return false;
+		}
+		else if (!published.equals(other.published)) return false;
+		if (publishedLayer == null)
+		{
+			if (other.publishedLayer != null) return false;
+		}
+		else if (!publishedLayer.equals(other.publishedLayer)) return false;
+		if (startEnabled == null)
+		{
+			if (other.startEnabled != null) return false;
+		}
+		else if (!startEnabled.equals(other.startEnabled)) return false;
+		if (startVisible == null)
+		{
+			if (other.startVisible != null) return false;
+		}
+		else if (!startVisible.equals(other.startVisible)) return false;
+		if (title == null)
+		{
+			if (other.title != null) return false;
+		}
+		else if (!title.equals(other.title)) return false;
+		return true;
+	}
+
 }

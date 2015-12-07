@@ -17,7 +17,10 @@
 		<level value="WARN" />
 	</logger>
 	<logger name="org.springframework.web">
-		<level value="DEBUG" />
+		<level value="WARN" />
+	</logger>
+	<logger name="org.modeshape">
+		<level value="WARN" />
 	</logger>
 	
 	<logger name="org.directwebremoting">

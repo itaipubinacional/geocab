@@ -4,22 +4,24 @@
 package br.com.geocab.domain.entity.marker;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
-import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
-import br.com.geocab.domain.entity.layer.Attribute;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.AttributeType;
+import br.com.geocab.domain.entity.layer.Layer;
 /**
  * @author Thiago Rossetto Afonso
  * @since 02/10/2014
@@ -28,7 +30,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Audited
 @DataTransferObject(javascript="MarkerAttribute")
-@Table(schema=IEntity.SCHEMA)
 public class MarkerAttribute extends AbstractEntity implements Serializable
 {
 	
@@ -54,14 +55,57 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	}
 	
 	public MarkerAttribute(Long id){
-		super(id);
+		this.setId(id);
 	}
 	
 	public MarkerAttribute(Long id, String value, Marker marker, Attribute attribute){
-		super(id);
+		this.setId(id);
 		this.setValue(value);
 		this.setMarker(marker);
 		this.setAttribute(attribute);
+	}
+	
+	public MarkerAttribute(Long id, String value, 
+			Long markerId, /*Geometry location,*/ MarkerStatus markerStatus, Calendar markerCreated,
+			Long markerLayerId, String markerLayerName, String markerLayerTitle,  
+			Long markerUserId, String markerUserName, String markerUserEmail, Boolean markerUserStatus,
+			Long attributeId, String attributeName, AttributeType attributeType, Boolean attributeRequired, Integer attributeOrder)
+	{
+		this.setId(id);
+		this.setValue(value);
+		
+		Marker marker = new Marker();
+		
+		marker.setId(markerId);
+		marker.setStatus(markerStatus);
+		marker.setCreated(markerCreated);
+		
+		Layer layer = new Layer();
+		layer.setId(markerLayerId);
+		layer.setName(markerLayerName);
+		layer.setTitle(markerLayerTitle);
+		
+		marker.setLayer(layer);
+		
+		User user = new User();
+		user.setId(markerUserId);
+		user.setName(markerUserName);
+		user.setEmail(markerUserEmail);
+		user.setEnabled(markerUserStatus);
+		
+		marker.setUser(user);
+		
+		this.setMarker(marker);
+		
+		Attribute attribute = new Attribute();
+		attribute.setId(attributeId);
+		attribute.setName(attributeName);
+		attribute.setType(attributeType);
+		attribute.setRequired(attributeRequired);
+		attribute.setOrderAttribute(attributeOrder);
+		
+		this.setAttribute(attribute);
+		
 	}
 	
 	/**

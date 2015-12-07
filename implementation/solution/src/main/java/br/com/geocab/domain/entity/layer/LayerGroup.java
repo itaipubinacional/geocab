@@ -23,7 +23,6 @@ import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 
 /**
  * @author Vinicius Ramos Kawamoto
@@ -35,7 +34,7 @@ import br.com.geocab.domain.entity.IEntity;
 @Entity
 @Audited
 @DataTransferObject(javascript="LayerGroup")
-@Table(schema=IEntity.SCHEMA, uniqueConstraints= @UniqueConstraint(columnNames={"name", "layer_group_upper_id"}))
+@Table(uniqueConstraints= @UniqueConstraint(columnNames={"name", "layer_group_upper_id"}))
 public class LayerGroup extends AbstractEntity implements Serializable, ITreeNode
 {
 
@@ -57,7 +56,7 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	 * 
 	 */
 	@Column
-    private int orderLayerGroup;
+    private Integer orderLayerGroup;
 	/**
 	 * {@link LayerGroup} upper than the current {@link LayerGroup}
 	 */
@@ -148,6 +147,26 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	}
 	
 	
+	
+	
+	/**
+	 * @param name
+	 * @param orderLayerGroup
+	 * @param layerGroupUpper
+	 * @param layers
+	 * @param layersGroup
+	 * @param draft
+	 * @param published
+	 */
+	public LayerGroup(Long id, String name, Integer orderLayerGroup, Boolean published, Long layerGroupUpperId)
+	{
+		this.setId(id);
+		this.name = name;
+		this.orderLayerGroup = orderLayerGroup;
+		this.setLayerGroupUpper(new LayerGroup(layerGroupUpperId));
+		this.published = published;
+	}
+
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -234,7 +253,7 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	/**
 	 * @return the orderLayerGroup
 	 */
-	public int getOrderLayerGroup()
+	public Integer getOrderLayerGroup()
 	{
 		return orderLayerGroup;
 	}
@@ -242,7 +261,7 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	/**
 	 * @param orderLayerGroup the orderLayerGroup to set
 	 */
-	public void setOrderLayerGroup(int orderLayerGroup)
+	public void setOrderLayerGroup(Integer orderLayerGroup)
 	{
 		this.orderLayerGroup = orderLayerGroup;
 	}

@@ -536,7 +536,7 @@ function MapController( $scope, $injector, $log, $state, $timeout, $modal, $loca
          	
         	//var hasSearch  = $scope.allSearchs.length ? $scope.allSearchs[0].children.length > 0 : false;
         
-            if (($scope.layers.length > 0 || hasSearch ) && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
+            if (($scope.layers.length > 0/* || hasSearch*/ ) && !$scope.menu.fcArea && !$scope.menu.fcDistancia){
 
                 var listUrls = [];
                 

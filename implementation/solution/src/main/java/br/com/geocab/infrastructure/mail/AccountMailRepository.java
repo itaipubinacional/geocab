@@ -18,8 +18,8 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import br.com.geocab.domain.entity.account.IAccountMailRepository;
 import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
+import br.com.geocab.domain.repository.IAccountMailRepository;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.marker.Marker;
 

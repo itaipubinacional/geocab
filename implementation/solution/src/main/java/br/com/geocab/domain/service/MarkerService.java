@@ -27,13 +27,17 @@ import javax.xml.bind.JAXBException;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
@@ -48,12 +52,6 @@ import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -93,11 +91,8 @@ public class MarkerService
 	private IMarkerModerationRepository markerModerationRepository;
 
 	/**
-	 * I18n
+	 * 
 	 */
-	@Autowired
-	private MessageSource messages;
-
 	@Autowired
 	private IMetaFileRepository metaFileRepository;
 
@@ -310,13 +305,11 @@ public class MarkerService
 			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
 					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
 			{
-				listMarker = this.markerRepository
-						.listMarkerByLayerAll(layerId);
+				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
 			}
 			else
 			{
-				listMarker = this.markerRepository.listMarkerByLayer(layerId,
-						user.getId());
+				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
 			}
 
 		}
@@ -353,13 +346,11 @@ public class MarkerService
 			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
 					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
 			{
-				listMarker = this.markerRepository
-						.listMarkerByLayerAll(layerId);
+				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
 			}
 			else
 			{
-				listMarker = this.markerRepository.listMarkerByLayer(layerId,
-						user.getId());
+				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
 			}
 
 		}
@@ -389,17 +380,6 @@ public class MarkerService
 			throw new RuntimeException("Not a WKT string:" + wktPoint);
 		}
 		return geom;
-	}
-
-	/**
-	 * 
-	 * @param geometry
-	 * @return
-	 */
-	private String geometryToWkt(Geometry geometry)
-	{
-		WKTWriter geom = new WKTWriter();
-		return geom.write(geometry);
 	}
 
 	/**

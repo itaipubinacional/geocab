@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.geoserver.security.PublicKeyGenerator;
@@ -16,7 +15,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 
 /**
  * 
@@ -30,7 +28,6 @@ import br.com.geocab.domain.entity.IEntity;
 @Entity
 @Audited
 @DataTransferObject(javascript="DataSource")
-@Table(schema=IEntity.SCHEMA)
 public class DataSource extends AbstractEntity implements Serializable
 {
 	/**
