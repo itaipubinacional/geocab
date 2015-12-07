@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import javax.jcr.RepositoryException;
 
 import org.directwebremoting.annotations.RemoteProxy;
-import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.marker.Marker;
-import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.entity.markermoderation.Motive;

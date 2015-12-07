@@ -31,6 +31,15 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
+	public static final String PICTURE_FOLDER = "/markers/%d";
+	/**
+	 * 
+	 */
+	public static final String PICTURE_PATH = PICTURE_FOLDER + "/%d";
+	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = -7763138575022585976L;
 
 	/*-------------------------------------------------------------------

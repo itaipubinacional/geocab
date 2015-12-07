@@ -20,11 +20,11 @@
 		<level value="WARN" />
 	</logger>
 	<logger name="org.modeshape">
-		<level value="DEBUG" />
+		<level value="WARN" />
 	</logger>
 	
 	<logger name="org.directwebremoting">
-		<level value="DEBUG" />
+		<level value="WARN" />
 	</logger>
 	
 	<logger name="org.hibernate">
