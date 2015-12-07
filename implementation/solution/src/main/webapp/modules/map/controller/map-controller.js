@@ -1504,20 +1504,24 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.initializeMarker = function () {
 
+
+    $('li.menu-item').each(function(index){
+
+      if($(this).hasClass('ui-state-active') && !$(this).hasClass('bg-inactive')){
+        console.log($(this).attr('id'));
+        $scope.toggleSidebarMenu(300, '#' + $(this).attr('id'));
+      }
+
+    });
+
     $timeout(function () {
       $scope.toggleSidebar(300, '', '#sidebar-marker-create');
     }, 400);
 
-    $scope.menu = {
-      fcDistancia: false,
-      fcArea: false,
-      fcKml: false,
-      fcMarker: true
-    };
 
     $scope.screenMarkerOpenned = true;
 
-    /*if ($("#sidebar-marker-detail-update").css("display") == 'block') {
+    if ($("#sidebar-marker-detail-update").css("display") == 'block') {
       $scope.clearDetailMarker();
     }
 
@@ -1547,7 +1551,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         fcMarker: true
       };
 
-    }*/
+    }
   };
 
   /**
@@ -2261,7 +2265,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.toggleSidebarMenu = function (time, element) {
 
-    if ($scope.slideActived == '#sidebar-layers') {
+    /*if ($scope.slideActived == '#sidebar-layers') {
       $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
 
       $timeout(function () {
@@ -2270,7 +2274,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     } else {
 
       $scope.toggleSidebar(time, element, '#sidebar-marker-create');
-    }
+    }*/
 
     if ($("#sidebar-marker-detail-update").css("display") == 'block') {
       $scope.clearDetailMarker();
