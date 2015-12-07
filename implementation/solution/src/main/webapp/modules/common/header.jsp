@@ -143,7 +143,8 @@
                 <li class="position-relative">
                     <a      href="admin#/markers"
                             ng-class="{active: menuActive == 'markers'}"
-                            style="width: 150px;">MARKERS
+                            style="width: 150px;">
+                        <spring:message code="admin.access-group.my-markers"/>
                     </a>
                 </li>
 
