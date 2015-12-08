@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,8 +76,7 @@ public class MarkerService
 	/**
 	 * Log
 	 */
-	private static final Logger LOG = Logger
-			.getLogger(DataSourceService.class.getName());
+	private static final Logger LOG = Logger.getLogger(DataSourceService.class.getName());
 
 	/**
 	 * Repository of {@link DataSource}
@@ -228,19 +228,42 @@ public class MarkerService
 	}
 	
 	/**
+	 * Salva todas as fotos no sistema de arquivos
+	 * @param photos
+	 * @return
+	 */
+	public void removePhotos(List<Long> idPhotos)
+	{
+		for (Long idPhoto : idPhotos)
+		{
+			Photo photo = this.photoRepository.findOne(idPhoto);
+
+			try
+			{
+				this.metaFileRepository.removeByPath(photo.getIdentifier());
+				this.photoRepository.delete(idPhoto);
+			}
+			catch (RepositoryException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
 	 * 
 	 * @param photoAlbumId
 	 * @return
 	 */
-	public Set<Photo> listPhotosByPhotoAlbumId(String photoAlbumId)
+	public Page<Photo> listPhotosByPhotoAlbumId(String photoAlbumId, final PageRequest pageRequest)
 	{
-		Set<Photo> photos = this.photoRepository.findByIdentifierContaining(photoAlbumId);
+		Page<Photo> photos = this.photoRepository.findByIdentifierContaining(photoAlbumId, pageRequest);
 		
 		for (Photo photo : photos)
 		{
 			try
 			{
-				MetaFile metaFile = this.metaFileRepository.findByPath("/" + photo.getIdentifier(), true);
+				MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
 				FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
 				photo.setImage(fileTransfer);
 			}
@@ -253,41 +276,18 @@ public class MarkerService
 	}
 	
 	/**
-	 * Pega os arquivos do sistema de arquivos
-	 * @param id
+	 * 
+	 * @param markerAttributeId
+	 * @param pageRequest
 	 * @return
 	 */
-	public FileTransfer findFileById(String id)
-	{
-		FileTransfer fileTransfer = null;
-		try
-		{
-			MetaFile metaFile = this.metaFileRepository.findById(id, true);
-			fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
-		}
-		catch (RepositoryException e)
-		{
-			e.printStackTrace();
-		}
-		return fileTransfer;
-	}
-	
-	public Set<Photo> findPhotoAlbumByAttributeMarkerId(Long markerAttributeId)
+	public Page<Photo> findPhotoAlbumByAttributeMarkerId(Long markerAttributeId, final PageRequest pageRequest)
 	{
 		PhotoAlbum photoAlbum = this.photoAlbumRepository.findByMarkerAttributeId(markerAttributeId);
-		return this.listPhotosByPhotoAlbumId(photoAlbum.getIdentifier());
+		return this.listPhotosByPhotoAlbumId(photoAlbum.getIdentifier(), pageRequest);
 	}
 	
-	/**
-	 * 
-	 * @param photoAlbumId
-	 * @return
-	 */
-	public Set<Photo> listPhotosByPhotoAlbumId(Long photoAlbumId)
-	{
-		PhotoAlbum photoAlbum = this.photoAlbumRepository.findOne(photoAlbumId);
-		return this.listPhotosByPhotoAlbumId(photoAlbum.getIdentifier());
-	}
+	
 	
 	/**
 	 * 
@@ -813,8 +813,7 @@ public class MarkerService
 	
 			InputStream is = new BufferedInputStream(fileTransfer.getInputStream());
 			
-			final BufferedImage bufferedImage = new BufferedImage(640, 480,
-					BufferedImage.TYPE_INT_RGB);
+			final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
 			Image image = ImageIO.read(is);
 			Graphics2D g = bufferedImage.createGraphics();
 			g.drawImage(image, 0, 0, 640, 480, null);

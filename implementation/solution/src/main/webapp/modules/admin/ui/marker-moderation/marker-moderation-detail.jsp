@@ -39,11 +39,11 @@
                         <span><b>Status</b></span>
                         {{translateByStatus(currentEntity.status)}}
 
-                        <a ng-if="currentEntity.status == 'SAVED' " class="icon itaipu-icon-save"></a>
-                        <a ng-if="currentEntity.status == 'PENDING' " class="icon itaipu-icon-schedules"></a>
-                        <a ng-if="currentEntity.status == 'ACCEPTED' " class="icon itaipu-icon-like-filled"></a>
-                        <a ng-if="currentEntity.status == 'REFUSED' " class="icon itaipu-icon-dislike"></a>
-                        <a ng-if="currentEntity.status == 'CANCELED' " class="icon itaipu-icon-close"></a>
+                        <i ng-if="currentEntity.status == 'SAVED' " class="icon itaipu-icon-save"></i>
+                        <i ng-if="currentEntity.status == 'PENDING' " class="icon itaipu-icon-schedules"></i>
+                        <i ng-if="currentEntity.status == 'ACCEPTED' " class="icon itaipu-icon-like-filled"></i>
+                        <i ng-if="currentEntity.status == 'REFUSED' " class="icon itaipu-icon-dislike"></i>
+                        <i ng-if="currentEntity.status == 'CANCELED' " class="icon itaipu-icon-close"></i>
                     </div>
                     </br></br>
 

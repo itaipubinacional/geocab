@@ -25,6 +25,11 @@ import br.com.geocab.domain.entity.AbstractEntity;
 @DataTransferObject(javascript = "Photo")
 public class Photo extends AbstractEntity implements Serializable
 {
+	
+	/**
+	 * 
+	 */
+	public static final String PHOTO_PATH = "/%d";
 
 	/**
 	 * 
@@ -142,7 +147,7 @@ public class Photo extends AbstractEntity implements Serializable
 	{
 		if (this.getId() != null)
 		{
-			this.identifier = this.getPhotoAlbum().getIdentifier() + '/' + this.getId();
+			this.identifier = this.getPhotoAlbum().getIdentifier() + String.format(PHOTO_PATH , this.getId());
 		}
 	}
 

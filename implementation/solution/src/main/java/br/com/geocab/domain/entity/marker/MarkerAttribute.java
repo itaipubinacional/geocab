@@ -32,7 +32,6 @@ import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 @DataTransferObject(javascript = "MarkerAttribute")
 public class MarkerAttribute extends AbstractEntity implements Serializable
 {
-
 	/**
 	 * 
 	 */

@@ -48,7 +48,6 @@ import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 @TypeDef(name = "geometry", typeClass = GeometryType.class)
 public class Marker extends AbstractEntity implements Serializable
 {
-
 	/**
 	 * 
 	 */
