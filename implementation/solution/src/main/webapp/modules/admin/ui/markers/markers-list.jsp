@@ -76,8 +76,7 @@
 						<spring:message code="admin.marker-moderation.Post"/>
 					</a>
 				</div>
-				<div class="btn btn-default col-md-3" name="btnSave" ng-click="removeMarkersModal()"
-					 ng-disabled="!disableButtonDelete">
+				<div class="btn btn-default col-md-3" name="btnSave" ng-click="removeMarkersModal()">
 					<a style="font-size:14px;text-decoration:none;color:black">
 						<spring:message code="admin.marker-moderation.Delete"/>
 					</a>

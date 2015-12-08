@@ -7,7 +7,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <!-- Data source - Main View -->
 <div class="content">
 
@@ -23,10 +23,9 @@
   <form name="form" ng-submit="sendForm()" role="form">
    
     <div>
-      <div class="form-item position-relative" style="width: 300px;">
-        <label class="detail-label">
-          <spring:message code="Name"/>
-          *</label>
+
+        <div class="form-item position-relative" style="width: 300px;">
+        <label class="detail-label" required><spring:message code="Name"/></label>
         <input name="name" type="text" class="form-control"
                ng-model="contactForm.name"
                ng-disabled="user.enabled"
@@ -41,7 +40,7 @@
                     code="admin.users.required"/></span>
       </div>
       <div class="form-item position-relative" style="width: 300px;">
-        <label class="detail-label"> Email*</label>
+        <label class="detail-label" required>Email</label>
         <input name="email" type="email" class="form-control"
                ng-model="contactForm.email"
                ng-disabled="user.enabled"
@@ -57,9 +56,7 @@
     </div>
     <div>
       <div class="form-item position-relative" style="width: 300px;">
-        <label class="detail-label">
-          <spring:message code="contact.Subject"/>
-          *</label>
+        <label class="detail-label" required><spring:message code="contact.Subject"/></label>
         <input name="subject" type="text" class="form-control"
                ng-model="contactForm.subject"
                required maxlength="144" ng-minlength="1"
@@ -73,10 +70,10 @@
       </div>
     </div>
 
-    <div class="form-item position-relative" style="width: 300px;">
-      <label class="detail-label">
-        <spring:message code="contact.Message"/>
-        *</label>
+      <div class="form-item position-relative" style="width: 300px;">
+          <label class="detail-label" required>
+              <spring:message code="contact.Message"/>
+          </label>
                 <textarea name="message" type="text" class="form-control"
                           style="height: 100px"
                           ng-model="contactForm.message"
@@ -88,16 +85,15 @@
                  </textarea>
                   <span ng-show="form.message.$error.required && (form.$submitted || form.message.$dirty)"
                         class="tooltip-validation"><spring:message code="contact.Message"/> <spring:message
-                      code="admin.users.required"/></span>
-    </div>
+                          code="admin.users.required"/>
+                  </span>
+      </div>
 
     <div>
       
       <div>
       <div class="form-item position-relative" style="width: 300px;">
-        <label class="detail-label">
-          <spring:message code="contact.securityVerification"/>
-          *</label>
+        <label class="detail-label" required><spring:message code="contact.securityVerification"/></label>
         <input name="subject" type="text" class="form-control"
                ng-model="contactForm.answer"
                required maxlength="144" ng-minlength="1"

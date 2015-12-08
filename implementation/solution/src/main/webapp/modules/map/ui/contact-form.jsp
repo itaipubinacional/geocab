@@ -25,7 +25,7 @@
       		
       		
             <div class="form-item position-relative" style="width: 300px;">
-                <label class="detail-label" ><spring:message code="admin.users.Name"/></label>
+                <label class="detail-label required" ><spring:message code="admin.users.Name"/></label>
                 <input name="name" type="text" class="form-control"
                        ng-model="currentEntity.name"
                        placeholder="<spring:message code='admin.users.Name'/>"
