@@ -537,17 +537,67 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     };
 
+    $scope.setMarkerCoordinates = function(){
+
+      $scope.formattedLatitude  = $scope.formattedLatitude.toString();
+      $scope.formattedLongitude = $scope.formattedLongitude.toString();
+
+      if($scope.formattedLatitude.match(/\d{2}[.|,]\d{6}/) && $scope.formattedLongitude.match(/\d{2}[.|,]\d{6}/)) {
+        console.log($scope.formattedLatitude);
+        console.log($scope.formattedLongitude);
+
+        $scope.formattedLatitude  = parseFloat($scope.formattedLatitude);
+        $scope.formattedLongitude = parseFloat($scope.formattedLongitude);
+
+        $scope.clearFcMarker();
+
+        var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon(({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: 'static/images/marker.png'
+          }))
+        });
+
+        var olCoordinates = ol.proj.transform([$scope.formattedLongitude, $scope.formattedLatitude], 'EPSG:4326','EPSG:900913');
+        console.log(olCoordinates);
+
+        $scope.currentEntity.latitude  = olCoordinates[0];
+        $scope.currentEntity.longitude = olCoordinates[1];
+
+        var iconFeature = new ol.Feature({
+          geometry: new ol.geom.Point([olCoordinates[0], olCoordinates[1]])
+        });
+
+        var layer = new ol.layer.Vector({
+          source: new ol.source.Vector({features: [iconFeature]})
+        });
+
+        layer.setStyle(iconStyle);
+
+        $scope.currentCreatingInternalLayer = layer;
+        $scope.map.addLayer(layer);
+
+        //$scope.setMarkerCoordinatesFormat();
+      }
+
+    };
+
     $scope.setMarkerCoordinatesFormat = function(){
 
       if($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
 
         console.log('DEGREES_DECIMAL');
 
+        $scope.formattedLatitude = $scope.latitude;
+        $scope.formattedLongitude = $scope.longitude
+
       } else {
 
         console.log('DEGREES_MINUTES_SECONDS');
 
-        var coordinate = $scope.formattedLongitude + ',' + $scope.formattedLatitude;
+        var coordinate = $scope.longitude + ',' + $scope.latitude;
 
         coordinate = ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)).match(/(.*\s[S|N])\s(.*)/);
 
@@ -556,6 +606,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
 
     };
+
     /**
      * Click event to prompt the geoserver the information layer of the clicked coordinat
      */
@@ -567,8 +618,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var transformed_coordinate = ol.proj.transform(coord, 'EPSG:900913', 'EPSG:4326');
         //console.log(transformed_coordinate);
 
-        $scope.formattedLongitude = transformed_coordinate[0];
-        $scope.formattedLatitude  = transformed_coordinate[1];
+        $scope.longitude = transformed_coordinate[0];
+        $scope.latitude  = transformed_coordinate[1];
 
         $scope.clearFcMarker();
 
