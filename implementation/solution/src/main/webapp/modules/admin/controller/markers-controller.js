@@ -49,6 +49,52 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.SAVED = "SAVED";
 
+
+    /*-------------------------------------------------------------------
+     * 		 				 	EVENT HANDLERS
+     *-------------------------------------------------------------------*/
+
+    /**
+     *  Handler that listens every time the user / programmatically makes sorting in grid-ng.
+     *  When the event is triggered, we set the pager's spring-data
+     *  and call the query again, also considering the state of the filter (@see $scope.data.filter)
+     */
+    $scope.$on('ngGridEventSorted', function(event, sort) {
+
+        //if(event.targetScope.gridId != $scope.gridOptions.gridId) {
+        //    return;
+        //}
+
+        //run only once
+        if ( !angular.equals(sort, $scope.gridOptions.sortInfo) ) {
+            $scope.gridOptions.sortInfo = angular.copy(sort);
+
+            //Order do spring-data
+            var order = new Order();
+            order.direction = sort.directions[0].toUpperCase();
+            order.property = sort.fields[0];
+
+            //Sort do spring-data
+            $scope.currentPage.pageable = {};
+
+            $scope.currentPage.pageable.sort = new Sort();
+
+
+            //FILTERS
+            $scope.currentPage.pageable.sort.orders = [ order ];
+            if ($scope.filter.status == "")
+                $scope.filter.status = null;
+            if ($scope.filter.dateStart == "")
+                $scope.filter.dateStart = null;
+            if ($scope.filter.dateEnd == "")
+                $scope.filter.dateEnd = null;
+
+            $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.currentPage.pageable);
+
+        }
+    });
+
+
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
@@ -302,7 +348,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             {
                 displayName: $translate('admin.marker-moderation.Date-posting'),
                 width: '150px',
-                field: 'created | date:"dd/MM/yyyy"'
+                field: 'created',
+                cellTemplate: '<span class="ngCellText">{{row.entity.created | date:"dd/MM/yyyy"}}</span>'
             },
             {
                 displayName: $translate('admin.marker-moderation.Situation'),
@@ -383,6 +430,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
+        pageRequest.sort = new Sort();
+        pageRequest.sort.orders = [{direction:'DESC',property : 'created'}];
         $scope.pageRequest = pageRequest;
 
         if (typeof markers == 'undefined') {
