@@ -484,12 +484,47 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br style="clear: both;"> <br>
 
-                <span>Formato de entrada</span>
+                <span><b><spring:message code='map.Input-format'/></b></span>
                 <i class="icon-question-sign icon-large" tooltip-placement="right"
                    tooltip="Selecione o formato de entrada para as coordenadas"></i>
 
+                <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
+                  <input type="radio" id="DMS" ng-click="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_MINUTES_SECONDS"
+                         name="DMS">
+                  <label class="radio-label" for="DMS"> <spring:message code='admin.users.coordinatesDMS'/> </label>
+                </div>
 
-                <br style="clear: both;"> <br> <label><spring:message code="map.Layer"/></label>
+                <br />
+
+                <div class="form-item-horizontal radio" style="margin-left: 0;">
+                  <input type="radio" id="DD" ng-click="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_DECIMAL"
+                         name="DD">
+                  <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDegree'/> </label>
+                </div>
+
+                <span><b><spring:message code='map.Coordinates'/></b></span>
+                <i class="icon-question-sign icon-large" tooltip-placement="right"
+                   tooltip="<spring:message code='map.Tips-coordinate'/>"></i>
+
+                <div class="form-item-horizontal" style="margin-left: 0; margin-top: 15px">
+                  <label class="detail-label" required>
+                    Latitude
+                  </label>
+                  <input type="text" name="latitude"
+                         class="form-control" ng-model="currentEntity.latitude">
+                </div>
+
+                <br />
+
+                <div class="form-item-horizontal" style="margin-left: 0;">
+                  <label class="detail-label" required>
+                    Longitude
+                  </label>
+                  <input type="text" name="longitude"
+                         class="form-control" ng-model="currentEntity.longitude">
+                </div>
+
+                <label><spring:message code="map.Layer"/></label>
 
                 <!-- no-results-text="Nenhum registro encontrado com" -->
 

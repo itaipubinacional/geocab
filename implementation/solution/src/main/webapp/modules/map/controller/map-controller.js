@@ -85,6 +85,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.marker;
 
+  $scope.coordinatesFormat = '';
+
   /**
    * User credentials
    * */
@@ -535,12 +537,33 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     };
 
+    $scope.setMarkerCoordinatesFormat = function(){
+
+      if($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
+
+      } else {
+
+        var coordinate = $scope.currentEntity.longitude + ',' + $scope.currentEntity.latitude;
+        //var coordinate = $scope.currentEntity.latitude + ',' + $scope.currentEntity.longitude;
+
+        coordinate = ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)).split('S ');
+
+        $scope.currentEntity.latitude = coordinate[0];
+        $scope.currentEntity.longitude = coordinate[1];
+
+        console.log(ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)));
+      }
+
+    };
     /**
      * Click event to prompt the geoserver the information layer of the clicked coordinat
      */
     $scope.map.on('click', function (evt) {
 
       if ($scope.menu.fcMarker && $scope.screenMarkerOpenned) {
+
+        $scope.clearFcMarker();
+
         $scope.screenMarkerOpenned = true;
         $scope.toggleSidebarMarkerCreate(300);
 
@@ -569,6 +592,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.currentEntity.latitude = evt.coordinate[0];
         $scope.currentEntity.longitude = evt.coordinate[1];
+
+        $scope.setMarkerCoordinatesFormat();
 
         layerGroupService.listAllInternalLayerGroups({
           callback: function (result) {
@@ -1406,8 +1431,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     var formatCoordinate = function (coord) {
 
       if($scope.userMe && $scope.userMe.coordinates == 'DEGREES_DECIMAL') {
-        return coord;
+        $scope.coordinatesFormat = $scope.userMe.coordinates;
+        return coord.split(',').reverse().join(', ');
       } else {
+        $scope.coordinatesFormat = $scope.userMe.coordinates;
         return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
       }
 
@@ -1514,6 +1541,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     });
 
+    if ($scope.slideActived == '#sidebar-marker-detail-update') {
+      $scope.toggleSidebar(300, 'closeButton', '#sidebar-marker-detail-update');
+    }
+
     $timeout(function () {
       $scope.toggleSidebar(300, '', '#sidebar-marker-create');
     }, 400);
@@ -1530,7 +1561,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.map.removeLayer(vector);
     $('#popup').css("display", "none");
     sketch = null;
-
 
     if ($scope.menu.fcMarker) {
 
@@ -2578,8 +2608,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.menu.fcMarker = false;
 
-    if ($scope.screenMarkerOpenned)
-      $scope.toggleSidebar('300', 'closeButton', $scope.slideActived);
+    /*if ($scope.screenMarkerOpenned)
+      $scope.toggleSidebar('300', 'closeButton', $scope.slideActived);*/
 
     $scope.map.removeLayer($scope.currentCreatingInternalLayer);
 
