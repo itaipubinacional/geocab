@@ -537,17 +537,44 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     };
 
+    $scope.convertDMSToDD = function(coordinate) {
+
+      var coordinate = coordinate.split(/[^\d\w\.]+/);
+      var dd = Number(coordinate[0]) + Number(coordinate[1])/60 + Number(coordinate[2])/(60*60);
+
+      var direction = coordinate[3];
+      if (direction == "S" || direction == "W") {
+        dd = dd * -1;
+      } // Don't do anything for N or E
+      return dd;
+    }
+
     $scope.setMarkerCoordinates = function(){
 
-      $scope.formattedLatitude  = $scope.formattedLatitude.toString();
-      $scope.formattedLongitude = $scope.formattedLongitude.toString();
+      var formattedLatitude  = $scope.formattedLatitude.toString();
+      var formattedLongitude = $scope.formattedLongitude.toString();
 
-      if($scope.formattedLatitude.match(/\d{2}[.|,]\d{6}/) && $scope.formattedLongitude.match(/\d{2}[.|,]\d{6}/)) {
-        console.log($scope.formattedLatitude);
-        console.log($scope.formattedLongitude);
+      var regEx = '';
 
-        $scope.formattedLatitude  = parseFloat($scope.formattedLatitude);
-        $scope.formattedLongitude = parseFloat($scope.formattedLongitude);
+      if($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
+
+        regEx = /^[1-9]\d{0,1}°\s?[1-9]\d{0,1}[′|']\s?[1-9]\d{0,1}[″|"]\s?[N|S|W|O]$/;
+
+        if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+          formattedLatitude = $scope.convertDMSToDD(formattedLatitude);
+          formattedLongitude = $scope.convertDMSToDD(formattedLongitude);
+        }
+      }
+
+      regEx = /\d{2}[.|,]\d{6}/;
+
+      if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+
+        console.log(formattedLatitude);
+        console.log(formattedLongitude);
+
+        formattedLatitude  = parseFloat(formattedLatitude);
+        formattedLongitude = parseFloat(formattedLongitude);
 
         $scope.clearFcMarker();
 
@@ -560,7 +587,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           }))
         });
 
-        var olCoordinates = ol.proj.transform([$scope.formattedLongitude, $scope.formattedLatitude], 'EPSG:4326','EPSG:900913');
+        var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326','EPSG:900913');
         console.log(olCoordinates);
 
         $scope.currentEntity.latitude  = olCoordinates[0];
@@ -590,7 +617,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         console.log('DEGREES_DECIMAL');
 
-        $scope.formattedLatitude = $scope.latitude;
+        $scope.formattedLatitude  = $scope.latitude;
         $scope.formattedLongitude = $scope.longitude
 
       } else {
@@ -601,7 +628,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         coordinate = ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)).match(/(.*\s[S|N])\s(.*)/);
 
-        $scope.formattedLatitude = coordinate[1];
+        $scope.formattedLatitude  = coordinate[1];
         $scope.formattedLongitude = coordinate[2];
       }
 
@@ -4415,6 +4442,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   //$scope.showGallery();
+
+
 
 };
 
