@@ -541,17 +541,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
 
+        console.log('DEGREES_DECIMAL');
+
       } else {
 
-        var coordinate = $scope.currentEntity.longitude + ',' + $scope.currentEntity.latitude;
-        //var coordinate = $scope.currentEntity.latitude + ',' + $scope.currentEntity.longitude;
+        console.log('DEGREES_MINUTES_SECONDS');
 
-        coordinate = ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)).split('S ');
+        var coordinate = $scope.formattedLongitude + ',' + $scope.formattedLatitude;
 
-        $scope.currentEntity.latitude = coordinate[0];
-        $scope.currentEntity.longitude = coordinate[1];
+        coordinate = ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)).match(/(.*\s[S|N])\s(.*)/);
 
-        console.log(ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)));
+        $scope.formattedLatitude = coordinate[1];
+        $scope.formattedLongitude = coordinate[2];
       }
 
     };
@@ -561,6 +562,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.map.on('click', function (evt) {
 
       if ($scope.menu.fcMarker && $scope.screenMarkerOpenned) {
+
+        var coord = evt.coordinate;
+        var transformed_coordinate = ol.proj.transform(coord, 'EPSG:900913', 'EPSG:4326');
+        //console.log(transformed_coordinate);
+
+        $scope.formattedLongitude = transformed_coordinate[0];
+        $scope.formattedLatitude  = transformed_coordinate[1];
 
         $scope.clearFcMarker();
 
@@ -701,6 +709,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       callback : function(result) {
         $scope.userMe = result;
         $scope.setBackgroundMap(result.backgroundMap);
+        $scope.coordinatesFormat = result.coordinates;
         $scope.$apply();
       },
       errorHandler : function(message, exception) {
@@ -1430,11 +1439,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
      */
     var formatCoordinate = function (coord) {
 
-      if($scope.userMe && $scope.userMe.coordinates == 'DEGREES_DECIMAL') {
-        $scope.coordinatesFormat = $scope.userMe.coordinates;
+      if($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
         return coord.split(',').reverse().join(', ');
       } else {
-        $scope.coordinatesFormat = $scope.userMe.coordinates;
         return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
       }
 
