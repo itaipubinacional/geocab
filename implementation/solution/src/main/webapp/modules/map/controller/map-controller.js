@@ -3314,9 +3314,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             if(attribute.photoAlbum != null)
               photoAlbumIds.push(attribute.photoAlbum.id);
           });
-
         }
-
       });
 
       return photoAlbumIds;
@@ -3325,6 +3323,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     var dialog = $modal.open({
       templateUrl: 'modules/map/ui/popup/img-popup.jsp',
       controller: ImgPopUpController,
+      size: 'lg',
       resolve: {
         photoAlbumIds: getPhotoAlbumIds
       }
