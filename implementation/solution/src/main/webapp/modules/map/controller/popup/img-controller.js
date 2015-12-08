@@ -53,7 +53,7 @@ function ImgPopUpController($scope, $modalInstance, $log, photoAlbumIds, $import
                 callback: function (result) {
                     console.log(result);
 
-                    angular.forEach(result, function(photo){
+                    angular.forEach(result.content, function(photo){
                         $scope.photos.push(photo);
                     });
 

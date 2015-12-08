@@ -3,7 +3,8 @@
  */
 package br.com.geocab.domain.repository.marker.photo;
 
-import java.util.Set;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import br.com.geocab.domain.entity.marker.photo.Photo;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
@@ -31,6 +32,6 @@ public interface IPhotoRepository extends IDataRepository<Photo, Long>
 	 * @param path
 	 * @return
 	 */
-	Set<Photo> findByIdentifierContaining(String path);
+	Page<Photo> findByIdentifierContaining(String path, Pageable pageable);
 
 }

@@ -24,8 +24,9 @@ public class PhotoAlbumTest
 	 *				 		     	TESTS
 	 *-------------------------------------------------------------------*/
 
+		
 	@Test
-	public void testGenerateIdentifierPhotoAlbum()
+	public void testGenerateIdentifierPhotoAlbumWithOutPhotoFolder()
 	{
 		Marker marker = new Marker(100L);
 
@@ -35,7 +36,7 @@ public class PhotoAlbumTest
 		PhotoAlbum photoAlbum = new PhotoAlbum(300L);
 		photoAlbum.setMarkerAttribute(markerAttribute);
 
-		Assert.equals("100/200/300", photoAlbum.getIdentifier());
+		Assert.equals("/markers/100/albuns/300/photos", photoAlbum.getIdentifier());
 	}
 
 	@Test
@@ -52,7 +53,8 @@ public class PhotoAlbumTest
 		Photo photo = new Photo(400L);
 		photo.setPhotoAlbum(photoAlbum);
 
-		Assert.equals("100/200/300/400", photo.getIdentifier());
+		
+		Assert.equals("/markers/100/albuns/300/photos/400", photo.getIdentifier());
 	}
 
 }

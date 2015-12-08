@@ -3282,18 +3282,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, {
       callback: function (result) {
-
-        console.log(result);
-
         /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
         $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
 
-        $scope.attributesByMarker[index].photoAlbum = result[0].photoAlbum;
-        $scope.attributesByMarker[index].photoAlbum.photos = result;
+        $scope.attributesByMarker[index].photoAlbum = result.content[0].photoAlbum;
+        $scope.attributesByMarker[index].photoAlbum.photos = result.content;
 
-        $scope.imgResult = result[0].image;
+        $scope.imgResult = result.content[0].image;
 
-        //$scope.$apply();
+        $scope.$apply();
       },
       errorHandler: function (message, exception) {
         $scope.message = {type: "error", text: message};

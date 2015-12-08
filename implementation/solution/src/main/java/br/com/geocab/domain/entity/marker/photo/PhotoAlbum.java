@@ -27,15 +27,15 @@ import br.com.geocab.domain.entity.marker.MarkerAttribute;
 @DataTransferObject(javascript = "PhotoAlbum")
 public class PhotoAlbum extends AbstractEntity implements Serializable
 {
+	/**
+	 * 
+	 */
+	public static final String MARKER_FOLDER = "/markers/%d";
 
 	/**
 	 * 
 	 */
-	public static final String PICTURE_FOLDER = "/markers/%d";
-	/**
-	 * 
-	 */
-	public static final String PICTURE_PATH = PICTURE_FOLDER + "/%d";
+	public static final String PHOTO_ALBUM_FOLDER =  MARKER_FOLDER + "/albuns/%d/photos";
 	
 	/**
 	 * 
@@ -129,11 +129,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 */
 	private void generateIdentifier()
 	{
-		this.identifier = this.getMarkerAttribute().getMarker().getId()
-				.toString();
-		this.identifier = this.identifier + '/'
-				+ this.getMarkerAttribute().getId().toString();
-		this.identifier = this.identifier + '/' + this.getId().toString();
+		this.identifier = String.format( PhotoAlbum.PHOTO_ALBUM_FOLDER, this.getMarkerAttribute().getMarker().getId(), this.getId() );
 	}
 
 	/*-------------------------------------------------------------------
