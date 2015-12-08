@@ -481,6 +481,14 @@ uri="http://www.springframework.org/security/tags"%>
             <div style="position: absolute; left: 0; right: 0; bottom: 0; top: 0">
               <div id="tabs-2" ng-switch="LAYER_MENU_STATE" style="overflow:auto; width: auto" class="container">
                 <div class="sidebar-content-header"><spring:message code="map.New-post" /></div>
+
+                <br style="clear: both;"> <br>
+
+                <span>Formato de entrada</span>
+                <i class="icon-question-sign icon-large" tooltip-placement="right"
+                   tooltip="Selecione o formato de entrada para as coordenadas"></i>
+
+
                 <br style="clear: both;"> <br> <label><spring:message code="map.Layer"/></label>
 
                 <!-- no-results-text="Nenhum registro encontrado com" -->

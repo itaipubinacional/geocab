@@ -193,11 +193,11 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     //    '</div>';
 
     var IMAGE_MODERATION = '<div  class="cell-centered">' +
-        '<a ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></a>' +
-        '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></a>' +
-        '<a ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></a>' +
-        '<a ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></a>' +
-        '<a ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></a>' +
+        '<i ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></i>' +
+        '<i ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></i>' +
+        '<i ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></i>' +
+        '<i ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></i>' +
+        '<i ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></i>' +
         '</div>';
 
 
@@ -252,13 +252,9 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
                 }
             }
             $scope.disableButtonPost = true;
-            $scope.disableButtonDelete = true;
 
             for (var i = 0; i < $scope.itensMarcados.length; i++) {
                 if(!( $scope.itensMarcados[i].status == $scope.REFUSED || $scope.itensMarcados[i].status == $scope.SAVED )){
-                    $scope.disableButtonPost = false;
-                }
-                if(!( $scope.itensMarcados[i].status == $scope.REFUSED || $scope.itensMarcados[i].status == $scope.SAVED || $scope.itensMarcados[i].status == $scope.CANCELED)){
                     $scope.disableButtonPost = false;
                 }
             }

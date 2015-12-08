@@ -54,6 +54,40 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.SAVED = "SAVED";
 
     /*-------------------------------------------------------------------
+     * 		 				 	EVENT HANDLERS
+     *-------------------------------------------------------------------*/
+
+    /**
+     *  Handler that listens every time the user / programmatically makes sorting in grid-ng.
+     *  When the event is triggered, we set the pager's spring-data
+     *  and call the query again, also considering the state of the filter (@see $scope.data.filter)
+     */
+    $scope.$on('ngGridEventSorted', function(event, sort) {
+
+        if(event.targetScope.gridId != $scope.gridOptions.gridId) {
+            return;
+        }
+
+        //run only once
+        if ( !angular.equals(sort, $scope.gridOptions.sortInfo) ) {
+            $scope.gridOptions.sortInfo = angular.copy(sort);
+
+            //Order do spring-data
+            var order = new Order();
+            order.direction = sort.directions[0].toUpperCase();
+            order.property = sort.fields[0];
+
+            //Sort do spring-data
+            $scope.currentPage.pageable.sort = new Sort();
+            $scope.currentPage.pageable.sort.orders = [ order ];
+
+            $scope.listMarkerModerationByFilters( $scope.data.filter, $scope.currentPage.pageable);
+
+        }
+    });
+
+
+    /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
     //STATES
@@ -199,11 +233,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     //    '<a ng-if="row.entity.status == \'CANCELED\' " class="icon-refuse-moderation"></a>' +
     //    '</div>';
     var IMAGE_MODERATION = '<div  class="cell-centered">' +
-        '<a ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></a>' +
-        '<a ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></a>' +
-        '<a ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></a>' +
-        '<a ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></a>' +
-        '<a ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></a>' +
+        '<i ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></i>' +
+        '<i ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></i>' +
+        '<i ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></i>' +
+        '<i ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></i>' +
+        '<i ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></i>' +
         '</div>';
 
 
@@ -661,6 +695,27 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * @see data.filter
      * @see currentPage
      */
+
+
+    $scope.listMarkerModerationByFilters = function (filter, pageRequest) {
+
+        markerModerationService.listMarkerModerationByFilters( filter, pageRequest, {
+            callback: function (result) {
+
+                $scope.currentPage = result;
+                $scope.currentPage.pageable.pageNumber++;
+                $scope.currentState = $scope.LIST_STATE;
+                $scope.$apply();
+
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.fadeMsg();
+                $scope.$apply();
+            }
+        });
+    };
+
     $scope.listMarkerByFilters = function (layer, status, dateStart, dateEnd, user, pageRequest) {
 
         markerService.listMarkerByFilters(layer, status, dateStart, dateEnd, user, pageRequest, {
@@ -716,7 +771,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                     return $translate('admin.marker-moderation.Confirm-approve');
                 },
                 message: function () {
-                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + ' ? <br/>.';
+                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + ' ? <br/>';
                 },
                 buttons: function () {
                     return [
@@ -1186,7 +1241,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                         return $translate('admin.marker-moderation.Confirm-approve');
                     },
                     message: function () {
-                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + ' ? <br/>.';
+                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + ' ? <br/>';
                     },
                     buttons: function () {
                         return [
@@ -1222,7 +1277,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                         return $translate('admin.marker-moderation.Confirm-cancel');
                     },
                     message: function () {
-                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-cancel-this-marker') + ' ? <br/>.';
+                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-cancel-this-marker') + ' ? <br/>';
                     },
                     buttons: function () {
                         return [
