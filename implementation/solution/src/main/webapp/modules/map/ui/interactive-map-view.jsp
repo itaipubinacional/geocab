@@ -489,7 +489,7 @@ uri="http://www.springframework.org/security/tags"%>
                    tooltip="Selecione o formato de entrada para as coordenadas"></i>
 
                 <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
-                  <input type="radio" id="DMS" ng-click="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_MINUTES_SECONDS"
+                  <input type="radio" id="DMS" ng-change="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_MINUTES_SECONDS"
                          name="DMS">
                   <label class="radio-label" for="DMS"> <spring:message code='admin.users.coordinatesDMS'/> </label>
                 </div>
@@ -497,7 +497,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <br />
 
                 <div class="form-item-horizontal radio" style="margin-left: 0;">
-                  <input type="radio" id="DD" ng-click="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_DECIMAL"
+                  <input type="radio" id="DD" ng-change="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_DECIMAL"
                          name="DD">
                   <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDegree'/> </label>
                 </div>
@@ -511,7 +511,7 @@ uri="http://www.springframework.org/security/tags"%>
                     Latitude
                   </label>
                   <input type="text" name="latitude"
-                         class="form-control" ng-model="currentEntity.latitude">
+                         class="form-control" ng-model="formattedLatitude">
                 </div>
 
                 <br />
@@ -521,7 +521,7 @@ uri="http://www.springframework.org/security/tags"%>
                     Longitude
                   </label>
                   <input type="text" name="longitude"
-                         class="form-control" ng-model="currentEntity.longitude">
+                         class="form-control" ng-model="formattedLongitude">
                 </div>
 
                 <label><spring:message code="map.Layer"/></label>
