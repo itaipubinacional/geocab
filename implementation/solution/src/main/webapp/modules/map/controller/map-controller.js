@@ -3302,30 +3302,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.openImgModal = function (attributesByMarker) {
 
-    console.log(attributesByMarker);
-
-    var getPhotoAlbumIds = function() {
-
-      var photoAlbumIds = [];
-      angular.forEach(attributesByMarker, function (markerAttribute) {
-        if(markerAttribute.attribute.type == 'PHOTO_ALBUM') {
-
-          angular.forEach(markerAttribute.marker.markerAttribute, function(attribute){
-            if(attribute.photoAlbum != null)
-              photoAlbumIds.push(attribute.photoAlbum.id);
-          });
-        }
-      });
-
-      return photoAlbumIds;
-    };
-
     var dialog = $modal.open({
       templateUrl: 'modules/map/ui/popup/img-popup.jsp',
       controller: ImgPopUpController,
       windowClass: 'gallery-modal-window',
       resolve: {
-        photoAlbumIds: getPhotoAlbumIds
+        attributesByMarker: function(){
+          return attributesByMarker;
+        }
       }
     });
   };
@@ -3391,8 +3375,17 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.getPhotosByAttribute = function(attribute, index){
 
+    var pageable = {
+      size: 1,
+      page: 0,
+      sort: {//Sort
+        orders: [
+          {direction: 'DESC', property: 'created'}
+        ]
+      }
+    };
 
-    markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, {
+    markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, pageable, {
       callback: function (result) {
         /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
         $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/

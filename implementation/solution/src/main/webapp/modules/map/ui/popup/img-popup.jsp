@@ -29,14 +29,14 @@
 				</div>
 
 				<div class="gallery-thumbnails">
-					<img ng-click="setCurrentPhoto(photo)" ng-repeat="photo in photos" ng-src="{{ photo.image }}">
+					<img ng-click="setCurrentPhoto(photo)" ng-repeat="photo in currentAttribute.content" ng-src="{{ photo.image }}">
 				</div>
 
 			</div>
 			<div id="sidenav" class="col-md-2" style="padding: 0">
 				<ul>
-					<li ng-repeat="attr in attributesByLayer" ng-click="setAttribute(attr)"
-							ng-class="{'active': attr.name == attribute.name}"> {{ attr.name }} ({{ attr.files ? attr.files.length : 0 }})</li>
+					<li ng-repeat="attr in attributes" ng-click="setAttribute(attr)"
+							ng-class="{'active': attr.name == attribute.name}"> {{ attr.name }} ({{ currentAttribute.total }})</li>
 				</ul>
 			</div>
 		</div>
