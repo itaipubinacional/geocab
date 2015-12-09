@@ -39,7 +39,6 @@ import com.vividsolutions.jts.io.ParseException;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
-import net.opengis.wms.v_1_3_0.Exception;
 
 /**
  * @author emanuelvictor
@@ -65,11 +64,7 @@ public class ShapeFileService
 	 * import shapeFile path
 	 */
 	private static String PATH_SHAPE_FILES_IMPORT = PATH_SHAPE_FILES + "import/";
-	
-	/**
-	 * zip file name path
-	 */
-	private static String ZIP_FILE_NAME = "export_shape_file.zip";
+		
 	/**
 	 * Log
 	 */
@@ -163,19 +158,23 @@ public class ShapeFileService
 //		}
 //	}
 	
-	
-	private List<Layer> groupByLayers(List<Marker> markers)
+	/**
+	 * Agrupa as postagens pelas camadas
+	 * @param markers
+	 * @return
+	 */
+	private List<Layer> groupByLayers(final List<Marker> markers)
 	{
-		Set<Layer> layers = new HashSet<>();
+		final Set<Layer> layers = new HashSet<>();
 		
-		for (Marker marker : markers)
+		for (final Marker marker : markers)
 		{	
 			layers.add(marker.getLayer());
 		}
 		
-		for (Layer layer : layers)
+		for (final Layer layer : layers)
 		{	
-			for (Marker marker : markers)
+			for (final Marker marker : markers)
 			{
 				layer.setMarkers(new ArrayList<Marker>());
 				if (marker.getLayer().getId() == layer.getId())
@@ -194,22 +193,34 @@ public class ShapeFileService
 	 * @param markers
 	 * @return
 	 */
-	public FileTransfer exportShapeFile(List<Marker> markers)
+	public FileTransfer exportShapeFile(final List<Marker> markers)
 	{
 		
-		List<Layer> layers = groupByLayers(markers);
+		final List<Layer> layers = groupByLayers(markers);
 		
-		final String fileExport = String.valueOf("Geocab-exported-" + new SimpleDateFormat("yyyy-mm-dd").format(Calendar.getInstance().getTime()) );
+		final String fileExport = String.valueOf("Geocab_exported_" + new SimpleDateFormat("yyyy-mm-dd").format(Calendar.getInstance().getTime()) );
 
 		//Cria shapeFiles
-		DefaultFeatureCollection featureCollection = new DefaultFeatureCollection();		
+		final DefaultFeatureCollection featureCollection = new DefaultFeatureCollection();		
 		
-		for (Layer layer : layers){
+		for (final Layer layer : layers){
 			try
-			{
-				SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), "geom:Point,"+layer.formattedAttributes()/* "name:String"*/ /*name camada tal*/);
+			{				
+				layer.setName(layer.getName().replaceAll(" ", "_"));
 				
-				WKTReader2 wkt = new WKTReader2();	
+				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), "geom:Point,"+layer.formattedAttributes());
+				
+				final WKTReader2 wkt = new WKTReader2();
+				
+				final File newFile = new File(PATH_SHAPE_FILES_EXPORT + layer.getName() + ".shp");
+				
+				final ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
+
+				final Map<String, Serializable> params = new HashMap<String, Serializable>();
+		        params.put("url", newFile.toURI().toURL());
+		        params.put("create spatial index", Boolean.TRUE);
+		        
+		        final ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
 				
 				for (Marker marker : layer.getMarkers())
 				{
@@ -217,21 +228,10 @@ public class ShapeFileService
 					featureCollection.add( SimpleFeatureBuilder.build( TYPE, new Object[]{ wkt.read("POINT(" + marker.getLocation().getX() + " "+ marker.getLocation().getY() + ")")}, null) );
 				}
 				
-		        File newFile = new File(PATH_SHAPE_FILES_EXPORT + layer.getName() + ".shp");
-
-		        ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
-
-		        Map<String, Serializable> params = new HashMap<String, Serializable>();
-		        params.put("url", newFile.toURI().toURL());
-		        params.put("create spatial index", Boolean.TRUE);
-
-		        
-				ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
 				newDataStore.createSchema(TYPE);
-				
 		        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
 			}
-			catch (RuntimeException | SchemaException | ParseException | IOException e)
+			catch (final RuntimeException | SchemaException | ParseException | IOException e)
 			{
 				// Quando ocorre um erro os arquivos são removidos
 				delete(new File(PATH_SHAPE_FILES_EXPORT));
@@ -241,7 +241,7 @@ public class ShapeFileService
 		}
 		
 		//Compcta os arquivos de exportação
-		FileTransfer fileTransfer = new FileTransfer(fileExport + ".zip", "application/zip", this.compactFilesToZip(PATH_SHAPE_FILES_EXPORT, fileExport + ".zip"));
+		final FileTransfer fileTransfer = new FileTransfer(fileExport + ".zip", "application/zip", this.compactFilesToZip(PATH_SHAPE_FILES_EXPORT, fileExport + ".zip"));
 
 		//Deleta os arquivos de exportação
 		delete(new File(PATH_SHAPE_FILES_EXPORT));
@@ -249,27 +249,25 @@ public class ShapeFileService
 		return fileTransfer;
 	}
 	/**
-	 * Compacta os arquivos .shp, .dbf e shx para o formato zip e devolve um
-	 * fileTransfer
-	 * TODO alterar para fazer genérico, da mesma forma que o delete
+	 * Compacta os arquivos .shp, .dbf e shx para o formato zip e devolve um fileTransfer
 	 * @param pathExport
 	 * @return
 	 */
-	public FileInputStream compactFilesToZip(String pathExport, String fileExport)
+	public FileInputStream compactFilesToZip(final String pathExport, final String fileExport)
 	{
 		try
 		{
-			File file = new File(pathExport);
+			final File file = new File(pathExport);
 
 			byte[] buffer = new byte[10240];
 			
-			FileOutputStream fileOutputStream = new FileOutputStream(pathExport + fileExport);
+			final FileOutputStream fileOutputStream = new FileOutputStream(pathExport + fileExport);
 
-			ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
+			final ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
 
-			List<ZipEntry> entries = new ArrayList<ZipEntry>();
+			final List<ZipEntry> entries = new ArrayList<ZipEntry>();
 			
-			List<FileInputStream> filesInputStream = new ArrayList<FileInputStream>();
+			final List<FileInputStream> filesInputStream = new ArrayList<FileInputStream>();
 			
 			for (int i = 0; i < file.list().length; i++)
 			{
@@ -300,7 +298,7 @@ public class ShapeFileService
 			return new FileInputStream(pathExport + fileExport);
 
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			LOG.info(e.getMessage());
 			throw new RuntimeException("Ocorreu um erro durante a exportação: " + e.getMessage());
@@ -311,13 +309,12 @@ public class ShapeFileService
 	 * Deleta uma pasta com todos os arquivos dentro
 	 * @param file
 	 */
-	public static void delete(File file)
+	public static void delete(final File file)
 	{
 		if (file.isDirectory())
 		{
-			String files[] = file.list();
-
-			for (String temp : files)
+			
+			for (final String temp : file.list())
 			{
 				delete(new File(file, temp));
 			}
