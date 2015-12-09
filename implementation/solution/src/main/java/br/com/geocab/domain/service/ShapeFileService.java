@@ -7,32 +7,37 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.geotools.data.DataUtilities;
-import org.geotools.data.shapefile.files.FileWriter;
-import org.geotools.data.shapefile.files.ShpFileType;
-import org.geotools.data.shapefile.files.ShpFiles;
-import org.geotools.data.simple.SimpleFeatureSource;
+import org.geotools.data.shapefile.ShapefileDataStore;
+import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.WKTReader2;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vividsolutions.jts.io.ParseException;
 
+import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.Marker;
-import br.com.geocab.domain.entity.shapefile.ShapeFile;
+import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
 /**
  * @author emanuelvictor
@@ -69,6 +74,11 @@ public class ShapeFileService
 	 */
 	private static final Logger LOG = Logger
 			.getLogger(DataSourceService.class.getName());
+	/**
+	 * 
+	 */
+	@Autowired
+	private IMarkerRepository markerRepository;
 
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
@@ -79,28 +89,28 @@ public class ShapeFileService
 	 * @param shapeFile
 	 * @return
 	 */
-	public ShapeFile importShapeFile(ShapeFile shapeFile)
-	{
-		try
-		{
-			// Lê o arquivo
-			File file = this.readFile(shapeFile);
-			// ShpFiles shpFiles = new ShpFiles(file);
-			//
-			// FileDataStore store = FileDataStoreFinder.getDataStore(file);
-			// SimpleFeatureSource featureSource = store.getFeatureSource();
+//	public ShapeFile importShapeFile(ShapeFile shapeFile)
+//	{
+//		try
+//		{
+//			// Lê o arquivo
+//			File file = this.readFile(shapeFile);
+//			// ShpFiles shpFiles = new ShpFiles(file);
+//			//
+//			// FileDataStore store = FileDataStoreFinder.getDataStore(file);
+//			// SimpleFeatureSource featureSource = store.getFeatureSource();
+//
+//			// Deleta o arquivo
+//			file.delete();
+//			return shapeFile;
+//		}
+//		catch (Exception e)
+//		{
+//			LOG.info(e.getMessage());
+//			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
+//		}
 
-			// Deleta o arquivo
-			file.delete();
-			return shapeFile;
-		}
-		catch (Exception e)
-		{
-			LOG.info(e.getMessage());
-			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
-		}
-
-	}
+//	}
 	
 	/**
 	 * Insere no sistema de arquivos o shapeFile, provisoriamente
@@ -108,28 +118,53 @@ public class ShapeFileService
 	 * @param shapeFile
 	 * @return
 	 */
-	private File readFile(ShapeFile shapeFile)
+//	private File readFile(ShapeFile shapeFile)
+//	{
+//		String pathFile = "/tmp/geocab/files/" + Calendar.getInstance().getTimeInMillis() + ".shp";
+//
+//		Base64 decoder = new Base64();
+//		byte[] shpBytes = decoder.decode(shapeFile.getShp());
+//		FileOutputStream osf;
+//		try
+//		{
+//			osf = new FileOutputStream(new File(pathFile));
+//			osf.write(shpBytes);
+//			osf.flush();
+//			osf.close();
+//			return new File(pathFile);
+//		}
+//		catch (IOException e)
+//		{
+//			LOG.info(e.getMessage());
+//			throw new RuntimeException("Erro ao gravar arquivo de shapefile: " + e.getMessage());
+//		}
+//	}
+	
+	
+	private List<Layer> groupByLayers(List<Marker> markers)
 	{
-		String pathFile = "/tmp/geocab/files/" + Calendar.getInstance().getTimeInMillis() + ".shp";
-
-		Base64 decoder = new Base64();
-		byte[] shpBytes = decoder.decode(shapeFile.getShp());
-		FileOutputStream osf;
-		try
-		{
-			osf = new FileOutputStream(new File(pathFile));
-			osf.write(shpBytes);
-			osf.flush();
-			osf.close();
-			return new File(pathFile);
+		Set<Layer> layers = new HashSet<>();
+		
+		for (Marker marker : markers)
+		{	
+			layers.add(marker.getLayer());
 		}
-		catch (IOException e)
-		{
-			LOG.info(e.getMessage());
-			throw new RuntimeException("Erro ao gravar arquivo de shapefile: " + e.getMessage());
+		
+		for (Layer layer : layers)
+		{	
+			for (Marker marker : markers)
+			{
+				layer.setMarkers(new ArrayList<Marker>());
+				if (marker.getLayer().getId() == layer.getId())
+				{
+					layer.getMarkers().add(marker);
+				}
+			}
 		}
+		return new ArrayList<Layer>(layers);
 	}
-
+	
+	
 	/**
 	 * Serviço de exportação para shapeFile
 	 * 
@@ -138,52 +173,70 @@ public class ShapeFileService
 	 */
 	public FileTransfer exportShapeFile(List<Marker> markers)
 	{
-	
-		final String pathExport = PATH_SHAPE_FILES_EXPORT + /*"test"*/ Calendar.getInstance().getTimeInMillis() ;
 		
+		List<Layer> layers = groupByLayers(markers);
+		
+		final String fileExport = String.valueOf(Calendar.getInstance().getTimeInMillis());
+		
+		final String pathExport = PATH_SHAPE_FILES_EXPORT + fileExport;
+//		for (Layer layer : layers)
+//		{
+//				try
+//				{
+//					
+//																	// NOME DA LAYER			Atributos	
+//					SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(),    "geom:Point,name:String" /*name camada tal*/);
+//				}
+//				catch (SchemaException e)
+//				{
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//		}
 		//Cria shapeFiles
 		DefaultFeatureCollection featureCollection = new DefaultFeatureCollection();
 		
-		
 		try
-		{
-			SimpleFeatureType TYPE = DataUtilities.createType("location","geom:Point,name:String" /*name camada tal*/);
-
-			WKTReader2 wkt = new WKTReader2();		
+		{ 
+				
+			// NOME DA LAYER			Atributos	
+			SimpleFeatureType TYPE = DataUtilities.createType("location",    "geom:Point,name:String" /*name camada tal*/);
+			
+			WKTReader2 wkt = new WKTReader2();	
 			
 			for (Marker marker : markers)
 			{
-				featureCollection.add( SimpleFeatureBuilder.build( TYPE, new Object[]{ wkt.read("POINT(" + marker.getLocation().getX() + ","+ marker.getLocation().getY() + ")")}, null) );
+				
+				marker = markerRepository.findOne(marker.getId());
+				featureCollection.add( SimpleFeatureBuilder.build( TYPE, new Object[]{ wkt.read("POINT(" + marker.getLocation().getX() + " "+ marker.getLocation().getY() + ")")}, null) );
 			}
 			
-			SimpleFeatureSource source = DataUtilities.source( featureCollection );
+	        File newFile = new File(pathExport + ".shp");
+
+	        ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
+
+	        Map<String, Serializable> params = new HashMap<String, Serializable>();
+	        params.put("url", newFile.toURI().toURL());
+	        params.put("create spatial index", Boolean.TRUE);
+
+	        
+			ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
+			newDataStore.createSchema(TYPE);
 			
+	        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
 			
-			ShpFiles shpFiles = new ShpFiles("asdfa");
-			
-//			FileWriter fileWriter = FileWriterI
-			shpFiles.acquireWriteFile(ShpFileType.SHP, new FilePathWriter());
-			shpFiles.acquireWriteFile(ShpFileType.SHX, new FilePathWriter());
-			shpFiles.acquireWriteFile(ShpFileType.DBF, new FilePathWriter());
 			
 		}
-		catch (SchemaException | ParseException | MalformedURLException e)
+		catch (SchemaException | ParseException | IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-//		MemoryDataStore memory = new MemoryDataStore();
-		
-//		DataStore dataStore = 
-//		SimpleFeatureSource featureSource = memory.getFeatureSource(typeName);
-//	    SimpleFeatureType ft = featureSource.getSchema();
-		
 		//Compcta os arquivos de exportação
-		FileTransfer fileTransfer = new FileTransfer(ZIP_FILE_NAME, "application/zip", this.compactFilesToZip(pathExport));
+		FileTransfer fileTransfer = new FileTransfer(fileExport + ".zip", "application/zip", this.compactFilesToZip(PATH_SHAPE_FILES_EXPORT, fileExport + ".zip"));
 
 		//Deleta os arquivos de exportação
-		delete(new File(pathExport));
+		delete(new File(PATH_SHAPE_FILES_EXPORT));
 
 		return fileTransfer;
 	}
@@ -194,7 +247,7 @@ public class ShapeFileService
 	 * @param pathExport
 	 * @return
 	 */
-	public FileInputStream compactFilesToZip(String pathExport)
+	public FileInputStream compactFilesToZip(String pathExport, String fileExport)
 	{
 		try
 		{
@@ -202,38 +255,41 @@ public class ShapeFileService
 
 			byte[] buffer = new byte[10240];
 			
-			FileOutputStream fileOutputStream = new FileOutputStream(pathExport + ZIP_FILE_NAME);
+			FileOutputStream fileOutputStream = new FileOutputStream(pathExport + fileExport);
 
 			ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
 
-			ZipEntry entries[] = new ZipEntry[file.list().length];
+			List<ZipEntry> entries = new ArrayList<ZipEntry>();
 			
-			FileInputStream filesInputStream[] = new FileInputStream[file.list().length];
+			List<FileInputStream> filesInputStream = new ArrayList<FileInputStream>();
 			
 			for (int i = 0; i < file.list().length; i++)
 			{
-				entries[i] = new ZipEntry(file.list()[i]);
-				filesInputStream[i] = new FileInputStream(pathExport + "/" +file.list()[i]);
+				if (!file.list()[i].contains(".zip"))
+				{
+					entries.add(new ZipEntry(file.list()[i]));
+					filesInputStream.add(new FileInputStream(pathExport +file.list()[i]));
+				}
 			}
 
-			for (int i = 0; i < entries.length; i++)
+			for (int i = 0; i < entries.size(); i++)
 			{
-				zipOutputStream.putNextEntry(entries[i]);
+				zipOutputStream.putNextEntry(entries.get(i));
 
 				int len;
-				while ((len = filesInputStream[i].read(buffer)) > 0)
+				while ((len = filesInputStream.get(i).read(buffer)) > 0)
 				{
 					zipOutputStream.write(buffer, 0, len);
 				}
 
-				filesInputStream[i].close();
+				filesInputStream.get(i).close();
 			}
 
 			zipOutputStream.closeEntry();
 
 			zipOutputStream.close();
 			
-			return new FileInputStream(pathExport + ZIP_FILE_NAME);
+			return new FileInputStream(pathExport + fileExport);
 
 		}
 		catch (IOException e)
@@ -251,45 +307,20 @@ public class ShapeFileService
 	{
 		if (file.isDirectory())
 		{
-			if (file.list().length == 0)
+			String files[] = file.list();
+
+			for (String temp : files)
 			{
-				file.delete();
+				File fileDelete = new File(file, temp);
+
+				delete(fileDelete);
 			}
-			else
-			{
-				String files[] = file.list();
 
-				for (String temp : files)
-				{
-					File fileDelete = new File(file, temp);
-
-					delete(fileDelete);
-				}
-
-				if (file.list().length == 0)
-				{
-					file.delete();
-				}
-			}
 		}
 		else
 		{
 			file.delete();
 		}
-	}
-	
-	class FilePathWriter implements FileWriter{
-
-		/* (non-Javadoc)
-		 * @see org.geotools.data.shapefile.files.FileWriter#id()
-		 */
-		@Override
-		public String id()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
 	}
 
 }

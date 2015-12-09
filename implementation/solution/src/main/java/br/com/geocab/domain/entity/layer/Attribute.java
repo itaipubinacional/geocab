@@ -183,6 +183,11 @@ public class Attribute extends AbstractEntity implements Serializable
 		this.setName(name);
 		this.setLayer(layer);
 	}
+	
+	/*-------------------------------------------------------------------
+	 *								BEHAVIORS
+	 *-------------------------------------------------------------------*/
+	
 
 	/*-------------------------------------------------------------------
 	 *								SETTERS/GETTERS
@@ -197,8 +202,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
+	 * 
 	 */
 	public void setName(String name)
 	{
@@ -323,5 +328,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		this.visible = visible;
 	}
+
+	
 
 }
