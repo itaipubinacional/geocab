@@ -28,6 +28,8 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
   $scope.currentPhoto = {};
 
+  $scope.photoIndex = 0;
+
   $scope.attributes = [];
 
   /**
@@ -47,34 +49,88 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
     }
   };
 
+  /*-------------------------------------------------------------------
+   * 		 				 	  BEHAVIORS
+   *-------------------------------------------------------------------*/
+
+  $scope.setCurrentPhoto = function (photo, index) {
+
+    $scope.photoIndex = index;
+
+    markerService.findPhotoById(photo.id, {
+      callback: function (result) {
+        console.log(result);
+        $scope.currentPhoto = result;
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+
+
+  };
+
   $scope.setAttribute = function (attribute) {
 
     $scope.currentAttribute = attribute;
+
+    $scope.setCurrentPhoto(attribute.content[0], 0);
     /*angular.forEach(attribute.photoAlbumIds, function (photoAlbumId) {
 
-      markerService.listPhotosByPhotoAlbumId(photoAlbumId, $scope.pageable, {
+     markerService.listPhotosByPhotoAlbumId(photoAlbumId, $scope.pageable, {
 
-        callback: function (result) {
+     callback: function (result) {
 
-          angular.forEach(result.content, function (photo, index) {
-            if (index == 0)
-              $scope.setCurrentPhoto(photo);
-            $scope.photos.push(photo);
-          });
+     angular.forEach(result.content, function (photo, index) {
+     if (index == 0)
+     $scope.setCurrentPhoto(photo);
+     $scope.photos.push(photo);
+     });
 
-          $scope.$apply();
-        },
-        errorHandler: function (message, exception) {
-          $scope.message = {type: "error", text: message};
-          $scope.$apply();
-        }
+     $scope.$apply();
+     },
+     errorHandler: function (message, exception) {
+     $scope.message = {type: "error", text: message};
+     $scope.$apply();
+     }
 
-      });
+     });
 
 
-    });*/
+     });*/
   };
 
+  $scope.nextPhoto = function(){
+
+    if($scope.currentAttribute.content[$scope.photoIndex + 1]){
+
+      $scope.setCurrentPhoto($scope.currentAttribute.content[$scope.photoIndex + 1], $scope.photoIndex + 1);
+
+    }
+
+
+
+  };
+
+  $scope.previousPhoto = function(){
+
+    if($scope.photoIndex - 1 >= 0 && $scope.currentAttribute.content[$scope.photoIndex - 1]){
+
+      $scope.setCurrentPhoto($scope.currentAttribute.content[$scope.photoIndex - 1], $scope.photoIndex - 1);
+
+    }
+
+  };
+
+  $scope.nextPage = function(){
+
+  };
+
+  $scope.previousPage = function(){
+
+  };
 
   /*-------------------------------------------------------------------
    * 		 				 	  NAVIGATIONS
@@ -91,62 +147,42 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
     $scope.attributesByMarker = attributesByMarker;
 
-    angular.forEach(attributesByMarker, function (markerAttribute, index) {
+    angular.forEach(attributesByMarker[0].marker.markerAttribute, function (markerAttribute, index) {
       if (markerAttribute.attribute.type == 'PHOTO_ALBUM') {
 
         //$scope.attributes[index] = markerAttribute.attribute;
 
-        angular.forEach(markerAttribute.marker.markerAttribute, function (attribute, index) {
 
-          if (attribute.photoAlbum != null) {
+        if (markerAttribute.photoAlbum != null) {
 
-            markerService.listPhotosByPhotoAlbumId(attribute.photoAlbum.id, $scope.pageable, {
+          console.log(markerAttribute.photoAlbum.id);
 
-              callback: function (result) {
+          markerService.listPhotosByPhotoAlbumId(markerAttribute.photoAlbum.id, $scope.pageable, {
 
-                $scope.attributes.push(result);
+            callback: function (result) {
 
-                //if (index == 0) {
-                  $scope.setAttribute(result);
-                  $scope.$apply();
-                //}
+              $scope.attributes.push(result);
 
-              },
-              errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+              //if (index == 0) {
+                $scope.setAttribute(result);
                 $scope.$apply();
-              }
+              //}
 
-            });
+            },
+            errorHandler: function (message, exception) {
+              $scope.message = {type: "error", text: message};
+              $scope.$apply();
+            }
 
-          }
-        });
+          });
 
+        }
       }
     });
 
     //$scope.setAttribute($scope.attributes[0]);
 
   };
-
-  $scope.setCurrentPhoto = function (photo) {
-
-    markerService.findPhotoById(photo.id, {
-      callback: function (result) {
-        console.log(result);
-        $scope.currentPhoto = result;
-        $scope.$apply();
-      },
-      errorHandler: function (message, exception) {
-        $scope.message = {type: "error", text: message};
-        $scope.$apply();
-      }
-    });
-
-  };
-  /*-------------------------------------------------------------------
-   * 		 				 	  BEHAVIORS
-   *-------------------------------------------------------------------*/
 
   /**
    *
