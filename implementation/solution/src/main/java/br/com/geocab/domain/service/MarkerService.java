@@ -796,7 +796,9 @@ public class MarkerService
 			InputStream isteam = new ByteArrayInputStream(os.toByteArray());
 	
 			MetaFile metaFile = new MetaFile();
+
 			
+			//TODO verificar necessidade
 			photo.getIdentifier();
 			
 			metaFile.setId(String.valueOf(photo.getId()));

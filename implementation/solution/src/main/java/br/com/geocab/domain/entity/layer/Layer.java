@@ -370,18 +370,21 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	/**
 	 * @return the attributes
 	 */
-	public String getFormattedAttributes()
+	public String formattedAttributes()
 	{
 		String formattedAttributes = new String();
-		for (Attribute attribute : attributes)
+		for (Attribute attribute : this.getAttributes())
 		{
-			if (formattedAttributes.length() > 0)
+			if (attribute.getName()!= null)
 			{
-				formattedAttributes += "," + attribute.getName() + ":" + attribute.getFormmattedAttribute();
-			}
-			else
-			{
-				formattedAttributes += attribute.getName() + ":" + attribute.getType().toString();
+				if (formattedAttributes.length() > 0)
+				{
+					formattedAttributes += "," + attribute.formmattedAttribute() + ":" +  attribute.getName();
+				}
+				else
+				{
+					formattedAttributes += attribute.getName() + ":" + attribute.getType().toString();
+				}
 			}
 		}
 		return formattedAttributes;

@@ -216,14 +216,14 @@ public class Marker extends AbstractEntity implements Serializable
 	 */
 	public void validate()
 	{
-		for (MarkerAttribute markerAttribute : markerAttributes)
-		{
-			if (markerAttribute.getAttribute().getRequired())
-			{
+//		for (MarkerAttribute markerAttribute : markerAttributes)
+//		{
+//			if (markerAttribute.getAttribute().getRequired())
+//			{
 //			TODO	Assert.isTrue(markerAttribute.getAttribute().getRequired() && markerAttribute. this.getPhotoAlbum() != null, "A postagem deve ter um album de fotos");
-			}
+//			}
 //			markerAttribute.validate();
-		}
+//		}
 	}
 	/*-------------------------------------------------------------------
 	 *						   SETTERS AND GETTERS

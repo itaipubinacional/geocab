@@ -186,7 +186,7 @@ public class ShapeFileService
 			try
 			{
 				// NOME DA LAYER			Atributos	
-				SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(),    "geom:Point,"+layer.getFormattedAttributes()/* "name:String"*/ /*name camada tal*/);
+				SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(),    "geom:Point,"+layer.formattedAttributes()/* "name:String"*/ /*name camada tal*/);
 				
 				WKTReader2 wkt = new WKTReader2();	
 				

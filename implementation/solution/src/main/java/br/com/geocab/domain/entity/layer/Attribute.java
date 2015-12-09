@@ -188,7 +188,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	
-	public String getFormmattedAttribute(){
+	public String formmattedAttribute(){
 		if (this.getType() == AttributeType.TEXT || this.getType() == AttributeType.DATE)
 		{
 			return "String";
