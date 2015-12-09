@@ -3323,7 +3323,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     var dialog = $modal.open({
       templateUrl: 'modules/map/ui/popup/img-popup.jsp',
       controller: ImgPopUpController,
-      size: 'lg',
+      windowClass: 'gallery-modal-window',
       resolve: {
         photoAlbumIds: getPhotoAlbumIds
       }

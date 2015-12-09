@@ -294,10 +294,21 @@ public class MarkerService
 	 * @param photoId
 	 * @return
 	 */
-	public Photo findPhotoById(String photoId)
+	public Photo findPhotoById(String identifier)
 	{
-		Photo photo = this.photoRepository.findByIdentifier(photoId);
-		//photo.setImage(this.findFileById(photo.getIdentifier()));
+		Photo photo = this.photoRepository.findByIdentifier(identifier);
+		
+		try
+		{
+			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
+			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(), metaFile.getContentType(), metaFile.getInputStream());
+			photo.setImage(fileTransfer);
+		}
+		catch (RepositoryException e)
+		{
+			e.printStackTrace();
+		}
+		
 		return photo;
 	}
 	
@@ -309,7 +320,18 @@ public class MarkerService
 	public Photo findPhotoById(Long photoId)
 	{
 		Photo photo = this.photoRepository.findOne(photoId);
-		//photo.setImage(findFileById(photo.getIdentifier()));
+		
+		try
+		{
+			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
+			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(), metaFile.getContentType(), metaFile.getInputStream());
+			photo.setImage(fileTransfer);
+		}
+		catch (RepositoryException e)
+		{
+			e.printStackTrace();
+		}
+		
 		return photo;
 	}
 

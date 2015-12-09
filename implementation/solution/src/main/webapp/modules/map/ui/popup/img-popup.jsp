@@ -8,23 +8,28 @@
 <!DOCTYPE html>
 <html>
 
-<div class="modal-content" style="width: 676px;">
+<div class="modal-content" id="gallery">
 
+	<div class="modal-header">
+		<h3 class="modal-title">Visualizar imagens</h3>
+	</div>
 	<!-- <span class="icon itaipu-icon-close sidebar-close" ng-click="close(true)"></span> -->
 
-	<div class="modal-body" ng-init="initialize();" style="overflow-y: auto; max-height: 550px;">
+	<div class="modal-body" ng-init="initialize();" style="overflow-y: auto;">
 
 
 		<div>
 			<div class="col-md-10" style="padding: 0">
 
+				<h4>Descrição</h4>
+				<p>Texto descrição</p>
 
-				<div style="height: 400px; width: 100%">
+				<div class="current-photo">
 					<img ng-src="{{ currentPhoto.image }}">
 				</div>
 
 				<div class="gallery-thumbnails">
-					<img ng-click="setCurrentPhoto(photo)" ng-repeat="photo in photos" ng-src="{{ photo.image }}" style="max-width: 125px; max-height: 125px;">
+					<img ng-click="setCurrentPhoto(photo)" ng-repeat="photo in photos" ng-src="{{ photo.image }}">
 				</div>
 
 			</div>

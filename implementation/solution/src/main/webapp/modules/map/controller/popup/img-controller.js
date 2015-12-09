@@ -58,7 +58,7 @@ function ImgPopUpController($scope, $modalInstance, $log, photoAlbumIds, $import
 
                     angular.forEach(result.content, function(photo, index){
                         if(index == 0)
-                            $scope.currentPhoto = photo;
+                            $scope.setCurrentPhoto(photo);
                         $scope.photos.push(photo);
                     });
 
