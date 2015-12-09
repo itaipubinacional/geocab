@@ -95,9 +95,10 @@
                 </div>
 
                 <div style="text-align:center;">
-                    <img ng-click="openImgModal()" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-                         style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px"> <br>
-
+                    <!--<img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"-->
+                         <!--style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px"> <br>-->
+                    <img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+                         style="width: 100%;margin-top: 12px;cursor: pointer;max-width:360px"> <br>
                 </div>
             </div>
 

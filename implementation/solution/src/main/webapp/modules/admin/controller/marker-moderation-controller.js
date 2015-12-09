@@ -417,6 +417,37 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     };
 
+    $scope.changeToListNoVectorMarkers = function (markers) {
+
+        $scope.listAllInternalLayerGroups();
+        $scope.listAllUsers();
+
+        var pageRequest = new PageRequest();
+        pageRequest.size = 10;
+        pageRequest.sort = new Sort();
+        pageRequest.sort.orders = [{direction:'ASC',property : 'created'}];
+        $scope.pageRequest = pageRequest;
+
+        if (typeof markers == 'undefined') {
+            $scope.listMarkerByFilters(null, $scope.PENDING, null, null, null, pageRequest);
+            $scope.listMarkerByFiltersMapNoVectorMarkers(null,$scope.PENDING,null, null, null);
+        } else if (typeof markers.content != 'undefined') {
+
+            var markersId = [];
+
+            for (var k = 0; k < markers.content.length; k++) {
+                markersId.push(markers.content[k].id);
+            }
+
+            $scope.listMarkerByMarkersNoVectorMarkers(markersId, pageRequest);
+
+
+        } else {
+            $scope.listMarkerByMarkersNoVectorMarkers(markers, pageRequest);
+        }
+
+    };
+
     /**
      * Performs initial procedures (prepares the State)
      * for screen and after that, change the State to insert.
@@ -706,6 +737,28 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
     };
 
+    $scope.listMarkerByFiltersMapNoVectorMarkers = function (layer, status, dateStart, dateEnd, user) {
+
+        markerService.listMarkerByFiltersMap(layer, status, dateStart, dateEnd, user, {
+            callback: function (result) {
+                if ($scope.features.length) {
+                    $scope.clearFeatures();
+                    $scope.removeLayers();
+                }
+                var markers = {'content': null};
+                markers.content = result;
+                $scope.buildMarker(markers);
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.fadeMsg();
+                $scope.$apply();
+            }
+        });
+    };
+
+
     /**
      * Performs the query logs, considering filter, paging and sorting.
      * When ok, change the state of the screen to list.
@@ -855,6 +908,56 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     }
 
+
+    $scope.getPhotosByAttribute = function(attribute, index){
+
+        var pageable = {
+            size: 1,
+            page: 0,
+            sort: {//Sort
+                orders: [
+                    {direction: 'DESC', property: 'created'}
+                ]
+            }
+        };
+
+        markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, pageable, {
+            callback: function (result) {
+                /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
+                 $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
+
+                $scope.attributesByMarker[index].photoAlbum = result.content[0].photoAlbum;
+                $scope.attributesByMarker[index].photoAlbum.photos = result.content;
+
+                $scope.imgResult = result.content[0].image;
+
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+            }
+        })
+
+    };
+
+
+    $scope.refreshMapNoVectorMarkers = function (markers) {
+
+        if ($scope.features.length) {
+            $scope.clearFeatures();
+            $scope.removeLayers();
+        }
+
+        if ($scope.hasSearch) {
+            //if it was done some search, return the searched markers on the map
+            $scope.buildMarker(markers);
+        } else {
+            //else return all the markers
+            $scope.listMarkerByFiltersMapNoVectorMarkers(null, null, null, null);
+        }
+    }
+
     /**
      * Accept status marker moderation
      */
@@ -865,7 +968,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 console.log(result);
                 $scope.currentEntity = result.marker;
                 $scope.updateStatus();
-                $scope.changeToList($scope.currentPage);
+                $scope.changeToListNoVectorMarkers($scope.currentPage);
                 $scope.msg = {
                     type: "success",
                     text: $translate('admin.marker-moderation.Marker-successfully-approved'),
@@ -889,7 +992,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 console.log(result);
                 $scope.currentEntity = result;
                 $scope.updateStatus();
-                $scope.changeToList($scope.currentPage);
+                $scope.changeToListNoVectorMarkers($scope.currentPage);
                 $scope.msg = {
                     type: "success",
                     text: $translate('admin.marker-moderation.Marker-successfully-canceled'),
@@ -914,7 +1017,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 console.log(result);
                 $scope.currentEntity = result.marker;
                 $scope.updateStatus();
-                $scope.changeToList($scope.currentPage);
+                $scope.changeToListNoVectorMarkers($scope.currentPage);
                 $scope.msg = {
                     type: "danger",
                     text: $translate('admin.marker-moderation.Marker-successfully-refused'),
@@ -943,6 +1046,30 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             callback: function (result) {
                 if (!$scope.drag) {
                     $scope.refreshMap(result);
+                }
+
+                if ($scope.hasSearch || $scope.drag) {
+                    $scope.currentPage = result;
+                    $scope.currentPage.pageable.pageNumber++;
+                }
+
+                $scope.currentState = $scope.LIST_STATE;
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.fadeMsg();
+                $scope.$apply();
+            }
+        });
+    };
+
+    $scope.listMarkerByMarkersNoVectorMarkers = function (markers, pageRequest) {
+
+        markerService.listMarkerByMarkers(markers, pageRequest, {
+            callback: function (result) {
+                if (!$scope.drag) {
+                    $scope.refreshMapNoVectorMarkers(result);
                 }
 
                 if ($scope.hasSearch || $scope.drag) {
@@ -1026,10 +1153,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         }, 300);
     };
 
-    /**
-     * Build the vectors in the map
-     */
-    $scope.buildVectorMarker = function (markers) {
+    $scope.buildMarker = function(markers){
+
         $scope.drag = false;
         var coordenates = [];
 
@@ -1131,11 +1256,19 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $scope.features.push({'feature': feature, "extent": source.getExtent(), 'layer': layer});
 
             $scope.map.addLayer(layer);
+
+            $scope.extent = new ol.extent.boundingExtent(coordenates);
         });
+    };
 
-        var extent = new ol.extent.boundingExtent(coordenates);
+    /**
+     * Build the vectors in the map
+     */
+    $scope.buildVectorMarker = function (markers) {
 
-        $scope.map.getView().fitExtent(extent, $scope.map.getSize());
+        $scope.buildMarker(markers);
+
+        $scope.map.getView().fitExtent($scope.extent, $scope.map.getSize());
 
     };
 
@@ -1375,17 +1508,49 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.$apply();
             }
         });
+        //
+        //markerService.findImgByMarker($scope.currentEntity.id, {
+        //    callback: function (result) {
+        //
+        //        $scope.imgResult = result;
+        //    },
+        //    errorHandler: function (message, exception) {
+        //        $scope.message = {type: "error", text: message};
+        //        $scope.$apply();
+        //    }
+        //});
 
-        markerService.findImgByMarker($scope.currentEntity.id, {
-            callback: function (result) {
+        //
+        //console.log("ERSDFSDFD");
+        //var pageable = {
+        //    size: 1,
+        //    page: 0,
+        //    sort: {//Sort
+        //        orders: [
+        //            {direction: 'DESC', property: 'created'}
+        //        ]
+        //    }
+        //};
+        //
+        //markerService.findPhotoAlbumByAttributeMarkerId($scope.attributesByMarker, pageable, {
+        //    callback: function (result) {
+        //        /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
+        //         $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
+        //
+        //        $scope.attributesByMarker[index].photoAlbum = result.content[0].photoAlbum;
+        //        $scope.attributesByMarker[index].photoAlbum.photos = result.content;
+        //
+        //        $scope.imgResult = result.content[0].image;
+        //
+        //        $scope.$apply();
+        //    },
+        //    errorHandler: function (message, exception) {
+        //        $scope.message = {type: "error", text: message};
+        //        $scope.$apply();
+        //    }
+        //})
 
-                $scope.imgResult = result;
-            },
-            errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
-                $scope.$apply();
-            }
-        });
+
 
     };
 
