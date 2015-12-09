@@ -263,7 +263,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         beforeSelectionChange: function (row, event) {
 
             //avoids call a selection , when clicked in a action button.
-            if ($(event.target).is("a") || $(event.target).is("i")) return false;
+            //if ($(event.target).is("a") || $(event.target).is("i")) return false;
 
             $scope.changeToDetail(row.entity);
 
@@ -392,7 +392,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
         pageRequest.sort = new Sort();
-        pageRequest.sort.orders = [{direction:'DESC',property : 'created'}];
+        pageRequest.sort.orders = [{direction:'ASC',property : 'created'}];
 
 
         $scope.pageRequest = pageRequest;
@@ -889,7 +889,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 console.log(result);
                 $scope.currentEntity = result;
                 $scope.updateStatus();
-                //$scope.changeToList($scope.currentPage);
+                $scope.changeToList($scope.currentPage);
                 $scope.msg = {
                     type: "success",
                     text: $translate('admin.marker-moderation.Marker-successfully-canceled'),

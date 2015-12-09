@@ -263,7 +263,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         afterSelectionChange: function (row) {
 
             //avoids call a selection , when clicked in a action button.
-            if (!($(event.target).is("a") || $(event.target).is("i") || $(event.target).is("input"))) {
+            if (!($(event.target).is("input"))) {
 
                 $scope.changeToDetail(row.entity);
 
