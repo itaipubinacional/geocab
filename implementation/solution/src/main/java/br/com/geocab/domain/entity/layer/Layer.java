@@ -379,11 +379,11 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 			{
 				if (formattedAttributes.length() > 0)
 				{
-					formattedAttributes += "," +  attribute.getName() + ":" + attribute.formmattedAttribute() ;
+					formattedAttributes += "," +  attribute.getName().replaceAll(" ", "_") + ":" + attribute.formmattedAttribute().replaceAll(" ", "_");
 				}
 				else
 				{
-					formattedAttributes += attribute.getName() + ":" + attribute.formmattedAttribute() ;
+					formattedAttributes += attribute.getName().replaceAll(" ", "_") + ":" + attribute.formmattedAttribute().replaceAll(" ", "_");
 				}
 			}
 		}
