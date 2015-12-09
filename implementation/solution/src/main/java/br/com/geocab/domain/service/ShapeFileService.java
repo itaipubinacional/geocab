@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -176,60 +177,44 @@ public class ShapeFileService
 		
 		List<Layer> layers = groupByLayers(markers);
 		
-		final String fileExport = String.valueOf(Calendar.getInstance().getTimeInMillis());
-		
-		final String pathExport = PATH_SHAPE_FILES_EXPORT + fileExport;
-//		for (Layer layer : layers)
-//		{
-//				try
-//				{
-//					
-//																	// NOME DA LAYER			Atributos	
-//					SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(),    "geom:Point,name:String" /*name camada tal*/);
-//				}
-//				catch (SchemaException e)
-//				{
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//		}
+		final String fileExport = String.valueOf("Geocab-exported-" + new SimpleDateFormat("yyyy-mm-dd").format(Calendar.getInstance().getTime()) );
+
 		//Cria shapeFiles
-		DefaultFeatureCollection featureCollection = new DefaultFeatureCollection();
+		DefaultFeatureCollection featureCollection = new DefaultFeatureCollection();		
 		
-		try
-		{ 
-				
-			// NOME DA LAYER			Atributos	
-			SimpleFeatureType TYPE = DataUtilities.createType("location",    "geom:Point,name:String" /*name camada tal*/);
-			
-			WKTReader2 wkt = new WKTReader2();	
-			
-			for (Marker marker : markers)
+		for (Layer layer : layers){
+			try
 			{
+				// NOME DA LAYER			Atributos	
+				SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(),    "geom:Point,"+layer.getFormattedAttributes()/* "name:String"*/ /*name camada tal*/);
 				
-				marker = markerRepository.findOne(marker.getId());
-				featureCollection.add( SimpleFeatureBuilder.build( TYPE, new Object[]{ wkt.read("POINT(" + marker.getLocation().getX() + " "+ marker.getLocation().getY() + ")")}, null) );
+				WKTReader2 wkt = new WKTReader2();	
+				
+				for (Marker marker : layer.getMarkers())
+				{
+					marker = markerRepository.findOne(marker.getId());												// TODO verificar se essa é a sintaxe correta
+					featureCollection.add( SimpleFeatureBuilder.build( TYPE, new Object[]{ wkt.read("POINT(" + marker.getLocation().getX() + " "+ marker.getLocation().getY() + ")")}, null) );
+				}
+				
+		        File newFile = new File(PATH_SHAPE_FILES_EXPORT + layer.getName() + ".shp");
+
+		        ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
+
+		        Map<String, Serializable> params = new HashMap<String, Serializable>();
+		        params.put("url", newFile.toURI().toURL());
+		        params.put("create spatial index", Boolean.TRUE);
+
+		        
+				ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
+				newDataStore.createSchema(TYPE);
+				
+		        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
+		        
 			}
-			
-	        File newFile = new File(pathExport + ".shp");
-
-	        ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
-
-	        Map<String, Serializable> params = new HashMap<String, Serializable>();
-	        params.put("url", newFile.toURI().toURL());
-	        params.put("create spatial index", Boolean.TRUE);
-
-	        
-			ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
-			newDataStore.createSchema(TYPE);
-			
-	        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
-			
-			
-		}
-		catch (SchemaException | ParseException | IOException e)
-		{
-			e.printStackTrace();
+			catch (SchemaException | ParseException | IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		
 		//Compcta os arquivos de exportação

@@ -188,7 +188,24 @@ public class Attribute extends AbstractEntity implements Serializable
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	
-
+	public String getFormmattedAttribute(){
+		if (this.getType() == AttributeType.TEXT || this.getType() == AttributeType.DATE)
+		{
+			return "String";
+		}
+		else if (this.getType() == AttributeType.BOOLEAN)
+		{
+			return "Boolean";
+		}
+		else if (this.getType() != AttributeType.PHOTO_ALBUM)
+		{
+			return "Integer";
+		}else // Se for do tipo PHOTO_ALBUM retorna null
+		{
+			return null;
+		}
+	}
+	
 	/*-------------------------------------------------------------------
 	 *								SETTERS/GETTERS
 	 *-------------------------------------------------------------------*/

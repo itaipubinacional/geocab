@@ -27,9 +27,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.util.Assert;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 
@@ -216,7 +218,11 @@ public class Marker extends AbstractEntity implements Serializable
 	{
 		for (MarkerAttribute markerAttribute : markerAttributes)
 		{
-			markerAttribute.validate();
+			if (markerAttribute.getAttribute().getRequired())
+			{
+//			TODO	Assert.isTrue(markerAttribute.getAttribute().getRequired() && markerAttribute. this.getPhotoAlbum() != null, "A postagem deve ter um album de fotos");
+			}
+//			markerAttribute.validate();
 		}
 	}
 	/*-------------------------------------------------------------------

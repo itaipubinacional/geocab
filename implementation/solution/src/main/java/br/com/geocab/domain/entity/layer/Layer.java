@@ -32,17 +32,16 @@ import br.com.geocab.domain.entity.marker.Marker;
 
 /**
  * 
- * @author Vinicius Ramos Kawamoto 
+ * @author Vinicius Ramos Kawamoto
  * @since 19/09/2014
  * @version 1.0
  * @category Entity
  */
 @Entity
 @Audited
-@DataTransferObject(javascript="Layer")
+@DataTransferObject(javascript = "Layer")
 public class Layer extends AbstractEntity implements Serializable, ITreeNode
 {
-
 
 	/**
 	 * 
@@ -53,12 +52,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * 
 	 */
 	public static final String LEGEND_GRAPHIC_URL = "ows?service=wms&version=1.3.0&request=GetLegendGraphic&layer=";
-	
+
 	/**
 	 * 
 	 */
 	public static final String LEGEND_GRAPHIC_FORMAT = "&format=image/png";
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
@@ -66,13 +65,13 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * Name {@link Layer}
 	 */
 	@NotEmpty
-	@Column(nullable=false, length=144)
+	@Column(nullable = false, length = 144)
 	private String name;
 	/**
 	 * Title {@link Layer}
 	 */
 	@NotEmpty
-	@Column(nullable=false, length=144)
+	@Column(nullable = false, length = 144)
 	private String title;
 	/**
 	 * Legend {@link Layer}
@@ -111,45 +110,47 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	@NotNull
 	@Enumerated(EnumType.ORDINAL)
 	private MapScale maximumScaleMap;
-	
+
 	/**
 	 * status
 	 */
 	private Boolean enabled;
-	
+
 	/**
 	 * {@link DataSource} of {@link Layer}
 	 */
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private DataSource dataSource;
 	/**
 	 * {@link LayerGroup} of {@link Layer}
 	 */
 	@JsonIgnore
-	@ManyToOne(fetch=FetchType.EAGER, optional=true)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	private LayerGroup layerGroup;
 	/**
 	 * Draft {@link Layer} that originated the published {@link Layer}
 	 */
 	@JsonIgnore
-	@OneToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
+	@OneToOne(fetch = FetchType.EAGER, optional = true, cascade =
+	{ CascadeType.ALL })
 	private Layer publishedLayer;
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="layer", fetch=FetchType.EAGER, cascade={CascadeType.REMOVE})
+	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade =
+	{ CascadeType.REMOVE })
 	private List<Marker> markers = new ArrayList<Marker>();
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="layer", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade =
+	{ CascadeType.ALL })
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 
-	
 	/**
 	 * Field that informs if the {@link Layer} is published
 	 */
 	@Column
 	private Boolean published;
-	
+
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -158,73 +159,73 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 */
 	public Layer()
 	{
-		
+
 	}
-	
+
 	/**
 	 * 
 	 *
 	 * @param id
 	 */
-	public Layer( Long id )
+	public Layer(Long id)
 	{
 		this.setId(id);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @param name
 	 * @param order
 	 */
-	public Layer( Long id, String name, int orderLayer )
+	public Layer(Long id, String name, int orderLayer)
 	{
 		this.setId(id);
 		this.setName(name);
 		this.setOrderLayer(orderLayer);
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @param title
 	 */
-	public Layer( Long id, String title )
+	public Layer(Long id, String title)
 	{
 		this.setId(id);
 		this.setTitle(title);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @param title
 	 * @param group
 	 */
-	public Layer( Long id, String name, String title, String icon, DataSource dataSource )
+	public Layer(Long id, String name, String title, String icon,
+			DataSource dataSource)
 	{
 		this.setId(id);
 		this.setName(name);
 		this.setTitle(title);
 		this.setIcon(icon);
 		this.setDataSource(dataSource);
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param id
 	 * @param title
 	 * @param group
 	 */
-	public Layer( Long id, String title, String icon, LayerGroup group )
+	public Layer(Long id, String title, String icon, LayerGroup group)
 	{
 		this.setId(id);
 		this.setTitle(title);
 		this.setLayerGroup(group);
 		this.setIcon(icon);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
@@ -238,8 +239,10 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, String title, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, DataSource dataSource,
-			LayerGroup layerGroup )
+	public Layer(Long id, String name, String title, Boolean startEnabled,
+			Boolean startVisible, int orderLayer, MapScale minimumMapScale,
+			MapScale maximumMapScale, Boolean enabled, DataSource dataSource,
+			LayerGroup layerGroup)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -253,7 +256,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
@@ -269,8 +272,10 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, String icon, String title, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, DataSource dataSource,
-			LayerGroup layerGroup )
+	public Layer(Long id, String name, String icon, String title,
+			Boolean startEnabled, Boolean startVisible, int orderLayer,
+			MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled,
+			DataSource dataSource, LayerGroup layerGroup)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -286,7 +291,6 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setIcon(icon);
 	}
 
-	
 	/**
 	 * 
 	 * @param id
@@ -299,7 +303,10 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer( Long id, String name, Boolean startEnabled, Boolean startVisible, int orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, DataSource dataSource, LayerGroup layerGroup )
+	public Layer(Long id, String name, Boolean startEnabled,
+			Boolean startVisible, int orderLayer, MapScale minimumMapScale,
+			MapScale maximumMapScale, DataSource dataSource,
+			LayerGroup layerGroup)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -311,12 +318,77 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
 	}
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
-	
-	/* (non-Javadoc)
+
+	/**
+	 * @return the legend
+	 */
+	public String getLegend()
+	{
+		if (this.legend != null && this.legend.contains("&authkey="))
+		{
+			this.legend = this.legend.replace(
+					this.legend.substring(this.legend.indexOf("&authkey="),
+							this.legend.length()),
+					"");
+		}
+		if (this.dataSource != null && this.dataSource.getToken() != null)
+		{
+			return this.legend + "&authkey=" + this.dataSource.getToken();
+		}
+		return legend;
+	}
+
+	/**
+	 * @param legend
+	 *            the legend to set
+	 */
+	public void setLegend(String legend)
+	{
+		if (this.legend != null && this.legend.contains("&authkey="))
+		{
+			this.legend = this.legend.replace(
+					this.legend.substring(this.legend.indexOf("&authkey="),
+							this.legend.length()),
+					"");
+		}
+		if (legend != null && legend.contains("&authkey="))
+		{
+			legend = legend.replace(legend.substring(
+					legend.indexOf("&authkey="), legend.length()), "");
+		}
+		if (this.dataSource != null && this.dataSource.getToken() != null)
+		{
+			legend += "&authkey=" + this.dataSource.getToken();
+		}
+		this.legend = legend;
+	}
+
+	/**
+	 * @return the attributes
+	 */
+	public String getFormattedAttributes()
+	{
+		String formattedAttributes = new String();
+		for (Attribute attribute : attributes)
+		{
+			if (formattedAttributes.length() > 0)
+			{
+				formattedAttributes += "," + attribute.getName() + ":" + attribute.getFormmattedAttribute();
+			}
+			else
+			{
+				formattedAttributes += attribute.getName() + ":" + attribute.getType().toString();
+			}
+		}
+		return formattedAttributes;
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -345,7 +417,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -397,7 +470,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		else if (!title.equals(other.title)) return false;
 		return true;
 	}
-	
+
 	/*-------------------------------------------------------------------
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
@@ -420,7 +493,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name)
 	{
@@ -436,51 +510,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param title the title to set
+	 * @param title
+	 *            the title to set
 	 */
 	public void setTitle(String title)
 	{
 		this.title = title;
-	}
-
-	/**
-	 * @return the legend
-	 */
-	public String getLegend()
-	{
-		if (this.legend != null && this.legend.contains("&authkey="))
-		{
-			this.legend = this.legend.replace(
-					this.legend.substring(this.legend.indexOf("&authkey="),
-							this.legend.length()), "");
-		}
-		if(this.dataSource != null  && this.dataSource.getToken()!= null){
-			return this.legend + "&authkey=" + this.dataSource.getToken(); 
-		}
-		return legend;
-	}
-
-	/**
-	 * @param legend the legend to set
-	 */
-	public void setLegend(String legend)
-	{
-		if (this.legend != null && this.legend.contains("&authkey="))
-		{
-			this.legend = this.legend.replace(
-					this.legend.substring(this.legend.indexOf("&authkey="),
-							this.legend.length()), "");
-		}
-		if (legend != null && legend.contains("&authkey="))
-		{
-			legend = legend.replace(
-					legend.substring(legend.indexOf("&authkey="),
-							legend.length()), "");
-		}
-		if(this.dataSource != null  && this.dataSource.getToken()!= null){
-			legend += "&authkey=" + this.dataSource.getToken(); 
-		}
-		this.legend = legend;
 	}
 
 	/**
@@ -492,7 +527,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param startEnabled the startEnabled to set
+	 * @param startEnabled
+	 *            the startEnabled to set
 	 */
 	public void setStartEnabled(boolean startEnabled)
 	{
@@ -508,7 +544,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param startVisible the startVisible to set
+	 * @param startVisible
+	 *            the startVisible to set
 	 */
 	public void setStartVisible(boolean startVisible)
 	{
@@ -524,7 +561,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param order the order to set
+	 * @param order
+	 *            the order to set
 	 */
 	public void setOrderLayer(int orderLayer)
 	{
@@ -540,7 +578,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param minimumScaleMap the minimumScaleMap to set
+	 * @param minimumScaleMap
+	 *            the minimumScaleMap to set
 	 */
 	public void setMinimumScaleMap(MapScale minimumScaleMap)
 	{
@@ -556,7 +595,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param maximumScaleMap the maximumScaleMap to set
+	 * @param maximumScaleMap
+	 *            the maximumScaleMap to set
 	 */
 	public void setMaximumScaleMap(MapScale maximumScaleMap)
 	{
@@ -572,7 +612,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param dataSource the dataSource to set
+	 * @param dataSource
+	 *            the dataSource to set
 	 */
 	public void setDataSource(DataSource dataSource)
 	{
@@ -588,7 +629,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param layerGroup the layerGroup to set
+	 * @param layerGroup
+	 *            the layerGroup to set
 	 */
 	public void setLayerGroup(LayerGroup layerGroup)
 	{
@@ -604,7 +646,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param publishedLayer the publishedLayer to set
+	 * @param publishedLayer
+	 *            the publishedLayer to set
 	 */
 	public void setPublishedLayer(Layer publishedLayer)
 	{
@@ -620,7 +663,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param published the published to set
+	 * @param published
+	 *            the published to set
 	 */
 	public void setPublished(Boolean published)
 	{
@@ -636,7 +680,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param attributes the attributes to set
+	 * @param attributes
+	 *            the attributes to set
 	 */
 	public void setAttributes(List<Attribute> attributes)
 	{
@@ -652,7 +697,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param icon the icon to set
+	 * @param icon
+	 *            the icon to set
 	 */
 	public void setIcon(String icon)
 	{
@@ -668,7 +714,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param enabled the enabled to set
+	 * @param enabled
+	 *            the enabled to set
 	 */
 	public void setEnabled(Boolean enabled)
 	{
@@ -684,11 +731,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
-	 * @param markers the markers to set
+	 * @param markers
+	 *            the markers to set
 	 */
 	public void setMarkers(List<Marker> markers)
 	{
 		this.markers = markers;
 	}
-	
+
 }
