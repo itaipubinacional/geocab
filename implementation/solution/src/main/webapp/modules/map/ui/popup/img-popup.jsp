@@ -47,7 +47,7 @@
           <span>{{ pageable.page + 1 }} de {{ currentAttribute.totalPages }}</span>
         </div>
         <ul>
-          <li ng-repeat="attr in attributes" ng-click="setAttribute(attr)"
+          <li ng-repeat="attr in attributes" ng-click="setAttribute(attr, true)"
               ng-class="{'active': currentAttribute.content[0].photoAlbum.markerAttribute.attribute.name == attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name}"> {{ attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name }} ({{ currentAttribute.total }})
           </li>
         </ul>
