@@ -39,6 +39,7 @@ import com.vividsolutions.jts.io.ParseException;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
+import net.opengis.wms.v_1_3_0.Exception;
 
 /**
  * @author emanuelvictor
@@ -69,18 +70,39 @@ public class ShapeFileService
 	 * zip file name path
 	 */
 	private static String ZIP_FILE_NAME = "export_shape_file.zip";
-
 	/**
 	 * Log
 	 */
-	private static final Logger LOG = Logger
-			.getLogger(DataSourceService.class.getName());
+	private static final Logger LOG = Logger.getLogger(DataSourceService.class.getName());
 	/**
 	 * 
 	 */
 	@Autowired
-	private IMarkerRepository markerRepository;
-
+	private IMarkerRepository markerRepository;	
+	/*-------------------------------------------------------------------
+	 *				 		    CONSTRUCTORS
+	 *-------------------------------------------------------------------*/
+	
+	/**
+	 * Sempre que o component for instanciado, 
+	 * o mesmo vai verificar se existe a pasta shapefile e caso a mesma não exista será criada
+	 */
+	public ShapeFileService()
+	{
+		super();
+		try
+		{
+			new File(PATH_SHAPE_FILES_EXPORT).mkdirs();
+			new File(PATH_SHAPE_FILES_IMPORT).mkdirs();
+		}
+		catch (RuntimeException e)
+		{
+			e.printStackTrace();
+			LOG.info(e.getMessage());
+		}
+	}
+		
+	
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -164,8 +186,8 @@ public class ShapeFileService
 		}
 		return new ArrayList<Layer>(layers);
 	}
-	
-	
+
+
 	/**
 	 * Serviço de exportação para shapeFile
 	 * 
@@ -185,8 +207,7 @@ public class ShapeFileService
 		for (Layer layer : layers){
 			try
 			{
-				// NOME DA LAYER			Atributos	
-				SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(),    "geom:Point,"+layer.formattedAttributes()/* "name:String"*/ /*name camada tal*/);
+				SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), "geom:Point,"+layer.formattedAttributes()/* "name:String"*/ /*name camada tal*/);
 				
 				WKTReader2 wkt = new WKTReader2();	
 				
@@ -209,11 +230,13 @@ public class ShapeFileService
 				newDataStore.createSchema(TYPE);
 				
 		        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
-		        
 			}
-			catch (SchemaException | ParseException | IOException e)
+			catch (RuntimeException | SchemaException | ParseException | IOException e)
 			{
+				// Quando ocorre um erro os arquivos são removidos
+				delete(new File(PATH_SHAPE_FILES_EXPORT));
 				e.printStackTrace();
+				LOG.info(e.getMessage());
 			}
 		}
 		
@@ -296,11 +319,8 @@ public class ShapeFileService
 
 			for (String temp : files)
 			{
-				File fileDelete = new File(file, temp);
-
-				delete(fileDelete);
+				delete(new File(file, temp));
 			}
-
 		}
 		else
 		{
