@@ -68,7 +68,8 @@
                 <h3 style="margin: 0"><spring:message code="admin.access-group.my-markers"/></h3>
             </div>
             <div class="row" style="height: 60px" ng-if="itensMarcados.length">
-                <h3 style="margin: 0" class="col-md-6">{{itensMarcados.length}} itens selecionados </h3>
+                <h3 ng-if="itensMarcados.length > 1"style="margin: 0" class="col-md-6">{{itensMarcados.length}} <spring:message code="admin.marker-moderation.Selected-items"/></h3>
+                <h3 ng-if="itensMarcados.length == 1" style="margin: 0" class="col-md-6">{{itensMarcados.length}} <spring:message code="admin.marker-moderation.Selected-item"/></h3>
 
 				<div class="btn btn-default col-md-3" name="btnSave"
 					 ng-click="postMarkersModal()" ng-disabled="!disableButtonPost">
