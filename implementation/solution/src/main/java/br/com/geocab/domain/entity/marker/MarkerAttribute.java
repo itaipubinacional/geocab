@@ -17,11 +17,9 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.vividsolutions.jts.util.Assert;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.layer.Attribute;
-import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 
 /**
@@ -99,13 +97,7 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	/*-------------------------------------------------------------------
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
-	/**
-	 * 
-	 */
-	public void validate()
-	{
-		Assert.isTrue(this.getAttribute().getType() == AttributeType.PHOTO_ALBUM && this.getPhotoAlbum() != null, "A postagem deve ter um album de fotos");
-	}
+	
 	/*-------------------------------------------------------------------
 	 *							SETTERS AND GETTERS
 	 *-------------------------------------------------------------------*/
