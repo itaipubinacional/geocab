@@ -414,7 +414,7 @@ public class MyMarkersService
 			System.out.println(dEnd);
 		}
 
-		return this.markerRepository.listByFilters(layer, status, dStart, dEnd,	user, pageable);
+		return this.markerRepository.listByFiltersWithoutOrder(layer, status, dStart, dEnd,	user, pageable);
 		
 	}
 

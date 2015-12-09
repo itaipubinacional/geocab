@@ -582,11 +582,10 @@ public class MarkerService
 	@Transactional(readOnly = true)
 	public Page<Marker> listMarkerByFiltersByUser(String layer,
 			MarkerStatus status, String dateStart, String dateEnd,
-			PageRequest pageable) throws java.text.ParseException
+			PageRequest pageable)
 	{
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
-		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, user,
-				pageable);
+		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, user, pageable);
 	}
 
 	/**
@@ -600,31 +599,12 @@ public class MarkerService
 	@Transactional(readOnly = true)
 	public Page<Marker> listMarkerByFilters(String layer, MarkerStatus status,
 			String dateStart, String dateEnd, String user, PageRequest pageable)
-					throws java.text.ParseException
 	{
 
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Calendar dEnd = null;
-		Calendar dStart = null;
-
-		if (dateStart != null)
-		{
-			dStart = Calendar.getInstance();
-			dStart.setTime((Date) formatter.parse(dateStart));
-		}
-
-		if (dateEnd != null)
-		{
-			dEnd = Calendar.getInstance();
-			dEnd.setTime((Date) formatter.parse(dateEnd));
-			dEnd.add(Calendar.DAY_OF_YEAR, 1);
-			System.out.println(dEnd);
-		}
-
-		
-		return this.markerRepository.listByFilters(layer, status, dStart, dEnd, user, pageable);
+		return this.markerRepository.listByFilters(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], user, pageable);
 
 	}
+	
 
 	@Transactional(readOnly = true)
 	public List<Marker> listMarkerByFiltersMapByUser(String layer,
@@ -634,6 +614,35 @@ public class MarkerService
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
 		return this.listMarkerByFiltersMap(layer, status, dateStart, dateEnd,
 				user, pageable);
+	}
+	
+	private Calendar[] formattDates(String dateStart, String dateEnd){
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Calendar dEnd = null;
+		Calendar dStart = null;
+		
+		try
+		{
+			if (dateStart != null)
+			{
+				dStart = Calendar.getInstance();
+				dStart.setTime((Date) formatter.parse(dateStart));
+			}
+			
+			if (dateEnd != null)
+			{
+				dEnd = Calendar.getInstance();
+				dEnd.setTime((Date) formatter.parse(dateEnd));
+				dEnd.add(Calendar.DAY_OF_YEAR, 1);
+				System.out.println(dEnd);
+			}
+		}
+		catch (java.text.ParseException e )
+		{
+			e.printStackTrace();
+			LOG.info(e.getMessage());
+		}
+		return new Calendar[] {dStart, dEnd};
 	}
 
 	/**
