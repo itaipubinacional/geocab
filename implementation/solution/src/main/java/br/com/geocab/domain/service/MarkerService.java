@@ -137,7 +137,9 @@ public class MarkerService
 
 			marker.setStatus(MarkerStatus.SAVED);
 			marker.setUser(user);
-
+			
+			marker.validate();
+			
 			marker = this.markerRepository.save(marker);
 
 			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
@@ -257,7 +259,7 @@ public class MarkerService
 	{
 		Page<Photo> photos = this.photoRepository.findByIdentifierContaining(photoAlbumId, pageRequest);
 		
-		for (Photo photo : photos)
+		for (Photo photo : photos.getContent())
 		{
 			try
 			{

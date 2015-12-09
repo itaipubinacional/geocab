@@ -3002,11 +3002,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
   }
 
+  /**
+   * TODO variável temporária pra testar a exportação .. REMOVER
+   */
+  $scope.markersToExport = new Array(); 
+	  
   $scope.addInternalLayer = function (layerId) {
-
+	  
     markerService.listMarkerByLayer(layerId, {
       callback: function (result) {
-
+    	
         var iconPath = "static/images/marker.png";
 
         if (result.length > 0) {
@@ -3026,6 +3031,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var icons = [];
 
         angular.forEach(result, function (marker, index) {
+        	
+        	  $scope.markersToExport.push(marker);
           /* var iconFeature = new ol.Feature({
            geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
            marker: marker,
@@ -3921,6 +3928,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
         var markers = { 'content' : null };
         markers.content = result;
+        
         $scope.buildVectorMarker(markers);
         $scope.$apply();
       },
@@ -4206,7 +4214,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   $scope.exportShapeFile= function (){
-	  shapeFileService.exportShapeFile( null, {
+	  shapeFileService.exportShapeFile( $scope.markersToExport, {
            callback: function (result) {
                 $('body').append('<a id="map-download" href="' + result + '"></a>');
                 $('#map-download')[0].click();

@@ -51,43 +51,63 @@ public class Marker extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1806026076674494131L;
+	/*-------------------------------------------------------------------
+	 *				 		     ATTRIBUTES
+	 *-------------------------------------------------------------------*/
+	/**
+	 * 
+	 */
 	public static final String PICTURE_FOLDER = "/marker/%d";
 	/**
 	 * 
 	 */
 	public static final String PICTURE_PATH = PICTURE_FOLDER + "/%d";
-
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1806026076674494131L;
-
 	@Transient
 	private Boolean imageToDelete;
-
+	/**
+	 * 
+	 */
 	@Transient
 	private String wktCoordenate;
-
+	/**
+	 * 
+	 */
 	@Column(nullable = true)
 	@Type(type = "org.hibernate.spatial.GeometryType")
 	@JsonIgnore
 	private Point location;
-
+	/**
+	 * 
+	 */
 	@NotNull
 	private MarkerStatus status;
-
+	/**
+	 * 
+	 */
 	private Boolean deleted;
-
+	/**
+	 * 
+	 */
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	private Layer layer;
-
+	/**
+	 * 
+	 */
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	private User user;
-
+	/**
+	 * 
+	 */
 	@JsonManagedReference
 	@OneToMany(mappedBy = "marker", fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
-
+	/**
+	 * 
+	 */
 	@JsonIgnore
 	@OneToMany(mappedBy = "marker", fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	private List<MarkerModeration> markerModeration = new ArrayList<MarkerModeration>();
@@ -100,7 +120,7 @@ public class Marker extends AbstractEntity implements Serializable
 	 */
 	public Marker()
 	{
-
+		super();
 	}
 
 	/**
@@ -185,7 +205,25 @@ public class Marker extends AbstractEntity implements Serializable
 		this.setLocation((Point) location);
 		this.setCreated(created);
 	}
-
+	
+	/*-------------------------------------------------------------------
+	 *								BEHAVIORS
+	 *-------------------------------------------------------------------*/
+	/**
+	 * Função que valida os atributos do ponto
+	 */
+	public void validate()
+	{
+		for (MarkerAttribute markerAttribute : markerAttributes)
+		{
+			markerAttribute.validate();
+		}
+	}
+	/*-------------------------------------------------------------------
+	 *						   SETTERS AND GETTERS
+	 *-------------------------------------------------------------------*/
+	
+	
 	/**
 	 * @return the status
 	 */
