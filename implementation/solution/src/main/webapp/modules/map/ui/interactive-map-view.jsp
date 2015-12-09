@@ -510,7 +510,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <label class="detail-label" required>
                     Latitude
                   </label>
-                  <input type="text" name="latitude"
+                  <input type="text" name="latitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLatitude">
                 </div>
 
@@ -520,7 +520,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <label class="detail-label" required>
                     Longitude
                   </label>
-                  <input type="text" name="longitude"
+                  <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLongitude">
                 </div>
 
@@ -616,7 +616,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
                 <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
-                <img class="marker-image" ng-show="imgResult" style="width: 100%; height: 200px; margin-top: 12px;"> <br>
+                <img class="marker-image" ng-if="imgResult" style="width: 100%; height: 200px; margin-top: 12px;"> <br>
                 <hr>
 
                 <div ng-if="currentEntity.layer">

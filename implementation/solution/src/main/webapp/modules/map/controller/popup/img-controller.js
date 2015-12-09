@@ -25,6 +25,9 @@ function ImgPopUpController($scope, $modalInstance, $log, photoAlbumIds, $import
      */
     $scope.currentEntity;
 
+
+    $scope.currentPhoto = {};
+
     /**
      *
      */
@@ -53,7 +56,9 @@ function ImgPopUpController($scope, $modalInstance, $log, photoAlbumIds, $import
                 callback: function (result) {
                     console.log(result);
 
-                    angular.forEach(result.content, function(photo){
+                    angular.forEach(result.content, function(photo, index){
+                        if(index == 0)
+                            $scope.setCurrentPhoto(photo);
                         $scope.photos.push(photo);
                     });
 
@@ -68,8 +73,25 @@ function ImgPopUpController($scope, $modalInstance, $log, photoAlbumIds, $import
 
 
         });
+
+
     };
 
+    $scope.setCurrentPhoto = function(photo){
+
+        markerService.findPhotoById(photo.id, {
+            callback: function (result) {
+                console.log(result);
+                $scope.currentPhoto = result;
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+            }
+        });
+
+    };
     /*-------------------------------------------------------------------
      * 		 				 	  BEHAVIORS
      *-------------------------------------------------------------------*/

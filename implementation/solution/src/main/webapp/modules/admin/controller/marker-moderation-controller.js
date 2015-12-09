@@ -78,10 +78,22 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             order.property = sort.fields[0];
 
             //Sort do spring-data
-            $scope.currentPage.pageable.sort = new Sort();
-            $scope.currentPage.pageable.sort.orders = [ order ];
 
-            $scope.listMarkerModerationByFilters( $scope.data.filter, $scope.currentPage.pageable);
+            $scope.currentPage.pageable.sort = new Sort();
+
+
+            //FILTERS
+            $scope.currentPage.pageable.sort.orders = [ order ];
+            if ($scope.filter.status == "")
+                $scope.filter.status = null;
+            if ($scope.filter.user != null)
+                var userEmail = $scope.filter.user.email;
+            if ($scope.filter.dateStart == "")
+                $scope.filter.dateStart = null;
+            if ($scope.filter.dateEnd == "")
+                $scope.filter.dateEnd = null;
+
+            $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, $scope.currentPage.pageable);
 
         }
     });
@@ -251,7 +263,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         beforeSelectionChange: function (row, event) {
 
             //avoids call a selection , when clicked in a action button.
-            if ($(event.target).is("a") || $(event.target).is("i")) return false;
+            //if ($(event.target).is("a") || $(event.target).is("i")) return false;
 
             $scope.changeToDetail(row.entity);
 
@@ -298,7 +310,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             {
                 displayName: $translate('admin.marker-moderation.Date-posting'),
                 width: '150px',
-                field: 'created | date:"dd/MM/yyyy"'
+                field: 'created',
+                cellTemplate: '<span class="ngCellText">{{row.entity.created | date:"dd/MM/yyyy"}}</span>'
+
             },
             {
                 displayName: $translate('admin.marker-moderation.Situation'),
@@ -377,6 +391,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
+        pageRequest.sort = new Sort();
+        pageRequest.sort.orders = [{direction:'ASC',property : 'created'}];
+
+
         $scope.pageRequest = pageRequest;
 
         if (typeof markers == 'undefined') {
@@ -871,7 +889,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 console.log(result);
                 $scope.currentEntity = result;
                 $scope.updateStatus();
-                //$scope.changeToList($scope.currentPage);
+                $scope.changeToList($scope.currentPage);
                 $scope.msg = {
                     type: "success",
                     text: $translate('admin.marker-moderation.Marker-successfully-canceled'),

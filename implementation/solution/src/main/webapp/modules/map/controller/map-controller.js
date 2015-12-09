@@ -537,25 +537,103 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     };
 
+    $scope.convertDMSToDD = function(coordinate) {
+
+      var coordinate = coordinate.split(/[^\d\w\.]+/);
+      var dd = Number(coordinate[0]) + Number(coordinate[1])/60 + Number(coordinate[2])/(60*60);
+
+      var direction = coordinate[3];
+      if (direction == "S" || direction == "W") {
+        dd = dd * -1;
+      } // Don't do anything for N or E
+      return dd;
+    }
+
+    $scope.setMarkerCoordinates = function(){
+
+      var formattedLatitude  = $scope.formattedLatitude.toString();
+      var formattedLongitude = $scope.formattedLongitude.toString();
+
+      var regEx = '';
+
+      if($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
+
+        regEx = /^[1-9]\d{0,1}°\s?[1-9]\d{0,1}[′|']\s?[1-9]\d{0,1}[″|"]\s?[N|S|W|O]$/;
+
+        if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+          formattedLatitude = $scope.convertDMSToDD(formattedLatitude);
+          formattedLongitude = $scope.convertDMSToDD(formattedLongitude);
+        }
+      }
+
+      regEx = /\d{2}[.|,]\d{6}/;
+
+      if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+
+        console.log(formattedLatitude);
+        console.log(formattedLongitude);
+
+        formattedLatitude  = parseFloat(formattedLatitude);
+        formattedLongitude = parseFloat(formattedLongitude);
+
+        $scope.clearFcMarker();
+
+        var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon(({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: 'static/images/marker.png'
+          }))
+        });
+
+        var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326','EPSG:900913');
+        console.log(olCoordinates);
+
+        $scope.currentEntity.latitude  = olCoordinates[0];
+        $scope.currentEntity.longitude = olCoordinates[1];
+
+        var iconFeature = new ol.Feature({
+          geometry: new ol.geom.Point([olCoordinates[0], olCoordinates[1]])
+        });
+
+        var layer = new ol.layer.Vector({
+          source: new ol.source.Vector({features: [iconFeature]})
+        });
+
+        layer.setStyle(iconStyle);
+
+        $scope.currentCreatingInternalLayer = layer;
+        $scope.map.addLayer(layer);
+
+        //$scope.setMarkerCoordinatesFormat();
+      }
+
+    };
+
     $scope.setMarkerCoordinatesFormat = function(){
 
       if($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
 
         console.log('DEGREES_DECIMAL');
 
+        $scope.formattedLatitude  = $scope.latitude;
+        $scope.formattedLongitude = $scope.longitude
+
       } else {
 
         console.log('DEGREES_MINUTES_SECONDS');
 
-        var coordinate = $scope.formattedLongitude + ',' + $scope.formattedLatitude;
+        var coordinate = $scope.longitude + ',' + $scope.latitude;
 
         coordinate = ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)).match(/(.*\s[S|N])\s(.*)/);
 
-        $scope.formattedLatitude = coordinate[1];
+        $scope.formattedLatitude  = coordinate[1];
         $scope.formattedLongitude = coordinate[2];
       }
 
     };
+
     /**
      * Click event to prompt the geoserver the information layer of the clicked coordinat
      */
@@ -567,8 +645,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var transformed_coordinate = ol.proj.transform(coord, 'EPSG:900913', 'EPSG:4326');
         //console.log(transformed_coordinate);
 
-        $scope.formattedLongitude = transformed_coordinate[0];
-        $scope.formattedLatitude  = transformed_coordinate[1];
+        $scope.longitude = transformed_coordinate[0];
+        $scope.latitude  = transformed_coordinate[1];
 
         $scope.clearFcMarker();
 
@@ -3243,9 +3321,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             if(attribute.photoAlbum != null)
               photoAlbumIds.push(attribute.photoAlbum.id);
           });
-
         }
-
       });
 
       return photoAlbumIds;
@@ -3254,6 +3330,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     var dialog = $modal.open({
       templateUrl: 'modules/map/ui/popup/img-popup.jsp',
       controller: ImgPopUpController,
+      windowClass: 'gallery-modal-window',
       resolve: {
         photoAlbumIds: getPhotoAlbumIds
       }
@@ -4372,6 +4449,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   //$scope.showGallery();
+
+
 
 };
 

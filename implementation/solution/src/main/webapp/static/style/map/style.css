@@ -436,6 +436,16 @@ div.files > div.thumbnail > div.caption{position: absolute; bottom: 0;}
 div.files > div.thumbnail > div.caption input[type=checkbox]{float: left;word-wrap: break-word;margin-top: 2px;}
 div.thumbnail.active{border: 1px solid #428bca;}
 
+/* GALLERY */
+div#gallery > div.modal-body > div.col-md-10{min-height: 800px}
+div#gallery > div.modal-body{position: relative}
+div.current-photo img{padding: 2px; border: 1px solid #ccc; margin: 2px;}
+.gallery-modal-window .modal-dialog {min-width: 980px;}
+
+div.gallery-thumbnails{ width: 100%; float: left;}
+div.gallery-thumbnails img{margin:2px; max-width:125px; max-height: 125px; float: left; border: 1px solid #ccc; padding: 2px}
+div.gallery-thumbnails img:hover{cursor:pointer}
+
 div#dropbox{float: left;height: 520px;width: 100%;border: 2px solid #fff;border-right: 1px solid #ccc;position: relative; padding: 15px}
 div#dropbox.over {background-color: #e8f0fe; border: 2px solid #4285f4 }
 div#dropbox > .dropbox {text-align: center;}
