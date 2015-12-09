@@ -40,7 +40,7 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
   $scope.currentAttribute = {};
 
   $scope.pageable = {
-    size: 5,
+      size: 5,
       page: 0,
       sort: {//Sort
       orders: [
@@ -75,6 +75,10 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
   $scope.setAttribute = function (attribute, reload) {
 
     if(reload) {
+
+      if(attribute.content[0].photoAlbum.id != $scope.currentAttribute.content[0].photoAlbum.id)
+        $scope.pageable.page = 0;
+
       markerService.listPhotosByPhotoAlbumId(attribute.content[0].photoAlbum.id, $scope.pageable, {
 
         callback: function (result) {
@@ -99,12 +103,38 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
   };
 
+  $scope.nextPage = function(){
+
+    $scope.pageable.page = $scope.pageable.page + 1;
+
+    if($scope.pageable.page <= $scope.currentAttribute.totalPages) {
+
+      $scope.setAttribute($scope.currentAttribute, true);
+
+    }
+
+  };
+
+  $scope.previousPage = function(){
+
+    if($scope.pageable.page - 1 >= 0) {
+
+      $scope.pageable.page = $scope.pageable.page - 1;
+
+      $scope.setAttribute($scope.currentAttribute, true);
+
+    }
+
+  };
+
   $scope.nextPhoto = function(){
 
     if($scope.currentAttribute.content[$scope.photoIndex + 1]){
 
       $scope.setCurrentPhoto($scope.currentAttribute.content[$scope.photoIndex + 1], $scope.photoIndex + 1);
 
+    } else {
+      $scope.nextPage();
     }
 
   };
@@ -115,18 +145,12 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
       $scope.setCurrentPhoto($scope.currentAttribute.content[$scope.photoIndex - 1], $scope.photoIndex - 1);
 
+    } else {
+      $scope.previousPage();
     }
 
   };
 
-  $scope.nextPage = function(){
-
-
-  };
-
-  $scope.previousPage = function(){
-
-  };
 
   /*-------------------------------------------------------------------
    * 		 				 	  NAVIGATIONS

@@ -26,26 +26,28 @@
         <p>Texto descrição</p>
 
         <div>
-          <a href="" ng-click="previousPhoto()">Prev</a>
-          <a href="" ng-click="nextPhoto()">Next</a>
           <span>{{ pageable.page + 1 }} de {{ currentAttribute.totalPages }}</span>
         </div>
         <div class="current-photo">
           <img ng-src="{{ currentPhoto.image }}">
         </div>
 
+        <div>
+          <a href="" ng-click="previousPhoto()">Prev</a>
+          <a href="" ng-click="nextPhoto()">Next</a>
+        </div>
+
         <div class="gallery-thumbnails">
           <img ng-click="setCurrentPhoto(photo, $index)" ng-repeat="photo in currentAttribute.content"
                ng-src="{{ photo.image }}">
         </div>
-
-      </div>
-      <div id="sidenav" class="col-md-2" style="padding: 0">
         <div>
           <a href="" ng-click="previousPage()">Prev</a>
           <a href="" ng-click="nextPage()">Next</a>
-          <span>{{ pageable.page + 1 }} de {{ currentAttribute.totalPages }}</span>
         </div>
+      </div>
+      <div id="sidenav" class="col-md-2" style="padding: 0">
+
         <ul>
           <li ng-repeat="attr in attributes" ng-click="setAttribute(attr, true)"
               ng-class="{'active': currentAttribute.content[0].photoAlbum.markerAttribute.attribute.name == attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name}"> {{ attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name }} ({{ currentAttribute.total }})
