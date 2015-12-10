@@ -105,7 +105,7 @@
                          class="tooltip-validation"><spring:message code="contact.securityVerification"/> <spring:message
                        code="admin.users.required"/></span>
       </div>
-      <img ng-src="/geocab/stickyImg" />
+      <img ng-src="./stickyImg" />
     </div>
 		 <button class="btn btn-success"
               id="buttonUpdate"
