@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.io.FileTransfer;
 import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.NotBlank;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 
@@ -73,6 +74,13 @@ public class Photo extends AbstractEntity implements Serializable
 	 */
 	@Transient
 	private String name;
+		
+	/**
+	 * 
+	 */
+	@Column(length = 60)
+	@NotBlank
+	private String description;
 	
 	/**
 	 * 
@@ -145,6 +153,7 @@ public class Photo extends AbstractEntity implements Serializable
 	 */
 	private void generateIdentifier()
 	{
+		this.getDescription();
 		if (this.getId() != null)
 		{
 			this.identifier = this.getPhotoAlbum().getIdentifier() + String.format(PHOTO_PATH , this.getId());
@@ -264,7 +273,29 @@ public class Photo extends AbstractEntity implements Serializable
 	{
 		this.image = image;
 	}
-	
-	
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription()
+	{
+		if (this.description == null)
+		{
+			this.description = this.getName();
+		}
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description)
+	{
+		this.description = description;
+		if (this.description == null)
+		{
+			this.description = this.getName();
+		}
+	}
 
 }
