@@ -27,7 +27,7 @@
             <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
                 <input type="radio" id="DMS" ng-model="currentEntity.coordinates" value="DEGREES_MINUTES_SECONDS"
                        name="DMS">
-                <label class="radio-label" for="DMS"> <spring:message code='admin.users.coordinatesDMS'/> </label>
+                <label class="radio-label" for="DMS"> <spring:message code='admin.users.coordinatesDMS'/> (<spring:message code='admin.users.coordinatesDMS-format'/>) </label>
             </div>
 
             <br />
@@ -35,7 +35,7 @@
             <div class="form-item-horizontal radio" style="margin-left: 0;">
                 <input type="radio" id="DD" ng-model="currentEntity.coordinates" value="DEGREES_DECIMAL"
                        name="DD">
-                <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDegree'/> </label>
+                <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDD'/> (<spring:message code='admin.users.coordinatesDD-format'/>) </label>
             </div>
 
             <hr>
