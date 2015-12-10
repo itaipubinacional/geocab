@@ -91,12 +91,12 @@
 
     <div>
       
-      <div>
+      <div ng-show="!user.email">
       <div class="form-item position-relative" style="width: 300px;">
         <label class="detail-label" required><spring:message code="contact.securityVerification"/></label>
         <input name="subject" type="text" class="form-control"
                ng-model="contactForm.answer"
-               required maxlength="144" ng-minlength="1"
+               maxlength="144" ng-minlength="1"
                ng-class="{ ngInvalid: form.subject.$error.required && (form.$submitted || form.name.$dirty) }"
                autofocus
                autocomplete="off"

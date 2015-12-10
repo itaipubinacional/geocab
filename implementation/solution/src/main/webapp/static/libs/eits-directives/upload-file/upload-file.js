@@ -17,6 +17,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
     },
     link: function(scope, element, attrs){
 
+      scope.over = false;
       scope.fileSelected = {};
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
 
@@ -49,17 +50,6 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       //============== DRAG & DROP =============
       // source for drag&drop: http://www.webappers.com/2011/09/28/drag-drop-file-upload-with-html5-javascript/
       var dropbox = document.getElementById("dropbox");
-      scope.dropText = 'Drop files here...';
-
-      // init event handlers
-      function dragEnterLeave(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        scope.$apply(function () {
-          scope.dropText = 'Drop files here...';
-          scope.dropClass = '';
-        })
-      };
 
       scope.setImage = function(file){
         scope.fileSelected = file;
@@ -67,28 +57,52 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         //scope.file.description = file.name;
       };
 
-      dropbox.addEventListener("dragenter", dragEnterLeave, false);
-      dropbox.addEventListener("dragleave", dragEnterLeave, false);
-      dropbox.addEventListener("dragover", function (evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        var clazz = 'not-available';
-        var ok = evt.dataTransfer && evt.dataTransfer.types && evt.dataTransfer.types.indexOf('Files') >= 0;
+      dropbox.addEventListener('dragend', function( event ) {
+
         scope.$apply(function () {
-          scope.dropText = ok ? 'Drop files here...' : 'Only files are allowed!';
-          scope.dropClass = ok ? 'over' : 'not-available';
-        })
+          scope.over = false;
+        });
+
       }, false);
 
-      dropbox.addEventListener("drop", function (evt) {
-        console.log('drop evt:', JSON.parse(JSON.stringify(evt.dataTransfer)));
-        evt.stopPropagation();
-        evt.preventDefault();
+      dropbox.addEventListener('dragover', function (event) {
+
+        event.preventDefault();
+
+        var hasFiles = event.dataTransfer && event.dataTransfer.types && event.dataTransfer.types.indexOf('Files') >= 0;
+
+        if(hasFiles) {
+          scope.$apply(function () {
+            scope.over = true;
+          });
+        }
+      }, false);
+
+      dropbox.addEventListener('dragenter', function(event){
+
         scope.$apply(function () {
-          scope.dropText = 'Drop files here...';
-          scope.dropClass = '';
+          scope.over = true;
         });
-        var files = evt.dataTransfer.files;
+
+      }, false);
+
+      dropbox.addEventListener('dragleave', function(event){
+
+        scope.$apply(function () {
+          scope.over = false;
+        });
+
+      }, false);
+
+      dropbox.addEventListener('drop', function (event) {
+
+        scope.$apply(function () {
+          scope.over = false;
+        });
+
+        event.preventDefault();
+
+        var files = event.dataTransfer.files;
 
         if (files.length > 0) {
           for (var i = 0, file; file = files[i]; i++) {
@@ -122,6 +136,9 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       //============== DRAG & DROP =============
 
       scope.setFiles = function (element) {
+
+        angular.element(dropbox).removeClass('over');
+
         scope.$apply(function (scope) {
           console.log('files:', element.files);
           // Turn the FileList object into an Array

@@ -1,5 +1,5 @@
-<div id="dropbox" ng-class="dropClass">
-  <div ng-if="!files.length" class="row dropbox">
+<div id="dropbox" ng-class="{'over': over}">
+  <div ng-if="!files.length" class="row dropbox" draggable="true">
     <h3>Solte os arquivos em qualquer lugar para fazer o upload</h3>
     <h4>ou</h4>
     <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="Selecionar arquivos"/>
@@ -33,7 +33,7 @@
       </div>
     </div>-->
   </div>
-  <div ng-if="dropClass == 'over' && files.length" id="dropbox-over-msg">
+  <div ng-if="over && files.length" id="dropbox-over-msg">
     <span>Solte os arquivos para fazer upload em <br/><b>{{ attribute.name }}</b></span>
   </div>
 </div>
