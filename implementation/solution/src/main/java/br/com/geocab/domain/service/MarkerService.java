@@ -213,7 +213,18 @@ public class MarkerService
 	 */
 	public Photo lastPhotoByMarkerId(Long markerId)
 	{
-		return this.photoRepository.findByMarkerId(markerId).get(0);
+		Photo photo = this.photoRepository.findByMarkerId(markerId).get(0);
+		try
+		{
+			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
+			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
+			photo.setImage(fileTransfer);
+		}
+		catch (RepositoryException e)
+		{
+			e.printStackTrace();
+		}
+		return photo;
 	}
 	
 	/**
