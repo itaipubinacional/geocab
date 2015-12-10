@@ -524,23 +524,20 @@ uri="http://www.springframework.org/security/tags"%>
                 <br style="clear: both;">
 
                 <span><b><spring:message code='map.Coordinates'/></b></span>
+
                 <i class="icon-question-sign icon-large" tooltip-placement="right"
                    tooltip="<spring:message code='map.Tips-coordinate'/>"></i>
 
-                <div class="form-item-horizontal" style="margin-left: 0; margin-top: 15px">
-                  <label class="detail-label" required>
-                    Latitude
-                  </label>
+                <div class="form-item position-relative" style="width:100%;margin:10px 0; padding-right: 10px">
+                  <label class="detail-label" required>Latitude</label>
                   <input type="text" name="latitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLatitude">
                 </div>
 
                 <br />
 
-                <div class="form-item-horizontal" style="margin-left: 0;">
-                  <label class="detail-label" required>
-                    Longitude
-                  </label>
+                <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
+                  <label class="detail-label" required>Longitude</label>
                   <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLongitude">
                 </div>
