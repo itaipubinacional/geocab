@@ -151,9 +151,6 @@ public class MarkerService
 		catch (DataIntegrityViolationException e)
 		{
 			LOG.info(e.getMessage());
-			final String error = e.getCause().getCause().getMessage();
-
-			this.dataIntegrityViolationException(error);
 		}
 		return marker;
 	}
@@ -209,6 +206,16 @@ public class MarkerService
 		return photoAlbum;
 	}
 
+	/**
+	 * Pega a ultima foto salva 
+	 * @param markerId
+	 * @return
+	 */
+	public Photo lastPhotoByMarkerId(Long markerId)
+	{
+		return this.photoRepository.findByMarkerId(markerId).get(0);
+	}
+	
 	/**
 	 * Salva todas as fotos no sistema de arquivos
 	 * @param photos
@@ -373,9 +380,6 @@ public class MarkerService
 		catch (DataIntegrityViolationException e)
 		{
 			LOG.info(e.getMessage());
-			final String error = e.getCause().getCause().getMessage();
-
-			this.dataIntegrityViolationException(error);
 		}
 		return marker;
 	}
@@ -412,9 +416,6 @@ public class MarkerService
 		catch (DataIntegrityViolationException e)
 		{
 			LOG.info(e.getMessage());
-			final String error = e.getCause().getCause().getMessage();
-
-			this.dataIntegrityViolationException(error);
 		}
 	}
 
@@ -436,9 +437,6 @@ public class MarkerService
 		catch (DataIntegrityViolationException e)
 		{
 			LOG.info(e.getMessage());
-			final String error = e.getCause().getCause().getMessage();
-
-			this.dataIntegrityViolationException(error);
 		}
 	}
 
@@ -713,27 +711,27 @@ public class MarkerService
 		return this.markerRepository.listByMarkers(ids, pageable);
 	}
 
-	/**
-	 * Method to verify DataIntegrityViolations and throw
-	 * IllegalArgumentException with the field name
-	 * 
-	 * @param error
-	 * @throws IllegalArgumentException
-	 * @return void
-	 */
-	private void dataIntegrityViolationException(String error)
-	{
-		/*
-		 * String fieldError = ""; if(error.contains("uk_data_source_name")) {
-		 * fieldError = this.messages.getMessage("Name", new Object [] {}, null
-		 * ); } else if(error.contains("uk_data_source_url")) { fieldError =
-		 * this.messages.getMessage("Address", new Object [] {}, null ); }
-		 * if(!fieldError.isEmpty()){ throw new IllegalArgumentException(
-		 * this.messages
-		 * .getMessage("The-field-entered-already-exists,-change-and-try-again",
-		 * new Object [] {fieldError}, null) ); }
-		 */
-	}
+//	/**
+//	 * Method to verify DataIntegrityViolations and throw
+//	 * IllegalArgumentException with the field name
+//	 * 
+//	 * @param error
+//	 * @throws IllegalArgumentException
+//	 * @return void
+//	 */
+//	private void dataIntegrityViolationException(String error)
+//	{
+//		/*
+//		 * String fieldError = ""; if(error.contains("uk_data_source_name")) {
+//		 * fieldError = this.messages.getMessage("Name", new Object [] {}, null
+//		 * ); } else if(error.contains("uk_data_source_url")) { fieldError =
+//		 * this.messages.getMessage("Address", new Object [] {}, null ); }
+//		 * if(!fieldError.isEmpty()){ throw new IllegalArgumentException(
+//		 * this.messages
+//		 * .getMessage("The-field-entered-already-exists,-change-and-try-again",
+//		 * new Object [] {fieldError}, null) ); }
+//		 */
+//	}
 
 	/**
 	 * 
@@ -795,8 +793,7 @@ public class MarkerService
 	
 			MetaFile metaFile = new MetaFile();
 
-			
-			//TODO verificar necessidade
+			// Gera o identificador
 			photo.getIdentifier();
 			
 			metaFile.setId(String.valueOf(photo.getId()));
