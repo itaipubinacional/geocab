@@ -906,10 +906,25 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $scope.listMarkerByFiltersMap(null, null, null, null);
         }
 
-    }
+    };
 
+    $scope.openImgModal = function (attributesByMarker) {
+
+        var dialog = $modal.open({
+            templateUrl: 'modules/map/ui/popup/img-popup.jsp',
+            controller: ImgPopUpController,
+            windowClass: 'gallery-modal-window',
+            resolve: {
+                attributesByMarker: function(){
+                    return attributesByMarker;
+                }
+            }
+        });
+    };
 
     $scope.getPhotosByAttribute = function(attribute, index){
+
+
 
         var pageable = {
             size: 1,
@@ -1457,6 +1472,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.listAttributesByMarker = function () {
 
         $scope.attributesByLayer = [];
+        $scope.imgResult = null;
         $scope.showNewAttributes = false;
 
         markerService.listAttributeByMarker($scope.currentEntity.id, {
@@ -1467,15 +1483,25 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                     callback: function (result) {
                         $scope.attributesByLayer = [];
 
+                        var photo = true;
+
                         angular.forEach(result, function (attribute, index) {
 
                             var exist = false;
+
+
 
                             angular.forEach($scope.attributesByMarker, function (attributeByMarker, index) {
 
                                 if (attributeByMarker.attribute.id == attribute.id) {
                                     exist = true;
                                 }
+
+                                if((photo) && (attributeByMarker.attribute.type == 'PHOTO_ALBUM')){
+                                    $scope.getPhotosByAttribute(attributeByMarker, index);
+                                    photo = false;
+                                }
+
                             });
 
                             if (!exist) {
@@ -1508,49 +1534,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.$apply();
             }
         });
-        //
-        //markerService.findImgByMarker($scope.currentEntity.id, {
-        //    callback: function (result) {
-        //
-        //        $scope.imgResult = result;
-        //    },
-        //    errorHandler: function (message, exception) {
-        //        $scope.message = {type: "error", text: message};
-        //        $scope.$apply();
-        //    }
-        //});
-
-        //
-        //console.log("ERSDFSDFD");
-        //var pageable = {
-        //    size: 1,
-        //    page: 0,
-        //    sort: {//Sort
-        //        orders: [
-        //            {direction: 'DESC', property: 'created'}
-        //        ]
-        //    }
-        //};
-        //
-        //markerService.findPhotoAlbumByAttributeMarkerId($scope.attributesByMarker, pageable, {
-        //    callback: function (result) {
-        //        /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
-        //         $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
-        //
-        //        $scope.attributesByMarker[index].photoAlbum = result.content[0].photoAlbum;
-        //        $scope.attributesByMarker[index].photoAlbum.photos = result.content;
-        //
-        //        $scope.imgResult = result.content[0].image;
-        //
-        //        $scope.$apply();
-        //    },
-        //    errorHandler: function (message, exception) {
-        //        $scope.message = {type: "error", text: message};
-        //        $scope.$apply();
-        //    }
-        //})
-
-
 
     };
 

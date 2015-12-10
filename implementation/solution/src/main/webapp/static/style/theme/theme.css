@@ -896,7 +896,7 @@ input:-moz-placeholder {
 	color: #09ba00;
 }
  .itaipu-icon-dislike, .itaipu-icon-dislike:hover {
-	color: #d45a05
+	color: #d45a05;
 }
 .itaipu-icon-close, .itaipu-icon-close:hover {
 	color: #ba0000
@@ -905,6 +905,12 @@ input:-moz-placeholder {
 	color: #777576
 }
 
+.btn-default >  i, i:hover {
+	font-size: 30px;
+}
+/*.btn-default >  .itaipu-icon-dislike, .itaipu-icon-dislike:hover {*!/*/
+	/*font-size: 30px;*/
+/*}*/
 
 .tree-itaipu-icon:hover {
     cursor: pointer;
