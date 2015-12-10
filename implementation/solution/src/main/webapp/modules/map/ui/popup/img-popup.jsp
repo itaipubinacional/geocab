@@ -17,27 +17,31 @@
 
   <div class="modal-body" ng-init="initialize();" style="overflow-y: auto;">
     <div>
-      <div class="col-md-10" style="padding: 0">
-        <h4>Descrição</h4>
-        <p>Texto descrição</p>
+      <div style="float:left;padding: 0;border-right: 1px solid #ccc">
+        <!--<h4>Descrição</h4>-->
+        <p>{{ currentPhoto.description }}</p>
         <div>
           <span>{{ pageable.page + 1 }} de {{ currentAttribute.totalPages }}</span>
         </div>
         <div class="current-photo">
+          <div class="left-nav" ng-click="previousPhoto()"><i class="icon-chevron-left icon-large"></i></div>
           <img ng-src="{{ currentPhoto.image }}">
+          <div class="right-nav" ng-click="nextPhoto()"><i class="icon-chevron-right icon-large"></i></div>
         </div>
-        <div>
+        <!--<div>
           <a href="" ng-click="previousPhoto()">Prev</a>
           <a href="" ng-click="nextPhoto()">Next</a>
-        </div>
+        </div>-->
         <div class="gallery-thumbnails">
+          <!--<div class="left-nav" ng-click="previousPage()"><i class="icon-chevron-left icon-large"></i></div>-->
           <img ng-click="setCurrentPhoto(photo, $index)" ng-repeat="photo in currentAttribute.content"
                ng-src="{{ photo.image }}">
+          <!--<div class="right-nav" ng-click="nextPage()"><i class="icon-chevron-right icon-large"></i></div>-->
         </div>
-        <div>
+        <!--<div>
           <a href="" ng-click="previousPage()">Prev</a>
           <a href="" ng-click="nextPage()">Next</a>
-        </div>
+        </div>-->
       </div>
       <div id="sidenav" class="col-md-2" style="padding: 0">
         <ul>

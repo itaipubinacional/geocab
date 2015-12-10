@@ -436,18 +436,33 @@ div.files > div.thumbnail > div.caption{position: absolute; bottom: 0;}
 div.files > div.thumbnail > div.caption input[type=checkbox]{float: left;word-wrap: break-word;margin-top: 2px;}
 div.thumbnail.active{border: 1px solid #428bca;}
 
-/* GALLERY */
-div#gallery > div.modal-body > div.col-md-10{min-height: 800px}
-div#gallery > div.modal-body{position: relative}
-div.current-photo img{padding: 2px; border: 1px solid #ccc; margin: 2px;}
-.gallery-modal-window .modal-dialog {min-width: 980px;}
-
-div.gallery-thumbnails{ width: 100%; float: left;}
-div.gallery-thumbnails img{margin:2px; max-width:125px; max-height: 125px; float: left; border: 1px solid #ccc; padding: 2px}
-div.gallery-thumbnails img:hover{cursor:pointer}
-
 div#dropbox{float: left;height: 520px;width: 100%;border: 2px solid #fff;border-right: 1px solid #ccc;position: relative; padding: 15px}
 div#dropbox.over {background-color: #e8f0fe; border: 2px solid #4285f4 }
 div#dropbox > .dropbox {text-align: center; margin-top: 130px}
 div#dropbox > .dropbox p{margin-top: 15px}
 div#dropbox > div#dropbox-over-msg {text-align: center; left: 235px;background-color: #428bca;color: #fff; padding: 15px;position:absolute; bottom:15px; width: 250px}
+
+/* GALLERY */
+div#gallery > div.modal-body > div.col-md-10{min-height: 800px}
+div#gallery > div.modal-body{position: relative}
+div.current-photo img{padding: 2px; border: 1px solid #ccc; margin: 2px 45px}
+.gallery-modal-window .modal-dialog {min-width: 980px;}
+
+div.gallery-thumbnails{ width: 100%; float: left; margin: 2px 45px}
+div.gallery-thumbnails img{margin:2px; max-width:125px; max-height: 125px; float: left; border: 1px solid #ccc; padding: 2px}
+div.gallery-thumbnails img:hover{cursor:pointer}
+
+div.current-photo{position: relative}
+
+.left-nav, .right-nav{/*display: none*/;height: 100%;padding: 225px 10px;color:#ccc}
+.left-nav > i, .right-nav > i{display: table-cell; vertical-align: middle;font-size: 20px;}
+.left-nav:hover, .right-nav:hover{cursor: pointer; color: #333}
+
+.left-nav{position: absolute; left: 0}
+.right-nav{position: absolute; right: 0; top:0}
+
+/*div.current-photo:hover .left-nav, div.current-photo:hover .right-nav{
+    display: block
+}*/
+
+div.gallery-thumbnails{}
