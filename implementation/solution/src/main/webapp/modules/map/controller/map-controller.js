@@ -2807,6 +2807,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           var img = file.src.split(';base64,');
           photo.source = img[1];
           photo.name = file.name;
+          photo.description = file.description;
           photo.contentLength = file.size;
           photo.mimeType = file.type;
           photoAlbum.photos.push(photo);

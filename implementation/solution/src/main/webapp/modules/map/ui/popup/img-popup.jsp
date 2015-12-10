@@ -19,9 +19,10 @@
     <div>
       <div style="float:left;padding: 0;border-right: 1px solid #ccc">
         <!--<h4>Descrição</h4>-->
-        <p>{{ currentPhoto.description }}</p>
-        <div>
-          <span>{{ pageable.page + 1 }} de {{ currentAttribute.totalPages }}</span>
+
+        <div style="margin: 0 45px">
+          <p style="float: left">{{ currentPhoto.description }}</p>
+          <span style="float: right">{{ pageable.page + 1 }} de {{ currentAttribute.totalPages }}</span>
         </div>
         <div class="current-photo">
           <div class="left-nav" ng-click="previousPhoto()"><i class="icon-chevron-left icon-large"></i></div>

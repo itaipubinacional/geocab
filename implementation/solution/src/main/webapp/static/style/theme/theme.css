@@ -906,7 +906,7 @@ input:-moz-placeholder {
 }
 
 .btn-default >  i, i:hover {
-	font-size: 30px;
+	/*font-size: 30px;*/
 }
 /*.btn-default >  .itaipu-icon-dislike, .itaipu-icon-dislike:hover {*!/*/
 	/*font-size: 30px;*/

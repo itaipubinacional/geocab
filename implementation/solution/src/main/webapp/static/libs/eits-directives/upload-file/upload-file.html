@@ -1,18 +1,40 @@
 <div id="dropbox" ng-class="{'over': over}">
+
+  <!--<tabset>
+    <tab heading="Tab 1">
+      tab 1
+    </tab>
+
+    <tab heading="Tab 2">
+      tab 2
+    </tab>
+
+  </tabset>-->
+
   <div ng-if="!files.length" class="row dropbox" draggable="true">
     <h3>Solte os arquivos em qualquer lugar para fazer o upload</h3>
     <h4>ou</h4>
     <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="Selecionar arquivos"/>
-    <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" style="height: 0;visibility:hidden"/>
     <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
   </div>
   <div ng-if="files.length" style="width: 100%;float: left">
-    <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
-      <label class="detail-label">
-        Descrição
-      </label>
-      <input name="description" type="text" class="form-control" ng-model="fileSelected.description"
-             maxlength="144" ng-minlength="1"/>
+
+    <div class="row">
+      <div class="col-md-9">
+        <div class="form-group" style="width:100%;margin-bottom: 10px; padding-right: 10px">
+          <label class="detail-label">
+            Descrição
+          </label>
+          <input name="description" type="text" class="form-control" ng-model="fileSelected.description"
+                 maxlength="144" ng-minlength="1"/>
+
+        </div>
+      </div>
+      <div class="col-md-3" style="margin-top: 23px;">
+        <div class="form-group">
+          <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="Selecionar arquivos"/>
+        </div>
+      </div>
     </div>
     <div>
       <div class="files" ng-repeat="file in files" class="dropbox">
@@ -20,7 +42,7 @@
           <img ng-src="{{ file.src }}" alt="{{ file.name }}">
           <div class="caption">
             <input type="checkbox" ng-model="file.checked" name="file_{{ $index }}">
-            <p ng-click="toggleCheckbox(file)" >{{file.description ? file.description : file.name}}</p>
+            <p ng-click="toggleCheckbox(file)">{{file.description ? file.description : file.name}}</p>
           </div>
         </div>
       </div>
@@ -36,4 +58,5 @@
   <div ng-if="over && files.length" id="dropbox-over-msg">
     <span>Solte os arquivos para fazer upload em <br/><b>{{ attribute.name }}</b></span>
   </div>
+  <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" style="height: 0;visibility:hidden"/>
 </div>
