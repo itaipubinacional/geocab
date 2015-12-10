@@ -1,12 +1,12 @@
 <div id="dropbox" ng-class="dropClass">
-  <div ng-if="!files.length" style="text-align: center" class="row dropbox">
-    <h2>Solte os arquivos em qualquer lugar para fazer o upload</h2>
+  <div ng-if="!files.length" class="row dropbox">
+    <h3>Solte os arquivos em qualquer lugar para fazer o upload</h3>
     <h4>ou</h4>
     <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="Selecionar arquivos"/>
     <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" style="height: 0;visibility:hidden"/>
     <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
   </div>
-  <div ng-if="files.length" style="width: 100%;float: left;">
+  <div ng-if="files.length" style="width: 100%;float: left">
     <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
       <label class="detail-label">
         Descrição

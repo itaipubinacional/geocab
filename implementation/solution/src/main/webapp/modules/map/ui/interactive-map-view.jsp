@@ -484,6 +484,25 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br style="clear: both;"> <br>
 
+                <label><spring:message code="map.Layer"/></label>
+
+                <!-- no-results-text="Nenhum registro encontrado com" -->
+
+                <select ng-change="listAttributesByLayer()"
+                        data-placeholder="Selecione uma camada" name="camada"
+                        ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
+                        ng-model="currentEntity.layer" chosen class="form-control"
+                        ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+                        required>
+                  <option value=""></option>
+                </select>
+
+                <span class="tooltip-validation"
+                      ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
+                      style="top: -20px"><spring:message code="map.Field-required"/></span>
+
+                <br style="clear: both;"> <br>
+
                 <span><b><spring:message code='map.Input-format'/></b></span>
                 <i class="icon-question-sign icon-large" tooltip-placement="right"
                    tooltip="Selecione o formato de entrada para as coordenadas"></i>
@@ -499,8 +518,10 @@ uri="http://www.springframework.org/security/tags"%>
                 <div class="form-item-horizontal radio" style="margin-left: 0;">
                   <input type="radio" id="DD" ng-change="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_DECIMAL"
                          name="DD">
-                  <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDegree'/> </label>
+                  <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDD'/> </label>
                 </div>
+
+                <br style="clear: both;">
 
                 <span><b><spring:message code='map.Coordinates'/></b></span>
                 <i class="icon-question-sign icon-large" tooltip-placement="right"
@@ -523,23 +544,6 @@ uri="http://www.springframework.org/security/tags"%>
                   <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLongitude">
                 </div>
-
-                <label><spring:message code="map.Layer"/></label>
-
-                <!-- no-results-text="Nenhum registro encontrado com" -->
-
-                <select ng-change="listAttributesByLayer()"
-                        data-placeholder="Selecione uma camada" name="camada"
-                        ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
-                        ng-model="currentEntity.layer" chosen class="form-control"
-                        ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
-                        required>
-                  <option value=""></option>
-                </select>
-
-                <span class="tooltip-validation"
-                      ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
-                      style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
 
                 <div ng-repeat="attribute in attributesByLayer track by $index"
                      style="float: left;width: 100%;" class="form-group">

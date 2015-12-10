@@ -448,5 +448,6 @@ div.gallery-thumbnails img:hover{cursor:pointer}
 
 div#dropbox{float: left;height: 520px;width: 100%;border: 2px solid #fff;border-right: 1px solid #ccc;position: relative; padding: 15px}
 div#dropbox.over {background-color: #e8f0fe; border: 2px solid #4285f4 }
-div#dropbox > .dropbox {text-align: center;}
+div#dropbox > .dropbox {text-align: center; margin-top: 130px}
+div#dropbox > .dropbox p{margin-top: 15px}
 div#dropbox > div#dropbox-over-msg {text-align: center; left: 235px;background-color: #428bca;color: #fff; padding: 15px;position:absolute; bottom:15px; width: 250px}
