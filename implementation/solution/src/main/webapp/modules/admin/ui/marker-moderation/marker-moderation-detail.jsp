@@ -52,8 +52,9 @@
                     <div ng-repeat="markerAttribute in attributesByMarker track by $index"
                          style="position: relative;margin-bottom:15px;">
 
-                        <label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == ''">{{
-                            markerAttribute.attribute.name }}</label>
+                        <label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == ''">
+                            {{markerAttribute.attribute.name }}
+                        </label>
                         <input
                                 type="number" name="number1"
                                 ng-if="markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '' "

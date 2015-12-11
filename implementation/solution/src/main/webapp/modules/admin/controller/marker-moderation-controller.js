@@ -561,6 +561,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.changeToPage = function (filter, pageNumber) {
         $scope.currentPage.pageable.page = pageNumber - 1;
+        if(!$scope.filter.status){
+            $scope.filter.status = null;
+        }
 
         if ($scope.dragMarkers != null) {
             $scope.listMarkerByMarkers($scope.dragMarkers, $scope.currentPage.pageable);
@@ -922,29 +925,13 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
     };
 
-    $scope.getPhotosByAttribute = function(attribute, index){
+    $scope.getPhotosByAttribute = function(id){
 
 
-
-        var pageable = {
-            size: 1,
-            page: 0,
-            sort: {//Sort
-                orders: [
-                    {direction: 'DESC', property: 'created'}
-                ]
-            }
-        };
-
-        markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, pageable, {
+        markerService.lastPhotoByMarkerId(parseInt(id), {
             callback: function (result) {
-                /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
-                 $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
 
-                $scope.attributesByMarker[index].photoAlbum = result.content[0].photoAlbum;
-                $scope.attributesByMarker[index].photoAlbum.photos = result.content;
-
-                $scope.imgResult = result.content[0].image;
+                $scope.imgResult = result.image;
 
                 $scope.$apply();
             },
@@ -1471,6 +1458,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.listAttributesByMarker = function () {
 
+
+        $scope.getPhotosByAttribute($scope.currentEntity.id);
+
+
         $scope.attributesByLayer = [];
         $scope.imgResult = null;
         $scope.showNewAttributes = false;
@@ -1483,23 +1474,16 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                     callback: function (result) {
                         $scope.attributesByLayer = [];
 
-                        var photo = true;
 
                         angular.forEach(result, function (attribute, index) {
 
                             var exist = false;
 
 
-
                             angular.forEach($scope.attributesByMarker, function (attributeByMarker, index) {
 
                                 if (attributeByMarker.attribute.id == attribute.id) {
                                     exist = true;
-                                }
-
-                                if((photo) && (attributeByMarker.attribute.type == 'PHOTO_ALBUM')){
-                                    $scope.getPhotosByAttribute(attributeByMarker, index);
-                                    photo = false;
                                 }
 
                             });
