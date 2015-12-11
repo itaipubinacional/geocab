@@ -49,8 +49,6 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
     }
   };
 
-  $scope.isPreviousPage = false;
-
   /*-------------------------------------------------------------------
    * 		 				 	  BEHAVIORS
    *-------------------------------------------------------------------*/
@@ -63,9 +61,6 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
       callback: function (result) {
         console.log(result);
         $scope.currentPhoto = result;
-
-        $scope.isPreviousPage = false;
-
         $scope.$apply();
       },
       errorHandler: function (message, exception) {
@@ -90,15 +85,7 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
           $scope.currentAttribute = result;
 
-          var index = 0;
-
-          if($scope.isPreviousPage)
-            index = result.pageable.size - 1;
-
-          $scope.setCurrentPhoto(result.content[index], index);
-
-          $scope.pageable = result.pageable;
-
+          $scope.setCurrentPhoto(result.content[0], 0);
           $scope.$apply();
 
         },
@@ -118,15 +105,17 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
   $scope.nextPage = function(){
 
-    if($scope.pageable.page + 1 < $scope.currentAttribute.totalPages) {
-      $scope.pageable.page = $scope.pageable.page + 1;
+    $scope.pageable.page = $scope.pageable.page + 1;
+
+    if($scope.pageable.page <= $scope.currentAttribute.totalPages) {
+
       $scope.setAttribute($scope.currentAttribute, true);
+
     }
+
   };
 
   $scope.previousPage = function(){
-
-    $scope.isPreviousPage = true;
 
     if($scope.pageable.page - 1 >= 0) {
 
@@ -176,35 +165,38 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
    */
   $scope.initialize = function () {
 
-    $scope.attributesByMarker = attributesByMarker;
+    markerService.findMarkerById(attributesByMarker[0].marker.id, {
+      callback: function (result) {
+    	attributesByMarker[0].marker = result;
+		$scope.attributesByMarker = attributesByMarker;
+   
+	    angular.forEach(attributesByMarker[0].marker.markerAttribute, function (markerAttribute, index) {
+	      if (markerAttribute.attribute.type == 'PHOTO_ALBUM') {
+	
+	        if (markerAttribute.photoAlbum != null) {
+	
+	          markerService.listPhotosByPhotoAlbumId(markerAttribute.photoAlbum.id, $scope.pageable, {
+	
+	            callback: function (result) {
+	
+	              $scope.attributes.push(result);
+	
+	              if(!$scope.currentAttribute.content) {
+	                $scope.setAttribute(result, false);
+	                $scope.$apply();
+	              }
+	            },
+	            errorHandler: function (message, exception) {
+	              $scope.message = {type: "error", text: message};
+	              $scope.$apply();
+	            }
+	
+	          });
 
-    angular.forEach(attributesByMarker[0].marker.markerAttribute, function (markerAttribute, index) {
-      if (markerAttribute.attribute.type == 'PHOTO_ALBUM') {
-
-        if (markerAttribute.photoAlbum != null) {
-
-          console.log(markerAttribute.photoAlbum.id);
-
-          markerService.listPhotosByPhotoAlbumId(markerAttribute.photoAlbum.id, $scope.pageable, {
-
-            callback: function (result) {
-
-              $scope.attributes.push(result);
-
-              if(!$scope.currentAttribute.content) {
-                $scope.setAttribute(result, false);
-                $scope.$apply();
-              }
-            },
-            errorHandler: function (message, exception) {
-              $scope.message = {type: "error", text: message};
-              $scope.$apply();
-            }
-
-          });
-
-        }
-      }
+	        }
+	      }
+	    });
+	  }
     });
 
   };

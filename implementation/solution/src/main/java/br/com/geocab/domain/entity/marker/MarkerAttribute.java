@@ -4,6 +4,7 @@
 package br.com.geocab.domain.entity.marker;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -19,7 +20,10 @@ import org.hibernate.envers.Audited;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.AttributeType;
+import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 
 /**
@@ -73,6 +77,7 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	{
 		super();
 	}
+	
 	/**
 	 * 
 	 */
@@ -89,10 +94,53 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	 */
 	public MarkerAttribute(Long id, String value, Marker marker, Attribute attribute)
 	{
-		super(id);
+		this.setId(id);
 		this.setValue(value);
 		this.setMarker(marker);
 		this.setAttribute(attribute);
+	}
+	
+	public MarkerAttribute(Long id, String value, 
+			Long markerId, /*Geometry location,*/ MarkerStatus markerStatus, Calendar markerCreated,
+			Long markerLayerId, String markerLayerName, String markerLayerTitle,  
+			Long markerUserId, String markerUserName, String markerUserEmail, Boolean markerUserStatus,
+			Long attributeId, String attributeName, AttributeType attributeType, Boolean attributeRequired, Integer attributeOrder)
+	{
+		this.setId(id);
+		this.setValue(value);
+		
+		Marker marker = new Marker();
+		
+		marker.setId(markerId);
+		marker.setStatus(markerStatus);
+		marker.setCreated(markerCreated);
+		
+		Layer layer = new Layer();
+		layer.setId(markerLayerId);
+		layer.setName(markerLayerName);
+		layer.setTitle(markerLayerTitle);
+		
+		marker.setLayer(layer);
+		
+		User user = new User();
+		user.setId(markerUserId);
+		user.setName(markerUserName);
+		user.setEmail(markerUserEmail);
+		user.setEnabled(markerUserStatus);
+		
+		marker.setUser(user);
+		
+		this.setMarker(marker);
+		
+		Attribute attribute = new Attribute();
+		attribute.setId(attributeId);
+		attribute.setName(attributeName);
+		attribute.setType(attributeType);
+		attribute.setRequired(attributeRequired);
+		attribute.setOrderAttribute(attributeOrder);
+		
+		this.setAttribute(attribute);
+		
 	}
 	/*-------------------------------------------------------------------
 	 *								BEHAVIORS

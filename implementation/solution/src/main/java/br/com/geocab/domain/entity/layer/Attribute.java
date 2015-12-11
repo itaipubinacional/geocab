@@ -82,8 +82,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * Order {@link Attribute}
 	 */
 	@Column
-	private int orderAttribute;
-
+	private Integer orderAttribute;
 	/**
 	 * Layer {@link Layer}
 	 */
@@ -118,7 +117,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public Attribute(Long id)
 	{
-		super(id);
+		this.setId(id);
 	}
 
 	/**
@@ -130,15 +129,20 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param orderAttribute
 	 * @param visible
 	 */
-	public Attribute(Long id, String name, AttributeType type, Boolean required, int orderAttribute, Boolean visible)
+	public Attribute(Long id, String name, AttributeType type, Boolean required, Integer orderAttribute, Boolean visible)
 	{
-		super(id);
+		this.setId(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
 		this.setOrderAttribute(orderAttribute);
 		this.setVisible(visible);
 	}
+	
+	// public Attribute(Long id, String name, AttributeType type, Boolean
+	// required, Integer orderAttribute){
+	//
+	// }
 
 	/**
 	 * 
@@ -159,8 +163,9 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param orderAttribute
 	 * @param visible
 	 */
-	public Attribute(Long id, String name, Boolean required, AttributeType type, int orderAttribute, Boolean visible)
+	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute, Boolean visible)
 	{
+		this.setId(id);
 		this.setTemporaryId(id);
 		this.setType(type);
 		this.setName(name);
@@ -176,9 +181,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param type
 	 * @param layer
 	 */
-	public Attribute(Long id, String name, AttributeType type, Layer layer)
-	{
-		super(id);
+	public Attribute(Long id, String name, AttributeType type, Layer layer){
+		this.setId(id);
 		this.setType(type);
 		this.setName(name);
 		this.setLayer(layer);
@@ -315,7 +319,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * @return the orderAttribute
 	 */
-	public int getOrderAttribute()
+	public Integer getOrderAttribute()
 	{
 		return orderAttribute;
 	}
@@ -324,7 +328,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param orderAttribute
 	 *            the orderAttribute to set
 	 */
-	public void setOrderAttribute(int orderAttribute)
+	public void setOrderAttribute(Integer orderAttribute)
 	{
 		this.orderAttribute = orderAttribute;
 	}

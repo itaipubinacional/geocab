@@ -81,7 +81,7 @@ public class AccessGroupCustomSearch extends AbstractEntity implements Serializa
 	 */
 	public AccessGroupCustomSearch(Long id, AccessGroup accessGroup, CustomSearch customSearch)
 	{
-		super(id);
+		this.setId(id);
 		this.accessGroup = accessGroup;
 		this.customSearch = customSearch;
 	}

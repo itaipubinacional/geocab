@@ -45,8 +45,8 @@ public class ContactMailRepository implements IContactMailRepository
 	/**
 	 *
 	 */
-	@Value("${mail.from}")
-	private String mailFrom;
+	@Value("${mail.support}")
+	private String mailSupport;
 
 	/*-------------------------------------------------------------------
 	 * 		 					BEHAVIORS
@@ -66,8 +66,8 @@ public class ContactMailRepository implements IContactMailRepository
 				final MimeMessageHelper message = new MimeMessageHelper(
 						mimeMessage);
 				message.setSubject(email.getSubject());
-				message.setTo(email.getEmail());
-				message.setFrom(mailFrom);
+				message.setTo(mailSupport);
+				message.setFrom(email.getEmail());
 
 				final Map<String, Object> model = new HashMap<String, Object>();
 				model.put("email", email);

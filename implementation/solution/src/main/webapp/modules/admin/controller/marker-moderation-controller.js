@@ -925,10 +925,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         });
     };
 
-    $scope.getPhotosByAttribute = function(id){
+    $scope.getPhotoByMarkerId = function(id){
 
 
-        markerService.lastPhotoByMarkerId(parseInt(id), {
+        markerService.lastPhotoByMarkerId(id, {
             callback: function (result) {
 
                 $scope.imgResult = result.image;
@@ -1459,7 +1459,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.listAttributesByMarker = function () {
 
 
-        $scope.getPhotosByAttribute($scope.currentEntity.id);
+        $scope.getPhotoByMarkerId($scope.currentEntity.id);
 
 
         $scope.attributesByLayer = [];

@@ -34,20 +34,6 @@ public class NavigationController
 	 */
 	@Autowired
 	private ResourceBundleMessageSource messageSource;
-//	/**
-//	 * 
-//	 */
-//	@Autowired
-//	private SpringSecuritySignInAdapter signInAdapter;
-//	
-//	@Autowired
-//	private AccountService accountService;
-//	
-//	/**
-//	 * 
-//	 */
-//	private ObjectMapper objectMapper = new ObjectMapper();
-	
 	
 	/*-------------------------------------------------------------------
 	 * 		 				 		BEHAVIORS

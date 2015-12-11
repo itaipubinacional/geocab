@@ -213,10 +213,9 @@ public class MarkerService
 	 */
 	public Photo lastPhotoByMarkerId(Long markerId)
 	{
-		Photo photo = null;
+		Photo photo = this.photoRepository.findByMarkerId(markerId).get(0);
 		try
 		{
-			photo = this.photoRepository.findByMarkerId(markerId).get(0);
 			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
 			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
 			photo.setImage(fileTransfer);
@@ -494,13 +493,11 @@ public class MarkerService
 			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
 					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
 			{
-				listMarker = this.markerRepository
-						.listMarkerByLayerAll(layerId);
+				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
 			}
 			else
 			{
-				listMarker = this.markerRepository.listMarkerByLayer(layerId,
-						user.getId());
+				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
 			}
 
 		}
@@ -537,13 +534,11 @@ public class MarkerService
 			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
 					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
 			{
-				listMarker = this.markerRepository
-						.listMarkerByLayerAll(layerId);
+				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
 			}
 			else
 			{
-				listMarker = this.markerRepository.listMarkerByLayer(layerId,
-						user.getId());
+				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
 			}
 
 		}
@@ -575,17 +570,7 @@ public class MarkerService
 		return geom;
 	}
 
-	// /**
-	// *
-	// * @param geometry
-	// * @return
-	// */
-	// private String geometryToWkt(Geometry geometry)
-	// {
-	// WKTWriter geom = new WKTWriter();
-	// return geom.write(geometry);
-	// }
-
+	
 	/**
 	 * Method to list all {@link Marker}
 	 * 

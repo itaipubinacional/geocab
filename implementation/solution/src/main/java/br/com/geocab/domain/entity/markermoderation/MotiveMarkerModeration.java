@@ -79,7 +79,7 @@ public class MotiveMarkerModeration extends AbstractEntity implements Serializab
 	 */
 	public MotiveMarkerModeration(Long id)
 	{
-		super(id);
+		this.setId(id);
 	}
 	
 	
@@ -94,7 +94,7 @@ public class MotiveMarkerModeration extends AbstractEntity implements Serializab
 	 */
 	public MotiveMarkerModeration(Long id, String description, MarkerModeration markerModeration, Motive motive)
 	{
-		super(id);
+		this.setId(id);
 		this.description = description;
 		this.markerModeration = markerModeration;
 		this.motive = motive;

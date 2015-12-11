@@ -29,7 +29,7 @@ public interface IAccessGroupLayerRepository extends IDataRepository<AccessGroup
 	 * @param layer
 	 * @return
 	 */
-	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup, accessGroupLayer.layer ) " +
+	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup.id, accessGroupLayer.layer.id ) " +
 				"FROM AccessGroupLayer accessGroupLayer " +
 				"WHERE  accessGroupLayer.layer.id = :layerId " )
 	public List<AccessGroupLayer> listByLayerId( @Param("layerId") Long layer );
@@ -39,7 +39,7 @@ public interface IAccessGroupLayerRepository extends IDataRepository<AccessGroup
 	 * @param groupId
 	 * @return
 	 */
-	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup, accessGroupLayer.layer ) " +
+	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup.id, accessGroupLayer.layer.id ) " +
 			"FROM AccessGroupLayer accessGroupLayer " +
 			"WHERE accessGroupLayer.accessGroup.id = :groupId " )
 	public List<AccessGroupLayer> listByAccessGroupId( @Param("groupId") Long groupId );
@@ -50,9 +50,43 @@ public interface IAccessGroupLayerRepository extends IDataRepository<AccessGroup
 	 * @param layerId
 	 * @return
 	 */
-	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup, accessGroupLayer.layer ) " +
+	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup.id, accessGroupLayer.layer.id ) " +
 			"FROM AccessGroupLayer accessGroupLayer " +
 			"WHERE  ((accessGroupLayer.accessGroup.id = :groupId) "
 			+ "AND (accessGroupLayer.layer.id = :layerId))" )
 	public List<AccessGroupLayer> listByAccessGroupLayerId( @Param("groupId") Long groupId, @Param("layerId") Long layerId );
+	
+	
+	
+//	/**
+//	 * 
+//	 * @param layer
+//	 * @return
+//	 */
+//	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup, accessGroupLayer.layer ) " +
+//				"FROM AccessGroupLayer accessGroupLayer " +
+//				"WHERE  accessGroupLayer.layer.id = :layerId " )
+//	public List<AccessGroupLayer> listByLayerId( @Param("layerId") Long layer );
+//	
+//	/**
+//	 * 
+//	 * @param groupId
+//	 * @return
+//	 */
+//	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup, accessGroupLayer.layer ) " +
+//			"FROM AccessGroupLayer accessGroupLayer " +
+//			"WHERE accessGroupLayer.accessGroup.id = :groupId " )
+//	public List<AccessGroupLayer> listByAccessGroupId( @Param("groupId") Long groupId );
+//	
+//	/**
+//	 * 
+//	 * @param groupId
+//	 * @param layerId
+//	 * @return
+//	 */
+//	@Query(value="SELECT new AccessGroupLayer( accessGroupLayer.id, accessGroupLayer.accessGroup, accessGroupLayer.layer ) " +
+//			"FROM AccessGroupLayer accessGroupLayer " +
+//			"WHERE  ((accessGroupLayer.accessGroup.id = :groupId) "
+//			+ "AND (accessGroupLayer.layer.id = :layerId))" )
+//	public List<AccessGroupLayer> listByAccessGroupLayerId( @Param("groupId") Long groupId, @Param("layerId") Long layerId );
 }

@@ -3,7 +3,6 @@
  */
 package br.com.geocab.tests.service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +12,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.github.springtestdbunit.annotation.DatabaseOperation;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.service.LayerGroupService;
 import br.com.geocab.tests.AbstractIntegrationTest;
-
-import com.github.springtestdbunit.annotation.DatabaseOperation;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 /**
  * @author Lucas
@@ -66,7 +65,7 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 		Assert.assertNotNull(layerGroup);
 		Assert.assertEquals("Group 1", layerGroup.getName());
 		Assert.assertEquals(null, layerGroup.getLayerGroupUpper());
-		Assert.assertEquals(0, layerGroup.getOrderLayerGroup());
+		Assert.assertEquals(new Integer(0), layerGroup.getOrderLayerGroup());
 		Assert.assertEquals(null, layerGroup.getLayers());
 		Assert.assertEquals(null, layerGroup.getLayersGroup());
 		
