@@ -96,7 +96,7 @@
                     </div>
                 </div>
 
-                <div style="text-align:center;">
+                <div class="col-md-12" style="text-align:center;">
                     <img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult" class="marker-image"
                          ng-src="{{ imgResult }}"
                          style="width: 100%;margin-top: 12px;cursor: pointer;max-width:360px"> <br>
