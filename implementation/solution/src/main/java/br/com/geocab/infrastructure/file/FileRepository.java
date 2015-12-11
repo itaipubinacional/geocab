@@ -16,16 +16,10 @@ import br.com.geocab.domain.repository.IFileRepository;
 @Component
 public class FileRepository implements IFileRepository
 {
-//	/**
-//	 * 
-//	 */
-//	@Autowired(required=false)
-//	private ServletContext servletContext;
-	
 	@Override
-	public File[] listFilePath( String path )
+	public File[] listFilePath(String path)
 	{
-		final File iconsFolder = new File( path );
+		final File iconsFolder = new File(path);
 		File[] listFiles = iconsFolder.listFiles();
 		return listFiles;
 	}

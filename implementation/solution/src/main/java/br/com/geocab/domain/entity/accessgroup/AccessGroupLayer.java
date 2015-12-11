@@ -81,9 +81,22 @@ public class AccessGroupLayer extends AbstractEntity implements Serializable
 	 */
 	public AccessGroupLayer(Long id, AccessGroup accessGroup, Layer layer)
 	{
-		super(id);
+		this.setId(id);
 		this.accessGroup = accessGroup;
 		this.layer = layer;
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param accessGroupId
+	 * @param layerId
+	 */
+	public AccessGroupLayer(Long id, Long accessGroupId, Long layerId)
+	{
+		this.setId(id);
+		this.setAccessGroup(new AccessGroup(accessGroupId));
+		this.setLayer(new Layer(layerId));
 	}
 	
 	/*-------------------------------------------------------------------

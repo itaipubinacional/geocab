@@ -73,21 +73,27 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	/**
 	 * list of {@link Tool} tools of {@link AccessGroup}
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade =
-	{ CascadeType.MERGE })
-	@JoinTable(name = "ACCESS_GROUP_TOOL", joinColumns =
-	{ @JoinColumn(name = "access_group_id", referencedColumnName = "id", nullable = true) }, inverseJoinColumns =
-	{ @JoinColumn(name = "tool_id", referencedColumnName = "id", nullable = true) })
+	@ManyToMany(fetch=FetchType.EAGER, cascade={ CascadeType.MERGE })
+	@JoinTable(name="ACCESS_GROUP_TOOL", 
+	joinColumns={ 
+		@JoinColumn(name="access_group_id", referencedColumnName="id", nullable=true) 
+	},
+	inverseJoinColumns={
+		@JoinColumn(name="tool_id", referencedColumnName="id", nullable=true)
+	})
 	private Set<Tool> tools = new HashSet<Tool>();
 
 	/**
 	 * list of {@link User} users of {@link AccessGroup}
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade =
-	{ CascadeType.MERGE })
-	@JoinTable(name = "ACCESS_GROUP_USER", joinColumns =
-	{ @JoinColumn(name = "access_group_id", referencedColumnName = "id", nullable = true) }, inverseJoinColumns =
-	{ @JoinColumn(name = "user_username", referencedColumnName = "id", nullable = true) })
+	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.MERGE })
+	@JoinTable(name="ACCESS_GROUP_USER", 
+	joinColumns={ 
+		@JoinColumn(name="access_group_id", referencedColumnName="id", nullable=true) 
+	},
+	inverseJoinColumns={
+		@JoinColumn(name="user_username", referencedColumnName="id", nullable=true)
+	})
 	private Set<User> users = new HashSet<User>();
 
 	/*-------------------------------------------------------------------

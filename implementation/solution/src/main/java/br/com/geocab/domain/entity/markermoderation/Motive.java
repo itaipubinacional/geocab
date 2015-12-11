@@ -65,11 +65,11 @@ public class Motive extends AbstractEntity implements Serializable
 	
 	public Motive( Long id )
 	{
-		super(id);
+		this.setId(id);
 	}
 	
 	public Motive(Long id, String name){
-		super(id);
+		this.setId(id);
 		this.setName(name);
 	}
 

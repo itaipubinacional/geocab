@@ -37,13 +37,6 @@ public class MotiveService
 	@Autowired
 	private IMotiveRepository motiveRepository;
 	
-//	/**
-//	 * 
-//	 */
-//	@Autowired
-//	private IMotiveMarkerModerationRepository motiveMarkerModerationRepository;
-	
-	
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/

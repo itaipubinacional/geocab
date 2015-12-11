@@ -114,9 +114,11 @@ public class CustomSearchService
 			 * The original layer stay. 
 			 * 
 			 * */
-			CustomSearch customSearchDatabase = this.findCustomSearchById(customSearch.getId());
-			customSearch.setLayer(customSearchDatabase.getLayer());
+//			CustomSearch customSearchDatabase = this.findCustomSearchById(customSearch.getId());
+			customSearch.setLayer(this.customSearchRepository.getFindLayerById(customSearch.getLayer().getId()));
 			
+			customSearch.setAccessGroupCustomSearch(null);
+//			customSearch.setLayerFields(null);
 			customSearch = this.customSearchRepository.save( customSearch );
 		}
 		catch ( DataIntegrityViolationException e )

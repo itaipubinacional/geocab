@@ -25,15 +25,18 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 	 * @param markerId
 	 * @return
 	 */
-	@Query(value="SELECT new MarkerAttribute( markerAttribute.id, markerAttribute.value, marker, attribute ) " +
-				 " FROM MarkerAttribute markerAttribute "+ 
-				 " LEFT OUTER JOIN markerAttribute.marker marker " + 
-				 " LEFT OUTER JOIN markerAttribute.attribute attribute " + 
+	@Query(value="SELECT new MarkerAttribute( markerAttribute.id, markerAttribute.value, "
+			+ " markerAttribute.marker.id, markerAttribute.marker.status, markerAttribute.marker.created, "
+			+ "markerAttribute.marker.layer.id, markerAttribute.marker.layer.name, markerAttribute.marker.layer.title, "
+			+ "markerAttribute.marker.user.id, markerAttribute.marker.user.name, markerAttribute.marker.user.email, markerAttribute.marker.user.enabled, "
+			+ "markerAttribute.attribute.id, markerAttribute.attribute.name, markerAttribute.attribute.type, markerAttribute.attribute.required, markerAttribute.attribute.orderAttribute) " +
+				 " FROM MarkerAttribute markerAttribute "+
 				 " WHERE (markerAttribute.marker.id = :markerId)"+ 
 				 " ORDER BY markerAttribute.id ASC")
 	public List<MarkerAttribute> listAttributeByMarker( @Param("markerId") Long markerId );
 	
 	/**
+	 * É utilizado somente no update LAYER
 	 * 
 	 * @param layerId
 	 * @return
