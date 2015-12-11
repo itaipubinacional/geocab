@@ -213,9 +213,10 @@ public class MarkerService
 	 */
 	public Photo lastPhotoByMarkerId(Long markerId)
 	{
-		Photo photo = this.photoRepository.findByMarkerId(markerId).get(0);
+		Photo photo = null;
 		try
 		{
+			photo = this.photoRepository.findByMarkerId(markerId).get(0);
 			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
 			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
 			photo.setImage(fileTransfer);

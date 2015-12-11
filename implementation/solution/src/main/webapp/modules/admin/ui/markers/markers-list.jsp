@@ -71,14 +71,14 @@
                 <h3 ng-if="itensMarcados.length > 1"style="margin: 0" class="col-md-6">{{itensMarcados.length}} <spring:message code="admin.marker-moderation.Selected-items"/></h3>
                 <h3 ng-if="itensMarcados.length == 1" style="margin: 0" class="col-md-6">{{itensMarcados.length}} <spring:message code="admin.marker-moderation.Selected-item"/></h3>
 
-				<div class="btn btn-default col-md-3" name="btnSave"
+				<div class="btn btn-primary col-md-3" name="btnSave"
 					 ng-click="postMarkersModal()" ng-disabled="!disableButtonPost">
-					<a style="font-size:14px;text-decoration:none;color:black">
+					<a style="font-size:14px;text-decoration:none;color:white">
 						<spring:message code="admin.marker-moderation.Post"/>
 					</a>
 				</div>
-				<div class="btn btn-default col-md-3" name="btnSave" ng-click="removeMarkersModal()">
-					<a style="font-size:14px;text-decoration:none;color:black">
+				<div class="btn btn-primary col-md-3" name="btnSave" ng-click="removeMarkersModal()">
+					<a style="font-size:14px;text-decoration:none;color:white">
 						<spring:message code="admin.marker-moderation.Delete"/>
 					</a>
 				</div>
