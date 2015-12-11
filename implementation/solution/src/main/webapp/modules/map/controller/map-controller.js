@@ -624,8 +624,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         console.log('DEGREES_DECIMAL');
 
-        $scope.formattedLatitude  = $scope.latitude;
-        $scope.formattedLongitude = $scope.longitude
+        $scope.formattedLatitude  = $scope.latitude.toFixed(6);
+        $scope.formattedLongitude = $scope.longitude.toFixed(6);
 
       } else {
 
