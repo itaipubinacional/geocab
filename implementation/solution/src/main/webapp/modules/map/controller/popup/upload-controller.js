@@ -6,7 +6,11 @@
  * @param $log
  * @param $location
  */
-function UploadPopUpController($scope, $modalInstance, $log, $filter, layer, attribute, attributesByLayer) {
+function UploadPopUpController($scope, $modalInstance, $log, $filter, $importService, layer, attribute, attributesByLayer) {
+
+
+  $importService("markerService");
+
 
   /*-------------------------------------------------------------------
    * 		 				 	ATTRIBUTES
@@ -26,6 +30,7 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, layer, att
 
   $scope.attribute = attribute;
 
+
   $scope.attributesByLayer = attributesByLayer;
 
   /*-------------------------------------------------------------------
@@ -41,6 +46,12 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, layer, att
    */
   $scope.initialize = function () {
     console.log('initialize');
+
+    if($scope.attribute.markerAttribute.id) {
+
+      $scope.setAttribute($scope.attribute);
+
+    }
   };
 
   $scope.onSuccess = function (files) {
@@ -74,7 +85,35 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, layer, att
   };
 
   $scope.setAttribute = function (attribute) {
+
     $scope.attribute = attribute;
+
+    markerService.findPhotoAlbumByAttributeMarkerId(attribute.markerAttribute.id, null, {
+
+      callback: function (result) {
+
+        $scope.attribute.files = [];
+
+        angular.forEach(result.content, function (photo) {
+
+          photo.src  = photo.image;
+          photo.name = photo.description;
+          $scope.attribute.files.push(photo);
+
+        });
+
+        //$scope.attribute = $scope.attribute;
+
+        $scope.$apply();
+
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+
+    });
+
   };
 
 

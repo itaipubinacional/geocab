@@ -112,8 +112,7 @@ uri="http://www.springframework.org/security/tags"%>
                           ng-if="(marker.status != 'ACCEPTED' && userMe.id == marker.user.id)"
                           style="float: right; margin-right: 5px" class="btn btn-default"
                           ng-click="changeToScreen('update')"
-                          title="<spring:message code="map.Update"/>"
-                      >
+                          title="<spring:message code='map.Update'/>">
                       <i class="itaipu-icon-edit"></i>
                       </button>
                       <button
@@ -135,8 +134,8 @@ uri="http://www.springframework.org/security/tags"%>
                       </button>
                       <br>
                       <div style="text-align:center">
-                        <img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-                             style="width: 100%;margin-top: 12px;cursor: pointer;max-width:360px"> <br>
+                        <img ng-click="showGallery(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+                             style="margin-top: 12px;cursor: pointer;max-width:360px"> <br>
                       </div>
                       <br>
 
@@ -222,8 +221,8 @@ uri="http://www.springframework.org/security/tags"%>
                     ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
                     style="float: left; margin: 5px 0 0 5px" class="btn btn-default"
                     ng-click="changeToScreen('detail')"
-                    title="<spring:message code="map.Back" />"
-                >
+                    title="<spring:message code='map.Back'/>">
+                  <i class="icon itaipu-icon-arrow-left"></i>
                 </button>
 
                 <span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
@@ -257,12 +256,12 @@ uri="http://www.springframework.org/security/tags"%>
                   <ng-form name="ngSideMarker" default-button="buttonUpdate">
 
                     <button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
-                            onclick="angular.element('#upload-input').click();"
-                            style="float: left;"
+                            ng-click="showUpload(markerAttribute.attribute, attributesByMarker)"
+                            style="float: left;margin-right: 5px"
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>
 
-                    <label  ng-style="$index > 0 ? {'margin-top':'15px'} : '' ">{{ markerAttribute.attribute.name }}</label>
+                    <label style="padding-top: 10px">{{ markerAttribute.attribute.name }}</label>
 
                     <input
                         type="number"
@@ -343,10 +342,9 @@ uri="http://www.springframework.org/security/tags"%>
 
                   <ng-form name="ngSideMarker" default-button="buttonInsert">
 
-                    {{ attribute.type }}
                     <button ng-if="attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
-                            onclick="angular.element('#upload-input').click();"
-                            style="float: left;"
+                            ng-click="showUpload(attribute, attributesByLayer)"
+                            style="float: left;margin-right: 5px"
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>
 
@@ -428,35 +426,20 @@ uri="http://www.springframework.org/security/tags"%>
                 <!-- <label>Foto</label> <input type="file" class="form-control" ng-model="currentEntity.photo"> -->
                 <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
-                <br>
-                <img  ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-                      style="width: 100%; height: 200px; margin-top: 12px;"> <br>
-                <br>
+                <!--<br>
+                <img  ng-show="imgResult" class="marker-image" ng-click="showGallery(attributesByMarker)" ng-src="{{ imgResult }}"
+                      style="margin-top: 12px;cursor: pointer;max-width:360px"> <br>
+                <br>-->
 
                 <hr>
-
-                <input type="file" id="upload-input" style="display: none;"
-                       accept="image/*"
-                       onchange="angular.element(this).scope().setPhotoMarker(this)" />
-
-                <button class="btn btn-default"
-                        onclick="angular.element('#upload-input').click();"
-                        style="float: left;"
-                        title="<spring:message code="map.Picture"/>"
-                >
-                <span class="glyphicon glyphicon-picture"></span>
-                </button>
 
                 <button
                     id="buttonUpdate"
                     class="btn btn-primary"
                     ng-click="updateMarker()"
                     style="float: right"
-                    title="<spring:message code="map.Submit" />"
-                >
-
-                <spring:message code="map.Submit" />
-
+                    title="<spring:message code='map.Submit' />">
+                  <spring:message code="map.Submit" />
                 </button>
               </div>
             </div>
@@ -552,12 +535,12 @@ uri="http://www.springframework.org/security/tags"%>
                   <ng-form name="ngSideMarker" default-button="buttonInsert">
 
                     <button ng-if="attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
-                            ng-click="showUpload(attribute)"
+                            ng-click="showUpload(attribute, attributesByLayer)"
                             style="float: left;margin-right: 5px"
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>
 
-                    <label style="margin-top: 10px">{{ attribute.name }}</label>
+                    <label style="margin-top: 15px">{{ attribute.name }}</label>
 
                     <input type="number"
                            name="number1" ng-if="attribute.type == 'NUMBER'"

@@ -33,8 +33,12 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         console.log('loaded');
       };
 
-      scope.$watch('attribute.files', function(n, o){
+      scope.$watch('attribute.files', function(newVal, oldVal){
+          scope.files = [];
           console.log('watch');
+          scope.files = newVal != undefined ? newVal : [];
+          if(newVal)
+            scope.setImage(newVal[0]);
       });
 
       scope.$watch('attribute', function(newVal, oldVal){

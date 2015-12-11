@@ -3308,7 +3308,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
   };
 
-  $scope.openImgModal = function (attributesByMarker) {
+  $scope.showGallery = function (attributesByMarker) {
 
     var dialog = $modal.open({
       templateUrl: 'modules/map/ui/popup/img-popup.jsp',
@@ -4405,15 +4405,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   /* Upload Photos */
 
-  $scope.showUpload = function(attribute){
+  $scope.showUpload = function(attribute, attributes){
 
     var attribute = attribute;
 
-    var attributesByLayer = function(){
+    var getAttributes = function(){
       var attrs = [];
-      angular.forEach($scope.attributesByLayer, function(attribute){
-        if(attribute.type == 'PHOTO_ALBUM')
-          attrs.push(attribute);
+      angular.forEach(attributes, function(attr, index){
+        if(attr.type == 'PHOTO_ALBUM')
+          attrs.push(attr);
+
+        if(attr.attribute && attr.attribute.type == 'PHOTO_ALBUM') {
+          attr.attribute.markerAttribute = {id: attr.id};
+          attrs.push(attr.attribute);
+        }
       });
       return attrs;
     };
@@ -4429,7 +4434,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         attribute: function(){
           return attribute;
         },
-        attributesByLayer: attributesByLayer
+        attributesByLayer: getAttributes
       }
     });
 
