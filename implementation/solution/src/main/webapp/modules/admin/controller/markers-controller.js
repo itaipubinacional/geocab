@@ -1432,11 +1432,40 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
     };
 
+    $scope.openImgModal = function (attributesByMarker) {
+
+        var dialog = $modal.open({
+            templateUrl: 'modules/map/ui/popup/img-popup.jsp',
+            controller: ImgPopUpController,
+            windowClass: 'gallery-modal-window',
+            resolve: {
+                attributesByMarker: function(){
+                    return attributesByMarker;
+                }
+            }
+        });
+    };
+
+    $scope.getPhotoByMarkerId = function(id){
+
+        markerService.lastPhotoByMarkerId(id, {
+            callback: function (result) {
+                $scope.imgResult = result.image;
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+            }
+        })
+    };
 
     /**
      * Lists the marker attributes
      */
     $scope.listAttributesByMarker = function () {
+
+        $scope.getPhotoByMarkerId($scope.currentEntity.id);
 
         $scope.attributesByLayer = [];
         $scope.showNewAttributes = false;
@@ -1490,18 +1519,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
                 $scope.$apply();
             }
         });
-
-        markerService.findImgByMarker($scope.currentEntity.id, {
-            callback: function (result) {
-
-                $scope.imgResult = result;
-            },
-            errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
-                $scope.$apply();
-            }
-        });
-
     };
 
 

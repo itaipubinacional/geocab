@@ -96,19 +96,12 @@
                         </div>
 
                         <!-- PHOTO ALBUM-->
-                        <div ng-repeat="markerAttribute in attributesByMarker |  filter :{attribute:{type: 'PHOTO_ALBUM'}}">
-                            <div ng-if="$first">
-                                <label style="margin-top: 30px">
-                                    FOTOS
-                                </label>
-                                <!-- TODO SHOW PHOTO_ALBUM -->
-                                <img ng-click="openImgModal()"
-                                     ng-show="imgResult"
-                                     class="marker-image"
-                                     ng-src="{{ imgResult }}"
-                                     style="width: 100%; height: 200px; margin-top: 12px; cursor: pointer;max-width:360px">
-                                <br>
-                            </div>
+                        <div
+                                ng-if="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED' )"
+                                style="text-align:center;">
+                            <img ng-click="openImgModal(attributesByMarker)"
+                                 ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
+                                 style="width: 100%;margin-top: 12px;cursor: pointer;max-width:360px"> <br>
                         </div>
                     </div>
 
