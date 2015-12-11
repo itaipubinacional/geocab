@@ -606,6 +606,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.currentCreatingInternalLayer = layer;
         $scope.map.addLayer(layer);
 
+        var zoom = $scope.map.getView().getZoom();
+
+        var extent = layer.getSource().getExtent();
+        $scope.map.getView().fitExtent(extent, $scope.map.getSize());
+
+        $scope.map.getView().setZoom(zoom);
+
         //$scope.setMarkerCoordinatesFormat();
       }
 
@@ -1613,9 +1620,32 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
   }
 
-
   $scope.initializeMarker = function () {
 
+    layerGroupService.listAllInternalLayerGroups({
+      callback: function (result) {
+        $scope.selectLayerGroup = [];
+
+        angular.forEach(result, function (layer, index) {
+
+          $scope.selectLayerGroup.push({
+            "layerTitle": layer.title,
+            "layerId": layer.id,
+            "layerIcon": layer.icon,
+            "group": layer.layerGroup.name
+          });
+
+        })
+
+        $scope.currentState = $scope.LIST_STATE;
+
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
 
     $('li.menu-item').each(function(index){
 
