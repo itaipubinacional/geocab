@@ -65,7 +65,7 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
         $scope.currentPhoto = result;
 
         $scope.isPreviousPage = false;
-        
+
         $scope.$apply();
       },
       errorHandler: function (message, exception) {

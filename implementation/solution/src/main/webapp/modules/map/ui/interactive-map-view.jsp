@@ -552,7 +552,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <ng-form name="ngSideMarker" default-button="buttonInsert">
 
                     <button ng-if="attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
-                            ng-click="showGallery(attribute)"
+                            ng-click="showUpload(attribute)"
                             style="float: left;margin-right: 5px"
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>

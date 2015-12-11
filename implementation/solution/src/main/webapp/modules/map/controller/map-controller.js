@@ -4403,9 +4403,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
   };
 
-  /* GALLERY */
+  /* Upload Photos */
 
-  $scope.showGallery = function(attribute){
+  $scope.showUpload = function(attribute){
 
     var attribute = attribute;
 
@@ -4419,8 +4419,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     };
 
     var dialog = $modal.open({
-      templateUrl: "modules/map/ui/popup/gallery-popup.jsp",
-      controller: GalleryPopUpController,
+      templateUrl: "modules/map/ui/popup/upload-popup.jsp",
+      controller: UploadPopUpController,
       size: 'lg',
       resolve: {
         layer: function(){

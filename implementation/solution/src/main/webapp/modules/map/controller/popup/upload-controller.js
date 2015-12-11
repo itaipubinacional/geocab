@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function GalleryPopUpController($scope, $modalInstance, $log, $filter, layer, attribute, attributesByLayer) {
+function UploadPopUpController($scope, $modalInstance, $log, $filter, layer, attribute, attributesByLayer) {
 
   /*-------------------------------------------------------------------
    * 		 				 	ATTRIBUTES

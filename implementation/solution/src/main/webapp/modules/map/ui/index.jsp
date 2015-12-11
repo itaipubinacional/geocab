@@ -39,7 +39,7 @@
 		<script type="text/javascript" src="modules/map/controller/contact-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
 		<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
-		<script type="text/javascript" src="modules/map/controller/popup/gallery-controller.js"></script>
+		<script type="text/javascript" src="modules/map/controller/popup/upload-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/refuse-marker-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>

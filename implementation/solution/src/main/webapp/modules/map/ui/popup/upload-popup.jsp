@@ -18,7 +18,7 @@
       <div id="sidenav" class="col-md-2" style="padding: 0">
         <ul>
           <li ng-repeat="attr in attributesByLayer" ng-click="setAttribute(attr)"
-              ng-class="{'active': attr.name == attribute.name}"> {{ attr.name }} ({{ attr.files ? attr.files.length : 0 }})</li>
+              ng-class="{'active': attr.name == attribute.name}">{{ attr.name }} ({{ attr.files ? attr.files.length : 0 }})</li>
         </ul>
       </div>
     </div>
