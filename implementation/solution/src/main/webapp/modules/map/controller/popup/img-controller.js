@@ -49,6 +49,8 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
     }
   };
 
+  $scope.isPreviousPage = false;
+
   /*-------------------------------------------------------------------
    * 		 				 	  BEHAVIORS
    *-------------------------------------------------------------------*/
@@ -61,6 +63,9 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
       callback: function (result) {
         console.log(result);
         $scope.currentPhoto = result;
+
+        $scope.isPreviousPage = false;
+        
         $scope.$apply();
       },
       errorHandler: function (message, exception) {
@@ -85,7 +90,15 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
           $scope.currentAttribute = result;
 
-          $scope.setCurrentPhoto(result.content[0], 0);
+          var index = 0;
+
+          if($scope.isPreviousPage)
+            index = result.pageable.size - 1;
+
+          $scope.setCurrentPhoto(result.content[index], index);
+
+          $scope.pageable = result.pageable;
+
           $scope.$apply();
 
         },
@@ -105,17 +118,15 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
   $scope.nextPage = function(){
 
-    $scope.pageable.page = $scope.pageable.page + 1;
-
-    if($scope.pageable.page <= $scope.currentAttribute.totalPages) {
-
+    if($scope.pageable.page + 1 < $scope.currentAttribute.totalPages) {
+      $scope.pageable.page = $scope.pageable.page + 1;
       $scope.setAttribute($scope.currentAttribute, true);
-
     }
-
   };
 
   $scope.previousPage = function(){
+
+    $scope.isPreviousPage = true;
 
     if($scope.pageable.page - 1 >= 0) {
 
