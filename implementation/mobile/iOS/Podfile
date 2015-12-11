@@ -1,5 +1,5 @@
 platform :ios, '7.0'
-    pod 'RestKit', '~> 0.23.3'
+    pod 'RestKit', '~> 0.24.1'
     pod 'Facebook-iOS-SDK', '~> 3.18.2'
     pod 'Google/SignIn'
     pod 'FDTake', '~> 0.2.2'

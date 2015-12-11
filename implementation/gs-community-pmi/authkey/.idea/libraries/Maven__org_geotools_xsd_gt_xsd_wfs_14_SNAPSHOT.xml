@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.geotools.xsd:gt-xsd-wfs:14-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geotools/xsd/gt-xsd-wfs/14-SNAPSHOT/gt-xsd-wfs-14-20150828.171833-222.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geotools/xsd/gt-xsd-wfs/14-SNAPSHOT/gt-xsd-wfs-14-20150828.171833-222-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geotools/xsd/gt-xsd-wfs/14-SNAPSHOT/gt-xsd-wfs-14-20150828.171833-222-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

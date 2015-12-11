@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.geotools:gt-referencing:14-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geotools/gt-referencing/14-SNAPSHOT/gt-referencing-14-20150828.171722-223.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geotools/gt-referencing/14-SNAPSHOT/gt-referencing-14-20150828.171722-223-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geotools/gt-referencing/14-SNAPSHOT/gt-referencing-14-20150828.171722-223-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

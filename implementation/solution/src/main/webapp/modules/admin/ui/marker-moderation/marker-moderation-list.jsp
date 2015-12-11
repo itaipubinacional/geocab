@@ -58,6 +58,7 @@
 							ng-options="user.email for user in selectUsers "
 							ng-model="filter.user" chosen class="form-control"
 							>
+						<option value=""><spring:message code="admin.marker-moderation.All-users"/></option>
 					</select>
 				</div>
 			
@@ -68,10 +69,10 @@
 		<div ng-grid="gridOptions" style="height: 499px;border: 1px solid rgb(212,212,212);"></div>					
 		
 		<div class="gridFooterDiv">
-		       <pagination style="text-align: center"
+		       <pagination style="text-align: center; margin-top:45px"
 		                   total-items="currentPage.total" rotate="false"
 		                   items-per-page="currentPage.size"
-		                   max-size="currentPage.totalPages"
+		                   max-size="5"
 		                   ng-change="changeToPage(data.filter, currentPage.pageable.pageNumber)"
 		                   ng-model="currentPage.pageable.pageNumber" boundary-links="true"
 		                   previous-text="‹" next-text="›" first-text="«" last-text="»">

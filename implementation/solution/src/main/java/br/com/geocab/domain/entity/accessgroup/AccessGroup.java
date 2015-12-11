@@ -12,14 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.tool.Tool;
 
@@ -35,7 +33,6 @@ import br.com.geocab.domain.entity.tool.Tool;
 @Entity
 @Audited
 @DataTransferObject
-@Table(schema=IEntity.SCHEMA)
 public class AccessGroup extends AbstractEntity implements Serializable
 {
 	/**
@@ -77,7 +74,7 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	 * list of {@link Tool} tools of {@link AccessGroup}
 	 */
 	@ManyToMany(fetch=FetchType.EAGER, cascade={ CascadeType.MERGE })
-	@JoinTable(name="ACCESS_GROUP_TOOL", schema=IEntity.SCHEMA,  
+	@JoinTable(name="ACCESS_GROUP_TOOL", 
 	joinColumns={ 
 		@JoinColumn(name="access_group_id", referencedColumnName="id", nullable=true) 
 	},
@@ -90,7 +87,7 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	 * list of {@link User} users of {@link AccessGroup}
 	 */
 	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.MERGE })
-	@JoinTable(name="ACCESS_GROUP_USER", schema=IEntity.SCHEMA,  
+	@JoinTable(name="ACCESS_GROUP_USER", 
 	joinColumns={ 
 		@JoinColumn(name="access_group_id", referencedColumnName="id", nullable=true) 
 	},

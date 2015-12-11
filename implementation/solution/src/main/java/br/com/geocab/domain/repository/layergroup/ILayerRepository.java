@@ -27,7 +27,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param pageable
 	 * @return
 	 */
-	@Query(value="SELECT new Layer( layer.id, layer.name, layer.icon, layer.title, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup ) " +
+	@Query(value="SELECT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup ) " +
 				"FROM Layer layer " +
 				"LEFT OUTER JOIN layer.dataSource dataSource " + 
 				"LEFT OUTER JOIN layer.layerGroup layerGroup " +
@@ -44,20 +44,30 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param idLayer
 	 * @return
 	 */
-	@Query(value="SELECT layer " +
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource )  " +
 			"FROM Layer layer " +
 			"WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " +
 			"ORDER BY layer.publishedLayer.orderLayer")
 	public List<Layer> listLayersByLayerGroupPublished( @Param("idLayer") Long idLayer);
+	
+//	/**layer.layerGroup.id, layer.layerGroup.name, layer.layerGroup.orderLayerGroup, 
+//	 * 
+//	 * @param idLayer
+//	 * @return
+//	 */
+//	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.dataSource) " +
+//			"FROM Layer layer " +
+//			"WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " +
+//			"ORDER BY layer.publishedLayer.orderLayer")
+//	public List<Layer> listLayersByLayerGroupPublished( @Param("idLayer") Long idLayer);
 	
 	
 	/**
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, dataSource) " +
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource) " +
 			"FROM Layer layer " +
-			"LEFT OUTER JOIN layer.dataSource dataSource " +
 			"WHERE ( layer.publishedLayer != NULL "
 			+ "AND layer.published = false ) ")
 	public List<Layer> listLayersPublished();
@@ -66,11 +76,9 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.title, layer.icon, layerGroup) "
-			+ "FROM Layer layer " 
-			+ "LEFT OUTER JOIN layer.dataSource dataSource "
-			+ "LEFT OUTER JOIN layer.layerGroup layerGroup "
-			+ "WHERE ( dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE ) " )
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.layerGroup.id, layer.layerGroup.name, layer.layerGroup.orderLayerGroup)  " 
+			+ "FROM Layer layer "
+			+ "WHERE ( layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE ) " )
 	public List<Layer> listAllInternalLayerGroups();
 	
 	/**
@@ -79,8 +87,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 */
 	@Query(value="SELECT new Layer(layer.id, layer.title) "
 			+ "FROM Layer layer " 
-			+ "LEFT OUTER JOIN layer.dataSource dataSource "
-			+ "WHERE ( dataSource.url = NULL ) " )
+			+ "WHERE ( layer.dataSource.url = NULL ) " )
 	public List<Layer> listAllInternalLayers();
 	
 	/**
@@ -93,4 +100,5 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
             "FROM Layer layer " +
             "WHERE ( layer.name = :layerName) AND ( layer.dataSource.id = :dataSourceId )")
     public List<Long> listLayerGroupIdsByNameAndDataSource( @Param("layerName") String layerName, @Param("dataSourceId") Long dataSourceId);
+
 }

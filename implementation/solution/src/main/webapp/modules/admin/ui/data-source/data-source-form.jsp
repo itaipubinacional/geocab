@@ -56,7 +56,7 @@
             <div >
                 <input id="authenticationRequired" type="checkbox"
                        ng-model="data.showFields"
-                       ng-change="clearFields()" ng-checked="currentEntity.login && currentEntity.password">
+                       ng-click="clearFields()" ng-checked="currentEntity.login && currentEntity.password">
                 <label for="authenticationRequired" title="Authentication required"><spring:message code="Authentication"/> <spring:message code="required"/></label>
             </div>
             <br ng-if="data.show"/>

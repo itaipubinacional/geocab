@@ -30,7 +30,7 @@
                 <label class="detail-label" required><spring:message code="admin.users.E-mail"/></label>
                 <input name="address" type="email" id="address" class="form-control"
                        ng-model="currentEntity.email"
-                       maxlength="255"
+                       maxlength="50"
                        placeholder="<spring:message code="admin.users.E-mail"/>"
                        required ng-minlength="1"
                        ng-class="{ ngInvalid: form.address.$error.required && (form.$submitted || form.address.$dirty) }"

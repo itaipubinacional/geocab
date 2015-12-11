@@ -49,13 +49,17 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	public List<LayerGroup> listLayersGroupUpperPublished();
 	
 	
-	/**
-	 * 
-	 * @return
-	 */
-	@Query(value="FROM LayerGroup layerGroup " 
-			+ "WHERE ( layerGroup.published = true ) "
-			+ "ORDER BY orderLayerGroup" )
+//	/**
+//	 * 
+//	 * @return
+//	 */
+//	@Query(value="FROM LayerGroup layerGroup " 
+//			+ "WHERE ( layerGroup.published = true ) "
+//			+ "ORDER BY orderLayerGroup" )
+	@Query(value="SELECT new LayerGroup( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id )  " +
+			"FROM LayerGroup layerGroup " +
+			"WHERE ( layerGroup.published = true ) " +
+			"ORDER BY orderLayerGroup")
 	public List<LayerGroup> listAllLayersGroupPublished();
 	
 	/**

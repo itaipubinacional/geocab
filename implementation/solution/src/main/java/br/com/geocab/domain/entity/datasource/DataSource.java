@@ -7,14 +7,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 import org.directwebremoting.annotations.DataTransferObject;
+import org.geoserver.security.PublicKeyGenerator;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.URL;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.IEntity;
 
 /**
  * 
@@ -28,7 +28,6 @@ import br.com.geocab.domain.entity.IEntity;
 @Entity
 @Audited
 @DataTransferObject(javascript="DataSource")
-@Table(schema=IEntity.SCHEMA)
 public class DataSource extends AbstractEntity implements Serializable
 {
 	/**
@@ -50,21 +49,22 @@ public class DataSource extends AbstractEntity implements Serializable
 	/**
 	 * URL of {@link DataSource}
 	 */
+	@URL
 	@Column(nullable=true, length=255  )
 	private String url;
+	
 	/**
 	 * Login to access the url {@link DataSource}
 	 */
 	@Column(nullable=true, length=144)
 	private String login;
+	
 	/**
 	 * Password to access the url {@link DataSource}
 	 */
 	@Column(nullable=true, length=144)
 	private String password;
-	
-	
-	
+
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -175,6 +175,20 @@ public class DataSource extends AbstractEntity implements Serializable
 	 *-------------------------------------------------------------------*/
 
 	/**
+	 * @return the token
+	 */
+	public String getToken()
+	{
+		if (!(this.getLogin() == null)
+				&& !this.getLogin().equals(null)
+				&& this.getLogin().length() > 0)
+		{
+			return PublicKeyGenerator.generateKey(this.getLogin());
+		}
+		return null;
+	}
+	
+	/**
 	 * @return the name
 	 */
 	public String getName()
@@ -195,7 +209,21 @@ public class DataSource extends AbstractEntity implements Serializable
 	 */
 	public String getUrl()
 	{
-		return url;
+		//if there's a token at the url, remove it to add again
+		if (this.url != null && this.url.contains("&authkey="))
+		{
+			this.url = this.url.replace(
+					this.url.substring(this.url.indexOf("&authkey="),
+							this.url.length()), "");
+		}
+		
+		//Concat the authentication token case the data source needs authentication
+		if (this.getToken() != null)
+		{
+			this.url = this.url.concat("&authkey=" + this.getToken());
+		}
+		
+		return this.url;
 	}
 
 	/**
@@ -203,6 +231,26 @@ public class DataSource extends AbstractEntity implements Serializable
 	 */
 	public void setUrl(String url)
 	{
+		//if there's a token at the url, remove it to add again
+		if (this.url != null && this.url.contains("&authkey="))
+		{
+			this.url = this.url.replace(
+					this.url.substring(this.url.indexOf("&authkey="),
+							this.url.length()), "");
+		}
+		if (url != null && url.contains("&authkey="))
+		{
+			url = url.replace(
+					url.substring(url.indexOf("&authkey="),
+							url.length()), "");
+		}
+		
+		//Concat the authentication token case the data source needs authentication
+		if (this.getToken() != null)
+		{
+			url = url.concat("&authkey=" + this.getToken());
+		}
+		
 		this.url = url;
 	}
 

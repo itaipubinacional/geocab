@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.geoserver.web:gs-web-sec-core:2.8-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geoserver/web/gs-web-sec-core/2.8-SNAPSHOT/gs-web-sec-core-2.8-20150829.025017-529.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geoserver/web/gs-web-sec-core/2.8-SNAPSHOT/gs-web-sec-core-2.8-20150829.025017-529-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/geoserver/web/gs-web-sec-core/2.8-SNAPSHOT/gs-web-sec-core-2.8-20150829.025017-529-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

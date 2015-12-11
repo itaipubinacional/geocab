@@ -13,7 +13,7 @@
 	        <h3><spring:message code="admin.marker-moderation.History" /></h3>
 	        <hr>
 	         
-	        <div ng-repeat="markerModeration in markersModeration " >
+	        <div ng-repeat="markerModeration in markersModeration " style="width:97%">
 	         
 	            <div class="{{markerModeration.status == 'PENDING' ? 'alert warning' : markerModeration.status == 'ACCEPTED' ? 'alert success' : 'alert danger'}}" style="text-align:center;height:75px">                                                                 
 	                 

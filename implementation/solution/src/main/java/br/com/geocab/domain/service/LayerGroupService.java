@@ -25,13 +25,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
@@ -46,7 +47,6 @@ import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerField;
 import br.com.geocab.domain.entity.layer.LayerFieldType;
 import br.com.geocab.domain.entity.layer.LayerGroup;
-import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.tool.Tool;
 import br.com.geocab.domain.repository.IFileRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupLayerRepository;
@@ -54,11 +54,8 @@ import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
-import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.tool.IToolRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
-
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * 
@@ -77,18 +74,6 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	
-	/**
-	 * I18n 
-	 */
-	@Autowired
-	private MessageSource messages;
-	
-	/**
-	 * 
-	 */
-	@Autowired
-	private IMarkerAttributeRepository markerAttributeRepository;
 	
 	/**
 	 * 
@@ -395,12 +380,14 @@ public class LayerGroupService
 		// faz a recursï¿½o para atualizar todos os filhos
 		if ( layerGroupPublished.getLayersGroup() != null)
 		{
-			for ( LayerGroup layerGroupOriginalChild : layerGroupOriginal.getLayersGroup() )
+			if ( layerGroupOriginal.getLayersGroup() != null )
 			{
-				this.recursive( layerGroupOriginalChild, layerGroupPublished );
+				for ( LayerGroup layerGroupOriginalChild : layerGroupOriginal.getLayersGroup() )
+				{
+					this.recursive( layerGroupOriginalChild, layerGroupPublished );
+				}
 			}
-		}
-		
+		}					
 	}
 
 	/**
@@ -514,7 +501,7 @@ public class LayerGroupService
 			{
 				layerGroupPublished.setLayers(this.layerRepository.listLayersByLayerGroupPublished(layerGroupPublished.getId()));
 				
-				if (layerGroupPublished.getLayerGroupUpper() == null )
+				if (layerGroupPublished.getLayerGroupUpper() == null || layerGroupPublished.getLayerGroupUpper().getId() == null)
 				{
 					layersGroupUpperPublished.add(layerGroupPublished);
 				}
@@ -559,10 +546,10 @@ public class LayerGroupService
 					}
 					layersGroupUpperPublished.removeAll(layerGroupToDelete);
 				}
-			} 
+			}
 			else 
 			{
-				AccessGroup accessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
+				AccessGroup accessGroup = this.accessGroupRepository.findById(AccessGroup.PUBLIC_GROUP_ID);
 				accessGroupsUser.add(accessGroup);
 				
 				accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
@@ -585,9 +572,6 @@ public class LayerGroupService
 				}
 				layersGroupUpperPublished.removeAll(layerGroupToDelete);
 			}
-			
-			
-		
 		
 		return layersGroupUpperPublished;
 		
@@ -723,6 +707,15 @@ public class LayerGroupService
 	
 	//Camadas
 	
+	private String getUrl(Layer layer, String sUrl)
+	{
+		if(layer.getDataSource().getToken()!= null)
+		{
+			sUrl += "&authkey=" + layer.getDataSource().getToken();	
+		}	
+		return sUrl;
+	}
+	
 	/**
 	 * 
 	 * @param filter
@@ -844,13 +837,10 @@ public class LayerGroupService
 			return layerFields;
 		}
 		
-		String sUrl;
-		
 		int position = layer.getDataSource().getUrl().lastIndexOf("ows?");
-		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position);
+		String urlGeoserver = layer.getDataSource().getUrl().substring(0, position);				
 		
-		
-		sUrl = urlGeoserver + ExternalLayer.CAMPO_CAMADA_URL + layer.getName();
+		String sUrl = this.getUrl(layer,urlGeoserver + ExternalLayer.CAMPO_CAMADA_URL + layer.getName() );
 		
 		BufferedReader reader = null;
 	    try 
@@ -1000,57 +990,40 @@ public class LayerGroupService
 	public Layer updateLayer( Layer layer )
 	{
 		layer.setLayerGroup(layer.getLayerGroup());
+						
+		List<Attribute> attributesToDelete = attributeRepository.listAttributeByLayer(layer.getId());
 		
-		Layer layerDatabase = this.findLayerById(layer.getId());
+		attributesToDelete.removeAll(layer.getAttributes());
 		
-		final List<Attribute> attributesByLayerToDelete = new ArrayList<Attribute>();
-		
-		for(Attribute attribute : layerDatabase.getAttributes()) 
+		for (Attribute attribute : attributesToDelete)
 		{
-			Boolean attributeDeleted = true;
-			
-			for(Attribute attributeInLayer : layer.getAttributes()) 
-			{
-				attributeInLayer.setId(attributeInLayer.getTemporaryId());
-				if(	attributeInLayer.getId().equals(attribute.getTemporaryId()) ) 
-				{
-					attributeDeleted = false;
-					break;
-				}
-			}
-			
-			if( attributeDeleted ) 
-			{
-				attributesByLayerToDelete.add(attribute);
-			}
-			
-		}
-		
-		for(Attribute attribute : attributesByLayerToDelete) {
-			List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listMarkerAttributeByAttribute(attribute.getTemporaryId());
-			
-			if( markerAttributes != null ) {
-				this.markerAttributeRepository.deleteInBatch(markerAttributes);	
-			}
-			
-		}
-		
-		final List<Attribute> attributesByLayerToDeleteTemporary = new ArrayList<Attribute>();
-		for(Attribute attribute : attributesByLayerToDelete) {
-			attributesByLayerToDeleteTemporary.add(this.attributeRepository.findOne(attribute.getTemporaryId()));
-		}
-		
-		if(attributesByLayerToDelete != null) {
-			this.attributeRepository.deleteInBatch(attributesByLayerToDeleteTemporary);
+			this.attributeRepository.delete(attribute);	
 		}
 		
 		/* Na atualização não foi permitido modificar a fonte de dados, camada e títuulo, dessa forma, 
 		Os valores originais são mantidos. */
+		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setDataSource(layerDatabase.getDataSource());
 		layer.setName(layerDatabase.getName());
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		
-		return this.layerRepository.save( layer );
+		
+		//Pega os atributos para serem salvos no banco de dados
+		List<Attribute> attributesToSave = layer.getAttributes();
+		
+		//Seta 'null' nos atributos da camada para o hibernate não dar cascade nos mesmos
+		layer.setAttributes(null);
+		
+		//Atualiza a camada
+		layer =	this.layerRepository.save( layer );
+		
+		//Atualiza todos os atributos antes separadamente da camada. Assim o sistema não fica confiado ao cascade do hibernate
+		for (Attribute attribute : attributesToSave)
+		{
+			this.attributeRepository.save(attribute);
+		}
+		
+		return layer;
 	}
 	
 	/**
@@ -1099,7 +1072,6 @@ public class LayerGroupService
 		
 		return layer;
 	}
-	
 	
 	/**
 	 * Mï¿½todo para listar as configuraï¿½ï¿½es de camadas paginadas com opï¿½ï¿½o do filtro
@@ -1208,7 +1180,16 @@ public class LayerGroupService
 		
 		for (String url : listUrls)
 		{
-			listFeatures.add(this.template.getForObject(url, String.class));
+			try
+			{
+				listFeatures.add(this.template.getForObject(url, String.class));
+			}
+			catch (Exception e)
+			{
+				System.out.println(e.getMessage()	);
+				continue;
+			}
+			
 		}
 		
 		return listFeatures;

@@ -70,4 +70,14 @@ public interface IAccessGroupRepository extends IDataRepository<AccessGroup, Lon
 				"WHERE accessGroup.id = 1" )
 	public List<AccessGroup> listPublicGroups();
 	
+	/**
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value="SELECT new AccessGroup ( accessGroup.id, accessGroup.name, accessGroup.description ) " +
+				"FROM AccessGroup accessGroup " +
+				"WHERE accessGroup.id = :id" )
+	public AccessGroup findById(@Param("id") Long id);
+	
 }

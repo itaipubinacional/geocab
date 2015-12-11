@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
+import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.repository.datasource.IDataSourceRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 
@@ -59,6 +61,12 @@ public class DataSourceService
 	@Autowired
 	private IDataSourceRepository dataSourceRepository;
 	
+	/**
+	 * Service of {@link LayerGroup}
+	 */
+	@Autowired
+	private LayerGroupService layerGroupService;
+	
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -91,17 +99,43 @@ public class DataSourceService
 	 */
 	public DataSource updateDataSource( DataSource dataSource )
 	{			
-		try{
-			dataSource = this.dataSourceRepository.save( dataSource );
-		}
-		catch ( DataIntegrityViolationException e )
+		PageRequest pageable = new PageRequest();
+		
+		Page<Layer> allLayers = this.layerGroupService.listLayersByFilters(null,pageable );
+		
+		DataSource oldDataSource = this.dataSourceRepository.findOne(dataSource.getId());
+		
+		Boolean canUpdate = true;
+		
+		if ( (oldDataSource.getUrl() == null && dataSource.getUrl() != null) || (oldDataSource.getUrl() != null && dataSource.getUrl() == null) )
 		{
-			LOG.info( e.getMessage() );
-			final String error = e.getCause().getCause().getMessage();
-			
-			this.dataIntegrityViolationException(error);
+			for ( Layer layer : allLayers )
+			{
+				if (layer.getDataSource().getId() == dataSource.getId())
+				{
+					canUpdate = false;
+					break;
+				}
+			}
 		}
-		return dataSource;
+		
+		if ( canUpdate )
+		{
+			try{
+				dataSource = this.dataSourceRepository.save( dataSource );
+				return dataSource;
+			}
+			catch ( DataIntegrityViolationException e )
+			{
+				LOG.info( e.getMessage() );
+				final String error = e.getCause().getCause().getMessage();
+				
+				this.dataIntegrityViolationException(error);
+			}
+		}
+				
+				
+		return null;
 	}
 	
 	/**

@@ -3,16 +3,11 @@ package br.com.geocab.tests.service;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.dao.SaltSource;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.layer.CustomSearch;
-import br.com.geocab.domain.entity.layer.LayerField;
 import br.com.geocab.domain.service.AccountService;
 import br.com.geocab.domain.service.CustomSearchService;
 import br.com.geocab.domain.service.LayerGroupService;
@@ -35,18 +30,6 @@ public class CustomSearchServiceTest extends AbstractIntegrationTest
 	 */
 	@Autowired
 	public AccountService accountService;
-	
-	/**
-	 * Password encoder
-	 */
-	@Autowired
-	private ShaPasswordEncoder passwordEncoder;
-	
-	/**
-	 * Hash generator for encryption
-	 */
-	@Autowired
-	private SaltSource saltSource;
 	
 	/**
 	 * Custom Search Service

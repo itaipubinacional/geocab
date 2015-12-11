@@ -72,13 +72,13 @@
 										></span>
 							</div>			
 						<accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret" heightStyle="content">
-				            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' }"> 
+				            <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' || feature.type == 'external' }"> 
 				            
 				                <accordion-heading>
 				                    <div style="cursor:pointer; padding: 10px 0;">
 				                    	<i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
 				                        <span ng-if="feature.type == 'internal'" style="overflow:auto" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
-				                        <span ng-if="feature.type == 'external'">{{feature.feature.layer.titulo}}</span>
+				                        <span ng-if="feature.type == 'external'" style="overflow:auto" ng-click="calculo()">{{feature.feature.layer.titulo}}</span>
 				                        
 				                    </div>
 				                </accordion-heading>
@@ -191,8 +191,8 @@
 				               </span>
 				               
 				               <span ng-if="feature.type == 'external'">
-					               <span ng-repeat="(key, value) in feature.feature.fields" >
-					                   <b>{{key}}</b> - {{value}}
+					               <span ng-repeat="key in objectKeys(feature.feature.fields)" >
+					                   <b>{{key}}</b> - {{feature.feature.fields[key]}}
 					                   </br>
 					               </span>
 				               </span>
@@ -546,28 +546,30 @@
 	
 							<img class="marker-image" ng-show="imgResult" style="width: 100%; height: 200px; margin-top: 12px;"> <br>
 							<hr>
-	
-							<input type="file" id="upload-input" style="display: none;"
+							
+							<div ng-if="currentEntity.layer">
+								<input type="file" id="upload-input" style="display: none;"
 								accept="image/*"
 								onchange="angular.element(this).scope().setPhotoMarker(this)" />
-	
-							<button class="btn btn-default"
-								onclick="angular.element('#upload-input').click();"
-								style="float: left;"
-								title="<spring:message code="map.Picture" />"
-								>
-								<span class="glyphicon glyphicon-picture"></span>
-							</button>
-	
-							<button 
-								id="buttonInsert" 
-								class="btn btn-primary"
-								ng-click="insertMarker()" 
-								style="float: right"
-								title="<spring:message code="map.Submit" />"
-								>
-								<spring:message code="map.Submit" />					
-							</button>
+		
+								<button  class="btn btn-default"
+									onclick="angular.element('#upload-input').click();"
+									style="float: left;"
+									title="<spring:message code="map.Picture" />"
+									>
+									<span class="glyphicon glyphicon-picture"></span>
+								</button>
+		
+								<button 
+									id="buttonInsert" 
+									class="btn btn-primary"
+									ng-click="insertMarker()" 
+									style="float: right"
+									title="<spring:message code="map.Submit" />"
+									>
+									<spring:message code="map.Submit" />					
+								</button>
+							</div>							
 						</div>
 					</div>
 				</form>
@@ -637,7 +639,7 @@
 									style="overflow-x: auto; position: absolute; top: 210px; bottom: 0px; left: 20px; right: 0px;">
 		
 									<div ng-show="allLayers.length > 0">
-										<input type="text" ng-model="bagSearch"
+										<input maxlength="144" type="text" ng-model="bagSearch"
 											placeholder="<spring:message code="map.Group-or-layer"/>"
 											class="sidebar-content-search form-control" />
 									</div>
@@ -750,17 +752,16 @@
 		
 		                    <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
 		                    	<spring:message code="map.None-KML-file-enabled"/>
-		                    </div>
-		
-		                    <div style="overflow-x: auto;position: absolute;top: 110px;bottom: 0px;left: 20px;right: 0px;">
+		                    </div>		
+		                    <div style="overflow: auto;top: 110px;bottom: 0px;left: 20px;right: 0px;">
 		                        <div id="tree-kml"
 		                             ivh-treeview="allLayersKML"
 		                             ivh-fn="getSelectedKMLNode"
 		                             ivh-treeview-label-attribute="'label'"
-		                             ivh-treeview-children-attribute="'children'">
+		                             ivh-treeview-children-attribute="'children'"
+		                            >
 		                        </div>
-		                    </div>
-		
+		                    </div>		
 		                </div>
 	              </div>
 	              <div class='rui-resizable-handle' style="background: #0077bf; width: 3px"></div>

@@ -33,7 +33,7 @@ function SelectLayerConfigPopUpController( $scope, $modalInstance, dataSource, s
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
-            $scope.listByFilters( $scope.currentEntity.filter, $scope.currentEntity.dataSource.id, $scope.currentPage.pageable );
+            $scope.listByFilters( $scope.data.filter, $scope.data.dataSource.id, $scope.currentPage.pageable );
         }
     });
 

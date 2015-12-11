@@ -26,7 +26,12 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      *  e chamamos novamente a consulta, considerando também o estado do filtro (@see $scope.data.filter)
      */
     $scope.$on('ngGridEventSorted', function (event, sort) {
-
+    	
+    	if(event.targetScope.gridId != $scope.gridOptions.gridId)
+        {
+            return;
+        }
+    	
         // compara os objetos para garantir que o evento seja executado somente uma vez q não entre em loop
         if (!angular.equals(sort, $scope.gridOptions.sortInfo)) {
             $scope.gridOptions.sortInfo = angular.copy(sort);
@@ -226,7 +231,6 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             {displayName: $translate('admin.access-group.Name'), field: 'name', width: '40%'},
             {displayName: $translate('admin.access-group.Data-source'), field: 'dataSource.name'},
             {displayName: $translate('admin.access-group.Layer-group'), field: 'layerGroup.name'},
-            {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_LAYER_BUTTONS, width: '100px'}
         ]
     };
 
@@ -244,7 +248,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
 			{displayName: $translate('admin.access-group.Layer-title'), field: 'layer.title', width: '20%'},
 			{displayName: $translate('admin.access-group.Layer-name'), field: 'layer.name', width: '20%'},
 			{displayName: $translate('admin.access-group.Data-source'), field: 'layer.dataSource.name', width: '20%'},
-			{displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'}
+			
         ]
     };  
 
@@ -260,7 +264,6 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             columnDefs: [
                 {displayName: $translate('admin.access-group.Description'), field: 'description'},
                 {displayName: $translate('admin.access-group.Name'), field: 'name', width: '55%'},
-                {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_TOOLS_BUTTONS, width: '100px'}
             ]
         };
     
@@ -272,8 +275,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         rowHeight: 45,
         columnDefs: [
             {displayName: $translate('admin.access-group.Full-name'), field: 'name', width: '35%'},
-            {displayName: $translate('admin.access-group.User-name'), field: 'username'},
-            {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_USER_BUTTONS, width: '100px'}
+            {displayName: $translate('admin.access-group.User-name'), field: 'username'},            
         ]
     };
 
@@ -419,7 +421,14 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.changeToUpdate = function (id) {
         $log.info("changeToUpdate", id);
-
+        
+        var actions = {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'};
+        
+        $scope.gridCustomSearch.columnDefs.push(actions);
+        $scope.gridUsers.columnDefs.push(actions);
+        $scope.gridTools.columnDefs.push(actions);
+        $scope.gridLayers.columnDefs.push(actions);
+        
         accessGroupService.findAccessGroupById($state.params.id, {
             callback: function (result) {
             	$scope.selectedUsers = result.users;
@@ -457,9 +466,15 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             $state.go($scope.LIST_STATE);
             return;
         }
-
+        
+        $scope.gridLayers.columnDefs.splice($scope.gridLayers.columnDefs.length - 1, 1);
+        $scope.gridTools.columnDefs.splice($scope.gridTools.columnDefs.length - 1, 1);
+        $scope.gridUsers.columnDefs.splice($scope.gridUsers.columnDefs.length - 1, 1);
+        $scope.gridCustomSearch.columnDefs.splice($scope.gridCustomSearch.columnDefs.length - 1, 1);
+        
         accessGroupService.findAccessGroupById(id, {
             callback: function (result) {
+            	$scope.selectedUsers = result.users;
                 $scope.currentEntity = result;
                 $scope.currentState = $scope.DETAIL_STATE;
                 $state.go($scope.DETAIL_STATE, {id: id});

@@ -231,7 +231,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         },
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '30%'},
-            {displayName: $translate('Type'), cellTemplate:TYPE_COLUMN ,  width: '30%'},
+            {displayName: $translate('Type'), field: 'type', cellTemplate:TYPE_COLUMN ,  width: '30%'},
             {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: REQUIRED_COLUMN}, 
 //            	'<div>' +
 //                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
@@ -534,6 +534,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
       			  	$scope.fadeMsg();
                 },
                 errorHandler: function (message, exception) {
+                	if (exception.message.indexOf("ConstraintViolationException") > -1){
+                		message = $translate('admin.layer-config.Is-not-possible-to-remove-the-layer-because-the-layer-is-present-at-a-custom-search');
+                	}
                     $scope.msg = {type: "danger", text: message, dismiss: true};
                     $scope.fadeMsg();                   
                     
@@ -568,6 +571,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.listLayersByFilters = function (filter, pageRequest) {
     	
+    	if ( pageRequest.sort == null ){
+    		var order = new Order();
+            order.direction = 'ASC';
+            order.property = 'id';
+            	
+            pageRequest.sort = new Sort();
+            pageRequest.sort.orders = [order];
+    	}
+    	
         layerGroupService.listLayersByFilters(filter, pageRequest, {
             callback: function (result) {
                 $scope.currentPage = result;
@@ -600,6 +612,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         }
         
         if ($scope.currentEntity.dataSource.url == null) {
+        	layer.name = $scope.currentEntity.title
         	
         	for (var k = 0; k < $scope.currentPage.content.length; k++ ){
         		if ( $scope.currentEntity.title.toUpperCase() == $scope.currentPage.content[k].title.toUpperCase() ){
@@ -617,7 +630,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         	$scope.fadeMsg();
         	return;
         }
-        
+
         if ( layer.legend == null ) {
             
             angular.forEach($scope.attributes, function(value, index){

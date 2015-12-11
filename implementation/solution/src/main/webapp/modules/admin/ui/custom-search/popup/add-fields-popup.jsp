@@ -17,7 +17,6 @@
         <form novalidate name="form" default-button="{{buttonInsert}}" style="margin-bottom: 10px; margin-top: 10px;">
             <input type="text" ng-model="filterOptions.filterText" name="name" style="width: 300px; float: left;"
                    placeholder="<spring:message code="admin.custom-search.Filter-fields"/>" class="form-control"
-                   required="true"
                    ng-class="{ ngInvalid: form.name.$error.required && (form.$submitted || form.name.$dirty) }"/>
         </form>
 

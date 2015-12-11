@@ -42,6 +42,11 @@ function AddFieldsPopupController( $scope, $log, $modalInstance, layer,  layerEx
      * @type {Array}
      */
     $scope.gridSelectedItems = [];
+    
+    var FIELD_TYPE = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
+    '<span ng-if="row.entity.typeGeoServer != null">{{row.entity.typeGeoServer}}</span>' +
+	'<span ng-if="row.entity.typeGeoServer == null">{{row.entity.type}}</span>' +
+    '</div>';
 
     $scope.gridOptions = {
         data: 'layers',
@@ -57,7 +62,7 @@ function AddFieldsPopupController( $scope, $log, $modalInstance, layer,  layerEx
         },
         columnDefs: [
             {displayName:'Nome', field:'name', width:'250px'},
-            {displayName:'Tipo', field: 'typeGeoServer'} // tipoGeoServer
+            {displayName:'Tipo', field: 'typeGeoServer', cellTemplate: FIELD_TYPE} // tipoGeoServer
         ]
     };
     /*-------------------------------------------------------------------
