@@ -561,7 +561,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         regEx = /^[1-9]\d{0,1}°\s?[1-9]\d{0,1}[′|']\s?[1-9]\d{0,1}[″|"]\s?[N|S|W|O]$/;
 
         if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
-          formattedLatitude = $scope.convertDMSToDD(formattedLatitude);
+          formattedLatitude  = $scope.convertDMSToDD(formattedLatitude);
           formattedLongitude = $scope.convertDMSToDD(formattedLongitude);
         }
       }
@@ -587,7 +587,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           }))
         });
 
-        var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326','EPSG:900913');
+        var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326', 'EPSG:900913');
         console.log(olCoordinates);
 
         $scope.currentEntity.latitude  = olCoordinates[0];
@@ -655,10 +655,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.longitude = transformed_coordinate[0];
         $scope.latitude  = transformed_coordinate[1];
 
-        $scope.clearFcMarker();
+        $scope.clearFcMarker(false);
 
         $scope.screenMarkerOpenned = true;
-        $scope.toggleSidebarMarkerCreate(300);
+
+        //$scope.toggleSidebarMarkerCreate(300);
 
         var iconStyle = new ol.style.Style({
           image: new ol.style.Icon(({
@@ -683,7 +684,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.map.addLayer(layer);
         $scope.$apply();
 
-        $scope.currentEntity.latitude = evt.coordinate[0];
+        $scope.currentEntity.latitude  = evt.coordinate[0];
         $scope.currentEntity.longitude = evt.coordinate[1];
 
         $scope.setMarkerCoordinatesFormat();
@@ -1622,70 +1623,70 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.initializeMarker = function () {
 
-    layerGroupService.listAllInternalLayerGroups({
-      callback: function (result) {
-        $scope.selectLayerGroup = [];
 
-        angular.forEach(result, function (layer, index) {
-
-          $scope.selectLayerGroup.push({
-            "layerTitle": layer.title,
-            "layerId": layer.id,
-            "layerIcon": layer.icon,
-            "group": layer.layerGroup.name
-          });
-
-        })
-
-        $scope.currentState = $scope.LIST_STATE;
-
-        $scope.$apply();
-      },
-      errorHandler: function (message, exception) {
-        $scope.message = {type: "error", text: message};
-        $scope.$apply();
-      }
-    });
-
-    $('li.menu-item').each(function(index){
-
-      if($(this).hasClass('ui-state-active') && !$(this).hasClass('bg-inactive')){
-        console.log($(this).attr('id'));
-        $scope.toggleSidebarMenu(300, '#' + $(this).attr('id'));
-      }
-
-    });
-
-    if ($scope.slideActived == '#sidebar-marker-detail-update') {
+    /*if ($scope.slideActived == '#sidebar-marker-detail-update') {
       $scope.toggleSidebar(300, 'closeButton', '#sidebar-marker-detail-update');
     }
 
-    $timeout(function () {
-      $scope.toggleSidebar(300, '', '#sidebar-marker-create');
-    }, 400);
-
-
-    $scope.screenMarkerOpenned = true;
 
     if ($("#sidebar-marker-detail-update").css("display") == 'block') {
       $scope.clearDetailMarker();
-    }
+    }*/
 
-    $scope.map.removeInteraction(draw);
-    source.clear();
-    $scope.map.removeLayer(vector);
-    $('#popup').css("display", "none");
-    sketch = null;
 
     if ($scope.menu.fcMarker) {
 
-      $scope.clearFcMarker();
-      return;
+      $scope.clearFcMarker(true);
+      $scope.menu.fcMarker = false;
 
     } else {
 
+      $('li.menu-item').each(function(index){
 
-      //$("body").prepend('<span id="marker-point" class="marker-point glyphicon glyphicon-map-marker" style="display: none;"></span>');
+        if($(this).hasClass('ui-state-active') && !$(this).hasClass('bg-inactive')){
+          console.log($(this).attr('id'));
+          $scope.toggleSidebarMenu(300, '#' + $(this).attr('id'));
+        }
+
+      });
+
+      $scope.screenMarkerOpenned = true;
+
+      $scope.map.removeInteraction(draw);
+      source.clear();
+      $scope.map.removeLayer(vector);
+      $('#popup').css("display", "none");
+      sketch = null;
+
+      layerGroupService.listAllInternalLayerGroups({
+        callback: function (result) {
+          $scope.selectLayerGroup = [];
+
+          angular.forEach(result, function (layer, index) {
+
+            $scope.selectLayerGroup.push({
+              "layerTitle": layer.title,
+              "layerId": layer.id,
+              "layerIcon": layer.icon,
+              "group": layer.layerGroup.name
+            });
+
+          });
+
+          $scope.currentState = $scope.LIST_STATE;
+
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
+
+      $timeout(function(){
+        $scope.toggleSidebar(300, '', '#sidebar-marker-create');
+      }, 400);
+
       $scope.currentEntity = new Marker();
 
       // active functionality and disables the other to only have one active at a time
@@ -2432,7 +2433,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
      * If the marker tab is open, close it and wait to open the new.
      * */
     if ($scope.menu.fcMarker) {
-      $scope.clearFcMarker();
+      $scope.clearFcMarker(true);
 
       $timeout(function () {
         $scope.toggleSidebar(time, element, '#sidebar-layers');
@@ -2640,6 +2641,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   }
 
   $scope.toggleSidebar = function (time, element, slide) {
+
     time = 300;
 
     //Checks whether the animation is to open or close the sidebar by her current position.
@@ -2718,19 +2720,22 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.LAYER_MENU_STATE = 'list';
   }
 
-  $scope.clearFcMarker = function () {
+  $scope.clearFcMarker = function (close) {
+
+    if ($scope.screenMarkerOpenned && close) {
+      //$timeout(function(){
+        $scope.toggleSidebar(300, '', '#sidebar-marker-create');
+      //}, 400);
+      $scope.menu.fcMarker = false;
+    }
+
     $scope.currentEntity = new Marker();
-
-    $scope.menu.fcMarker = false;
-
-    /*if ($scope.screenMarkerOpenned)
-      $scope.toggleSidebar('300', 'closeButton', $scope.slideActived);*/
 
     $scope.map.removeLayer($scope.currentCreatingInternalLayer);
 
     $scope.screenMarkerOpenned = false;
     $scope.attributesByLayer = [];
-  }
+  };
 
   $scope.updateMarker = function () {
 

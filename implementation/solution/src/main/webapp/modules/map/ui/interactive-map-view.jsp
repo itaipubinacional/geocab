@@ -47,8 +47,8 @@ uri="http://www.springframework.org/security/tags"%>
           <!-- Verificar... -->
           <security:authorize access="isAuthenticated()">
             <li ng-click="initializeMarker()"
-                title="<spring:message code="map.Perform-post" />"
-            ng-class="{ferramenta_active : menu.fcMarker}"><a
+                title="<spring:message code='map.Perform-post' />"
+                ng-class="{ferramenta_active : menu.fcMarker}" ><a
               href="#tabs-1"> <span
               class="glyphicon glyphicon-map-marker sidebar-icon"></span>
           </a></li>
@@ -456,10 +456,10 @@ uri="http://www.springframework.org/security/tags"%>
                 default-button="buttonInsert" novalidate>
 
             <!--  <div class="sidebar-coloredbar"></div>-->
-              <span ng-click="clearFcMarker()"
+              <span ng-click="clearFcMarker('true')"
                     style="z-index: 10000"
                     class="icon itaipu-icon-close sidebar-close"
-                    title="<spring:message code="map.Close" />"
+                    title="<spring:message code='map.Close' />"
             ></span>
             <div style="position: absolute; left: 0; right: 0; bottom: 0; top: 0">
               <div id="tabs-2" ng-switch="LAYER_MENU_STATE" style="overflow:auto; width: auto" class="container">
