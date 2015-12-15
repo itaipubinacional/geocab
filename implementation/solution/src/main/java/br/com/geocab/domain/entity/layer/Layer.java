@@ -82,12 +82,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * Indicates that the {@link Layer} will start enabled on map
 	 */
 	@Basic
-	private Boolean startEnabled;
+	private Boolean startEnabled = false;
 	/**
 	 * Indicates that the {@link Layer} will be visible in the layer menu
 	 */
 	@Basic
-	private Boolean startVisible;
+	private Boolean startVisible = false;
 
 	/**
 	 * status
@@ -475,85 +475,17 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 
 	/**
 	 * 
-	 * @return
-	 */
-	public Boolean isStartEnabled()
-	{
-		if (startEnabled == null)
-		{
-			this.startEnabled = false;
-		}
-		return startEnabled;
-	}
-
-	/*-------------------------------------------------------------------
-	 *						GETTERS AND SETTERS
-	 *-------------------------------------------------------------------*/
-	/**
-	 * 
 	 * @param startEnabled
 	 */
 	public void setStartEnabled(Boolean startEnabled)
 	{
 		if (startEnabled == null)
 		{
-			this.startEnabled = false;
+			startEnabled = false;
 		}
 		this.startEnabled = startEnabled;
 	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Boolean getEnabled()
-	{
-		if (enabled == null)
-		{
-			this.enabled = false;
-		}
-		return enabled;
-	}
-
-	/**
-	 * 
-	 * @param enabled
-	 */
-	public void setEnabled(Boolean enabled)
-	{
-		this.enabled = enabled;
-		if (enabled == null)
-		{
-			this.enabled = false;
-		}
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Boolean isStartVisible()
-	{
-		if (startVisible == null)
-		{
-			this.startVisible = false;
-		}
-		return startVisible;
-	}
-
-	/**
-	 * 
-	 * @param startVisible
-	 */
-	public void setStartVisible(Boolean startVisible)
-	{
-		if (startVisible == null)
-		{
-			this.startVisible = false;
-		}
-		this.startVisible = startVisible;
-	}
-
+	
 	/**
 	 * 
 	 * @return
@@ -571,6 +503,44 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * 
 	 * @return
 	 */
+	public Boolean getEnabled()
+	{
+		if (enabled == null)
+		{
+			enabled = false;
+		}
+		return enabled;
+	}
+
+	/**
+	 * 
+	 * @param enabled
+	 */
+	public void setEnabled(Boolean enabled)
+	{
+		if (enabled == null)
+		{
+			enabled = false;
+		}
+		this.enabled = enabled;
+	}
+	/**
+	 * 
+	 * @param startVisible
+	 */
+	public void setStartVisible(Boolean startVisible)
+	{
+		if (startVisible == null)
+		{
+			startVisible = false;
+		}
+		this.startVisible = startVisible;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public Boolean getStartVisible()
 	{
 		if (startVisible == null)
@@ -579,11 +549,58 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		}
 		return startVisible;
 	}
+	
+	/**
+	 * @return the order
+	 */
+	public Integer getOrderLayer()
+	{
+		if (orderLayer == null)
+		{
+			orderLayer = 0;
+		}
+		return orderLayer;
+	}
 
-	/*-------------------------------------------------------------------
-	 *						GETTERS AND SETTERS
-	 *-------------------------------------------------------------------*/
+	/**
+	 * @param order
+	 *            the order to set
+	 */
+	public void setOrderLayer(Integer orderLayer)
+	{
+		if (orderLayer == null)
+		{
+			orderLayer = 0;
+		}
+		this.orderLayer = orderLayer;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean getPublished()
+	{
+		if (published == null)
+		{
+			published = false;
+		}
+		return published;
+	}
 
+	/**
+	 * @param published
+	 *            the published to set
+	 */
+	public void setPublished(Boolean published)
+	{
+		if (published == null)
+		{
+			published = false;
+		}
+		this.published = published;
+	}
+	
 	/**
 	 * 
 	 * @return
@@ -593,6 +610,10 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	{
 		return null;
 	}
+
+	/*-------------------------------------------------------------------
+	 *						GETTERS AND SETTERS
+	 *-------------------------------------------------------------------*/
 
 	/**
 	 * 
@@ -637,23 +658,6 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	public void setTitle(String title)
 	{
 		this.title = title;
-	}
-
-	/**
-	 * @return the order
-	 */
-	public Integer getOrderLayer()
-	{
-		return orderLayer;
-	}
-
-	/**
-	 * @param order
-	 *            the order to set
-	 */
-	public void setOrderLayer(Integer orderLayer)
-	{
-		this.orderLayer = orderLayer;
 	}
 
 	/**
@@ -739,24 +743,6 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	public void setPublishedLayer(Layer publishedLayer)
 	{
 		this.publishedLayer = publishedLayer;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Boolean getPublished()
-	{
-		return published;
-	}
-
-	/**
-	 * @param published
-	 *            the published to set
-	 */
-	public void setPublished(Boolean published)
-	{
-		this.published = published;
 	}
 
 	/**

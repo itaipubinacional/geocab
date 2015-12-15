@@ -24,7 +24,8 @@
 					<span ng-if="node.nodes && node.nodes.length == 0" class="glyphicon glyphicon-chevron-right glyphicon-without-nodes"></span>
 					<span ng-if="node.nodes != null" ng-class="'icon-child-node-tree'"></span>
 
-                    <a href="http://google.com"><img src="{{node.legend}}" ng-if="node.nodes == null" style="margin-right: 5px; width: 20px; height: 20px; border: solid 1px #c9c9c9;"/></a>
+                    <a ng-if="node.icon && !node.legend"><img src="{{node.icon}}" ng-if="node.nodes == null" style="margin-right: 5px; width: 20px; height: 20px; border: solid 1px #c9c9c9;"/></a>
+					<a ng-if="node.legend"><img src="{{node.legend}}" ng-if="node.nodes == null" style="margin-right: 5px; width: 20px; height: 20px; border: solid 1px #c9c9c9;"/></a>
 
                     {{node.nodes ? node.name : node.title}}
                     <a ng-show="hover" data-nodrag class="icon itaipu-icon-edit tree-itaipu-icon" ng-if="node.nodes != null" data-nodrag ng-click="editItem(this)" title="<spring:message code="layer-group-popup.Update"/>" style="position: absolute;margin-left: 18px;"></a>

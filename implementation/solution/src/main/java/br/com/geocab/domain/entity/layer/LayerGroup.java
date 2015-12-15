@@ -172,51 +172,28 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	 *-------------------------------------------------------------------*/
 	
 	/**
-	 * 
+	 * @return the published
 	 */
-	@Override
-	public int hashCode()
+	public Boolean getPublished()
 	{
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((draft == null) ? 0 : draft.hashCode());
-		result = prime * result
-				+ ((layerGroupUpper == null) ? 0 : layerGroupUpper.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + orderLayerGroup;
-		result = prime * result
-				+ ((published == null) ? 0 : published.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
-		LayerGroup other = (LayerGroup) obj;
-		if (draft == null)
-		{
-			if (other.draft != null) return false;
-		}
-		else if (!name.equals(other.name)) return false;
-		if (orderLayerGroup != other.orderLayerGroup) return false;
 		if (published == null)
 		{
-			if (other.published != null) return false;
+			published = false;
 		}
-		else if (!published.equals(other.published)) return false;
-		return true;
+		return published;
 	}
-	
-	
-	/*-------------------------------------------------------------------
-	 *						GETTERS AND SETTERS
-	 *-------------------------------------------------------------------*/
+
+	/**
+	 * @param published the published to set
+	 */
+	public void setPublished(Boolean published)
+	{
+		if (published == null)
+		{
+			published = false;
+		}
+		this.published = published;
+	}
 	
 	/**
 	 * 
@@ -233,7 +210,37 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 			return this.layers;
 		}
 	}
+	
+	
+	/**
+	 * @return the orderLayerGroup
+	 */
+	public Integer getOrderLayerGroup()
+	{
+		if (orderLayerGroup == null)
+		{
+			orderLayerGroup = 0;
+		}
+		return orderLayerGroup;
+	}
 
+	/**
+	 * @param orderLayerGroup the orderLayerGroup to set
+	 */
+	public void setOrderLayerGroup(Integer orderLayerGroup)
+	{
+		if (orderLayerGroup == null)
+		{
+			orderLayerGroup = 0;
+		}
+		this.orderLayerGroup = orderLayerGroup;
+	}
+	
+	
+	/*-------------------------------------------------------------------
+	 *						GETTERS AND SETTERS
+	 *-------------------------------------------------------------------*/
+	
 	/**
 	 * @return the name
 	 */
@@ -248,22 +255,6 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	/**
-	 * @return the orderLayerGroup
-	 */
-	public Integer getOrderLayerGroup()
-	{
-		return orderLayerGroup;
-	}
-
-	/**
-	 * @param orderLayerGroup the orderLayerGroup to set
-	 */
-	public void setOrderLayerGroup(Integer orderLayerGroup)
-	{
-		this.orderLayerGroup = orderLayerGroup;
 	}
 
 	/**
@@ -329,23 +320,4 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	{
 		this.draft = draft;
 	}
-
-	/**
-	 * @return the published
-	 */
-	public Boolean getPublished()
-	{
-		return published;
-	}
-
-	/**
-	 * @param published the published to set
-	 */
-	public void setPublished(Boolean published)
-	{
-		this.published = published;
-	}
-	
-	
-	
 }
