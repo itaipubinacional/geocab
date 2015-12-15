@@ -48,7 +48,6 @@ import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
 import br.com.geocab.domain.service.DataSourceService;
 
-
 @Service
 @Transactional
 @RemoteProxy(name = "myMarkersService")
@@ -60,8 +59,8 @@ public class MyMarkersService
 	/**
 	 * Log
 	 */
-	private static final Logger LOG = Logger.getLogger(DataSourceService.class
-			.getName());
+	private static final Logger LOG = Logger
+			.getLogger(DataSourceService.class.getName());
 
 	/**
 	 * Repository of {@link DataSource}
@@ -81,9 +80,8 @@ public class MyMarkersService
 	@Autowired
 	private IMarkerModerationRepository markerModerationRepository;
 
-
-//	@Autowired
-//	private MessageSource messages;
+	// @Autowired
+	// private MessageSource messages;
 
 	@Autowired
 	private IMetaFileRepository metaFileRepository;
@@ -92,10 +90,9 @@ public class MyMarkersService
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	/**
-
-
-	/**
-	 * Method to update an {@link Marker}
+	 * 
+	 * 
+	 * /** Method to update an {@link Marker}
 	 * 
 	 * @param Marker
 	 * @return Marker
@@ -103,35 +100,31 @@ public class MyMarkersService
 	 * @throws IOException
 	 */
 
-	public Marker updateMarker(Marker marker) throws IOException,
-			RepositoryException
+	public Marker updateMarker(Marker marker) throws IOException, RepositoryException
 	{
 		try
 		{
-			Marker markerTemporary = this.markerRepository.findOne(marker
-					.getId());
+			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
 
 			if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
 			{
-				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository
-						.listAttributeByMarker(marker.getId());
+				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
 
 				if (markerAttributes != null)
 				{
-					this.markerAttributeRepository
-							.deleteInBatch(markerAttributes);
+					this.markerAttributeRepository.deleteInBatch(markerAttributes);
 				}
 			}
 
 			marker.setLocation(markerTemporary.getLocation());
-			
+
 			MarkerModeration markerModeration = new MarkerModeration();
 			markerModeration.setMarker(marker);
-	
+
 			markerModeration.setStatus(marker.getStatus());
-			
+
 			this.markerModerationRepository.save(markerModeration);
-			
+
 			marker = this.markerRepository.save(marker);
 		}
 		catch (DataIntegrityViolationException e)
@@ -140,8 +133,6 @@ public class MyMarkersService
 		}
 		return marker;
 	}
-	
-
 
 	/**
 	 * Method to update an {@link Marker}
@@ -152,38 +143,42 @@ public class MyMarkersService
 	 * @throws IOException
 	 */
 
-	public Marker postMarker(Marker marker) throws IOException,
-			RepositoryException
+	public Marker postMarker(Marker marker)
+			throws IOException, RepositoryException
 	{
 		try
 		{
-			if(marker.getStatus() == MarkerStatus.SAVED || marker.getStatus() == MarkerStatus.REFUSED){
-				
-				Marker markerTemporary = this.markerRepository.findOne(marker.getId());
-	
-				if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
+			if (marker.getStatus() == MarkerStatus.SAVED
+					|| marker.getStatus() == MarkerStatus.REFUSED)
+			{
+
+				Marker markerTemporary = this.markerRepository
+						.findOne(marker.getId());
+
+				if (markerTemporary.getLayer().getId() != marker.getLayer()
+						.getId())
 				{
 					List<MarkerAttribute> markerAttributes = this.markerAttributeRepository
 							.listAttributeByMarker(marker.getId());
-	
+
 					if (markerAttributes != null)
 					{
 						this.markerAttributeRepository
 								.deleteInBatch(markerAttributes);
 					}
-				}				
-	
+				}
+
 				marker.setLocation(markerTemporary.getLocation());
-				
+
 				marker.setStatus(MarkerStatus.PENDING);
-				
+
 				MarkerModeration markerModeration = new MarkerModeration();
 				markerModeration.setMarker(marker);
-				
+
 				markerModeration.setStatus(marker.getStatus());
-				
+
 				this.markerModerationRepository.save(markerModeration);
-				
+
 				marker = this.markerRepository.save(marker);
 			}
 		}
@@ -193,13 +188,12 @@ public class MyMarkersService
 		}
 		return marker;
 	}
-	
+
 	/**
 	 * Method to remove markers
 	 * 
 	 */
-
-	public void removeMarkers( List<Long> markersId) throws IOException,RepositoryException
+	public void removeMarkers(List<Long> markersId) throws IOException, RepositoryException
 	{
 		try
 		{
@@ -219,7 +213,8 @@ public class MyMarkersService
 	 * 
 	 */
 
-	public void postMarkers( List<Long> markersId) throws IOException,RepositoryException
+	public void postMarkers(List<Long> markersId)
+			throws IOException, RepositoryException
 	{
 		try
 		{
@@ -235,8 +230,7 @@ public class MyMarkersService
 			LOG.info(e.getMessage());
 		}
 	}
-	
-	
+
 	/**
 	 * Method to remove an {@link Marker}
 	 * 
@@ -348,8 +342,6 @@ public class MyMarkersService
 		return listMarker;
 	}
 
-
-
 	/**
 	 * Method to list all {@link Marker}
 	 * 
@@ -374,15 +366,15 @@ public class MyMarkersService
 	}
 
 	@Transactional(readOnly = true)
-	public Page<Marker> listMarkerByFiltersByUser(String layer, MarkerStatus status,
-			String dateStart, String dateEnd, PageRequest pageable)
-			throws java.text.ParseException
+	public Page<Marker> listMarkerByFiltersByUser(String layer,
+			MarkerStatus status, String dateStart, String dateEnd,
+			PageRequest pageable) throws java.text.ParseException
 	{
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
-		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, user, pageable);
+		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, user,
+				pageable);
 	}
-	
-	
+
 	/**
 	 * Method to list {@link FonteDados} pageable with filter options
 	 * 
@@ -394,7 +386,7 @@ public class MyMarkersService
 	@Transactional(readOnly = true)
 	public Page<Marker> listMarkerByFilters(String layer, MarkerStatus status,
 			String dateStart, String dateEnd, String user, PageRequest pageable)
-			throws java.text.ParseException
+					throws java.text.ParseException
 	{
 
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -415,8 +407,9 @@ public class MyMarkersService
 			System.out.println(dEnd);
 		}
 
-		return this.markerRepository.listByFiltersWithoutOrder(layer, status, dStart, dEnd,	user, pageable);
-		
+		return this.markerRepository.listByFiltersWithoutOrder(layer, status,
+				dStart, dEnd, user, pageable);
+
 	}
 
 	@Transactional(readOnly = true)
@@ -425,10 +418,10 @@ public class MyMarkersService
 			PageRequest pageable) throws java.text.ParseException
 	{
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
-		return this.listMarkerByFiltersMap( layer, status,  dateStart,  dateEnd,  user, pageable);
+		return this.listMarkerByFiltersMap(layer, status, dateStart, dateEnd,
+				user, pageable);
 	}
-	
-	
+
 	/**
 	 * Method to list {@link FonteDados} pageable with filter options
 	 * 
@@ -457,11 +450,12 @@ public class MyMarkersService
 		{
 			dEnd = Calendar.getInstance();
 			dEnd.setTime((Date) formatter.parse(dateEnd));
-			dEnd.add(Calendar.DAY_OF_MONTH,1);
+			dEnd.add(Calendar.DAY_OF_MONTH, 1);
 			dEnd.setTime(dEnd.getTime());
 		}
 
-		return this.markerRepository.listByFiltersMap(layer, status, dStart, dEnd, user);
+		return this.markerRepository.listByFiltersMap(layer, status, dStart,
+				dEnd, user);
 	}
 
 	/**
@@ -472,11 +466,11 @@ public class MyMarkersService
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public Page<Marker> listMarkerByMarkers(List<Long> ids, PageRequest pageable)
+	public Page<Marker> listMarkerByMarkers(List<Long> ids,
+			PageRequest pageable)
 	{
 		return this.markerRepository.listByMarkers(ids, pageable);
 	}
-
 
 	/**
 	 * 
@@ -484,8 +478,8 @@ public class MyMarkersService
 	 * @throws IOException
 	 * @throws RepositoryException
 	 */
-	public void removeImg(String metaFileId) throws IOException,
-			RepositoryException
+	public void removeImg(String metaFileId)
+			throws IOException, RepositoryException
 	{
 
 		this.metaFileRepository.remove(metaFileId);
@@ -549,8 +543,8 @@ public class MyMarkersService
 	{
 		try
 		{
-			final MetaFile metaFile = this.metaFileRepository.findByPath(
-					"/marker/" + markerId + "/" + markerId, true);
+			final MetaFile metaFile = this.metaFileRepository
+					.findByPath("/marker/" + markerId + "/" + markerId, true);
 			return new FileTransfer(metaFile.getName(),
 					metaFile.getContentType(), metaFile.getInputStream());
 		}
@@ -560,9 +554,10 @@ public class MyMarkersService
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Retorna os status possíveis das postagens para o front-end
+	 * 
 	 * @return
 	 */
 	public MarkerStatus[] getMarkerStatus()

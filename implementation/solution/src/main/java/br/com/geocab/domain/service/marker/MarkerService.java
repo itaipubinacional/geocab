@@ -595,9 +595,7 @@ public class MarkerService
 	}
 
 	@Transactional(readOnly = true)
-	public Page<Marker> listMarkerByFiltersByUser(String layer,
-			MarkerStatus status, String dateStart, String dateEnd,
-			PageRequest pageable)
+	public Page<Marker> listMarkerByFiltersByUser(String layer, MarkerStatus status, String dateStart, String dateEnd, PageRequest pageable)
 	{
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
 		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, user, pageable);
@@ -615,6 +613,11 @@ public class MarkerService
 	public Page<Marker> listMarkerByFilters(String layer, MarkerStatus status,
 			String dateStart, String dateEnd, String user, PageRequest pageable)
 	{
+		if(this.getUserMe().getRole() != UserRole.ADMINISTRATOR)
+		{
+			user = this.getUserMe().getEmail();	
+		}
+		
 		return this.markerRepository.listByFilters(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], user, pageable);
 	}
 	
@@ -625,8 +628,7 @@ public class MarkerService
 			PageRequest pageable) throws java.text.ParseException
 	{
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
-		return this.listMarkerByFiltersMap(layer, status, dateStart, dateEnd,
-				user, pageable);
+		return this.listMarkerByFiltersMap(layer, status, dateStart, dateEnd, user, pageable);
 	}
 	
 	private Calendar[] formattDates(String dateStart, String dateEnd){
@@ -667,9 +669,7 @@ public class MarkerService
 	 * @throws java.text.ParseException
 	 */
 	@Transactional(readOnly = true)
-	public List<Marker> listMarkerByFiltersMap(String layer,
-			MarkerStatus status, String dateStart, String dateEnd, String user,
-			PageRequest pageable) throws java.text.ParseException
+	public List<Marker> listMarkerByFiltersMap(String layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable) throws java.text.ParseException
 	{
 
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -690,6 +690,12 @@ public class MarkerService
 			dEnd.setTime(dEnd.getTime());
 		}
 
+		if(this.getUserMe().getRole() != UserRole.ADMINISTRATOR)
+		{
+			user = this.getUserMe().getEmail();	
+		}
+		
+		
 		return this.markerRepository.listByFiltersMap(layer, status, dStart, dEnd, user);
 	}
 
