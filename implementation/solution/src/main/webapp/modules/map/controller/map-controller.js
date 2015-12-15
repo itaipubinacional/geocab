@@ -4476,6 +4476,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     dialog.result.then(function (result) {
 
+      $scope.removePhotosIds = result;
       console.log(result);
 
     });

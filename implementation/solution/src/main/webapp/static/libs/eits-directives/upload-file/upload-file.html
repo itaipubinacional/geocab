@@ -37,17 +37,17 @@
       </div>
     </div>
     <div>
-      <div class="files" ng-repeat="file in files" class="dropbox" title="{{ file.description ? file.description : file.name }}">
+      <div class="files" ng-repeat="file in files | filter: {delete:false}" class="dropbox" title="{{ file.description ? file.description : file.name }}">
         <div ng-click="setFile(file)" class="thumbnail" ng-class="{'active': file.name == fileSelected.name}">
           <img ng-src="{{ file.src }}" alt="{{ file.name }}">
           <div class="caption">
             <label ng-click="toggleCheckbox(file);$event.stopPropagation();">
               <input type="checkbox" ng-model="file.checked" name="file_{{ $index }}">
               <span ng-if="file.description">
-                {{ file.description | limitTo: 30 }} {{ file.description.length > 30 ? '...' : ''}}
+                {{ file.description | limitTo: 30 }} {{ file.description.length > 30 ? '...' : '' }}
               </span>
               <span ng-if="file.name && !file.description">
-                {{ file.name | limitTo: 30 }} {{ file.name.length > 30 ? '...' : ''}}
+                {{ file.name | limitTo: 30 }} {{ file.name.length > 30 ? '...' : '' }}
               </span>
             </label>
           </div>

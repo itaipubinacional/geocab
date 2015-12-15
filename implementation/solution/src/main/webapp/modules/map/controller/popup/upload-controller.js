@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function UploadPopUpController($scope, $modalInstance, $log, $filter, $importService, layer, attribute, attributesByLayer) {
+function UploadPopUpController($scope, $modalInstance, $filter, $importService, layer, attribute, attributesByLayer) {
 
 
   $importService("markerService");
@@ -22,7 +22,6 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, $importSer
    */
   $scope.msg = null;
 
-  $scope.filter = $filter;
   /**
    *
    */
@@ -33,6 +32,7 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, $importSer
 
   $scope.attributesByLayer = attributesByLayer;
 
+  $scope.removePhotosIds = [];
   /*-------------------------------------------------------------------
    * 		 				 	  NAVIGATIONS
    *-------------------------------------------------------------------*/
@@ -47,7 +47,7 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, $importSer
   $scope.initialize = function () {
     console.log('initialize');
 
-    if($scope.attribute.markerAttribute.id) {
+    if($scope.attribute.markerAttribute && $scope.attribute.markerAttribute.id) {
 
       $scope.setAttribute($scope.attribute);
 
@@ -70,6 +70,8 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, $importSer
       var file = $scope.attribute.files[i];
 
       if (file.checked) {
+        if(file.id)
+          $scope.removePhotosIds.push(file.id);
         $scope.attribute.files.splice(i, 1);
       }
     }
@@ -79,6 +81,8 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, $importSer
     if ($scope.attribute.files.length) {
       var i = $scope.attribute.files.length;
       while (i--) {
+        if($scope.attribute.file.id)
+          $scope.removePhotosIds.push($scope.attribute.file[i].id);
         $scope.attribute.files.splice(i, 1);
       }
     }
@@ -88,15 +92,32 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, $importSer
 
     $scope.attribute = attribute;
 
+    var files = attribute.files ? attribute.files : [];
+
     markerService.findPhotoAlbumByAttributeMarkerId(attribute.markerAttribute.id, null, {
 
       callback: function (result) {
 
         $scope.attribute.files = [];
 
+
         angular.forEach(result.content, function (photo) {
 
-          photo.src  = photo.image;
+          //photo.delete = false;
+
+          /*if(!files.length)
+            photo.delete = true;
+          */
+          if($filter('filter')(files, {id: photo.id})[0]) {
+            photo.delete = false;
+          } else {
+            photo.delete = true;
+          }
+
+          if(!files.length)
+            photo.delete = false;
+
+          photo.src = photo.image;
           photo.name = photo.description;
           $scope.attribute.files.push(photo);
 
@@ -124,14 +145,14 @@ function UploadPopUpController($scope, $modalInstance, $log, $filter, $importSer
   /**
    *
    */
-  $scope.close = function (fechar) {
-    // verifica se o usuário selecionou a opção de fechar ou selecionar na pop up
-    if (fechar) {
-      $modalInstance.close();
-    } else {
-      $modalInstance.close($scope.attributesByLayer);
-    }
-  };
+  $scope.close = function () {
 
+    angular.forEach($scope.attribute.files, function(file){
+        file.image = null;
+    });
+
+    $modalInstance.close($scope.removePhotosIds);
+
+  };
 
 };
