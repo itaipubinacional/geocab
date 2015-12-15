@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function UploadPopUpController($scope, $modalInstance, $filter, $importService, layer, attribute, attributesByLayer) {
+function UploadPopUpController($scope, $modalInstance, $filter, $importService, layer, attribute, attributes) {
 
 
   $importService("markerService");
@@ -29,8 +29,9 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
   $scope.attribute = attribute;
 
+  $scope.attributes = attributes;
 
-  $scope.attributesByLayer = attributesByLayer;
+  $scope.attributesByLayer = [];
 
   $scope.removePhotosIds = [];
   /*-------------------------------------------------------------------
@@ -47,6 +48,16 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
   $scope.initialize = function () {
     console.log('initialize');
 
+    angular.forEach($scope.attributes, function(attr){
+      if(attr.type == 'PHOTO_ALBUM')
+        $scope.attributesByLayer.push(attr);
+
+      if(attr.attribute && attr.attribute.type == 'PHOTO_ALBUM') {
+        attr.attribute.markerAttribute = {id: attr.id};
+        $scope.attributesByLayer.push(attr.attribute);
+      }
+    });
+
     if($scope.attribute.markerAttribute && $scope.attribute.markerAttribute.id) {
 
       $scope.setAttribute($scope.attribute);
@@ -59,6 +70,8 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
     console.log(files);
 
     $scope.attribute.files = files;
+
+    $scope.$apply();
 
   };
 
@@ -75,16 +88,20 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
         $scope.attribute.files.splice(i, 1);
       }
     }
+
+    $scope.attribute.removePhotosIds = $scope.removePhotosIds;
   };
 
   $scope.clearFiles = function () {
     if ($scope.attribute.files.length) {
       var i = $scope.attribute.files.length;
       while (i--) {
-        if($scope.attribute.file.id)
-          $scope.removePhotosIds.push($scope.attribute.file[i].id);
+        if($scope.attribute.files[i].id) {
+          $scope.removePhotosIds.push($scope.attribute.files[i].id);
+        }
         $scope.attribute.files.splice(i, 1);
       }
+      $scope.attribute.removePhotosIds = $scope.removePhotosIds;
     }
   };
 
@@ -92,48 +109,37 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
     $scope.attribute = attribute;
 
-    var files = attribute.files ? attribute.files : [];
+    $scope.attribute.removePhotosIds = attribute.removePhotosIds ? attribute.removePhotosIds : [];
 
-    markerService.findPhotoAlbumByAttributeMarkerId(attribute.markerAttribute.id, null, {
+    if(attribute.markerAttribute && attribute.markerAttribute.id) {
 
-      callback: function (result) {
+      $scope.attribute.files = [];
 
-        $scope.attribute.files = [];
+      markerService.findPhotoAlbumByAttributeMarkerId(attribute.markerAttribute.id, null, {
 
+        callback: function (result) {
 
-        angular.forEach(result.content, function (photo) {
+          $scope.attribute.files = [];
 
-          //photo.delete = false;
+          angular.forEach(result.content, function (photo) {
 
-          /*if(!files.length)
-            photo.delete = true;
-          */
-          if($filter('filter')(files, {id: photo.id})[0]) {
-            photo.delete = false;
-          } else {
-            photo.delete = true;
-          }
+            if ($scope.attribute.removePhotosIds.indexOf(photo.id) == -1) {
+              photo.src = photo.image;
+              photo.name = photo.description;
+              $scope.attribute.files.push(photo);
+            }
 
-          if(!files.length)
-            photo.delete = false;
+          });
 
-          photo.src = photo.image;
-          photo.name = photo.description;
-          $scope.attribute.files.push(photo);
+          $scope.$apply();
 
-        });
-
-        //$scope.attribute = $scope.attribute;
-
-        $scope.$apply();
-
-      },
-      errorHandler: function (message, exception) {
-        $scope.message = {type: "error", text: message};
-        $scope.$apply();
-      }
-
-    });
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
+    }
 
   };
 
@@ -151,7 +157,7 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
         file.image = null;
     });
 
-    $modalInstance.close($scope.removePhotosIds);
+    $modalInstance.close($scope.attributes);
 
   };
 

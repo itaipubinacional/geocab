@@ -37,7 +37,7 @@
       </div>
     </div>
     <div>
-      <div class="files" ng-repeat="file in files | filter: {delete:false}" class="dropbox" title="{{ file.description ? file.description : file.name }}">
+      <div class="files" ng-repeat="file in files" class="dropbox" title="{{ file.description ? file.description : file.name }}">
         <div ng-click="setFile(file)" class="thumbnail" ng-class="{'active': file.name == fileSelected.name}">
           <img ng-src="{{ file.src }}" alt="{{ file.name }}">
           <div class="caption">

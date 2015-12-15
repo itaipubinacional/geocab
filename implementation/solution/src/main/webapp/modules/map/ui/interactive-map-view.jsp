@@ -629,6 +629,17 @@ uri="http://www.springframework.org/security/tags"%>
                   >
                   <spring:message code="map.Submit" />
                   </button>
+
+                  <button
+                      id="savePost"
+                      class="btn btn-primary"
+                      ng-click="saveMarker()"
+                      style="float: right"
+                      title="<spring:message code="map.Save" />"
+                  >
+                  <spring:message code="map.Save" />
+                  </button>
+
                 </div>
               </div>
             </div>

@@ -168,7 +168,7 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
     markerService.findMarkerById(attributesByMarker[0].marker.id, {
       callback: function (result) {
     	attributesByMarker[0].marker = result;
-		$scope.attributesByMarker = attributesByMarker;
+		  $scope.attributesByMarker = attributesByMarker;
    
 	    angular.forEach(attributesByMarker[0].marker.markerAttribute, function (markerAttribute, index) {
 	      if (markerAttribute.attribute.type == 'PHOTO_ALBUM') {
