@@ -9,19 +9,44 @@ import org.geotools.data.shapefile.files.ShpFileType;
 /**
  * @author emanuelvictor
  *
+ * Classe responsável por trazer os arquivos shapefile do front-end para o back-end
  */
 @DataTransferObject(javascript = "ShapeFile")
 public class ShapeFile
 {
 
-	private String name;
-
-	private Long size;
-
+	/*-------------------------------------------------------------------
+	 *				 		     ATTRIBUTES
+	 *-------------------------------------------------------------------*/
+	/**
+	 * 
+	 */
 	private ShpFileType type;
 
-	private String shp;
+	/**
+	 * 
+	 */
+	private String source;
 
+	/**
+	 * 
+	 */
+	private String mimeType;
+
+	/**
+	 * 
+	 */
+	private Integer contentLength;
+
+	/**
+	 * 
+	 */
+	private String name;
+
+	/*-------------------------------------------------------------------
+	 *				 		     CONSTRUCTORS
+	 *-------------------------------------------------------------------*/
+	
 	/**
 	 * 
 	 */
@@ -31,18 +56,75 @@ public class ShapeFile
 	}
 
 	/**
-	 * @param name
-	 * @param size
 	 * @param type
-	 * @param shp
+	 * @param source
+	 * @param mimeType
+	 * @param contentLength
+	 * @param name
 	 */
-	public ShapeFile(String name, Long size, ShpFileType type, String shp)
+	public ShapeFile(ShpFileType type, String source, String mimeType,
+			Integer contentLength, String name)
 	{
 		super();
-		this.name = name;
-		this.size = size;
 		this.type = type;
-		this.shp = shp;
+		this.source = source;
+		this.mimeType = mimeType;
+		this.contentLength = contentLength;
+		this.name = name;
+	}
+
+	/*-------------------------------------------------------------------
+	 *				 		     SETTERS/GETTERS
+	 *-------------------------------------------------------------------*/
+	/**
+	 * @return the source
+	 */
+	public String getSource()
+	{
+		return source;
+	}
+
+	/**
+	 * @param source
+	 *            the source to set
+	 */
+	public void setSource(String source)
+	{
+		this.source = source;
+	}
+
+	/**
+	 * @return the mimeType
+	 */
+	public String getMimeType()
+	{
+		return mimeType;
+	}
+
+	/**
+	 * @param mimeType
+	 *            the mimeType to set
+	 */
+	public void setMimeType(String mimeType)
+	{
+		this.mimeType = mimeType;
+	}
+
+	/**
+	 * @return the contentLength
+	 */
+	public Integer getContentLength()
+	{
+		return contentLength;
+	}
+
+	/**
+	 * @param contentLength
+	 *            the contentLength to set
+	 */
+	public void setContentLength(Integer contentLength)
+	{
+		this.contentLength = contentLength;
 	}
 
 	/**
@@ -63,23 +145,6 @@ public class ShapeFile
 	}
 
 	/**
-	 * @return the size
-	 */
-	public Long getSize()
-	{
-		return size;
-	}
-
-	/**
-	 * @param size
-	 *            the size to set
-	 */
-	public void setSize(Long size)
-	{
-		this.size = size;
-	}
-
-	/**
 	 * @return the type
 	 */
 	public ShpFileType getType()
@@ -94,23 +159,6 @@ public class ShapeFile
 	public void setType(ShpFileType type)
 	{
 		this.type = type;
-	}
-
-	/**
-	 * @return the shp
-	 */
-	public String getShp()
-	{
-		return shp;
-	}
-
-	/**
-	 * @param shp
-	 *            the shp to set
-	 */
-	public void setShp(String shp)
-	{
-		this.shp = shp;
 	}
 
 }
