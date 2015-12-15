@@ -1024,6 +1024,12 @@ input:-moz-placeholder {
     height: 34px;
 }
 
+
+.btn-icon{
+	padding-top: 15px;
+}
+
+
 /* Scale Slider - Começo */
 
 .ui-slider-horizontal .ui-slider-handle {

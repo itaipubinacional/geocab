@@ -8,11 +8,6 @@
  */
 function MarkerModerationController($scope, $injector, $log, $state, $timeout, $modal, $location, $importService, $translate) {
 
-    $scope.breakpoint = function(){
-        console.log("DEBUG");
-    }
-
-
     /**
      * Inject the methods, attributes and its states inherited from AbstractCRUDController.
      * @see AbstractCRUDController
