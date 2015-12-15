@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.domain.service;
+package br.com.geocab.domain.service.marker;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -57,6 +57,7 @@ import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
+import br.com.geocab.domain.service.DataSourceService;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -244,9 +245,8 @@ public class MarkerService
 	}
 	
 	/**
-	 * Salva todas as fotos no sistema de arquivos
-	 * @param photos
-	 * @return
+	 * Remove todas as fotos no sistema de arquivos
+	 * @param idPhotos
 	 */
 	public void removePhotos(List<Long> idPhotos)
 	{
@@ -615,9 +615,7 @@ public class MarkerService
 	public Page<Marker> listMarkerByFilters(String layer, MarkerStatus status,
 			String dateStart, String dateEnd, String user, PageRequest pageable)
 	{
-
 		return this.markerRepository.listByFilters(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], user, pageable);
-
 	}
 	
 

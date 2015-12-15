@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.domain.service;
+package br.com.geocab.domain.service.marker;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,10 +16,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
@@ -43,6 +45,7 @@ import br.com.geocab.domain.repository.motive.IMotiveMarkerModerationRepository;
 @Service
 @Transactional
 @RemoteProxy(name="markerModerationService")
+@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 public class MarkerModerationService
 {
 	/*-------------------------------------------------------------------
@@ -97,6 +100,7 @@ public class MarkerModerationService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Page<MarkerModeration> listMarkerModerationByFilters( String filter, PageRequest pageable )
 	{
 		return this.markerModerationRepository.listByFilters(filter, pageable);
@@ -110,6 +114,7 @@ public class MarkerModerationService
 	 * @param markerModeration
 	 * @return
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public MarkerModeration acceptMarker( Long id )
 	{			
 		try
@@ -152,6 +157,7 @@ public class MarkerModerationService
 	 * @param layers
 	 * @param accessGroupId
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void associateMotive( List<Motive> motives, Long markerModerationId )
 	{
 		MarkerModeration markerModeration = new MarkerModeration(markerModerationId);
@@ -175,7 +181,7 @@ public class MarkerModerationService
      * @throws RepositoryException
      * @throws IOException
      */
- 
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
     public Marker cancelMarkerModeration (Long id) throws IOException,
             RepositoryException
     {
@@ -225,6 +231,7 @@ public class MarkerModerationService
 	 * @param markerModeration
 	 * @return
 	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public MarkerModeration refuseMarker( Long markerId, Motive motive, String description )
 	{			
 		
@@ -278,6 +285,7 @@ public class MarkerModerationService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public List<MotiveMarkerModeration> listMotivesByMarkerModerationId(Long markerModerationId)
 	{
 		List<MotiveMarkerModeration> motivesMarkerModeration = this.motiveMarkerModerationRepository.listByMarkerModerationId(markerModerationId);
@@ -291,6 +299,7 @@ public class MarkerModerationService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public List<MarkerModeration> listMarkerModerationByMarker( Long markerId  )
 	{
 		return this.markerModerationRepository.listMarkerModerationByMarker(markerId);
@@ -304,6 +313,7 @@ public class MarkerModerationService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Page<MarkerModeration> listMarkerModerationByMarker( Long markerId, PageRequest pageable  )
 	{
 		pageable.setSort(new Sort(Direction.ASC, "id"));

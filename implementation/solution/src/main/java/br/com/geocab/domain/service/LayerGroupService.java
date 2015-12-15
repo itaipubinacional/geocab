@@ -269,7 +269,12 @@ public class LayerGroupService
 		
 		for (LayerGroup layerGroupPublished : layersGroupPublished)
 		{
-			layerGroupPublished.setLayersGroup(this.layerGroupRepository.listLayersGroupPublishedChildren(layerGroupPublished.getId()));
+			try{
+				layerGroupPublished.setLayersGroup(this.layerGroupRepository.listLayersGroupPublishedChildren(layerGroupPublished.getId()));
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
 			this.layerGroupRepository.save(layerGroupPublished);
 		}
 	}
@@ -607,7 +612,7 @@ public class LayerGroupService
 										{
 											for (AccessGroupLayer accessGroupLayer : accessGroup.getAccessGroupLayer())
 											{
-												if(layer.getId().equals(accessGroupLayer.getLayer().getId()) && layer.isStartVisible())
+												if(layer.getId().equals(accessGroupLayer.getLayer().getId()) && layer.getStartEnabled())
 												{
 													hasAccess = true;
 													break;
