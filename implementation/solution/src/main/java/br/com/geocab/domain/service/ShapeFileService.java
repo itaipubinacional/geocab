@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.geotools.data.DataUtilities;
@@ -38,6 +39,7 @@ import com.vividsolutions.jts.io.ParseException;
 
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.shapefile.ShapeFile;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
 /**
@@ -107,28 +109,27 @@ public class ShapeFileService
 	 * @param shapeFile
 	 * @return
 	 */
-//	public ShapeFile importShapeFile(ShapeFile shapeFile)
-//	{
-//		try
-//		{
-//			// Lê o arquivo
-//			File file = this.readFile(shapeFile);
-//			// ShpFiles shpFiles = new ShpFiles(file);
-//			//
-//			// FileDataStore store = FileDataStoreFinder.getDataStore(file);
-//			// SimpleFeatureSource featureSource = store.getFeatureSource();
-//
-//			// Deleta o arquivo
-//			file.delete();
-//			return shapeFile;
-//		}
-//		catch (Exception e)
-//		{
-//			LOG.info(e.getMessage());
-//			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
-//		}
+	public List<Marker> importShapeFile(ShapeFile shapeFile)
+	{
+		try
+		{
+			// Lê o arquivo
+			File file = this.readFile(shapeFile);
+			// ShpFiles shpFiles = new ShpFiles(file);
+			//
+			// FileDataStore store = FileDataStoreFinder.getDataStore(file);
+			// SimpleFeatureSource featureSource = store.getFeatureSource();
 
-//	}
+			// Deleta o arquivo
+			file.delete();
+			return null;
+		}
+		catch (Exception e)
+		{
+			LOG.info(e.getMessage());
+			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
+		}
+	}
 	
 	/**
 	 * Insere no sistema de arquivos o shapeFile, provisoriamente
@@ -136,27 +137,27 @@ public class ShapeFileService
 	 * @param shapeFile
 	 * @return
 	 */
-//	private File readFile(ShapeFile shapeFile)
-//	{
-//		String pathFile = "/tmp/geocab/files/" + Calendar.getInstance().getTimeInMillis() + ".shp";
-//
-//		Base64 decoder = new Base64();
-//		byte[] shpBytes = decoder.decode(shapeFile.getShp());
-//		FileOutputStream osf;
-//		try
-//		{
-//			osf = new FileOutputStream(new File(pathFile));
-//			osf.write(shpBytes);
-//			osf.flush();
-//			osf.close();
-//			return new File(pathFile);
-//		}
-//		catch (IOException e)
-//		{
-//			LOG.info(e.getMessage());
-//			throw new RuntimeException("Erro ao gravar arquivo de shapefile: " + e.getMessage());
-//		}
-//	}
+	private File readFile(ShapeFile shapeFile)
+	{
+		String pathFile = "/tmp/geocab/files/" + Calendar.getInstance().getTimeInMillis() +"."+ shapeFile.getType();//".shp";
+
+		Base64 decoder = new Base64();
+		byte[] shpBytes = decoder.decode(shapeFile.getSource());
+		FileOutputStream osf;
+		try
+		{
+			osf = new FileOutputStream(new File(pathFile));
+			osf.write(shpBytes);
+			osf.flush();
+			osf.close();
+			return new File(pathFile);
+		}
+		catch (IOException e)
+		{
+			LOG.info(e.getMessage());
+			throw new RuntimeException("Erro ao gravar arquivo de shapefile: " + e.getMessage());
+		}
+	}
 	
 	/**
 	 * Agrupa as postagens pelas camadas

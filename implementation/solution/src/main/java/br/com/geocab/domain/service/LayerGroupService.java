@@ -65,7 +65,6 @@ import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
  * @category Service
  *
  */
-
 @Service
 @Transactional
 @RemoteProxy(name="layerGroupService")
@@ -269,13 +268,12 @@ public class LayerGroupService
 		
 		for (LayerGroup layerGroupPublished : layersGroupPublished)
 		{
-			try{
-				layerGroupPublished.setLayersGroup(this.layerGroupRepository.listLayersGroupPublishedChildren(layerGroupPublished.getId()));
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+			//Pega o grupo de camadas pois a query anterior (layerGroupRepository.listAllLayersGroupPublished()) foi alterada e não pega todos os atributos da camada
+			layerGroupPublished = this.layerGroupRepository.findOne(layerGroupPublished.getId());
 			
-			this.layerGroupRepository.save(layerGroupPublished);
+			layerGroupPublished.setLayersGroup(this.layerGroupRepository.listLayersGroupPublishedChildren(layerGroupPublished.getId()));
+		
+			this.layerGroupRepository.save(layerGroupPublished);	
 		}
 	}
 	
@@ -788,12 +786,7 @@ public class LayerGroupService
 	  */
     @Transactional(readOnly=true)
     public List<LayerGroup> listSupervisorsFilter(String layer, Long dataSource)
-    {
-        /* Retorna lista de ids dos grupos de camadas para não cadastramento de camadas repetidos no grupo */
-        //List<Long> layerGroupIds = this.layerRepository.listLayerGroupIdsByNameAndDataSource(layer, dataSource);
-         
-        //List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layerGroupIds);
-    	
+    {    	
     	List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layer, dataSource);
          
         this.setLegendsLayers(layersGroup);
