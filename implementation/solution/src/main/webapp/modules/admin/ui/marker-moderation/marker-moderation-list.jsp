@@ -13,67 +13,77 @@
 	<div style="width:35%; height: 100%; float:left; margin: 20px;">
 
 		<!-- Filter Bar -->
-		<div class="search-div" style="margin-bottom:10px">
+        <div class="search-div" style="margin-bottom:10px">
 			<form class="form-inline" role="form">
+                <div class="form-inline row">
+                    <div class="form-group col-md-12">
+                        <div class="col-md-5 row">
+                            <input auto-complete autocomplete="off" type="text" class="form-control"
+                                   typeahead-wait-ms="500" ng-model="filter.layer"
+                                   placeholder="<spring:message code='admin.marker-moderation.Layer' />"
+                                   typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2"/>
+                        </div>
 
-                <div class="form-group">
-                    <div style="display:inline-block">
+                        <div class="col-md-2">
+                            <input type="button" style="margin-right:5px" ng-click="bindFilter()"
+                                   value="<spring:message code='Filter'/>" title="<spring:message code='Search'/>"
+                                   class="btn btn-default" ng-disabled="currentPage == null"/>
+                        </div>
 
-                        <input auto-complete autocomplete="off" type="text" class="form-control"
-                           typeahead-wait-ms="500" ng-model="filter.layer" placeholder="<spring:message code='admin.marker-moderation.Layer' />"
-                           typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2"/>
+                        <div class="col-md-4">
+                            <input type="button" ng-click="clearFilters()" value="Limpar Filtros"
+                                   class="btn btn-default" ng-disabled="currentPage == null"/>
+                        </div>
+
+                        <div class="col-md-1">
+                            <a class="btn btn-mini" ng-show="visible" ng-click="visible = false">
+                                <i class="glyphicon glyphicon-chevron-up"></i>
+                            </a>
+                            <a class="btn btn-mini" ng-show="!visible" ng-click="visible = true">
+                                <i class="glyphicon glyphicon-chevron-down"></i>
+                            </a>
+                        </div>
+
                     </div>
-
-
-
-                    <input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code='Filter'/>" title="<spring:message code='Search'/>" class="btn btn-default" ng-disabled="currentPage == null"/>
-
-                    <input type="button" ng-click="clearFilters()" value="Limpar Filtros" class="btn btn-default" ng-disabled="currentPage == null"/>
-
-
-
-                        <a class="btn btn-mini" ng-show="visible"   ng-click="visible = false" >
-                            <i class="glyphicon glyphicon-chevron-up"></i>
-                        </a>
-                        <a class="btn btn-mini" ng-show="!visible" 	ng-click="visible = true"  >
-                            <i class="glyphicon glyphicon-chevron-down"></i>
-                        </a>
-
-
                 </div>
-                <!--<div class="form-group">-->
-                    <div style="margin-top:10px; display:flex" ng-show="visible">
 
-                        <select class="form-control" ng-model="filter.status" style="width:30%;margin-right:10px">
-                            <option value=""><spring:message code="admin.marker-moderation.All-status" /></option>
-                            <option value="SAVED"><spring:message code="admin.marker-moderation.Saved"/></option>
-                            <option value="PENDING" ><spring:message code="admin.marker-moderation.Pending" /></option>
-                            <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
-                            <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
-                            <option value="CANCELED"><spring:message code="admin.marker-moderation.Canceled"/></option>
-                         </select>
+                <div class="col-md-12" ng-if="visible">
+                    <div class="row">
+                        <!--<div class="form-group">-->
+                            <select class="form-control" ng-model="filter.status">
+                                <option value=""><spring:message code="admin.marker-moderation.All-status" /></option>
+                                <option value="SAVED"><spring:message code="admin.marker-moderation.Saved"/></option>
+                                <option value="PENDING" ><spring:message code="admin.marker-moderation.Pending" /></option>
+                                <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
+                                <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
+                                <option value="CANCELED"><spring:message code="admin.marker-moderation.Canceled"/></option>
+                             </select>
+                        <!--</div>-->
 
-                        <!--
-                        <input ng-model="filter.dateStart" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Beginning"/>" onfocus="(this.type='date')" onblur="(this.type='text')"  id="date" />
+                        <div class="form-group">
+                            <input ng-model="filter.dateStart" class="form-control datepicker"
+                                   placeholder="<spring:message code='admin.marker-moderation.Beginning'/>"/>
+                        </div>
 
-                        <input ng-model="filter.dateEnd" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>" onfocus="(this.type='date')" onblur="(this.type='text')" id="date"/>
-                        -->
-
-                        <input ng-model="filter.dateStart" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Beginning"/>"/>
-
-                        <input ng-model="filter.dateEnd" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>"/>
+                        <div class="form-group">
+                            <input ng-model="filter.dateEnd" class="form-control datepicker"
+                                   placeholder="<spring:message code='admin.marker-moderation.Ending'/>"/>
+                        </div>
                     </div>
-
-                    <div style="margin-top:10px; display:flex" ng-show="visible">
-                         <select data-placeholder="<spring:message code='admin.marker-moderation.Users'/>" name="layer"
+                </div>
+                <div class="form-inline row" ng-if="visible">
+                    <div class="form-group col-md-12">
+                        <select data-placeholder="<spring:message code='admin.marker-moderation.Users'/>" name="layer"
                                 ng-options="user.email for user in selectUsers "
-                                ng-model="filter.user" chosen class="form-control"
-                                >
-                            <option value=""><spring:message code="admin.marker-moderation.All-users"/></option>
+                                ng-model="filter.user" chosen class="form-control">
+                            <option value="">
+                                <spring:message code="admin.marker-moderation.All-users"/>
+                            </option>
                         </select>
                     </div>
-                <!--</div>-->
-			 </form>
+                </div>
+
+            </form>
 
 		</div>
 

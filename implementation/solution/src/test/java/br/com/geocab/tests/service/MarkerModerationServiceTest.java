@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.entity.markermoderation.Motive;
-import br.com.geocab.domain.service.MarkerModerationService;
-import br.com.geocab.domain.service.MarkerService;
 import br.com.geocab.domain.service.MotiveService;
+import br.com.geocab.domain.service.marker.MarkerModerationService;
+import br.com.geocab.domain.service.marker.MarkerService;
 import br.com.geocab.tests.AbstractIntegrationTest;
 
 import com.github.springtestdbunit.annotation.DatabaseOperation;

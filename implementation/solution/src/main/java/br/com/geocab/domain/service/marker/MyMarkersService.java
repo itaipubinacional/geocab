@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.domain.service;
+package br.com.geocab.domain.service.marker;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -46,6 +46,7 @@ import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
+import br.com.geocab.domain.service.DataSourceService;
 
 
 @Service
