@@ -428,12 +428,14 @@ div#sidenav ul li{border: 1px solid #ccc; padding: 10px;margin-left: -1px; backg
 div#sidenav ul li:hover{cursor: pointer}
 div#sidenav li.active{border-left: none; background-color: #fff; font-weight: 900}
 
-div.files{float:left;margin:5px; width: 140px; height: 190px}
+div.files{float:left;margin:5px; width: 140px; height: 160px}
 div.files:hover{cursor:pointer}
 div.files > div.thumbnail{width: 100%; height: 100%;position: relative;}
 div.files > div.thumbnail img{max-width: 125px;max-height: 125px;}
-div.files > div.thumbnail > div.caption{position: absolute; bottom: 0;}
-div.files > div.thumbnail > div.caption input[type=checkbox]{float: left;word-wrap: break-word;margin-top: 2px;}
+div.files > div.thumbnail > div.caption{position: absolute; bottom: 0; height: 50px; padding: 5px; width: 100%}
+div.files > div.thumbnail > div.caption label{overflow: hidden;}
+div.files > div.thumbnail > div.caption label:hover{cursor: pointer}
+div.files > div.thumbnail > div.caption input[type=checkbox]{float: left;word-wrap: break-word;margin: 2px 5px 0 0;}
 div.thumbnail.active{border: 1px solid #428bca;}
 
 div#dropbox{float: left;height: 520px;width: 100%;border: 2px solid #fff;border-right: 1px solid #ccc;position: relative; padding: 15px}

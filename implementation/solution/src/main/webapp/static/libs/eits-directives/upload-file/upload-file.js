@@ -33,12 +33,23 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         console.log('loaded');
       };
 
+      scope.setFile = function(file){
+        scope.fileSelected = file;
+        element.find('input[type="text"]').focus();
+        //scope.file.description = file.name;
+      };
+
+      scope.toggleCheckbox = function(file){
+        scope.fileSelected = file;
+        element.find('input[type="text"]').focus();
+      };
+
       scope.$watch('attribute.files', function(newVal, oldVal){
           scope.files = [];
           console.log('watch');
           scope.files = newVal != undefined ? newVal : [];
           if(newVal)
-            scope.setImage(newVal[0]);
+            scope.setFile(newVal[0]);
       });
 
       scope.$watch('attribute', function(newVal, oldVal){
@@ -54,12 +65,6 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       //============== DRAG & DROP =============
       // source for drag&drop: http://www.webappers.com/2011/09/28/drag-drop-file-upload-with-html5-javascript/
       var dropbox = document.getElementById("dropbox");
-
-      scope.setImage = function(file){
-        scope.fileSelected = file;
-        element.find('input[type="text"]').focus();
-        //scope.file.description = file.name;
-      };
 
       dropbox.addEventListener('dragend', function( event ) {
 
@@ -178,6 +183,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
         });
       };
+
+
 
       if(!scope.fileSelected.name && scope.files.length > 0)
         scope.setImage(scope.files[0]);

@@ -26,7 +26,7 @@
             Descrição
           </label>
           <input name="description" type="text" class="form-control" ng-model="fileSelected.description"
-                 maxlength="144" ng-minlength="1"/>
+                 maxlength="60" ng-maxlength="60"/>
 
         </div>
       </div>
@@ -37,12 +37,19 @@
       </div>
     </div>
     <div>
-      <div class="files" ng-repeat="file in files" class="dropbox">
-        <div ng-click="setImage(file)" class="thumbnail" ng-class="{'active': file.name == fileSelected.name}">
+      <div class="files" ng-repeat="file in files" class="dropbox" title="{{ file.description ? file.description : file.name }}">
+        <div ng-click="setFile(file)" class="thumbnail" ng-class="{'active': file.name == fileSelected.name}">
           <img ng-src="{{ file.src }}" alt="{{ file.name }}">
           <div class="caption">
-            <input type="checkbox" ng-model="file.checked" name="file_{{ $index }}">
-            <p ng-click="toggleCheckbox(file)">{{file.description ? file.description : file.name}}</p>
+            <label ng-click="toggleCheckbox(file);$event.stopPropagation();">
+              <input type="checkbox" ng-model="file.checked" name="file_{{ $index }}">
+              <span ng-if="file.description">
+                {{ file.description | limitTo: 30 }} {{ file.description.length > 30 ? '...' : ''}}
+              </span>
+              <span ng-if="file.name && !file.description">
+                {{ file.name | limitTo: 30 }} {{ file.name.length > 30 ? '...' : ''}}
+              </span>
+            </label>
           </div>
         </div>
       </div>
