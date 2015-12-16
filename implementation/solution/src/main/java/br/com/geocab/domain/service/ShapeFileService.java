@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,14 +24,21 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
+import org.geotools.data.DataStore;
+import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
+import org.geotools.data.FeatureSource;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
+import org.geotools.data.shapefile.files.ShpFileType;
 import org.geotools.feature.DefaultFeatureCollection;
+import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,15 +121,31 @@ public class ShapeFileService
 	{
 		try
 		{
-			// Lê o arquivo
-			File file = this.readFile(shapeFiles.get(0));
+			// Lê os arquivos
+			List<File> files = new ArrayList<File>();
+			for (ShapeFile shapeFile : shapeFiles)
+			{
+				files.add(this.readFile(shapeFile));
+			}
+			
+			
+			for (ShapeFile shapeFile : shapeFiles)
+			{
+				if (shapeFile.getType() == ShpFileType.SHP)
+				{
+					importt(this.readFile(shapeFile));
+				}
+			}
+			
+			
 			// ShpFiles shpFiles = new ShpFiles(file);
 			//
 			// FileDataStore store = FileDataStoreFinder.getDataStore(file);
 			// SimpleFeatureSource featureSource = store.getFeatureSource();
 
 			// Deleta o arquivo
-			file.delete();
+			delete(new File(PATH_SHAPE_FILES_IMPORT));
+			
 			return null;
 		}
 		catch (Exception e)
@@ -129,6 +153,86 @@ public class ShapeFileService
 			LOG.info(e.getMessage());
 			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
 		}
+	}
+	
+	private void importt(File file){
+		
+		try
+		{
+			Map<String, Object> map = new HashMap<String, Object>();
+		    map.put("url", file.toURI().toURL());
+
+		    DataStore dataStore = DataStoreFinder.getDataStore(map);
+		    String typeName = dataStore.getTypeNames()[0];
+
+		    FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore.getFeatureSource(typeName);
+
+		    FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures();
+		    try (FeatureIterator<SimpleFeature> features = collection.features()) {
+		        while (features.hasNext()) {
+		            SimpleFeature feature = features.next();
+		            System.out.print(feature.getID());
+		            System.out.print(": ");
+		            System.out.println(feature.getDefaultGeometryProperty().getValue());
+		        }
+		    }
+		}
+		catch ( IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+//        /*
+//         * GeometryFactory will be used to create the geometry attribute of each feature (a Point
+//         * object for the location)
+//         */
+//        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
+//        
+//        BufferedReader reader = null;
+//        
+//        try {
+//        	reader = new BufferedReader(new FileReader(file));
+//        	
+//        	
+//        	
+//        	
+//            /* First line of the data file is the header */
+//            String line = reader.readLine();
+//            System.out.println("Header: " + line);
+//
+//            for (line = reader.readLine(); line != null; line = reader.readLine()) {
+//                if (line.trim().length() > 0) { // skip blank lines
+//                    String tokens[] = line.split("\\,");
+//
+//                    double latitude = Double.parseDouble(tokens[0]);
+//                    double longitude = Double.parseDouble(tokens[1]);
+//                    String name = tokens[2].trim();
+//                    int number = Integer.parseInt(tokens[3].trim());
+//
+//                    /* Longitude (= x coord) first ! */
+//                    Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+//
+//                }
+//            }
+//        }
+//		catch (IOException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//        } 
+//        finally 
+//		{
+//            try
+//			{
+//				reader.close();
+//			}
+//			catch (IOException e)
+//			{
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//        }
 	}
 	
 	/**
@@ -139,7 +243,7 @@ public class ShapeFileService
 	 */
 	private File readFile(ShapeFile shapeFile)
 	{
-		String pathFile = "/tmp/geocab/files/" + Calendar.getInstance().getTimeInMillis() +"."+ shapeFile.getType();//".shp";
+		String pathFile = PATH_SHAPE_FILES_IMPORT + String.valueOf("Geocab_imported_" + new SimpleDateFormat("yyyy-mm-dd").format(Calendar.getInstance().getTime())) +"."+ shapeFile.getType().toString().toLowerCase();//".shp";
 
 		Base64 decoder = new Base64();
 		byte[] shpBytes = decoder.decode(shapeFile.getSource());
@@ -198,7 +302,7 @@ public class ShapeFileService
 	{
 		
 		final List<Layer> layers = groupByLayers(markers);
-		
+		//TODO colocar segundos
 		final String fileExport = String.valueOf("Geocab_exported_" + new SimpleDateFormat("yyyy-mm-dd").format(Calendar.getInstance().getTime()) );
 
 		//Cria shapeFiles
