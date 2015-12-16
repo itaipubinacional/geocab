@@ -240,11 +240,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     //    '<a ng-if="row.entity.status == \'CANCELED\' " class="icon-refuse-moderation"></a>' +
     //    '</div>';
     var IMAGE_MODERATION = '<div  class="cell-centered">' +
-        '<i ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></i>' +
-        '<i ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></i>' +
-        '<i ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></i>' +
-        '<i ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></i>' +
-        '<i ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></i>' +
         '</div>';
 
 
@@ -300,13 +300,34 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         },
 
         columnDefs: [
-            {displayName: $translate('admin.marker-moderation.Layer'), field: 'layer.title'},
-            {displayName: $translate('admin.marker-moderation.Email'), field: 'user.email'},
+            {
+                displayName: $translate('admin.marker-moderation.Layer'),
+                field: 'layer.title',
+                cellTemplate:
+                '<span title="{{row.entity.layer.title}}" ' +
+                'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
+                '{{row.entity.layer.title }}' +
+                '</span>'
+            },
+            {
+                displayName: $translate('admin.marker-moderation.Email'),
+                field: 'user.email',
+                cellTemplate:
+                '<span title="{{row.entity.user.email}}" ' +
+                'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
+                '{{row.entity.user.email}}' +
+                '</span>'
+            },
+
             {
                 displayName: $translate('admin.marker-moderation.Date-posting'),
                 width: '150px',
                 field: 'created',
-                cellTemplate: '<span class="ngCellText">{{row.entity.created | date:"dd/MM/yyyy"}}</span>'
+                cellTemplate:
+                    '<span ' +
+                    'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">'+
+                     '{{row.entity.created | date:"dd/MM/yyyy"}}' +
+                    '</span>'
 
             },
             {
@@ -962,7 +983,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
         markerModerationService.acceptMarker(id, {
             callback: function (result) {
-                console.log(result);
                 $scope.currentEntity = result.marker;
                 $scope.updateStatus();
                 $scope.changeToListNoVectorMarkers($scope.currentPage);

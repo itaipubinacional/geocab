@@ -68,8 +68,31 @@
                 <h3 style="margin: 0"><spring:message code="admin.access-group.my-markers"/></h3>
             </div>
             <div class="row" style="height: 60px" ng-if="itensMarcados.length">
-                <h3 ng-if="itensMarcados.length > 1"style="margin: 0" class="col-md-6">{{itensMarcados.length}} <spring:message code="admin.marker-moderation.Selected-items"/></h3>
-                <h3 ng-if="itensMarcados.length == 1" style="margin: 0" class="col-md-6">{{itensMarcados.length}} <spring:message code="admin.marker-moderation.Selected-item"/></h3>
+
+				<!-- BUTTONS-->
+				<!--<div class="col-md-8">-->
+					<!--<h3 ng-if="itensMarcados.length > 1" style="margin: 0" >{{itensMarcados.length}}-->
+						<!--<spring:message code="admin.marker-moderation.Selected-items"/>-->
+					<!--</h3>-->
+					<!--<h3 ng-if="itensMarcados.length == 1" style="margin: 0" >{{itensMarcados.length}}-->
+						<!--<spring:message code="admin.marker-moderation.Selected-item"/>-->
+					<!--</h3>-->
+				<!--</div>-->
+
+				<!--<div class="btn-group col-md-4" role="group" aria-label="group buttons">-->
+					<!--<button type="button" ng-click="postMarkersModal()" ng-disabled="!disableButtonPost"-->
+							<!--tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Post'/>"-->
+							<!--style="float: right"-->
+							<!--class="btn btn-secondary">-->
+						<!--<i style="font-size: 18px" class="icon itaipu-icon-export"></i>-->
+					<!--</button>-->
+					<!--<button type="button" ng-click="removeMarkersModal()"-->
+							<!--tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Delete'/>"-->
+							<!--style="float: right"-->
+							<!--class="btn btn-secondary">-->
+						<!--<i style="font-size: 18px" class="icon itaipu-icon-delete"></i>-->
+					<!--</button>-->
+				<!--</div>-->
 
 				<div class="btn btn-primary col-md-3" name="btnSave"
 					 ng-click="postMarkersModal()" ng-disabled="!disableButtonPost">

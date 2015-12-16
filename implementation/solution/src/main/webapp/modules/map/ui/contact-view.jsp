@@ -12,6 +12,8 @@
 <div class="content">
 
   <div class="navbar">
+      <!--Message -->
+      <div class="msg" ng-include="'static/libs/eits-directives/alert/alert.html'"></div>
 
     <div class="navbar-inner navbar-container">
       <div class="navbar-title"><span class="ng-scope" style="text-transform:uppercase;"><spring:message

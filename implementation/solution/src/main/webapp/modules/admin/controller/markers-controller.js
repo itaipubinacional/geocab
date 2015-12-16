@@ -59,14 +59,14 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      *  When the event is triggered, we set the pager's spring-data
      *  and call the query again, also considering the state of the filter (@see $scope.data.filter)
      */
-    $scope.$on('ngGridEventSorted', function(event, sort) {
+    $scope.$on('ngGridEventSorted', function (event, sort) {
 
         //if(event.targetScope.gridId != $scope.gridOptions.gridId) {
         //    return;
         //}
 
         //run only once
-        if ( !angular.equals(sort, $scope.gridOptions.sortInfo) ) {
+        if (!angular.equals(sort, $scope.gridOptions.sortInfo)) {
             $scope.gridOptions.sortInfo = angular.copy(sort);
 
             //Order do spring-data
@@ -81,7 +81,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
 
             //FILTERS
-            $scope.currentPage.pageable.sort.orders = [ order ];
+            $scope.currentPage.pageable.sort.orders = [order];
             if ($scope.filter.status == "")
                 $scope.filter.status = null;
             if ($scope.filter.dateStart == "")
@@ -173,8 +173,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     };
 
 
-
-
     /**
      * select Marker tool
      * */
@@ -205,13 +203,13 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     $scope.selectLayerGroup = [];
 
     accountService.getUserAuthenticated({
-        callback : function(result) {
+        callback: function (result) {
             $scope.userMe = result;
             //$scope.setBackgroundMap(result.backgroundMap);
             $scope.$apply();
         },
-        errorHandler : function(message, exception) {
-            $scope.message = {type:"error", text: message};
+        errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
             $scope.$apply();
         }
     });
@@ -239,14 +237,12 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     //    '</div>';
 
     var IMAGE_MODERATION = '<div  class="cell-centered">' +
-        '<i ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></i>' +
-        '<i ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></i>' +
-        '<i ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></i>' +
-        '<i ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></i>' +
-        '<i ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></i>' +
+        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></i>' +
         '</div>';
-
-
 
 
     $scope.gridOptions = {
@@ -255,7 +251,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         showSelectionCheckbox: true,
         useExternalSorting: true,
         headerRowHeight: 45,
-        keepLastSelected: true,
+        keepLastSelected: false,
         rowHeight: 45,
         selectedItems: [],
 
@@ -267,10 +263,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
                 $scope.changeToDetail(row.entity);
 
-            }
-
-            if (row.length > 0) {
-
+            } else if (row.length > 0) {
                 var i;
                 for (var rowItemIndex = 0; rowItemIndex < row.length; rowItemIndex++) {
                     if (row[rowItemIndex].selected) {
@@ -288,7 +281,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
                 var i;
                 if (row.selected) {
                     i = $scope.findByIdInArray($scope.itensMarcados, row.entity);
-                    if (i == -1){
+                    if (i == -1) {
                         $scope.itensMarcados.push(row.entity);
                     }
                 } else {
@@ -300,7 +293,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             $scope.disableButtonPost = true;
 
             for (var i = 0; i < $scope.itensMarcados.length; i++) {
-                if(!( $scope.itensMarcados[i].status == $scope.REFUSED || $scope.itensMarcados[i].status == $scope.SAVED )){
+                if (!( $scope.itensMarcados[i].status == $scope.REFUSED || $scope.itensMarcados[i].status == $scope.SAVED )) {
                     $scope.disableButtonPost = false;
                 }
             }
@@ -344,12 +337,22 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         },
         enableRowSelection: true,
         columnDefs: [
-            {displayName: $translate('admin.marker-moderation.Layer'), field: 'layer.title'},
+            {
+                displayName: $translate('admin.marker-moderation.Layer'),
+                field: 'layer.title',
+                cellTemplate:
+                    '<span title="{{row.entity.layer.title}}" ' +
+                    'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
+                         '{{row.entity.layer.title }}' +
+                    '</span>'
+            },
             {
                 displayName: $translate('admin.marker-moderation.Date-posting'),
                 width: '150px',
                 field: 'created',
-                cellTemplate: '<span class="ngCellText">{{row.entity.created | date:"dd/MM/yyyy"}}</span>'
+                cellTemplate: '<span ' +
+                'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
+                '{{row.entity.created | date:"dd/MM/yyyy"}}</span>'
             },
             {
                 displayName: $translate('admin.marker-moderation.Situation'),
@@ -424,6 +427,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     $scope.changeToList = function (markers) {
         $log.info("changeToList");
 
+        $scope.imgResult = null;
+
         $scope.currentState = $scope.LIST_STATE;
 
         $scope.listAllInternalLayerGroups();
@@ -431,12 +436,12 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         var pageRequest = new PageRequest();
         pageRequest.size = 10;
         pageRequest.sort = new Sort();
-        pageRequest.sort.orders = [{direction:'DESC',property : 'created'}];
+        pageRequest.sort.orders = [{direction: 'DESC', property: 'created'}];
         $scope.pageRequest = pageRequest;
 
         if (typeof markers == 'undefined') {
-            $scope.listMarkerByFilters(null, null, null, null,pageRequest);
-            $scope.listMarkerByFiltersMap(null, null, null,null);
+            $scope.listMarkerByFilters(null, null, null, null, pageRequest);
+            $scope.listMarkerByFiltersMap(null, null, null, null);
         } else if (typeof markers.content != 'undefined') {
 
             var markersId = [];
@@ -547,6 +552,9 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * @see data.filter
      */
     $scope.changeToPage = function (filter, pageNumber) {
+
+        $scope.itensMarcados = [];
+
         $scope.currentPage.pageable.page = pageNumber - 1;
 
         if ($scope.dragMarkers != null) {
@@ -586,7 +594,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
          */
         var formatCoordinate = function (coord) {
 
-            if($scope.userMe && $scope.userMe.coordinates == 'DEGREES_DECIMAL') {
+            if ($scope.userMe && $scope.userMe.coordinates == 'DEGREES_DECIMAL') {
                 return coord;
             } else {
                 return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
@@ -788,7 +796,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         }
 
     }
-
 
 
     /**
@@ -1156,7 +1163,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             markersId[i] = $scope.itensMarcados[i].id;
         }
 
-        myMarkersService.postMarkers( markersId, {
+        myMarkersService.postMarkers(markersId, {
             callback: function (result) {
 
                 $scope.changeToList();
@@ -1197,7 +1204,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             markersId[i] = $scope.itensMarcados[i].id;
         }
 
-        myMarkersService.removeMarkers( markersId, {
+        myMarkersService.removeMarkers(markersId, {
             callback: function (result) {
 
                 $scope.changeToList();
@@ -1346,7 +1353,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.saveMarkerModal = function () {
 
-        if (! ($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED)) {
+        if (!($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED)) {
 
             var dialog = $modal.open({
                 templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
@@ -1439,14 +1446,14 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             controller: ImgPopUpController,
             windowClass: 'gallery-modal-window',
             resolve: {
-                attributesByMarker: function(){
+                attributesByMarker: function () {
                     return attributesByMarker;
                 }
             }
         });
     };
 
-    $scope.getPhotoByMarkerId = function(id){
+    $scope.getPhotoByMarkerId = function (id) {
 
         markerService.lastPhotoByMarkerId(id, {
             callback: function (result) {
@@ -1529,10 +1536,10 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         if (status == $scope.SAVED) {
             return $translate('admin.marker-moderation.SAVED');
         }
-        if ( status == $scope.PENDING) {
+        if (status == $scope.PENDING) {
             return $translate('admin.marker-moderation.PENDING');
         }
-        if ( status == $scope.REFUSED) {
+        if (status == $scope.REFUSED) {
             return $translate('admin.marker-moderation.REFUSED');
         }
         if (status == $scope.ACCEPTED) {
@@ -1561,13 +1568,13 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         } else if (status == $scope.ACCEPTED) {
             // GREEN
             statusColor = "#09ba00";
-        } else if(status == $scope.PENDING){
+        } else if (status == $scope.PENDING) {
             // YELLOW
             statusColor = "#eee400";
-        }else if(status == $scope.SAVED){
+        } else if (status == $scope.SAVED) {
             // GRAY
             statusColor = "#A3A3A3";
-        }else if(status == $scope.CANCELED){
+        } else if (status == $scope.CANCELED) {
             // RED
             statusColor = "#ba0000";
         }
