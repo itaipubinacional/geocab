@@ -38,7 +38,7 @@
     </div>
     <div>
       <div class="files" ng-repeat="file in files" class="dropbox" title="{{ file.description ? file.description : file.name }}">
-        <div ng-click="setFile(file)" class="thumbnail" ng-class="{'active': file.name == fileSelected.name}">
+        <div ng-click="setFile(file)" class="thumbnail" ng-class="{'active': file.$$hashKey == fileSelected.$$hashKey}">
           <img ng-src="{{ file.src }}" alt="{{ file.name }}">
           <div class="caption">
             <label ng-click="toggleCheckbox(file);$event.stopPropagation();">
