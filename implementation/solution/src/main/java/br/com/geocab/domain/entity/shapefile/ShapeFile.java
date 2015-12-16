@@ -31,11 +31,6 @@ public class ShapeFile
 	/**
 	 * 
 	 */
-	private String mimeType;
-
-	/**
-	 * 
-	 */
 	private Integer contentLength;
 
 	/**
@@ -62,12 +57,11 @@ public class ShapeFile
 	 * @param contentLength
 	 * @param name
 	 */
-	public ShapeFile(ShpFileType type, String source, String mimeType, Integer contentLength, String name)
+	public ShapeFile(ShpFileType type, String source, Integer contentLength, String name)
 	{
 		super();
 		this.type = type;
 		this.source = source;
-		this.mimeType = mimeType;
 		this.contentLength = contentLength;
 		this.name = name;
 	}
@@ -90,23 +84,6 @@ public class ShapeFile
 	public void setSource(String source)
 	{
 		this.source = source;
-	}
-
-	/**
-	 * @return the mimeType
-	 */
-	public String getMimeType()
-	{
-		return mimeType;
-	}
-
-	/**
-	 * @param mimeType
-	 *            the mimeType to set
-	 */
-	public void setMimeType(String mimeType)
-	{
-		this.mimeType = mimeType;
 	}
 
 	/**
