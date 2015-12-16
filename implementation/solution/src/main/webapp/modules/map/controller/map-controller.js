@@ -4421,9 +4421,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
             var base64 = e.target.result.split('base64,');
 
-            readFile.src = base64[1];
+            var fileToObj = angular.copy(readFile);
 
-            data.push(readFile);
+            fileToObj.source = base64[1];
+            fileToObj.type = readFile.name.substr(readFile.name.length - 3);
+            fileToObj.contentLength = readFile.size;
+
+            data.push(fileToObj);
 
             if(readFile.name == $scope.lastFile.name) {
               console.log(data);
