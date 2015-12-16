@@ -76,13 +76,21 @@ function ContactController($scope, $injector, $log, $state, $timeout, $modal,
 
 			contactService.contactUs($scope.contactForm, {
 				callback : function(result) {
+					$scope.msg = {
+						type : "success",
+						text : 'Sua mensagem foi enviada com sucesso!',
+						dismiss : true
+					};
+					$scope.fadeMsg();
 					$scope.$apply();
 				},
 				errorHandler : function(message, exception) {
-					$scope.message = {
+					$scope.msg = {
 						type : "error",
-						text : message
+						text : 'Erro ao enviar a mensagem!',
+						dismiss : true
 					};
+					$scope.fadeMsg();
 					$scope.$apply();
 				}
 			});
@@ -91,12 +99,9 @@ function ContactController($scope, $injector, $log, $state, $timeout, $modal,
 
 	};
 
-	$scope.fadeMsg = function() {
+	$scope.fadeMsg = function(){
 		$("div.msg").show();
-
-		setTimeout(function() {
-			$("div.msg").fadeOut();
-		}, 3000);
 	}
+
 
 };
