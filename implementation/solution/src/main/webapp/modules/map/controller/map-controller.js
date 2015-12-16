@@ -713,6 +713,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $scope.$apply();
           }
         });
+
         return false;
       }
 
@@ -4479,10 +4480,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     dialog.result.then(function (result) {
 
-      angular.forEach(result, function(attribute){
-        if(attribute.attribute.type == 'PHOTO_ALBUM')
-          attribute.photoAlbum.photos = attribute.attribute.files;
-      });
+      if(attribute.attribute) {
+        angular.forEach(result, function (attribute) {
+          if (attribute.attribute.type == 'PHOTO_ALBUM')
+            attribute.photoAlbum.photos = attribute.attribute.files;
+        });
+      }
 
       $scope.attributesByMarker = result;
       console.log(result);
