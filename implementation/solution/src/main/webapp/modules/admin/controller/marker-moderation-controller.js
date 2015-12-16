@@ -211,6 +211,28 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         }
     });
 
+    layerGroupService.listAllInternalLayerGroups({
+        callback: function (result) {
+            $scope.selectLayerGroup = [];
+
+            angular.forEach(result, function (layer, index) {
+
+                $scope.selectLayerGroup.push({
+                    "layerTitle": layer.title,
+                    "layerId": layer.id,
+                    "layerIcon": layer.icon,
+                    "group": layer.layerGroup.name
+                });
+
+            });
+            $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+        }
+    });
+
     /**
      * Markers Moderation
      */
@@ -255,7 +277,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         useExternalSorting: true,
         headerRowHeight: 45,
         rowHeight: 45,
-        beforeSelectionChange: function (row, event) {
+        beforeSelectionChange: function (row) {
 
             //avoids call a selection , when clicked in a action button.
             //if ($(event.target).is("a") || $(event.target).is("i")) return false;
@@ -1652,9 +1674,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $scope.filter.dateStart = null;
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
+        if ($scope.filter.layer.title.layerTitle != null)
+            var layer = $scope.filter.layer.title.layerTitle;
 
-        $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest);
-        $scope.listMarkerByFiltersMap($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);
+        $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest);
+        $scope.listMarkerByFiltersMap( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);
         $scope.dragMarkers = null;
         $scope.hasSearch = true;
     };

@@ -18,11 +18,19 @@
                 <div class="form-inline row">
                     <div class="form-group col-md-12">
                         <div class="col-md-5 row">
-                            <input auto-complete autocomplete="off" type="text" class="form-control"
-                                   typeahead-wait-ms="500" ng-model="filter.layer"
-                                   placeholder="<spring:message code='admin.marker-moderation.Layer' />"
-                                   typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2"/>
+                            <!--<input auto-complete autocomplete="off" type="text" class="form-control"-->
+                                   <!--typeahead-wait-ms="500" ng-model="filter.layer"-->
+                                   <!--placeholder="<spring:message code='admin.marker-moderation.Layer' />"-->
+                                   <!--typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2"/>-->
+
+                            <select data-placeholder="<spring:message code='admin.marker-moderation.Layer'/>" name="camada"
+                                    ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
+                                    ng-model="filter.layer.title" chosen class="form-control">
+                                <option value=""></option>
+                            </select>
                         </div>
+
+
 
                         <div class="col-md-2">
                             <input type="button" style="margin-right:5px" ng-click="bindFilter()"

@@ -214,6 +214,27 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         }
     });
 
+    layerGroupService.listAllInternalLayerGroups({
+        callback: function (result) {
+            $scope.selectLayerGroup = [];
+
+            angular.forEach(result, function (layer, index) {
+
+                $scope.selectLayerGroup.push({
+                    "layerTitle": layer.title,
+                    "layerId": layer.id,
+                    "layerIcon": layer.icon,
+                    "group": layer.layerGroup.name
+                });
+            });
+            $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+        }
+    });
+
     /**
      * checks whether any research has been done
      */
@@ -1641,9 +1662,11 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             $scope.filter.dateStart = null;
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
+        if ($scope.filter.layer.title.layerTitle != null)
+            var layer = $scope.filter.layer.title.layerTitle;
 
-        $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, pageRequest);
-        $scope.listMarkerByFiltersMap($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd);
+        $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, pageRequest);
+        $scope.listMarkerByFiltersMap( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd);
         $scope.dragMarkers = null;
         $scope.hasSearch = true;
     };
