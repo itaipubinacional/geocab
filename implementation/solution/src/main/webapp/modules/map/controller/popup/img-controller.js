@@ -166,37 +166,38 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
   $scope.initialize = function () {
 
     markerService.findMarkerById(attributesByMarker[0].marker.id, {
-      callback: function (result) {
-    	attributesByMarker[0].marker = result;
-		  $scope.attributesByMarker = attributesByMarker;
-   
-	    angular.forEach(attributesByMarker[0].marker.markerAttribute, function (markerAttribute, index) {
-	      if (markerAttribute.attribute.type == 'PHOTO_ALBUM') {
-	
-	        if (markerAttribute.photoAlbum != null) {
-	
-	          markerService.listPhotosByPhotoAlbumId(markerAttribute.photoAlbum.id, $scope.pageable, {
-	
-	            callback: function (result) {
-	
-	              $scope.attributes.push(result);
-	
-	              if(!$scope.currentAttribute.content) {
-	                $scope.setAttribute(result, false);
-	                $scope.$apply();
-	              }
-	            },
-	            errorHandler: function (message, exception) {
-	              $scope.message = {type: "error", text: message};
-	              $scope.$apply();
-	            }
-	
-	          });
 
-	        }
-	      }
-	    });
-	  }
+      callback: function (result) {
+        attributesByMarker[0].marker = result;
+        $scope.attributesByMarker = attributesByMarker;
+
+        angular.forEach(attributesByMarker[0].marker.markerAttribute, function (markerAttribute, index) {
+          if (markerAttribute.attribute.type == 'PHOTO_ALBUM') {
+
+            if (markerAttribute.photoAlbum != null) {
+
+              markerService.listPhotosByPhotoAlbumId(markerAttribute.photoAlbum.id, $scope.pageable, {
+
+                callback: function (result) {
+
+                  $scope.attributes.push(result);
+
+                  if(!$scope.currentAttribute.content) {
+                    $scope.setAttribute(result, false);
+                    $scope.$apply();
+                  }
+                },
+                errorHandler: function (message, exception) {
+                  $scope.message = {type: "error", text: message};
+                  $scope.$apply();
+                }
+
+              });
+
+            }
+          }
+	      });
+	    }
     });
 
   };

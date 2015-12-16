@@ -45,17 +45,62 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
    * If the State is not found, he directs to the listing,
    * Although the front controller of Angular won't let enter an invalid URL.
    */
+
   $scope.initialize = function () {
     console.log('initialize');
 
-    angular.forEach($scope.attributes, function(attr){
-      if(attr.type == 'PHOTO_ALBUM')
+    angular.forEach($scope.attributes, function(attr, index){
+
+      var photoAlbumId = false;
+      var attributesByLayer = {};
+
+      if(attr.type == 'PHOTO_ALBUM') {
+
+        attributesByLayer = attr;
+
         $scope.attributesByLayer.push(attr);
+      }
 
       if(attr.attribute && attr.attribute.type == 'PHOTO_ALBUM') {
         attr.attribute.markerAttribute = {id: attr.id};
-        $scope.attributesByLayer.push(attr.attribute);
+
+        attributesByLayer = attr.attribute;
+        photoAlbumId = attr.photoAlbum.id;
+
+        if(photoAlbumId){
+
+          markerService.listPhotosByPhotoAlbumId(photoAlbumId, {
+            callback: function (result) {
+
+              if(result.content.length) {
+
+                attributesByLayer.files = [];
+
+                angular.forEach(result.content, function (photo) {
+
+                  photo.src = photo.image;
+                  photo.name = photo.description;
+                  attributesByLayer.files.push(photo);
+
+                });
+
+                $scope.attributesByLayer.push(attributesByLayer);
+
+              }
+
+              $scope.$apply();
+
+            },
+            errorHandler: function (message, exception) {
+              $scope.message = {type: "error", text: message};
+              $scope.$apply();
+            }
+          });
+
+        }
+
       }
+
     });
 
     if($scope.attribute.markerAttribute && $scope.attribute.markerAttribute.id) {
