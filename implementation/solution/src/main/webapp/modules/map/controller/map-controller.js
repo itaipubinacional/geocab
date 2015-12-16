@@ -4398,44 +4398,56 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.setAction('import');
 
-    if (!(/\.(shp)$/i).test(input.value)){
+    if (!(/\.(shp|dbf|shx)$/i).test(input.value)){
 
       console.log('File type error');
       return false;
     }
 
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function (e) {
+    if (input.files) {
 
-        var base64 = e.target.result.split('base64,');
-        var data = { name: input.files[0].name, size: input.files[0].size, shpFileType: input.files[0].type, shp: base64[1]};
+      var files = input.files;
 
-        if(input.files[0].size < 1073741824){
-          var bytes = (input.files[0].size / 1048576).toFixed(3);
-          if(bytes > 10){
+      var data = [];
 
-            console.log('Size error');
-            return false;
+      $scope.lastFile = files[files.length - 1];
+
+      for (var i = 0, file; file = files[i]; i++) {
+
+        var reader = new FileReader();
+
+        reader.onloadend = (function (readFile) {
+          return function (e) {
+
+            var base64 = e.target.result.split('base64,');
+
+            readFile.src = base64[1];
+
+            data.push(readFile);
+
+            if(readFile.name == $scope.lastFile.name) {
+              console.log(data);
+
+              shapeFileService.importShapeFile(data, {
+                callback: function (result) {
+                  console.log(result);
+                  $scope.$apply();
+                },
+                errorHandler: function (message, exception) {
+                  alert(message);
+                  $scope.$apply();
+                }
+              });
+            }
+
+            /*$scope.shapeFile.files.push(readFile);
+            $scope.$apply();*/
+
           }
-        }
+        })(file);
 
-        shapeFileService.importShapeFile( data, {
-          callback: function (result) {
-            console.log(result);
-            $scope.$apply();
-          },
-          errorHandler: function (message, exception) {
-            alert(message);
-            $scope.$apply();
-          }
-        });
-
-        uploadButton.val('');
-      };
-
-      reader.readAsDataURL(input.files[0]);
-
+        reader.readAsDataURL(file);
+      }
     }
   };
 

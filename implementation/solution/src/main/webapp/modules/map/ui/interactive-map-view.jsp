@@ -920,9 +920,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <i class="icon-download icon-large"></i>
                   <spring:message code="admin.shape-file.Import" /></button>
 
-                <input style="display:none" id="upload" multiple="true" type="file" name="upload[]" onchange="angular.element(this).scope().onFileChange(this)">
-                <input style="display:none" id="upload1" multiple="true" type="file" name="upload[]">
-                <input style="display:none" id="upload2" multiple="true" type="file" name="upload[]">
+                <input style="display:none" id="upload" multiple="true" type="file" accept=".shp, .shx, .dbf" name="upload" onchange="angular.element(this).scope().onFileChange(this)">
 
                 <hr style="border-color: #d9d9d9;"/>
 
