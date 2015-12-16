@@ -78,47 +78,47 @@ public class ServiceTest
 	{
 		super();
 		
-		this.metaFileRepository = metaFileRepository;
-		
-		for (Marker marker : markerRepository.listAll())
-		{
-			
-			try
-			{
-				
-				this.verifyMarker(marker);
-											
-				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
-				
-				MarkerAttribute markerAttribute = new MarkerAttribute();
-				markerAttribute.setMarker(marker);
-				markerAttribute.setValue("Default photo album");
-				
-				markerAttribute = markerAttributeRepository.save(markerAttribute);
-				
-				
-				PhotoAlbum photoAlbum = new PhotoAlbum();
-				photoAlbum.setMarkerAttribute(markerAttribute);
-				photoAlbum.getIdentifier();
-				
-				photoAlbum = photoAlbumRepository.save(photoAlbum);
-				
-				Photo photo = new Photo();
-				photo.setDescription("Default description");
-				photo.setPhotoAlbum(photoAlbum);
-				photo.getIdentifier();
-				
-				photo = photoRepository.save(photo);
-				
-				photo = this.uploadImg(photo);
-				
-			}
-			catch (RepositoryException | RuntimeException e)
-			{
-				e.printStackTrace();
-			}
-			
-		}		
+//		this.metaFileRepository = metaFileRepository;
+//		
+//		for (Marker marker : markerRepository.listAll())
+//		{
+//			
+//			try
+//			{
+//				
+//				this.verifyMarker(marker);
+//											
+//				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
+//				
+//				MarkerAttribute markerAttribute = new MarkerAttribute();
+//				markerAttribute.setMarker(marker);
+//				markerAttribute.setValue("Default photo album");
+//				
+//				markerAttribute = markerAttributeRepository.save(markerAttribute);
+//				
+//				
+//				PhotoAlbum photoAlbum = new PhotoAlbum();
+//				photoAlbum.setMarkerAttribute(markerAttribute);
+//				photoAlbum.getIdentifier();
+//				
+//				photoAlbum = photoAlbumRepository.save(photoAlbum);
+//				
+//				Photo photo = new Photo();
+//				photo.setDescription("Default description");
+//				photo.setPhotoAlbum(photoAlbum);
+//				photo.getIdentifier();
+//				
+//				photo = photoRepository.save(photo);
+//				
+//				photo = this.uploadImg(photo);
+//				
+//			}
+//			catch (RepositoryException | RuntimeException e)
+//			{
+//				e.printStackTrace();
+//			}
+//			
+//		}		
 		
 	}
 	
@@ -185,9 +185,8 @@ public class ServiceTest
 		
 		
 		// Verifica se o marker tem foto, se não tiver estoura exceção
-		this.metaFileRepository.findById(String.valueOf(marker.getId()), true);
-		
-		
+		this.metaFileRepository.findByPath("/marker/" + marker.getId() + "/" + marker.getId(), true);
+
 		
 	}
 
