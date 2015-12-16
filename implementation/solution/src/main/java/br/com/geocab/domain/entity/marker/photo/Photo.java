@@ -159,6 +159,44 @@ public class Photo extends AbstractEntity implements Serializable
 			this.identifier = this.getPhotoAlbum().getIdentifier() + String.format(PHOTO_PATH , this.getId());
 		}
 	}
+	
+	
+	/**
+	 * @return the description
+	 */
+	public String getDescription()
+	{
+		if (this.description == null)
+		{
+			this.description = this.getName();
+		}
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description)
+	{
+		this.description = description;
+		if (this.description == null)
+		{
+			this.description = this.getName();
+		}
+	}
+	
+	/**
+	 * @param identifier
+	 *            the identifier to set
+	 */
+	public void setIdentifier(String identifier)
+	{
+		if (identifier != null)
+		{
+			this.identifier = identifier;
+		}
+		this.getIdentifier();
+	}
 
 	/*-------------------------------------------------------------------
 	 *								SETTERS/GETTERS
@@ -180,18 +218,7 @@ public class Photo extends AbstractEntity implements Serializable
 		this.photoAlbum = photoAlbum;
 	}
 
-	/**
-	 * @param identifier
-	 *            the identifier to set
-	 */
-	public void setIdentifier(String identifier)
-	{
-		if (identifier != null)
-		{
-			this.identifier = identifier;
-		}
-		this.getIdentifier();
-	}
+	
 
 	/**
 	 * @return the source
@@ -274,28 +301,6 @@ public class Photo extends AbstractEntity implements Serializable
 		this.image = image;
 	}
 
-	/**
-	 * @return the description
-	 */
-	public String getDescription()
-	{
-		if (this.description == null)
-		{
-			this.description = this.getName();
-		}
-		return description;
-	}
-
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description)
-	{
-		this.description = description;
-		if (this.description == null)
-		{
-			this.description = this.getName();
-		}
-	}
+	
 
 }
