@@ -4422,7 +4422,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             var base64 = e.target.result.split('base64,');
             var type = readFile.name.substr(readFile.name.length - 3);
 
-            data.push({type: type, source: base64[1], contentLength: readFile.size, name: readFile.name});
+            data.push({type: type.toUpperCase(), source: base64[1], contentLength: readFile.size, name: readFile.name});
 
             if(readFile.name == $scope.lastFile.name) {
               console.log(data);
