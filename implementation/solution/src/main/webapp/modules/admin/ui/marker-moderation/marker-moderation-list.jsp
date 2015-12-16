@@ -10,7 +10,8 @@
 <div>
 
 	<!-- Posting evaluation - List -->
-	<div style="width:35%; height: 100%; float:left; margin: 20px;">
+    <div style="width:38%; height: 100%; float:left; padding: 20px;z-index: 1; position: relative;
+            box-shadow: 8px -6px 5px -5px #999, -6px 0 5px -5px #999;">
 
 		<!-- Filter Bar -->
         <div class="search-div" style="margin-bottom:10px">
@@ -18,11 +19,19 @@
                 <div class="form-inline row">
                     <div class="form-group col-md-12">
                         <div class="col-md-5 row">
-                            <input auto-complete autocomplete="off" type="text" class="form-control"
-                                   typeahead-wait-ms="500" ng-model="filter.layer"
-                                   placeholder="<spring:message code='admin.marker-moderation.Layer' />"
-                                   typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2"/>
+                            <!--<input auto-complete autocomplete="off" type="text" class="form-control"-->
+                                   <!--typeahead-wait-ms="500" ng-model="filter.layer"-->
+                                   <!--placeholder="<spring:message code='admin.marker-moderation.Layer' />"-->
+                                   <!--typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2"/>-->
+
+                            <select data-placeholder="<spring:message code='admin.marker-moderation.Layer'/>" name="camada"
+                                    ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
+                                    ng-model="filter.layer.title" chosen class="form-control">
+                                <option value=""></option>
+                            </select>
                         </div>
+
+
 
                         <div class="col-md-2">
                             <input type="button" style="margin-right:5px" ng-click="bindFilter()"

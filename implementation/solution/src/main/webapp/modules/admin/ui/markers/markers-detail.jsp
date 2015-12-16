@@ -31,80 +31,83 @@
             <form role="form">
 
                 <fieldset
-                        ng-disabled="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED' )">
+                        ng-disabled="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
 
-                    <div id="left-content" style="float:left;">
 
-                        <span style="font-weight: bold; font-size: 18px; margin: 20px 0 20px 0; float: left;">Informações</span>
+                    <span style="font-weight: bold; font-size: 18px;padding-left: 15px; margin: 20px 0 20px 0; float: left;">
+                        Informações
+                    </span>
 
+                    <span style="cursor: pointer; text-decoration: underline; float: right; margin-top: 25px; color: #cacaca"
+                          ng-click="changeToHistory(row.entity.marker)">
+                        <spring:message code="admin.marker-moderation.History"/>
+                    </span>
+                    </br>
+
+                    <div class="col-md-12" style="float:left">
+                        <div>
+                            <span><b>Status</b></span>
+                            </br>
+                            <span><b>{{translateByStatus(currentEntity.status)}}</b></span>
+                        </div>
                         </br>
 
+                        <div ng-repeat="markerAttribute in attributesByMarker track by $index"
+                             style="position: relative;">
+                            <label ng-style="$index > 0 ? {'margin-top':'15px'} : ''"
+                                   ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'">
+                                {{markerAttribute.attribute.name }}
+                            </label>
 
-                        <div class="col-md-12" style="float:left">
-                            <div>
-                                <span><b>Status</b></span>
-                                </br>
-                                <span><b>{{translateByStatus(currentEntity.status)}}</b></span>
-                            </div>
-                            </br>
 
-                            <div ng-repeat="markerAttribute in attributesByMarker track by $index"
-                                 style="position: relative;">
-                                <label ng-style="$index > 0 ? {'margin-top':'15px'} : ''"
-                                       ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'">
-                                    {{markerAttribute.attribute.name }}
-                                </label>
+                            <input
+                                    type="number" name="number1"
+                                    ng-if="markerAttribute.attribute.type == 'NUMBER'"
+                                    class="form-control"
+                                    ng-model="markerAttribute.value"
+                                    required="{{markerAttribute.attribute.required}}">
 
+                            <input name="date1" type="date"
+                                   ng-if="markerAttribute.attribute.type == 'DATE'"
+                                   class="form-control"
+                                   ng-model="markerAttribute.value"
+                                   required="{{markerAttribute.attribute.required}}">
+
+
+                            <input name="texto"
+                                   ng-if="markerAttribute.attribute.type == 'TEXT'"
+                                   ng-model="markerAttribute.value"
+                                   required="{{markerAttribute.attribute.required}}"
+                                   class="form-control">
+
+                            <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
+                                <input
+                                        type="radio"
+                                        ng-checked="markerAttribute.value == 'Yes'"
+                                        ng-model="markerAttribute.value"
+                                        value="Yes">
+                                <spring:message code="map.Yes"/>
 
                                 <input
-                                        type="number" name="number1"
-                                        ng-if="markerAttribute.attribute.type == 'NUMBER'"
-                                        class="form-control"
+                                        type="radio"
+                                        ng-checked="markerAttribute.value == 'No'"
                                         ng-model="markerAttribute.value"
-                                        required="{{markerAttribute.attribute.required}}">
-
-                                <input name="date1" type="date"
-                                       ng-if="markerAttribute.attribute.type == 'DATE'"
-                                       class="form-control"
-                                       ng-model="markerAttribute.value"
-                                       required="{{markerAttribute.attribute.required}}">
-
-
-                                <input name="texto"
-                                       ng-if="markerAttribute.attribute.type == 'TEXT'"
-                                       ng-model="markerAttribute.value"
-                                       required="{{markerAttribute.attribute.required}}"
-                                       class="form-control">
-
-                                <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
-                                    <input
-                                            type="radio"
-                                            ng-checked="markerAttribute.value == 'Yes'"
-                                            ng-model="markerAttribute.value"
-                                            value="Yes">
-                                    <spring:message code="map.Yes"/>
-
-                                    <input
-                                            type="radio"
-                                            ng-checked="markerAttribute.value == 'No'"
-                                            ng-model="markerAttribute.value"
-                                            value="No">
-                                    <spring:message code="map.No"/>
-                                </div>
+                                        value="No">
+                                <spring:message code="map.No"/>
                             </div>
-
-                            <!-- PHOTO ALBUM-->
-
-                            <div class="col-md-12" style="text-align:center;">
-                                <img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult"
-                                     class="marker-image"
-                                     ng-src="{{ imgResult }}"
-                                     style="width: 100%;margin-top: 12px;cursor: pointer;max-width:360px"> <br>
-                            </div>
-
-                            <div class="col-md-12" style="margin-bottom: 120px"></div>
-
                         </div>
+
+                        <!-- PHOTO ALBUM-->
+
+                        <div class="col-md-12" style="text-align:center;">
+                            <img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult"
+                                 class="marker-image"
+                                 ng-src="{{ imgResult }}"
+                                 style="width: 100%;margin-top: 12px;cursor: pointer;max-width:360px"> <br>
+                        </div>
+
+                        <div class="col-md-12" style="margin-bottom: 120px"></div>
+
                     </div>
 
                 </fieldset>
@@ -112,16 +115,16 @@
         </div>
 
 
-
         <!--BUTTONS-->
         <div class="col-md-12" style="position: fixed ;bottom: 0;width: 36%;
             padding-top: 10px; background-color: white; border-top: 1px solid #c5c5c5;
             height: 100px; ">
 
-            <div class="btn-group col-md-12" role="group" aria-label="group buttons" >
+            <div class="btn-group col-md-12" role="group" aria-label="group buttons">
 
 
-                <button ng-disabled="currentEntity.status == PENDING ||currentEntity.status == ACCEPTED" ng-click="saveMarkerModal()" type="button"
+                <button ng-disabled="currentEntity.status == PENDING ||currentEntity.status == ACCEPTED"
+                        ng-click="saveMarkerModal()" type="button"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Save'/>"
                         class="btn btn-secondary col-md-4 btn-icon">
                     <i style="font-size: 40px" class="icon itaipu-icon-save"></i>

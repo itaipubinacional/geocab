@@ -9,7 +9,8 @@
 <!-- Users - List -->
 <div>
 	<!-- Posting evaluation - List -->
-	<div style="width:35%; height: 100%; float:left; margin: 20px;">
+	<div style="width:38%; height: 100%; float:left; padding: 20px;z-index: 1; position: relative;
+            box-shadow: 8px -6px 5px -5px #999, -6px 0 5px -5px #999;">
 
 		<!-- Filter Bar -->
 		<div class="search-div" style="margin-bottom:10px">
@@ -17,12 +18,16 @@
 
 				<div style="width:45%;display:inline-block">
 
-					<input auto-complete autocomplete="off" type="text" class="form-control"
-                	   typeahead-wait-ms="500" ng-model="filter.layer" placeholder="<spring:message code="admin.marker-moderation.Layer" />"
-                	   typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2">
+					<!--<input auto-complete autocomplete="off" type="text" class="form-control"-->
+                	   <!--typeahead-wait-ms="500" ng-model="filter.layer" placeholder="<spring:message code="admin.marker-moderation.Layer" />"-->
+                	   <!--typeahead="layer.title for layer in listAllInternalLayerGroups($viewValue) | limitTo:2">-->
 
+					<select data-placeholder="<spring:message code='admin.marker-moderation.Layer'/>" name="camada"
+							ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
+							ng-model="filter.layer.title" chosen class="form-control">
+						<option value=""></option>
+					</select>
 				</div>
-
 
 
 		    	<input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
@@ -68,17 +73,16 @@
                 <h3 style="margin: 0"><spring:message code="admin.access-group.my-markers"/></h3>
             </div>
             <div class="row" style="height: 60px" ng-if="itensMarcados.length">
+				<div class="col-md-6">
+					<h3 ng-if="itensMarcados.length > 1" style="margin: 0" >{{itensMarcados.length}}
+						<spring:message code="admin.marker-moderation.Selected-items"/>
+					</h3>
+					<h3 ng-if="itensMarcados.length == 1" style="margin: 0" >{{itensMarcados.length}}
+						<spring:message code="admin.marker-moderation.Selected-item"/>
+					</h3>
+				</div>
 
 				<!-- BUTTONS-->
-				<!--<div class="col-md-8">-->
-					<!--<h3 ng-if="itensMarcados.length > 1" style="margin: 0" >{{itensMarcados.length}}-->
-						<!--<spring:message code="admin.marker-moderation.Selected-items"/>-->
-					<!--</h3>-->
-					<!--<h3 ng-if="itensMarcados.length == 1" style="margin: 0" >{{itensMarcados.length}}-->
-						<!--<spring:message code="admin.marker-moderation.Selected-item"/>-->
-					<!--</h3>-->
-				<!--</div>-->
-
 				<!--<div class="btn-group col-md-4" role="group" aria-label="group buttons">-->
 					<!--<button type="button" ng-click="postMarkersModal()" ng-disabled="!disableButtonPost"-->
 							<!--tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Post'/>"-->
