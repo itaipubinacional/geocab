@@ -9,7 +9,8 @@
 <!-- Users - List -->
 <div>
 	<!-- Posting evaluation - List -->
-	<div style="width:35%; height: 100%; float:left; margin: 20px;">
+	<div style="width:38%; height: 100%; float:left; padding: 20px;z-index: 1; position: relative;
+            box-shadow: 8px -6px 5px -5px #999, -6px 0 5px -5px #999;">
 
 		<!-- Filter Bar -->
 		<div class="search-div" style="margin-bottom:10px">

@@ -729,6 +729,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.listMarkerByFilters = function (layer, status, dateStart, dateEnd, pageRequest) {
 
+        $scope.itensMarcados = [];
+
         myMarkersService.listMarkerByFiltersByUser(layer, status, dateStart, dateEnd, pageRequest, {
             callback: function (result) {
 
