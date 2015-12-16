@@ -4469,13 +4469,22 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         attribute: function(){
           return attribute;
         },
-        attributesByLayer: getAttributes
+        attributes: function(){
+          return attributes
+        }
+        //attributesByLayer: getAttributes
       }
     });
 
 
     dialog.result.then(function (result) {
 
+      angular.forEach(result, function(attribute){
+        if(attribute.attribute.type == 'PHOTO_ALBUM')
+          attribute.photoAlbum.photos = attribute.attribute.files;
+      });
+
+      $scope.attributesByMarker = result;
       console.log(result);
 
     });

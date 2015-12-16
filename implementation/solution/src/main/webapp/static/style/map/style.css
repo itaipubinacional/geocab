@@ -428,7 +428,7 @@ div#sidenav ul li{border: 1px solid #ccc; padding: 10px;margin-left: -1px; backg
 div#sidenav ul li:hover{cursor: pointer}
 div#sidenav li.active{border-left: none; background-color: #fff; font-weight: 900}
 
-div.files{float:left;margin:5px; width: 140px; height: 160px}
+div.files{float:left;margin:5px; width: 140px; height: 180px}
 div.files:hover{cursor:pointer}
 div.files > div.thumbnail{width: 100%; height: 100%;position: relative;}
 div.files > div.thumbnail img{max-width: 125px;max-height: 125px;}

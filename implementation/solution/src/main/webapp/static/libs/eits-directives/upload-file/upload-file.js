@@ -187,7 +187,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
 
       if(!scope.fileSelected.name && scope.files.length > 0)
-        scope.setImage(scope.files[0]);
+        scope.setFile(scope.files[0]);
 
       scope.uploadFile = function(){
         setTimeout( function () {
