@@ -62,8 +62,7 @@ public class ShapeFile
 	 * @param contentLength
 	 * @param name
 	 */
-	public ShapeFile(ShpFileType type, String source, String mimeType,
-			Integer contentLength, String name)
+	public ShapeFile(ShpFileType type, String source, String mimeType, Integer contentLength, String name)
 	{
 		super();
 		this.type = type;

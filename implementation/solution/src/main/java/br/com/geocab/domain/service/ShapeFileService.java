@@ -109,12 +109,12 @@ public class ShapeFileService
 	 * @param shapeFile
 	 * @return
 	 */
-	public List<Marker> importShapeFile(ShapeFile shp, ShapeFile dbf, ShapeFile shx)
+	public List<Marker> importShapeFile(List<ShapeFile> shapeFiles)
 	{
 		try
 		{
 			// Lê o arquivo
-			File file = this.readFile(shp);
+			File file = this.readFile(shapeFiles.get(0));
 			// ShpFiles shpFiles = new ShpFiles(file);
 			//
 			// FileDataStore store = FileDataStoreFinder.getDataStore(file);

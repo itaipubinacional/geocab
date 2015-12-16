@@ -66,7 +66,7 @@ public class ContactMailRepository implements IContactMailRepository
 				final MimeMessageHelper message = new MimeMessageHelper(
 						mimeMessage);
 				message.setSubject(email.getSubject());
-				message.setTo(mailSupport);
+				message.setTo("tbecker@itaipu.gov.br");
 				message.setFrom(email.getEmail());
 
 				final Map<String, Object> model = new HashMap<String, Object>();
