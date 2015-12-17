@@ -4438,13 +4438,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         reader.onloadend = (function (readFile) {
           return function (e) {
 
-            //var base64 = e.target.result.split('base64,');
-            var base64 = e.target.result;
+            var base64 = e.target.result.split('base64,');
+//            var base64 = e.target.result;
             var type = readFile.name.substr(readFile.name.length - 3);
 
             $scope.testFiles.push(readFile.name);
 
-            data.push({type: type.toUpperCase(), source: base64, contentLength: readFile.size, name: readFile.name});
+            data.push({type: type.toUpperCase(), source: base64[1], contentLength: readFile.size, name: readFile.name});
 
           }
         })(file);

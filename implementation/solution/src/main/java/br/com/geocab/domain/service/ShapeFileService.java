@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +26,10 @@ import org.directwebremoting.io.FileTransfer;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
+import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
+import org.geotools.data.FeatureStore;
+import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.shapefile.files.ShpFileType;
@@ -36,14 +38,15 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.geometry.jts.WKTReader2;
+import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.Marker;
@@ -182,57 +185,6 @@ public class ShapeFileService
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//        /*
-//         * GeometryFactory will be used to create the geometry attribute of each feature (a Point
-//         * object for the location)
-//         */
-//        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
-//        
-//        BufferedReader reader = null;
-//        
-//        try {
-//        	reader = new BufferedReader(new FileReader(file));
-//        	
-//        	
-//        	
-//        	
-//            /* First line of the data file is the header */
-//            String line = reader.readLine();
-//            System.out.println("Header: " + line);
-//
-//            for (line = reader.readLine(); line != null; line = reader.readLine()) {
-//                if (line.trim().length() > 0) { // skip blank lines
-//                    String tokens[] = line.split("\\,");
-//
-//                    double latitude = Double.parseDouble(tokens[0]);
-//                    double longitude = Double.parseDouble(tokens[1]);
-//                    String name = tokens[2].trim();
-//                    int number = Integer.parseInt(tokens[3].trim());
-//
-//                    /* Longitude (= x coord) first ! */
-//                    Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
-//
-//                }
-//            }
-//        }
-//		catch (IOException e)
-//		{
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//        } 
-//        finally 
-//		{
-//            try
-//			{
-//				reader.close();
-//			}
-//			catch (IOException e)
-//			{
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//        }
 	}
 	
 	/**
@@ -312,10 +264,10 @@ public class ShapeFileService
 			try
 			{				
 				layer.setName(layer.getName().replaceAll(" ", "_"));
+//				location:Point:srid=4326,
+				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), "location:Point:,"+layer.formattedAttributes());
 				
-				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), "geom:Point,"+layer.formattedAttributes());
-				
-				final WKTReader2 wkt = new WKTReader2();
+//				final WKTReader2 wkt = new WKTReader2();
 				
 				final File newFile = new File(PATH_SHAPE_FILES_EXPORT + layer.getName() + ".shp");
 				
@@ -326,17 +278,36 @@ public class ShapeFileService
 		        params.put("create spatial index", Boolean.TRUE);
 		        
 		        final ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
-				
+		       
+		        GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(null);
 				for (Marker marker : layer.getMarkers())
 				{
-					marker = markerRepository.findOne(marker.getId());												// TODO verificar se essa é a sintaxe correta
-					featureCollection.add( SimpleFeatureBuilder.build( TYPE, new Object[]{ wkt.read("POINT(" + marker.getLocation().getX() + " "+ marker.getLocation().getY() + ")")}, null) );
+					marker = markerRepository.findOne(marker.getId());											
+					
+	                Point point = factory.createPoint(marker.getLocation().getCoordinate()/*new Coordinate(marker.getLocation().getX(), latitude)*/);
+	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
+		                
+					featureCollection.add( feature /*SimpleFeatureBuilder.build( TYPE, new Object[]{ wkt.read("POINT(" + marker.getLocation().getX() + " "+ marker.getLocation().getY() + ")")}, null)*/ );
 				}
 				
 				newDataStore.createSchema(TYPE);
 		        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
+		        
+		        Transaction transaction = new DefaultTransaction("create");
+		        String typeName = newDataStore.getTypeNames()[0];
+		        FeatureStore<SimpleFeatureType, SimpleFeature> featureStore = (FeatureStore<SimpleFeatureType, SimpleFeature>) newDataStore.getFeatureSource(typeName);
+		        featureStore.setTransaction(transaction);
+		        try {
+		            featureStore.addFeatures(featureCollection);
+		            transaction.commit();
+		        } catch (Exception problem) {
+		            problem.printStackTrace();
+		            transaction.rollback();
+		        } finally {
+		            transaction.close();
+		        }
 			}
-			catch (final RuntimeException | SchemaException | ParseException | IOException e)
+			catch (final RuntimeException | SchemaException /*| ParseException*/ | IOException e)
 			{
 				// Quando ocorre um erro os arquivos são removidos
 				delete(new File(PATH_SHAPE_FILES_EXPORT));
