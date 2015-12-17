@@ -3738,6 +3738,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
       });
 
+      $scope.resolveDatePicker();
+
     }
   };
 
@@ -4394,6 +4396,27 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
+  $scope.testFiles = [];
+
+  var data = [];
+
+  $scope.$watch('testFiles', function(newVal, oldVal){
+
+    if(newVal.length == 3) {
+      shapeFileService.importShapeFile(data, {
+        callback: function (result) {
+          console.log(result);
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+          alert(message);
+          $scope.$apply();
+        }
+      });
+    }
+
+  }, true);
+
   $scope.onFileChange = function(input){
 
     $scope.setAction('import');
@@ -4408,10 +4431,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       var files = input.files;
 
-      var data = [];
-
-      $scope.lastFile = files[files.length - 1];
-
       for (var i = 0, file; file = files[i]; i++) {
 
         var reader = new FileReader();
@@ -4419,28 +4438,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         reader.onloadend = (function (readFile) {
           return function (e) {
 
-            var base64 = e.target.result.split('base64,');
+            //var base64 = e.target.result.split('base64,');
+            var base64 = e.target.result;
             var type = readFile.name.substr(readFile.name.length - 3);
 
-            data.push({type: type.toUpperCase(), source: base64[1], contentLength: readFile.size, name: readFile.name});
+            $scope.testFiles.push(readFile.name);
 
-            if(readFile.name == $scope.lastFile.name) {
-              console.log(data);
-
-              shapeFileService.importShapeFile(data, {
-                callback: function (result) {
-                  console.log(result);
-                  $scope.$apply();
-                },
-                errorHandler: function (message, exception) {
-                  alert(message);
-                  $scope.$apply();
-                }
-              });
-            }
-
-            /*$scope.shapeFile.files.push(readFile);
-            $scope.$apply();*/
+            data.push({type: type.toUpperCase(), source: base64, contentLength: readFile.size, name: readFile.name});
 
           }
         })(file);
@@ -4507,6 +4511,25 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   //$scope.showGallery();
 
+  /**
+   * Resolve date picker
+   */
+  $scope.resolveDatePicker = function () {
+    $timeout(function () {
+      $('.datepicker').datepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+        dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior'
+      });
+
+      $('.datepicker').mask("99/99/9999");
+    }, 300);
+  };
 
 
 };
