@@ -581,7 +581,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
 
-        regEx = /^[1-9]\d{0,1}°\s?[1-9]\d{0,1}[′|']\s?[1-9]\d{0,1}\.[1-9]\d+[″|"]\s?[N|S|W|O]$/;
+        regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.\d+?[″|"]\s?[N|S|W|O]?$/;
 
         if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
           formattedLatitude  = $scope.convertDMSToDD(formattedLatitude);
