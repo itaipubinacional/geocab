@@ -316,7 +316,7 @@ public class ShapeFileService
 			}
 		}
 		
-		//Compcta os arquivos de exportação
+		//Compcta os arquivos de exportação e trás para memória
 		final FileTransfer fileTransfer = new FileTransfer(fileExport + ".zip", "application/zip", this.compactFilesToZip(PATH_SHAPE_FILES_EXPORT, fileExport + ".zip"));
 
 		//Deleta os arquivos de exportação
