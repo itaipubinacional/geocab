@@ -47,7 +47,8 @@
       <div id="sidenav" class="col-md-2" style="padding: 0">
         <ul>
           <li ng-repeat="attr in attributes" ng-click="setAttribute(attr, true)"
-              ng-class="{'active': currentAttribute.content[0].photoAlbum.markerAttribute.attribute.name == attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name}"> {{ attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name }} ({{ currentAttribute.total }})
+              ng-class="{'active': currentAttribute.content[0].photoAlbum.markerAttribute.attribute.name == attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name}">
+            {{ attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name }} ({{ attributes[$index].total }})
           </li>
         </ul>
       </div>

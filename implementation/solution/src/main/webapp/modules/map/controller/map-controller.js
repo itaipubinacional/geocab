@@ -547,7 +547,24 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         dd = dd * -1;
       } // Don't do anything for N or E
       return dd;
-    }
+    };
+
+    $scope.convertDDtoDMS = function(coordinate){
+      var valDeg, valMin, valSec, result;
+
+      coordinate = Math.abs(coordinate);
+
+      valDeg = Math.floor(coordinate);
+      result = valDeg + "° ";
+
+      valMin = Math.floor((coordinate - valDeg) * 60);
+      result += valMin + "′ ";
+
+      valSec = Math.round((coordinate - valDeg - valMin / 60) * 3600 * 1000) / 1000;
+      result += valSec + '″';
+
+      return result;
+    };
 
     $scope.setMarkerCoordinates = function(){
 
@@ -558,7 +575,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
 
-        regEx = /^[1-9]\d{0,1}°\s?[1-9]\d{0,1}[′|']\s?[1-9]\d{0,1}[″|"]\s?[N|S|W|O]$/;
+        regEx = /^[1-9]\d{0,1}°\s?[1-9]\d{0,1}[′|']\s?[1-9]\d{0,1}\.[1-9]\d+[″|"]\s?[N|S|W|O]$/;
 
         if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
           formattedLatitude  = $scope.convertDMSToDD(formattedLatitude);
@@ -631,12 +648,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         console.log('DEGREES_MINUTES_SECONDS');
 
-        var coordinate = $scope.longitude + ',' + $scope.latitude;
+        /*var coordinate = $scope.longitude + ',' + $scope.latitude;
 
         coordinate = ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)).match(/(.*\s[S|N])\s(.*)/);
 
         $scope.formattedLatitude  = coordinate[1];
-        $scope.formattedLongitude = coordinate[2];
+        $scope.formattedLongitude = coordinate[2];*/
+
+        $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude);
+        $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude);
       }
 
     };
@@ -3738,6 +3758,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
       });
 
+      $scope.resolveDatePicker();
+
     }
   };
 
@@ -4394,6 +4416,27 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
+  $scope.testFiles = [];
+
+  var data = [];
+
+  $scope.$watch('testFiles', function(newVal, oldVal){
+
+    if(newVal.length == 3) {
+      shapeFileService.importShapeFile(data, {
+        callback: function (result) {
+          console.log(result);
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+          alert(message);
+          $scope.$apply();
+        }
+      });
+    }
+
+  }, true);
+
   $scope.onFileChange = function(input){
 
     $scope.setAction('import');
@@ -4408,10 +4451,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       var files = input.files;
 
-      var data = [];
-
-      $scope.lastFile = files[files.length - 1];
-
       for (var i = 0, file; file = files[i]; i++) {
 
         var reader = new FileReader();
@@ -4420,27 +4459,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           return function (e) {
 
             var base64 = e.target.result.split('base64,');
+            //var base64 = e.target.result;
             var type = readFile.name.substr(readFile.name.length - 3);
 
+            $scope.testFiles.push(readFile.name);
+
             data.push({type: type.toUpperCase(), source: base64[1], contentLength: readFile.size, name: readFile.name});
-
-            if(readFile.name == $scope.lastFile.name) {
-              console.log(data);
-
-              shapeFileService.importShapeFile(data, {
-                callback: function (result) {
-                  console.log(result);
-                  $scope.$apply();
-                },
-                errorHandler: function (message, exception) {
-                  alert(message);
-                  $scope.$apply();
-                }
-              });
-            }
-
-            /*$scope.shapeFile.files.push(readFile);
-            $scope.$apply();*/
 
           }
         })(file);
@@ -4506,6 +4530,27 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   //$scope.showGallery();
+
+  /**
+   * Resolve date picker
+   */
+  $scope.resolveDatePicker = function () {
+    $timeout(function () {
+      $('.datepicker').datepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+        dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior'
+      });
+
+      $('.datepicker').mask("99/99/9999");
+    }, 300);
+  };
+
 
 
 

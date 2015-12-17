@@ -83,9 +83,14 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
         callback: function (result) {
 
+          var index = 0;
+
+          if($scope.currentAttribute.content[0].photoAlbum.id == result.content[0].photoAlbum.id && ((!result.firstPage && !result.lastPage) || result.firstPage))
+            index = $scope.pageable.size - 1;
+
           $scope.currentAttribute = result;
 
-          $scope.setCurrentPhoto(result.content[0], 0);
+          $scope.setCurrentPhoto(result.content[index], index);
           $scope.$apply();
 
         },

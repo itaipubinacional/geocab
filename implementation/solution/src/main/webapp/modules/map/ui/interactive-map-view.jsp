@@ -911,13 +911,13 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <button style="margin: 10px 0;" class="btn btn-primary"
                         ng-click="setAction('export')">
-                  <i class="icon-upload icon-large"></i>
+                  <i class="icon-download icon-large"></i>
                   <spring:message code="admin.shape-file.Export" />
                 </button>
 
                 <button class="btn btn-primary"
                         ng-click="clickUpload()">
-                  <i class="icon-download icon-large"></i>
+                  <i class="icon-upload icon-large"></i>
                   <spring:message code="admin.shape-file.Import" /></button>
 
                 <input style="display:none" id="upload" multiple="true" type="file" accept=".shp, .shx, .dbf" name="upload" onchange="angular.element(this).scope().onFileChange(this)">
@@ -927,9 +927,9 @@ uri="http://www.springframework.org/security/tags"%>
               </div>
               <div ng-if="isExport">
 
-                <p>Filtros</p>
+                <p><b>Filtrar camadas ativas</b></p>
 
-                <div>
+                <!--<div>
                   <select ng-change="listAttributesByLayer()"
                           data-placeholder="Selecione uma camada" name="camada"
                           ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
@@ -938,7 +938,7 @@ uri="http://www.springframework.org/security/tags"%>
                           required>
                     <option value=""></option>
                   </select>
-                </div>
+                </div>-->
 
                 <div style="margin-top:10px;">
 
@@ -964,7 +964,7 @@ uri="http://www.springframework.org/security/tags"%>
                 </div>
 
                 <div style="float: left;margin-top: 10px">
-                  <span ng-click="clearFilters()">Limpar Filtros</span>
+                  <a href="" ng-click="clearFilters()">Limpar Filtros</a>
                   <input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code='Filter'/>"
                          title="<spring:message code='Search'/>" class="btn btn-default"/>
                 </div>
