@@ -4477,22 +4477,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.showUpload = function(attribute, attributes){
 
-    var attribute = attribute;
-
-    var getAttributes = function(){
-      var attrs = [];
-      angular.forEach(attributes, function(attr, index){
-        if(attr.type == 'PHOTO_ALBUM')
-          attrs.push(attr);
-
-        if(attr.attribute && attr.attribute.type == 'PHOTO_ALBUM') {
-          attr.attribute.markerAttribute = {id: attr.id};
-          attrs.push(attr.attribute);
-        }
-      });
-      return attrs;
-    };
-
     var dialog = $modal.open({
       templateUrl: "modules/map/ui/popup/upload-popup.jsp",
       controller: UploadPopUpController,
@@ -4507,7 +4491,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         attributes: function(){
           return attributes
         }
-        //attributesByLayer: getAttributes
       }
     });
 
