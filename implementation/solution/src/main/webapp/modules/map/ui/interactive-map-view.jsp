@@ -235,8 +235,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <br style="clear: both;"> <br>
                 <label>Camada</label>
                 <div style="margin-bottom:5px;">
-                  <select ng-change="listAttributesByLayerUpdate()"
-                          ng-disabled="selectLayerGroup"
+                  <select ng-disabled="selectLayerGroup"
                           data-placeholder="Selecione uma camada" name="camada"
                           ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                           ng-model="currentEntity.layer" chosen class="form-control"
@@ -1012,25 +1011,13 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative">
-                    <label class="detail-label" required><spring:message code="admin.custom-search.Layer"/></label>
-                    <div class="input-group">
-                      <input name="layerGroup" type="text" class="form-control"
-                             ng-model="shapeFile.form.layer.name"
-                             disabled
-                             placeholder="<spring:message code='admin.custom-search.Enter-the-Layer'/>"
-                             maxlength="144"
-                             ng-minlength="1"
-                             ng-hover
-                             required>
-                        <span class="input-group-btn">
-                            <button style="height: 34px" ng-click="selectLayerConfig()" class="btn btn-default" type="button"
-                                    ng-disabled="shapeFile.form.dataSource == null">
-                              <i class="icon-plus-sign icon-large"></i>
-                            </button>
-                        </span>
-                    </div>
-                    <span ng-show="form.layerGroup.$error.required && form.$submitted"
-                          class="tooltip-validation"><spring:message code="admin.custom-search.Layer-required"/></span>
+                    <select data-placeholder="Selecione uma camada" name="camada"
+                            ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
+                            ng-model="shapeFile.filter.layer" chosen class="form-control"
+                            ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+                            required>
+                      <option value=""></option>
+                    </select>
                   </div>
 
                   <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">

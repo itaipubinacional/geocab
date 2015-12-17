@@ -681,12 +681,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         //$scope.toggleSidebarMarkerCreate(300);
 
         var iconStyle = new ol.style.Style({
-          image: new ol.style.Icon(({
+          image: new ol.style.Icon({
             anchor: [0.5, 1],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
             src: 'static/images/marker.png'
-          }))
+          })
         });
 
         var iconFeature = new ol.Feature({
@@ -3694,7 +3694,26 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
        */
       $scope.addGroups = [];
 
-      $scope.$apply();
+      layerGroupService.listAllInternalLayerGroups({
+        callback: function (result) {
+          $scope.selectLayerGroup = [];
+
+          angular.forEach(result, function (layer, index) {
+
+            $scope.selectLayerGroup.push({
+              "layerTitle": layer.title,
+              "layerId": layer.id,
+              "layerIcon": layer.icon,
+              "group": layer.layerGroup.name
+            });
+          });
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
 
     } else {
 
@@ -4327,6 +4346,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.shapeFile.form.attributes = $scope.attributes;
     }
+
+
 
     layerGroupService.insertLayer(layer, {
       callback: function (result) {
