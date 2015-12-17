@@ -549,19 +549,25 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       return dd;
     };
 
-    $scope.convertDDtoDMS = function(coordinate){
-      var valDeg, valMin, valSec, result;
+    $scope.convertDDtoDMS = function(coordinate, latitude){
+      var valCoordinate, valDeg, valMin, valSec, result;
 
-      coordinate = Math.abs(coordinate);
+      valCoordinate = Math.abs(coordinate);
 
-      valDeg = Math.floor(coordinate);
+      valDeg = Math.floor(valCoordinate);
       result = valDeg + "° ";
 
-      valMin = Math.floor((coordinate - valDeg) * 60);
+      valMin = Math.floor((valCoordinate - valDeg) * 60);
       result += valMin + "′ ";
 
-      valSec = Math.round((coordinate - valDeg - valMin / 60) * 3600 * 1000) / 1000;
-      result += valSec + '″';
+      valSec = Math.round((valCoordinate - valDeg - valMin / 60) * 3600 * 1000) / 1000;
+      result += valSec + '″ ';
+
+      if(latitude)
+        result += coordinate < 0 ? 'S' : 'N';
+
+      if(!latitude)
+        result += coordinate < 0 ? 'W' : 'O';
 
       return result;
     };
@@ -648,15 +654,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         console.log('DEGREES_MINUTES_SECONDS');
 
-        /*var coordinate = $scope.longitude + ',' + $scope.latitude;
-
-        coordinate = ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)).match(/(.*\s[S|N])\s(.*)/);
-
-        $scope.formattedLatitude  = coordinate[1];
-        $scope.formattedLongitude = coordinate[2];*/
-
-        $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude);
-        $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude);
+        $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude, true);
+        $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude, false);
       }
 
     };
