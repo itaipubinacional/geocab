@@ -10,7 +10,7 @@
 <div>
 
 	<!-- Posting evaluation - List -->
-    <div style="width:38%; height: 100%; float:left; padding: 20px;z-index: 1; position: relative;
+    <div style="width:38%; height: 100%; float:left; padding: 20px 20px 0 20px;z-index: 1; position: relative;
             box-shadow: 8px -6px 5px -5px #999, -6px 0 5px -5px #999;">
 
 		<!-- Filter Bar -->

@@ -6,20 +6,29 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
-<div class="content-tab" style="width:36%; height: 100%; float:left; margin: 20px;">
-    <span style="z-index: 1000;float:right;cursor:pointer" ng-click="changeToDetail(currentEntity)"
-          class="icon itaipu-icon-close"></span>
+<!--class="content-tab"-->
+<div style="width:38%;height: 100%; float:left;z-index: 1; position: relative;
+            box-shadow: 8px -6px 5px -5px #999, -6px 0 5px -5px #999; ">
+    <div class="col-md-12" style="padding: 15px; background-color: #f5f5f5">
+        <div class="col-md-1" style="margin-top: 10px">
+            <i style="cursor:pointer; font-size: 25px;" ng-click="changeToDetail(currentEntity)"
+               class="icon itaipu-icon-arrow-left-1">
+            </i>
+        </div>
 
-    <div style="overflow:auto;height:78vh;width:59vh">
+        <div class="col-md-10" style="margin-top: 10px;">
+                <span style=" font-weight: bold; font-size: 18px;">
+                    <spring:message code="admin.marker-moderation.History"/>
+                </span>
+        </div>
+    </div>
 
-        <h3>
-            <spring:message code="admin.marker-moderation.History"/>
-        </h3>
-        <hr>
+
+    <div class="col-md-12" style="overflow:auto;height:78vh; padding: 30px">
 
         <div ng-repeat="markerModeration in markersModeration " style="width:97%">
 
-            <!--<div class="{{markerModeration.status == 'PENDING' ? 'alert warning' : markerModeration.status == 'ACCEPTED' ? 'alert success' : 'alert danger'}}" style="text-align:center;height:75px">                                                                 -->
+            <!--<div class="{{markerModeration.status == 'PENDING' ? 'alert warning' : markerModeration.status == 'ACCEPTED' ? 'alert success' : 'alert danger'}}"-->
             <div class="alert" ng-style="{'background-color': verifyStatusColor(markerModeration.status)}"
                  style="text-align:center;height:75px">
 
@@ -35,28 +44,34 @@
                     <span><b style="position:absolute;top:15px;left:45%"> {{ translateStatus($index) }}</b></span>
                 </div>
 
-                <div style="position:relative">
-                    <span><b style="float:right;position:absolute;top:0px;right:0px"> {{ currentEntity.created |
-                        date:'dd/MM/yyyy' }}</b></span>
+                <div style="position:relative"  ng-if="!$index">
+                    <span><b style="float:right;position:absolute;top:0;right:0"> {{ currentEntity.created | date:'dd/MM/yyyy' }}</b></span>
                 </div>
 
                 <div>
-	                    <span ng-show="visibleDescription && markerModeration.status == 'REFUSED'" id="up-arrow">
+                   <span ng-show="visibleDescription && markerModeration.status == 'REFUSED'" id="up-arrow">
 							<i style="float:right;cursor:pointer;left:-12px;top:40px"
                                class="glyphicon glyphicon-chevron-up"
                                ng-click="visibleDescription = false"></i>
-						</span>
-	                    <span ng-show="!visibleDescription && markerModeration.status == 'REFUSED'">
+                   </span>
+                    <span ng-show="!visibleDescription && markerModeration.status == 'REFUSED'">
 							<i style="float:right;cursor:pointer;top:40px" class="glyphicon glyphicon-chevron-down"
-                               ng-click="visibleDescription = true; listMotivesByMarkerModeration(markerModeration.id)"></i>
-						</span>
+                               ng-click="visibleDescription = true; listMotivesByMarkerModeration(markerModeration.id)">
+
+                            </i>
+                    </span>
                 </div>
 
             </div>
+
             <div class="alert" ng-style="{'background-color': verifyStatusColor(markerModeration.status)}"
                  style="text-align:center" ng-if="visibleDescription && markerModeration.status == 'REFUSED'">
-                <span><b> {{motiveMarkerModeration[markerModeration.id][0].motive.name}} -
-                    {{motiveMarkerModeration[markerModeration.id][0].description}} </b></span>
+
+                <span>
+                    <b> {{motiveMarkerModeration[markerModeration.id][0].motive.name}} -
+                        {{motiveMarkerModeration[markerModeration.id][0].description}}
+                    </b>
+                </span>
             </div>
 
         </div>

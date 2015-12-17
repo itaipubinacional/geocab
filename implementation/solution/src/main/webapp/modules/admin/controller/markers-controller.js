@@ -284,7 +284,9 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
                 $scope.changeToDetail(row.entity);
 
-            } else if (row.length > 0) {
+            }
+
+            if (row.length > 0) {
                 var i;
                 for (var rowItemIndex = 0; rowItemIndex < row.length; rowItemIndex++) {
                     if (row[rowItemIndex].selected) {
@@ -449,6 +451,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         $log.info("changeToList");
 
         $scope.imgResult = null;
+
+        $scope.itensMarcados = [];
 
         $scope.currentState = $scope.LIST_STATE;
 
