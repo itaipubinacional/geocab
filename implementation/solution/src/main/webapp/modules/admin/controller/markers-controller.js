@@ -594,6 +594,43 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * 		 				 	  BEHAVIORS
      *-------------------------------------------------------------------*/
 
+
+    $scope.showUpload = function(attribute, attributes){
+
+        var dialog = $modal.open({
+            templateUrl: "modules/map/ui/popup/upload-popup.jsp",
+            controller: UploadPopUpController,
+            size: 'lg',
+            resolve: {
+                layer: function(){
+                    return $scope.currentEntity.layer;
+                },
+                attribute: function(){
+                    return attribute;
+                },
+                attributes: function(){
+                    return attributes
+                }
+            }
+        });
+
+
+        dialog.result.then(function (result) {
+
+            if(attribute.attribute) {
+                angular.forEach(result, function (attribute) {
+                    if (attribute.attribute.type == 'PHOTO_ALBUM')
+                        attribute.photoAlbum.photos = attribute.attribute.files;
+                });
+            }
+
+            $scope.attributesByMarker = result;
+            console.log(result);
+
+        });
+
+    };
+
     /**
      * Responsible method to display on the map the mouse pointer coordinates
      */

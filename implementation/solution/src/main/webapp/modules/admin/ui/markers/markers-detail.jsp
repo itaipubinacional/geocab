@@ -54,8 +54,11 @@
 
                         <div ng-repeat="markerAttribute in attributesByMarker track by $index"
                              style="position: relative;">
+
                             <label ng-style="$index > 0 ? {'margin-top':'15px'} : ''"
-                                   ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'">
+                                   ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM' ||
+                                    markerAttribute.attribute.type == 'PHOTO_ALBUM' &&
+                                    (currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
                                 {{markerAttribute.attribute.name }}
                             </label>
 
@@ -95,11 +98,34 @@
                                         value="No">
                                 <spring:message code="map.No"/>
                             </div>
+
+                            <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
+                                <input
+                                        type="radio"
+                                        ng-checked="markerAttribute.value == 'Yes'"
+                                        ng-model="markerAttribute.value"
+                                        value="Yes">
+                                <spring:message code="map.Yes"/>
+
+                            </div>
+
+                            <div ng-if="(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')"
+                                    style="float: left;">
+                                <button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
+                                        ng-click="showUpload(markerAttribute.attribute, attributesByMarker)"
+                                        style="float: left;margin-right: 5px"
+                                        title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
+                                </button>
+                                </br>
+                            </div>
+
+
                         </div>
 
                         <!-- PHOTO ALBUM-->
 
-                        <div class="col-md-12" style="text-align:center;">
+                        <div class="col-md-12" style="text-align:center;"
+                             ng-if="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
                             <img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult"
                                  class="marker-image"
                                  ng-src="{{ imgResult }}"
