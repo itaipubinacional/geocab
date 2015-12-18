@@ -686,7 +686,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
             src: 'static/images/marker.png'
-          })
+          }),
+          zIndex: 2
+        });
+
+        var shadowStyle = new ol.style.Style({
+          image: new ol.style.Icon({
+            anchor: [0.3, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: 'static/images/default_shadow.png'
+          }),
+          zIndex: 1
         });
 
         var iconFeature = new ol.Feature({
@@ -694,10 +705,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         });
 
         var layer = new ol.layer.Vector({
-          source: new ol.source.Vector({features: [iconFeature]})
+          source: new ol.source.Vector({
+            features: [iconFeature]
+          })
         });
 
-        layer.setStyle(iconStyle);
+        layer.setStyle([iconStyle, shadowStyle]);
 
         $scope.currentCreatingInternalLayer = layer;
         $scope.map.addLayer(layer);
