@@ -98,7 +98,7 @@
         <div id="popup" class="ol-popup">
             <div id="popup-content"></div>
         </div>
-        <div id="info"></div>
+        <div id="info" style="height: 30px; margin: 0"></div>
     </div>
 </div>
 

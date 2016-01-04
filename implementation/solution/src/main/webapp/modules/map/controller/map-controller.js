@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿﻿'use strict';
 
 /**
  *
@@ -549,19 +549,25 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       return dd;
     };
 
-    $scope.convertDDtoDMS = function(coordinate){
-      var valDeg, valMin, valSec, result;
+    $scope.convertDDtoDMS = function(coordinate, latitude){
+      var valCoordinate, valDeg, valMin, valSec, result;
 
-      coordinate = Math.abs(coordinate);
+      valCoordinate = Math.abs(coordinate);
 
-      valDeg = Math.floor(coordinate);
+      valDeg = Math.floor(valCoordinate);
       result = valDeg + "° ";
 
-      valMin = Math.floor((coordinate - valDeg) * 60);
+      valMin = Math.floor((valCoordinate - valDeg) * 60);
       result += valMin + "′ ";
 
-      valSec = Math.round((coordinate - valDeg - valMin / 60) * 3600 * 1000) / 1000;
-      result += valSec + '″';
+      valSec = Math.round((valCoordinate - valDeg - valMin / 60) * 3600 * 1000) / 1000;
+      result += valSec + '″ ';
+
+      if(latitude)
+        result += coordinate < 0 ? 'S' : 'N';
+
+      if(!latitude)
+        result += coordinate < 0 ? 'W' : 'O';
 
       return result;
     };
@@ -575,7 +581,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
 
-        regEx = /^[1-9]\d{0,1}°\s?[1-9]\d{0,1}[′|']\s?[1-9]\d{0,1}\.[1-9]\d+[″|"]\s?[N|S|W|O]$/;
+        regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.\d+?[″|"]\s?[N|S|W|O]?$/;
 
         if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
           formattedLatitude  = $scope.convertDMSToDD(formattedLatitude);
@@ -648,15 +654,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         console.log('DEGREES_MINUTES_SECONDS');
 
-        /*var coordinate = $scope.longitude + ',' + $scope.latitude;
-
-        coordinate = ol.coordinate.toStringHDMS(coordinate.split(',').map(Number)).match(/(.*\s[S|N])\s(.*)/);
-
-        $scope.formattedLatitude  = coordinate[1];
-        $scope.formattedLongitude = coordinate[2];*/
-
-        $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude);
-        $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude);
+        $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude, true);
+        $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude, false);
       }
 
     };
@@ -682,12 +681,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         //$scope.toggleSidebarMarkerCreate(300);
 
         var iconStyle = new ol.style.Style({
-          image: new ol.style.Icon(({
+          image: new ol.style.Icon({
             anchor: [0.5, 1],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
             src: 'static/images/marker.png'
-          }))
+          }),
+          zIndex: 2
+        });
+
+        var shadowStyle = new ol.style.Style({
+          image: new ol.style.Icon({
+            anchor: [0.3, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: 'static/images/default_shadow.png'
+          }),
+          zIndex: 1
         });
 
         var iconFeature = new ol.Feature({
@@ -695,10 +705,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         });
 
         var layer = new ol.layer.Vector({
-          source: new ol.source.Vector({features: [iconFeature]})
+          source: new ol.source.Vector({
+            features: [iconFeature]
+          })
         });
 
-        layer.setStyle(iconStyle);
+        layer.setStyle([iconStyle, shadowStyle]);
 
         $scope.currentCreatingInternalLayer = layer;
         $scope.map.addLayer(layer);
@@ -3695,7 +3707,26 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
        */
       $scope.addGroups = [];
 
-      $scope.$apply();
+      layerGroupService.listAllInternalLayerGroups({
+        callback: function (result) {
+          $scope.selectLayerGroup = [];
+
+          angular.forEach(result, function (layer, index) {
+
+            $scope.selectLayerGroup.push({
+              "layerTitle": layer.title,
+              "layerId": layer.id,
+              "layerIcon": layer.icon,
+              "group": layer.layerGroup.name
+            });
+          });
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
 
     } else {
 
@@ -4329,6 +4360,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.shapeFile.form.attributes = $scope.attributes;
     }
 
+
+
     layerGroupService.insertLayer(layer, {
       callback: function (result) {
         $scope.currentState = $scope.LIST_STATE;
@@ -4459,7 +4492,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           return function (e) {
 
             var base64 = e.target.result.split('base64,');
-
+            //var base64 = e.target.result;
             var type = readFile.name.substr(readFile.name.length - 3);
 
             $scope.testFiles.push(readFile.name);
@@ -4478,22 +4511,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.showUpload = function(attribute, attributes){
 
-    var attribute = attribute;
-
-    var getAttributes = function(){
-      var attrs = [];
-      angular.forEach(attributes, function(attr, index){
-        if(attr.type == 'PHOTO_ALBUM')
-          attrs.push(attr);
-
-        if(attr.attribute && attr.attribute.type == 'PHOTO_ALBUM') {
-          attr.attribute.markerAttribute = {id: attr.id};
-          attrs.push(attr.attribute);
-        }
-      });
-      return attrs;
-    };
-
     var dialog = $modal.open({
       templateUrl: "modules/map/ui/popup/upload-popup.jsp",
       controller: UploadPopUpController,
@@ -4508,7 +4525,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         attributes: function(){
           return attributes
         }
-        //attributesByLayer: getAttributes
       }
     });
 
