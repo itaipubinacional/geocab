@@ -1,4 +1,4 @@
-﻿﻿'use strict';
+﻿'use strict';
 
 /**
  *
@@ -488,6 +488,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       } else {
         $scope.currentEntity.backgroundMap = $scope.backgroundMap.subType;
       }
+      $scope.initializeGMAP();
     };
 
     $scope.setBackgroundMap = function(backgroundMap){
@@ -501,38 +502,43 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.backgroundMap.map = 'MAP_QUEST';
 
       if(backgroundMap.match(/OPEN_STREET_MAP/i)) {
-        $scope.initializeOSM();
         $scope.backgroundMap.map = 'OPEN_STREET_MAP';
+        $scope.initializeOSM();
       }
 
       if(backgroundMap.match(/MAP_QUEST|MAP_QUEST_OSM/i) && backgroundMap != 'MAP_QUEST_SAT') {
-        $scope.initializeMapQuestOSM();
         $scope.currentEntity.backgroundMap = 'MAP_QUEST_OSM';
         $scope.backgroundMap.subType = 'MAP_QUEST_OSM';
+        $scope.initializeMapQuestOSM();
       }
 
-      if(backgroundMap.match(/MAP_QUEST_SAT/i))
+      if(backgroundMap.match(/MAP_QUEST_SAT/i)) {
         $scope.backgroundMap.subType = 'MAP_QUEST_SAT';
+        $scope.initializeMapQuestSAT();
+      }
 
       if(backgroundMap == 'GOOGLE_MAP' && backgroundMap != 'GOOGLE_SATELLITE') {
-        $scope.initializeGMAP();
         $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
         $scope.backgroundMap.subType = 'GOOGLE_MAP';
+        $scope.initializeGMAP();
       }
 
       if(backgroundMap == 'GOOGLE_SATELLITE') {
         $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
         $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
+        $scope.initializeGMAP();
       }
 
       if(backgroundMap == 'GOOGLE_MAP_TERRAIN') {
         $scope.backgroundMap.subType = 'GOOGLE_MAP';
         $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = true;
+        $scope.initializeGMAP();
       }
 
       if(backgroundMap == 'GOOGLE_SATELLITE_LABELS') {
         $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
         $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = true;
+        $scope.initializeGMAP();
       }
 
     };
@@ -1374,7 +1380,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       // set the mapGoogleOptions
       $scope.mapGoogle = new google.maps.Map(document.getElementById("gmap"), $scope.mapGoogleOptions);
 
-
       $scope.olMapDiv.parentNode.removeChild($scope.olMapDiv);
       $scope.mapGoogle.controls[google.maps.ControlPosition.RIGHT_TOP].push($scope.olMapDiv)
 
@@ -1390,9 +1395,21 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       // set the view from google maps
       $scope.view.setCenter($scope.view.getCenter());
       $scope.view.setZoom($scope.view.getZoom());
-
-
     }
+
+    //$scope.mapGoogle.setMapTypeId('hybrid');
+
+    if($scope.currentEntity.backgroundMap == 'GOOGLE_MAP')
+      $scope.mapGoogle.setMapTypeId('roadmap');
+
+    if($scope.currentEntity.backgroundMap == 'GOOGLE_MAP_TERRAIN')
+      $scope.mapGoogle.setMapTypeId('terrain');
+
+    if($scope.currentEntity.backgroundMap == 'GOOGLE_SATELLITE')
+      $scope.mapGoogle.setMapTypeId('satellite');
+
+    if($scope.currentEntity.backgroundMap == 'GOOGLE_SATELLITE_LABELS')
+      $scope.mapGoogle.setMapTypeId('hybrid');
 
   }
 
@@ -1481,7 +1498,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_OSM;
 
     }
-  }
+  };
 
 
   /**
@@ -4566,18 +4583,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $('.datepicker').mask("99/99/9999");
     }, 300);
   };
-
-
-
-
 };
-
 
 function isBooleanChecked(that) {
   $(that).parent().css("border", "0");
   $(that).parent().parent().find("span.tooltip-validation").remove();
 };
-
-/**
- * Function responsible for loading the user photo on the screen at the time it was selected
- */
