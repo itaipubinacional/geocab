@@ -108,7 +108,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public Attribute()
 	{
-		
+
 	}
 
 	/**
@@ -129,7 +129,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param orderAttribute
 	 * @param visible
 	 */
-	public Attribute(Long id, String name, AttributeType type, Boolean required, Integer orderAttribute, Boolean visible)
+	public Attribute(Long id, String name, AttributeType type, Boolean required,
+			Integer orderAttribute, Boolean visible)
 	{
 		this.setId(id);
 		this.setType(type);
@@ -138,7 +139,7 @@ public class Attribute extends AbstractEntity implements Serializable
 		this.setOrderAttribute(orderAttribute);
 		this.setVisible(visible);
 	}
-	
+
 	/**
 	 * 
 	 * @param name
@@ -158,7 +159,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param orderAttribute
 	 * @param visible
 	 */
-	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute, Boolean visible)
+	public Attribute(Long id, String name, Boolean required, AttributeType type,
+			Integer orderAttribute, Boolean visible)
 	{
 		this.setId(id);
 		this.setTemporaryId(id);
@@ -183,11 +185,29 @@ public class Attribute extends AbstractEntity implements Serializable
 		this.setName(name);
 		this.setLayer(layer);
 	}
-	
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param type
+	 * @param layer
+	 */
+	public Attribute(Long id, String name, String type, Layer layer)
+	{
+		this.setId(id);
+		this.setType(formmatAttributes(type));
+		this.setName(name);
+		this.setLayer(layer);
+	}
+
 	/*-------------------------------------------------------------------
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
-	
+	/**
+	 * Formata os atributos para importação
+	 * @return
+	 */
 	public String formmattedAttribute()
 	{
 		if (this.getType() == AttributeType.TEXT)
@@ -205,12 +225,39 @@ public class Attribute extends AbstractEntity implements Serializable
 		else if (this.getType() != AttributeType.PHOTO_ALBUM)
 		{
 			return "Integer";
-		}else // Se for do tipo PHOTO_ALBUM retorna null
+		}
+		else // Se for do tipo PHOTO_ALBUM retorna null
 		{
 			return null;
 		}
 	}
-	
+	/**
+	 * Formata os atributos para exportação
+	 * @param type
+	 * @return
+	 */
+	private static AttributeType formmatAttributes(String type)
+	{
+		AttributeType attributeType = null;
+		if (type.contains("java.lang.String"))
+		{
+			attributeType = AttributeType.TEXT;
+		}
+		else if (type.contains("java.lang.Integer") || type.contains("java.lang.Long"))
+		{
+			attributeType = AttributeType.NUMBER;
+		}
+		else if (type.contains("java.util.Date"))
+		{
+			attributeType = AttributeType.DATE;
+		}
+		else if (type.contains("java.lang.Boolean"))
+		{
+			attributeType = AttributeType.BOOLEAN;
+		}
+		return attributeType;
+	}
+
 	/*-------------------------------------------------------------------
 	 *								SETTERS/GETTERS
 	 *-------------------------------------------------------------------*/
@@ -224,7 +271,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 * 
 	 */
 	public void setName(String name)
@@ -350,7 +398,5 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		this.visible = visible;
 	}
-
-	
 
 }

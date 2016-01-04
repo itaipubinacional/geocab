@@ -56,6 +56,18 @@ public class Point extends Geometry implements Puntal
 				coordinate != null ? new Coordinate[]
 				{ coordinate } : new Coordinate[] {}));
 	}
+	
+	/**
+	 * 
+	 * @param coordinate
+	 */
+	public Point(Coordinate coordinate)
+	{
+		super(new GeometryFactory());
+		init(getFactory().getCoordinateSequenceFactory().create(
+				coordinate != null ? new Coordinate[]
+				{ coordinate } : new Coordinate[] {}));
+	}
 
 	/**
 	 * @param coordinates
