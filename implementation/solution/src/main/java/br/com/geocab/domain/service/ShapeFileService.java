@@ -49,6 +49,7 @@ import org.springframework.stereotype.Service;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 
 import br.com.geocab.domain.entity.layer.Layer;
@@ -182,38 +183,48 @@ public class ShapeFileService
 		    FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore.getFeatureSource(typeName);
 
 		    FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures();
+		    
+		    List<Marker> markers = new ArrayList<>();
+		    
 		    try (FeatureIterator<SimpleFeature> features = collection.features()) 
 		    {
-		        while (features.hasNext()) 
+		    	while (features.hasNext()) 
 		        {
+		    		Marker marker = new Marker();
 		            SimpleFeature feature = features.next();
 		            
-		            for (Object attribute : feature.getAttributes())
+//		            for (Object attribute : feature.getAttributes())
 					{//TODO trocar the_geom pelo nome da camada?
-						System.out.println(attribute);
-						System.out.println(feature.getType().getAttributeDescriptors());
+//						System.out.println(attribute);
+//						System.out.println(feature.getType().getAttributeDescriptors());
 						for (Property property : feature.getProperties())
 						{
-							System.out.println(property.getName());
-							System.out.println(property.getDescriptor());
-							System.out.println(property.getType().getDescription());
-							System.out.println(property.getValue());
+//							System.out.println(property.getName());
+//							System.out.println(property.getDescriptor());
+//							System.out.println(property.getType().getDescription());
+//							System.out.println(property.getValue());
 							//TODO AQUI ESTÃO ASPROPRIEADEADS QUE FORENCEM OS ATRIBUTOS
 							System.out.println(property.getDescriptor().getType().getBinding());
+							// Deve ignorar a propriedade "the_geom"
+							if ("the_geom" != property.getDescriptor().getName().toString())
+							{
+								
+								marker.setLocation(new Point());
+							}
 							System.out.println(property.getDescriptor().getName());
 						}
-						for (AttributeDescriptor attributeDescriptor : feature.getType().getAttributeDescriptors())
-						{
-							System.out.println(attributeDescriptor.getDefaultValue());
-							System.out.println(attributeDescriptor.getName());
-							System.out.println(attributeDescriptor.getLocalName());
-							System.out.println(attributeDescriptor.getType().getName());
-							System.out.println(attributeDescriptor.getType().getDescription());
-						}
+//						for (AttributeDescriptor attributeDescriptor : feature.getType().getAttributeDescriptors())
+//						{
+//							System.out.println(attributeDescriptor.getDefaultValue());
+//							System.out.println(attributeDescriptor.getName());
+//							System.out.println(attributeDescriptor.getLocalName());
+//							System.out.println(attributeDescriptor.getType().getName());
+//							System.out.println(attributeDescriptor.getType().getDescription());
+//						}
 					}
-		            System.out.print(feature.getID());
+//		            System.out.print(feature.getID());
 		            //TODO here
-		            System.out.print(": ");
+//		            System.out.print(": ");
 		            System.out.println(feature.getDefaultGeometryProperty().getValue());
 		        }
 		    }
@@ -306,7 +317,7 @@ public class ShapeFileService
 				
 				layer.setName(layer.getName().replaceAll(" ", "_"));
 				
-				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), /*layer.getName() + */"the_geom:Point,"+layer.formattedAttributes());
+				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), /*layer.getName() + */"the_geom:MultiPoint,"+layer.formattedAttributes());
 	
 //				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), layer.getName() + ":Point,"+layer.formattedAttributes());
 				
@@ -322,7 +333,9 @@ public class ShapeFileService
 	                double latitude = marker.getLocation().getY();
 	
 	                Point point = factory.createPoint(new Coordinate(longitude, latitude));
-	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
+	                //Padronizamos no formato multiPoint, da mesma forma que é a exportação do geoserver
+	                MultiPoint multiPoint = new MultiPoint(new Point[]{point}, factory);
+	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{multiPoint}, null);
 		
 	                collection.add(feature);
 	            }

@@ -139,11 +139,6 @@ public class Attribute extends AbstractEntity implements Serializable
 		this.setVisible(visible);
 	}
 	
-	// public Attribute(Long id, String name, AttributeType type, Boolean
-	// required, Integer orderAttribute){
-	//
-	// }
-
 	/**
 	 * 
 	 * @param name
@@ -181,7 +176,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param type
 	 * @param layer
 	 */
-	public Attribute(Long id, String name, AttributeType type, Layer layer){
+	public Attribute(Long id, String name, AttributeType type, Layer layer)
+	{
 		this.setId(id);
 		this.setType(type);
 		this.setName(name);
@@ -192,10 +188,15 @@ public class Attribute extends AbstractEntity implements Serializable
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	
-	public String formmattedAttribute(){
-		if (this.getType() == AttributeType.TEXT || this.getType() == AttributeType.DATE)
+	public String formmattedAttribute()
+	{
+		if (this.getType() == AttributeType.TEXT)
 		{
 			return "String";
+		}
+		else if (this.getType() == AttributeType.DATE)
+		{
+			return "Date";
 		}
 		else if (this.getType() == AttributeType.BOOLEAN)
 		{
