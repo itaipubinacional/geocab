@@ -123,7 +123,7 @@
 			</security:authorize>-->
 		
 			<!-- /content -->
-		       
+
 			<footer></footer>
 		</div>
 	</body>

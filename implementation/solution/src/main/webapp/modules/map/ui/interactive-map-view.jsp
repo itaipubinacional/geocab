@@ -1134,16 +1134,24 @@ uri="http://www.springframework.org/security/tags"%>
     <!-- Openlayer Map -->
     <div id="olmap"
          style="position: absolute; top: 0; bottom: 0; left: 0; right: 0">
-      <!-- style="position: relative; width: 100%; height: 100%; top: 0 !important"> -->
-      <div id="popup" class="ol-popup">
-        <!--<a href="#" id="popup-closer" class="ol-popup-closer"></a>-->
-        <div id="popup-content"></div>
-      </div>
+
       <div id="info"></div>
     </div>
   </section>
 
+
+  <div id="popup1" class="ol-popup1">
+    <div id="popup-content">
+      <span ng-repeat="attribute in attributesByMarker | filter:{attribute.attribute.visible}">
+        <b>{{ attribute.attribute.name }}</b> - {{ attribute.value }}
+        <br>
+      </span>
+    </div>
+  </div>
+
 </div>
+
+
 
 </html>
 

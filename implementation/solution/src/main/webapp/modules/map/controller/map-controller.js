@@ -354,6 +354,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.firstTime = true;
 
+  var overlay = new ol.Overlay({
+    element: container
+  });
+
   /*-------------------------------------------------------------------
    * 		 				 	  NAVIGATIONS
    *-------------------------------------------------------------------*/
@@ -410,7 +414,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       ]),
 
       target: $scope.olMapDiv,
-      view: $scope.view
+      view: $scope.view,
+      overlays: [overlay]
     });
 
 
@@ -672,7 +677,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     };
 
     /**
-     * Click event to prompt the geoserver the information layer of the clicked coordinat
+     * Click event to prompt the geoserver the information layer of the clicked coordinate
      */
     $scope.map.on('click', function (evt) {
 
@@ -1356,6 +1361,87 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    *-------------------------------------------------------------------*/
 
   /**
+   * Create an overlay to anchor the popup to the map.
+   */
+
+  var container = document.getElementById('popup1');
+  var content = document.getElementById('popup-content');
+
+  var displayFeatureInfo = function(pixel) {
+
+    var mousePixel = pixel;
+
+    var feature = $scope.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+      return feature;
+    });
+
+    if (feature) {
+      if (typeof feature.getProperties().marker != "undefined") {
+
+        var geometry = feature.getGeometry();
+        var coordinate = geometry.getCoordinates();
+        var pixel = $scope.map.getPixelFromCoordinate(coordinate);
+
+        console.log(pixel);
+
+        overlay.setPosition(coordinate);
+
+        $scope.marker = feature.getProperties().marker;
+
+        markerService.listAttributeByMarker($scope.marker.id, {
+          callback: function (result) {
+            $scope.attributesByMarker = result;
+
+            console.log(result);
+
+            //content.innerHTML = result;
+            container.style.display = 'block';
+
+            $('#popup1').css('left', mousePixel[0]);
+            $('#popup1').css('top', mousePixel[1]);
+            $('#popup1').css('bottom', 'initial');
+
+            /*angular.forEach(result, function (markerAttribute, index) {
+              if (markerAttribute.attribute.type == "NUMBER") {
+                markerAttribute.value = parseInt(markerAttribute.value);
+              }
+            });*/
+
+            $scope.$apply();
+
+          },
+          errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+          }
+        });
+
+        //console.log($scope.marker);
+      }
+    }
+
+    /*var info = document.getElementById('info');
+    if (feature) {
+      console.log(feature);
+      info.innerHTML = feature.getId() + ': ' + feature.get('name');
+    } else {
+      info.innerHTML = '&nbsp;';
+    }*/
+
+
+    /*if (feature !== highlight) {
+     if (highlight) {
+     featureOverlay.removeFeature(highlight);
+     }
+     if (feature) {
+     featureOverlay.addFeature(feature);
+     }
+     highlight = feature;
+     }*/
+
+  };
+
+  /**
    * Method that initializes the Google Maps map and its settings
    */
   $scope.initializeGMAP = function initializeGMAP() {
@@ -1416,8 +1502,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     if($scope.currentEntity.backgroundMap == 'GOOGLE_SATELLITE_LABELS')
       $scope.mapGoogle.setMapTypeId('hybrid');
 
-  }
+    /* POINTER MOVE LISTENER */
+    $scope.map.on('pointermove', function(evt) {
+      if (evt.dragging) {
+        return;
+      }
+      var pixel = $scope.map.getEventPixel(evt.originalEvent);
+      displayFeatureInfo(pixel);
+    });
 
+  };
 
   /**
    * Method that initializes the Open Street Map map and its settings
@@ -2598,7 +2692,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             if (markerAttribute.attribute.type == "NUMBER") {
               markerAttribute.value = parseInt(markerAttribute.value);
             }
-          })
+          });
 
 
           $scope.$apply();
@@ -4588,6 +4682,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $('.datepicker').mask("99/99/9999");
     }, 300);
   };
+
+
+
 };
 
 function isBooleanChecked(that) {
