@@ -495,13 +495,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.currentEntity.backgroundMap = backgroundMap;
 
-      if(backgroundMap.match(/GOOGLE/i))
+      if(backgroundMap.match(/GOOGLE/i)) {
+        $scope.mapConf.type = 'gmap';
         $scope.backgroundMap.map = 'GOOGLE';
+      }
 
-      if(backgroundMap.match(/MAP_QUEST/i))
+      if(backgroundMap.match(/MAP_QUEST/i)) {
+        $scope.mapConf.type = 'mapQuest';
         $scope.backgroundMap.map = 'MAP_QUEST';
+      }
 
       if(backgroundMap.match(/OPEN_STREET_MAP/i)) {
+        $scope.mapConf.type = 'osm';
         $scope.backgroundMap.map = 'OPEN_STREET_MAP';
         $scope.initializeOSM();
       }
