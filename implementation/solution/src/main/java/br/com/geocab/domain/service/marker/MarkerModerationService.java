@@ -115,8 +115,8 @@ public class MarkerModerationService
 	 * @return
 	 */
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
-	public MarkerModeration acceptMarker( Long id )
-	{			
+	public MarkerModeration acceptMarker( Long id)
+	{
 		try
 		{
 			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(id).get(0);
@@ -208,7 +208,7 @@ public class MarkerModerationService
 				
 				markerModeration = this.markerModerationRepository.save(markerModeration);
 				
-				this.accountMailRepository.sendMarkerAccepted( user, marker );
+				this.accountMailRepository.sendMarkerCanceled( user, marker );
 				
 				return marker;
 			}
@@ -234,7 +234,6 @@ public class MarkerModerationService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public MarkerModeration refuseMarker( Long markerId, Motive motive, String description )
 	{			
-		
 		
 		try
 		{

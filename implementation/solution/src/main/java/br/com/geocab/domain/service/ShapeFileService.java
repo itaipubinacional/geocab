@@ -43,17 +43,17 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.AttributeDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 
+import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.shapefile.ShapeFile;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
@@ -138,6 +138,9 @@ public class ShapeFileService
 			String pathFile = PATH_SHAPE_FILES_IMPORT + String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis());
 			// Lê os arquivos
 			List<File> files = new ArrayList<File>();
+			
+			List<Marker> markers = new ArrayList<>();
+			
 			for (ShapeFile shapeFile : shapeFiles)
 			{
 				files.add(this.readFile(shapeFile, pathFile));
@@ -148,20 +151,14 @@ public class ShapeFileService
 			{
 				if (shapeFile.getType() == ShpFileType.SHP)
 				{
-					importt(this.readFile(shapeFile, pathFile));
+					markers = importt(this.readFile(shapeFile, pathFile));
 				}
 			}
 			
-			
-			// ShpFiles shpFiles = new ShpFiles(file);
-			//
-			// FileDataStore store = FileDataStoreFinder.getDataStore(file);
-			// SimpleFeatureSource featureSource = store.getFeatureSource();
-
 			// Deleta o arquivo
 			delete(new File(PATH_SHAPE_FILES_IMPORT));
 			
-			return null;
+			return markers;
 		}
 		catch (Exception e)
 		{
@@ -170,7 +167,7 @@ public class ShapeFileService
 		}
 	}
 	
-	private void importt(File file)
+	private List<Marker> importt(File file)
 	{
 		try
 		{
@@ -186,52 +183,42 @@ public class ShapeFileService
 		    
 		    List<Marker> markers = new ArrayList<>();
 		    
-		    try (FeatureIterator<SimpleFeature> features = collection.features()) 
-		    {
-		    	while (features.hasNext()) 
-		        {
-		    		Marker marker = new Marker();
-		            SimpleFeature feature = features.next();
-		            
-//		            for (Object attribute : feature.getAttributes())
-					{//TODO trocar the_geom pelo nome da camada?
-//						System.out.println(attribute);
-//						System.out.println(feature.getType().getAttributeDescriptors());
-						for (Property property : feature.getProperties())
-						{
-//							System.out.println(property.getName());
-//							System.out.println(property.getDescriptor());
-//							System.out.println(property.getType().getDescription());
-//							System.out.println(property.getValue());
-							//TODO AQUI ESTÃO ASPROPRIEADEADS QUE FORENCEM OS ATRIBUTOS
-							System.out.println(property.getDescriptor().getType().getBinding());
-							// Deve ignorar a propriedade "the_geom"
-							if ("the_geom" != property.getDescriptor().getName().toString())
-							{
-								
-								marker.setLocation(new Point());
-							}
-							System.out.println(property.getDescriptor().getName());
-						}
-//						for (AttributeDescriptor attributeDescriptor : feature.getType().getAttributeDescriptors())
-//						{
-//							System.out.println(attributeDescriptor.getDefaultValue());
-//							System.out.println(attributeDescriptor.getName());
-//							System.out.println(attributeDescriptor.getLocalName());
-//							System.out.println(attributeDescriptor.getType().getName());
-//							System.out.println(attributeDescriptor.getType().getDescription());
-//						}
+		    FeatureIterator<SimpleFeature> features = collection.features(); 
+		    
+	    	while (features.hasNext()) 
+	        {
+	    		SimpleFeature feature = features.next();
+	            
+    			Marker marker = new Marker();
+    			
+    			Coordinate coordinate = new Coordinate(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
+    			
+    			Point point = new Point(coordinate);
+    			
+    			marker.setLocation(point);
+    			
+	            List<MarkerAttribute> markersAttributes = new ArrayList<>();
+				for (Property property : feature.getProperties())
+				{
+					// Deve ignorar a propriedade "the_geom"
+					if (property.getDescriptor().getName().toString() != "the_geom")
+					{
+						Attribute attribute = new Attribute(null, property.getDescriptor().getName().toString(), property.getDescriptor().getType().getBinding().toString(), null);
+						MarkerAttribute markerAttribute = new MarkerAttribute(null, property.getDescriptor().getName().toString(), marker, attribute);
+						markersAttributes.add(markerAttribute);
 					}
-//		            System.out.print(feature.getID());
-		            //TODO here
-//		            System.out.print(": ");
-		            System.out.println(feature.getDefaultGeometryProperty().getValue());
-		        }
-		    }
+				}
+				marker.setMarkerAttribute(markersAttributes);
+				
+				markers.add(marker);
+	        }
+		    	
+		    return markers;
 		}
 		catch ( IOException e)
 		{
 			e.printStackTrace();
+			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
 		}
 	}
 	
@@ -290,11 +277,7 @@ public class ShapeFileService
 			}
 		}
 		return new ArrayList<Layer>(layers);
-	}
-	
-//	@Autowired
-//	ILayerRepository layerRepository;
-	
+	}	
 	
 	/**
 	 * Serviço de exportação para shapeFile
@@ -317,9 +300,7 @@ public class ShapeFileService
 				
 				layer.setName(layer.getName().replaceAll(" ", "_"));
 				
-				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), /*layer.getName() + */"the_geom:MultiPoint,"+layer.formattedAttributes());
-	
-//				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), layer.getName() + ":Point,"+layer.formattedAttributes());
+				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), "the_geom:Point,"+layer.formattedAttributes());
 				
 		        DefaultFeatureCollection collection = new DefaultFeatureCollection();
 	   
@@ -333,9 +314,7 @@ public class ShapeFileService
 	                double latitude = marker.getLocation().getY();
 	
 	                Point point = factory.createPoint(new Coordinate(longitude, latitude));
-	                //Padronizamos no formato multiPoint, da mesma forma que é a exportação do geoserver
-	                MultiPoint multiPoint = new MultiPoint(new Point[]{point}, factory);
-	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{multiPoint}, null);
+	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
 		
 	                collection.add(feature);
 	            }
@@ -373,10 +352,11 @@ public class ShapeFileService
 		            transaction.close();
 		        }
 			}
-			catch (SchemaException | IOException e)
+			catch (final SchemaException | IOException e)
 			{
-				// TODO: handle exception
 				e.printStackTrace();
+				LOG.info(e.getMessage());
+				throw new RuntimeException("Ocorreu um erro durante a exportação: " + e.getMessage());
 			}
 	    }
 		
@@ -388,6 +368,7 @@ public class ShapeFileService
 
 		return fileTransfer;
 	}
+	
 	/**
 	 * Compacta os arquivos .shp, .dbf e shx para o formato zip e devolve um fileTransfer
 	 * @param pathExport
@@ -463,6 +444,34 @@ public class ShapeFileService
 		{
 			file.delete();
 		}
+	}
+	
+	/**
+	 * Pega a string com as coordenadas e retorna a coordenada 'X'
+	 * @param coordinateString
+	 * @return
+	 */
+	private static double getX(String coordinateString)
+	{
+		coordinateString = coordinateString.replace("POINT (", "");
+		coordinateString = coordinateString.replace(")", "");
+		coordinateString = coordinateString.substring(0, coordinateString.indexOf(" "));
+		double doubleCoordinate = Double.parseDouble(coordinateString);
+		return doubleCoordinate;
+	}
+	
+	/**
+	 * Pega a string com as coordenadas e retorna a coordenada 'Y'
+	 * @param coordinateString
+	 * @return
+	 */
+	private static double getY(String coordinateString)
+	{
+		coordinateString = coordinateString.replace("POINT (", "");
+		coordinateString = coordinateString.replace(")", "");
+		coordinateString = coordinateString.substring(coordinateString.indexOf(" "), coordinateString.length());
+		double doubleCoordinate = Double.parseDouble(coordinateString);
+		return doubleCoordinate;
 	}
 
 }

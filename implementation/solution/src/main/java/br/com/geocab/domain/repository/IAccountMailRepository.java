@@ -35,4 +35,13 @@ public interface IAccountMailRepository
 	 * @param marker
 	 */
 	public Future<Void> sendMarkerRefused( User user, Marker marker, MotiveMarkerModeration motiveMarkerModeration );
+	
+	/**
+	 * 
+	 * @param user
+	 * @param marker
+	 * @return
+	 */
+	public Future<Void> sendMarkerCanceled( User user, Marker marker );
+	
 }
