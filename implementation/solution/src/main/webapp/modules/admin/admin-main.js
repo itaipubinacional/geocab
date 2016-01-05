@@ -144,8 +144,6 @@
             menu: "access-group"
         });
 		
-	
-	
 		//Marker moderation
 		$stateProvider.state('marker-moderation', {
 			url : "/marker-moderation",
@@ -161,7 +159,11 @@
 			//templateUrl : "modules/admin/ui/marker-moderation/marker-moderation-view.jsp",
 			controller : MarkersController,
 			menu: 'markers'
-		});
+		})
+		.state('markers.detail', {
+			url: "/detail/:id",
+			menu: 'markers'
+        });
 		
 	});
 	
