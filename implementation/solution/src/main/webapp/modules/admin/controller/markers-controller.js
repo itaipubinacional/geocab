@@ -93,6 +93,23 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
         }
     });
+    
+    /**
+     * Handler que escuta as mudanças de URLs pertecentes ao estado da tela.
+     * Ex.: list, add, detail, edit
+     *
+     * Toda vez que ocorre uma mudança de URL se via botão, troca de URL manual, ou ainda
+     * ao vançar e voltar do browser, este evento é chamado.
+     *
+     */
+    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+    	if ($state.current.name == 'markers.detail'){
+//    		console.log('HERE');
+//    		$scope.changeToList();
+    	};
+    });
+    
 
 
     /*-------------------------------------------------------------------
@@ -420,24 +437,146 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      *      /create -> changeToInsert()
      *
      * If the State is not found, he directs to the listing,
-     * Although the front controller of angle won't let enter an invalid URL.
+     * Although the finitialize = function (toState, toParams, fromState, fromParams) {
+
+ront controller of angle won't let enter an invalid URL.
      */
     $scope.initialize = function (toState, toParams, fromState, fromParams) {
 
-        /**
+    	/**
          * It is necessary to remove the sortInfo attribute because the return of an edition was doubling the value of the same with the Sort attribute
          * preventing the ordinations in the columns of the grid.
          */
 
         $log.info("Starting the front controller.");
 
-        //$scope.itensMarcados = selectedGroups.slice(0);
-
-        $scope.changeToList();
-
         $scope.loadMap();
+        
+        if (toParams.id) {
+        	markerService.findMarkerById(toParams.id,{
+        		callback: function (result) {
+        			$scope.changeToDetail(result);
+        			$scope.$apply();
+                },
+                errorHandler: function (message, exception) {
+                    $scope.message = {type: "error", text: message};
+                    $scope.$apply();
+                }
+        	});
+		}else{
+	        $scope.changeToList();
+		}
 
     };
+    
+    $scope.buildMarker = function(markers){
+
+        $scope.drag = false;
+        var coordenates = [];
+
+        angular.forEach(markers.content, function (marker, index) {
+
+            /**
+             * Verify status
+             * */
+            var statusColor = $scope.verifyStatusColor(marker.status);
+
+            var dragBox = new ol.interaction.DragBox({
+                condition: function () {
+                    return $scope.selectMarkerTool;
+                },
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [0, 0, 255, 1]
+                    })
+                })
+            });
+
+            dragBox.on('boxend', function (e) {
+
+                var extent = dragBox.getGeometry().getExtent();
+                var markers = [];
+
+                angular.forEach($scope.features, function (feature, index) {
+                    var marker = feature.feature.getProperties().marker;
+                    $scope.selectMarker(marker);
+
+                    var extentMarker = feature.extent;
+                    var feature = feature.feature;
+
+                    if (ol.extent.containsExtent(extent, extentMarker)) {
+                        markers.push(marker.id);
+
+                        angular.forEach($scope.selectedFeatures, function (selected, index) {
+                            if (selected.marker.id == marker.id) {
+                                selected.feature.push(feature);
+                            }
+                        });
+
+                    }
+                });
+
+                if (markers.length) {
+                    $scope.changeToList(markers);
+                    $scope.dragMarkers = markers;
+                }
+
+
+                $scope.drag = true;
+            });
+
+
+            dragBox.on('boxstart', function (e) {
+                $scope.clearFeatures();
+            });
+
+            $scope.map.addInteraction(dragBox);
+
+            var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+            var feature = new ol.Feature({
+                geometry: geometry,
+                marker: marker,
+            });
+
+            var fill = new ol.style.Fill({
+                color: statusColor,
+                width: 4.53
+            });
+            var stroke = new ol.style.Stroke({
+                color: '#3399CC',
+                width: 1.25
+            });
+
+            var source = new ol.source.Vector({features: [feature]});
+            var layer = new ol.layer.Vector({
+                source: source,
+                style: new ol.style.Style(
+                    {
+                        image: new ol.style.Circle({
+                            fill: fill,
+                            stroke: stroke,
+                            radius: 10,
+                        }),
+                        fill: fill,
+                        stroke: stroke
+                    }
+                ),
+                maxResolution: minScaleToMaxResolution(marker.layer.minimumScaleMap),
+                minResolution: maxScaleToMinResolution(marker.layer.maximumScaleMap)
+            });
+
+            source.addFeatures(source);
+
+            coordenates.push(geometry.getCoordinates());
+
+            $scope.features.push({'feature': feature, "extent": source.getExtent(), 'layer': layer});
+
+            $scope.map.addLayer(layer);
+
+            $scope.extent = new ol.extent.boundingExtent(coordenates);
+        });
+    };
+
 
     /**
      * Performs initial procedures (prepares the State)
@@ -448,8 +587,10 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * To change to this State, one must first load the data from the query.
      */
     $scope.changeToList = function (markers) {
+    	 
+        
         $log.info("changeToList");
-
+        
         $scope.imgResult = null;
 
         $scope.itensMarcados = [];
@@ -547,7 +688,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
         $scope.listAttributesByMarker();
 
-
+      //Constrói o ponto no mapa
+        $scope.buildMarker({content : [marker]});
     };
 
     /**
@@ -566,7 +708,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         $log.info("changeToHistory");
         var pageRequest = new PageRequest();
         $scope.listMarkerModerationByMarker($scope.currentEntity.id, pageRequest);
-
     };
 
     /**
