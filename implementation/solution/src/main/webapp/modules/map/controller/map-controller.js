@@ -1402,12 +1402,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         if(!$('#popup1').is(':visible')) {
 
           container.style.display = 'block';
+          $('#popup1').css('z-index', -1);
 
           markerService.listAttributeByMarker($scope.markerOnHover.id, {
             callback: function (result) {
 
               $scope.attributesByMarkerOnHover = result;
               $scope.$apply();
+
+              angular.forEach($scope.attributesByMarkerOnHover, function(attribute){
+                  if(attribute.attribute.visible)
+                    $('#popup1').css('z-index', 0);
+              });
 
               var left = coordinatePixel[0] - $('#popup1').outerWidth() / 2;
               var top = (coordinatePixel[1] - $('#popup1').outerHeight()) - 30;
