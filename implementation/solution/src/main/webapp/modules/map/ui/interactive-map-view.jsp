@@ -1121,7 +1121,7 @@ uri="http://www.springframework.org/security/tags"%>
     <!-- Google Maps -->
     <div id="gmap" style="width: 0; height: 0"></div>
 
-    <div id="typeMapQuest"
+    <!--<div id="typeMapQuest"
          ng-if="mapConf.active == 'mapQuest_osm' || mapConf.active == 'mapQuest_sat'"
          ng-mouseover="hideMousePosition()"
          style="position: absolute; top: 20px; right: 10px; z-index: 1;">
@@ -1129,7 +1129,7 @@ uri="http://www.springframework.org/security/tags"%>
               class="btn btn-default btn-xs">OSM</button>
       <button type="button" ng-click="initializeMapQuestSAT()"
               class="btn btn-default btn-xs">SAT</button>
-    </div>
+    </div>-->
 
     <!-- Openlayer Map -->
     <div id="olmap"

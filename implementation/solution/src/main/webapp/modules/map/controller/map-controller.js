@@ -837,6 +837,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $("div.msgMap").css("display", "none");
 
+
+
     });
 
     /**
@@ -1506,6 +1508,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.mapGoogle.setMapTypeId('hybrid');
 
     $scope.addEventListenerPointerMove();
+
+    setTimeout(function(){
+      $('.gmnoprint:eq(4)').hide();
+    }, 1000);
 
   };
 
