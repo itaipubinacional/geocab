@@ -78,6 +78,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * */
   $scope.attributesByLayer = [];
 
+  $scope.attributesByMarkerOnHover = [];
+
   /*
    *
    * */
@@ -354,7 +356,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.firstTime = true;
 
-  var overlay = new ol.Overlay({
+  $scope.overlay = new ol.Overlay({
     element: container
   });
 
@@ -415,7 +417,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       target: $scope.olMapDiv,
       view: $scope.view,
-      overlays: [overlay]
+      overlays: [$scope.overlay]
     });
 
 
@@ -1365,7 +1367,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
 
   var container = document.getElementById('popup1');
-  var content = document.getElementById('popup-content');
+  var content = document.getElementById('popup-content1');
+  //var closer = document.getElementById('popup-closer');
+
+  /**
+   * Add a click handler to hide the popup.
+   * @return {boolean} Don't follow the href.
+   */
+  /*closer.onclick = function() {
+    container.style.display = 'none';
+    closer.blur();
+    return false;
+  };*/
 
   var displayFeatureInfo = function(pixel) {
 
@@ -1384,28 +1397,21 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         console.log(pixel);
 
-        overlay.setPosition(coordinate);
+        $scope.overlay.setPosition(coordinate);
 
-        $scope.marker = feature.getProperties().marker;
+        $scope.markerOnHover = feature.getProperties().marker;
 
-        markerService.listAttributeByMarker($scope.marker.id, {
+        markerService.listAttributeByMarker($scope.markerOnHover.id, {
           callback: function (result) {
-            $scope.attributesByMarker = result;
+            $scope.attributesByMarkerOnHover = result;
 
             console.log(result);
 
-            //content.innerHTML = result;
             container.style.display = 'block';
 
             $('#popup1').css('left', mousePixel[0]);
             $('#popup1').css('top', mousePixel[1]);
             $('#popup1').css('bottom', 'initial');
-
-            /*angular.forEach(result, function (markerAttribute, index) {
-              if (markerAttribute.attribute.type == "NUMBER") {
-                markerAttribute.value = parseInt(markerAttribute.value);
-              }
-            });*/
 
             $scope.$apply();
 
@@ -1416,29 +1422,22 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           }
         });
 
-        //console.log($scope.marker);
       }
-    }
-
-    /*var info = document.getElementById('info');
-    if (feature) {
-      console.log(feature);
-      info.innerHTML = feature.getId() + ': ' + feature.get('name');
     } else {
-      info.innerHTML = '&nbsp;';
-    }*/
+      console.log('mouse out');
+      $('#popup1').hide();
+    }
+  };
 
-
-    /*if (feature !== highlight) {
-     if (highlight) {
-     featureOverlay.removeFeature(highlight);
-     }
-     if (feature) {
-     featureOverlay.addFeature(feature);
-     }
-     highlight = feature;
-     }*/
-
+  $scope.addEventListenerPointerMove = function() {
+    /* POINTER MOVE LISTENER */
+    $scope.map.on('pointermove', function (evt) {
+      if (evt.dragging) {
+        return;
+      }
+      var pixel = $scope.map.getEventPixel(evt.originalEvent);
+      displayFeatureInfo(pixel);
+    });
   };
 
   /**
@@ -1502,14 +1501,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     if($scope.currentEntity.backgroundMap == 'GOOGLE_SATELLITE_LABELS')
       $scope.mapGoogle.setMapTypeId('hybrid');
 
-    /* POINTER MOVE LISTENER */
-    $scope.map.on('pointermove', function(evt) {
-      if (evt.dragging) {
-        return;
-      }
-      var pixel = $scope.map.getEventPixel(evt.originalEvent);
-      displayFeatureInfo(pixel);
-    });
+    $scope.addEventListenerPointerMove();
 
   };
 
@@ -1546,16 +1538,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.rasterMapQuestSAT.setVisible(false);
       }
 
-
       //$scope.map.addLayer($scope.raster);
       $scope.rasterOSM.setVisible(true);
 
       $scope.mapConf.active = $scope.MAP_TYPE_OSM;
 
+      $scope.addEventListenerPointerMove();
+
     }
-
-  }
-
+  };
 
   /**
    *
@@ -1595,6 +1586,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.rasterMapQuestOSM.setVisible(true);
 
       $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_OSM;
+
+      $scope.addEventListenerPointerMove();
 
     }
   };
@@ -1640,8 +1633,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_SAT;
 
+      $scope.addEventListenerPointerMove();
     }
-  }
+  };
 
 
   /*-------------------------------------------------------------------

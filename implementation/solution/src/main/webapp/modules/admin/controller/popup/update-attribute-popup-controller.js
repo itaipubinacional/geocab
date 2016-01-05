@@ -77,7 +77,8 @@ function UpdateAttributePopUpController($scope, $injector,$modalInstance, $state
 		$scope.parentEntity.name = $scope.currentEntity.name;
 		$scope.parentEntity.type = $scope.currentEntity.type;
 		$scope.parentEntity.required = $scope.currentEntity.required;
-		
+		$scope.parentEntity.visible = $scope.currentEntity.visible;
+
 		$scope.close();
 	}
 
