@@ -1382,10 +1382,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   var displayFeatureInfo = function(pixel) {
 
-    var mousePixel = pixel;
-
-    console.log(mousePixel);
-
     var feature = $scope.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
       return feature;
     });
@@ -1395,34 +1391,30 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         var geometry = feature.getGeometry();
         var coordinate = geometry.getCoordinates();
-        var pixel = $scope.map.getPixelFromCoordinate(coordinate);
-
-        console.log(pixel);
+        var coordinatePixel = $scope.map.getPixelFromCoordinate(coordinate);
 
         $scope.overlay.setPosition(coordinate);
 
         $scope.markerOnHover = feature.getProperties().marker;
 
-        if($('#popup1').is(':visible') && $scope.markerOnHover.layer.id != $scope.attributesByMarkerOnHover[0].marker.layer.id || !$scope.attributesByMarkerOnHover[0]) {
+        if(!$('#popup1').is(':visible')) {
+
+          container.style.display = 'block';
 
           markerService.listAttributeByMarker($scope.markerOnHover.id, {
             callback: function (result) {
+
               $scope.attributesByMarkerOnHover = result;
+              $scope.$apply();
 
-              console.log(result);
-
-              container.style.display = 'block';
-
-              var left = pixel[0] - $('#popup1').outerWidth() / 2;
-              var top = (pixel[1] - $('#popup1').outerHeight()) - 30;
+              var left = coordinatePixel[0] - $('#popup1').outerWidth() / 2;
+              var top = (coordinatePixel[1] - $('#popup1').outerHeight()) - 30;
 
               $('#popup1').css('left', left);
               $('#popup1').css('top', top);
               $('#popup1').css('bottom', 'initial');
 
               $('.ol-popup1:after').css('left', $('#popup1').outerWidth() / 2);
-
-              $scope.$apply();
 
             },
             errorHandler: function (message, exception) {
@@ -1434,9 +1426,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       }
     } else {
-      console.log('mouse out');
-      $('#popup1').hide();
 
+      $('#popup1').hide();
       $scope.attributesByMarkerOnHover = [];
 
     }

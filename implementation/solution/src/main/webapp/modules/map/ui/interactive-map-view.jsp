@@ -1146,10 +1146,11 @@ uri="http://www.springframework.org/security/tags"%>
   <div id="popup1" class="ol-popup1">
     <div id="popup-content1">
       <!--<a href="#" id="popup-closer" class="ol-popup1-closer"></a>-->
-      <span ng-repeat="attribute in attributesByMarkerOnHover" ng-if="attribute.attribute.visible && attribute.attribute.type != 'PHOTO_ALBUM'">
-        <b>{{ attribute.attribute.name }}</b> - {{ attribute.value }}
-        <br>
-      </span>
+      <div ng-repeat="attribute in attributesByMarkerOnHover" ng-if="attribute.attribute.visible && attribute.attribute.type != 'PHOTO_ALBUM'">
+        <span ng-if="attribute.attribute.type != 'BOOLEAN'"><b>{{ attribute.attribute.name }}</b> - {{ attribute.value }}</span>
+        <span ng-if="attribute.value == 'Yes'"><b>{{ attribute.attribute.name }}</b> - <spring:message code="Yes"/></span>
+        <span ng-if="attribute.value == 'No'"><b>{{ attribute.attribute.name }}</b> - <spring:message code="No"/></span>
+      </div>
     </div>
   </div>
 
