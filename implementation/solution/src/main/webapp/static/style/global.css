@@ -51,3 +51,55 @@
 .datepicker{
 	/*z-index:10000 !important;*/
 }
+
+/* POP UP*/
+.ol-popup1 {
+    display: none;
+    position: absolute;
+    background-color: white;
+    -moz-box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    /*bottom: 12px;
+    left: -50px;*/
+}
+.ol-popup1 span{
+    text-align: left;
+    width: 100%;
+    display: block;
+}
+#popup-content1{
+    position: relative; text-align: center
+}
+#popup-content1:after, .ol-popup1:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+#popup-content1:after {
+    margin-top: 15px;
+    border-top-color: white;
+    border-width: 10px;
+    margin-left: -10px;
+}
+#popup-content1:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    margin-left: -11px;
+}
+.ol-popup1-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+}
+.ol-popup1-closer:after {
+    content: "✖";
+}

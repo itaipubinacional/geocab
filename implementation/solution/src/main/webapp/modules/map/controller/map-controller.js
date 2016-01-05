@@ -78,6 +78,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * */
   $scope.attributesByLayer = [];
 
+  $scope.attributesByMarkerOnHover = [];
+
   /*
    *
    * */
@@ -354,6 +356,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.firstTime = true;
 
+  $scope.overlay = new ol.Overlay({
+    element: container
+  });
+
   /*-------------------------------------------------------------------
    * 		 				 	  NAVIGATIONS
    *-------------------------------------------------------------------*/
@@ -410,7 +416,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       ]),
 
       target: $scope.olMapDiv,
-      view: $scope.view
+      view: $scope.view,
+      overlays: [$scope.overlay]
     });
 
 
@@ -672,7 +679,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     };
 
     /**
-     * Click event to prompt the geoserver the information layer of the clicked coordinat
+     * Click event to prompt the geoserver the information layer of the clicked coordinate
      */
     $scope.map.on('click', function (evt) {
 
@@ -1356,6 +1363,97 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    *-------------------------------------------------------------------*/
 
   /**
+   * Create an overlay to anchor the popup to the map.
+   */
+
+  var container = document.getElementById('popup1');
+  var content = document.getElementById('popup-content1');
+  //var closer = document.getElementById('popup-closer');
+
+  /**
+   * Add a click handler to hide the popup.
+   * @return {boolean} Don't follow the href.
+   */
+  /*closer.onclick = function() {
+    container.style.display = 'none';
+    closer.blur();
+    return false;
+  };*/
+
+  var displayFeatureInfo = function(pixel) {
+
+    var mousePixel = pixel;
+
+    console.log(mousePixel);
+
+    var feature = $scope.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+      return feature;
+    });
+
+    if (feature) {
+      if (typeof feature.getProperties().marker != "undefined") {
+
+        var geometry = feature.getGeometry();
+        var coordinate = geometry.getCoordinates();
+        var pixel = $scope.map.getPixelFromCoordinate(coordinate);
+
+        console.log(pixel);
+
+        $scope.overlay.setPosition(coordinate);
+
+        $scope.markerOnHover = feature.getProperties().marker;
+
+        if($('#popup1').is(':visible') && $scope.markerOnHover.layer.id != $scope.attributesByMarkerOnHover[0].marker.layer.id || !$scope.attributesByMarkerOnHover[0]) {
+
+          markerService.listAttributeByMarker($scope.markerOnHover.id, {
+            callback: function (result) {
+              $scope.attributesByMarkerOnHover = result;
+
+              console.log(result);
+
+              container.style.display = 'block';
+
+              var left = pixel[0] - $('#popup1').outerWidth() / 2;
+              var top = (pixel[1] - $('#popup1').outerHeight()) - 30;
+
+              $('#popup1').css('left', left);
+              $('#popup1').css('top', top);
+              $('#popup1').css('bottom', 'initial');
+
+              $('.ol-popup1:after').css('left', $('#popup1').outerWidth() / 2);
+
+              $scope.$apply();
+
+            },
+            errorHandler: function (message, exception) {
+              $scope.message = {type: "error", text: message};
+              $scope.$apply();
+            }
+          });
+        }
+
+      }
+    } else {
+      console.log('mouse out');
+      $('#popup1').hide();
+
+      $scope.attributesByMarkerOnHover = [];
+
+    }
+  };
+
+  $scope.addEventListenerPointerMove = function() {
+    /* POINTER MOVE LISTENER */
+    $scope.map.on('pointermove', function (evt) {
+      if (evt.dragging) {
+        return;
+      }
+      var pixel = $scope.map.getEventPixel(evt.originalEvent);
+      displayFeatureInfo(pixel);
+    });
+  };
+
+  /**
    * Method that initializes the Google Maps map and its settings
    */
   $scope.initializeGMAP = function initializeGMAP() {
@@ -1416,8 +1514,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     if($scope.currentEntity.backgroundMap == 'GOOGLE_SATELLITE_LABELS')
       $scope.mapGoogle.setMapTypeId('hybrid');
 
-  }
+    $scope.addEventListenerPointerMove();
 
+  };
 
   /**
    * Method that initializes the Open Street Map map and its settings
@@ -1452,16 +1551,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.rasterMapQuestSAT.setVisible(false);
       }
 
-
       //$scope.map.addLayer($scope.raster);
       $scope.rasterOSM.setVisible(true);
 
       $scope.mapConf.active = $scope.MAP_TYPE_OSM;
 
+      $scope.addEventListenerPointerMove();
+
     }
-
-  }
-
+  };
 
   /**
    *
@@ -1501,6 +1599,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.rasterMapQuestOSM.setVisible(true);
 
       $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_OSM;
+
+      $scope.addEventListenerPointerMove();
 
     }
   };
@@ -1546,8 +1646,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.mapConf.active = $scope.MAP_TYPE_MAPQUEST_SAT;
 
+      $scope.addEventListenerPointerMove();
     }
-  }
+  };
 
 
   /*-------------------------------------------------------------------
@@ -2598,7 +2699,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             if (markerAttribute.attribute.type == "NUMBER") {
               markerAttribute.value = parseInt(markerAttribute.value);
             }
-          })
+          });
 
 
           $scope.$apply();
@@ -4588,6 +4689,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $('.datepicker').mask("99/99/9999");
     }, 300);
   };
+
+
+
 };
 
 function isBooleanChecked(that) {

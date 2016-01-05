@@ -29,7 +29,7 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 			+ " markerAttribute.marker.id, markerAttribute.marker.status, markerAttribute.marker.created, "
 			+ "markerAttribute.marker.layer.id, markerAttribute.marker.layer.name, markerAttribute.marker.layer.title, "
 			+ "markerAttribute.marker.user.id, markerAttribute.marker.user.name, markerAttribute.marker.user.email, markerAttribute.marker.user.enabled, "
-			+ "markerAttribute.attribute.id, markerAttribute.attribute.name, markerAttribute.attribute.type, markerAttribute.attribute.required, markerAttribute.attribute.orderAttribute) " +
+			+ "markerAttribute.attribute.id, markerAttribute.attribute.name, markerAttribute.attribute.type, markerAttribute.attribute.required, markerAttribute.attribute.visible, markerAttribute.attribute.orderAttribute) " +
 				 " FROM MarkerAttribute markerAttribute "+
 				 " WHERE (markerAttribute.marker.id = :markerId)"+ 
 				 " ORDER BY markerAttribute.id ASC")
