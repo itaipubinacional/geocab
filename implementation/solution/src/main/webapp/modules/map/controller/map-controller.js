@@ -1384,6 +1384,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     var mousePixel = pixel;
 
+    console.log(mousePixel);
+
     var feature = $scope.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
       return feature;
     });
@@ -1401,31 +1403,42 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.markerOnHover = feature.getProperties().marker;
 
-        markerService.listAttributeByMarker($scope.markerOnHover.id, {
-          callback: function (result) {
-            $scope.attributesByMarkerOnHover = result;
+        if($('#popup1').is(':visible') && $scope.markerOnHover.layer.id != $scope.attributesByMarkerOnHover[0].marker.layer.id || !$scope.attributesByMarkerOnHover[0]) {
 
-            console.log(result);
+          markerService.listAttributeByMarker($scope.markerOnHover.id, {
+            callback: function (result) {
+              $scope.attributesByMarkerOnHover = result;
 
-            container.style.display = 'block';
+              console.log(result);
 
-            $('#popup1').css('left', mousePixel[0]);
-            $('#popup1').css('top', mousePixel[1]);
-            $('#popup1').css('bottom', 'initial');
+              container.style.display = 'block';
 
-            $scope.$apply();
+              var left = pixel[0] - $('#popup1').outerWidth() / 2;
+              var top = (pixel[1] - $('#popup1').outerHeight()) - 30;
 
-          },
-          errorHandler: function (message, exception) {
-            $scope.message = {type: "error", text: message};
-            $scope.$apply();
-          }
-        });
+              $('#popup1').css('left', left);
+              $('#popup1').css('top', top);
+              $('#popup1').css('bottom', 'initial');
+
+              $('.ol-popup1:after').css('left', $('#popup1').outerWidth() / 2);
+
+              $scope.$apply();
+
+            },
+            errorHandler: function (message, exception) {
+              $scope.message = {type: "error", text: message};
+              $scope.$apply();
+            }
+          });
+        }
 
       }
     } else {
       console.log('mouse out');
       $('#popup1').hide();
+
+      $scope.attributesByMarkerOnHover = [];
+
     }
   };
 
