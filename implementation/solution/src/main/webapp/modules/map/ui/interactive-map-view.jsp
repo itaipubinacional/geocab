@@ -32,6 +32,13 @@ uri="http://www.springframework.org/security/tags"%>
           <li ng-click="diminuirZoom()" title="<spring:message code="map.Zoom-out" />"><a>
           <div class="icon itaipu-icon-minus sidebar-icon"></div>
         </a></li>
+          <li ng-click="initializeSelectionTool()"
+              ng-class="{ferramenta_active : menu.fcSelect}"
+              title="<spring:message code='admin.marker-moderation.Select-marker'/>">
+            <a>
+              <div class="select-moderation sidebar-icon" style="width: 37px; height: 20px;"></div>
+            </a>
+          </li>
           <li ng-if="hasPermissionCalculoDistancia"
               title="<spring:message code="map.Calculate-distance" />"
           ng-click="initializeDistanceCalc()"
@@ -444,6 +451,29 @@ uri="http://www.springframework.org/security/tags"%>
             </div>
           </form>
         </div>
+        <div class='rui-resizable-handle' style="background: #0077bf; width: 3px"></div>
+      </div>
+
+      <div id="sidebar-select-marker" style="min-width: 384px" class="sidebar-style rui-resizable-left resizable-test-block">
+
+        <div class='rui-resizable-content' style="position: static;">
+
+              <span ng-click="clearFcMarker('true')"
+                    style="z-index: 10000"
+                    class="icon itaipu-icon-close sidebar-close"
+                    title="<spring:message code='map.Close' />"
+                  ></span>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; top: 0">
+              <div id="tabs-6" ng-switch="LAYER_MENU_STATE" style="overflow:auto; width: auto" class="container">
+                <div class="sidebar-content-header"><spring:message code="map.New-post" /></div>
+
+                <br style="clear: both;"> <br>
+
+                {{ selectedMarkers | json }}
+              </div>
+            </div>
+        </div>
+
         <div class='rui-resizable-handle' style="background: #0077bf; width: 3px"></div>
       </div>
 

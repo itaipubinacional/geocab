@@ -85,6 +85,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * */
   $scope.screenMarkerOpenned = false;
 
+  $scope.screenSelectMarkerOpenned = false;
+
   $scope.marker;
 
   $scope.coordinatesFormat = '';
@@ -127,8 +129,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     fcDistancia: false,
     fcArea: false,
     fcKml: false,
-    fcMarker: false
+    fcMarker: false,
+    fcSelect: false
   };
+
+  /**
+   * select Marker tool
+   * */
+  $scope.selectMarkerTool = false;
+
+  $scope.selectedMarkers = [];
 
   /**
    * Variable that stores the list of layer groups with user access profile
@@ -1720,8 +1730,83 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.hideMousePosition = function () {
     var info = $('#info');
     info.tooltip('hide');
-  }
+  };
 
+
+  $scope.initializeSelectionTool = function () {
+
+    $scope.selectMarkerTool = $scope.menu.fcSelect = ($scope.selectMarkerTool == true) ? false : true;
+
+    $scope.menu = {
+      fcDistancia: false,
+      fcArea: false,
+      fcKml: false,
+      fcMarker: false,
+      fcSelect: true
+    };
+
+    var dragBox = new ol.interaction.DragBox({
+      condition: function () {
+        return $scope.selectMarkerTool;
+      },
+      style: new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: [0, 0, 255, 1]
+        })
+      })
+    });
+
+    dragBox.on('boxend', function (e) {
+
+      if(!$scope.screenSelectMarkerOpenned) {
+        $scope.toggleSidebar(300, '', '#sidebar-select-marker');
+
+        $scope.screenSelectMarkerOpenned = true;
+      }
+
+      var extent = dragBox.getGeometry().getExtent();
+      var markers = [];
+
+      angular.forEach($scope.internalLayers, function (feature, index) {
+
+        var marker = feature.feature.getProperties().marker;
+
+        var extentMarker = feature.extent;
+        var feature = feature.feature;
+
+        if (ol.extent.containsExtent(extent, extentMarker)) {
+
+          $scope.selectedMarkers.push(marker);
+
+          markers.push(marker.id);
+
+          angular.forEach($scope.selectedFeatures, function (selected, index) {
+            if (selected.marker.id == marker.id) {
+              selected.feature.push(feature);
+            }
+          });
+
+        }
+      });
+
+      if (markers.length) {
+        $scope.dragMarkers = markers;
+      }
+
+      $scope.drag = true;
+
+      console.log($scope.selectedMarkers);
+
+    });
+
+    dragBox.on('boxstart', function (e) {
+      //$scope.clearFeatures();
+      console.log('boxstart');
+    });
+
+    $scope.map.addInteraction(dragBox);
+
+  };
 
   /*-------------------------------------------------------------------
    * 		 	    FUNCTIONALITY TO CALCULATE DISTANCE AND AREA
@@ -1753,7 +1838,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     }
 
-    //If this functionality is active: deactivates and leavecaso mapa ativo for o google maps
+    //If this functionality is active: deactivates and leave caso mapa ativo for o google maps
     if ($scope.menu.fcDistancia) {
 
       $scope.menu.fcDistancia = false;
@@ -1766,7 +1851,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         fcDistancia: true,
         fcArea: false,
         fcKml: false,
-        fcMarker: false
+        fcMarker: false,
+        fcSelect: false
       };
 
       // add the measuring layer on a map
@@ -1778,7 +1864,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       // initializes the interaction
       addInteraction('LineString');
     }
-  }
+  };
 
   $scope.initializeMarker = function () {
 
@@ -1853,7 +1939,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         fcDistancia: false,
         fcArea: false,
         fcKml: false,
-        fcMarker: true
+        fcMarker: true,
+        fcSelect: false
       };
 
     }
@@ -1896,7 +1983,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         fcDistancia: false,
         fcArea: true,
         fcKml: false,
-        fcMarker: false
+        fcMarker: false,
+        fcSelect: false
       };
 
       // Add the layer of measurement on the map
@@ -3238,6 +3326,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             marker: marker,
           });
 
+          var source = new ol.source.Vector({features: [iconFeature]});
+
           var layer = new ol.layer.Vector({
             source: new ol.source.Vector({features: [iconFeature]}),
 
@@ -3249,7 +3339,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           $scope.map.addLayer(layer);
 
-          $scope.internalLayers.push({"layer": layer, "id": layerId});
+          $scope.internalLayers.push({"layer": layer, "id": layerId, "feature": iconFeature, "extent": source.getExtent()});
         });
 
         $scope.$apply();

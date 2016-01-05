@@ -112,7 +112,7 @@
     border: none!important;
     list-style: none;
     padding: 16px 8px;
-    height: 56px;
+    height: 50px;
     width: 60px;
     text-align: center;
     clear: both;
@@ -468,3 +468,7 @@ div.current-photo{position: relative}
 }*/
 
 div.gallery-thumbnails{}
+
+.select-moderation {
+    background: url(../../images/icon-select-moderation.png) 14px 0 no-repeat;
+}
