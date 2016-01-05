@@ -1,18 +1,21 @@
 /**
  * 
  */
-package br.com.geocab.domain.service;
+package br.com.geocab.application.scheduling;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.jcr.RepositoryException;
-import javax.transaction.Transactional;
 
+import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.marker.Marker;
@@ -23,15 +26,16 @@ import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoRepository;
+import br.com.geocab.domain.service.DataSourceService;
 import br.com.geocab.infrastructure.jcr.MetaFileRepository;
 
 /**
  * @author emanuelvictor
  *
  */
-@Service
-@Transactional
-public class ServiceTest
+@Component
+@Scope(proxyMode=ScopedProxyMode.TARGET_CLASS)
+public class PhotoScheduling
 {
 	
 	/**
@@ -39,88 +43,86 @@ public class ServiceTest
 	 */
 	private static final Logger LOG = Logger.getLogger(DataSourceService.class.getName());
 	
-//	/**
-//	 * 
-//	 */
-//	@Autowired
-//	private IMarkerRepository markerRepository;
-//	
-//	/**
-//	 * 
-//	 */
-//	@Autowired
-//	private IMarkerAttributeRepository markerAttributeRepository;
-//		
-//	/**
-//	 * 
-//	 */
-//	@Autowired
-//	private IPhotoAlbumRepository photoAlbumRepository;
-//	
 	/**
 	 * 
 	 */
-//	@Autowired
-	private MetaFileRepository metaFileRepository;
-//	
-//	/**
-//	 * 
-//	 */
-//	@Autowired
-//	private IPhotoRepository photoRepository;
-	
+	@Autowired
+	private IMarkerRepository markerRepository;
 	
 	/**
 	 * 
 	 */
 	@Autowired
-	public ServiceTest(IMarkerRepository markerRepository, IMarkerAttributeRepository markerAttributeRepository, IPhotoAlbumRepository photoAlbumRepository, MetaFileRepository metaFileRepository, IPhotoRepository photoRepository)
+	private IMarkerAttributeRepository markerAttributeRepository;
+		
+	/**
+	 * 
+	 */
+	@Autowired
+	private IPhotoAlbumRepository photoAlbumRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private MetaFileRepository metaFileRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IPhotoRepository photoRepository;
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	public void postConstruct()
 	{
-		super();
-		
-//		this.metaFileRepository = metaFileRepository;
-//		
-//		for (Marker marker : markerRepository.listAll())
-//		{
-//			
-//			try
-//			{
-//				
-//				this.verifyMarker(marker);
-//											
-//				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
-//				
-//				MarkerAttribute markerAttribute = new MarkerAttribute();
-//				markerAttribute.setMarker(marker);
-//				markerAttribute.setValue("Default photo album");
-//				
-//				markerAttribute = markerAttributeRepository.save(markerAttribute);
-//				
-//				
-//				PhotoAlbum photoAlbum = new PhotoAlbum();
-//				photoAlbum.setMarkerAttribute(markerAttribute);
-//				photoAlbum.getIdentifier();
-//				
-//				photoAlbum = photoAlbumRepository.save(photoAlbum);
-//				
-//				Photo photo = new Photo();
-//				photo.setDescription("Default description");
-//				photo.setPhotoAlbum(photoAlbum);
-//				photo.getIdentifier();
-//				
-//				photo = photoRepository.save(photo);
-//				
-//				photo = this.uploadImg(photo);
-//				
-//			}
-//			catch (RepositoryException | RuntimeException e)
-//			{
-//				e.printStackTrace();
-//			}
-//			
-//		}		
-		
+		for (Marker marker : markerRepository.listAll())
+		{
+			
+			try
+			{
+				
+				this.verifyMarker(marker);
+											
+				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
+				
+				MarkerAttribute markerAttribute = new MarkerAttribute();
+				markerAttribute.setMarker(marker);
+				markerAttribute.setValue("Default photo album");
+				
+				markerAttribute = markerAttributeRepository.save(markerAttribute);
+				
+				
+				PhotoAlbum photoAlbum = new PhotoAlbum();
+				photoAlbum.setMarkerAttribute(markerAttribute);
+				photoAlbum.getIdentifier();
+				
+				photoAlbum = photoAlbumRepository.save(photoAlbum);
+				
+				Photo photo = new Photo();
+				photo.setDescription("Default description");
+				photo.setPhotoAlbum(photoAlbum);
+				photo.getIdentifier();
+				final MetaFile metaFile = this.metaFileRepository.findByPath("/marker/" + marker.getId() + "/" + marker.getId(), true);
+				photo.setImage(new FileTransfer(metaFile.getName(),
+						metaFile.getContentType(), metaFile.getInputStream()));
+				
+				photo = photoRepository.save(photo);
+				
+				photo = this.uploadImg(photo);
+				
+			}
+			catch (RepositoryException | RuntimeException e)
+			{
+				e.printStackTrace();
+			}
+			
+		}	
 	}
+	
 	
 	/**
 	 * Salva uma foto e devolve o objeto foto
