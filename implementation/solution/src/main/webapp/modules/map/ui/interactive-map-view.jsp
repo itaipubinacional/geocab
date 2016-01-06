@@ -34,7 +34,7 @@ uri="http://www.springframework.org/security/tags"%>
         </a></li>
           <li ng-click="initializeSelectionTool()"
               ng-class="{ferramenta_active : menu.fcSelect}"
-              title="<spring:message code='admin.marker-moderation.Select-marker'/>">
+              title="<spring:message code='map.Select-posts'/>">
             <a>
               <div class="select-moderation sidebar-icon" style="width: 37px; height: 20px;"></div>
             </a>
@@ -465,27 +465,22 @@ uri="http://www.springframework.org/security/tags"%>
                   ></span>
             <div style="position: absolute; left: 0; right: 0; bottom: 0; top: 0">
               <div id="tabs-6" ng-switch="LAYER_MENU_STATE" style="overflow:auto; width: auto" class="container">
-                <div class="sidebar-content-header"><spring:message code="map.New-post" /></div>
+                <div class="sidebar-content-header"><spring:message code="map.Select-posts" /></div>
 
                 <br style="clear: both;"> <br>
+                <p>{{ markers.length }} registros selecionados</p>
 
-                <span>{{ markers.length }} registros selecionados</span>
                 <accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret" heightStyle="content">
                   <accordion-group ng-repeat="selected in selectedMarkers">
-
                     <accordion-heading>
                       <div style="cursor:pointer; padding: 10px 0;">
                         <i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-                        <span>{{ selected.name }} - {{ selected.markers.length }} </span>
+                        <span>{{ selected.name }} ({{ selected.markers.length }}) </span>
                       </div>
                     </accordion-heading>
-
                     <div ng-repeat="marker in selected.markers">
-
-                      {{ marker }}
-
+                      <p ng-click="showMarkerDetail(marker)">{{ $index + 1 }} - {{ marker.coordinate }}</p>
                     </div>
-
                   </accordion-group>
                 </accordion>
               </div>
