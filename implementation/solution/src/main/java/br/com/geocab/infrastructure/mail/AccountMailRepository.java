@@ -8,7 +8,6 @@ import java.util.concurrent.Future;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.velocity.app.VelocityEngine;
-import org.directwebremoting.WebContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,10 +18,10 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
-import br.com.geocab.domain.repository.IAccountMailRepository;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
+import br.com.geocab.domain.repository.IAccountMailRepository;
 
 /**
  * @author Rodrigo P. Fraga
@@ -51,7 +50,13 @@ public class AccountMailRepository implements IAccountMailRepository
 	 */
 	@Value("${mail.from}")
 	private String mailFrom;
-
+	
+	/**
+	 *
+	 */
+	@Value("${geocab.url}")
+	private String geocabUrl;
+	
 	/*-------------------------------------------------------------------
 	 * 		 					BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -109,7 +114,7 @@ public class AccountMailRepository implements IAccountMailRepository
                model.put("userName", user.getName() );
                model.put("marker", marker.getLayer().getName());
                
-               model.put("url", getURL() + "admin#/markers/detail/" + marker.getId());
+               model.put("url", geocabUrl + "/admin#/markers/detail/" + marker.getId());
 
                final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/accept-marker.html", StandardCharsets.ISO_8859_1.toString(), model);
                message.setText(content, true);
@@ -144,7 +149,7 @@ public class AccountMailRepository implements IAccountMailRepository
   	          model.put("marker", marker.getLayer().getName());
   	          model.put("motive", motiveMarkerModeration.getMotive().getName() + " - " + motiveMarkerModeration.getDescription());
   	          
-  	          model.put("url", getURL() + "admin#/markers/detail/" + marker.getId());
+  	          model.put("url", geocabUrl + "/admin#/markers/detail/" + marker.getId());
 
               final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/refuse-marker.html", StandardCharsets.ISO_8859_1.toString(), model);
               message.setText(content, true);
@@ -179,7 +184,7 @@ public class AccountMailRepository implements IAccountMailRepository
  	          model.put("userName", user.getName() );
  	          model.put("marker", marker.getLayer().getName());
  	          
- 	          model.put("url", getURL() + "admin#/markers/detail/" + marker.getId());
+ 	          model.put("url", geocabUrl + "/admin#/markers/detail/" + marker.getId());
 
              final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/cancel-marker.html", StandardCharsets.ISO_8859_1.toString(), model);
              message.setText(content, true);
@@ -189,11 +194,6 @@ public class AccountMailRepository implements IAccountMailRepository
      this.mailSender.send(preparator);
 
      return new AsyncResult<Void>(null);
-	}
-	
-	private static String getURL()
-	{
-		return WebContextFactory.get().getHttpServletRequest().getRequestURL().toString().substring(0, WebContextFactory.get().getHttpServletRequest().getRequestURL().toString().indexOf("geocab/") + 7);
 	}
 
 }
