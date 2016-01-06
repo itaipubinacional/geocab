@@ -116,6 +116,9 @@
 				<!-- jcaptcha version -->
 				<jcaptcha.version>1.0</jcaptcha.version>
 				
+				<!-- jcaptcha version -->
+				<mvn.geocab.url>http://localhost:8080/geocab</mvn.geocab.url>
+				
 			</properties>
 		</profile>
 
@@ -161,11 +164,10 @@
 				<!-- jcaptcha version -->
 				<jcaptcha.version>1.0</jcaptcha.version>
 				
+				<mvn.geocab.url>http://geocab.sbox.me</mvn.geocab.url>
+				
 			</properties>
 		</profile>
-
-
-
 
 	</profiles>
 
