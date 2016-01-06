@@ -50,19 +50,29 @@ public class AccessGroupService
 	 */
 	@Autowired
 	private IAccessGroupRepository accessGroupRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private IToolRepository toolRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private IUserRepository userRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private IAccessGroupCustomSearchRepository accessGroupCustomSearchRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private IAccessGroupLayerRepository accessGroupLayerRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private LayerGroupService layerGroupService;
 	

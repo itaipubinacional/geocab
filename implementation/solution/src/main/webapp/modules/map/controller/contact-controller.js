@@ -87,7 +87,7 @@ function ContactController($scope, $injector, $log, $state, $timeout, $modal,
 				errorHandler : function(message, exception) {
 					$scope.msg = {
 						type : "danger",
-						text : 'Erro ao enviar a mensagem!',
+						text : message,
 						dismiss : true
 					};
 					$scope.fadeMsg();

@@ -243,7 +243,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <label>Camada</label>
                 <div style="margin-bottom:5px;">
                   <select ng-disabled="selectLayerGroup"
-                          data-placeholder="Selecione uma camada" name="camada"
+                          data-placeholder="<spring:message code="admin.layer-config.Enter-the-layer"/>" name="camada"
                           ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                           ng-model="currentEntity.layer" chosen class="form-control"
                           ng-class="{ngInvalid: sidebarMarker.camada.$error.required && sidebarMarker.$submitted}"
@@ -519,7 +519,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <!-- no-results-text="Nenhum registro encontrado com" -->
 
                 <select ng-change="listAttributesByLayer()"
-                        data-placeholder="Selecione uma camada" name="camada"
+                        data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />"
                         ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                         ng-model="currentEntity.layer" chosen class="form-control"
                         ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
@@ -974,11 +974,11 @@ uri="http://www.springframework.org/security/tags"%>
               </div>
               <div ng-if="isExport">
 
-                <p><b>Filtrar camadas ativas</b></p>
+                <p><b><spring:message code="admin.filter-active-layers"/></b></p>
 
                 <!--<div>
                   <select ng-change="listAttributesByLayer()"
-                          data-placeholder="Selecione uma camada" name="camada"
+                          placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
                           ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                           ng-model="shapeFile.filter.layer" chosen class="form-control"
                           ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
@@ -1011,13 +1011,13 @@ uri="http://www.springframework.org/security/tags"%>
                 </div>
 
                 <div style="float: left;margin-top: 10px">
-                  <a href="" ng-click="clearFilters()">Limpar Filtros</a>
+                  <a href="" ng-click="clearFilters()"><spring:message code="clear.Filters"/></a>
                   <input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code='Filter'/>"
                          title="<spring:message code='Search'/>" class="btn btn-default"/>
                 </div>
 
                 <div style="float: left;clear: both">
-                  <button ng-click="exportShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success">Exportar</button>
+                  <button ng-click="exportShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="admin.shape-file.Export" /></button>
                 </div>
 
               </div>
@@ -1027,15 +1027,15 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <form novalidate name="form">
                   <div class="form-item-horizontal radio">
-                    <input type="radio" id="layer" ng-model="shapeFile.layerType"
+                    <input type="radio" id="layer" data-ng-model="shapeFile.layerType"
                            value="layer" ng-change="setLayerType()"> <label
-                      class="radio-label" for="layer"> Camada existente</label>
+                      class="radio-label" for="layer"><spring:message code="admin.layer-config.Existing-layer"/></label>
                   </div>
 
                   <div class="form-item-horizontal radio">
                     <input type="radio" id="new-layer" ng-model="shapeFile.layerType"
                            value="new" ng-change="setLayerType()"> <label
-                      class="radio-label" for="new-layer"> Nova camada</label>
+                      class="radio-label" for="new-layer"><spring:message code="admin.layer-config.New-layer"/></label>
                   </div>
 
                   <div class="form-item position-relative">
@@ -1059,7 +1059,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative">
-                    <select data-placeholder="Selecione uma camada" name="camada"
+                    <select placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
                             ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                             ng-model="shapeFile.filter.layer" chosen class="form-control"
                             ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
@@ -1104,14 +1104,14 @@ uri="http://www.springframework.org/security/tags"%>
                       <div class="input-group">
                         <input name="layerGroup" type="text" disabled class="form-control"
                                ng-model="shapeFile.form.layerGroup.name"
-                               placeholder="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
+                               placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />"
                                maxlength="144"
                                ng-minlength="1"
                                required
                                ng-class="{ ngInvalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)}" class="tooltip-validation}">
                           <span class="input-group-btn">
                               <button style="height: 34px" ng-click="selectLayerGroup()" class="btn btn-default"
-                                      title="<spring:message code='admin.layer-config.Enter-the-layer-group' />"
+                                      title="<spring:message code='admin.layer-config.Enter-the-layer' />"
                                       type="button"
                                       ng-disabled="shapeFile.form.dataSource == null">
                                   <i class="icon-plus-sign icon-large"></i>
@@ -1147,11 +1147,10 @@ uri="http://www.springframework.org/security/tags"%>
                     <div>
                       <button ng-click="selectAccessGroups()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary">Associar grupo</button>
                     </div>
-
                   </div>
 
                   <div>
-                    <button ng-click="importShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success">Salvar</button>
+                    <button ng-click="importShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="layer-group-popup.Save"/></button>
                   </div>
 
                 </form>

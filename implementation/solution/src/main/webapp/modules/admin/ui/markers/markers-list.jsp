@@ -33,7 +33,7 @@
 		    	<input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
 			       />
 
-		    	<input type="button" ng-click="clearFilters()" value="Limpar Filtros" class="btn btn-default" ng-disabled="currentPage == null"
+		    	<input type="button" ng-click="clearFilters()" value="<spring:message code='clear.Filters'/>" class="btn btn-default" ng-disabled="currentPage == null"
 			       />
 
 

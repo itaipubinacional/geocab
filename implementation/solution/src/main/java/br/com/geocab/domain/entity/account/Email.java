@@ -3,6 +3,8 @@
  */
 package br.com.geocab.domain.entity.account;
 
+import javax.mail.internet.InternetAddress;
+
 import org.directwebremoting.annotations.DataTransferObject;
 import org.springframework.util.Assert;
 
@@ -23,7 +25,6 @@ public class Email
 	/**
 	 * 
 	 */
-	@org.hibernate.validator.constraints.Email
 	private String email;
 	
 	/**
@@ -74,29 +75,49 @@ public class Email
 	 *-------------------------------------------------------------------*/
 
 	/**
-	 * FIXME ALTERAR PARA MENSAGENS INTERNACIONALIZADAS Valida o email
+	 * 
+	 * @param captcha
+	 * @throws Exception
 	 */
-	public void validate(Captcha captcha)
+	public void validate(Captcha captcha) throws Exception
 	{
-		Assert.isTrue(captcha.isCorrect(this.getAnswer()), "You are a robot?");
+		Assert.isTrue(captcha.isCorrect(this.getAnswer()), "contact.SecurityVerification.Incorrect");
 
 		this.validate();
 	}
 	
 	/**
-	 * FIXME ALTERAR PARA MENSAGENS INTERNACIONALIZADAS Valida o email
+	 * 
+	 * @throws Exception
 	 */
-	public void validate()
+	public void validate() throws Exception
 	{
-		// Verificar se o TODO @Email vai funcionar, se não funcionar fazer função
-		// validadora
-		Assert.isTrue(this.getEmail() != null, "Insira o email");
+		this.validate(this.getEmail());
 
-		Assert.isTrue(this.getName() != null, "Insira o nome");
+		Assert.isTrue(this.getName() != null, "contact.Insert.Name");
 
-		Assert.isTrue(this.getSubject() != null, "Insira o assunto");
+		Assert.isTrue(this.getSubject() != null, "contact.Insert.Subject");
 
-		Assert.isTrue(this.getMessage() != null, "Insira a mensagem");
+		Assert.isTrue(this.getMessage() != null, "contact.Insert.Message");
+	}
+	
+	/**
+	 * Valida o email
+	 * @param email
+	 * @throws Exception
+	 */
+	public void validate(String email) throws Exception
+	{
+		Assert.isTrue(this.getEmail() != null, "contact.Insert.Email");
+		InternetAddress emailAddr = new InternetAddress(email);
+        try
+		{
+        	emailAddr.validate();	
+		}
+		catch (Exception e)
+		{
+			throw new Exception("contact.Email.Invalid");
+		}
 	}
 
 	/*-------------------------------------------------------------------

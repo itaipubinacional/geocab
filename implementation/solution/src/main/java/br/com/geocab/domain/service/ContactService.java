@@ -3,11 +3,14 @@
  */
 package br.com.geocab.domain.service;
 
+import java.util.logging.Logger;
+
 import javax.servlet.http.HttpSession;
 
 import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -25,7 +28,18 @@ import nl.captcha.Captcha;
 @RemoteProxy(name = "contactService")
 public class ContactService
 {
-
+	
+	/**
+	 * Log
+	 */
+	private static final Logger LOG = Logger.getLogger( DataSourceService.class.getName() );
+	
+	/**
+	 * I18n 
+	 */
+	@Autowired
+	private MessageSource messages;
+	
 	/**
 	 * AccountMail Repository
 	 */
@@ -40,21 +54,27 @@ public class ContactService
 	 */
 	public Email contactUs(Email email)
 	{
-		if (this.getLoggedUser() != null)
-		{
-			email.setEmail(ContextHolder.getAuthenticatedUser().getUsername());
-			email.setName(ContextHolder.getAuthenticatedUser().getName());
+		try
+		{			
+			if (this.getLoggedUser() != null)
+			{
+				email.setEmail(ContextHolder.getAuthenticatedUser().getUsername());
+				email.setName(ContextHolder.getAuthenticatedUser().getName());
+			}
+			else
+			{
+				Assert.notNull(getCaptcha());
+				email.validate(getCaptcha());
+			}
+			email.validate();
+	
+			contactMailRepository.sendContactUs(email);
 		}
-		else
+		catch (Exception e)
 		{
-			Assert.notNull(getCaptcha());
-			email.validate(getCaptcha());
+			LOG.info(e.getMessage());
+			throw new RuntimeException(this.messages.getMessage(e.getMessage(), new Object [] {}, null ));
 		}
-
-		
-		email.validate();
-
-		contactMailRepository.sendContactUs(email);
 
 		return email;
 	}
