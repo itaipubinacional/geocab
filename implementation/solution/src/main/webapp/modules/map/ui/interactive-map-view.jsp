@@ -458,7 +458,7 @@ uri="http://www.springframework.org/security/tags"%>
 
         <div class='rui-resizable-content' style="position: static;">
 
-              <span ng-click="clearFcMarker('true')"
+              <span ng-click="closeSelectMarker()"
                     style="z-index: 10000"
                     class="icon itaipu-icon-close sidebar-close"
                     title="<spring:message code='map.Close' />"
