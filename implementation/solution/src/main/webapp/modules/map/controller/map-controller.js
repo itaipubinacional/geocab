@@ -627,14 +627,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         formattedLatitude  = parseFloat(formattedLatitude);
         formattedLongitude = parseFloat(formattedLongitude);
 
-        $scope.clearFcMarker();
+        $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+
+        //$scope.clearFcMarker();
 
         var iconStyle = new ol.style.Style({
           image: new ol.style.Icon(({
             anchor: [0.5, 1],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
-            src: 'static/images/marker.png'
+            src: $scope.currentEntity.layer.layerIcon
           }))
         });
 
@@ -669,23 +671,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     };
 
-    $scope.setMarkerCoordinatesFormat = function(){
-
-      if($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
-
-        console.log('DEGREES_DECIMAL');
-
+    $scope.setMarkerCoordinatesFormat = function() {
+      if ($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
         $scope.formattedLatitude  = $scope.latitude.toFixed(6);
         $scope.formattedLongitude = $scope.longitude.toFixed(6);
-
       } else {
-
-        console.log('DEGREES_MINUTES_SECONDS');
-
         $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude, true);
         $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude, false);
       }
-
     };
 
     /**
@@ -766,7 +759,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                 "group": layer.layerGroup.name
               });
 
-            })
+            });
 
             $scope.currentState = $scope.LIST_STATE;
 
@@ -1742,6 +1735,22 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
+  $scope.showMarkerDetail = function(marker) {
+    console.log(marker);
+
+    $scope.marker = marker;
+
+    $scope.screen = 'detail';
+    $scope.features.push({"feature": $scope.marker, "type": "internal"});
+
+    $scope.closeSelectMarker();
+
+    $timeout(function(){
+      $scope.toggleSidebarMarkerDetailUpdate(300);
+    }, 400);
+
+  };
+
   $scope.initializeSelectionTool = function () {
 
     /*if($scope.menu.fcSelect) {
@@ -1754,6 +1763,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.closeSelectMarker();
 
     } else {
+
+      if (!$scope.screenSelectMarkerOpenned && $scope.selectedMarkers.length) {
+
+        $scope.screenSelectMarkerOpenned = true;
+
+        $timeout(function() {
+          $scope.toggleSidebar(300, '', '#sidebar-select-marker');
+        }, 400);
+
+      }
 
       $scope.selectMarkerTool = $scope.menu.fcSelect = ($scope.selectMarkerTool == true) ? false : true;
 
@@ -1811,7 +1830,19 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         angular.forEach($scope.internalLayers, function (feature, index) {
 
+          var geometry = feature.feature.getGeometry();
+          var coordinate = geometry.getCoordinates();
+
+          var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
+
+          $scope.latitude = transformed_coordinate[1];
+          $scope.longitude = transformed_coordinate[0];
+
+          $scope.setMarkerCoordinatesFormat();
+
           var marker = feature.feature.getProperties().marker;
+
+          marker.coordinate = $scope.formattedLatitude + ' ' + $scope.formattedLongitude;
 
           var extentMarker = feature.extent;
           var feature = feature.feature;
@@ -1825,12 +1856,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
             if(index == -1) {
               marker.layer.markers = [];
-              marker.layer.markers.push(marker.location.coordinateString);
+              marker.layer.markers.push(marker);
 
               $scope.selectedMarkers.push(marker.layer);
             } else {
 
-              $scope.selectedMarkers[index].markers.push(marker.location.coordinateString);
+              $scope.selectedMarkers[index].markers.push(marker);
             }
 
             $scope.markers.push(marker.id);
@@ -3590,7 +3621,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     });
 
-  }
+  };
 
   $scope.disableMarker = function () {
 
@@ -3609,7 +3640,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     dialog.result.then(function (result) {
       $scope.refuseMarkerModeration($scope.currentEntity.id, result.motive, result.description);
     });
-  }
+  };
 
   $scope.refuseMarkerModeration = function (id, motive, description) {
 
@@ -3682,7 +3713,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
 
     return $scope.ok;
-  }
+  };
 
   $scope.resolveDatepicker = function () {
 
@@ -3701,7 +3732,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $('.datepicker').mask("99/99/9999");
       }, 200);
-    })
+    });
     $scope.$watch('screen', function (oldValue, newValue) {
       $timeout(function () {
         $('.datepicker').datepicker({
@@ -3753,7 +3784,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
-  $scope.toggleSidebarMarkerDetailUpdate = function (time, element) {
+  /*$scope.toggleSidebarMarkerDetailUpdate = function (time, element) {
     $scope.currentEntity = $scope.marker;
 
     if (element == "closeButton") {
@@ -3832,10 +3863,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
       });
     }
-    /* List for the edit */
+
     layerGroupService.listAllInternalLayerGroups({
       callback: function (result) {
-        // $scope.layersGroups = result;
 
         $scope.selectLayerGroup = [];
 
@@ -3883,17 +3913,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     });
 
-    /**
-     * If the marker tab is open, close it and wait to open the new.
-     * */
-
     if ($scope.slideActived == '#sidebar-marker-detail-update') {
       $(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
       return
     }
 
     if ($scope.slideActived == '#sidebar-layers') {
-      //If menu layer or search is open, close it and open marker detail
       $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
 
       $timeout(function () {
@@ -3903,17 +3928,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     } else {
       $scope.toggleSidebar(time, '', '#sidebar-marker-detail-update');
     }
-    /*
-     if ( $('#sidebar-marker-detail').css("display") == 'none' ){
-
-     }*/
     $scope.resolveDatepicker();
     $(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
-  };
-
-  $scope.clearDetailMarker = function () {
-    $scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail-update');
-  };
+  };*/
 
   $scope.isChecked = function () {
     if ($(".yes").is(':checked')) {
