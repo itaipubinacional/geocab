@@ -1054,7 +1054,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative">
-                    <select placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
+                    <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
                             ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                             ng-model="shapeFile.filter.layer" chosen class="form-control"
                             ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
@@ -1140,7 +1140,7 @@ uri="http://www.springframework.org/security/tags"%>
                     </div>
 
                     <div>
-                      <button ng-click="selectAccessGroups()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary">Associar grupo</button>
+                      <button ng-click="selectAccessGroups()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary"><spring:message code="admin.layer-config.Associate-access-group"/></button>
                     </div>
                   </div>
 

@@ -22,7 +22,7 @@
                 </span>
 
                 <div>
-                    <span>Postado por <b>{{ currentEntity.user.name}} ({{ currentEntity.user.email}})</b> em {{ currentEntity.created | date:'dd/MM/yyyy' }}</span>
+                    <span><spring:message code="PostedBy"/> <b>{{currentEntity.user.name}} ({{currentEntity.user.email}})</b> <spring:message code="in"/> {{currentEntity.created | date:'dd/MM/yyyy' }}</span>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
 
 
                     <span style="font-weight: bold; font-size: 18px;padding-left: 15px; margin: 20px 0 20px 0; float: left;">
-                        Informações
+                        <spring:message code="Informations"/>
                     </span>
 
                     <span style="cursor: pointer; text-decoration: underline; float: right; margin-top: 25px; color: #cacaca"
