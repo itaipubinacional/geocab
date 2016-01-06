@@ -52,7 +52,7 @@
                autocomplete="off"
                ng-hover>
                    <span ng-show="form.email.$error.required && (form.$submitted || form.email.$dirty)"
-                         class="tooltip-validation"><spring:message code="contact.Subject"/> <spring:message
+                         class="tooltip-validation">Email <spring:message
                        code="admin.users.required"/></span>
       </div>
     </div>

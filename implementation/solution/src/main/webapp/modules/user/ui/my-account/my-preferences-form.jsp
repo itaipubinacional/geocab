@@ -49,7 +49,15 @@
             <div class="row">
                 <div class="col-md-2">
 
-                    <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
+					<div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
+                        <input type="radio" id="OPEN_STREET_MAP" ng-click="setBackgroundMap('OPEN_STREET_MAP')" ng-model="backgroundMap.map" value="OPEN_STREET_MAP"
+                               name="OPEN_STREET_MAP">
+                        <label class="radio-label" for="OPEN_STREET_MAP"> Open Street </label>
+                    </div>
+                    
+                    <br />
+                    
+                    <div class="form-item-horizontal radio" style="margin-left: 0">
                         <input type="radio" id="GOOGLE" ng-click="setBackgroundMap('GOOGLE_MAP')" ng-model="backgroundMap.map" value="GOOGLE"
                                name="GOOGLE">
                         <label class="radio-label" for="GOOGLE"> Google Maps </label>
@@ -61,14 +69,6 @@
                         <input type="radio" id="MAP_QUEST" ng-click="setBackgroundMap('MAP_QUEST')" ng-model="backgroundMap.map" value="MAP_QUEST"
                                name="MAP_QUEST">
                         <label class="radio-label" for="MAP_QUEST"> MapQuest </label>
-                    </div>
-
-                    <br />
-
-                    <div class="form-item-horizontal radio" style="margin-left: 0;">
-                        <input type="radio" id="OPEN_STREET_MAP" ng-click="setBackgroundMap('OPEN_STREET_MAP')" ng-model="backgroundMap.map" value="OPEN_STREET_MAP"
-                               name="OPEN_STREET_MAP">
-                        <label class="radio-label" for="OPEN_STREET_MAP"> Open Street </label>
                     </div>
 
                 </div>

@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <input type="button" ng-click="clearFilters()" value="Limpar Filtros"
+                            <input type="button" ng-click="clearFilters()" value="<spring:message code='clear.Filters'/>"
                                    class="btn btn-default" ng-disabled="currentPage == null"/>
                         </div>
 
