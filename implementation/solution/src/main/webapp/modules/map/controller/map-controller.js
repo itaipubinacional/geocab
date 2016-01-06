@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function MapController($scope, $injector, $log, $state, $timeout, $modal, $location, $http, $importService, $translate) {
+function MapController($scope, $injector, $log, $state, $timeout, $modal, $location, $http, $importService, $filter, $translate) {
 
   /**
    *
@@ -1738,104 +1738,130 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.toggleSidebar(300, '', '#sidebar-select-marker');
     $scope.screenSelectMarkerOpenned = false;
     $scope.menu.fcSelect = false;
+    $scope.selectMarkerTool = false;
 
   };
 
   $scope.initializeSelectionTool = function () {
 
-    $scope.selectMarkerTool = $scope.menu.fcSelect = ($scope.selectMarkerTool == true) ? false : true;
+    /*if($scope.menu.fcSelect) {
+      $scope.menu.fcSelect = false;
+      $scope.selectMarkerTool = false;
+    }*/
 
-    if ($scope.slideActived == '#sidebar-marker-detail-update') {
-      $scope.toggleSidebarMarkerDetailUpdate(300);
-    }
+    if($scope.screenSelectMarkerOpenned) {
 
-    if ($scope.menu.fcMarker) {
-
-      $scope.clearFcMarker(true);
-      $scope.menu.fcMarker = false;
+      $scope.closeSelectMarker();
 
     } else {
 
-      $('li.menu-item').each(function (index) {
+      $scope.selectMarkerTool = $scope.menu.fcSelect = ($scope.selectMarkerTool == true) ? false : true;
 
-        if ($(this).hasClass('ui-state-active') && !$(this).hasClass('bg-inactive')) {
-          console.log($(this).attr('id'));
-          $scope.toggleSidebarMenu(300, '#' + $(this).attr('id'));
-        }
+      if ($("#sidebar-marker-detail-update").css("display") == 'block') {
+        $scope.clearDetailMarker();
+      }
 
-      });
-    }
+      if ($scope.menu.fcMarker) {
 
-    $scope.menu = {
-      fcDistancia: false,
-      fcArea: false,
-      fcKml: false,
-      fcMarker: false,
-      fcSelect: true
-    };
+        $scope.clearFcMarker(true);
+        $scope.menu.fcMarker = false;
 
-    var dragBox = new ol.interaction.DragBox({
-      condition: function () {
-        return $scope.selectMarkerTool;
-      },
-      style: new ol.style.Style({
-        stroke: new ol.style.Stroke({
-          color: [0, 0, 255, 1]
+      } else {
+
+        $('li.menu-item').each(function (index) {
+
+          if ($(this).hasClass('ui-state-active') && !$(this).hasClass('bg-inactive')) {
+            console.log($(this).attr('id'));
+            $scope.toggleSidebarMenu(300, '#' + $(this).attr('id'));
+          }
+
+        });
+      }
+
+      $scope.menu = {
+        fcDistancia: false,
+        fcArea: false,
+        fcKml: false,
+        fcMarker: false,
+        fcSelect: true
+      };
+
+      var dragBox = new ol.interaction.DragBox({
+        condition: function () {
+          return $scope.selectMarkerTool;
+        },
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: [0, 0, 255, 1]
+          })
         })
-      })
-    });
-
-    dragBox.on('boxend', function (e) {
-
-      $scope.selectedMarkers = [];
-
-      if(!$scope.screenSelectMarkerOpenned) {
-        $scope.toggleSidebar(300, '', '#sidebar-select-marker');
-        $scope.screenSelectMarkerOpenned = true;
-      }
-
-      var extent = dragBox.getGeometry().getExtent();
-      var markers = [];
-
-      angular.forEach($scope.internalLayers, function (feature, index) {
-
-        var marker = feature.feature.getProperties().marker;
-
-        var extentMarker = feature.extent;
-        var feature = feature.feature;
-
-        if (ol.extent.containsExtent(extent, extentMarker)) {
-
-          $scope.selectedMarkers.push(marker);
-
-          markers.push(marker.id);
-
-          angular.forEach($scope.selectedFeatures, function (selected, index) {
-            if (selected.marker.id == marker.id) {
-              selected.feature.push(feature);
-            }
-          });
-
-          $scope.$apply();
-        }
       });
 
-      if (markers.length) {
-        $scope.dragMarkers = markers;
-      }
+      dragBox.on('boxend', function (e) {
 
-      $scope.drag = true;
+        $scope.selectedMarkers = [];
 
-      console.log($scope.selectedMarkers);
+        if (!$scope.screenSelectMarkerOpenned) {
+          $scope.toggleSidebar(300, '', '#sidebar-select-marker');
+          $scope.screenSelectMarkerOpenned = true;
+        }
 
-    });
+        var extent = dragBox.getGeometry().getExtent();
+        $scope.markers = [];
 
-    dragBox.on('boxstart', function (e) {
-      //$scope.clearFeatures();
-      console.log('boxstart');
-    });
+        angular.forEach($scope.internalLayers, function (feature, index) {
 
-    $scope.map.addInteraction(dragBox);
+          var marker = feature.feature.getProperties().marker;
+
+          var extentMarker = feature.extent;
+          var feature = feature.feature;
+
+          var layer = {id: 1, name: 'teste', markers: [{id: 1, name: 'teste'}]}
+
+          if (ol.extent.containsExtent(extent, extentMarker)) {
+
+            var layer = $filter('filter')($scope.selectedMarkers, {id: marker.layer.id})[0];
+            var index = $scope.selectedMarkers.indexOf(layer);
+
+            if(index == -1) {
+              marker.layer.markers = [];
+              marker.layer.markers.push(marker.location.coordinateString);
+
+              $scope.selectedMarkers.push(marker.layer);
+            } else {
+
+              $scope.selectedMarkers[index].markers.push(marker.location.coordinateString);
+            }
+
+            $scope.markers.push(marker.id);
+
+            /*angular.forEach($scope.selectedFeatures, function (selected, index) {
+              if (selected.marker.id == marker.id) {
+                selected.feature.push(feature);
+              }
+            });*/
+
+            $scope.$apply();
+          }
+        });
+
+        if ($scope.markers.length) {
+          $scope.dragMarkers = $scope.markers;
+        }
+
+        $scope.drag = true;
+
+        console.log($scope.selectedMarkers);
+
+      });
+
+      dragBox.on('boxstart', function (e) {
+        //$scope.clearFeatures();
+        console.log('boxstart');
+      });
+
+      $scope.map.addInteraction(dragBox);
+    }
 
   };
 

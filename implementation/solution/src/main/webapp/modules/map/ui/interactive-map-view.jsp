@@ -469,7 +469,25 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br style="clear: both;"> <br>
 
-                {{ selectedMarkers | json }}
+                <span>{{ markers.length }} registros selecionados</span>
+                <accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret" heightStyle="content">
+                  <accordion-group ng-repeat="selected in selectedMarkers">
+
+                    <accordion-heading>
+                      <div style="cursor:pointer; padding: 10px 0;">
+                        <i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+                        <span>{{ selected.name }} - {{ selected.markers.length }} </span>
+                      </div>
+                    </accordion-heading>
+
+                    <div ng-repeat="marker in selected.markers">
+
+                      {{ marker }}
+
+                    </div>
+
+                  </accordion-group>
+                </accordion>
               </div>
             </div>
         </div>
