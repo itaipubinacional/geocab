@@ -640,6 +640,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           }))
         });
 
+        var shadowStyle = $scope.setShadowMarker();
+
         var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326', 'EPSG:900913');
         console.log(olCoordinates);
 
@@ -654,7 +656,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           source: new ol.source.Vector({features: [iconFeature]})
         });
 
-        layer.setStyle(iconStyle);
+        layer.setStyle([iconStyle, shadowStyle]);
 
         $scope.currentCreatingInternalLayer = layer;
         $scope.map.addLayer(layer);
@@ -669,6 +671,30 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         //$scope.setMarkerCoordinatesFormat();
       }
 
+    };
+
+    $scope.setShadowMarker = function(type) {
+
+      if(!type) {
+        type = 'default';
+        if (!$scope.currentEntity.layer.layerIcon.match(/default/))
+          type = 'collection';
+      }
+
+      var anchor = [];
+      anchor['collection'] = [0.50, 0.86];
+      anchor['default']    = [0.49, 0.83];
+      anchor['marker']     = [0.48, 0.73];
+
+      return new ol.style.Style({
+        image: new ol.style.Icon({
+          anchor: anchor[type],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction',
+          src: 'static/images/' + type + '_shadow.png'
+        }),
+        zIndex: 1
+      });
     };
 
     $scope.setMarkerCoordinatesFormat = function() {
@@ -715,15 +741,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           zIndex: 2
         });
 
-        var shadowStyle = new ol.style.Style({
-          image: new ol.style.Icon({
-            anchor: [0.3, 1],
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            src: 'static/images/default_shadow.png'
-          }),
-          zIndex: 1
-        });
+        var shadowStyle = $scope.setShadowMarker('marker');
 
         var iconFeature = new ol.Feature({
           geometry: new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]])
@@ -822,6 +840,24 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.screen = 'detail';
 
           $scope.marker = feature.getProperties().marker;
+
+          var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+              anchor: [0.5, 1],
+              anchorXUnits: 'fraction',
+              anchorYUnits: 'fraction',
+              src: $scope.marker.layer.icon
+            }))
+          });
+
+          var shadowType = 'default';
+          if (!$scope.marker.layer.icon.match(/default/))
+            shadowType = 'collection';
+
+          var shadowStyle = $scope.setShadowMarker(shadowType);
+
+          feature.setStyle([iconStyle, shadowStyle]);
+
           $scope.features.push({"feature": $scope.marker, "type": "internal"});
         }
       }
@@ -3301,6 +3337,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   }
 
   $scope.listAttributesByLayer = function () {
+
     var iconStyle = new ol.style.Style({
       image: new ol.style.Icon(({
         anchor: [0.5, 1],
@@ -3309,7 +3346,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         src: $scope.currentEntity.layer.layerIcon
       }))
     });
-    $scope.currentCreatingInternalLayer.setStyle(iconStyle);
+
+    var shadowStyle = $scope.setShadowMarker();
+
+    $scope.currentCreatingInternalLayer.setStyle([iconStyle, shadowStyle]);
 
     layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId, {
       callback: function (result) {
