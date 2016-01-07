@@ -10,7 +10,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
   return {
     restrict: 'E',
     priority: -1000,
-    templateUrl: 'static/libs/eits-directives/upload-file/upload-file.html',
+    templateUrl: 'static/libs/eits-directives/upload-file/upload-file.jsp',
     scope: {
       attribute: '=',
       onSuccess: '&'
