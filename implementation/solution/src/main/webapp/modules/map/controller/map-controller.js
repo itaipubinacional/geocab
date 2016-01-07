@@ -718,6 +718,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if ($scope.menu.fcMarker && $scope.screenMarkerOpenned) {
 
+        $scope.clearShadowCreatingInternalLayer();
+        
         var coord = evt.coordinate;
         var transformed_coordinate = ol.proj.transform(coord, 'EPSG:900913', 'EPSG:4326');
         //console.log(transformed_coordinate);
