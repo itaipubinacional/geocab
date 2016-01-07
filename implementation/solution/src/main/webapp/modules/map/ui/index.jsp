@@ -27,7 +27,9 @@
 	
 	    <!-- Treeview -->
 	    <link rel="stylesheet" href="static/libs/angular-treeview/ivh-treeview.min.css" type="text/css">
-	
+
+	    <link rel="stylesheet" href="static/libs/ui-grid/ui-grid.min.css" type="text/css">
+
 	    <!-- CSS do mapa -->
 	    <link href="static/style/map/style.css" type="text/css" rel="stylesheet">
 		
@@ -47,13 +49,18 @@
 		<script type="text/javascript" src="modules/admin/controller/popup/select-layer-config-popup-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/select-layer-group-popup-controller.js"></script>
 		<script type="text/javascript" src="modules/admin/controller/popup/add-attribute-import-popup-controller.js"></script>
+		<script type="text/javascript" src="modules/admin/controller/popup/associate-attribute-import-popup-controller.js"></script>
 
    		<!-- Treeview -->
 		<script type="text/javascript"
 		        src="static/libs/angular-treeview/ivh-treeview.min.js"></script>
 		
 		<script src="static/libs/angular-treeview/ivh-treeview.extend.js" type="text/javascript"></script>
-		
+
+
+		<script src="static/libs/ui-grid/ui-grid.min.js" type="text/javascript"></script>
+		<script src="static/libs/ui-grid/draggable-rows.js" type="text/javascript"></script>
+
 		<!-- OpenLayers 3 -->
 		<script src="static/libs/openlayers/ol.js" type="text/javascript"></script>
 		

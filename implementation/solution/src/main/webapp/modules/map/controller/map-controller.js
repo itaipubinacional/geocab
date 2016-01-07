@@ -174,7 +174,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.allLayersKML = [];
 
-  $scope.importMarkes = [];
+  $scope.importMarkers = [];
+  $scope.importLayers = [];
 
   /**
    * Variable that stores the inner layer being created
@@ -4058,7 +4059,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.shapeFile.layerType = 'layer';
 
-  $scope.isImport = false;
+  $scope.isImport = true;
   $scope.isExport = false;
 
   var uploadButton = angular.element('#upload');
@@ -4127,6 +4128,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
 
     } else {
+
+      $scope.clearImportMarkers();
 
       $scope.isImport = false;
       $scope.isExport = true;
@@ -4571,6 +4574,29 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
   };
 
+
+
+  /**
+   * Associate attribute
+   * */
+  $scope.associateAttribute = function() {
+    var dialog = $modal.open({
+      templateUrl: "modules/admin/ui/layer-config/popup/associate-attribute-import-popup.jsp",
+      controller: AssociateAttributeImportPopUpController,
+      windowClass: 'xx-dialog',
+      resolve: {
+        attributes: function () {
+          return $scope.attributes;
+        }
+      }
+    });
+
+    dialog.result.then(function (result) {
+
+
+    });
+  };
+
   $scope.moreIcons = function() {
     var dialog = $modal.open({
       templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
@@ -4849,10 +4875,33 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.clearImportMarkers = function() {
 
-    angular.forEach($scope.importMarkes, function (marker, index) {
-      $scope.map.removeLayer(marker.layer);
+    $scope.importMarkers = [];
+    $scope.testFiles = [];
+    $('#upload')[0].val = '';
+    data = [];
+
+    angular.forEach($scope.importLayers, function (layer, index) {
+      $scope.map.removeLayer(layer);
     });
 
+  };
+
+  $scope.setImportLayer = function() {
+    angular.forEach($scope.importLayers, function (layer, index) {
+
+      var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(({
+          anchor: [0.5, 1],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction',
+          src: $scope.shapeFile.form.layer.layerIcon
+        }))
+      });
+
+      layer.setStyle(iconStyle);
+
+      console.log(layer);
+    });
   };
 
   $scope.testFiles = [];
@@ -4869,16 +4918,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           $scope.clearImportMarkers();
 
-          $scope.testFiles = [];
-          $('#upload')[0].val = '';
-          data = [];
-
-          $scope.importMarkes = result;
+          $scope.importMarkers = result;
 
           var coordinates = [];
           var extent = '';
 
-          angular.forEach($scope.importMarkes, function (marker, index) {
+          angular.forEach($scope.importMarkers, function (marker, index) {
 
             var iconStyle = new ol.style.Style({
               image: new ol.style.Icon({
@@ -4905,7 +4950,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
             coordinates.push(geometry.getCoordinates());
 
-            marker.layer = layer;
+            $scope.importLayers.push(layer);
+
             $scope.map.addLayer(layer);
 
             extent = new ol.extent.boundingExtent(coordinates);
@@ -4918,9 +4964,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         },
         errorHandler: function (message, exception) {
 
-          $scope.testFiles = [];
-          $('#upload')[0].val = '';
-          data = [];
+          $scope.clearImportMarkers();
           
           alert(message);
           $scope.$apply();

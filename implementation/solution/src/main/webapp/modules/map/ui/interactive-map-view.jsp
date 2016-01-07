@@ -1053,11 +1053,12 @@ uri="http://www.springframework.org/security/tags"%>
                     <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
                   </div>
 
-                  <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative">
+                  <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative" style="float:left;width:100%;margin-top:10px;">
                     <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
                             ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
-                            ng-model="shapeFile.filter.layer" chosen class="form-control"
+                            ng-model="shapeFile.form.layer" chosen class="form-control"
                             ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+                            ng-change="setImportLayer()"
                             required>
                       <option value=""></option>
                     </select>
@@ -1078,7 +1079,14 @@ uri="http://www.springframework.org/security/tags"%>
                             class="tooltip-validation"><spring:message code="admin.layer-config.Title-required"/></span>
                   </div>
 
-                  <div style="margin-bottom: 10px">
+                  <div ng-if="shapeFile.layerType != 'new'" style="margin-bottom: 10px">
+                    <button ng-click="associateAttribute()" title="<spring:message code='admin.layer-config.Associate-attributes' />"
+                            class="btn btn-primary" style="margin-bottom: 5px">
+                      <spring:message code="admin.layer-config.Associate-attributes"/>
+                    </button>
+                  </div>
+
+                  <div ng-if="shapeFile.layerType == 'new'" style="margin-bottom: 10px">
                     <button ng-click="addAttribute()" title="<spring:message code='admin.layer-config.Add-attributes' />"
                             class="btn btn-primary" style="margin-bottom: 5px">
                       <spring:message code="admin.layer-config.Add-attributes"/>

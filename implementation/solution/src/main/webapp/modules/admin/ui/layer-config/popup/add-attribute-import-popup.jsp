@@ -22,7 +22,6 @@
         <h3 class="modal-title"><spring:message code="admin.layer-config.Add-attribute" /></h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
-        <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>
 
         <form novalidate name="form_add_attribute" default-button="buttonInsertAdd" style="margin-bottom: 10px; margin-top: 10px;" class="addAttribute">        
         
