@@ -719,7 +719,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       if ($scope.menu.fcMarker && $scope.screenMarkerOpenned) {
 
         $scope.clearShadowCreatingInternalLayer();
-        
+
         var coord = evt.coordinate;
         var transformed_coordinate = ol.proj.transform(coord, 'EPSG:900913', 'EPSG:4326');
         //console.log(transformed_coordinate);
@@ -3878,7 +3878,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
-  /*$scope.toggleSidebarMarkerDetailUpdate = function (time, element) {
+  $scope.toggleSidebarMarkerDetailUpdate = function (time, element) {
     $scope.currentEntity = $scope.marker;
 
     if (element == "closeButton") {
@@ -4024,7 +4024,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
     $scope.resolveDatepicker();
     $(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
-  };*/
+  };
 
   $scope.isChecked = function () {
     if ($(".yes").is(':checked')) {
