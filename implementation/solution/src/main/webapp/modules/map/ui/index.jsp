@@ -28,8 +28,6 @@
 	    <!-- Treeview -->
 	    <link rel="stylesheet" href="static/libs/angular-treeview/ivh-treeview.min.css" type="text/css">
 
-	    <link rel="stylesheet" href="static/libs/ui-grid/ui-grid.min.css" type="text/css">
-
 	    <!-- CSS do mapa -->
 	    <link href="static/style/map/style.css" type="text/css" rel="stylesheet">
 		
@@ -57,9 +55,7 @@
 		
 		<script src="static/libs/angular-treeview/ivh-treeview.extend.js" type="text/javascript"></script>
 
-
-		<script src="static/libs/ui-grid/ui-grid.min.js" type="text/javascript"></script>
-		<script src="static/libs/ui-grid/draggable-rows.js" type="text/javascript"></script>
+		<script src="static/libs/ui-sortable/sortable.js" type="text/javascript"></script>
 
 		<!-- OpenLayers 3 -->
 		<script src="static/libs/openlayers/ol.js" type="text/javascript"></script>

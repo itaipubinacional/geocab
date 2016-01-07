@@ -23,7 +23,7 @@
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
 
-        <div id="grid1" ui-grid="gridOptions" class="grid" ui-grid-draggable-rows></div>
+
 
         <br style="clear: both"/>
 

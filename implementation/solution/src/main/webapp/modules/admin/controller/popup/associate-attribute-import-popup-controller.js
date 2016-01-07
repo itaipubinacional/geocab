@@ -44,7 +44,7 @@ function AssociateAttributeImportPopUpController($scope, $injector,$modalInstanc
      */
 	var isEqual = false;
 
-	
+
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS

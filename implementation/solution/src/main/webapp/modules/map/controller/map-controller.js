@@ -4057,7 +4057,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.shapeFile = {};
   $scope.shapeFile.form = {};
 
-  $scope.shapeFile.layerType = 'layer';
+  $scope.shapeFile.layerType = 'new';
 
   $scope.isImport = true;
   $scope.isExport = false;
@@ -4560,16 +4560,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     dialog.result.then(function (result) {
 
-      if (result) {
-        $scope.currentEntity.name = result.name;
-        $scope.currentEntity.title = result.title;
-        $scope.currentEntity.legend = result.legend;
-      }
-
-      for(var i = 0; i < $scope.attributes.length; i++)
-      {
-        $scope.attributes[i].orderAttribute = i;
-      }
 
     });
   };

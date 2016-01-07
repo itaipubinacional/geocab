@@ -44,6 +44,21 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
      */
 	var isEqual = false;
 
+	$scope.attributes = [
+		{
+			"name": "Atributo 1",
+			"type": 'TEXT',
+			"required": true,
+			"showAttribute": true,
+		},
+		{
+			"name": "Atributo 2",
+			"type": 'TEXT',
+			"required": true,
+			"showAttribute": true,
+		}
+		];
+
 	/*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
@@ -65,17 +80,15 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 	 *-------------------------------------------------------------------*/
 
 	$scope.addAttribute = function () {
-		
-		if( !$scope.form('form_add_attribute').$valid ){
-			
-			return;
-		}
-		
-		if(!$scope.currentEntity.required) $scope.currentEntity.required = false;
-		
-		attributes.push($scope.currentEntity);
-		$scope.close();
-	}
+
+		$scope.attributes.push({name: ''});
+
+	};
+
+	$scope.removeAttribute = function(index) {
+		$scope.attributes.splice(index, 1);
+	};
+
 
 	/**
 	 * Close popup
