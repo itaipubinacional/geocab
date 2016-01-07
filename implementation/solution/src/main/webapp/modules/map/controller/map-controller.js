@@ -831,6 +831,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       /* if click on the marker */
       if (feature) {
+
+        $scope.clearAllSelectedMarkers();
+
+        $scope.clearShadowCreatingInternalLayer();
+
         if (typeof feature.getProperties().marker != "undefined") {
           if ($scope.screenMarkerOpenned) {
             $scope.clearFcMarker();
@@ -1787,6 +1792,41 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
+  $scope.clearShadowCreatingInternalLayer = function() {
+    if ($scope.currentCreatingInternalLayer != undefined) {
+      var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(({
+          anchor: [0.5, 1],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction',
+          src: $scope.marker.layer.icon
+        }))
+      });
+      $scope.currentCreatingInternalLayer.setStyle(iconStyle);
+    }
+  };
+
+  $scope.clearAllSelectedMarkers = function() {
+
+    angular.forEach($scope.markers, function(marker){
+
+      var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(({
+          anchor: [0.5, 1],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction',
+          src: marker.layer.icon
+        }))
+      });
+
+      marker.feature.setStyle(iconStyle);
+
+    });
+
+    $scope.selectedMarkers = [];
+
+  };
+
   $scope.initializeSelectionTool = function () {
 
     /*if($scope.menu.fcSelect) {
@@ -1854,7 +1894,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       dragBox.on('boxend', function (e) {
 
-        $scope.selectedMarkers = [];
+        $scope.clearAllSelectedMarkers();
 
         if (!$scope.screenSelectMarkerOpenned) {
           $scope.toggleSidebar(300, '', '#sidebar-select-marker');
@@ -1877,15 +1917,31 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.setMarkerCoordinatesFormat();
 
           var marker = feature.feature.getProperties().marker;
-
-          marker.coordinate = $scope.formattedLatitude + ' ' + $scope.formattedLongitude;
-
           var extentMarker = feature.extent;
+
           var feature = feature.feature;
 
-          var layer = {id: 1, name: 'teste', markers: [{id: 1, name: 'teste'}]}
+          marker.coordinate = $scope.formattedLatitude + ' ' + $scope.formattedLongitude;
+          marker.feature = feature;
 
           if (ol.extent.containsExtent(extent, extentMarker)) {
+
+            var iconStyle = new ol.style.Style({
+              image: new ol.style.Icon(({
+                anchor: [0.5, 1],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                src: marker.layer.icon
+              }))
+            });
+
+            var shadowType = 'default';
+            if (!marker.layer.icon.match(/default/))
+              shadowType = 'collection';
+
+            var shadowStyle = $scope.setShadowMarker(shadowType);
+
+            feature.setStyle([iconStyle, shadowStyle]);
 
             var layer = $filter('filter')($scope.selectedMarkers, {id: marker.layer.id})[0];
             var index = $scope.selectedMarkers.indexOf(layer);
@@ -1900,13 +1956,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
               $scope.selectedMarkers[index].markers.push(marker);
             }
 
-            $scope.markers.push(marker.id);
-
-            /*angular.forEach($scope.selectedFeatures, function (selected, index) {
-              if (selected.marker.id == marker.id) {
-                selected.feature.push(feature);
-              }
-            });*/
+            $scope.markers.push(marker);
 
             $scope.$apply();
           }
@@ -1923,6 +1973,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
 
       dragBox.on('boxstart', function (e) {
+
+        $scope.clearShadowCreatingInternalLayer();
         //$scope.clearFeatures();
         console.log('boxstart');
       });
