@@ -172,7 +172,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   /**
    *
    */
-  $scope.allLayersKML = []
+  $scope.allLayersKML = [];
+
+  $scope.importMarkes = [];
 
   /**
    * Variable that stores the inner layer being created
@@ -2519,12 +2521,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             angular.forEach($scope.markersByLayer, function (marker, index) {
               var iconFeature = new ol.Feature({
                 geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
-                marker: marker,
+                marker: marker
               });
 
               var layer = new ol.layer.Vector({
                 source: new ol.source.Vector({features: [iconFeature]}),
-
                 maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
                 minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
               });
@@ -3481,7 +3482,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   /**
    * TODO variável temporária pra testar a exportação .. REMOVER
    */
-  $scope.markersToExport = new Array(); 
+  $scope.markersToExport = [];
 	  
   $scope.addInternalLayer = function (layerId) {
 	  
@@ -3508,7 +3509,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         angular.forEach(result, function (marker, index) {
         	
-        	  $scope.markersToExport.push(marker);
+          $scope.markersToExport.push(marker);
           /* var iconFeature = new ol.Feature({
            geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
            marker: marker,
@@ -4846,6 +4847,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
+  $scope.clearImportMarkers = function() {
+
+    angular.forEach($scope.importMarkes, function (marker, index) {
+      $scope.map.removeLayer(marker.layer);
+    });
+
+  };
+
   $scope.testFiles = [];
 
   var data = [];
@@ -4856,18 +4865,62 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       shapeFileService.importShapeFile(data, {
         callback: function (result) {
 
+          //console.log(result);
+
+          $scope.clearImportMarkers();
+
           $scope.testFiles = [];
           $('#upload')[0].val = '';
-          var data = [];
+          data = [];
 
-          console.log(result);
+          $scope.importMarkes = result;
+
+          var coordinates = [];
+          var extent = '';
+
+          angular.forEach($scope.importMarkes, function (marker, index) {
+
+            var iconStyle = new ol.style.Style({
+              image: new ol.style.Icon({
+                anchor: [0.5, 1],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                src: 'static/images/marker.png'
+              }),
+              zIndex: 2
+            });
+
+            var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+
+            var iconFeature = new ol.Feature({
+              geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
+              marker: marker
+            });
+
+            var layer = new ol.layer.Vector({
+              source: new ol.source.Vector({features: [iconFeature]})
+            });
+
+            layer.setStyle(iconStyle);
+
+            coordinates.push(geometry.getCoordinates());
+
+            marker.layer = layer;
+            $scope.map.addLayer(layer);
+
+            extent = new ol.extent.boundingExtent(coordinates);
+
+          });
+
+          $scope.map.getView().fitExtent(extent, $scope.map.getSize());
+
           $scope.$apply();
         },
         errorHandler: function (message, exception) {
 
           $scope.testFiles = [];
           $('#upload')[0].val = '';
-          var data = [];
+          data = [];
           
           alert(message);
           $scope.$apply();
