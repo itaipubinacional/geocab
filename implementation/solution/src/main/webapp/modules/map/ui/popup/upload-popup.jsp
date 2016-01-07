@@ -8,7 +8,7 @@
 <html>
 <div class="modal-content">
 	<div class="modal-header">
-		<h3 class="modal-title">Inserir imagens</h3>
+	  <h3 class="modal-title"><spring:message code="photos.Insert-Photos"/></h3>
 	</div>
 	<div class="modal-body" ng-init="initialize();" style="overflow: auto;max-height: 550px; min-height: 500px">
     <div>
@@ -24,9 +24,9 @@
     </div>
 	</div>
   <div class="modal-footer">
-    <a href="#" ng-click="clearFiles()">Limpar todos</a>
-    <button class="btn btn-default" ng-click="removeChecked()">Remover selecionados</button>
-    <button id="buttonClose" class="btn btn-primary" ng-click="close(false)">Continuar</button>
+    <a href="#" ng-click="clearFiles()"><spring:message code="photos.Clear-All"/></a>
+    <button class="btn btn-default" ng-click="removeChecked()"><spring:message code="photos.Remove-Selected"/></button>
+    <button id="buttonClose" class="btn btn-primary" ng-click="close(false)"><spring:message code="photos.Continue"/></button>
   </div>
 </div>
 </html>

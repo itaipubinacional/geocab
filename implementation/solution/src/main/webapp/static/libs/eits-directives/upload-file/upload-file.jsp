@@ -1,3 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"  %>
+<!DOCTYPE html>
+<html>
 <div id="dropbox" ng-class="{'over': over}">
 
   <!--<tabset>
@@ -12,10 +21,10 @@
   </tabset>-->
 
   <div ng-if="!files.length" class="row dropbox" draggable="true">
-    <h3>Solte os arquivos em qualquer lugar para fazer o upload</h3>
-    <h4>ou</h4>
-    <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="Selecionar arquivos"/>
-    <p>Tamanho máximo do arquivo de upload: 2 MB.</p>
+    <h3><spring:message code="photos.Drag-And-Drop-The-Files-To-Upload"/></h3>
+    <h4><spring:message code="or"/></h4>
+    <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="<spring:message code="photos.Select-Files"/>"/>
+    <p><spring:message code="photos.MaxSize-File-To-Upload"/></p>
   </div>
   <div ng-if="files.length" style="width: 100%;float: left">
 
@@ -23,16 +32,15 @@
       <div class="col-md-9">
         <div class="form-group" style="width:100%;margin-bottom: 10px; padding-right: 10px">
           <label class="detail-label">
-            Descrição
+            <spring:message code="Description"/>
           </label>
           <input name="description" type="text" class="form-control" ng-model="fileSelected.description"
                  maxlength="60" ng-maxlength="60"/>
-
         </div>
       </div>
       <div class="col-md-3" style="margin-top: 23px;">
         <div class="form-group">
-          <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="Selecionar arquivos"/>
+          <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="<spring:message code="photos.Select-Files"/>"/>
         </div>
       </div>
     </div>
@@ -63,7 +71,8 @@
     </div>-->
   </div>
   <div ng-if="over && files.length" id="dropbox-over-msg">
-    <span>Solte os arquivos para fazer upload em <br/><b>{{ attribute.name }}</b></span>
+    <span><spring:message code="photos.Drop-The-Files-To-Upload"/> <spring:message code="in"/> <br/><b>{{ attribute.name }}</b></span>
   </div>
   <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" style="height: 0; visibility: hidden"/>
 </div>
+</html>
