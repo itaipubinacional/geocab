@@ -834,11 +834,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       /* if click on the marker */
       if (feature) {
 
-        $scope.clearAllSelectedMarkers();
-
-        $scope.clearShadowCreatingInternalLayer();
-
         if (typeof feature.getProperties().marker != "undefined") {
+
+          $scope.clearAllSelectedMarkers();
+
+          $scope.clearShadowCreatingInternalLayer();
+
           if ($scope.screenMarkerOpenned) {
             $scope.clearFcMarker();
           }
@@ -866,25 +867,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           feature.setStyle([iconStyle, shadowStyle]);
 
           $scope.features.push({"feature": $scope.marker, "type": "internal"});
+
+          if ($scope.features.length > 0) {
+            $timeout(function () {
+              $scope.toggleSidebarMarkerDetailUpdate(300);
+            }, 400)
+          }
+
+          if ($scope.features.length == 1) {
+            $timeout(function () {
+
+              $(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
+            }, 100)
+          }
+
+          $("div.msgMap").css("display", "none");
         }
       }
-
-      if ($scope.features.length > 0) {
-        $timeout(function () {
-          $scope.toggleSidebarMarkerDetailUpdate(300);
-        }, 400)
-      }
-
-
-      if ($scope.features.length == 1) {
-        $timeout(function () {
-
-          $(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
-        }, 100)
-
-      }
-
-      $("div.msgMap").css("display", "none");
 
     });
 
@@ -3884,6 +3883,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     if (element == "closeButton") {
       $scope.screenMarkerOpenned = false;
       $scope.toggleSidebar(time, 'closeButton', '#sidebar-marker-detail-update');
+
+      $scope.clearShadowCreatingInternalLayer();
       return;
     }
 
