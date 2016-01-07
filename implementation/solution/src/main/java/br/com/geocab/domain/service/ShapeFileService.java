@@ -51,11 +51,13 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
 import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.shapefile.ShapeFile;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
+import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
 /**
@@ -190,7 +192,7 @@ public class ShapeFileService
 	    		SimpleFeature feature = features.next();
 	            
     			Marker marker = new Marker();
-    			
+    			    			
     			Coordinate coordinate = new Coordinate(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
     			
     			Point point = new Point(coordinate);
@@ -204,7 +206,7 @@ public class ShapeFileService
 					if (property.getDescriptor().getName().toString() != "the_geom")
 					{
 						Attribute attribute = new Attribute(null, property.getDescriptor().getName().toString(), property.getDescriptor().getType().getBinding().toString(), null);
-						MarkerAttribute markerAttribute = new MarkerAttribute(null, property.getDescriptor().getName().toString(), marker, attribute);
+						MarkerAttribute markerAttribute = new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart() /*.toString()*/).toString(), marker, attribute);
 						markersAttributes.add(markerAttribute);
 					}
 				}
@@ -249,7 +251,8 @@ public class ShapeFileService
 			throw new RuntimeException("Erro ao gravar arquivo de shapefile: " + e.getMessage());
 		}
 	}
-	
+	@Autowired
+	IMarkerAttributeRepository markerAttributeRepository;
 	/**
 	 * Agrupa as postagens pelas camadas
 	 * @param markers
@@ -260,10 +263,9 @@ public class ShapeFileService
 		final Set<Layer> layers = new HashSet<>();
 		
 		for (final Marker marker : markers)
-		{	
+		{
 			layers.add(marker.getLayer());
 		}
-		
 		
 		for (final Layer layer : layers)
 		{	
@@ -300,22 +302,28 @@ public class ShapeFileService
 				
 				layer.setName(layer.getName().replaceAll(" ", "_"));
 				
-				final SimpleFeatureType TYPE = DataUtilities.createType(layer.getName(), "the_geom:Point,"+layer.formattedAttributes());
-				
-		        DefaultFeatureCollection collection = new DefaultFeatureCollection();
-	   
-	            GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(null);
+				SimpleFeatureType TYPE = null; 
 	
+				DefaultFeatureCollection collection = new DefaultFeatureCollection();
+				
 	            for (Marker marker : layer.getMarkers())
-	            {	            	
+	            {	            
 	            	marker = markerRepository.findOne(marker.getId());
+//	            	if (TYPE == null) TODO melhorar aqui
+	            		TYPE = DataUtilities.createType(layer.getName(), "the_geom:Point,"+marker.formattedAttributes());
+					
+		            GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(null);
 	            	
 	                double longitude = marker.getLocation().getX();
 	                double latitude = marker.getLocation().getY();
 	
 	                Point point = factory.createPoint(new Coordinate(longitude, latitude));
+	                // O ponto também é um attributo "new Object[]{point}"
 	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
-		
+	                
+	                // Extrai os atributos da feature 
+	                feature = this.extractAttributes(feature, marker);
+	                
 	                collection.add(feature);
 	            }
 	            
@@ -367,6 +375,27 @@ public class ShapeFileService
 		delete(new File(PATH_SHAPE_FILES_EXPORT));
 
 		return fileTransfer;
+	}
+	
+	/**
+	 * 
+	 * @param feature
+	 * @param marker
+	 * @return
+	 */
+	private SimpleFeature extractAttributes(SimpleFeature feature, Marker marker)
+	{
+		
+		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
+		{
+			if (markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM)
+			{
+				System.out.println(markerAttribute.getAttribute().getName()+ " "+ markerAttribute.getValue());
+				feature.setAttribute(markerAttribute.getAttribute().getName(), markerAttribute.getValue());	
+			}
+		}
+		
+		return feature;
 	}
 	
 	/**

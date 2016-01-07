@@ -30,6 +30,7 @@ import com.vividsolutions.jts.geom.Point;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 
@@ -257,6 +258,32 @@ public class Marker extends AbstractEntity implements Serializable
 	/*-------------------------------------------------------------------
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
+
+	/**
+	 * Formata os attributos
+	 * @return
+	 */
+	public String formattedAttributes()
+	{
+		String formattedAttributes = new String();
+		
+		for (MarkerAttribute markerAttribute : this.getMarkerAttribute())
+		{		
+			if (markerAttribute.getAttribute().getName() != null && markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM)
+			{
+				if (formattedAttributes.length() > 0)
+				{
+					formattedAttributes += "," + markerAttribute.getAttribute().getName().replaceAll(" ", "_") + ":" + markerAttribute.getAttribute().formmattedAttribute().replaceAll(" ", "_");
+				}
+				else
+				{
+					formattedAttributes += markerAttribute.getAttribute().getName().replaceAll(" ", "_") + ":" + markerAttribute.getAttribute().formmattedAttribute().replaceAll(" ", "_");
+				}
+			}
+		}
+		
+		return formattedAttributes;
+	}
 	
 	/*-------------------------------------------------------------------
 	 *						   SETTERS AND GETTERS
