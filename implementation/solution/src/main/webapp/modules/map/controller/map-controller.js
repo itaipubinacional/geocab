@@ -2846,12 +2846,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }*/
 
     if ($("#sidebar-marker-detail-update").css("display") == 'block') {
+
       $scope.clearDetailMarker();
 
       $timeout(function () {
         $scope.toggleSidebar(time, element, '#sidebar-layers');
       }, 400)
     }
+
+    if ($("#sidebar-select-marker").css("display") == 'block') {
+
+      $scope.closeSelectMarker();
+
+      $timeout(function () {
+        $scope.toggleSidebar(time, element, '#sidebar-layers');
+      }, 400)
+    }
+
     /**
      * If the marker tab is open, close it and wait to open the new.
      * */
@@ -4842,10 +4853,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     if(newVal.length == 3) {
       shapeFileService.importShapeFile(data, {
         callback: function (result) {
+
+          $scope.testFiles = [];
+          $('#upload')[0].val = '';
+          var data = [];
+
           console.log(result);
           $scope.$apply();
         },
         errorHandler: function (message, exception) {
+
+          $scope.testFiles = [];
+          $('#upload')[0].val = '';
+          var data = [];
+          
           alert(message);
           $scope.$apply();
         }
