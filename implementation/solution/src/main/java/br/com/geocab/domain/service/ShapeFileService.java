@@ -208,13 +208,25 @@ public class ShapeFileService
 					// Deve ignorar a propriedade "the_geom"
 					if (property.getDescriptor().getName().toString() != "the_geom")
 					{
-						final Attribute attribute = new Attribute(null, property.getDescriptor().getName().toString(), property.getDescriptor().getType().getBinding().toString(), null);
-						final MarkerAttribute markerAttribute = new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart() /*.toString()*/).toString(), marker, attribute);
-						markersAttributes.add(markerAttribute);
+						try
+						{
+							final Attribute attribute = new Attribute(null, property.getDescriptor().getName().toString(), property.getDescriptor().getType().getBinding().toString(), null);
+							final MarkerAttribute markerAttribute = new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart() /*.toString()*/).toString(), marker, attribute);
+							//Valida o atributo
+							validateMarkerAttribute(markerAttribute);
+							markersAttributes.add(markerAttribute);
+							
+							marker.setMarkerAttribute(markersAttributes);
+							
+						}
+						//Ignora atributos inválidos, separar em uma função
+						catch (Exception e)
+						{
+							e.printStackTrace();
+							continue; 
+						}
 					}
 				}
-				marker.setMarkerAttribute(markersAttributes);
-				
 				markers.add(marker);
 	        }
 		    	
