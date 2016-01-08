@@ -23,15 +23,38 @@
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
 
-
+        <div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Atributos</th>
+                    <th>Atributo Importado</th>
+                </tr>
+                </thead>
+                <tbody ui-sortable ng-model="attributes">
+                <tr ng-repeat="attribute in attributesByLayer">
+                    <td>{{ attribute.name }} ({{ attribute.type }})</td>
+                    <td>
+                        <select data-placeholder="Selecione" name="attribute"
+                                ng-model="attribute.option" class="form-control"
+                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+                                ng-change="setMarkerAttribute()"
+                                required>
+                            <!--<option value=""></option>-->
+                            <option ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
         <br style="clear: both"/>
 
     </div>
 
     <div class="modal-footer">
-        <button id="buttonInsertAdd" ng-disabled="gridOptions.selectedItems.length == 0" title="<spring:message code="admin.layer-config.Associate" />" class="btn btn-primary" ng-click="addAttribute()"><spring:message code="admin.layer-config.Associate" /></button>
-        <button class="btn btn-default" title="<spring:message code="admin.layer-config.Close" />" ng-click="close(true)"><spring:message code="admin.layer-config.Close" /></button>
+        <button class="btn btn-primary" title="<spring:message code='admin.layer-config.Continue'/>" ng-click="close(true)"><spring:message code='admin.layer-config.Continue'/></button>
     </div>
 </div>
 

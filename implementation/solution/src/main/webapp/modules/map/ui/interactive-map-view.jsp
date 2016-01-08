@@ -1080,7 +1080,7 @@ uri="http://www.springframework.org/security/tags"%>
                             class="tooltip-validation"><spring:message code="admin.layer-config.Title-required"/></span>
                   </div>
 
-                  <div ng-if="shapeFile.layerType != 'new'" style="margin-bottom: 10px">
+                  <div ng-if="shapeFile.layerType != 'new' && shapeFile.form.layer" style="margin-bottom: 10px">
                     <button ng-click="associateAttribute()" title="<spring:message code='admin.layer-config.Associate-attributes' />"
                             class="btn btn-primary" style="margin-bottom: 5px">
                       <spring:message code="admin.layer-config.Associate-attributes"/>

@@ -3240,7 +3240,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     });
 
-  }
+  };
 
   $scope.insertMarker = function () {
     if (!$scope.isBooleanValid()) {
@@ -3479,12 +3479,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         callback(layerId);
       }
     }
-  }
-
-  /**
-   * TODO variável temporária pra testar a exportação .. REMOVER
-   */
-  $scope.markersToExport = [];
+  };
 	  
   $scope.addInternalLayer = function (layerId) {
 	  
@@ -3511,7 +3506,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         angular.forEach(result, function (marker, index) {
         	
-          $scope.markersToExport.push(marker);
+          $scope.exportMarkers.push(marker);
           /* var iconFeature = new ol.Feature({
            geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
            marker: marker,
@@ -4059,6 +4054,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.shapeFile.form = {};
 
   $scope.shapeFile.layerType = 'new';
+  $scope.shapeFile.layerType = 'layer';
 
   $scope.isImport = false;
   $scope.isExport = false;
@@ -4554,8 +4550,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
   };
 
-
-
   /**
    * Associate attribute
    * */
@@ -4565,14 +4559,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       controller: AssociateAttributeImportPopUpController,
       windowClass: 'xx-dialog',
       resolve: {
-        attributes: function () {
-          return $scope.attributes;
+        layer: function () {
+          return $scope.shapeFile.form.layer
+        },
+        markerAttributes: function () {
+          return $scope.importMarkers[0].markerAttribute;
         }
       }
     });
 
     dialog.result.then(function (result) {
 
+      $scope.attributesByLayer = result.attributesByLayer;
 
     });
   };
@@ -4730,56 +4728,118 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.importShapeFile = function () {
 
-    $scope.shapeFile.form.minimumScaleMap = 'UM'+$scope.layers.values[0].substring(2);
-    $scope.shapeFile.form.maximumScaleMap = 'UM'+$scope.layers.values[1].substring(2);
+    if($scope.shapeFile.layerType == 'new') {
 
-    if (!$scope.form().$valid) {
-      $scope.msg = {type: "danger", text: $translate("admin.layer-config.The-highlighted-fields-are-required"), dismiss: true};
-      $scope.fadeMsg();
-      return;
-    }
+      $scope.shapeFile.form.minimumScaleMap = 'UM' + $scope.layers.values[0].substring(2);
+      $scope.shapeFile.form.maximumScaleMap = 'UM' + $scope.layers.values[1].substring(2);
 
-    $scope.shapeFile.form.name = $scope.shapeFile.form.title;
-
-    /*for (var k = 0; k < $scope.currentPage.content.length; k++ ){
-      if ( $scope.currentEntity.title.toUpperCase() == $scope.currentPage.content[k].title.toUpperCase() ){
-        $scope.msg = {type:"danger", text: $translate('admin.layer-config.The-field-name-already-exists,-change-and-try-again'), dismiss : true };
+      if (!$scope.form().$valid) {
+        $scope.msg = {
+          type: "danger",
+          text: $translate("admin.layer-config.The-highlighted-fields-are-required"),
+          dismiss: true
+        };
         $scope.fadeMsg();
         return;
       }
-    }*/
 
-    if( ($scope.shapeFile.form.dataSource.url == null) && ($scope.shapeFile.form.icon == undefined) ){
-      $scope.msg = {type:"danger", text:$translate("admin.layer-config.Choose-an-icon"),dissmiss:true };
-      $scope.fadeMsg();
-      return;
-    }
+      $scope.shapeFile.form.name = $scope.shapeFile.form.title;
 
-    if ( $scope.shapeFile.form.legend == null ) {
-
-      angular.forEach($scope.attributes, function(value, index){
-        value.layer = layer;
-      })
-
-      $scope.shapeFile.form.attributes = $scope.attributes;
-    }
-
-
-
-    layerGroupService.insertLayer(layer, {
-      callback: function (result) {
-        $scope.currentState = $scope.LIST_STATE;
-        $scope.currentEntity = result;
-        $state.go($scope.LIST_STATE);
-        $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
-        $scope.$apply();
-        $scope.saveGroups();
-      },
-      errorHandler: function (message, exception) {
-        $scope.msg = {type: "danger", text: message, dismiss: true};
-        $scope.$apply();
+      for (var k = 0; k < $scope.currentPage.content.length; k++) {
+        if ($scope.currentEntity.title.toUpperCase() == $scope.currentPage.content[k].title.toUpperCase()) {
+          $scope.msg = {
+            type: "danger",
+            text: $translate('admin.layer-config.The-field-name-already-exists,-change-and-try-again'),
+            dismiss: true
+          };
+          $scope.fadeMsg();
+          return;
+        }
       }
-    });
+
+      if (($scope.shapeFile.form.dataSource.url == null) && ($scope.shapeFile.form.icon == undefined)) {
+        $scope.msg = {type: "danger", text: $translate("admin.layer-config.Choose-an-icon"), dissmiss: true};
+        $scope.fadeMsg();
+        return;
+      }
+
+      if ($scope.shapeFile.form.legend == null) {
+
+        angular.forEach($scope.attributes, function (value, index) {
+          value.layer = layer;
+        });
+
+        $scope.shapeFile.form.attributes = $scope.attributes;
+      }
+
+      layerGroupService.insertLayer(layer, {
+        callback: function (result) {
+          $scope.currentState = $scope.LIST_STATE;
+          $scope.currentEntity = result;
+          $state.go($scope.LIST_STATE);
+          $scope.msg = {
+            type: "success",
+            text: $translate("admin.layer-config.The-layer-has-been-created-successfully") + "!",
+            dismiss: true
+          };
+          $scope.$apply();
+          $scope.saveGroups();
+        },
+        errorHandler: function (message, exception) {
+          $scope.msg = {type: "danger", text: message, dismiss: true};
+          $scope.$apply();
+        }
+      });
+    } else {
+
+      angular.forEach($scope.importMarkers, function(marker){
+
+        console.log(marker);
+
+        $scope.currentEntity = marker;
+
+        var layer = new Layer();
+        layer.id = $scope.shapeFile.form.layer.layerId;
+        $scope.currentEntity.layer = layer;
+
+        $scope.currentEntity.markerAttribute = [];
+
+        angular.forEach($scope.attributesByLayer, function (val, ind) {
+
+          var attribute = new Attribute();
+          attribute.id = val.id;
+
+          var markerAttribute = new MarkerAttribute();
+          if (val.value != "" && val.value != undefined) {
+            markerAttribute.value = val.value;
+          } else {
+            markerAttribute.value = "";
+          }
+
+          markerAttribute.attribute = attribute;
+          markerAttribute.marker = $scope.currentEntity;
+          $scope.currentEntity.markerAttribute.push(markerAttribute);
+
+        });
+
+        $scope.currentEntity.wktCoordenate = $scope.currentEntity.location.coordinateString;
+
+        markerService.insertMarker( $scope.currentEntity, {
+          callback: function (result) {
+
+            console.log(result);
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+          }
+        });
+
+      });
+    }
+
   };
 
   /**
@@ -4925,7 +4985,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       layer.setStyle(iconStyle);
 
-      console.log(layer);
     });
   };
 

@@ -89,55 +89,13 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 		$scope.attributes.splice(index, 1);
 	};
 
-
 	/**
 	 * Close popup
 	 */
 	$scope.fechaPopup = function () 
 	{
-		if ( !$scope.form().$valid ) 
-		{
-			$scope.msg = {type:"danger", text: "Por favor digite um nome para o grupo", dismiss:true};
-			return;
-		}
-		
-		$scope.listGruposCamadas(grupos, null);
-
-		if( grupos )
-		{
-
-			for( var i= 0; i < grupos.length; i++)
-			{
-				if( grupos[i].nome.toUpperCase() == $scope.currentEntity.nome.toUpperCase() && grupos[i].id != $scope.currentEntity.id )
-				{
-					$scope.msg = {type:"danger", text: "Já possui um grupo com este nome no mesmo nível", dismiss:true};
-					return;
-				}
-			}
-			
-			if( isEqual == true )
-			{
-				$scope.msg = {type:"warning", text: "Já existe um grupo com este nome em outro nível. Deseja salvar mesmo assim?", dismiss:true};
-                $scope.currentState = $scope.CONFIRM_STATE;
-				isEqual = false;
-				return;
-			}
-		}
-		$modalInstance.close($scope.currentEntity);
+		$modalInstance.close();
 	};
-
-    /**
-     * Confirms the name of the Group and close popup
-     */
-    $scope.fechaPopupConfirm = function ()
-    {
-        if (!$scope.form().$valid) {
-            $scope.msg = {type: "danger", text: "Por favor digite um nome para o grupo", dismiss: true};
-            return;
-        }
-
-        $modalInstance.close($scope.currentEntity);
-    }
 
 	/**
 	 * 
@@ -153,17 +111,15 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 		return $("form[name="+formName+"]").scope()[formName];
 	};
 
-
-
-    /**
-     *
-     */
-    $scope.closeConfirm = function()
-    {
-        $scope.msg = null;
-        $scope.currentEntity.nome = '';
-        $scope.currentState = $scope.NORMAL_STATE;
-    };
+	/**
+	 *
+	 */
+	$scope.closeConfirm = function()
+	{
+			$scope.msg = null;
+			$scope.currentEntity.nome = '';
+			$scope.currentState = $scope.NORMAL_STATE;
+	};
 
 	/**
 	 *

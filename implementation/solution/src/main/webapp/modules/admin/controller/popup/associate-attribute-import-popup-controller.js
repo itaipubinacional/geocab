@@ -6,8 +6,9 @@
  * @param $log
  * @param $location
  */
-function AssociateAttributeImportPopUpController($scope, $injector,$modalInstance, $state, attributes ) {
+function AssociateAttributeImportPopUpController($scope, $injector,$modalInstance, $state, layer, markerAttributes, $importService) {
 
+	$importService("layerGroupService");
 
 	$scope.msg = null;
 
@@ -15,144 +16,40 @@ function AssociateAttributeImportPopUpController($scope, $injector,$modalInstanc
 	 * 		 				 	ATTRIBUTES
 	 *-------------------------------------------------------------------*/
 
-    /*-------------------------------------------------------------------
-     * 		 				 	ATTRIBUTES
-     *-------------------------------------------------------------------*/
-    //STATES
-    /**
-     *
-     */
-    $scope.NORMAL_STATE = "grupo-camadas.normal";
-    /**
-     *
-     */
-    $scope.CONFIRM_STATE = "grupo-camadas.confirm";
+	$scope.layer = layer;
+	$scope.markerAttributes = markerAttributes;
 
-    /**
-     *
-     */
-	$scope.currentEntity;
+	$scope.attributesByLayer = [];
 
-    /**
-     *
-     */
-    $scope.currentState;
+	layerGroupService.listAttributesByLayer($scope.layer.layerId, {
+		callback: function (result) {
 
-    /**
-     *
-     * @type {boolean}
-     */
-	var isEqual = false;
+			//console.log(result);
 
+			angular.forEach(result, function(attribute){
 
+				//console.log(attribute);
 
-	/*-------------------------------------------------------------------
-	 * 		 				 	  NAVIGATIONS
-	 *-------------------------------------------------------------------*/
-	/**
-	 * Main method that makes the role of front-controller of the screen.
-     * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
-     * When this occurs, gets the State via the $state and calls the initial method of that State.
-     *
-     * If the State is not found, he directs to the listing,
-     * Although the front controller of Angular won't let enter an invalid URL.
-	 */
-	$scope.initialize = function() 
-	{
-		$scope.currentEntity = new Attribute();
-	};
+				if(attribute.type != 'PHOTO_ALBUM') {
+					attribute.option = attribute.name + '(' + attribute.type + ')';
+					$scope.attributesByLayer.push(attribute);
+				}
+
+			});
+
+			//$scope.layer.attributes = result;
+
+			$scope.$apply();
+		},
+		errorHandler: function (message, exception) {
+			$scope.message = {type: "error", text: message};
+			$scope.$apply();
+		}
+	});
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	  BEHAVIORS
 	 *-------------------------------------------------------------------*/
-
-	$scope.addAttribute = function () {
-		
-		if( !$scope.form('form_add_attribute').$valid ){
-			
-			return;
-		}
-		
-		if(!$scope.currentEntity.required) $scope.currentEntity.required = false;
-		
-		attributes.push($scope.currentEntity);
-		$scope.close();
-	}
-
-	/**
-	 * Close popup
-	 */
-	$scope.fechaPopup = function () 
-	{
-		if ( !$scope.form().$valid ) 
-		{
-			$scope.msg = {type:"danger", text: "Por favor digite um nome para o grupo", dismiss:true};
-			return;
-		}
-		
-		$scope.listGruposCamadas(grupos, null);
-
-		if( grupos )
-		{
-
-			for( var i= 0; i < grupos.length; i++)
-			{
-				if( grupos[i].nome.toUpperCase() == $scope.currentEntity.nome.toUpperCase() && grupos[i].id != $scope.currentEntity.id )
-				{
-					$scope.msg = {type:"danger", text: "Já possui um grupo com este nome no mesmo nível", dismiss:true};
-					return;
-				}
-			}
-			
-			if( isEqual == true )
-			{
-				$scope.msg = {type:"warning", text: "Já existe um grupo com este nome em outro nível. Deseja salvar mesmo assim?", dismiss:true};
-                $scope.currentState = $scope.CONFIRM_STATE;
-				isEqual = false;
-				return;
-			}
-		}
-		$modalInstance.close($scope.currentEntity);
-	};
-
-    /**
-     * Confirms the name of the Group and close popup
-     */
-    $scope.fechaPopupConfirm = function ()
-    {
-        if (!$scope.form().$valid) {
-            $scope.msg = {type: "danger", text: "Por favor digite um nome para o grupo", dismiss: true};
-            return;
-        }
-
-        $modalInstance.close($scope.currentEntity);
-    }
-
-	/**
-	 * 
-	 */
-	$scope.form = function( formName ) 
-	{
-
-		if ( !formName ) 
-		{
-			formName = "form";
-		}
-
-		return $("form[name="+formName+"]").scope()[formName];
-	};
-
-
-
-    /**
-     *
-     */
-    $scope.closeConfirm = function()
-    {
-        $scope.msg = null;
-        $scope.currentEntity.nome = '';
-        $scope.currentState = $scope.NORMAL_STATE;
-    };
 
 	/**
 	 *
@@ -160,6 +57,6 @@ function AssociateAttributeImportPopUpController($scope, $injector,$modalInstanc
 	$scope.close = function() 
 	{
 		$scope.msg = null;
-		$modalInstance.close(null);
+		$modalInstance.close({attributesByLayer: $scope.attributesByLayer});
 	};
 };
