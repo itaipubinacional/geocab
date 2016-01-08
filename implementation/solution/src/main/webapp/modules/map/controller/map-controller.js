@@ -3263,7 +3263,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       if (val.value != "" && val.value != undefined) {
         markerAttribute.value = val.value;
       } else {
-    	if(val.type = 'PHOTO_ALBUM'){
+    	if(val.type == 'PHOTO_ALBUM'){
     	  markerAttribute.value = val.name;  
     	}
       }
