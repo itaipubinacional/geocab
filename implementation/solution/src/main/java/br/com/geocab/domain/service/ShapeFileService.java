@@ -306,10 +306,12 @@ public class ShapeFileService
 	
 				DefaultFeatureCollection collection = new DefaultFeatureCollection();
 				
-	            for (Marker marker : layer.getMarkers())
-	            {	            
+				for (int i = 0; i < layer.getMarkers().size(); i++)
+	            {	
+					Marker marker = layer.getMarkers().get(i);       
 	            	marker = markerRepository.findOne(marker.getId());
-//	            	if (TYPE == null) TODO melhorar aqui
+	            	
+	            	if ((i != 0 && marker.getLayer().getId() != layer.getMarkers().get(i - 1).getId()) || TYPE == null)
 	            		TYPE = DataUtilities.createType(layer.getName(), "the_geom:Point,"+marker.formattedAttributes());
 					
 		            GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(null);
