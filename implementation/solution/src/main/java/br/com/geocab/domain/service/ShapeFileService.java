@@ -164,6 +164,7 @@ public class ShapeFileService
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			LOG.info(e.getMessage());
 			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
 		}
@@ -217,9 +218,10 @@ public class ShapeFileService
 		    	
 		    return markers;
 		}
-		catch ( IOException e)
-		{
+		catch ( IOException e )
+		{	
 			e.printStackTrace();
+			LOG.info(e.getMessage());
 			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
 		}
 	}
