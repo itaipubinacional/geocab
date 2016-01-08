@@ -36,7 +36,6 @@ import org.geotools.data.shapefile.files.ShpFileType;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -49,6 +48,7 @@ import org.springframework.stereotype.Service;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.util.Assert;
 
 import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.AttributeType;
@@ -57,7 +57,6 @@ import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.shapefile.ShapeFile;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
-import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
 /**
@@ -66,6 +65,7 @@ import br.com.geocab.domain.repository.marker.IMarkerRepository;
  */
 @Service
 @RemoteProxy(name = "shapeFileService")
+@SuppressWarnings("unchecked")
 public class ShapeFileService
 {
 	/*-------------------------------------------------------------------
@@ -115,7 +115,7 @@ public class ShapeFileService
 			new File(PATH_SHAPE_FILES_EXPORT).mkdirs();
 			new File(PATH_SHAPE_FILES_IMPORT).mkdirs();
 		}
-		catch (RuntimeException e)
+		catch (final RuntimeException e)
 		{
 			e.printStackTrace();
 			LOG.info(e.getMessage());
@@ -132,28 +132,27 @@ public class ShapeFileService
 	 * @param shapeFile
 	 * @return
 	 */
-	public List<Marker> importShapeFile(List<ShapeFile> shapeFiles)
+	public final List<Marker> importShapeFile(final List<ShapeFile> shapeFiles)
 	{
 		try
 		{
 			
-			String pathFile = PATH_SHAPE_FILES_IMPORT + String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis());
+			final String pathFile = PATH_SHAPE_FILES_IMPORT + String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis());
 			// Lê os arquivos
-			List<File> files = new ArrayList<File>();
+			final List<File> files = new ArrayList<File>();
+			
+			for (final ShapeFile shapeFile : shapeFiles)
+			{
+				files.add(readFile(shapeFile, pathFile));
+			}
 			
 			List<Marker> markers = new ArrayList<>();
 			
-			for (ShapeFile shapeFile : shapeFiles)
-			{
-				files.add(this.readFile(shapeFile, pathFile));
-			}
-			
-			
-			for (ShapeFile shapeFile : shapeFiles)
+			for (final ShapeFile shapeFile : shapeFiles)
 			{
 				if (shapeFile.getType() == ShpFileType.SHP)
 				{
-					markers = importt(this.readFile(shapeFile, pathFile));
+					markers = importt(readFile(shapeFile, pathFile));
 				}
 			}
 			
@@ -162,7 +161,7 @@ public class ShapeFileService
 			
 			return markers;
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 			LOG.info(e.getMessage());
@@ -170,44 +169,47 @@ public class ShapeFileService
 		}
 	}
 	
-	private List<Marker> importt(File file)
+	/**
+	 * Importa a lista de postagem dos shapeFiles já gravados no sistema de arquivos
+	 * @param file
+	 * @return
+	 */
+	private static final List<Marker> importt(final File file)
 	{
 		try
 		{
-			Map<String, Object> map = new HashMap<String, Object>();
+			final Map<String, Object> map = new HashMap<String, Object>();
 		    map.put("url", file.toURI().toURL());
 
-		    DataStore dataStore = DataStoreFinder.getDataStore(map);
-		    String typeName = dataStore.getTypeNames()[0];
+		    final DataStore dataStore = DataStoreFinder.getDataStore(map);
+		    final String typeName = dataStore.getTypeNames()[0];
 
-		    FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore.getFeatureSource(typeName);
+		    final FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore.getFeatureSource(typeName);
 
-		    FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures();
+		    final FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures();
 		    
-		    List<Marker> markers = new ArrayList<>();
+		    final List<Marker> markers = new ArrayList<>();
 		    
-		    FeatureIterator<SimpleFeature> features = collection.features(); 
+		    final FeatureIterator<SimpleFeature> features = collection.features(); 
 		    
 	    	while (features.hasNext()) 
 	        {
-	    		SimpleFeature feature = features.next();
+	    		final SimpleFeature feature = features.next();
 	            
-    			Marker marker = new Marker();
+	    		final Marker marker = new Marker();
     			    			
-    			Coordinate coordinate = new Coordinate(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
+    			final Coordinate coordinate = new Coordinate(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
     			
-    			Point point = new Point(coordinate);
+    			marker.setLocation(new Point(coordinate));
     			
-    			marker.setLocation(point);
-    			
-	            List<MarkerAttribute> markersAttributes = new ArrayList<>();
-				for (Property property : feature.getProperties())
+	            final List<MarkerAttribute> markersAttributes = new ArrayList<>();
+				for (final Property property : feature.getProperties())
 				{
 					// Deve ignorar a propriedade "the_geom"
 					if (property.getDescriptor().getName().toString() != "the_geom")
 					{
-						Attribute attribute = new Attribute(null, property.getDescriptor().getName().toString(), property.getDescriptor().getType().getBinding().toString(), null);
-						MarkerAttribute markerAttribute = new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart() /*.toString()*/).toString(), marker, attribute);
+						final Attribute attribute = new Attribute(null, property.getDescriptor().getName().toString(), property.getDescriptor().getType().getBinding().toString(), null);
+						final MarkerAttribute markerAttribute = new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart() /*.toString()*/).toString(), marker, attribute);
 						markersAttributes.add(markerAttribute);
 					}
 				}
@@ -218,7 +220,7 @@ public class ShapeFileService
 		    	
 		    return markers;
 		}
-		catch ( IOException e )
+		catch ( final IOException e )
 		{	
 			e.printStackTrace();
 			LOG.info(e.getMessage());
@@ -232,35 +234,33 @@ public class ShapeFileService
 	 * @param shapeFile
 	 * @return
 	 */
-	private File readFile(ShapeFile shapeFile, String pathFile)
+	private static final File readFile(final ShapeFile shapeFile, String pathFile)
 	{
 		pathFile += "." + shapeFile.getType().toString().toLowerCase();//".shp";
 
-		Base64 decoder = new Base64();
-		byte[] shpBytes = decoder.decode(shapeFile.getSource());
-		FileOutputStream osf;
+		final Base64 decoder = new Base64();
+		final byte[] shpBytes = decoder.decode(shapeFile.getSource());
 		try
 		{
-			osf = new FileOutputStream(new File(pathFile));
+			final FileOutputStream osf = new FileOutputStream(new File(pathFile));
 			osf.write(shpBytes);
 			osf.flush();
 			osf.close();
 			return new File(pathFile);
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			LOG.info(e.getMessage());
 			throw new RuntimeException("Erro ao gravar arquivo de shapefile: " + e.getMessage());
 		}
 	}
-	@Autowired
-	IMarkerAttributeRepository markerAttributeRepository;
+	
 	/**
 	 * Agrupa as postagens pelas camadas
 	 * @param markers
 	 * @return
 	 */
-	private List<Layer> groupByLayers(final List<Marker> markers)
+	private static final List<Layer> groupByLayers(final List<Marker> markers)
 	{
 		final Set<Layer> layers = new HashSet<>();
 		
@@ -291,10 +291,9 @@ public class ShapeFileService
 	 */
 	public FileTransfer exportShapeFile(final List<Marker> markers)
 	{
-		
 		final List<Layer> layers = groupByLayers(markers);
 		
-		final String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis() );
+		String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis() );
 		 
 		for (final Layer layer : layers)
 		{
@@ -306,47 +305,45 @@ public class ShapeFileService
 				
 				SimpleFeatureType TYPE = null; 
 	
-				DefaultFeatureCollection collection = new DefaultFeatureCollection();
+				final DefaultFeatureCollection collection = new DefaultFeatureCollection();
 				
 				for (int i = 0; i < layer.getMarkers().size(); i++)
 	            {	
-					Marker marker = layer.getMarkers().get(i);       
-	            	marker = markerRepository.findOne(marker.getId());
+					final Marker marker = markerRepository.findOne(layer.getMarkers().get(i).getId());
 	            	
 	            	if ((i != 0 && marker.getLayer().getId() != layer.getMarkers().get(i - 1).getId()) || TYPE == null)
 	            		TYPE = DataUtilities.createType(layer.getName(), "the_geom:Point,"+marker.formattedAttributes());
 					
-		            GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(null);
+	            	final GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(null);
 	            	
-	                double longitude = marker.getLocation().getX();
-	                double latitude = marker.getLocation().getY();
+	            	final double longitude = marker.getLocation().getX();
+	                final double latitude = marker.getLocation().getY();
 	
-	                Point point = factory.createPoint(new Coordinate(longitude, latitude));
+	                final Point point = factory.createPoint(new Coordinate(longitude, latitude));
 	                // O ponto também é um attributo "new Object[]{point}"
 	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
 	                
 	                // Extrai os atributos da feature 
-	                feature = this.extractAttributes(feature, marker);
+	                feature = extractAttributes(feature, marker);
 	                
 	                collection.add(feature);
 	            }
 	            
-		        DataStoreFactorySpi dataStoreFactorySpi = new ShapefileDataStoreFactory();
+		        final DataStoreFactorySpi dataStoreFactorySpi = new ShapefileDataStoreFactory();
 	
 		        final File newFile = new File(PATH_SHAPE_FILES_EXPORT + layer.getName() + ".shp");
-		        Map<String, Serializable> create = new HashMap<String, Serializable>();
+		        final Map<String, Serializable> create = new HashMap<String, Serializable>();
 		        create.put("url", newFile.toURI().toURL());
 		        create.put("create spatial index", Boolean.TRUE);
 	
-		        ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactorySpi.createNewDataStore(create);
+		        final ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactorySpi.createNewDataStore(create);
 		        newDataStore.createSchema(TYPE);
 		        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
 	
-		        Transaction transaction = new DefaultTransaction("create");
-		        String typeName = newDataStore.getTypeNames()[0];
+		        final Transaction transaction = new DefaultTransaction("create");
+		        final String typeName = newDataStore.getTypeNames()[0];
 		        
-		        @SuppressWarnings("unchecked")
-				FeatureStore<SimpleFeatureType, SimpleFeature> featureStore = (FeatureStore<SimpleFeatureType, SimpleFeature>) newDataStore.getFeatureSource(typeName);
+				final FeatureStore<SimpleFeatureType, SimpleFeature> featureStore = (FeatureStore<SimpleFeatureType, SimpleFeature>) newDataStore.getFeatureSource(typeName);
 	
 		        featureStore.setTransaction(transaction);
 		        try 
@@ -354,9 +351,9 @@ public class ShapeFileService
 		            featureStore.addFeatures(collection);
 		            transaction.commit();
 		        } 
-		        catch (Exception problem) 
+		        catch (final Exception e) 
 		        {
-		            problem.printStackTrace();
+		            e.printStackTrace();
 		            transaction.rollback();
 		        } 
 		        finally 
@@ -364,16 +361,16 @@ public class ShapeFileService
 		            transaction.close();
 		        }
 			}
-			catch (final SchemaException | IOException e)
+			catch (final Exception e2)
 			{
-				e.printStackTrace();
-				LOG.info(e.getMessage());
-				throw new RuntimeException("Ocorreu um erro durante a exportação: " + e.getMessage());
+				e2.printStackTrace();
+				LOG.info(e2.getMessage());
+				throw new RuntimeException("Ocorreu um erro durante a exportação: " + e2.getMessage());
 			}
 	    }
 		
 		//Compcta os arquivos de exportação e trás para memória
-		final FileTransfer fileTransfer = new FileTransfer(fileExport + ".zip", "application/zip", this.compactFilesToZip(PATH_SHAPE_FILES_EXPORT, fileExport + ".zip"));
+		final FileTransfer fileTransfer = new FileTransfer(fileExport + ".zip", "application/zip", compactFilesToZip(PATH_SHAPE_FILES_EXPORT, fileExport + ".zip"));
 
 		//Deleta os arquivos de exportação
 		delete(new File(PATH_SHAPE_FILES_EXPORT));
@@ -387,14 +384,21 @@ public class ShapeFileService
 	 * @param marker
 	 * @return
 	 */
-	private SimpleFeature extractAttributes(SimpleFeature feature, Marker marker)
+	private static final SimpleFeature extractAttributes(final SimpleFeature feature, final Marker marker)
 	{
 		
-		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
+		for (final MarkerAttribute markerAttribute : marker.getMarkerAttribute())
 		{
-			if (markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM)
+			try
 			{
-				feature.setAttribute(markerAttribute.getAttribute().getName(), markerAttribute.getValue());	
+				validateMarkerAttribute(markerAttribute);
+				feature.setAttribute(markerAttribute.getAttribute().getName(), markerAttribute.getValue());
+			}
+			catch (RuntimeException e)
+			{
+				// Se o attributo não é inválido parte para o próximo
+				LOG.info(e.getMessage());
+				continue;
 			}
 		}
 		
@@ -402,11 +406,21 @@ public class ShapeFileService
 	}
 	
 	/**
+	 * Valida o attributo para exportação
+	 * @param markerAttribute
+	 */
+	private static final void validateMarkerAttribute(final MarkerAttribute markerAttribute)
+	{Assert.isTrue(markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM, "O atributo não pode ser um album de fotos");
+		Assert.isTrue(markerAttribute.getAttribute().getName() != null, "O nome do atributo não pode ser nulo ");
+		Assert.isTrue(markerAttribute.getValue() != null , "O valor do atributo não pode ser nulo ");
+	}
+	
+	/**
 	 * Compacta os arquivos .shp, .dbf e shx para o formato zip e devolve um fileTransfer
 	 * @param pathExport
 	 * @return
 	 */
-	public FileInputStream compactFilesToZip(final String pathExport, final String fileExport)
+	public static final FileInputStream compactFilesToZip(final String pathExport, final String fileExport)
 	{
 		try
 		{
@@ -462,7 +476,7 @@ public class ShapeFileService
 	 * Deleta uma pasta com todos os arquivos dentro
 	 * @param file
 	 */
-	public static void delete(final File file)
+	public static final void delete(final File file)
 	{
 		if (file.isDirectory())
 		{
@@ -483,7 +497,7 @@ public class ShapeFileService
 	 * @param coordinateString
 	 * @return
 	 */
-	private static double getX(String coordinateString)
+	private static final double getX(String coordinateString)
 	{
 		coordinateString = coordinateString.replace("POINT (", "");
 		coordinateString = coordinateString.replace(")", "");
@@ -497,7 +511,7 @@ public class ShapeFileService
 	 * @param coordinateString
 	 * @return
 	 */
-	private static double getY(String coordinateString)
+	private static final double getY(String coordinateString)
 	{
 		coordinateString = coordinateString.replace("POINT (", "");
 		coordinateString = coordinateString.replace(")", "");
