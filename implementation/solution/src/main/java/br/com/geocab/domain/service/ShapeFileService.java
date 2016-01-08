@@ -394,7 +394,6 @@ public class ShapeFileService
 		{
 			if (markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM)
 			{
-				System.out.println(markerAttribute.getAttribute().getName()+ " "+ markerAttribute.getValue());
 				feature.setAttribute(markerAttribute.getAttribute().getName(), markerAttribute.getValue());	
 			}
 		}
