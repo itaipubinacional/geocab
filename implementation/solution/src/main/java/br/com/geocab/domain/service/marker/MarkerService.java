@@ -149,8 +149,9 @@ public class MarkerService
 			this.markerModerationRepository.save(markerModeration);
 
 		}
-		catch (DataIntegrityViolationException e)
-		{
+		catch (Exception e)
+		{	
+			e.printStackTrace();
 			LOG.info(e.getMessage());
 		}
 		return marker;
@@ -169,13 +170,17 @@ public class MarkerService
 
 		for (MarkerAttribute markerAttribute : markersAttributes)
 		{
-			markerAttribute = this.markerAttributeRepository.save(markerAttribute);
-
-			if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
+			
+			if (markerAttribute.getValue() != null)
 			{
-				markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
+				markerAttribute = this.markerAttributeRepository.save(markerAttribute);
 				
-				markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
+				if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
+				{
+					markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
+					
+					markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
+				}
 			}
 		}
 		return markersAttributes;
