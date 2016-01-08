@@ -1666,16 +1666,19 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
+        var layer = null;
+        var userEmail = null;
+
         if ($scope.filter.status == "")
             $scope.filter.status = null;
         if ($scope.filter.user != null)
-            var userEmail = $scope.filter.user.email;
+            userEmail = $scope.filter.user.email;
         if ($scope.filter.dateStart == "")
             $scope.filter.dateStart = null;
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
-        if ($scope.filter.layer.title.layerTitle != null)
-            var layer = $scope.filter.layer.title.layerTitle;
+        if ($scope.filter.layer != null)
+            layer = $scope.filter.layer.title.layerTitle;
 
         $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest);
         $scope.listMarkerByFiltersMap( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);

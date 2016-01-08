@@ -56,9 +56,10 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" ng-if="visible">
-                    <div class="row">
-                        <!--<div class="form-group">-->
+                <div class="row " style="margin-bottom: 10px">
+                  <div class="col-md-12" ng-if="visible">
+
+                        <div class="form-group">
                             <select class="form-control" ng-model="filter.status">
                                 <option value=""><spring:message code="admin.marker-moderation.All-status" /></option>
                                 <option value="SAVED"><spring:message code="admin.marker-moderation.Saved"/></option>
@@ -67,7 +68,7 @@
                                 <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
                                 <option value="CANCELED"><spring:message code="admin.marker-moderation.Canceled"/></option>
                              </select>
-                        <!--</div>-->
+                        </div>
 
                         <div class="form-group">
                             <input ng-model="filter.dateStart" class="form-control datepicker"

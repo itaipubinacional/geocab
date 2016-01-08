@@ -971,24 +971,25 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <p><b><spring:message code="admin.filter-active-layers"/></b></p>
 
-                <!--<div>
-                  <select ng-change="listAttributesByLayer()"
-                          placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
+                <div>
+                  <select placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
                           ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                           ng-model="shapeFile.filter.layer" chosen class="form-control"
                           ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
                           required>
                     <option value=""></option>
                   </select>
-                </div>-->
+                </div>
 
                 <div style="margin-top:10px;">
 
                   <select class="form-control" ng-model="shapeFile.filter.status" style="width:100%;">
                     <option value="" ng-selected="true"><spring:message code="admin.marker-moderation.All-status" /></option>
-                    <option value="PENDING"><spring:message code="admin.marker-moderation.Pending" /></option>
+                    <option value="SAVED"><spring:message code="admin.marker-moderation.Saved"/></option>
+                    <option value="PENDING" ><spring:message code="admin.marker-moderation.Pending" /></option>
                     <option value="ACCEPTED"><spring:message code="admin.marker-moderation.Approved" /></option>
                     <option value="REFUSED"><spring:message code="admin.marker-moderation.Refused"/></option>
+                    <option value="CANCELED"><spring:message code="admin.marker-moderation.Canceled"/></option>
                   </select>
                 </div>
 
@@ -1007,7 +1008,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <div style="float: left;margin-top: 10px">
                   <a href="" ng-click="clearFilters()"><spring:message code="clear.Filters"/></a>
-                  <input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code='Filter'/>"
+                  <input type="button" style="margin-right:5px" ng-click="shapeFileFilter()" value="<spring:message code='Filter'/>"
                          title="<spring:message code='Search'/>" class="btn btn-default"/>
                 </div>
 

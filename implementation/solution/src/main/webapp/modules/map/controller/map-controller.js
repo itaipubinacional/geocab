@@ -177,6 +177,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.importMarkers = [];
   $scope.importLayers = [];
 
+  $scope.exportMarkers = [];
+  $scope.exportLayers = [];
+
   /**
    * Variable that stores the inner layer being created
    * @type {Array}
@@ -3518,7 +3521,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           var iconFeature = new ol.Feature({
             geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
-            marker: marker,
+            marker: marker
           });
 
           var source = new ol.source.Vector({features: [iconFeature]});
@@ -4059,7 +4062,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.shapeFile.layerType = 'new';
 
-  $scope.isImport = true;
+  $scope.isImport = false;
   $scope.isExport = false;
 
   var uploadButton = angular.element('#upload');
@@ -4433,23 +4436,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.clearFilters = function(){
 
-    var pageRequest = new PageRequest();
-    pageRequest.size = 10;
-    $scope.pageRequest = pageRequest;
-
-    if ( $scope.dragMarkers != null ){
-      $scope.dragMarkers = null;
-    }
-
     $scope.shapeFile.filter.layer = null;
     $scope.shapeFile.filter.status = null;
     $scope.shapeFile.filter.dateStart= null;
     $scope.shapeFile.filter.dateEnd= null;
-    $scope.shapeFile.filter.user= null;
-
-    $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
-    $scope.listMarkerByFiltersMap( null, null, null, null, null);
-    $scope.hasSearch = false;
+    $scope.shapeFile.filter.user = null;
 
   };
 
@@ -4547,13 +4538,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * Add attribute
    * */
   $scope.addAttribute = function() {
+
     var dialog = $modal.open({
       templateUrl: "modules/admin/ui/layer-config/popup/add-attribute-import-popup.jsp",
       controller: AddAttributeImportPopUpController,
       windowClass: 'xx-dialog',
       resolve: {
         attributes: function () {
-          return $scope.attributes;
+          return $scope.importMarkers;
         }
       }
     });
@@ -4718,7 +4710,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   $scope.exportShapeFile= function (){
-	  shapeFileService.exportShapeFile( $scope.markersToExport, {
+	  shapeFileService.exportShapeFile( $scope.exportMarkers, {
            callback: function (result) {
                 $('body').append('<a id="map-download" href="' + result + '"></a>');
                 $('#map-download')[0].click();
@@ -4842,24 +4834,69 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }, 5000);
   };
 
-  $scope.clearFilters = function(){
+  $scope.shapeFileFilter = function() {
 
-    var pageRequest = new PageRequest();
-    pageRequest.size = 10;
-    $scope.pageRequest = pageRequest;
+    $scope.internalLayers.forEach(function (layer) {
 
-    if ( $scope.dragMarkers != null ){
-      $scope.dragMarkers = null;
-    }
+      $scope.map.removeLayer(layer.layer);
 
-    $scope.shapeFile.filter.layer = null;
-    $scope.shapeFile.filter.status = null;
-    $scope.shapeFile.filter.dateStart= null;
-    $scope.shapeFile.filter.dateEnd= null;
-    $scope.shapeFile.filter.user= null;
+    });
 
-    $scope.listMarkerByFilters( null, null, null, null, null, pageRequest );
-    $scope.listMarkerByFiltersMap( null, null, null, null, null);
+    $scope.exportMarkers = [];
+    $scope.exportLayers = [];
+
+    var layer = null;
+    var userEmail = null;
+
+    if ($scope.shapeFile.filter.status == "")
+      $scope.shapeFile.filter.status = null;
+    if ($scope.shapeFile.filter.user != null)
+      userEmail = $scope.shapeFile.filter.user.email;
+    if ($scope.shapeFile.filter.dateStart == "")
+      $scope.shapeFile.filter.dateStart = null;
+    if ($scope.shapeFile.filter.dateEnd == "")
+      $scope.shapeFile.filter.dateEnd = null;
+    if ($scope.shapeFile.filter.layer != null)
+      layer = $scope.shapeFile.filter.layer.layerTitle;
+
+    markerService.listMarkerByFilters(layer, $scope.shapeFile.filter.status, $scope.shapeFile.filter.dateStart, $scope.shapeFile.filter.dateEnd, userEmail, null, {
+      callback: function (result) {
+
+        $scope.internalLayers.forEach(function(layer) {
+          var marker = layer.feature.getProperties().marker;
+
+          var index = $filter('filter')(result.content, {id: marker.id})[0];
+
+          if(index) {
+            $scope.map.addLayer(layer.layer);
+            $scope.exportLayers.push(layer);
+            $scope.exportMarkers.push(marker);
+          }
+
+        });
+
+        var coordinates = [];
+        var extent = '';
+
+        angular.forEach(result.content, function(marker){
+
+          var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+          coordinates.push(geometry.getCoordinates());
+          extent = new ol.extent.boundingExtent(coordinates);
+
+        });
+
+        $scope.map.getView().fitExtent(extent, $scope.map.getSize());
+
+        $scope.$apply();
+
+      },
+      errorHandler: function (message, exception) {
+        $scope.msg = {type: "danger", text: message, dismiss: true};
+        $scope.fadeMsg();
+        $scope.$apply();
+      }
+    });
 
   };
 

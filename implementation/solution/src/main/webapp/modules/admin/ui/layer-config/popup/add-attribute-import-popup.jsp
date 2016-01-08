@@ -59,7 +59,7 @@
         </div>
 
         <div>
-            <button title="Novo atributo" class="btn btn-primary" ng-click="addAttribute()"><spring:message code="admin.layer-config.Register" /></button>
+            <button title="<spring:message code="admin.layer-config.Add-attribute" />" class="btn btn-primary" ng-click="addAttribute()"><spring:message code="admin.layer-config.Add-attribute" /></button>
         </div>
 
       <br style="clear: both"/>
