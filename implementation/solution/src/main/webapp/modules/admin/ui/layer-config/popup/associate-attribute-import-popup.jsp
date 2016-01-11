@@ -33,7 +33,7 @@
                 </thead>
                 <tbody ui-sortable ng-model="attributes">
                 <tr ng-repeat="attribute in attributesByLayer">
-                    <td>{{ attribute.name }} ({{ attribute.type }})</td>
+                    <td>{{ attribute.name }} ({{ attribute.type }}) <span ng-if="attribute.required"></span></td>
                     <td>
                         <select data-placeholder="Selecione" name="attribute"
                                 ng-model="attribute.option" class="form-control"

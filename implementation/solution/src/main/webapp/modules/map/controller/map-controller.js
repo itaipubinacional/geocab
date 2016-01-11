@@ -4794,11 +4794,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
     } else {
 
+      angular.forEach($scope.attributesByLayer, function(attribute){
+
+        if(attribute.required && attribute.option == '') {
+          $scope.msg = {type: "danger", text: $translate("admin.layer-config.Assign-the-required-fields"), dissmiss: true};
+          $scope.fadeMsg();
+          return;
+        }
+
+      });
+
       angular.forEach($scope.importMarkers, function(marker){
 
         console.log(marker);
 
         $scope.currentEntity = marker;
+
+        var markerAttributes = marker.markerAttribute;
 
         var layer = new Layer();
         layer.id = $scope.shapeFile.form.layer.layerId;
@@ -4812,11 +4824,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           attribute.id = val.id;
 
           var markerAttribute = new MarkerAttribute();
-          if (val.value != "" && val.value != undefined) {
+
+          angular.forEach(markerAttributes, function(attr){
+            if(attr.attribute.name == val.name && attr.attribute.type == val.type) {
+              markerAttribute.value = attr.value;
+            }
+          });
+
+          /*if (val.value != "" && val.value != undefined) {
             markerAttribute.value = val.value;
           } else {
             markerAttribute.value = "";
-          }
+          }*/
 
           markerAttribute.attribute = attribute;
           markerAttribute.marker = $scope.currentEntity;
@@ -4972,7 +4991,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
 
   };
-  
+
   /* TEST */
   $scope.setMarkerAttribute = function(index, markerAttribute) {
 
