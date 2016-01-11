@@ -8,8 +8,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -211,7 +214,7 @@ public class ShapeFileService
 						try
 						{
 							final Attribute attribute = new Attribute(null, property.getDescriptor().getName().toString(), property.getDescriptor().getType().getBinding().toString(), null);
-							final MarkerAttribute markerAttribute = new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart() /*.toString()*/).toString(), marker, attribute);
+							final MarkerAttribute markerAttribute = new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart() /*.toString() TODO NEM SEMPRE É STRING*/).toString(), marker, attribute);
 							//Valida o atributo
 							validateMarkerAttribute(markerAttribute);
 							markersAttributes.add(markerAttribute);
@@ -263,7 +266,7 @@ public class ShapeFileService
 		catch (final IOException e)
 		{
 			LOG.info(e.getMessage());
-			throw new RuntimeException("Erro ao gravar arquivo de shapefile: " + e.getMessage());
+			throw new RuntimeException("Erro ao gravar arquivo de shapefile: " + e.getMessage());// FIXME LOCALIZE
 		}
 	}
 	
@@ -375,11 +378,11 @@ public class ShapeFileService
 		            transaction.close();
 		        }
 			}
-			catch (final Exception e2)
+			catch (final Exception e)
 			{
-				e2.printStackTrace();
-				LOG.info(e2.getMessage());
-				throw new RuntimeException("Ocorreu um erro durante a exportação: " + e2.getMessage());
+				e.printStackTrace();
+				LOG.info(e.getMessage());
+				throw new RuntimeException("Ocorreu um erro durante a exportação: " + e.getMessage()); //FIXME localize
 			}
 	    }
 		
@@ -398,7 +401,7 @@ public class ShapeFileService
 	 * @param marker
 	 * @return
 	 */
-	private static final SimpleFeature extractAttributes(final SimpleFeature feature, final Marker marker)
+	private static final SimpleFeature extractAttributes(SimpleFeature feature, final Marker marker)
 	{
 		
 		for (final MarkerAttribute markerAttribute : marker.getMarkerAttribute())
@@ -406,7 +409,8 @@ public class ShapeFileService
 			try
 			{
 				validateMarkerAttribute(markerAttribute);
-				feature.setAttribute(markerAttribute.getAttribute().getName(), markerAttribute.getValue());
+				
+				feature = extractAttributes(feature, markerAttribute);
 			}
 			catch (RuntimeException e)
 			{
@@ -420,12 +424,52 @@ public class ShapeFileService
 	}
 	
 	/**
+	 * Valida o markerAttribute (sobrecarga de método)
+	 * @param feature
+	 * @param markerAttribute
+	 * @return
+	 */
+	private static final SimpleFeature extractAttributes(final SimpleFeature feature, final MarkerAttribute markerAttribute)
+	{		
+		if (markerAttribute.getValue().toLowerCase().trim().equals("yes") || markerAttribute.getValue().toLowerCase().trim().equals("sim") && markerAttribute.getAttribute().getType() == AttributeType.BOOLEAN)
+		{
+			feature.setAttribute(markerAttribute.getAttribute().getName(), new Boolean(true));
+		}
+		else if (markerAttribute.getValue().toLowerCase().trim().equals("no") || markerAttribute.getValue().toLowerCase().trim().equals("nao") && markerAttribute.getAttribute().getType() == AttributeType.BOOLEAN)
+		{
+			feature.setAttribute(markerAttribute.getAttribute().getName(), new Boolean(false));
+		}
+		else if (markerAttribute.getAttribute().getType() == AttributeType.DATE)
+		{
+			try
+			{
+				Date date = new SimpleDateFormat("dd/MM/yyyy").parse(markerAttribute.getValue());
+				feature.setAttribute(markerAttribute.getAttribute().getName(), date);
+			}
+			catch (ParseException e)
+			{
+				e.printStackTrace();
+				LOG.info("Problema na conversão da data " +e.getMessage()); // FIXME Localize
+				throw new RuntimeException(e);
+			}
+		}
+		else
+		{
+			feature.setAttribute(markerAttribute.getAttribute().getName(), markerAttribute.getValue());
+		}
+		
+		return feature;
+	}
+	
+	/**
 	 * Valida o attributo para exportação
 	 * @param markerAttribute
 	 */
 	private static final void validateMarkerAttribute(final MarkerAttribute markerAttribute)
-	{Assert.isTrue(markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM, "O atributo não pode ser um album de fotos");
-		Assert.isTrue(markerAttribute.getAttribute().getName() != null, "O nome do atributo não pode ser nulo ");
+	{
+		Assert.isTrue(markerAttribute.getAttribute().getType()  != null, "O tipo do atributo não pode ser nulo ");
+		Assert.isTrue(markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM, "O atributo não pode ser um album de fotos");
+		Assert.isTrue(markerAttribute.getAttribute().getName() != null, "O nome do atributo não pode ser nulo "); // FIXME LOCALIZE
 		Assert.isTrue(markerAttribute.getValue() != null , "O valor do atributo não pode ser nulo ");
 	}
 	
