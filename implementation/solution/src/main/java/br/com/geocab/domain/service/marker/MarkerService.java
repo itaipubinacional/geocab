@@ -27,6 +27,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +45,7 @@ import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
+import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
@@ -52,6 +54,7 @@ import br.com.geocab.domain.entity.marker.photo.Photo;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.repository.IMetaFileRepository;
+import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
@@ -106,11 +109,16 @@ public class MarkerService
 	@Autowired
 	private IPhotoRepository photoRepository;
 
-	// /**
-	// * I18n
-	// */
-	// @Autowired
-	// private MessageSource messages;
+	 /**
+	 * I18n
+	 */
+	 @Autowired
+	 private MessageSource messages;
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAttributeRepository attributeRepository;
 	/**
 	 * 
 	 */
@@ -130,31 +138,46 @@ public class MarkerService
 	 */
 	public Marker insertMarker(Marker marker) 
 	{
-		try
-		{
-			User user = ContextHolder.getAuthenticatedUser();
+		User user = ContextHolder.getAuthenticatedUser();
 
-			marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
+		marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
 
-			marker.setStatus(MarkerStatus.SAVED);
-			marker.setUser(user);
+		marker.setStatus(MarkerStatus.SAVED);
+		marker.setUser(user);
+		
+		validateAttribute(marker.getMarkerAttribute());
+		
+		marker = this.markerRepository.save(marker);
+
+		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
+		
+		MarkerModeration markerModeration = new MarkerModeration();
+		markerModeration.setMarker(marker);
+		markerModeration.setStatus(MarkerStatus.SAVED);
+		this.markerModerationRepository.save(markerModeration);
 			
-			marker = this.markerRepository.save(marker);
-
-			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
-			
-			MarkerModeration markerModeration = new MarkerModeration();
-			markerModeration.setMarker(marker);
-			markerModeration.setStatus(MarkerStatus.SAVED);
-			this.markerModerationRepository.save(markerModeration);
-
-		}
-		catch (Exception e)
-		{	
-			e.printStackTrace();
-			LOG.info(e.getMessage());
-		}
 		return marker;
+	}
+	
+	/**
+	 * Valida os atributos a serem inseridos, caso o atributo seja "required" e não estiver setado, estoura exceção
+	 * @param markerAttributes
+	 */
+	private void validateAttribute(List<MarkerAttribute> markerAttributes)
+	{
+		for (MarkerAttribute markerAttribute : markerAttributes)
+		{
+			Attribute attribute = attributeRepository.findOne(markerAttribute.getAttribute().getId());
+			
+			if (attribute.getRequired() && attribute.getType() != AttributeType.PHOTO_ALBUM && markerAttribute.getValue() == null)
+			{
+				throw new RuntimeException("Insira um valor para o atributo " + attribute.getName());
+			}
+			else if (attribute.getRequired() && attribute.getType() == AttributeType.PHOTO_ALBUM && (markerAttribute.getPhotoAlbum() == null || markerAttribute.getPhotoAlbum().getPhotos() == null || markerAttribute.getPhotoAlbum().getPhotos().size() == 0))
+			{
+				throw new RuntimeException("Insira fotos para o atributo " + attribute.getName());
+			}
+		}
 	}
 
 	/**
