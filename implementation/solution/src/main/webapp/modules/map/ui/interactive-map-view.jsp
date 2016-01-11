@@ -1034,7 +1034,7 @@ uri="http://www.springframework.org/security/tags"%>
                       class="radio-label" for="new-layer"><spring:message code="admin.layer-config.New-layer"/></label>
                   </div>
 
-                  <!--<div class="form-item position-relative">
+                  <div class="form-item position-relative">
                     <label class="detail-label" required><spring:message code="admin.datasource.Data-Source"/></label>
                     <div class="input-group position-relative">
                       <input name="dataSource" type="text" disabled class="form-control"
@@ -1052,7 +1052,7 @@ uri="http://www.springframework.org/security/tags"%>
                         </span>
                     </div>
                     <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
-                  </div>-->
+                  </div>
 
                   <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative" style="float:left;width:100%;margin-top:10px;">
                     <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"

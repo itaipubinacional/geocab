@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $state, attributes ) {
+function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $state, markerAttributes ) {
 
 
 	$scope.msg = null;
@@ -59,6 +59,8 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 		}
 		];
 
+	$scope.markerAttributes = markerAttributes;
+
 	/*-------------------------------------------------------------------
 	 * 		 				 	  NAVIGATIONS
 	 *-------------------------------------------------------------------*/
@@ -81,12 +83,12 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 
 	$scope.addAttribute = function () {
 
-		$scope.attributes.push({name: ''});
+		$scope.markerAttributes.push({name: ''});
 
 	};
 
 	$scope.removeAttribute = function(index) {
-		$scope.attributes.splice(index, 1);
+		$scope.markerAttributes.splice(index, 1);
 	};
 
 	/**
@@ -98,35 +100,11 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 	};
 
 	/**
-	 * 
-	 */
-	$scope.form = function( formName ) 
-	{
-
-		if ( !formName ) 
-		{
-			formName = "form";
-		}
-
-		return $("form[name="+formName+"]").scope()[formName];
-	};
-
-	/**
-	 *
-	 */
-	$scope.closeConfirm = function()
-	{
-			$scope.msg = null;
-			$scope.currentEntity.nome = '';
-			$scope.currentState = $scope.NORMAL_STATE;
-	};
-
-	/**
 	 *
 	 */
 	$scope.close = function() 
 	{
 		$scope.msg = null;
-		$modalInstance.close(null);
+		$modalInstance.close({attributesByLayer: $scope.attributesByLayer});
 	};
 };

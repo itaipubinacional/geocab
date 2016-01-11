@@ -4540,14 +4540,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       controller: AddAttributeImportPopUpController,
       windowClass: 'xx-dialog',
       resolve: {
-        attributes: function () {
-          return $scope.importMarkers;
+        markerAttributes: function () {
+          return $scope.importMarkers[0].markerAttribute;
         }
       }
     });
 
     dialog.result.then(function (result) {
 
+      $scope.attributesByLayer = result.attributesByLayer;
 
     });
   };
@@ -4595,11 +4596,24 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     dialog.result.then(function (result) {
 
       if (result) {
-        $scope.shapeFile.form.name = result.name;
-        $scope.shapeFile.form.title = result.title;
-        $scope.shapeFile.form.legend = result.legend;
-      }
 
+        $scope.shapeFile.form.layerIcon = result.icon;
+
+        angular.forEach($scope.importLayers, function (layer, index) {
+
+          var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+              anchor: [0.5, 1],
+              anchorXUnits: 'fraction',
+              anchorYUnits: 'fraction',
+              src: $scope.shapeFile.form.layerIcon
+            }))
+          });
+
+          layer.setStyle(iconStyle);
+
+        });
+      }
     });
   };
 
@@ -5004,7 +5018,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.setImportLayer = function() {
 
     /* TEST */
-    /*$scope.attributesByLayer = [];
+    $scope.attributesByLayer = [];
 
     $scope.markerAttributes = $scope.importMarkers[0].markerAttribute;
 
@@ -5026,7 +5040,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.message = {type: "error", text: message};
         $scope.$apply();
       }
-    });*/
+    });
 
     angular.forEach($scope.importLayers, function (layer, index) {
 
@@ -5040,6 +5054,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
 
       layer.setStyle(iconStyle);
+
+      //$scope.associateAttribute();
 
     });
   };
