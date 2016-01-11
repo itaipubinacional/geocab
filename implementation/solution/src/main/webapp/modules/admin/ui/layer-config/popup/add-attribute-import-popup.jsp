@@ -35,10 +35,10 @@
                 </tr>
                 </thead>
                 <tbody ui-sortable ng-model="attributes">
-                    <tr ng-repeat="attribute in attributes">
-                        <td><input type="text" ng-model="attribute.name"></td>
+                    <tr ng-repeat="attribute in markerAttributes">
+                        <td><input type="text" ng-model="attribute.attribute.name"></td>
                         <td>
-                            <select name="select" class="form-control" ng-model="attribute.type"  style="margin-bottom: 15px"
+                            <select name="select" class="form-control" ng-model="attribute.attribute.type"  style="margin-bottom: 15px"
                                     ng-class="{ngInvalid: form_add_attribute.$submitted && form_add_attribute.select.$error.required }"
                                     required
                             >
