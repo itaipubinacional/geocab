@@ -1072,7 +1072,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             }
 
         });
-    }
+    };
     
     /**
      * Remove attribute

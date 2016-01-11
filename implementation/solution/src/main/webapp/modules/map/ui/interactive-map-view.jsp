@@ -962,7 +962,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <i class="icon-upload icon-large"></i>
                   <spring:message code="admin.shape-file.Import" /></button>
 
-                <input style="display:none" id="upload" multiple="true" type="file" accept=".shp, .shx, .dbf" name="upload" onchange="angular.element(this).scope().onFileChange(this)">
+                <input id="upload" multiple="true" type="file" accept=".shp, .shx, .dbf" name="upload" onchange="angular.element(this).scope().onFileChange(this)">
 
                 <hr style="border-color: #d9d9d9;"/>
 
@@ -1034,7 +1034,7 @@ uri="http://www.springframework.org/security/tags"%>
                       class="radio-label" for="new-layer"><spring:message code="admin.layer-config.New-layer"/></label>
                   </div>
 
-                  <div class="form-item position-relative">
+                  <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative">
                     <label class="detail-label" required><spring:message code="admin.datasource.Data-Source"/></label>
                     <div class="input-group position-relative">
                       <input name="dataSource" type="text" disabled class="form-control"
@@ -1114,7 +1114,7 @@ uri="http://www.springframework.org/security/tags"%>
                                required
                                ng-class="{ ngInvalid:form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)}" class="tooltip-validation}">
                           <span class="input-group-btn">
-                              <button style="height: 34px" ng-click="selectLayerGroup()" class="btn btn-default"
+                              <button style="height: 34px" ng-click="selectLayerGroupPopup()" class="btn btn-default"
                                       title="<spring:message code='admin.layer-config.Enter-the-layer' />"
                                       type="button"
                                       ng-disabled="shapeFile.form.dataSource == null">

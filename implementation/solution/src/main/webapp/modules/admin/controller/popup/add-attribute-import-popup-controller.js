@@ -105,6 +105,6 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 	$scope.close = function() 
 	{
 		$scope.msg = null;
-		$modalInstance.close({attributesByLayer: $scope.attributesByLayer});
+		$modalInstance.close({attributesByLayer: $scope.markerAttributes});
 	};
 };
