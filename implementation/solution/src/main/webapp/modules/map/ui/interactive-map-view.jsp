@@ -969,7 +969,7 @@ uri="http://www.springframework.org/security/tags"%>
               </div>
               <div ng-if="isExport">
 
-                <p><b><spring:message code="admin.filter-active-layers"/></b></p>
+                <!--<p><b><spring:message code="admin.filter-active-layers"/></b></p>-->
 
                 <div>
                   <select placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
@@ -1034,7 +1034,7 @@ uri="http://www.springframework.org/security/tags"%>
                       class="radio-label" for="new-layer"><spring:message code="admin.layer-config.New-layer"/></label>
                   </div>
 
-                  <div class="form-item position-relative">
+                  <!--<div class="form-item position-relative">
                     <label class="detail-label" required><spring:message code="admin.datasource.Data-Source"/></label>
                     <div class="input-group position-relative">
                       <input name="dataSource" type="text" disabled class="form-control"
@@ -1052,7 +1052,7 @@ uri="http://www.springframework.org/security/tags"%>
                         </span>
                     </div>
                     <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
-                  </div>
+                  </div>-->
 
                   <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative" style="float:left;width:100%;margin-top:10px;">
                     <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
@@ -1080,7 +1080,7 @@ uri="http://www.springframework.org/security/tags"%>
                             class="tooltip-validation"><spring:message code="admin.layer-config.Title-required"/></span>
                   </div>
 
-                  <div ng-if="shapeFile.layerType != 'new' && shapeFile.form.layer" style="margin-bottom: 10px">
+                  <div ng-if="shapeFile.layerType != 'new'" style="margin-bottom: 10px">
                     <button ng-click="associateAttribute()" title="<spring:message code='admin.layer-config.Associate-attributes' />"
                             class="btn btn-primary" style="margin-bottom: 5px">
                       <spring:message code="admin.layer-config.Associate-attributes"/>
@@ -1152,6 +1152,36 @@ uri="http://www.springframework.org/security/tags"%>
                       <button ng-click="selectAccessGroups()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary"><spring:message code="admin.layer-config.Associate-access-group"/></button>
                     </div>
                   </div>
+
+                  <!--<table>
+                    <thead>
+                    <tr>
+                      <th>Atributos</th>
+                      <th>Atributo Importado</th>
+                    </tr>
+                    </thead>
+                    <tbody ui-sortable ng-model="attributes">
+                    <tr ng-repeat="attribute in attributesByLayer">
+                      <td>{{ attribute.name }} ({{ attribute.type }}) {{ attribute.option }}</td>
+                      <td>
+                        <select data-placeholder="Selecione" name="attribute"
+                                ng-model="attribute.option" class="form-control"
+                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+                                ng-change="setMarkerAttribute()"
+                                ng-options="markerAttribute.id as markerAttribute.name for markerAttribute in markerAttributes"
+                                required>
+                        </select>
+                        <select data-placeholder="Selecione" name="attribute"
+                                ng-model="attribute.option" class="form-control"
+                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+                                ng-change="setMarkerAttribute($index, attribute.option)"
+                                required>
+                          <option ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
+                        </select>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>-->
 
                   <div>
                     <button ng-click="importShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="layer-group-popup.Save"/></button>

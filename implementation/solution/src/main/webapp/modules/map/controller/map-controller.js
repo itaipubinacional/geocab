@@ -3506,7 +3506,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         angular.forEach(result, function (marker, index) {
         	
-          $scope.exportMarkers.push(marker);
+          //$scope.exportMarkers.push(marker);
           /* var iconFeature = new ol.Feature({
            geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
            marker: marker,
@@ -4056,7 +4056,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.shapeFile.layerType = 'new';
   $scope.shapeFile.layerType = 'layer';
 
-  $scope.isImport = false;
+  $scope.isImport = true;
   $scope.isExport = false;
 
   var uploadButton = angular.element('#upload');
@@ -4064,6 +4064,27 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.clickUpload = function(){
     angular.element('#upload').trigger('click');
   };
+
+  layerGroupService.listAllInternalLayerGroups({
+    callback: function (result) {
+      $scope.selectLayerGroup = [];
+
+      angular.forEach(result, function (layer, index) {
+
+        $scope.selectLayerGroup.push({
+          "layerTitle": layer.title,
+          "layerId": layer.id,
+          "layerIcon": layer.icon,
+          "group": layer.layerGroup.name
+        });
+      });
+      $scope.$apply();
+    },
+    errorHandler: function (message, exception) {
+      $scope.message = {type: "error", text: message};
+      $scope.$apply();
+    }
+  });
 
   $scope.setAction = function (type) {
 
@@ -4103,26 +4124,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
        */
       $scope.addGroups = [];
 
-      layerGroupService.listAllInternalLayerGroups({
-        callback: function (result) {
-          $scope.selectLayerGroup = [];
 
-          angular.forEach(result, function (layer, index) {
-
-            $scope.selectLayerGroup.push({
-              "layerTitle": layer.title,
-              "layerId": layer.id,
-              "layerIcon": layer.icon,
-              "group": layer.layerGroup.name
-            });
-          });
-          $scope.$apply();
-        },
-        errorHandler: function (message, exception) {
-          $scope.message = {type: "error", text: message};
-          $scope.$apply();
-        }
-      });
 
     } else {
 
@@ -4970,8 +4972,43 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
 
   };
+  
+  /* TEST */
+  $scope.setMarkerAttribute = function(index, markerAttribute) {
+
+    if($scope.attributesByLayer[index].type != markerAttribute.match(/\((.*)\)/)[1]) {
+      $scope.attributesByLayer[index].option = '';
+    }
+
+  };
 
   $scope.setImportLayer = function() {
+
+    /* TEST */
+    /*$scope.attributesByLayer = [];
+
+    $scope.markerAttributes = $scope.importMarkers[0].markerAttribute;
+
+    layerGroupService.listAttributesByLayer($scope.shapeFile.form.layer.layerId, {
+      callback: function (result) {
+
+        angular.forEach(result, function(attribute){
+
+          if(attribute.type != 'PHOTO_ALBUM') {
+            attribute.option = attribute.name + ' (' + attribute.type + ')';
+            $scope.attributesByLayer.push(attribute);
+          }
+
+        });
+
+        $scope.$apply();
+      },
+      errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });*/
+
     angular.forEach($scope.importLayers, function (layer, index) {
 
       var iconStyle = new ol.style.Style({
@@ -5042,7 +5079,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           });
 
+          var zoom = $scope.map.getView().getZoom();
+
           $scope.map.getView().fitExtent(extent, $scope.map.getSize());
+
+          $scope.map.getView().setZoom(zoom);
 
           $scope.$apply();
         },

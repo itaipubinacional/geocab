@@ -38,9 +38,8 @@
                         <select data-placeholder="Selecione" name="attribute"
                                 ng-model="attribute.option" class="form-control"
                                 ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
-                                ng-change="setMarkerAttribute()"
+                                ng-change="setMarkerAttribute($index, attribute.option)"
                                 required>
-                            <!--<option value=""></option>-->
                             <option ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
                         </select>
                     </td>

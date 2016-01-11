@@ -31,7 +31,7 @@ function AssociateAttributeImportPopUpController($scope, $injector,$modalInstanc
 				//console.log(attribute);
 
 				if(attribute.type != 'PHOTO_ALBUM') {
-					attribute.option = attribute.name + '(' + attribute.type + ')';
+					attribute.option = attribute.name + ' (' + attribute.type + ')';
 					$scope.attributesByLayer.push(attribute);
 				}
 
@@ -46,6 +46,14 @@ function AssociateAttributeImportPopUpController($scope, $injector,$modalInstanc
 			$scope.$apply();
 		}
 	});
+
+	$scope.setMarkerAttribute = function(index, markerAttribute) {
+
+		if($scope.attributesByLayer[index].type != markerAttribute.match(/\((.*)\)/)[1]) {
+			$scope.attributesByLayer[index].option = '';
+		}
+
+	};
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	  BEHAVIORS
