@@ -273,7 +273,7 @@ public class ShapeFileService
 	 * @return
 	 */
 	private static final List<Layer> groupByLayers(final List<Marker> markers)
-	{
+	{		
 		final Set<Layer> layers = new HashSet<>();
 		
 		for (final Marker marker : markers)
@@ -283,10 +283,11 @@ public class ShapeFileService
 		
 		for (final Layer layer : layers)
 		{	
+			// Inicializa os markers da layer
 			layer.setMarkers(new ArrayList<Marker>());
 			for (final Marker marker : markers)
 			{	
-				if (marker.getLayer().getId() == layer.getId())
+				if (marker.getLayer().getId().equals(layer.getId()))
 				{
 					layer.getMarkers().add(marker);
 				}
@@ -303,6 +304,7 @@ public class ShapeFileService
 	 */
 	public FileTransfer exportShapeFile(final List<Marker> markers)
 	{
+		
 		final List<Layer> layers = groupByLayers(markers);
 		
 		String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis() );
@@ -332,7 +334,7 @@ public class ShapeFileService
 	                final double latitude = marker.getLocation().getY();
 	
 	                final Point point = factory.createPoint(new Coordinate(longitude, latitude));
-	                // O ponto também é um attributo "new Object[]{point}"
+	                // O ponto também é um atributo "new Object[]{point}"
 	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
 	                
 	                // Extrai os atributos da feature 

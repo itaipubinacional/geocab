@@ -170,11 +170,11 @@ public class MarkerService
 			Attribute attribute = attributeRepository.findOne(markerAttribute.getAttribute().getId());
 			
 			if (attribute.getRequired() && attribute.getType() != AttributeType.PHOTO_ALBUM && markerAttribute.getValue() == null)
-			{
+			{// FIXME localize
 				throw new RuntimeException("Insira um valor para o atributo " + attribute.getName());
 			}
 			else if (attribute.getRequired() && attribute.getType() == AttributeType.PHOTO_ALBUM && (markerAttribute.getPhotoAlbum() == null || markerAttribute.getPhotoAlbum().getPhotos() == null || markerAttribute.getPhotoAlbum().getPhotos().size() == 0))
-			{
+			{// FIXME localize
 				throw new RuntimeException("Insira fotos para o atributo " + attribute.getName());
 			}
 		}
