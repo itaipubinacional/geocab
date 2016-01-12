@@ -24,7 +24,7 @@
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
 
         <div>
-            <table>
+            <table class="ng-grid">
                 <thead>
                 <tr>
                     <th>Nome</th>
@@ -36,12 +36,11 @@
                 </thead>
                 <tbody ui-sortable ng-model="attributes">
                     <tr ng-repeat="attribute in markerAttributes">
-                        <td><input type="text" ng-model="attribute.attribute.name"></td>
+                        <td><input type="text" class="form-control" ng-model="attribute.attribute.name"></td>
                         <td>
-                            <select name="select" class="form-control" ng-model="attribute.attribute.type"  style="margin-bottom: 15px"
+                            <select name="select" class="form-control" ng-model="attribute.attribute.type"
                                     ng-class="{ngInvalid: form_add_attribute.$submitted && form_add_attribute.select.$error.required }"
-                                    required
-                            >
+                                    required>
                             <option value="" disabled selected style="display:none" ><spring:message code="admin.layer-config.Attribute-type" /></option>
                             <option value="TEXT"><spring:message code="admin.layer-config.Text" /></option>
                             <option value="NUMBER"><spring:message code="admin.layer-config.Number" /></option>
@@ -50,9 +49,11 @@
                             <option value="PHOTO_ALBUM"><spring:message code="admin.layer-config.Photo-album" /></option>
                         </select>
                         </td>
-                        <td><input type="checkbox" ng-model="attribute.attribute.required"></td>
-                        <td><input type="checkbox" ng-model="attribute.attribute.visible"></td>
-                        <td><button ng-click="removeAttribute($index)" value="Remove">Remove</button></td>
+                        <td style="text-align: center"><input type="checkbox" ng-model="attribute.attribute.required"></td>
+                        <td style="text-align: center"><input type="checkbox" ng-model="attribute.attribute.visible"></td>
+                        <td>
+                            <a ng-click="removeAttribute($index)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>
+                        </td>
                     </tr>
                 </tbody>
             </table>

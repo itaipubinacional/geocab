@@ -4041,8 +4041,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.shapeFile = {};
   $scope.shapeFile.form = {};
 
-  $scope.shapeFile.layerType = 'new';
-  //$scope.shapeFile.layerType = 'layer';
+  //$scope.shapeFile.layerType = 'new';
+  $scope.shapeFile.layerType = 'layer';
 
   $scope.isImport = false;
   $scope.isExport = false;
@@ -4551,7 +4551,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       windowClass: 'xx-dialog',
       resolve: {
         layer: function () {
-          return $scope.shapeFile.form.layer
+          return $scope.shapeFile.form.layer;
         },
         markerAttributes: function () {
           return $scope.importMarkers[0].markerAttribute;

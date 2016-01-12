@@ -89,3 +89,18 @@
 .ui-grid-draggable-row-over--below:before {
     bottom: 0;
 }
+
+/* TABLE GRID */
+table.ng-grid{margin-bottom: 15px;width: 100%;}
+
+table.ng-grid thead tr th{padding: 8px;}
+
+table.ng-grid thead tr{height: 45px;
+    border: 1px solid #ccc;
+    margin: 5px;}
+table.ng-grid tbody{border: 1px solid #ccc;}
+
+table.ng-grid tbody tr td{padding: 4px 8px; height: 45px}
+
+table.ng-grid tbody tr{background-color: #f3f3f3}
+table.ng-grid tbody tr:nth-child(odd) td{background-color: #fff}

@@ -24,7 +24,7 @@
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
 
         <div>
-            <table>
+            <table class="ng-grid">
                 <thead>
                 <tr>
                     <th>Atributos</th>
@@ -33,7 +33,7 @@
                 </thead>
                 <tbody ui-sortable ng-model="attributes">
                 <tr ng-repeat="attribute in attributesByLayer">
-                    <td>{{ attribute.name }} ({{ attribute.type }}) <span ng-if="attribute.required"></span></td>
+                    <td>{{ attribute.name }} ({{ attribute.type }}) <b ng-if="attribute.required">*</b></td>
                     <td>
                         <select data-placeholder="Selecione" name="attribute"
                                 ng-model="attribute.option" class="form-control"

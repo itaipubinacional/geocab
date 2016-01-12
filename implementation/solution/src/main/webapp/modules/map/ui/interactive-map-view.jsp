@@ -1055,6 +1055,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative" style="float:left;width:100%;margin-top:10px;">
+                    <label class="detail-label" required><spring:message code="admin.layer-config.Layer"/></label>
                     <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
                             ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                             ng-model="shapeFile.form.layer" chosen class="form-control"
@@ -1080,7 +1081,7 @@ uri="http://www.springframework.org/security/tags"%>
                             class="tooltip-validation"><spring:message code="admin.layer-config.Title-required"/></span>
                   </div>
 
-                  <div ng-if="shapeFile.layerType != 'new'" style="margin-bottom: 10px">
+                  <div ng-if="shapeFile.layerType != 'new' && shapeFile.form.layer" style="margin-bottom: 10px">
                     <button ng-click="associateAttribute()" title="<spring:message code='admin.layer-config.Associate-attributes' />"
                             class="btn btn-primary" style="margin-bottom: 5px">
                       <spring:message code="admin.layer-config.Associate-attributes"/>
