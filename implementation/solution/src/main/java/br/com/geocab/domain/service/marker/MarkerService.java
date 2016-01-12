@@ -27,7 +27,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -109,11 +108,11 @@ public class MarkerService
 	@Autowired
 	private IPhotoRepository photoRepository;
 
-	 /**
-	 * I18n
-	 */
-	 @Autowired
-	 private MessageSource messages;
+//	 /**
+//	 * I18n
+//	 */
+//	 @Autowired
+//	 private MessageSource messages;
 	/**
 	 * 
 	 */
