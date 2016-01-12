@@ -3157,7 +3157,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.exitLegendDetail = function () {
     $scope.LAYER_MENU_STATE = 'list';
-  }
+  };
 
   $scope.clearFcMarker = function (close) {
 
@@ -3287,18 +3287,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           photoAlbum.photos.push(photo);
         });
 
-        /*var img = $scope.imgResult.split(';base64,');
-
-        var photo = new Photo();
-        photo.image = img[1];
-        photo.mimeType = 'image/png';
-        photoAlbum.photos.push(photo);
-
-        var photo = new Photo();
-        photo.image = img[1];
-        photo.mimeType = 'image/png';
-        photoAlbum.photos.push(photo);*/
-
         markerAttribute.photoAlbum = photoAlbum;
 
       }
@@ -3318,9 +3306,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.removeInternalLayer($scope.currentEntity.layer.id, function (layerId) {
           $scope.addInternalLayer(layerId);
-        })
+        });
 
-        $scope.clearFcMarker();
+        $scope.clearFcMarker(true);
 
         $scope.msg = {type: "success", text: $translate("map.Mark-inserted-succesfully"), dismiss: true};
         $("div.msgMap").show();
@@ -4787,9 +4775,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
       });
 
+      $scope.toggleSidebarMenu(300, 'closeButton');
+
     });
 
-  }
+  };
 
   /**
    * Performs the insertion of a new record
@@ -5118,7 +5108,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                 anchor: [0.5, 1],
                 anchorXUnits: 'fraction',
                 anchorYUnits: 'fraction',
-                src: 'static/images/marker.png'
+                src: 'static/icons/default_blue.png'
               }),
               zIndex: 2
             });

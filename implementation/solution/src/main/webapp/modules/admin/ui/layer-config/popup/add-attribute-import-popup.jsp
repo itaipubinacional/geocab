@@ -50,8 +50,8 @@
                             <option value="PHOTO_ALBUM"><spring:message code="admin.layer-config.Photo-album" /></option>
                         </select>
                         </td>
-                        <td><input type="checkbox" value="attribute.required" ng-value="attribute.required"></td>
-                        <td><input type="checkbox" value="attribute.visible" ng-value="attribute.visible"></td>
+                        <td><input type="checkbox" ng-model="attribute.attribute.required"></td>
+                        <td><input type="checkbox" ng-model="attribute.attribute.visible"></td>
                         <td><button ng-click="removeAttribute($index)" value="Remove">Remove</button></td>
                     </tr>
                 </tbody>
