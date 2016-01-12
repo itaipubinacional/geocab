@@ -251,6 +251,23 @@ uri="http://www.springframework.org/security/tags"%>
                     <option value=""></option>
                   </select>
                 </div>
+
+                <br style="clear: both;">
+
+                <div class="form-item position-relative" style="width:100%;margin:10px 0; padding-right: 10px">
+                  <label required>Latitude</label>
+                  <input type="text" name="latitude" ng-change="setMarkerCoordinates()"
+                         class="form-control" ng-model="formattedLatitude">
+                </div>
+
+                <br />
+
+                <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
+                  <label required>Longitude</label>
+                  <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
+                         class="form-control" ng-model="formattedLongitude">
+                </div>
+
                 <span class="tooltip-validation"
                       ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
                       style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
@@ -558,7 +575,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <br style="clear: both;">
 
                 <div class="form-item position-relative" style="width:100%;margin:10px 0; padding-right: 10px">
-                  <label class="detail-label" required>Latitude</label>
+                  <label required>Latitude</label>
                   <input type="text" name="latitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLatitude">
                 </div>
@@ -566,7 +583,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <br />
 
                 <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
-                  <label class="detail-label" required>Longitude</label>
+                  <label required>Longitude</label>
                   <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLongitude">
                 </div>
@@ -1035,7 +1052,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative">
-                    <label class="detail-label" required><spring:message code="admin.datasource.Data-Source"/></label>
+                    <label required><spring:message code="admin.datasource.Data-Source"/></label>
                     <div class="input-group position-relative">
                       <input name="dataSource" type="text" disabled class="form-control"
                              ng-model="shapeFile.form.dataSource.name"
@@ -1055,7 +1072,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative" style="float:left;width:100%;margin-top:10px;">
-                    <label class="detail-label" required><spring:message code="admin.layer-config.Layer"/></label>
+                    <label required><spring:message code="admin.layer-config.Layer"/></label>
                     <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
                             ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                             ng-model="shapeFile.form.layer" chosen class="form-control"
@@ -1067,7 +1084,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
-                    <label class="detail-label" required>
+                    <label required>
                       <spring:message code="Title"/>
                     </label>
                     <input name="title" type="text" class="form-control"
@@ -1105,7 +1122,7 @@ uri="http://www.springframework.org/security/tags"%>
                       </button>
                     </div>
                     <div style="margin-top: 10px" class="form-item position-relative">
-                      <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
+                      <label required><spring:message code="admin.layer-config.Layer-group"/> </label>
                       <div class="input-group">
                         <input name="layerGroup" type="text" disabled class="form-control"
                                ng-model="shapeFile.form.layerGroup.name"

@@ -633,9 +633,24 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         formattedLatitude  = parseFloat(formattedLatitude);
         formattedLongitude = parseFloat(formattedLongitude);
 
+        var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon(({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: ''
+          }))
+        });
+
+        $scope.currentCreatingInternalLayer.setStyle(iconStyle);
+
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
 
         //$scope.clearFcMarker();
+
+        if($scope.currentEntity.layer.layerIcon == undefined) {
+          $scope.currentEntity.layer.layerIcon = $scope.currentEntity.layer.icon;
+        }
 
         var iconStyle = new ol.style.Style({
           image: new ol.style.Icon(({
@@ -683,7 +698,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if(!type) {
         type = 'default';
-        if (!$scope.currentEntity.layer.layerIcon.match(/default/))
+        if ($scope.currentEntity.layer.layerIcon && !$scope.currentEntity.layer.layerIcon.match(/default/) || !$scope.currentEntity.layer.icon.match(/default/))
           type = 'collection';
       }
 
@@ -873,6 +888,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           feature.setStyle([iconStyle, shadowStyle]);
 
           $scope.features.push({"feature": $scope.marker, "type": "internal"});
+
+          var geometry = feature.getGeometry();
+          var coordinate = geometry.getCoordinates();
+
+          var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
+
+          $scope.latitude = transformed_coordinate[1];
+          $scope.longitude = transformed_coordinate[0];
+
+          $scope.setMarkerCoordinatesFormat();
 
           if ($scope.features.length > 0) {
             $timeout(function () {
