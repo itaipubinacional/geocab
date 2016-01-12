@@ -3284,7 +3284,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
-  $scope.insertMarker = function () {
+  $scope.insertMarker = function (status) {
     if (!$scope.isBooleanValid()) {
       return false;
     }
@@ -3340,6 +3340,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
 
     $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
+
+    $scope.currentEntity.status = status;
 
     markerService.insertMarker( $scope.currentEntity, {
       callback: function (result) {

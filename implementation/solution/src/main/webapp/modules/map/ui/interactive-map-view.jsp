@@ -703,9 +703,9 @@ uri="http://www.springframework.org/security/tags"%>
 
                   <button
                       id="buttonInsert"
-                      class="btn btn-primary"
-                      ng-click="insertMarker()"
-                      style="float: right"
+                      class="btn btn-success"
+                      ng-click="insertMarker('PENDING')"
+                      style="float: right;"
                       title="<spring:message code="map.Submit" />"
                   >
                   <spring:message code="map.Submit" />
@@ -714,8 +714,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <button
                       id="savePost"
                       class="btn btn-primary"
-                      ng-click="saveMarker()"
-                      style="float: right"
+                      ng-click="insertMarker('SAVED')"
                       title="<spring:message code="map.Save" />"
                   >
                   <spring:message code="map.Save" />
