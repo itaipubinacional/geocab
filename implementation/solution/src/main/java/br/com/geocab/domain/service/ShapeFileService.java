@@ -46,7 +46,9 @@ import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Component;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -66,28 +68,28 @@ import br.com.geocab.domain.repository.marker.IMarkerRepository;
  * @author emanuelvictor
  *
  */
-@Service
+@Component
+//@Service //não lê os properties
 @RemoteProxy(name = "shapeFileService")
 @SuppressWarnings("unchecked")
 public class ShapeFileService
 {
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
-	 *-------------------------------------------------------------------*/
+	 *-------------------------------------------------------------------*/	
 	/**
 	 * shapeFile path
 	 */
-	private static String PATH_SHAPE_FILES = "/tmp/geocab/files/shapefile/";
+	@Value("${path.shapefiles}")
+	private String PATH_SHAPE_FILES;	
 	/**
 	 * export shapeFile path
 	 */
-	private static String PATH_SHAPE_FILES_EXPORT = PATH_SHAPE_FILES + "export/";
-
+	private String PATH_SHAPE_FILES_EXPORT = PATH_SHAPE_FILES + "export/";
 	/**
 	 * import shapeFile path
 	 */
-	private static String PATH_SHAPE_FILES_IMPORT = PATH_SHAPE_FILES + "import/";
-		
+	private String PATH_SHAPE_FILES_IMPORT = PATH_SHAPE_FILES + "import/";
 	/**
 	 * Log
 	 */
@@ -101,7 +103,12 @@ public class ShapeFileService
 	 * 
 	 */
 	@Autowired
-	IAttributeRepository attributeRepository;
+	private IAttributeRepository attributeRepository;
+	 /**
+	 * I18n
+	 */
+	 @Autowired
+	 private MessageSource messages;
 	/*-------------------------------------------------------------------
 	 *				 		    CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -168,7 +175,7 @@ public class ShapeFileService
 		{
 			e.printStackTrace();
 			LOG.info(e.getMessage());
-			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
+			throw new RuntimeException(messages.getMessage("admin.shape.error.import", null, null));
 		}
 	}
 	
@@ -214,7 +221,10 @@ public class ShapeFileService
 						try
 						{
 							final Attribute attribute = new Attribute(null, property.getDescriptor().getName().toString(), property.getDescriptor().getType().getBinding().toString(), null);
-							final MarkerAttribute markerAttribute = new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart() /*.toString() TODO NEM SEMPRE É STRING*/).toString(), marker, attribute);
+							
+							//Extrai os atributos da feature
+							final MarkerAttribute markerAttribute = extractAttributes(feature, attribute, property, marker);
+							
 							//Valida o atributo
 							validateMarkerAttribute(markerAttribute);
 							markersAttributes.add(markerAttribute);
@@ -239,7 +249,7 @@ public class ShapeFileService
 		{	
 			e.printStackTrace();
 			LOG.info(e.getMessage());
-			throw new RuntimeException("Ocorreu um erro durante a importação: " + e.getMessage());
+			throw new RuntimeException("admin.shape.error.import");
 		}
 	}
 	
@@ -266,7 +276,7 @@ public class ShapeFileService
 		catch (final IOException e)
 		{
 			LOG.info(e.getMessage());
-			throw new RuntimeException("Erro ao gravar arquivo de shapefile: " + e.getMessage());// FIXME LOCALIZE
+			throw new RuntimeException("admin.shape.error.import");
 		}
 	}
 	
@@ -300,7 +310,7 @@ public class ShapeFileService
 	}	
 	
 	/**
-	 * Serviço de exportação para shapeFile
+	 * Serviço de exportação para shapeFile (Obs:. FileTransfer do DWR não pode ser final)
 	 * 
 	 * @param markers
 	 * @return
@@ -341,7 +351,7 @@ public class ShapeFileService
 	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
 	                
 	                // Extrai os atributos da feature 
-	                feature = extractAttributes(feature, marker);
+	                feature = extractFeatures(feature, marker);
 	                
 	                collection.add(feature);
 	            }
@@ -382,7 +392,7 @@ public class ShapeFileService
 			{
 				e.printStackTrace();
 				LOG.info(e.getMessage());
-				throw new RuntimeException("Ocorreu um erro durante a exportação: " + e.getMessage()); //FIXME localize
+				throw new RuntimeException("admin.shape.error.export");
 			}
 	    }
 		
@@ -401,7 +411,7 @@ public class ShapeFileService
 	 * @param marker
 	 * @return
 	 */
-	private static final SimpleFeature extractAttributes(SimpleFeature feature, final Marker marker)
+	private static final SimpleFeature extractFeatures(SimpleFeature feature, final Marker marker)
 	{
 		
 		for (final MarkerAttribute markerAttribute : marker.getMarkerAttribute())
@@ -410,7 +420,7 @@ public class ShapeFileService
 			{
 				validateMarkerAttribute(markerAttribute);
 				
-				feature = extractAttributes(feature, markerAttribute);
+				feature = extractFeatures(feature, markerAttribute);
 			}
 			catch (RuntimeException e)
 			{
@@ -423,13 +433,50 @@ public class ShapeFileService
 		return feature;
 	}
 	
+	
+	/**
+	 * Encapsula comportamento de extração dos atributos da feature
+	 * @param feature
+	 * @param attribute
+	 * @param property
+	 * @param marker
+	 * @return
+	 */
+	private static final MarkerAttribute extractAttributes(final SimpleFeature feature, final Attribute attribute, final Property property, final Marker marker)
+	{		
+		
+		// Se a feature for no formato tipo data, deve formatar a mesma
+		if (attribute.getType() == AttributeType.DATE)
+		{
+			Date date = (Date) feature.getAttribute(property.getDescriptor().getName().getLocalPart());
+			return new MarkerAttribute(null, new SimpleDateFormat("dd/MM/yyyy").format(date), marker, attribute); 
+		}
+		else if (attribute.getType() == AttributeType.BOOLEAN)
+		{
+			if ((boolean) feature.getAttribute(property.getDescriptor().getName().getLocalPart()))
+			{
+				return new MarkerAttribute(null, "Yes", marker, attribute);
+			}
+			else
+			{
+				return new MarkerAttribute(null, "No", marker, attribute);
+			}
+		}
+		else
+		{
+			return new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart()).toString(), marker, attribute);
+		}
+	}
+	
+	
+	
 	/**
 	 * Valida o markerAttribute (sobrecarga de método)
 	 * @param feature
 	 * @param markerAttribute
 	 * @return
 	 */
-	private static final SimpleFeature extractAttributes(final SimpleFeature feature, final MarkerAttribute markerAttribute)
+	private static final SimpleFeature extractFeatures(final SimpleFeature feature, final MarkerAttribute markerAttribute)
 	{		
 		if (markerAttribute.getValue().toLowerCase().trim().equals("yes") || markerAttribute.getValue().toLowerCase().trim().equals("sim") && markerAttribute.getAttribute().getType() == AttributeType.BOOLEAN)
 		{
@@ -449,7 +496,7 @@ public class ShapeFileService
 			catch (ParseException e)
 			{
 				e.printStackTrace();
-				LOG.info("Problema na conversão da data " +e.getMessage()); // FIXME Localize
+				LOG.info(e.getMessage());
 				throw new RuntimeException(e);
 			}
 		}
@@ -467,10 +514,10 @@ public class ShapeFileService
 	 */
 	private static final void validateMarkerAttribute(final MarkerAttribute markerAttribute)
 	{
-		Assert.isTrue(markerAttribute.getAttribute().getType()  != null, "O tipo do atributo não pode ser nulo ");
-		Assert.isTrue(markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM, "O atributo não pode ser um album de fotos");
-		Assert.isTrue(markerAttribute.getAttribute().getName() != null, "O nome do atributo não pode ser nulo "); // FIXME LOCALIZE
-		Assert.isTrue(markerAttribute.getValue() != null , "O valor do atributo não pode ser nulo ");
+		Assert.isTrue(markerAttribute.getAttribute().getType()  != null, "admin.shape.error.type-attribute-can-not-be-null");
+		Assert.isTrue(markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM, "admin.shape.error.type-attribute-can-not-be-a-photoalbum");
+		Assert.isTrue(markerAttribute.getAttribute().getName() != null, "admin.shape.error.name-attribute-can-not-be-null");
+		Assert.isTrue(markerAttribute.getValue() != null , "admin.shape.error.value-attribute-can-not-be-null");
 	}
 	
 	/**
@@ -526,7 +573,7 @@ public class ShapeFileService
 		catch (final IOException e)
 		{
 			LOG.info(e.getMessage());
-			throw new RuntimeException("Ocorreu um erro durante a exportação: " + e.getMessage());
+			throw new RuntimeException("admin.shape.error.export");
 		}
 	}
 	
@@ -538,7 +585,6 @@ public class ShapeFileService
 	{
 		if (file.isDirectory())
 		{
-			
 			for (final String temp : file.list())
 			{
 				delete(new File(file, temp));
