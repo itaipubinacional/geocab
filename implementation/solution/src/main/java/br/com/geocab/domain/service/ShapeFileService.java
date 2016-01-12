@@ -81,15 +81,15 @@ public class ShapeFileService
 	 * shapeFile path
 	 */
 	@Value("${path.shapefiles}")
-	private String PATH_SHAPE_FILES;	
+	private String pathShapefiles;	
 	/**
 	 * export shapeFile path
 	 */
-	private String PATH_SHAPE_FILES_EXPORT = PATH_SHAPE_FILES + "export/";
+	private String pathShapefilesExport = pathShapefiles + "export/";
 	/**
 	 * import shapeFile path
 	 */
-	private String PATH_SHAPE_FILES_IMPORT = PATH_SHAPE_FILES + "import/";
+	private String pathShapefilesImport = pathShapefiles + "import/";
 	/**
 	 * Log
 	 */
@@ -122,8 +122,8 @@ public class ShapeFileService
 		super();
 		try
 		{
-			new File(PATH_SHAPE_FILES_EXPORT).mkdirs();
-			new File(PATH_SHAPE_FILES_IMPORT).mkdirs();
+			new File(pathShapefilesExport).mkdirs();
+			new File(pathShapefilesImport).mkdirs();
 		}
 		catch (final RuntimeException e)
 		{
@@ -147,7 +147,7 @@ public class ShapeFileService
 		try
 		{
 			
-			final String pathFile = PATH_SHAPE_FILES_IMPORT + String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis());
+			final String pathFile = pathShapefilesImport + String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis());
 			// Lê os arquivos
 			final List<File> files = new ArrayList<File>();
 			
@@ -167,7 +167,7 @@ public class ShapeFileService
 			}
 			
 			// Deleta o arquivo
-			delete(new File(PATH_SHAPE_FILES_IMPORT));
+			delete(new File(pathShapefilesImport));
 			
 			return markers;
 		}
@@ -360,7 +360,7 @@ public class ShapeFileService
 	            
 		        final DataStoreFactorySpi dataStoreFactorySpi = new ShapefileDataStoreFactory();
 	
-		        final File newFile = new File(PATH_SHAPE_FILES_EXPORT + layer.getName() + ".shp");
+		        final File newFile = new File(pathShapefilesExport + layer.getName() + ".shp");
 		        final Map<String, Serializable> create = new HashMap<String, Serializable>();
 		        create.put("url", newFile.toURI().toURL());
 		        create.put("create spatial index", Boolean.TRUE);
@@ -399,10 +399,10 @@ public class ShapeFileService
 	    }
 		
 		//Compcta os arquivos de exportação e trás para memória
-		final FileTransfer fileTransfer = new FileTransfer(fileExport + ".zip", "application/zip", compactFilesToZip(PATH_SHAPE_FILES_EXPORT, fileExport + ".zip"));
+		final FileTransfer fileTransfer = new FileTransfer(fileExport + ".zip", "application/zip", compactFilesToZip(pathShapefilesExport, fileExport + ".zip"));
 
 		//Deleta os arquivos de exportação
-		delete(new File(PATH_SHAPE_FILES_EXPORT));
+		delete(new File(pathShapefilesExport));
 
 		return fileTransfer;
 	}
