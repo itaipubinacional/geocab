@@ -273,16 +273,32 @@ public class Marker extends AbstractEntity implements Serializable
 			{
 				if (formattedAttributes.length() > 0)
 				{
-					formattedAttributes += "," + markerAttribute.getAttribute().getName().replaceAll(" ", "_") + ":" + markerAttribute.getAttribute().formmattedAttribute().replaceAll(" ", "_");
+					formattedAttributes += "," + markerAttribute.getAttribute().getName().replaceAll(" ", "_") + ":" + markerAttribute.getAttribute().getFormmattedTypeAttributes().replaceAll(" ", "_");
 				}
 				else
 				{
-					formattedAttributes += markerAttribute.getAttribute().getName().replaceAll(" ", "_") + ":" + markerAttribute.getAttribute().formmattedAttribute().replaceAll(" ", "_");
+					formattedAttributes += markerAttribute.getAttribute().getName().replaceAll(" ", "_") + ":" + markerAttribute.getAttribute().getFormmattedTypeAttributes().replaceAll(" ", "_");
 				}
+				// O 
+				markerAttribute.getAttribute().formmatNameAttribute();
 			}
 		}
 		
 		return formattedAttributes;
+	}
+	
+	/**
+	 * Diminui o tamanho de todos os atributos
+	 */
+	public void formattedNameAttributes()
+	{
+		for (MarkerAttribute markerAttribute : this.getMarkerAttribute())
+		{		
+			if (markerAttribute.getAttribute().getName() != null && markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM)
+			{
+				markerAttribute.getAttribute().formmatNameAttribute();
+			}
+		}
 	}
 	
 	/*-------------------------------------------------------------------
