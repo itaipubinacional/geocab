@@ -402,8 +402,15 @@ public class MarkerService
 					this.markerAttributeRepository.deleteInBatch(markerAttributes);
 				}
 			}
-
-			marker.setLocation(markerTemporary.getLocation());
+			
+			if(marker.getLocation() == null)
+			{
+				marker.setLocation(markerTemporary.getLocation());
+			}
+			else
+			{
+				marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
+			}
 
 			marker.setStatus(MarkerStatus.PENDING);
 

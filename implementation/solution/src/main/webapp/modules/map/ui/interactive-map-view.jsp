@@ -254,6 +254,28 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br style="clear: both;">
 
+                <span><b><spring:message code='map.Input-format'/></b></span>
+                <i class="icon-question-sign icon-large" tooltip-placement="right"
+                   tooltip="Selecione o formato de entrada para as coordenadas"></i>
+
+                <br style="clear: both;">
+
+                <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
+                  <input type="radio" id="DMS" ng-change="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_MINUTES_SECONDS"
+                         name="DMS">
+                  <label class="radio-label" for="DMS"> <spring:message code='admin.users.coordinatesDMS'/> </label>
+                </div>
+
+                <br />
+
+                <div class="form-item-horizontal radio" style="margin-left: 0;">
+                  <input type="radio" id="DD" ng-change="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_DECIMAL"
+                         name="DD">
+                  <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDD'/> </label>
+                </div>
+
+                <br style="clear: both;">
+
                 <div class="form-item position-relative" style="width:100%;margin:10px 0; padding-right: 10px">
                   <label required>Latitude</label>
                   <input type="text" name="latitude" ng-change="setMarkerCoordinates()"
@@ -567,7 +589,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br style="clear: both;">
 
-                <span ><b><spring:message code='map.Coordinates'/></b></span>
+                <span><b><spring:message code='map.Coordinates'/></b></span>
 
                 <i class="icon-question-sign icon-large" tooltip-placement="right"
                    tooltip="<spring:message code='map.Tips-coordinate'/>"></i>

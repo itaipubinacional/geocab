@@ -633,6 +633,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         formattedLatitude  = parseFloat(formattedLatitude);
         formattedLongitude = parseFloat(formattedLongitude);
 
+        $scope.latitude  = formattedLatitude;
+        $scope.longitude = formattedLongitude;
+
         var iconStyle = new ol.style.Style({
           image: new ol.style.Icon(({
             anchor: [0.5, 1],
@@ -648,8 +651,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         //$scope.clearFcMarker();
 
-        if($scope.currentEntity.layer.layerIcon == undefined) {
+        if($scope.currentEntity.layer && $scope.currentEntity.layer.layerIcon == undefined) {
           $scope.currentEntity.layer.layerIcon = $scope.currentEntity.layer.icon;
+        }
+
+        var icon = 'static/images/marker.png';
+        if($scope.currentEntity.layer) {
+          icon = $scope.currentEntity.layer.layerIcon;
         }
 
         var iconStyle = new ol.style.Style({
@@ -657,7 +665,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             anchor: [0.5, 1],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
-            src: $scope.currentEntity.layer.layerIcon
+            src: icon
           }))
         });
 
@@ -698,7 +706,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if(!type) {
         type = 'default';
-        if ($scope.currentEntity.layer.layerIcon && !$scope.currentEntity.layer.layerIcon.match(/default/) || !$scope.currentEntity.layer.icon.match(/default/))
+        if (($scope.currentEntity.layer && !$scope.currentEntity.layer.layerIcon.match(/default/)) || ($scope.currentEntity.layer && $scope.currentEntity.layer.icon && !$scope.currentEntity.layer.icon.match(/default/)))
           type = 'collection';
       }
 
@@ -3244,6 +3252,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.currentEntity.markerAttribute.push(markerAttribute);
 
     });
+
+    if($scope.currentEntity.latitude == null){
+      var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
+      $scope.currentEntity.latitude  = olCoordinates[0];
+      $scope.currentEntity.longitude = olCoordinates[1];
+    }
+
+    $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
+    $scope.currentEntity.location.coordinateString = $scope.currentEntity.wktCoordenate;
 
     markerService.updateMarker($scope.currentEntity, {
       callback: function (result) {
