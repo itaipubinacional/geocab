@@ -4915,7 +4915,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    *
    */
   $scope.linkGroups = function() {
-    layerGroupService.linkAccessGroup($scope.addGroups, $scope.currentEntity.id, {
+    layerGroupService.linkAccessGroup($scope.addGroups, $scope.shapeFile.form.layer.id, {
       callback: function(){
         $scope.addGroups = [];
         $scope.$apply();
