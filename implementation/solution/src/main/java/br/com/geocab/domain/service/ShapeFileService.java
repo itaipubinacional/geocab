@@ -338,6 +338,8 @@ public class ShapeFileService
 	            {	
 					final Marker marker = markerRepository.findOne(layer.getMarkers().get(i).getId());
 	            	
+					marker.formattedNameAttributes();
+					
 	            	if ((i != 0 && marker.getLayer().getId() != layer.getMarkers().get(i - 1).getId()) || TYPE == null)
 	            		TYPE = DataUtilities.createType(layer.getName(), "the_geom:Point,"+marker.formattedAttributes());
 					
@@ -413,7 +415,6 @@ public class ShapeFileService
 	 */
 	private static final SimpleFeature extractFeatures(SimpleFeature feature, final Marker marker)
 	{
-		
 		for (final MarkerAttribute markerAttribute : marker.getMarkerAttribute())
 		{
 			try
@@ -429,7 +430,6 @@ public class ShapeFileService
 				continue;
 			}
 		}
-		
 		return feature;
 	}
 	

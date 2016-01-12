@@ -208,7 +208,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * Formata os atributos para importação
 	 * @return
 	 */
-	public String formmattedAttribute()
+	public String getFormmattedTypeAttributes()
 	{
 		if (this.getType() == AttributeType.TEXT)
 		{
@@ -231,6 +231,20 @@ public class Attribute extends AbstractEntity implements Serializable
 			return null;
 		}
 	}
+	
+	/**
+	 * Formata o nome do atributo para exportação (A documentação informa que o nome não pode ser maior que 15 caracteres)
+	 * @param type
+	 * @return
+	 */
+	public void formmatNameAttribute()
+	{
+		if (this.getName().length() >= 10)
+		{
+			this.setName(this.getName().substring(0, 7) + "...");
+		}
+	}
+	
 	/**
 	 * Formata os atributos para exportação
 	 * @param type
@@ -257,6 +271,8 @@ public class Attribute extends AbstractEntity implements Serializable
 		}
 		return attributeType;
 	}
+	
+	
 
 	/*-------------------------------------------------------------------
 	 *								SETTERS/GETTERS
