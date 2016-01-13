@@ -137,6 +137,8 @@ public class ShapeFileService
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	/**
+	 * TODO alterar shapeFile para shapefile
+	 * 
 	 * Serviço de importação de shapeFile
 	 * 
 	 * @param shapeFile
