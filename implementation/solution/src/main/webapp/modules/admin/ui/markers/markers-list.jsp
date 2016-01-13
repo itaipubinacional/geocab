@@ -58,9 +58,9 @@
 					<input ng-model="filter.dateEnd" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>" onfocus="(this.type='date')" onblur="(this.type='text')" id="date"/>
 					-->
 
-					<input ng-model="filter.dateStart" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Beginning"/>"/>
+					<input ng-model="filter.dateStart" class="form-control datepicker" style="width:35%;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Beginning"/>"/>
 
-					<input ng-model="filter.dateEnd" class="form-control datepicker" style="width:35%;;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>"/>
+					<input ng-model="filter.dateEnd" class="form-control datepicker" style="width:35%;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>"/>
 				</div>
 
 
@@ -154,9 +154,17 @@
 </div>
 
 <script type="text/javascript">
+function setSidebarHeight() {
   var height = $('#olmap').height();
   $('#markers-sidebar').height(height - 40);
   $('#markers-sidebar').css('overflow', 'auto');
   $('body').css('overflow', 'hidden');
+}
+
+setSidebarHeight();
+
+$(window).resize(function() {
+  setSidebarHeight();
+});
 </script>
 </html>

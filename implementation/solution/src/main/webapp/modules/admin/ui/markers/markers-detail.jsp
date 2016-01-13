@@ -53,15 +53,18 @@
                         </br>
 
                         <div ng-repeat="markerAttribute in attributesByMarker track by $index"
-                             style="position: relative;">
+                             style="position: relative;margin-bottom:15px;">
 
-                            <label ng-style="$index > 0 ? {'margin-top':'15px'} : ''"
-                                   ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM' ||
-                                    markerAttribute.attribute.type == 'PHOTO_ALBUM' &&
+                            <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM' &&
                                     (currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
                                 {{markerAttribute.attribute.name }}
                             </label>
 
+                            <label ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM' &&
+                                      (currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')"
+                                style="margin-top: 9px">
+                              {{markerAttribute.attribute.name }}
+                            </label>
 
                             <input
                                     type="number" name="number1"

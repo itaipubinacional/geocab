@@ -295,7 +295,6 @@ uri="http://www.springframework.org/security/tags"%>
                       style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
 
                 <div ng-repeat="markerAttribute in attributesByMarker"
-                     ng-if="!showAttributesAlone"
                      style="position: relative;margin-bottom:15px;">
 
                   <ng-form name="ngSideMarker" default-button="buttonUpdate">
