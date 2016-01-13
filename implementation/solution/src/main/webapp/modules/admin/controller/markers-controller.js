@@ -294,7 +294,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         selectedItems: [],
 
 
-        afterSelectionChange: function (row) {
+        afterSelectionChange: function (row, event) {
 
             //avoids call a selection , when clicked in a action button.
             if (!($(event.target).is("input"))) {

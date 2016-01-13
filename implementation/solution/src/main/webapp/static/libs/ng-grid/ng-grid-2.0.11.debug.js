@@ -2858,16 +2858,16 @@ var ngSelectionProvider = function (grid, $scope, $parse) {
         }
         else if (!self.multi) {
             if (self.lastClickedRow === rowItem) {
-                self.setSelection(self.lastClickedRow, grid.config.keepLastSelected ? true : !rowItem.selected);
+                self.setSelection(self.lastClickedRow, grid.config.keepLastSelected ? true : !rowItem.selected, evt);
             } else {
                 if (self.lastClickedRow) {
-                    self.setSelection(self.lastClickedRow, false);
+                    self.setSelection(self.lastClickedRow, false, evt);
                 }
-                self.setSelection(rowItem, !rowItem.selected);
+                self.setSelection(rowItem, !rowItem.selected, evt);
             }
         }
         else if (!evt.keyCode || isUpDownKeyPress && !grid.config.selectWithCheckboxOnly) {
-            self.setSelection(rowItem, !rowItem.selected);
+            self.setSelection(rowItem, !rowItem.selected, evt);
         }
         self.lastClickedRow = rowItem;
         self.lastClickedRowIndex = rowItem.rowIndex;
@@ -2895,7 +2895,7 @@ var ngSelectionProvider = function (grid, $scope, $parse) {
     };
 
     // just call this func and hand it the rowItem you want to select (or de-select)    
-    self.setSelection = function (rowItem, isSelected) {
+    self.setSelection = function (rowItem, isSelected, evt) {
         if(grid.config.enableRowSelection){
             if (!isSelected) {
                 var indx = self.getSelectionIndex(rowItem.entity);
@@ -2918,7 +2918,7 @@ var ngSelectionProvider = function (grid, $scope, $parse) {
             if (rowItem.clone) {
                 rowItem.clone.selected = isSelected;
             }
-            rowItem.afterSelectionChange(rowItem);
+            rowItem.afterSelectionChange(rowItem, evt);
         }
     };
 
