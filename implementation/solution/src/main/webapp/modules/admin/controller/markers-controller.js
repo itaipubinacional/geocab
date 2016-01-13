@@ -1675,6 +1675,38 @@ ront controller of angle won't let enter an invalid URL.
         })
     };
 
+    $scope.getPhotosByAttribute = function(attribute, index){
+
+        var pageable = {
+            size: 1,
+            page: 0,
+            sort: {//Sort
+                orders: [
+                    {direction: 'DESC', property: 'created'}
+                ]
+            }
+        };
+
+        markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, pageable, {
+            callback: function (result) {
+                /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
+                 $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
+
+                $scope.attributesByMarker[index].photoAlbum = result.content[0].photoAlbum;
+                $scope.attributesByMarker[index].photoAlbum.photos = result.content;
+
+                $scope.imgResult = result.content[0].image;
+
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+            }
+        })
+
+    };
+
     /**
      * Lists the marker attributes
      */
@@ -1702,6 +1734,9 @@ ront controller of angle won't let enter an invalid URL.
                                 if (attributeByMarker.attribute.id == attribute.id) {
                                     exist = true;
                                 }
+
+                                if(attributeByMarker.attribute.type == 'PHOTO_ALBUM')
+                                    $scope.getPhotosByAttribute(attributeByMarker, index);
                             });
 
                             if (!exist) {
