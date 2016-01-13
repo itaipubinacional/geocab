@@ -27,10 +27,10 @@ uri="http://www.springframework.org/security/tags"%>
       <div>
         <ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
           <li ng-click="aumentarZoom()" title="<spring:message code="map.Zoom-in" />"><a href="#tabs-2">
-          <div class="icon itaipu-icon-plus sidebar-icon"></div>
+          <div class="icon itaipu-icon-zoom-in sidebar-icon"></div>
         </a></li>
           <li ng-click="diminuirZoom()" title="<spring:message code="map.Zoom-out" />"><a>
-          <div class="icon itaipu-icon-minus sidebar-icon"></div>
+          <div class="icon itaipu-icon-zoom-out sidebar-icon"></div>
         </a></li>
           <li ng-click="initializeSelectionTool()"
               ng-class="{ferramenta_active : menu.fcSelect}"
@@ -43,7 +43,7 @@ uri="http://www.springframework.org/security/tags"%>
               title="<spring:message code="map.Calculate-distance" />"
           ng-click="initializeDistanceCalc()"
           ng-class="{ferramenta_active : menu.fcDistancia}"><a>
-          <div class="icon itaipu-icon-ruler-1 sidebar-icon"></div>
+          <div class="icon itaipu-icon-ruler sidebar-icon"></div>
         </a></li>
           <li ng-if="hasPermissionCalculoArea" ng-click="initializeAreaCalc()"
               title="<spring:message code="map.Calculate-area" />"
