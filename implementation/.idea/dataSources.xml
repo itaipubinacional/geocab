@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="3895915181">
+    <data-source source="LOCAL" name="geocab" uuid="66a8d92c-b424-47e0-a2e2-e35a9ea621c6">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/geocab</jdbc-url>
+      <libraries />
+    </data-source>
+  </component>
+</project>
