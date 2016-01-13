@@ -1077,6 +1077,9 @@ ront controller of angle won't let enter an invalid URL.
         });
 
         $scope.resolveDatePicker();
+
+
+
     };
 
     /**

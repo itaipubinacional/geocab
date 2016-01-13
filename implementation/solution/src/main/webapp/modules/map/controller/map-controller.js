@@ -633,16 +633,39 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         formattedLatitude  = parseFloat(formattedLatitude);
         formattedLongitude = parseFloat(formattedLongitude);
 
-        $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-
-        //$scope.clearFcMarker();
+        $scope.latitude  = formattedLatitude;
+        $scope.longitude = formattedLongitude;
 
         var iconStyle = new ol.style.Style({
           image: new ol.style.Icon(({
             anchor: [0.5, 1],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
-            src: $scope.currentEntity.layer.layerIcon
+            src: ''
+          }))
+        });
+
+        $scope.currentCreatingInternalLayer.setStyle(iconStyle);
+
+        $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+
+        //$scope.clearFcMarker();
+
+        if($scope.currentEntity.layer && $scope.currentEntity.layer.layerIcon == undefined) {
+          $scope.currentEntity.layer.layerIcon = $scope.currentEntity.layer.icon;
+        }
+
+        var icon = 'static/images/marker.png';
+        if($scope.currentEntity.layer) {
+          icon = $scope.currentEntity.layer.layerIcon;
+        }
+
+        var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon(({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: icon
           }))
         });
 
@@ -683,7 +706,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if(!type) {
         type = 'default';
-        if (!$scope.currentEntity.layer.layerIcon.match(/default/))
+        if (($scope.currentEntity.layer && !$scope.currentEntity.layer.layerIcon.match(/default/)) || ($scope.currentEntity.layer && $scope.currentEntity.layer.icon && !$scope.currentEntity.layer.icon.match(/default/)))
           type = 'collection';
       }
 
@@ -873,6 +896,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           feature.setStyle([iconStyle, shadowStyle]);
 
           $scope.features.push({"feature": $scope.marker, "type": "internal"});
+
+          var geometry = feature.getGeometry();
+          var coordinate = geometry.getCoordinates();
+
+          var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
+
+          $scope.latitude = transformed_coordinate[1];
+          $scope.longitude = transformed_coordinate[0];
+
+          $scope.setMarkerCoordinatesFormat();
 
           if ($scope.features.length > 0) {
             $timeout(function () {
@@ -3220,6 +3253,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     });
 
+    if($scope.currentEntity.latitude == null){
+      var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
+      $scope.currentEntity.latitude  = olCoordinates[0];
+      $scope.currentEntity.longitude = olCoordinates[1];
+    }
+
+    $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
+    $scope.currentEntity.location.coordinateString = $scope.currentEntity.wktCoordenate;
+
     markerService.updateMarker($scope.currentEntity, {
       callback: function (result) {
 
@@ -3242,7 +3284,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
-  $scope.insertMarker = function () {
+  $scope.insertMarker = function (status) {
     if (!$scope.isBooleanValid()) {
       return false;
     }
@@ -3298,6 +3340,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
 
     $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
+
+    $scope.currentEntity.status = status;
 
     markerService.insertMarker( $scope.currentEntity, {
       callback: function (result) {

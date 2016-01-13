@@ -400,6 +400,7 @@ input:-moz-placeholder {
 #header-page .navbar-1 {
 	margin-bottom: 0;
     height: 65px;
+	background-color: #fff;
 }
 
 #header-page .navbar-1 .navbar-inner {

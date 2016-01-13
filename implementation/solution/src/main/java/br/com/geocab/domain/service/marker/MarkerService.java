@@ -141,7 +141,7 @@ public class MarkerService
 
 		marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
 
-		marker.setStatus(MarkerStatus.SAVED);
+		//marker.setStatus(MarkerStatus.SAVED);
 		marker.setUser(user);
 		
 		validateAttribute(marker.getMarkerAttribute());
@@ -152,7 +152,7 @@ public class MarkerService
 		
 		MarkerModeration markerModeration = new MarkerModeration();
 		markerModeration.setMarker(marker);
-		markerModeration.setStatus(MarkerStatus.SAVED);
+		markerModeration.setStatus(marker.getStatus());
 		this.markerModerationRepository.save(markerModeration);
 			
 		return marker;
@@ -402,8 +402,15 @@ public class MarkerService
 					this.markerAttributeRepository.deleteInBatch(markerAttributes);
 				}
 			}
-
-			marker.setLocation(markerTemporary.getLocation());
+			
+			if(marker.getLocation() == null)
+			{
+				marker.setLocation(markerTemporary.getLocation());
+			}
+			else
+			{
+				marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
+			}
 
 			marker.setStatus(MarkerStatus.PENDING);
 

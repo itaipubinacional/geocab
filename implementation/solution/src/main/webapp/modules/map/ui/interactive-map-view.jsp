@@ -27,10 +27,10 @@ uri="http://www.springframework.org/security/tags"%>
       <div>
         <ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
           <li ng-click="aumentarZoom()" title="<spring:message code="map.Zoom-in" />"><a href="#tabs-2">
-          <div class="icon itaipu-icon-plus sidebar-icon"></div>
+          <div class="icon itaipu-icon-zoom-in sidebar-icon"></div>
         </a></li>
           <li ng-click="diminuirZoom()" title="<spring:message code="map.Zoom-out" />"><a>
-          <div class="icon itaipu-icon-minus sidebar-icon"></div>
+          <div class="icon itaipu-icon-zoom-out sidebar-icon"></div>
         </a></li>
           <li ng-click="initializeSelectionTool()"
               ng-class="{ferramenta_active : menu.fcSelect}"
@@ -43,7 +43,7 @@ uri="http://www.springframework.org/security/tags"%>
               title="<spring:message code="map.Calculate-distance" />"
           ng-click="initializeDistanceCalc()"
           ng-class="{ferramenta_active : menu.fcDistancia}"><a>
-          <div class="icon itaipu-icon-ruler-1 sidebar-icon"></div>
+          <div class="icon itaipu-icon-ruler sidebar-icon"></div>
         </a></li>
           <li ng-if="hasPermissionCalculoArea" ng-click="initializeAreaCalc()"
               title="<spring:message code="map.Calculate-area" />"
@@ -251,6 +251,45 @@ uri="http://www.springframework.org/security/tags"%>
                     <option value=""></option>
                   </select>
                 </div>
+
+                <br style="clear: both;">
+
+                <span><b><spring:message code='map.Input-format'/></b></span>
+                <i class="icon-question-sign icon-large" tooltip-placement="right"
+                   tooltip="Selecione o formato de entrada para as coordenadas"></i>
+
+                <br style="clear: both;">
+
+                <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
+                  <input type="radio" id="DMS" ng-change="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_MINUTES_SECONDS"
+                         name="DMS">
+                  <label class="radio-label" for="DMS"> <spring:message code='admin.users.coordinatesDMS'/> </label>
+                </div>
+
+                <br />
+
+                <div class="form-item-horizontal radio" style="margin-left: 0;">
+                  <input type="radio" id="DD" ng-change="setMarkerCoordinatesFormat()" ng-model="coordinatesFormat" value="DEGREES_DECIMAL"
+                         name="DD">
+                  <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDD'/> </label>
+                </div>
+
+                <br style="clear: both;">
+
+                <div class="form-item position-relative" style="width:100%;margin:10px 0; padding-right: 10px">
+                  <label required>Latitude</label>
+                  <input type="text" name="latitude" ng-change="setMarkerCoordinates()"
+                         class="form-control" ng-model="formattedLatitude">
+                </div>
+
+                <br />
+
+                <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
+                  <label required>Longitude</label>
+                  <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
+                         class="form-control" ng-model="formattedLongitude">
+                </div>
+
                 <span class="tooltip-validation"
                       ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
                       style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
@@ -550,7 +589,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br style="clear: both;">
 
-                <span ><b><spring:message code='map.Coordinates'/></b></span>
+                <span><b><spring:message code='map.Coordinates'/></b></span>
 
                 <i class="icon-question-sign icon-large" tooltip-placement="right"
                    tooltip="<spring:message code='map.Tips-coordinate'/>"></i>
@@ -558,7 +597,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <br style="clear: both;">
 
                 <div class="form-item position-relative" style="width:100%;margin:10px 0; padding-right: 10px">
-                  <label class="detail-label" required>Latitude</label>
+                  <label required>Latitude</label>
                   <input type="text" name="latitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLatitude">
                 </div>
@@ -566,7 +605,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <br />
 
                 <div class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
-                  <label class="detail-label" required>Longitude</label>
+                  <label required>Longitude</label>
                   <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLongitude">
                 </div>
@@ -664,9 +703,9 @@ uri="http://www.springframework.org/security/tags"%>
 
                   <button
                       id="buttonInsert"
-                      class="btn btn-primary"
-                      ng-click="insertMarker()"
-                      style="float: right"
+                      class="btn btn-success"
+                      ng-click="insertMarker('PENDING')"
+                      style="float: right;"
                       title="<spring:message code="map.Submit" />"
                   >
                   <spring:message code="map.Submit" />
@@ -675,8 +714,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <button
                       id="savePost"
                       class="btn btn-primary"
-                      ng-click="saveMarker()"
-                      style="float: right"
+                      ng-click="insertMarker('SAVED')"
                       title="<spring:message code="map.Save" />"
                   >
                   <spring:message code="map.Save" />
@@ -1035,7 +1073,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative">
-                    <label class="detail-label" required><spring:message code="admin.datasource.Data-Source"/></label>
+                    <label required><spring:message code="admin.datasource.Data-Source"/></label>
                     <div class="input-group position-relative">
                       <input name="dataSource" type="text" disabled class="form-control"
                              ng-model="shapeFile.form.dataSource.name"
@@ -1055,7 +1093,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative" style="float:left;width:100%;margin-top:10px;">
-                    <label class="detail-label" required><spring:message code="admin.layer-config.Layer"/></label>
+                    <label required><spring:message code="admin.layer-config.Layer"/></label>
                     <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
                             ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                             ng-model="shapeFile.form.layer" chosen class="form-control"
@@ -1067,7 +1105,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                   <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
-                    <label class="detail-label" required>
+                    <label required>
                       <spring:message code="Title"/>
                     </label>
                     <input name="title" type="text" class="form-control"
@@ -1105,7 +1143,7 @@ uri="http://www.springframework.org/security/tags"%>
                       </button>
                     </div>
                     <div style="margin-top: 10px" class="form-item position-relative">
-                      <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
+                      <label required><spring:message code="admin.layer-config.Layer-group"/> </label>
                       <div class="input-group">
                         <input name="layerGroup" type="text" disabled class="form-control"
                                ng-model="shapeFile.form.layerGroup.name"
