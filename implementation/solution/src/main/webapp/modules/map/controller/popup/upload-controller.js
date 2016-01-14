@@ -77,6 +77,20 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
                 angular.forEach(result.content, function (photo) {
 
+                  /*var file = $filter('filter')($scope.attribute.files, {id: photo.id})[0];
+                  var index = $scope.attribute.files.indexOf(file);
+
+                  photo.src  = photo.image;
+                  photo.name = photo.description;
+
+                  if ($scope.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
+                    $scope.attribute.files.push(photo);
+                  }
+
+                  if (index != -1){
+                    $scope.attribute.files[index] = photo;
+                  }*/
+
                   if (attribute.removePhotosIds.indexOf(photo.id) == -1) {
                     photo.src = photo.image;
                     photo.name = photo.description;
@@ -152,20 +166,34 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
     if(attribute.markerAttribute && attribute.markerAttribute.id) {
 
-      $scope.attribute.files = [];
+      //$scope.attribute.files = [];
+      angular.forEach($scope.attribute.files, function(file){
+        if(file.id) {
+          file.image = null;
+          file.src = null;
+        }
+      });
 
       markerService.findPhotoAlbumByAttributeMarkerId(attribute.markerAttribute.id, null, {
 
         callback: function (result) {
 
-          $scope.attribute.files = [];
+          //$scope.attribute.files = [];
 
           angular.forEach(result.content, function (photo) {
 
-            if ($scope.attribute.removePhotosIds.indexOf(photo.id) == -1) {
-              photo.src = photo.image;
-              photo.name = photo.description;
+            var file = $filter('filter')($scope.attribute.files, {id: photo.id})[0];
+            var index = $scope.attribute.files.indexOf(file);
+
+            photo.src  = photo.image;
+            photo.name = photo.description;
+
+            if ($scope.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
               $scope.attribute.files.push(photo);
+            }
+
+            if (index != -1){
+              $scope.attribute.files[index] = photo;
             }
 
           });
