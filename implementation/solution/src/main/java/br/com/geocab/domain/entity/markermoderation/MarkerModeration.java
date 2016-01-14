@@ -4,6 +4,7 @@
 package br.com.geocab.domain.entity.markermoderation;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -78,6 +79,22 @@ public class MarkerModeration extends AbstractEntity implements Serializable
 	{
 		this.setId(id);
 	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param created
+	 * @param status
+	 * @param marker
+	 */
+	public MarkerModeration( Long id, Calendar created, MarkerStatus status, Marker marker)
+	{
+		this.setId(id);
+		this.setStatus(status);
+		this.setMarker(marker);
+		this.setCreated(created);
+	}
+	
 	/**
 	 * 
 	 * @param id

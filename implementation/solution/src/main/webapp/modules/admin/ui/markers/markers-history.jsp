@@ -48,6 +48,10 @@
                     <span><b style="float:right;position:absolute;top:0;right:0"> {{ currentEntity.created | date:'dd/MM/yyyy' }}</b></span>
                 </div>
 
+                <div style="position:relative">
+                    <span><b style="float:right;position:absolute;top:0;right:0"> {{ markerModeration.created | date:'dd/MM/yyyy'}}</b></span>
+                </div>
+
                 <div>
                    <span ng-show="visibleDescription && markerModeration.status == 'REFUSED'" id="up-arrow">
 							<i style="float:right;cursor:pointer;left:-12px;top:40px"

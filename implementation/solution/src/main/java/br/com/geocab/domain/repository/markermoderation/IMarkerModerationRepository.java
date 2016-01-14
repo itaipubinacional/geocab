@@ -27,7 +27,7 @@ public interface IMarkerModerationRepository extends IDataRepository<MarkerModer
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new MarkerModeration( markerModeration.id, markerModeration.status, marker) " +
+	@Query(value="SELECT new MarkerModeration( markerModeration.id, markerModeration.created, markerModeration.status, marker) " +
 				"FROM MarkerModeration markerModeration "+
 				"LEFT OUTER JOIN markerModeration.marker marker " +
 				"LEFT OUTER JOIN markerModeration.marker.layer layer " +
@@ -38,7 +38,7 @@ public interface IMarkerModerationRepository extends IDataRepository<MarkerModer
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new MarkerModeration( markerModeration.id, markerModeration.status, marker) " +
+	@Query(value="SELECT new MarkerModeration( markerModeration.id, markerModeration.created, markerModeration.status, marker) " +
 				"FROM MarkerModeration markerModeration "+
 				"LEFT OUTER JOIN markerModeration.marker marker " +
 				"WHERE marker.id = :markerId" )
@@ -48,7 +48,7 @@ public interface IMarkerModerationRepository extends IDataRepository<MarkerModer
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new MarkerModeration( markerModeration.id, markerModeration.status, marker) " +
+	@Query(value="SELECT new MarkerModeration( markerModeration.id, markerModeration.created, markerModeration.status, marker) " +
 				"FROM MarkerModeration markerModeration "+
 				"LEFT OUTER JOIN markerModeration.marker marker " +
 				"WHERE marker.id = :markerId ORDER BY markerModeration.id DESC" )
