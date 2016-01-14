@@ -208,7 +208,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * Formata os atributos para importação
 	 * @return
 	 */
-	public String getFormmattedTypeAttributes()
+	public String formmattedTypeAttributes()
 	{
 		if (this.getType() == AttributeType.TEXT)
 		{
