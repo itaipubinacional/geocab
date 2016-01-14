@@ -73,11 +73,13 @@
                                     ng-model="markerAttribute.value"
                                     required="{{markerAttribute.attribute.required}}">
 
-                            <input name="date1" type="date"
-                                   ng-if="markerAttribute.attribute.type == 'DATE'"
-                                   class="form-control"
-                                   ng-model="markerAttribute.value"
-                                   required="{{markerAttribute.attribute.required}}">
+                           
+                           <input
+                              name="date1"
+                              ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
+                              class="form-control datepicker" ng-model="markerAttribute.value"
+                              required
+                              >
 
 
                             <input name="texto"
