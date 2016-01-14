@@ -3264,6 +3264,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
     $scope.currentEntity.location.coordinateString = $scope.currentEntity.wktCoordenate;
 
+    /* Remove image to update */
+    angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
+      if(markerAttribute.photoAlbum){
+        angular.forEach(markerAttribute.photoAlbum.photos, function(photo){
+          delete photo.image;
+        })
+      }
+    });
+
     markerService.updateMarker($scope.currentEntity, {
       callback: function (result) {
 
