@@ -27,6 +27,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -108,11 +109,11 @@ public class MarkerService
 	@Autowired
 	private IPhotoRepository photoRepository;
 
-//	 /**
-//	 * I18n
-//	 */
-//	 @Autowired
-//	 private MessageSource messages;
+	 /**
+	 * I18n
+	 */
+	 @Autowired
+	 private MessageSource messages;
 	/**
 	 * 
 	 */
@@ -127,6 +128,21 @@ public class MarkerService
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	
+	/**
+	 * 
+	 * @param markers
+	 * @return
+	 */
+	public List<Marker> insertMarker(List<Marker> markers) 
+	{
+		for (Marker marker : markers)
+		{
+			marker = this.insertMarker(marker);
+		}
+		return markers;
+	}
+	
 	/**
 	 * Method to insert an {@link Marker}
 	 * 
@@ -169,12 +185,12 @@ public class MarkerService
 			Attribute attribute = attributeRepository.findOne(markerAttribute.getAttribute().getId());
 			
 			if (attribute.getRequired() && attribute.getType() != AttributeType.PHOTO_ALBUM && markerAttribute.getValue() == null)
-			{// FIXME localize
-				throw new RuntimeException("Insira um valor para o atributo " + attribute.getName());
+			{
+				throw new RuntimeException(messages.getMessage("admin.shape.error.value-attribute-can-not-be-null", null, null));
 			}
 			else if (attribute.getRequired() && attribute.getType() == AttributeType.PHOTO_ALBUM && (markerAttribute.getPhotoAlbum() == null || markerAttribute.getPhotoAlbum().getPhotos() == null || markerAttribute.getPhotoAlbum().getPhotos().size() == 0))
-			{// FIXME localize
-				throw new RuntimeException("Insira fotos para o atributo " + attribute.getName());
+			{
+				throw new RuntimeException(messages.getMessage("photos.Insert-Photos", null, null));
 			}
 		}
 	}

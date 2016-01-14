@@ -54,464 +54,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="JAVA/br.com.geocab.domain.entity" pinned="false" current-in-tab="true">
-        <entry file="uml://JAVA/br.com.geocab.domain.entity">
-          <provider selected="true" editor-type-id="UmlEditorProvider">
-            <state>
-              <ID>JAVA</ID>
-              <OriginalElement>br.com.geocab.domain.entity</OriginalElement>
-              <nodes>
-                <node x="1243.0" y="3315.0">br.com.geocab.domain.entity.shapefile.ShapeFile</node>
-                <node x="2570.084456424079" y="60.5">br.com.geocab.domain.entity.account.preferences.BackgroundMap</node>
-                <node x="657.0" y="3315.0">br.com.geocab.domain.entity.Revision</node>
-                <node x="2239.084456424079" y="36.0">br.com.geocab.domain.entity.account.UserRole</node>
-                <node x="2465.585579514824" y="2868.0">br.com.geocab.domain.entity.accessgroup.AccessGroup</node>
-                <node x="2160.834456424079" y="370.0">br.com.geocab.domain.entity.account.User</node>
-                <node x="1100.4570979335128" y="490.0">br.com.geocab.domain.entity.marker.photo.PhotoAlbum</node>
-                <node x="1844.1570080862532" y="2498.0">br.com.geocab.domain.entity.layer.CustomSearch</node>
-                <node x="1660.7070979335126" y="1384.4999999999998">br.com.geocab.domain.entity.marker.MarkerStatus</node>
-                <node x="340.0" y="1328.0">br.com.geocab.domain.entity.layer.LayerGroup</node>
-                <node x="2762.134546271339" y="409.75">br.com.geocab.domain.entity.account.UserSocialConnection</node>
-                <node x="0.0" y="1376.0">br.com.geocab.domain.entity.datasource.DataSource</node>
-                <node x="2242.157008086253" y="2626.0">br.com.geocab.domain.entity.accessgroup.AccessGroupCustomSearch</node>
-                <node x="1454.1570080862534" y="1885.9999999999998">br.com.geocab.domain.entity.layer.LayerField</node>
-                <node x="1743.1570080862527" y="1208.0">br.com.geocab.domain.entity.markermoderation.MarkerModeration</node>
-                <node x="680.4570979335128" y="430.0">br.com.geocab.domain.entity.layer.Attribute</node>
-                <node x="2088.1570080862525" y="1041.0">br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration</node>
-                <node x="2149.157008086253" y="854.75">br.com.geocab.domain.entity.markermoderation.Motive</node>
-                <node x="1143.6570080862527" y="1286.0">br.com.geocab.domain.entity.marker.Marker</node>
-                <node x="2940.657008086253" y="0.0">br.com.geocab.domain.entity.MetaFile</node>
-                <node x="803.9570979335128" y="84.5">br.com.geocab.domain.entity.layer.AttributeType</node>
-                <node x="0.0" y="3315.0">br.com.geocab.domain.entity.layer.ExternalLayer</node>
-                <node x="1040.9701257861636" y="952.0">br.com.geocab.domain.entity.marker.MarkerAttribute</node>
-                <node x="2724.157008086253" y="2694.0">br.com.geocab.domain.entity.tool.Tool</node>
-                <node x="385.0" y="3315.0">br.com.geocab.domain.entity.layer.TypeFieldLayer</node>
-                <node x="539.0" y="1000.5">br.com.geocab.domain.entity.layer.ITreeNode</node>
-                <node x="406.1713836477986" y="1762.0">br.com.geocab.domain.entity.layer.Layer</node>
-                <node x="2044.6570080862527" y="1280.0">br.com.geocab.domain.entity.layer.MapScale</node>
-                <node x="982.0" y="3315.0">br.com.geocab.domain.entity.account.Email</node>
-                <node x="2362.0119047619046" y="3238.0">br.com.geocab.domain.entity.accessgroup.AccessGroupLayer</node>
-                <node x="2027.0844564240788" y="120.5">br.com.geocab.domain.entity.account.preferences.Coordinates</node>
-                <node x="1050.9570979335128" y="0.0">br.com.geocab.domain.entity.marker.photo.Photo</node>
-                <node x="2094.6570080862534" y="1910.0">br.com.geocab.domain.entity.layer.LayerFieldType</node>
-              </nodes>
-              <notes />
-              <edges>
-                <edge source="br.com.geocab.domain.entity.accessgroup.AccessGroup" target="br.com.geocab.domain.entity.accessgroup.AccessGroupCustomSearch">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.accessgroup.AccessGroupCustomSearch" target="br.com.geocab.domain.entity.layer.CustomSearch">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.accessgroup.AccessGroup" target="br.com.geocab.domain.entity.account.User">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.Attribute" target="br.com.geocab.domain.entity.layer.AttributeType">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.markermoderation.Motive" target="br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.Layer" target="br.com.geocab.domain.entity.layer.Attribute">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.MarkerAttribute" target="br.com.geocab.domain.entity.marker.photo.PhotoAlbum">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.MarkerAttribute" target="br.com.geocab.domain.entity.account.User">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.CustomSearch" target="br.com.geocab.domain.entity.accessgroup.AccessGroupCustomSearch">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.Attribute" target="br.com.geocab.domain.entity.layer.Layer">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.accessgroup.AccessGroupCustomSearch" target="br.com.geocab.domain.entity.accessgroup.AccessGroup">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.markermoderation.MarkerModeration" target="br.com.geocab.domain.entity.marker.MarkerStatus">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.CustomSearch" target="br.com.geocab.domain.entity.layer.Layer">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.Layer" target="br.com.geocab.domain.entity.layer.LayerGroup">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.LayerField" target="br.com.geocab.domain.entity.layer.LayerFieldType">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.accessgroup.AccessGroupLayer" target="br.com.geocab.domain.entity.accessgroup.AccessGroup">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.CustomSearch" target="br.com.geocab.domain.entity.layer.LayerField">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.Marker" target="br.com.geocab.domain.entity.marker.MarkerStatus">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.MarkerAttribute" target="br.com.geocab.domain.entity.layer.Attribute">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.Marker" target="br.com.geocab.domain.entity.marker.MarkerAttribute">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.Attribute" target="br.com.geocab.domain.entity.marker.MarkerAttribute">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.account.UserSocialConnection" target="br.com.geocab.domain.entity.account.User">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.photo.PhotoAlbum" target="br.com.geocab.domain.entity.marker.photo.Photo">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.MarkerAttribute" target="br.com.geocab.domain.entity.marker.Marker">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.account.User" target="br.com.geocab.domain.entity.account.preferences.Coordinates">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.Layer" target="br.com.geocab.domain.entity.datasource.DataSource">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.accessgroup.AccessGroup" target="br.com.geocab.domain.entity.accessgroup.AccessGroupLayer">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.account.User" target="br.com.geocab.domain.entity.account.preferences.BackgroundMap">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.photo.Photo" target="br.com.geocab.domain.entity.marker.photo.PhotoAlbum">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.Marker" target="br.com.geocab.domain.entity.markermoderation.MarkerModeration">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.LayerGroup" target="br.com.geocab.domain.entity.layer.Layer">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.account.User" target="br.com.geocab.domain.entity.account.UserRole">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.accessgroup.AccessGroupLayer" target="br.com.geocab.domain.entity.layer.Layer">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.accessgroup.AccessGroup" target="br.com.geocab.domain.entity.tool.Tool">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.Layer" target="br.com.geocab.domain.entity.marker.Marker">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.Marker" target="br.com.geocab.domain.entity.layer.Layer">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.photo.PhotoAlbum" target="br.com.geocab.domain.entity.marker.MarkerAttribute">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.Marker" target="br.com.geocab.domain.entity.account.User">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.marker.MarkerAttribute" target="br.com.geocab.domain.entity.layer.Layer">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.LayerGroup" target="br.com.geocab.domain.entity.layer.ITreeNode">
-                  <point x="0.0" y="-148.0" />
-                  <point x="540.0" y="1260.0" />
-                  <point x="609.5" y="1260.0" />
-                  <point x="-70.5" y="27.5" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.Layer" target="br.com.geocab.domain.entity.layer.ITreeNode">
-                  <point x="-96.0" y="-340.0" />
-                  <point x="670.1713836477986" y="1712.0" />
-                  <point x="750.4999999999998" y="1712.0" />
-                  <point x="70.5" y="27.5" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.markermoderation.MarkerModeration" target="br.com.geocab.domain.entity.marker.Marker">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration" target="br.com.geocab.domain.entity.markermoderation.Motive">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.layer.Layer" target="br.com.geocab.domain.entity.layer.MapScale">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration" target="br.com.geocab.domain.entity.markermoderation.MarkerModeration">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-              </edges>
-              <settings layout="Hierarchic Group" zoom="0.4" x="0.5" y="988.5" />
-              <SelectedNodes>
-                <node>br.com.geocab.domain.entity.marker.MarkerAttribute</node>
-              </SelectedNodes>
-              <Categories>
-                <Category>Properties</Category>
-                <Category>Fields</Category>
-              </Categories>
-              <SCOPE>All</SCOPE>
-              <VISIBILITY>private</VISIBILITY>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="console.sql" pinned="false" current-in-tab="false">
-        <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/66a8d92c-b424-47e0-a2e2-e35a9ea621c6/console.sql">
+      <file leaf-file-name="geocab-context.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/solution/src/main/webapp/WEB-INF/spring/geocab-context.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="7.7222223">
+              <caret line="200" column="79" selection-start-line="200" selection-start-column="79" selection-end-line="200" selection-end-column="79" />
+              <folding>
+                <element signature="e#8090#8107#0" expanded="true" />
+                <element signature="e#9505#9527#0" expanded="true" />
+                <element signature="e#9577#9601#0" expanded="true" />
+                <element signature="e#9649#9671#0" expanded="true" />
+                <element signature="e#9925#9954#0" expanded="true" />
+                <element signature="e#10727#10763#0" expanded="true" />
+                <element signature="e#11744#11762#0" expanded="true" />
+                <element signature="e#11795#11809#0" expanded="true" />
+                <element signature="e#11842#11856#0" expanded="true" />
+                <element signature="e#11893#11907#0" expanded="true" />
+                <element signature="e#11944#11962#0" expanded="true" />
+                <element signature="n#prop#0;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+                <element signature="n#prop#1;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+                <element signature="n#prop#2;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+                <element signature="n#prop#3;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+                <element signature="n#prop#4;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+                <element signature="n#prop#5;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DATABASE/66a8d92c-b424-47e0-a2e2-e35a9ea621c6.schema:geocab.geocab" pinned="false" current-in-tab="false">
-        <entry file="uml://DATABASE/66a8d92c-b424-47e0-a2e2-e35a9ea621c6.schema:geocab.geocab">
-          <provider selected="true" editor-type-id="UmlEditorProvider">
-            <state>
-              <ID>DATABASE</ID>
-              <OriginalElement>66a8d92c-b424-47e0-a2e2-e35a9ea621c6.schema:geocab.geocab</OriginalElement>
-              <nodes>
-                <node x="1553.2" y="1254.5">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_tool</node>
-                <node x="0.0" y="1915.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.field_layer</node>
-                <node x="1256.9231884057972" y="1218.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_layer</node>
-                <node x="500.5684782608696" y="848.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker</node>
-                <node x="1806.2" y="1254.5">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_user</node>
-                <node x="0.0" y="824.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.attribute</node>
-                <node x="107.0" y="1480.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.photo_album</node>
-                <node x="1333.8934782608696" y="884.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group</node>
-                <node x="405.39166666666665" y="0.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer_group</node>
-                <node x="1126.825" y="366.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.user</node>
-                <node x="495.72500000000014" y="294.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer</node>
-                <node x="87.0" y="1194.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker_attribute</node>
-                <node x="2059.2" y="1230.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.motive</node>
-                <node x="673.3916666666667" y="12.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.data_source</node>
-                <node x="97.0" y="1694.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.photo</node>
-                <node x="623.0" y="1218.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker_moderation</node>
-                <node x="981.2684782608696" y="800.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.user_social_connection</node>
-                <node x="768.5684782608696" y="884.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.custom_search</node>
-                <node x="335.0" y="1170.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer_field</node>
-                <node x="1432.3934782608696" y="1468.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.motive_marker_moderation</node>
-                <node x="1639.2684782608696" y="884.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.tool</node>
-                <node x="879.75" y="1218.0">66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_custom_search</node>
-              </nodes>
-              <notes />
-              <edges>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_user" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group">
-                  <point x="-58.25" y="-39.5" />
-                  <point x="1864.45" y="1140.0" />
-                  <point x="1498.3934782608696" y="1140.0" />
-                  <point x="70.5" y="76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.attribute" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer">
-                  <point x="0.0" y="-136.0" />
-                  <point x="144.0" y="750.0" />
-                  <point x="618.1250000000001" y="750.0" />
-                  <point x="-81.60000000000002" y="208.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker_attribute" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker">
-                  <point x="57.0" y="-100.0" />
-                  <point x="258.0" y="1140.0" />
-                  <point x="562.5684782608696" y="1140.0" />
-                  <point x="-62.0" y="112.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer_group">
-                  <point x="-102.0" y="-208.0" />
-                  <point x="597.7250000000001" y="274.0" />
-                  <point x="612.0583333333334" y="274.0" />
-                  <point x="82.66666666666674" y="112.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer_field" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.custom_search">
-                  <point x="0.0" y="-124.0" />
-                  <point x="469.0" y="1150.0" />
-                  <point x="815.5684782608696" y="1150.0" />
-                  <point x="-47.0" y="76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.photo_album" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker_attribute">
-                  <point x="-47.0" y="-76.0" />
-                  <point x="154.0" y="1443.0" />
-                  <point x="144.0" y="1443.0" />
-                  <point x="-57.0" y="100.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_user" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.user">
-                  <point x="58.25" y="-39.5" />
-                  <point x="1980.95" y="780.0" />
-                  <point x="1366.825" y="780.0" />
-                  <point x="96.0" y="136.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer_group" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer_group">
-                  <point x="-82.66666666666663" y="112.0" />
-                  <point x="446.725" y="244.0" />
-                  <point x="385.39166666666665" y="244.0" />
-                  <point x="385.39166666666665" y="168.0" />
-                  <point x="-124.0" y="56.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.photo" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.photo_album">
-                  <point x="0.0" y="-88.0" />
-                  <point x="0.0" y="76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker_moderation" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker">
-                  <point x="0.0" y="-76.0" />
-                  <point x="717.0" y="1140.0" />
-                  <point x="686.5684782608696" y="1140.0" />
-                  <point x="62.0" y="112.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker_attribute" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.attribute">
-                  <point x="-57.0" y="-100.0" />
-                  <point x="0.0" y="136.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.custom_search" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer">
-                  <point x="0.0" y="-76.0" />
-                  <point x="862.5684782608696" y="760.0" />
-                  <point x="781.3250000000002" y="760.0" />
-                  <point x="81.60000000000002" y="208.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_tool" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.tool">
-                  <point x="58.25" y="-39.5" />
-                  <point x="1727.95" y="1150.0" />
-                  <point x="1733.2684782608696" y="1150.0" />
-                  <point x="0.0" y="76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_layer" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer">
-                  <point x="-47.0" y="-76.0" />
-                  <point x="1303.9231884057972" y="1140.0" />
-                  <point x="970.7684782608696" y="1140.0" />
-                  <point x="970.7684782608696" y="750.0" />
-                  <point x="862.9250000000002" y="750.0" />
-                  <point x="163.20000000000005" y="208.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer">
-                  <point x="-62.0" y="-112.0" />
-                  <point x="562.5684782608696" y="760.0" />
-                  <point x="699.7250000000001" y="760.0" />
-                  <point x="0.0" y="208.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker_attribute" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.photo_album">
-                  <point x="57.0" y="100.0" />
-                  <point x="258.0" y="1443.0" />
-                  <point x="248.0" y="1443.0" />
-                  <point x="47.0" y="-76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer">
-                  <point x="-163.2" y="208.0" />
-                  <point x="536.5250000000001" y="730.0" />
-                  <point x="475.72500000000014" y="730.0" />
-                  <point x="475.72500000000014" y="502.0" />
-                  <point x="-204.0" y="-0.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.motive_marker_moderation" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.motive">
-                  <point x="56.0" y="-88.0" />
-                  <point x="1600.3934782608696" y="1443.0" />
-                  <point x="2143.2" y="1443.0" />
-                  <point x="0.0" y="64.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.motive_marker_moderation" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker_moderation">
-                  <point x="-56.0" y="-88.0" />
-                  <point x="1488.3934782608696" y="1443.0" />
-                  <point x="717.0" y="1443.0" />
-                  <point x="0.0" y="76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_custom_search" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.custom_search">
-                  <point x="-60.25" y="-76.0" />
-                  <point x="940.0" y="1150.0" />
-                  <point x="909.5684782608696" y="1150.0" />
-                  <point x="47.0" y="76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_tool" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group">
-                  <point x="-58.25" y="-39.5" />
-                  <point x="1611.45" y="1150.0" />
-                  <point x="1451.3934782608696" y="1150.0" />
-                  <point x="23.5" y="76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_custom_search" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group">
-                  <point x="60.25" y="-76.0" />
-                  <point x="1060.5" y="1150.0" />
-                  <point x="1357.3934782608696" y="1150.0" />
-                  <point x="-70.5" y="76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.user_social_connection" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.user">
-                  <point x="0.0" y="-160.0" />
-                  <point x="1145.2684782608696" y="780.0" />
-                  <point x="1270.825" y="780.0" />
-                  <point x="0.0" y="136.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.marker" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.user">
-                  <point x="62.0" y="-112.0" />
-                  <point x="686.5684782608696" y="770.0" />
-                  <point x="1174.825" y="770.0" />
-                  <point x="-96.0" y="136.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_layer" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group">
-                  <point x="47.0" y="-76.0" />
-                  <point x="1397.9231884057972" y="1150.0" />
-                  <point x="1404.3934782608696" y="1150.0" />
-                  <point x="-23.5" y="76.0" />
-                </edge>
-                <edge source="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.layer" target="66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.data_source">
-                  <point x="102.0" y="-208.0" />
-                  <point x="801.7250000000001" y="274.0" />
-                  <point x="787.3916666666667" y="274.0" />
-                  <point x="0.0" y="100.0" />
-                </edge>
-              </edges>
-              <settings layout="Hierarchic Group" zoom="0.5386416861826698" x="204.56521739130432" y="831.5652173913043" />
-              <SelectedNodes>
-                <node>66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_custom_search</node>
-              </SelectedNodes>
-              <Categories>
-                <Category>Columns</Category>
-                <Category>Key columns</Category>
-              </Categories>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/solution/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="38" column="57" selection-start-line="31" selection-start-column="20" selection-end-line="38" selection-end-column="57" />
+            <state vertical-scroll-proportion="0.48073024">
+              <caret line="21" column="20" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -527,8 +102,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/solution/pom.xml" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/66a8d92c-b424-47e0-a2e2-e35a9ea621c6/console.sql" />
+        <option value="$PROJECT_DIR$/solution/src/main/webapp/WEB-INF/spring/geocab-context.xml" />
+        <option value="$PROJECT_DIR$/solution/pom.xml" />
       </list>
     </option>
   </component>
@@ -585,24 +161,6 @@
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="geocab-solution" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="Plugins" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginsNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="tomcat7" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
           <option name="myItemId" value="Geocab" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
         </PATH_ELEMENT>
@@ -638,64 +196,6 @@
           <option name="myItemId" value="Plugins" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginsNode" />
         </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="install" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="Geocab" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="Plugins" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginsNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="deploy" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="Geocab" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="Plugins" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginsNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="compiler" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="Geocab" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="Plugins" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginsNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="clean" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginNode" />
-        </PATH_ELEMENT>
       </PATH>
       <PATH>
         <PATH_ELEMENT>
@@ -707,6 +207,9 @@
   </component>
   <component name="NamedScopeManager">
     <order />
+  </component>
+  <component name="PhpServers">
+    <servers />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
@@ -739,6 +242,7 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -810,6 +314,96 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WEB-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="geocab-multimodule" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="implementation" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="solution" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WEB-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="spring" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="geocab-multimodule" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="implementation" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="solution" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="geocab-multimodule" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="implementation" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="solution" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -864,512 +458,11 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tool" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="shapefile" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="markermoderation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="marker" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="marker" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="photo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="datasource" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="account" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="account" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="preferences" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab-multimodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="solution" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geocab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="domain" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="accessgroup" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -1378,6 +471,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="dynamic.classpath" value="false" />
+    <property name="FullScreen" value="false" />
   </component>
   <component name="RunManager" selected="Maven.geocab-solution [deploy:deploy]">
     <configuration default="false" name="geocab-solution [deploy:deploy]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
@@ -1707,10 +801,13 @@
       <listeners />
       <method />
     </configuration>
-    <configuration default="true" type="Unknown" factoryName="Unknown">
-      <method />
-    </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <pass-parent-envs>true</pass-parent-envs>
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="osgi.bnd.run" factoryName="Run Launcher">
@@ -1750,6 +847,9 @@
     </option>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="9ecdf06a-a3d3-4d9d-8835-b1bb6eb9fae3" name="Default" comment="" />
@@ -1757,48 +857,49 @@
       <option name="number" value="Default" />
       <updated>1452625598131</updated>
       <workItem from="1452625602672" duration="11823000" />
+      <workItem from="1452715252363" duration="1509000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11823000" />
+    <option name="totallyTimeSpent" value="13332000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1600" y="-4" width="1600" height="904" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947233" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32947233" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32948717" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947233" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32948717" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32948717" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24967825" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947233" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24967825" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32948717" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32948717" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32948717" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32948717" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32948717" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24967825" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32948717" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32948717" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1834,14 +935,35 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
     </layout-to-restore>
   </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/.." />
+    </ignored-roots>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/66a8d92c-b424-47e0-a2e2-e35a9ea621c6/console.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/solution/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1854,7 +976,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3326572">
           <caret line="29" column="12" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1873,12 +994,13 @@
           </nodes>
           <notes />
           <edges />
-          <settings layout="Hierarchic Group" zoom="0.8253424657534246" x="474.25311203319507" y="448.0" />
+          <settings layout="Hierarchic Group" zoom="0.8253424657534246" x="474.0" y="448.0" />
           <SelectedNodes />
           <Categories>
-            <Category>Key columns</Category>
             <Category>Columns</Category>
+            <Category>Key columns</Category>
           </Categories>
+          <SCOPE>All</SCOPE>
         </state>
       </provider>
     </entry>
@@ -1988,12 +1110,13 @@
           </nodes>
           <notes />
           <edges />
-          <settings layout="Hierarchic Group" zoom="0.39357429718875503" x="2407.5060547040375" y="1274.9167795749006" />
+          <settings layout="Hierarchic Group" zoom="0.39357429718875503" x="2408.0" y="1275.0" />
           <SelectedNodes />
           <Categories>
-            <Category>Key columns</Category>
             <Category>Columns</Category>
+            <Category>Key columns</Category>
           </Categories>
+          <SCOPE>All</SCOPE>
         </state>
       </provider>
     </entry>
@@ -2006,7 +1129,6 @@
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2019,7 +1141,6 @@
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2032,7 +1153,6 @@
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2045,7 +1165,6 @@
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2053,7 +1172,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3326572">
           <caret line="35" column="13" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2069,7 +1187,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.45638946">
           <caret line="59" column="27" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2261,7 +1378,7 @@
               <point x="0.0" y="100.0" />
             </edge>
           </edges>
-          <settings layout="Hierarchic Group" zoom="0.5386416861826698" x="204.56521739130432" y="831.5652173913043" />
+          <settings layout="Hierarchic Group" zoom="0.5386416861826698" x="205.0" y="832.0" />
           <SelectedNodes>
             <node>66a8d92c-b424-47e0-a2e2-e35a9ea621c6.table:geocab.geocab.access_group_custom_search</node>
           </SelectedNodes>
@@ -2269,6 +1386,7 @@
             <Category>Columns</Category>
             <Category>Key columns</Category>
           </Categories>
+          <SCOPE>All</SCOPE>
         </state>
       </provider>
     </entry>
@@ -2499,16 +1617,58 @@
               <point x="0.0" y="0.0" />
             </edge>
           </edges>
-          <settings layout="Hierarchic Group" zoom="0.4" x="0.5" y="988.5" />
+          <settings layout="Hierarchic Group" zoom="0.4" x="1.0" y="989.0" />
           <SelectedNodes>
             <node>br.com.geocab.domain.entity.marker.MarkerAttribute</node>
           </SelectedNodes>
           <Categories>
-            <Category>Properties</Category>
             <Category>Fields</Category>
+            <Category>Properties</Category>
           </Categories>
           <SCOPE>All</SCOPE>
           <VISIBILITY>private</VISIBILITY>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.88">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solution/src/main/webapp/WEB-INF/spring/geocab-context.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="7.7222223">
+          <caret line="200" column="79" selection-start-line="200" selection-start-column="79" selection-end-line="200" selection-end-column="79" />
+          <folding>
+            <element signature="e#8090#8107#0" expanded="true" />
+            <element signature="e#9505#9527#0" expanded="true" />
+            <element signature="e#9577#9601#0" expanded="true" />
+            <element signature="e#9649#9671#0" expanded="true" />
+            <element signature="e#9925#9954#0" expanded="true" />
+            <element signature="e#10727#10763#0" expanded="true" />
+            <element signature="e#11744#11762#0" expanded="true" />
+            <element signature="e#11795#11809#0" expanded="true" />
+            <element signature="e#11842#11856#0" expanded="true" />
+            <element signature="e#11893#11907#0" expanded="true" />
+            <element signature="e#11944#11962#0" expanded="true" />
+            <element signature="n#prop#0;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+            <element signature="n#prop#1;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+            <element signature="n#prop#2;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+            <element signature="n#prop#3;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+            <element signature="n#prop#4;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+            <element signature="n#prop#5;n#props#0;n#property#5;n#bean#16;n#beans#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solution/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48073024">
+          <caret line="21" column="20" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
+          <folding />
         </state>
       </provider>
     </entry>
