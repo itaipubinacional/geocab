@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 /**
  * 
@@ -194,7 +194,21 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 		$log.info("changeToList");
 		
 		var pageRequest = new PageRequest();
-		pageRequest.size = 6;
+
+		pageRequest = {  
+						  "size":6,
+						  "sort":{  
+							"orders":[  
+							  {  
+								"direction":"ASC",
+								"ignoreCase":false,
+								"nullHandling":null,
+								"property":"name"
+							  }
+							]
+						  }
+						}
+
 		$scope.pageRequest = pageRequest;
 
 		$scope.listDataSourceByFilters( null, pageRequest );

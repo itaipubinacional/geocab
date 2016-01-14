@@ -106,7 +106,7 @@ public class MyMarkersService
 		{
 			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
 
-			if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
+			if (!markerTemporary.getLayer().getId().equals(marker.getLayer().getId()))
 			{
 				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
 
@@ -388,6 +388,9 @@ public class MyMarkersService
 			String dateStart, String dateEnd, String user, PageRequest pageable)
 					throws java.text.ParseException
 	{
+		
+//		if (!(pageable.getSort().getOrders().size() >= 0))
+//			pageable.getSort().getOrders().add(new Order(Direction.ASC, "name", null));
 
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Calendar dEnd = null;

@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 /**
  *
@@ -375,7 +375,20 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $scope.currentState = $scope.LIST_STATE;
 
         var pageRequest = new PageRequest();
-        pageRequest.size = 10;
+        
+        pageRequest = {  
+						  "size":10,
+						  "sort":{  
+							"orders":[  
+							  {  
+								"direction":"ASC",
+								"nullHandling":null,
+								"property":"title"
+							  }
+							]
+						  }
+						}
+
         $scope.pageRequest = pageRequest;
 
         $scope.listLayersByFilters(null, pageRequest);

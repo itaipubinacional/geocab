@@ -205,7 +205,19 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 		$log.info("changeToList");
 	
 		var pageRequest = new PageRequest();
-		pageRequest.size = 10;
+		  pageRequest = {  
+						  "size":10,
+						  "sort":{  
+							"orders":[  
+							  {  
+								"direction":"ASC",
+								"ignoreCase":false,
+								"nullHandling":null,
+								"property":"name"
+							  }
+							]
+						  }
+						}
 		$scope.pageRequest = pageRequest;
 		$scope.listUsersByFilters( null, pageRequest );
 		
@@ -422,7 +434,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 	 * @see currentPage
 	 */
 	$scope.listUsersByFilters = function( filter, pageRequest ) {
-				
+
 		accountService.listUsersByFilters( filter, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;

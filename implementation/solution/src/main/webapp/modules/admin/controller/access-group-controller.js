@@ -368,7 +368,18 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         $log.info("changeToList");
 
         var pageRequest = new PageRequest();
-        pageRequest.size = 10;
+        pageRequest = {  
+						  "size":10,
+						  "sort":{  
+							"orders":[  
+							  {   
+								"direction":"ASC",
+								"nullHandling":null,
+								"property":"name"
+							  }
+							]
+						  }
+						}
         $scope.pageRequest = pageRequest;
 
         $scope.listAccessGroupByFilters(null, pageRequest);
