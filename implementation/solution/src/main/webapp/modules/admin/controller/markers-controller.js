@@ -1655,6 +1655,15 @@ ront controller of angle won't let enter an invalid URL.
 
         });
 
+        /* Remove image to update */
+        angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
+            if(markerAttribute.photoAlbum){
+                angular.forEach(markerAttribute.photoAlbum.photos, function(photo){
+                    delete photo.image;
+                })
+            }
+        });
+
         myMarkersService.updateMarker($scope.currentEntity, {
             callback: function (result) {
 
