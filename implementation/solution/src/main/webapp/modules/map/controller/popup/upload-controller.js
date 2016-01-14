@@ -66,6 +66,8 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
         attributesByLayer = attr.attribute;
         photoAlbumId = attr.photoAlbum.id;
 
+        attribute.files = attribute.files ? attribute.files : [];
+
         if(photoAlbumId){
 
           markerService.listPhotosByPhotoAlbumId(photoAlbumId, {
@@ -73,29 +75,29 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
               if(result.content.length) {
 
-                attributesByLayer.files = [];
+                attributesByLayer.files = attributesByLayer.files ? attributesByLayer.files : [];
 
                 angular.forEach(result.content, function (photo) {
 
-                  /*var file = $filter('filter')($scope.attribute.files, {id: photo.id})[0];
-                  var index = $scope.attribute.files.indexOf(file);
+                  var file = $filter('filter')(attributesByLayer.files, {id: photo.id})[0];
+                  var index = attributesByLayer.files.indexOf(file);
 
-                  photo.src  = photo.image;
-                  photo.name = photo.description;
+                  //photo.src = photo.image;
+                  //photo.name = photo.description;
 
-                  if ($scope.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
-                    $scope.attribute.files.push(photo);
+                  if (attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
+                    attributesByLayer.files.push(photo);
                   }
 
-                  if (index != -1){
-                    $scope.attribute.files[index] = photo;
-                  }*/
+                  if (index != -1) {
+                    attributesByLayer.files[index].src = photo.image;
+                  }
 
-                  if (attribute.removePhotosIds.indexOf(photo.id) == -1) {
+                  /*if (attribute.removePhotosIds.indexOf(photo.id) == -1) {
                     photo.src = photo.image;
                     photo.name = photo.description;
                     attributesByLayer.files.push(photo);
-                  }
+                  }*/
 
                 });
                 $scope.attributesByLayer.push(attributesByLayer);
@@ -185,15 +187,15 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
             var file = $filter('filter')($scope.attribute.files, {id: photo.id})[0];
             var index = $scope.attribute.files.indexOf(file);
 
-            photo.src  = photo.image;
-            photo.name = photo.description;
+            //photo.src  = photo.image;
+            //photo.name = photo.description;
 
             if ($scope.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
               $scope.attribute.files.push(photo);
             }
 
             if (index != -1){
-              $scope.attribute.files[index] = photo;
+              $scope.attribute.files[index].src = photo.image;
             }
 
           });
