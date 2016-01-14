@@ -102,16 +102,6 @@
                                 <spring:message code="map.No"/>
                             </div>
 
-                            <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
-                                <input
-                                        type="radio"
-                                        ng-checked="markerAttribute.value == 'Yes'"
-                                        ng-model="markerAttribute.value"
-                                        value="Yes">
-                                <spring:message code="map.Yes"/>
-
-                            </div>
-
                             <div ng-if="(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')"
                                     style="float: left;">
                                 <button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
