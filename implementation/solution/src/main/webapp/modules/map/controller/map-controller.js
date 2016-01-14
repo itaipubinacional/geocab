@@ -3266,8 +3266,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     /* Remove image to update */
     angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
-      if(markerAttribute.photoAlbum){
-        angular.forEach(markerAttribute.photoAlbum.photos, function(photo){
+      if(markerAttribute.photoAlbum) {
+        angular.forEach(markerAttribute.photoAlbum.photos, function(photo) {
+
+          if (markerAttribute.attribute.removePhotosIds) {
+            var index = markerAttribute.attribute.removePhotosIds.indexOf(photo.id);
+
+            if (index != -1)
+              delete markerAttribute.photoAlbum.photos[index];
+          }
+
           delete photo.image;
         })
       }

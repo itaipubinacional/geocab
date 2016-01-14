@@ -1659,6 +1659,14 @@ ront controller of angle won't let enter an invalid URL.
         angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
             if(markerAttribute.photoAlbum){
                 angular.forEach(markerAttribute.photoAlbum.photos, function(photo){
+
+                    if (markerAttribute.attribute.removePhotosIds) {
+                        var index = markerAttribute.attribute.removePhotosIds.indexOf(photo.id);
+
+                        if (index != -1)
+                            delete markerAttribute.photoAlbum.photos[index];
+                    }
+
                     delete photo.image;
                 })
             }
