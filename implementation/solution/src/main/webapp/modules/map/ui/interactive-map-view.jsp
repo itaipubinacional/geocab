@@ -620,7 +620,9 @@ uri="http://www.springframework.org/security/tags"%>
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>
 
-                    <label style="margin-top: 15px">{{ attribute.name }}</label>
+                    <label ng-if="attribute.type != 'PHOTO_ALBUM'" style="margin-top: 10px">{{ attribute.name }}</label>
+
+                    <label ng-if="attribute.type == 'PHOTO_ALBUM'" style="height: 30px;line-height: 34px;">{{ attribute.name }}</label>
 
                     <input type="number"
                            name="number1" ng-if="attribute.type == 'NUMBER'"

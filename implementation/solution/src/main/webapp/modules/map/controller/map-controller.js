@@ -2616,7 +2616,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       var lastSearchName = "";
       for (var i = 0; i < $scope.searchs.length; ++i) {
 
-        $scope.searchs[i].id = (i + 1).toString();
+        $scope.searchs[i].id = 'pesquisa_' + (i + 1).toString();
         $scope.searchs[i].searchId = i;
         $scope.searchs[i].label = "Pesquisa " + (i + 1);
         $scope.searchs[i].type = 'layer';
@@ -2716,7 +2716,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     var lastSearchName;
     for (var i = 0; i < $scope.searchs.length; ++i) {
-      $scope.searchs[i].id = (i + 1).toString();
+      $scope.searchs[i].id = 'pesquisa_' + (i + 1).toString();
       $scope.searchs[i].label = "Pesquisa " + (i + 1);
       $scope.searchs[i].type = 'layer';
       $scope.searchs[i].name = "pesquisa" + (i + 1);

@@ -652,44 +652,47 @@ ront controller of angle won't let enter an invalid URL.
      * If the modifier is not valid, returns to the State of the listing.
      */
     $scope.changeToDetail = function (marker) {
-        $log.info("changeToDetail", marker);
 
-        $scope.drag = false;
-        $scope.clearFeatures();
+        if(marker) {
+            $log.info("changeToDetail", marker);
 
-        var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+            $scope.drag = false;
+            $scope.clearFeatures();
 
-        $scope.map.getView().fitExtent(geometry.getExtent(), $scope.map.getSize());
+            var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
 
-        $scope.map.getView().setZoom(14);
+            $scope.map.getView().fitExtent(geometry.getExtent(), $scope.map.getSize());
 
-        $scope.selectMarker(marker);
+            $scope.map.getView().setZoom(14);
 
-        angular.forEach($scope.features, function (feature, index) {
-            var marker = feature.feature.getProperties().marker;
+            $scope.selectMarker(marker);
 
-            if (ol.extent.equals(feature.extent, geometry.getExtent())) {
+            angular.forEach($scope.features, function (feature, index) {
+                var marker = feature.feature.getProperties().marker;
 
-                angular.forEach($scope.selectedFeatures, function (selected, index) {
-                    if (selected.marker.id == marker.id) {
+                if (ol.extent.equals(feature.extent, geometry.getExtent())) {
 
-                        selected.feature.push(feature.feature);
-                    }
-                });
+                    angular.forEach($scope.selectedFeatures, function (selected, index) {
+                        if (selected.marker.id == marker.id) {
 
-                return false;
-            }
-        });
+                            selected.feature.push(feature.feature);
+                        }
+                    });
 
-        $scope.selectMarker(marker);
+                    return false;
+                }
+            });
 
-        $scope.currentState = $scope.DETAIL_STATE;
-        $scope.currentEntity = marker;
+            $scope.selectMarker(marker);
 
-        $scope.listAttributesByMarker();
+            $scope.currentState = $scope.DETAIL_STATE;
+            $scope.currentEntity = marker;
 
-      //Constrói o ponto no mapa
-        $scope.buildMarker({content : [marker]});
+            $scope.listAttributesByMarker();
+
+            //Constrói o ponto no mapa
+            $scope.buildMarker({content: [marker]});
+        }
     };
 
     /**
