@@ -3224,15 +3224,34 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.currentEntity.layer = layer;
     }
 
-    var i = 0;
+    angular.forEach($scope.attributesByMarker, function (attribute) {
 
-    angular.forEach($scope.attributesByMarker, function () {
-
-      if ($scope.attributesByMarker[i].value == null) {
-        $scope.attributesByMarker[i].value = "";
+      if (attribute.value == null) {
+        attribute.value = "";
       }
 
-      i++;
+      if(attribute.attribute.files) {
+
+        console.log(attribute.attribute.files);
+
+        angular.forEach(attribute.attribute.files, function(file, index){
+
+          if(!file.id) {
+            var photo = new Photo();
+            var img = file.src.split(';base64,');
+            photo.source = img[1];
+            photo.name = file.name;
+            photo.description = file.description;
+            photo.contentLength = file.size;
+            photo.mimeType = file.type;
+
+            attribute.attribute.files[index] = photo;
+          }
+        });
+
+        attribute.photoAlbum.photos = attribute.attribute.files;
+
+      }
     });
 
     $scope.currentEntity.markerAttribute = $scope.attributesByMarker;
