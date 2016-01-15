@@ -409,15 +409,15 @@ public class MarkerService
 		{
 			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
 
-			if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
-			{
-				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
-
-				if (markerAttributes != null)
-				{
-					this.markerAttributeRepository.deleteInBatch(markerAttributes);
-				}
-			}
+//			if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
+//			{
+//				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
+//
+//				if (markerAttributes != null)
+//				{
+//					this.markerAttributeRepository.deleteInBatch(markerAttributes);
+//				}
+//			}
 			
 			if(marker.getLocation() == null)
 			{
@@ -427,6 +427,8 @@ public class MarkerService
 			{
 				marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
 			}
+			
+			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
 
 			marker.setStatus(MarkerStatus.PENDING);
 
@@ -812,49 +814,52 @@ public class MarkerService
 
 		try
 		{
-			
-			Base64 photoDecode = new Base64();
-			
-			byte[] data = photoDecode.decode(photo.getSource());
-			InputStream decodedMap = new ByteArrayInputStream(data);	
-			
-			final String mimeType = photo.getMimeType();
-	
-			final List<String> validMimeTypes = new ArrayList<String>();
-			validMimeTypes.add("image/gif");
-			validMimeTypes.add("image/jpeg");
-			validMimeTypes.add("image/bmp");
-			validMimeTypes.add("image/png");
-	
-			if (mimeType == null || !validMimeTypes.contains(mimeType))
+			if (photo.getSource() != null)
 			{
-				throw new IllegalArgumentException("Formato inválido!");
-			}
+				Base64 photoDecode = new Base64();
+				
+				byte[] data = photoDecode.decode(photo.getSource());
+				InputStream decodedMap = new ByteArrayInputStream(data);	
+				
+				final String mimeType = photo.getMimeType();
+		
+				final List<String> validMimeTypes = new ArrayList<String>();
+				validMimeTypes.add("image/gif");
+				validMimeTypes.add("image/jpeg");
+				validMimeTypes.add("image/bmp");
+				validMimeTypes.add("image/png");
+		
+				if (mimeType == null || !validMimeTypes.contains(mimeType))
+				{
+					throw new IllegalArgumentException("Formato inválido!");
+				}
+		
+				InputStream is = new BufferedInputStream(decodedMap);
+				final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+				Image image = ImageIO.read(is);
+				Graphics2D g = bufferedImage.createGraphics();
+				g.drawImage(image, 0, 0, 640, 480, null);
+				g.dispose();
+		
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				ImageIO.write(bufferedImage, "png", os);
+				InputStream isteam = new ByteArrayInputStream(os.toByteArray());
+		
+				MetaFile metaFile = new MetaFile();
 	
-			InputStream is = new BufferedInputStream(decodedMap);
-			final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
-			Image image = ImageIO.read(is);
-			Graphics2D g = bufferedImage.createGraphics();
-			g.drawImage(image, 0, 0, 640, 480, null);
-			g.dispose();
-	
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			ImageIO.write(bufferedImage, "png", os);
-			InputStream isteam = new ByteArrayInputStream(os.toByteArray());
-	
-			MetaFile metaFile = new MetaFile();
-
-			// Gera o identificador
-			photo.getIdentifier();
+				// Gera o identificador
+				photo.getIdentifier();
+				
+				metaFile.setId(String.valueOf(photo.getId()));
+				metaFile.setContentType(photo.getMimeType());
+				metaFile.setContentLength(photo.getContentLength());
+				metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
+				metaFile.setInputStream(isteam);
+				metaFile.setName(photo.getName());
+		
+				this.metaFileRepository.insert(metaFile);
 			
-			metaFile.setId(String.valueOf(photo.getId()));
-			metaFile.setContentType(photo.getMimeType());
-			metaFile.setContentLength(photo.getContentLength());
-			metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
-			metaFile.setInputStream(isteam);
-			metaFile.setName(photo.getName());
-	
-			this.metaFileRepository.insert(metaFile);
+			}
 		
 		}
 		catch (IOException | RepositoryException e)

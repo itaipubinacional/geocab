@@ -24,6 +24,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +39,18 @@ import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
+import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
+import br.com.geocab.domain.entity.marker.photo.Photo;
+import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
+import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
+import br.com.geocab.domain.repository.marker.photo.IPhotoRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
 import br.com.geocab.domain.service.DataSourceService;
 
@@ -68,6 +74,18 @@ public class MyMarkersService
 	@Autowired
 	private IMarkerRepository markerRepository;
 
+	/**
+	 * 
+	 */
+	@Autowired
+	private IPhotoAlbumRepository photoAlbumRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IPhotoRepository photoRepository;
+	
 	/**
 	 * 
 	 */
@@ -106,15 +124,15 @@ public class MyMarkersService
 		{
 			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
 
-			if (!markerTemporary.getLayer().getId().equals(marker.getLayer().getId()))
-			{
-				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
-
-				if (markerAttributes != null)
-				{
-					this.markerAttributeRepository.deleteInBatch(markerAttributes);
-				}
-			}
+//			if (!markerTemporary.getLayer().getId().equals(marker.getLayer().getId()))
+//			{
+//				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
+//
+//				if (markerAttributes != null)
+//				{
+//					this.markerAttributeRepository.deleteInBatch(markerAttributes);
+//				}
+//			}
 
 			marker.setLocation(markerTemporary.getLocation());
 
@@ -122,6 +140,8 @@ public class MyMarkersService
 			markerModeration.setMarker(marker);
 
 			markerModeration.setStatus(marker.getStatus());
+			
+			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
 
 			this.markerModerationRepository.save(markerModeration);
 
@@ -179,6 +199,7 @@ public class MyMarkersService
 
 				this.markerModerationRepository.save(markerModeration);
 
+				
 				marker = this.markerRepository.save(marker);
 			}
 		}
@@ -187,6 +208,151 @@ public class MyMarkersService
 			LOG.info(e.getMessage());
 		}
 		return marker;
+	}
+	
+	/**
+	 * Salva todos os atributos de um ponto
+	 * 
+	 * @param marker
+	 * @return
+	 * @throws RepositoryException 
+	 * @throws IOException 
+	 */
+	public List<MarkerAttribute> insertMarkersAttributes(List<MarkerAttribute> markersAttributes)
+	{
+
+		for (MarkerAttribute markerAttribute : markersAttributes)
+		{
+			
+			if (markerAttribute.getValue() != null)
+			{
+				/*markerAttribute = */this.markerAttributeRepository.save(markerAttribute);
+				
+				if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
+				{
+					markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
+					
+					markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
+				}
+			}
+		}
+		return markersAttributes;
+	}
+	
+	/**
+	 * Salva todos os albuns de fotos no banco de dados e todas as fotos nos
+	 * sistemas de arquivos
+	 * 
+	 * @param marker
+	 * @return
+	 * @throws RepositoryException 
+	 * @throws IOException 
+	 */
+	public PhotoAlbum insertPhotoAlbum(PhotoAlbum photoAlbum)
+	{try
+	{
+		/*photoAlbum =*/ photoAlbumRepository.save(photoAlbum);
+	}
+	catch (Exception e)
+	{e.printStackTrace();
+		// TODO: handle exception
+	}
+		
+		// Caso não haja o foto_album dentro da foto, seta lá então.
+		// Caso seja uma inserção de um album de fotos ou uma atualização de um
+		// album de fotos
+		for (Photo photo : photoAlbum.getPhotos())
+		{
+			if (photo.getPhotoAlbum() == null)
+			{
+				photo.setPhotoAlbum(photoAlbum);
+			}
+		}
+		this.uploadPhoto(photoAlbum.getPhotos());
+		return photoAlbum;
+	}
+	
+	/**
+	 * Salva todas as fotos no sistema de arquivos
+	 * @param photos
+	 * @return
+	 */
+	public List<Photo> uploadPhoto(List<Photo> photos)
+	{
+		for (Photo photo : photos)
+		{
+			photo = this.photoRepository.save(photo);
+
+			photo = this.uploadImg(photo);
+		}
+		return photos;
+	}
+	
+	/**
+	 * Salva uma foto e devolve o objeto foto
+	 * @param photo
+	 * @return
+	 */
+	public Photo uploadImg(Photo photo)
+	{
+
+		try
+		{
+			if (photo.getSource() != null)
+			{
+				Base64 photoDecode = new Base64();
+				
+				byte[] data = photoDecode.decode(photo.getSource());
+				InputStream decodedMap = new ByteArrayInputStream(data);	
+				
+				final String mimeType = photo.getMimeType();
+		
+				final List<String> validMimeTypes = new ArrayList<String>();
+				validMimeTypes.add("image/gif");
+				validMimeTypes.add("image/jpeg");
+				validMimeTypes.add("image/bmp");
+				validMimeTypes.add("image/png");
+		
+				if (mimeType == null || !validMimeTypes.contains(mimeType))
+				{
+					throw new IllegalArgumentException("Formato inválido!");
+				}
+		
+				InputStream is = new BufferedInputStream(decodedMap);
+				final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+				Image image = ImageIO.read(is);
+				Graphics2D g = bufferedImage.createGraphics();
+				g.drawImage(image, 0, 0, 640, 480, null);
+				g.dispose();
+		
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				ImageIO.write(bufferedImage, "png", os);
+				InputStream isteam = new ByteArrayInputStream(os.toByteArray());
+		
+				MetaFile metaFile = new MetaFile();
+	
+				// Gera o identificador
+				photo.getIdentifier();
+				
+				metaFile.setId(String.valueOf(photo.getId()));
+				metaFile.setContentType(photo.getMimeType());
+				metaFile.setContentLength(photo.getContentLength());
+				metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
+				metaFile.setInputStream(isteam);
+				metaFile.setName(photo.getName());
+		
+				this.metaFileRepository.insert(metaFile);
+			
+			}
+		
+		}
+		catch (IOException | RepositoryException e)
+		{
+			e.printStackTrace();
+			LOG.info(e.getMessage());
+		}
+
+		return photo;
 	}
 
 	/**
