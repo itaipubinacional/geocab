@@ -715,20 +715,23 @@ uri="http://www.springframework.org/security/tags"%>
                       class="btn btn-success"
                       ng-click="insertMarker('PENDING')"
                       style="float: right;"
+                      ng-disabled="isLoading"
                       title="<spring:message code="map.Submit" />"
                   >
                   <spring:message code="map.Submit" />
+                  <i ng-if="isLoading && currentEntity.status == 'PENDING'" class="loading"></i>
                   </button>
 
                   <button
                       id="savePost"
                       class="btn btn-primary"
                       ng-click="insertMarker('SAVED')"
+                      ng-disabled="isLoading"
                       title="<spring:message code="map.Save" />"
                   >
                   <spring:message code="map.Save" />
+                  <i ng-if="isLoading && currentEntity.status == 'SAVED'" class="loading"></i>
                   </button>
-
                 </div>
               </div>
             </div>
@@ -1005,16 +1008,19 @@ uri="http://www.springframework.org/security/tags"%>
                 </button>
 
                 <button class="btn btn-primary"
-                        ng-click="clickUpload()">
+                        ng-click="clickUpload()"
+                        ng-disabled="isLoading && isImport">
                   <i class="icon-upload icon-large"></i>
-                  <spring:message code="admin.shape-file.Import" /></button>
+                  <spring:message code="admin.shape-file.Import" />
+                  <i ng-if="isLoading && isImport" class="loading"></i>
+                </button>
 
                 <input id="upload" multiple="true" type="file" accept=".shp, .shx, .dbf" name="upload" onchange="angular.element(this).scope().onFileChange(this)">
 
                 <hr style="border-color: #d9d9d9;"/>
 
               </div>
-              <div ng-if="isExport">
+              <div ng-if="isExport && !isLoading">
 
                 <!--<p><b><spring:message code="admin.filter-active-layers"/></b></p>-->
 
@@ -1060,7 +1066,13 @@ uri="http://www.springframework.org/security/tags"%>
                 </div>
 
                 <div style="float: left;clear: both">
-                  <button ng-click="exportShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="admin.shape-file.Export" /></button>
+                  <button ng-click="exportShapeFile()"
+                          type="button"
+                          style="margin: 6px 0 20px 0;"
+                          ng-disabled="isLoading && !isImport"
+                          class="btn btn-success"><spring:message code="admin.shape-file.Export" />
+                    <i ng-if="isLoading && !isImport" class="loading"></i>
+                  </button>
                 </div>
 
               </div>
@@ -1072,7 +1084,9 @@ uri="http://www.springframework.org/security/tags"%>
                   <div class="form-item-horizontal radio">
                     <input type="radio" id="layer" data-ng-model="shapeFile.layerType"
                            value="layer" ng-change="setLayerType()"> <label
-                      class="radio-label" for="layer"><spring:message code="admin.layer-config.Existing-layer"/></label>
+                      class="radio-label" for="layer"><spring:message code="admin.layer-config.Existing-layer"/>
+
+                  </label>
                   </div>
 
                   <div class="form-item-horizontal radio">

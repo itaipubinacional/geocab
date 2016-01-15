@@ -296,6 +296,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
   $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
 
+  $scope.isLoading = false;
   /*-------------------------------------------------------------------
    * 		 				 	 CONFIGURATION VARIABLES MAP
    *-------------------------------------------------------------------*/
@@ -2086,6 +2087,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.initializeMarker = function () {
 
+    $scope.imgResult = null;
+
     if ($scope.slideActived == '#sidebar-select-marker') {
       $scope.closeSelectMarker();
     }
@@ -3328,6 +3331,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   $scope.insertMarker = function (status) {
+
+    $scope.isLoading = true;
+
     if (!$scope.isBooleanValid()) {
       return false;
     }
@@ -3388,6 +3394,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     markerService.insertMarker( $scope.currentEntity, {
       callback: function (result) {
+
+        $scope.isLoading = false;
 
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
 
@@ -4797,22 +4805,30 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   $scope.exportShapeFile= function (){
-	  shapeFileService.exportShapeFile( $scope.exportMarkers, {
-           callback: function (result) {
-                $('body').append('<a id="map-download" href="' + result + '"></a>');
-                $('#map-download')[0].click();
-             $('#map-download').remove();
 
-             $scope.$apply();
-           },
-           errorHandler: function (message, exception) {
-            alert(message);
-            $scope.$apply();
-           }
-        });
-	  };
+    $scope.isLoading = true;
+
+	  shapeFileService.exportShapeFile( $scope.exportMarkers, {
+         callback: function (result) {
+
+           $scope.isLoading = false;
+
+              $('body').append('<a id="export-download" href="' + result + '"></a>');
+              $('#export-download')[0].click();
+           $('#export-download').remove();
+
+           $scope.$apply();
+         },
+         errorHandler: function (message, exception) {
+          alert(message);
+          $scope.$apply();
+         }
+      });
+    };
 
   $scope.insertMarkers = function () {
+
+    $scope.isLoading = true;
 
     var importMarkers = [];
 
@@ -4876,6 +4892,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       callback: function (result) {
 
         console.log('Imported');
+
+        $scope.isLoading = false;
+
         $scope.$apply();
 
       }, errorHandler: function (message, exception) {
@@ -5206,6 +5225,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           //console.log(result);
 
+          $scope.isLoading = false;
+
           $scope.clearImportMarkers();
 
           $scope.importMarkers = result;
@@ -5279,6 +5300,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
 
     if (input.files) {
+
+      $scope.isLoading = true;
+      $scope.$apply();
 
       var files = input.files;
 

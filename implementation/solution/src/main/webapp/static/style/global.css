@@ -104,3 +104,20 @@ table.ng-grid tbody tr td{padding: 4px 8px; height: 45px}
 
 table.ng-grid tbody tr{background-color: #f3f3f3}
 table.ng-grid tbody tr:nth-child(odd) td{background-color: #fff}
+
+i.loading{background-image: url(../images/ajax-loader-transparent.gif);
+    display: inline-block;
+    width: 21px;
+    height: 15px;
+    line-height: normal;
+    vertical-align: baseline;
+    background-position: 0% 0%;
+    background-repeat: repeat;
+    margin-top: 0;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    line-height: 30px;
+    background-position: 6px 0px;
+    padding-top: 1px;
+    position: relative;
+    top: 1px;}
