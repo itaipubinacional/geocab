@@ -305,7 +305,11 @@ uri="http://www.springframework.org/security/tags"%>
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>
 
-                    <label style="padding-top: 10px">{{ markerAttribute.attribute.name }}</label>
+                    <!--<label style="padding-top: 10px">{{ markerAttribute.attribute.name }}</label>-->
+
+                    <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'" style="margin-top: 10px">{{ markerAttribute.attribute.name }}</label>
+
+                    <label ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" style="height: 34px;line-height: 34px; margin-bottom: 15px;">{{ markerAttribute.attribute.name }}</label>
 
                     <input
                         type="number"
@@ -392,7 +396,11 @@ uri="http://www.springframework.org/security/tags"%>
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>
 
-                    <label style="margin-top: 15px">{{ attribute.name }}</label>
+                    <!--<label style="margin-top: 15px">{{ attribute.name }}</label>-->
+
+                    <label ng-if="attribute.type != 'PHOTO_ALBUM'" style="margin-top: 15px">{{ attribute.name }}</label>
+
+                    <label ng-if="attribute.type == 'PHOTO_ALBUM'" style="height: 34px;line-height: 34px; margin-bottom: 15px;">{{ attribute.name }}</label>
 
                     <input type="number"
                            name="number1" ng-if="attribute.type == 'NUMBER'"
