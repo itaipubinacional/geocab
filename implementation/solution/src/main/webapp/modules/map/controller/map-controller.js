@@ -87,7 +87,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.screenSelectMarkerOpenned = false;
 
-  $scope.marker;
+  $scope.marker = {};
 
   $scope.coordinatesFormat = '';
 
@@ -307,7 +307,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
     zoom: 9,
     minZoom: 3
-  })
+  });
 
   // view events
   $scope.view.on('change:center', function () {
@@ -2884,6 +2884,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.toggleSidebar(time, element, '#sidebar-marker-create');
     }*/
+    if($('#menu-item-4').css("display") != 'block') {
+      $scope.clearAllSelectedMarkers();
+
+      $scope.marker = {};
+    }
 
     if ($("#sidebar-marker-detail-update").css("display") == 'block') {
 
@@ -3550,12 +3555,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     }
   };
-	  
+
   $scope.addInternalLayer = function (layerId) {
-	  
+
     markerService.listMarkerByLayer(layerId, {
       callback: function (result) {
-    	
+
         var iconPath = "static/images/marker.png";
 
         if (result.length > 0) {
@@ -3575,7 +3580,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var icons = [];
 
         angular.forEach(result, function (marker, index) {
-        	
+
           //$scope.exportMarkers.push(marker);
           /* var iconFeature = new ol.Feature({
            geometry: new ol.geom.Point([marker.latitude ,marker.longitude]),
@@ -4488,7 +4493,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
         var markers = { 'content' : null };
         markers.content = result;
-        
+
         $scope.buildVectorMarker(markers);
         $scope.$apply();
       },
@@ -4797,7 +4802,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                 $('body').append('<a id="map-download" href="' + result + '"></a>');
                 $('#map-download')[0].click();
              $('#map-download').remove();
-             
+
              $scope.$apply();
            },
            errorHandler: function (message, exception) {
@@ -4808,6 +4813,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 	  };
 
   $scope.insertMarkers = function () {
+
+    var importMarkers = [];
 
     angular.forEach($scope.importMarkers, function(marker){
 
@@ -4844,7 +4851,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.currentEntity.wktCoordenate = $scope.currentEntity.location.coordinateString;
 
-      markerService.insertMarker( $scope.currentEntity, {
+      $scope.currentEntity.status = 'SAVED';
+
+      importMarkers.push($scope.currentEntity);
+
+      /*markerService.insertMarker( $scope.currentEntity, {
         callback: function (result) {
 
           console.log(result);
@@ -4855,11 +4866,25 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.message = {type: "error", text: message};
           $scope.$apply();
         }
-      });
+      });*/
 
-      $scope.toggleSidebarMenu(300, 'closeButton');
+      //$scope.toggleSidebarMenu(300, 'closeButton');
 
     });
+
+    markerService.insertMarker( importMarkers, {
+      callback: function (result) {
+
+        console.log('Imported');
+        $scope.$apply();
+
+      }, errorHandler: function (message, exception) {
+        $scope.message = {type: "error", text: message};
+        $scope.$apply();
+      }
+    });
+
+    $scope.toggleSidebarMenu(300, 'closeButton');
 
   };
 
@@ -5083,7 +5108,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         });
 
+        var zoom = $scope.map.getView().getZoom();
         $scope.map.getView().fitExtent(extent, $scope.map.getSize());
+        $scope.map.getView().setZoom(zoom);
 
         $scope.$apply();
 
@@ -5147,6 +5174,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
 
     angular.forEach($scope.importLayers, function (layer, index) {
+
+      if(!$scope.shapeFile.form.layer.layerIcon)
+        $scope.shapeFile.form.layer.layerIcon = $scope.shapeFile.form.layer.icon;
 
       var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
@@ -5229,7 +5259,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         errorHandler: function (message, exception) {
 
           $scope.clearImportMarkers();
-          
+
           alert(message);
           $scope.$apply();
         }
