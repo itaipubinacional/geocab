@@ -3249,7 +3249,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         markerAttribute.value = "";
       }
 
-      markerAttribute.attribute = attribute
+      markerAttribute.attribute = attribute;
       markerAttribute.marker = $scope.currentEntity;
       $scope.currentEntity.markerAttribute.push(markerAttribute);
 
