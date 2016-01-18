@@ -1835,7 +1835,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.clearShadowCreatingInternalLayer = function() {
 
-    if ($scope.currentCreatingInternalLayer != undefined && $scope.marker != undefined) {
+    if ($scope.currentCreatingInternalLayer != undefined && $scope.marker != undefined && $scope.marker.layer != undefined) {
 
       var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
@@ -3213,6 +3213,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.currentEntity = new Marker();
 
+    $scope.currentCreatingInternalLayer = {};
+
     $scope.map.removeLayer($scope.currentCreatingInternalLayer);
 
     $scope.screenMarkerOpenned = false;
@@ -3257,8 +3259,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           }
         });
 
-        attribute.photoAlbum.photos = attribute.attribute.files;
+        if(!attribute.photoAlbum) {
+          var photoAlbum = new PhotoAlbum();
+          photoAlbum.photos = new Array();
 
+          attribute.photoAlbum = photoAlbum;
+          attribute.photoAlbum.photos = attribute.attribute.files;
+
+        } else {
+          attribute.photoAlbum.photos = attribute.attribute.files;
+        }
       }
     });
 
@@ -3415,7 +3425,17 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.$apply();
       },
       errorHandler: function (message, exception) {
-        $scope.message = {type: "error", text: message};
+
+        $scope.isLoading = false;
+
+        $scope.msg = {type: "danger", text: message};
+
+        $("div.msgMap").show();
+
+        setTimeout(function () {
+          $("div.msgMap").fadeOut();
+        }, 5000);
+
         $scope.$apply();
       }
     });

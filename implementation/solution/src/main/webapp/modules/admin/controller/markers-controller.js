@@ -1649,7 +1649,16 @@ ront controller of angle won't let enter an invalid URL.
                     }
                 });
 
-                attribute.photoAlbum.photos = attribute.attribute.files;
+                if(!attribute.photoAlbum) {
+                    var photoAlbum = new PhotoAlbum();
+                    photoAlbum.photos = new Array();
+
+                    attribute.photoAlbum = photoAlbum;
+                    attribute.photoAlbum.photos = attribute.attribute.files;
+
+                } else {
+                    attribute.photoAlbum.photos = attribute.attribute.files;
+                }
 
             }
         });
