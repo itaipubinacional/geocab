@@ -109,30 +109,16 @@ public class MyMarkersService
 	 *-------------------------------------------------------------------*/
 	/**
 	 * 
-	 * 
-	 * /** Method to update an {@link Marker}
-	 * 
-	 * @param Marker
-	 * @return Marker
-	 * @throws RepositoryException
+	 * @param marker
+	 * @return
 	 * @throws IOException
+	 * @throws RepositoryException
 	 */
-
 	public Marker updateMarker(Marker marker) throws IOException, RepositoryException
 	{
 		try
 		{
 			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
-
-//			if (!markerTemporary.getLayer().getId().equals(marker.getLayer().getId()))
-//			{
-//				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
-//
-//				if (markerAttributes != null)
-//				{
-//					this.markerAttributeRepository.deleteInBatch(markerAttributes);
-//				}
-//			}
 
 			marker.setLocation(markerTemporary.getLocation());
 

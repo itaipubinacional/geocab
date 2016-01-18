@@ -49,7 +49,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	/**
 	 * Um album de fotos deve estar vinculado á um atributo de uma camada
 	 */
-	@OneToOne(optional = false, cascade = CascadeType.REMOVE)
+	@OneToOne(optional = false, cascade = CascadeType.ALL)
 	private MarkerAttribute markerAttribute;
 
 	/**

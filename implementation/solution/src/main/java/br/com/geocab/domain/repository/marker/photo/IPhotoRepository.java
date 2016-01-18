@@ -44,6 +44,6 @@ public interface IPhotoRepository extends IDataRepository<Photo, Long>
 	@Query(value="SELECT photo " +
 			 " FROM Photo photo WHERE (photo.photoAlbum.markerAttribute.marker.id = :markerId)"+ 
 			 " ORDER BY photo.created DESC")
-	List<Photo> findByMarkerId(@Param("markerId") Long markerId);
+	List<Photo> listByMarkerId(@Param("markerId") Long markerId);
 
 }

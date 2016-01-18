@@ -207,10 +207,17 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 *							BEHAVIORS
 	 *-------------------------------------------------------------------*/
 
-	/*-------------------------------------------------------------------
-	 *						GETTERS AND SETTERS
-	 *-------------------------------------------------------------------*/
-
+	/**
+	 * @return the enabled
+	 */
+	public Boolean getEnabled()
+	{
+		if (enabled == null)
+		{
+			this.setEnabled(false);
+		}
+		return enabled;
+	}
 	/**
 	 * 
 	 */
@@ -242,6 +249,11 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 
 		return authorities;
 	}
+	/*-------------------------------------------------------------------
+	 *						GETTERS AND SETTERS
+	 *-------------------------------------------------------------------*/
+
+	
 
 	/**
 	 * 
@@ -280,7 +292,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	@Transient
 	public boolean isEnabled()
 	{
-		return this.enabled;
+		return this.getEnabled();
 	}
 
 	/*
@@ -339,14 +351,6 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	public void setEmail(String email)
 	{
 		this.email = email;
-	}
-
-	/**
-	 * @return the enabled
-	 */
-	public Boolean getEnabled()
-	{
-		return enabled;
 	}
 
 	/**
