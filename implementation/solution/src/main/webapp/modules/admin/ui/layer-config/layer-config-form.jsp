@@ -172,7 +172,7 @@
             </span>
 
             <br/>
-            <div class="form-item position-relative" style="width: 350px;">
+            <div class="form-item position-relative" style="width: 350px;" ng-if="currentEntity.dataSource">
                 <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
                 <div class="input-group">
                     <input name="layerGroup" type="text" disabled class="form-control"
