@@ -30,10 +30,10 @@
 				</div>
 
 
-				<input type="button" style="margin-right:5px" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
+				<input type="button" style="margin-right:5px;margin-bottom:0px" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
 				/>
 
-				<input type="button" ng-click="clearFilters()" value="<spring:message code='clear.Filters'/>" class="btn btn-default" ng-disabled="currentPage == null"
+				<input type="button" ng-click="clearFilters()" style="margin-bottom:0px" value="<spring:message code='clear.Filters'/>" class="btn btn-default" ng-disabled="currentPage == null"
 						/>
 
 
