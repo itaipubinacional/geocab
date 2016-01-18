@@ -272,7 +272,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <span><b><spring:message code='map.Input-format'/></b></span>
                 <i class="icon-question-sign icon-large" tooltip-placement="right"
-                   tooltip="Selecione o formato de entrada para as coordenadas"></i>
+                   tooltip="<spring:message code='admin.users.coordinates-format-hint'/>"></i>
 
                 <br style="clear: both;">
 
@@ -292,7 +292,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br style="clear: both;">
 
-                <div style="width:100%">
+                <div style="width:100%;margin-top: 10px">
                   <label required>Latitude</label>
                   <input type="text" name="latitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLatitude">
@@ -300,7 +300,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br />
 
-                <div style="width:100%">
+                <div style="width:100%;">
                   <label required>Longitude</label>
                   <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLongitude">
@@ -592,7 +592,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <span><b><spring:message code='map.Input-format'/></b></span>
                 <i class="icon-question-sign icon-large" tooltip-placement="right"
-                   tooltip="Selecione o formato de entrada para as coordenadas"></i>
+                   tooltip="<spring:message code='admin.users.coordinates-format-hint'/>"></i>
 
                 <br style="clear: both;">
 
@@ -619,7 +619,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br style="clear: both;">
 
-                <div style="width:100%">
+                <div style="width:100%;margin-top: 10px">
                   <label required>Latitude</label>
                   <input type="text" name="latitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLatitude">
@@ -627,7 +627,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <br />
 
-                <div style="width:100%;">
+                <div style="width:100%;margin-bottom: 15px">
                   <label required>Longitude</label>
                   <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
                          class="form-control" ng-model="formattedLongitude">
