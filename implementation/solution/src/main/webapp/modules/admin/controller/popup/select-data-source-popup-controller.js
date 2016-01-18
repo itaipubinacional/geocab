@@ -133,14 +133,14 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
         pageRequest.size = 6;
         $scope.pageRequest = pageRequest;
 
-        /*var order = new Order();
+        var order = new Order();
         order.direction = 'ASC';
-        order.property = 'id';
+        order.property = 'name';
 
         $scope.pageRequest.sort = new Sort();
-        $scope.pageRequest.sort.orders = [ order ];*/
+        $scope.pageRequest.sort.orders = [ order ];
 
-        $scope.listDataSourceByFilters( null, pageRequest );
+        $scope.listDataSourceByFilters( null, $scope.pageRequest );
     };
 
     /**
