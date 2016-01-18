@@ -28,6 +28,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +40,7 @@ import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
+import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
@@ -47,6 +49,7 @@ import br.com.geocab.domain.entity.marker.photo.Photo;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.repository.IMetaFileRepository;
+import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
@@ -98,9 +101,20 @@ public class MyMarkersService
 	@Autowired
 	private IMarkerModerationRepository markerModerationRepository;
 
-	// @Autowired
-	// private MessageSource messages;
+	/**
+	 * I18n
+	 */
+	 @Autowired
+	 private MessageSource messages;
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAttributeRepository attributeRepository;
 
+	/**
+	 * 
+	 */
 	@Autowired
 	private IMetaFileRepository metaFileRepository;
 
@@ -116,28 +130,50 @@ public class MyMarkersService
 	 */
 	public Marker updateMarker(Marker marker) throws IOException, RepositoryException
 	{
-		try
-		{
-			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
-
-			marker.setLocation(markerTemporary.getLocation());
-
-			MarkerModeration markerModeration = new MarkerModeration();
-			markerModeration.setMarker(marker);
-
-			markerModeration.setStatus(marker.getStatus());
-			
-			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
-
-			this.markerModerationRepository.save(markerModeration);
-
-			marker = this.markerRepository.save(marker);
-		}
-		catch (DataIntegrityViolationException e)
-		{
-			LOG.info(e.getMessage());
-		}
+		marker.setLocation(this.markerRepository.findOne(marker.getId()).getLocation());
+		
+		validateAttribute(marker.getMarkerAttribute());
+		
+		this.markerRepository.save(marker);
+		
+		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
+		
+		MarkerModeration markerModeration = new MarkerModeration();
+		markerModeration.setMarker(marker);
+		markerModeration.setStatus(marker.getStatus());
+		this.markerModerationRepository.save(markerModeration);
+		
 		return marker;
+	}
+	
+	/**
+	 * Valida os atributos a serem inseridos, caso o atributo seja "required" e não estiver setado, estoura exceção
+	 * @param markerAttributes
+	 */
+	private void validateAttribute(List<MarkerAttribute> markerAttributes)
+	{
+		for (int i = 0; i < markerAttributes.size(); i++)
+		{
+			
+			MarkerAttribute markerAttribute = markerAttributes.get(i);
+			
+			Attribute attribute = attributeRepository.findOne(markerAttribute.getAttribute().getId());
+			
+			if (attribute.getRequired() && attribute.getType() != AttributeType.PHOTO_ALBUM && markerAttribute.getValue() == null)
+			{
+				throw new RuntimeException(messages.getMessage("admin.shape.error.value-attribute-can-not-be-null", null, null));
+			}
+			else if (attribute.getRequired() && attribute.getType() == AttributeType.PHOTO_ALBUM && (markerAttribute.getPhotoAlbum() == null || markerAttribute.getPhotoAlbum().getPhotos() == null || markerAttribute.getPhotoAlbum().getPhotos().size() == 0))
+			{
+				throw new RuntimeException(messages.getMessage("photos.Insert-Photos", null, null));
+			}
+			
+//			if (attribute.getType() == AttributeType.PHOTO_ALBUM && (markerAttribute.getPhotoAlbum() == null || markerAttribute.getPhotoAlbum().getPhotos() == null || markerAttribute.getPhotoAlbum().getPhotos().size() == 0))
+//			{
+//				markerAttributes.remove(i);
+//				throw new RuntimeException(messages.getMessage("photos.Insert-Photos", null, null)); TODO marcar para excluir o photoAlbum aqui
+//			}
+		}
 	}
 
 	/**
@@ -209,12 +245,12 @@ public class MyMarkersService
 
 		for (MarkerAttribute markerAttribute : markersAttributes)
 		{
-			
+			// TODO remover esse if
 			if (markerAttribute.getValue() != null)
 			{
-				/*markerAttribute = */this.markerAttributeRepository.save(markerAttribute);
+				/*markerAttribute =*/ this.markerAttributeRepository.save(markerAttribute);
 				
-				if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
+				if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM && markerAttribute.getPhotoAlbum() != null)
 				{
 					markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
 					
@@ -235,26 +271,24 @@ public class MyMarkersService
 	 * @throws IOException 
 	 */
 	public PhotoAlbum insertPhotoAlbum(PhotoAlbum photoAlbum)
-	{try
 	{
 		/*photoAlbum =*/ photoAlbumRepository.save(photoAlbum);
-	}
-	catch (Exception e)
-	{e.printStackTrace();
-		// TODO: handle exception
-	}
-		
 		// Caso não haja o foto_album dentro da foto, seta lá então.
 		// Caso seja uma inserção de um album de fotos ou uma atualização de um
 		// album de fotos
-		for (Photo photo : photoAlbum.getPhotos())
+		if (photoAlbum.getPhotos() != null)
 		{
-			if (photo.getPhotoAlbum() == null)
+			for (Photo photo : photoAlbum.getPhotos())
 			{
-				photo.setPhotoAlbum(photoAlbum);
+				//TODO verificar remover esse if
+				if (photo.getPhotoAlbum() == null)
+				{
+					photo.setPhotoAlbum(photoAlbum);
+				}
 			}
+			photoAlbum.setPhotos(this.uploadPhoto(photoAlbum));
 		}
-		this.uploadPhoto(photoAlbum.getPhotos());
+		
 		return photoAlbum;
 	}
 	
@@ -263,17 +297,65 @@ public class MyMarkersService
 	 * @param photos
 	 * @return
 	 */
-	public List<Photo> uploadPhoto(List<Photo> photos)
+	public List<Photo> uploadPhoto(PhotoAlbum photoAlbum)
 	{
-		for (Photo photo : photos)
+		
+	    List<Photo> photos = photoAlbum.getPhotos();
+	    
+    	List<Photo> photosDatabase = this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
+    	//Handler para deletar fotos
+		for (Photo photoDatabase : photosDatabase)
 		{
-			photo = this.photoRepository.save(photo);
-
-			photo = this.uploadImg(photo);
+			boolean photoToExclude = true;
+			for (Photo photo : photos)
+			{
+				if (photoDatabase.getId().equals(photo.getId()) )
+				{
+					photoToExclude = false;
+				}
+			}
+			if (photoToExclude)
+			{
+				MetaFile metaFile = null;
+				try
+				{
+					metaFile = this.metaFileRepository.findByPath( photoDatabase.getIdentifier(), true);
+				}
+				catch (RepositoryException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				this.removeImg(metaFile.getId());
+				this.photoRepository.delete(photoDatabase.getId());
+				
+			}
 		}
-		return photos;
+		
+		// Album de fotos já existente
+		if (photos.size() > 0)
+		{
+			for (Photo photo : photos)
+			{
+				if (photo.getId() != null)
+				{
+					// Se não é uma foto nova só atualiza a foto no banco de dados
+					photo = this.photoRepository.save(photo);
+				}
+				else
+				{
+					// Se é uma foto nova, salva a foto no banco de dados e no sistema de arquivos
+					photo = this.photoRepository.save(photo);
+					photo = this.uploadImg(photo);
+				}
+			}
+		}
+		
+		//Se o photoALbum não tem fotos deleta o mesmo
+		return this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
 	}
 	
+		
 	/**
 	 * Salva uma foto e devolve o objeto foto
 	 * @param photo
@@ -408,6 +490,10 @@ public class MyMarkersService
 		return this.markerRepository.findOne(id);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public User getUserMe()
 	{
 		return ContextHolder.getAuthenticatedUser();
@@ -633,11 +719,16 @@ public class MyMarkersService
 	 * @throws IOException
 	 * @throws RepositoryException
 	 */
-	public void removeImg(String metaFileId)
-			throws IOException, RepositoryException
+	public void removeImg(String metaFileId) 
 	{
-
-		this.metaFileRepository.remove(metaFileId);
+		try
+		{
+			this.metaFileRepository.remove(metaFileId);
+		}
+		catch (RepositoryException e)
+		{
+			LOG.info(e.getMessage());	
+		}
 	}
 
 	/**

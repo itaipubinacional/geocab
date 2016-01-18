@@ -109,7 +109,7 @@ public class MarkerService
 	@Autowired
 	private IPhotoRepository photoRepository;
 
-	 /**
+	/**
 	 * I18n
 	 */
 	 @Autowired
@@ -183,34 +183,26 @@ public class MarkerService
 	 */
 	public Marker updateMarker(Marker marker)
 	{
-		try
+			
+		if(marker.getLocation() == null)
 		{
-			
-			if(marker.getLocation() == null)
-			{
-				marker.setLocation(this.markerRepository.findOne(marker.getId()).getLocation());
-			}
-			else
-			{
-				marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
-			}
-	
-			validateAttribute(marker.getMarkerAttribute());
-			
-			/*marker =*/ this.markerRepository.save(marker);
-			
-			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
-			
-			MarkerModeration markerModeration = new MarkerModeration();
-			markerModeration.setMarker(marker);
-			markerModeration.setStatus(marker.getStatus());
-			this.markerModerationRepository.save(markerModeration);
+			marker.setLocation(this.markerRepository.findOne(marker.getId()).getLocation());
 		}
-		catch (Exception e)
+		else
 		{
-			// TODO: handle exception
-			e.printStackTrace();
+			marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
 		}
+
+		validateAttribute(marker.getMarkerAttribute());
+		
+		/*marker =*/ this.markerRepository.save(marker);
+		
+		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
+		
+		MarkerModeration markerModeration = new MarkerModeration();
+		markerModeration.setMarker(marker);
+		markerModeration.setStatus(marker.getStatus());
+		this.markerModerationRepository.save(markerModeration);
 		
 		return marker;
 	}
@@ -497,62 +489,6 @@ public class MarkerService
 		
 		return photo;
 	}
-
-	
-	
-	
-	/**
-	 * Method to update an {@link Marker}
-	 * 
-	 * @param Marker
-	 * @return Marker
-	 * @throws RepositoryException
-	 * @throws IOException
-	 */
-	// @PreAuthorize("hasAnyRole('"+UserRole.ADMINISTRATOR_VALUE+"','"+UserRole.MODERATOR_VALUE+"')") TODO ?? VAI PRECISAR ??
-//	public Marker updateMarker(Marker marker)
-//	{
-//		try
-//		{
-//			Marker markerTemporary = this.markerRepository.findOne(marker.getId());
-//
-////			if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
-////			{
-////				List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
-////
-////				if (markerAttributes != null)
-////				{
-////					this.markerAttributeRepository.deleteInBatch(markerAttributes);
-////				}
-////			}
-//			
-//			if(marker.getLocation() == null)
-//			{
-//				marker.setLocation(markerTemporary.getLocation());
-//			}
-//			else
-//			{
-//				marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
-//			}
-//			
-//			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
-//
-//			marker.setStatus(MarkerStatus.PENDING);
-//
-//			MarkerModeration markerModeration = new MarkerModeration();
-//			markerModeration.setMarker(marker);
-//			markerModeration.setStatus(MarkerStatus.PENDING);
-//
-//			this.markerModerationRepository.save(markerModeration);
-//
-//			marker = this.markerRepository.save(marker);
-//		}
-//		catch (DataIntegrityViolationException e)
-//		{
-//			LOG.info(e.getMessage());
-//		}
-//		return marker;
-//	}
 
 	/**
 	 * Method to remove an {@link Marker}
