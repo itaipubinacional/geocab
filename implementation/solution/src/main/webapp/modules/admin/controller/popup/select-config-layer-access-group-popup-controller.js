@@ -173,7 +173,7 @@ function SelectConfigLayerAccessGroupPopUpController( $scope, $modalInstance, se
 
         var order = new Order();
         order.direction = 'ASC';
-        order.property = 'name';
+        order.property = 'title';
 
         $scope.pageRequest.sort = new Sort();
         $scope.pageRequest.sort.orders = [ order ];

@@ -344,10 +344,10 @@
 							  }
 							]
 						  }
-						}
+						};
 		$scope.pageRequest = pageRequest;
 
-		$scope.listCustomSearchByFilters( null, pageRequest );
+		$scope.listCustomSearchByFilters( null, $scope.pageRequest );
 	};
 
 	/**

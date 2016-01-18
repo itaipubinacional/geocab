@@ -1,4 +1,4 @@
-﻿﻿'use strict';
+﻿'use strict';
 
 /**
  *
@@ -177,7 +177,7 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
 
         var order = new Order();
         order.direction = 'ASC';
-        order.property = 'id';
+        order.property = 'name';
 
         $scope.pageRequest.sort = new Sort();
         $scope.pageRequest.sort.orders = [ order ];

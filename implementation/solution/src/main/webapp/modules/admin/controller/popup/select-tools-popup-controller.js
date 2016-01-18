@@ -65,12 +65,12 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
 
         var order = new Order();
         order.direction = 'ASC';
-        order.property = 'id';
+        order.property = 'description';
 
         $scope.pageRequest.sort = new Sort();
         $scope.pageRequest.sort.orders = [ order ];
 
-        $scope.list();
+        $scope.list($scope.pageRequest);
     };
 
     /**
@@ -80,11 +80,11 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
      * @see filterOptions.filter
      * @see currentPage
      */
-    $scope.list = function( filter ) {
+    $scope.list = function( pageRequest ) {
 
         $scope.showLoading = true;
 
-        accessGroupService.listTools( {
+        accessGroupService.listTools(pageRequest, {
             callback : function(result) {
                 $scope.tools = result;
                 $scope.showLoading = false;

@@ -124,7 +124,7 @@ function SelectLayerConfigPopUpController( $scope, $modalInstance, dataSource, s
 
         var order = new Order();
         order.direction = 'ASC';
-        order.property = 'name';
+        order.property = 'title';
 
         // seta a fonte de dados
         $scope.data.dataSource = dataSource;

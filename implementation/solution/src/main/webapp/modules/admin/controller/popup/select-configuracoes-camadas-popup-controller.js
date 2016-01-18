@@ -122,7 +122,7 @@ function SelectConfiguracoesCamadasPopUpController( $scope, $modalInstance, font
 
         var order = new Order();
         order.direction = 'ASC';
-        order.property = 'id';
+        order.property = 'title';
 
         // seta a fonte de dados
         $scope.data.fonteDados = fonteDados;
