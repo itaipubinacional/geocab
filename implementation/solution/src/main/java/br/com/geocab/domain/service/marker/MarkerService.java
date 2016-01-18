@@ -304,27 +304,6 @@ public class MarkerService
 		
 		return photoAlbum;
 	}
-
-	/**
-	 * Pega a ultima foto salva 
-	 * @param markerId
-	 * @return
-	 */
-	public Photo lastPhotoByMarkerId(Long markerId)
-	{
-		Photo photo = this.photoRepository.listByMarkerId(markerId).get(0);
-		try
-		{
-			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
-			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
-			photo.setImage(fileTransfer);
-		}
-		catch (RepositoryException e)
-		{
-			e.printStackTrace();
-		}
-		return photo;
-	}
 	
 	/**
 	 * Salva todas as fotos no sistema de arquivos
@@ -334,30 +313,10 @@ public class MarkerService
 	public List<Photo> uploadPhoto(PhotoAlbum photoAlbum)
 	{
 		
-		List<Photo> photosDatabase = this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
 	    List<Photo> photos = photoAlbum.getPhotos();
-		// Album de fotos já existente
-		if (photos.size() > 0)
-		{
-			for (Photo photo : photos)
-			{
-				if (photo.getId() != null)
-				{
-					// Se não é uma foto nova só atualiza a foto no banco de dados
-					photo = this.photoRepository.save(photo);
-				}
-				else
-				{
-					// Se é uma foto nova, salva a foto no banco de dados e no sistema de arquivos
-					photo = this.photoRepository.save(photo);
-					photo = this.uploadImg(photo);
-				}
-			}
-		}
-		
-		
-		
-		//Handler para deletar fotos
+	    
+    	List<Photo> photosDatabase = this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
+    	//Handler para deletar fotos
 		for (Photo photoDatabase : photosDatabase)
 		{
 			boolean photoToExclude = true;
@@ -386,9 +345,50 @@ public class MarkerService
 			}
 		}
 		
+		// Album de fotos já existente
+		if (photos.size() > 0)
+		{
+			for (Photo photo : photos)
+			{
+				if (photo.getId() != null)
+				{
+					// Se não é uma foto nova só atualiza a foto no banco de dados
+					photo = this.photoRepository.save(photo);
+				}
+				else
+				{
+					// Se é uma foto nova, salva a foto no banco de dados e no sistema de arquivos
+					photo = this.photoRepository.save(photo);
+					photo = this.uploadImg(photo);
+				}
+			}
+		}
+		
+		
 		
 		//Se o photoALbum não tem fotos deleta o mesmo
 		return this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
+	}
+	
+	/**
+	 * Pega a ultima foto salva 
+	 * @param markerId
+	 * @return
+	 */
+	public Photo lastPhotoByMarkerId(Long markerId)
+	{
+		Photo photo = this.photoRepository.listByMarkerId(markerId).get(0);
+		try
+		{
+			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
+			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
+			photo.setImage(fileTransfer);
+		}
+		catch (RepositoryException e)
+		{
+			e.printStackTrace();
+		}
+		return photo;
 	}
 	
 	/**
