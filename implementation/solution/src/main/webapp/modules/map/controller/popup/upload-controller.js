@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function UploadPopUpController($scope, $modalInstance, $filter, $importService, layer, attribute, attributes) {
+function UploadPopUpController($scope, $modalInstance, $filter, $importService, $translate, layer, attribute, attributes) {
 
 
   $importService("markerService");
@@ -47,7 +47,6 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
    */
 
   $scope.initialize = function () {
-    console.log('initialize');
 
     angular.forEach($scope.attributes, function(attr, index){
 
@@ -123,12 +122,22 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
   $scope.onSuccess = function (files) {
 
-    console.log(files);
-
     $scope.attribute.files = files;
-
     $scope.$apply();
 
+  };
+
+  $scope.onError = function(msg){
+
+    //console.log(msg);
+
+    $scope.msg = {
+      type: "danger",
+      text: $translate(msg)
+    };
+    $scope.fadeMsg();
+
+    $scope.$apply();
   };
 
   $scope.removeChecked = function () {
@@ -229,6 +238,14 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
     $modalInstance.close($scope.attributes);
 
+  };
+
+  $scope.fadeMsg = function(){
+    $("span.error").show();
+
+    setTimeout(function () {
+      $("span.error").fadeOut();
+    }, 5000);
   };
 
 };

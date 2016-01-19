@@ -438,7 +438,7 @@ div.files > div.thumbnail > div.caption label:hover{cursor: pointer}
 div.files > div.thumbnail > div.caption input[type=checkbox]{float: left;word-wrap: break-word;margin: 2px 5px 0 0;}
 div.thumbnail.active{border: 1px solid #428bca;}
 
-div#dropbox{float: left;height: 520px;width: 100%;border: 2px solid #fff;border-right: 1px solid #ccc;position: relative; padding: 15px}
+div#dropbox{float: left;height: auto;min-height: 520px; width: 100%;border: 2px solid #fff;border-right: 1px solid #ccc;position: relative;}
 div#dropbox.over {background-color: #e8f0fe; border: 2px solid #4285f4 }
 div#dropbox > .dropbox {text-align: center; margin-top: 130px}
 div#dropbox > .dropbox p{margin-top: 15px}

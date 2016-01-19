@@ -59,7 +59,6 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
     markerService.findPhotoById(photo.id, {
       callback: function (result) {
-        console.log(result);
         $scope.currentPhoto = result;
         $scope.$apply();
       },

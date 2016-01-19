@@ -484,13 +484,13 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
     $scope.fadeMsg = function(){
 		$("div.msg").show();
-		
+
 	  	setTimeout(function(){
 	  		$("div.msg").fadeOut();
 	  	}, 3000);
 	}
-			
-	
-    
+
+
+
 };
 

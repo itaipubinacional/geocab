@@ -121,3 +121,8 @@ i.loading{background-image: url(../images/ajax-loader-transparent.gif);
     padding-top: 1px;
     position: relative;
     top: 1px;}
+
+img.marker-image{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: 1px solid #ccc;
+    padding: 5px;}
