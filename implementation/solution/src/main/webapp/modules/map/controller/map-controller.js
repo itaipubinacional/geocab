@@ -796,6 +796,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.setMarkerCoordinatesFormat();
 
+        $scope.currentEntity.status = 'PENDING';
+
         layerGroupService.listAllInternalLayerGroups({
           callback: function (result) {
             $scope.selectLayerGroup = [];
@@ -3348,15 +3350,21 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
-  $scope.insertMarker = function (status) {
+  $scope.insertMarkerSaved = function() {
+    $scope.currentEntity.status = 'SAVED';
+    $('#buttonInsert').trigger('click');
+  };
+
+  $scope.insertMarker = function () {
 
     $scope.isLoading = true;
 
     if (!$scope.isBooleanValid()) {
       return false;
     }
-    if (!$scope.form('sidebarMarker').$valid) {
 
+    if (!$scope.form('sidebarMarker').$valid) {
+      $scope.isLoading = false;
       return;
     }
 
@@ -3407,8 +3415,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
 
     $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
-
-    $scope.currentEntity.status = status;
 
     markerService.insertMarker( $scope.currentEntity, {
       callback: function (result) {

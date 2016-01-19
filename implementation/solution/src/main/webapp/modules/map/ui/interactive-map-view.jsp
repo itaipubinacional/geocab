@@ -729,7 +729,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <button
                       id="buttonInsert"
                       class="btn btn-success"
-                      ng-click="insertMarker('PENDING')"
+                      ng-click="insertMarker()"
                       style="float: right;"
                       ng-disabled="isLoading"
                       title="<spring:message code="map.Submit" />"
@@ -739,9 +739,8 @@ uri="http://www.springframework.org/security/tags"%>
                   </button>
 
                   <button
-                      id="savePost"
                       class="btn btn-primary"
-                      ng-click="insertMarker('SAVED')"
+                      ng-click="insertMarkerSaved()"
                       ng-disabled="isLoading"
                       title="<spring:message code="map.Save" />"
                   >
