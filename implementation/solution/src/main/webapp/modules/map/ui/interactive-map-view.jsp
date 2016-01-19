@@ -634,7 +634,7 @@ uri="http://www.springframework.org/security/tags"%>
                 </div>
 
                 <div ng-repeat="attribute in attributesByLayer track by $index"
-                     style="float: left;width: 100%;" class="form-group">
+                     style="position:relative" class="form-group">
 
                   <ng-form name="ngSideMarker" default-button="buttonInsert">
 
