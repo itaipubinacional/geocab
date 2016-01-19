@@ -23,21 +23,16 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
 
       element.on('load', function (event) {
-        console.log('load');
-      });
-
-      angular.element(document).ready(function() {
-        console.log('ready');
+        console.debug('load');
       });
 
       scope.loaded = function(){
-        console.log('loaded');
+        console.debug('loaded');
       };
 
       scope.setFile = function(file){
         scope.fileSelected = file;
         element.find('input[type="text"]').focus();
-        //scope.file.description = file.name;
       };
 
       scope.toggleCheckbox = function(file){
@@ -46,21 +41,15 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       };
 
       scope.$watch('attribute.files', function(newVal, oldVal){
-          scope.files = [];
-          console.log('watch');
-          scope.files = newVal != undefined ? newVal : [];
-          if(newVal)
-            scope.setFile(newVal[0]);
+        scope.files = [];
+        scope.files = newVal != undefined ? newVal : [];
+        if(newVal)
+          scope.setFile(newVal[0]);
       });
 
       scope.$watch('attribute', function(newVal, oldVal){
-        console.log('watch');
         scope.files = newVal.files != undefined ? newVal.files : [];
 
-      });
-
-      scope.$watch('scope', function(n, o){
-        console.log('watch');
       });
 
       //============== DRAG & DROP =============
@@ -106,10 +95,10 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
       dropbox.addEventListener('drop', function (event) {
 
-        scope.$apply(function () {
-          scope.over = false;
-          scope.isLoading = true;
-        });
+        scope.over = false;
+        scope.isLoading = true;
+
+        scope.$apply();
 
         event.preventDefault();
 
@@ -123,7 +112,6 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
             reader.onloadend = (function (readFile) {
               return function(e) {
 
-                console.log(e.target.result);
                 readFile.src = e.target.result;
 
                 var fileToObj = angular.copy(readFile);
@@ -145,18 +133,13 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         }
       }, false);
 
-      //============== DRAG & DROP =============
-
       scope.setFiles = function (element) {
-
-
-        angular.element(dropbox).removeClass('over');
 
         scope.$apply(function (scope) {
 
+          scope.over = false;
           scope.isLoading = true;
 
-          console.log('files:', element.files);
           // Turn the FileList object into an Array
           var files = element.files;
 
@@ -167,7 +150,6 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
             reader.onloadend = (function (readFile) {
               return function (e) {
 
-                console.log(e.target.result);
                 readFile.src = e.target.result;
 
                 var fileToObj = angular.copy(readFile);
@@ -187,8 +169,6 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
             reader.readAsDataURL(file);
           }
 
-          scope.isLoading = false;
-
         });
       };
 
@@ -198,7 +178,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       scope.uploadFile = function(){
         setTimeout( function () {
           angular.element('#files').trigger('click');
-        }, 0)
+        }, 0);
 
       };
     }

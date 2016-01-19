@@ -1,12 +1,12 @@
 ﻿'use strict';
 
 /**
- * 
+ *
  * @param $scope
  * @param $log
  * @param $location
  */
-function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $state, markerAttributes ) {
+function AddAttributeImportPopUpController($scope, $injector, $modalInstance, $state, markerAttributes ) {
 
 
 	$scope.msg = null;
@@ -15,49 +15,29 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 	 * 		 				 	ATTRIBUTES
 	 *-------------------------------------------------------------------*/
 
-    /*-------------------------------------------------------------------
-     * 		 				 	ATTRIBUTES
-     *-------------------------------------------------------------------*/
-    //STATES
-    /**
-     *
-     */
-    $scope.NORMAL_STATE = "grupo-camadas.normal";
-    /**
-     *
-     */
-    $scope.CONFIRM_STATE = "grupo-camadas.confirm";
+	/*-------------------------------------------------------------------
+	 * 		 				 	ATTRIBUTES
+	 *-------------------------------------------------------------------*/
+	//STATES
+	/**
+	 *
+	 */
+	$scope.NORMAL_STATE = "grupo-camadas.normal";
+	/**
+	 *
+	 */
+	$scope.CONFIRM_STATE = "grupo-camadas.confirm";
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 	$scope.currentEntity;
 
-    /**
-     *
-     */
-    $scope.currentState;
+	/**
+	 *
+	 */
+	$scope.currentState;
 
-    /**
-     *
-     * @type {boolean}
-     */
-	var isEqual = false;
-
-	$scope.attributes = [
-		{
-			"name": "Atributo 1",
-			"type": 'TEXT',
-			"required": true,
-			"showAttribute": true,
-		},
-		{
-			"name": "Atributo 2",
-			"type": 'TEXT',
-			"required": true,
-			"showAttribute": true,
-		}
-		];
 
 	$scope.markerAttributes = markerAttributes;
 
@@ -66,13 +46,13 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 	 *-------------------------------------------------------------------*/
 	/**
 	 * Main method that makes the role of front-controller of the screen.
-     * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
-     * When this occurs, gets the State via the $state and calls the initial method of that State.
-     *
-     * If the State is not found, he directs to the listing,
-     * Although the front controller of Angular won't let enter an invalid URL.
+	 * He is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+	 * When this occurs, gets the State via the $state and calls the initial method of that State.
+	 *
+	 * If the State is not found, he directs to the listing,
+	 * Although the front controller of Angular won't let enter an invalid URL.
 	 */
-	$scope.initialize = function() 
+	$scope.initialize = function()
 	{
 		$scope.currentEntity = new Attribute();
 	};
@@ -94,7 +74,7 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 	/**
 	 * Close popup
 	 */
-	$scope.fechaPopup = function () 
+	$scope.fechaPopup = function ()
 	{
 		$modalInstance.close();
 	};
@@ -102,7 +82,7 @@ function AddAttributeImportPopUpController($scope, $injector,$modalInstance, $st
 	/**
 	 *
 	 */
-	$scope.close = function() 
+	$scope.close = function()
 	{
 		$scope.msg = null;
 		$modalInstance.close({attributesByLayer: $scope.markerAttributes});
