@@ -19,13 +19,17 @@
     </tab>
 
   </tabset>-->
-
-  <div ng-if="!files.length" class="row dropbox" draggable="true">
+  <!--<div style="text-align: center;">
+    <i class="loading" style="height: 50px;width: 50px"></i>
+  </div>-->
+  <span>{{ isLoading ? 'Aguarde...' : '' }}</span>
+  <div ng-if="!files.length && !isLoading" class="row dropbox" draggable="true">
     <h3><spring:message code="photos.Drag-And-Drop-The-Files-To-Upload"/></h3>
     <h4><spring:message code="or"/></h4>
     <input type="button" class="btn btn-primary" ng-click="uploadFile()" value="<spring:message code="photos.Select-Files"/>"/>
     <p><spring:message code="photos.MaxSize-File-To-Upload"/></p>
   </div>
+
   <div ng-if="files.length" style="width: 100%;float: left">
 
     <div class="row">
@@ -44,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div>
+    <div style="float: left;overflow: auto;height: 440px;">
       <div class="files" ng-repeat="file in files" class="dropbox" title="{{ file.description ? file.description : file.name }}">
         <div ng-click="setFile(file)" class="thumbnail" ng-class="{'active': file.$$hashKey == fileSelected.$$hashKey}">
           <img ng-src="{{ file.src }}" alt="{{ file.name }}">

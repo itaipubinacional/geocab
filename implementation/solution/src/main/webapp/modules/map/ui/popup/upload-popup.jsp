@@ -12,10 +12,10 @@
 	</div>
 	<div class="modal-body" ng-init="initialize();" style="overflow: auto;max-height: 550px; min-height: 500px">
     <div>
-      <div class="col-md-10" style="padding: 0">
+      <div class="col-md-9" style="padding: 0">
         <upload-file on-success="onSuccess(files)" attribute="attribute"></upload-file>
       </div>
-      <div id="sidenav" class="col-md-2" style="padding: 0">
+      <div id="sidenav" class="col-md-3" style="padding: 0">
         <ul>
           <li ng-repeat="attr in attributesByLayer" ng-click="setAttribute(attr)"
               ng-class="{'active': attr.name == attribute.name}">{{ attr.name }} ({{ attr.files ? attr.files.length : 0 }})</li>

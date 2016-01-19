@@ -17,6 +17,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
     },
     link: function(scope, element, attrs){
 
+      scope.isLoading = false;
       scope.over = false;
       scope.fileSelected = {};
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
@@ -107,6 +108,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
         scope.$apply(function () {
           scope.over = false;
+          scope.isLoading = true;
         });
 
         event.preventDefault();
@@ -129,6 +131,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
                 if(files.length == i) {
                   scope.fileSelected = scope.files[0];
+                  scope.isLoading = false;
                   scope.$apply();
                   scope.onSuccess({
                     files: scope.files
@@ -146,9 +149,13 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
       scope.setFiles = function (element) {
 
+
         angular.element(dropbox).removeClass('over');
 
         scope.$apply(function (scope) {
+
+          scope.isLoading = true;
+
           console.log('files:', element.files);
           // Turn the FileList object into an Array
           var files = element.files;
@@ -168,6 +175,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
                 if (files.length == i) {
                   scope.fileSelected = scope.files[0];
+                  scope.isLoading = false;
                   scope.$apply();
                   scope.onSuccess({
                     files: scope.files
@@ -179,12 +187,10 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
             reader.readAsDataURL(file);
           }
 
-          scope.progressVisible = false;
+          scope.isLoading = false;
 
         });
       };
-
-
 
       if(!scope.fileSelected.name && scope.files.length > 0)
         scope.setFile(scope.files[0]);

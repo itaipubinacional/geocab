@@ -155,7 +155,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                       <br />
 
-                      <div style="width:100%;">
+                      <div style="width:100%; margin-bottom: 15px">
                         <label required>Longitude</label>
                         <input type="text" name="longitude" ng-change="setMarkerCoordinates()"
                                class="form-control" ng-model="formattedLongitude"
