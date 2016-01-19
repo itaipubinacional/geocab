@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
+import org.hibernate.loader.plan.build.internal.CascadeStyleLoadPlanBuildingAssociationVisitationStrategy;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
@@ -49,7 +50,7 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	/**
 	 * Um album de fotos deve estar vinculado á um atributo de uma camada
 	 */
-	@OneToOne(optional = false, cascade = CascadeType.ALL)
+	@OneToOne(optional = false/*, cascade = CascadeType.ALL*/)
 	private MarkerAttribute markerAttribute;
 
 	/**

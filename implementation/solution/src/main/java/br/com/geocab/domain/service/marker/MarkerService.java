@@ -61,6 +61,7 @@ import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
 import br.com.geocab.domain.service.DataSourceService;
+import ucar.ma2.ArrayDouble.D3.IF;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -195,6 +196,12 @@ public class MarkerService
 
 		validateAttribute(marker.getMarkerAttribute());
 		
+		
+//		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
+//		{
+//			System.out.println(markerAttribute.getValue());
+//		}
+		
 		/*marker =*/ this.markerRepository.save(marker);
 		
 		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
@@ -250,16 +257,21 @@ public class MarkerService
 
 		for (MarkerAttribute markerAttribute : markersAttributes)
 		{
-			// TODO remover esse if
 			if (markerAttribute.getValue() != null)
 			{
-				/*markerAttribute =*/ this.markerAttributeRepository.save(markerAttribute);
+				
 				
 				if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM && markerAttribute.getPhotoAlbum() != null)
 				{
+					List<Photo> photos = markerAttribute.getPhotoAlbum().getPhotos();
+					markerAttribute = this.markerAttributeRepository.save(markerAttribute);
+					
+					markerAttribute.getPhotoAlbum().setPhotos(photos);
 					markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
 					
 					markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
+				}else {
+					markerAttribute = this.markerAttributeRepository.save(markerAttribute);
 				}
 			}
 		}
@@ -277,7 +289,23 @@ public class MarkerService
 	 */
 	public PhotoAlbum insertPhotoAlbum(PhotoAlbum photoAlbum)
 	{
-		/*photoAlbum =*/ photoAlbumRepository.save(photoAlbum);
+		try
+		{
+			List<Photo> photos = photoAlbum.getPhotos();
+			
+			photoAlbum = photoAlbumRepository.save(photoAlbum);	
+			
+			photoAlbum.setPhotos(photos);
+//			aux.setPhotos(photoAlbum.getPhotos());
+//			photoAlbum.setIdentifier(aux.getIdentifier());
+			System.out.println("AQUIIIIIIIIIIIIIIIIIIIIIIIIEEEEEEEEEEE ------------ > " + photoAlbum.getIdentifier());
+		}
+		catch (Exception e)
+		{
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 		// Caso não haja o foto_album dentro da foto, seta lá então.
 		// Caso seja uma inserção de um album de fotos ou uma atualização de um
 		// album de fotos
@@ -321,7 +349,7 @@ public class MarkerService
 			}
 			if (photoToExclude)
 			{
-				MetaFile metaFile = null;
+				MetaFile metaFile = null;	
 				try
 				{
 					metaFile = this.metaFileRepository.findByPath( photoDatabase.getIdentifier(), true);
