@@ -258,9 +258,7 @@ public class MarkerService
 		for (MarkerAttribute markerAttribute : markersAttributes)
 		{
 			if (markerAttribute.getValue() != null)
-			{
-				
-				
+			{				
 				if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM && markerAttribute.getPhotoAlbum() != null)
 				{
 					List<Photo> photos = markerAttribute.getPhotoAlbum().getPhotos();
@@ -270,11 +268,38 @@ public class MarkerService
 					markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
 					
 					markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
-				}else {
+				} else {
 					markerAttribute = this.markerAttributeRepository.save(markerAttribute);
 				}
 			}
 		}
+		
+		for (MarkerAttribute markerAttribute : markersAttributes)
+		{
+			if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM && markerAttribute.getPhotoAlbum() != null)
+			{
+				PhotoAlbum photoAlbum = markerAttribute.getPhotoAlbum();
+				if (photoAlbum.getPhotos().size() == 0)
+				{
+					try
+					{
+						markerAttribute = markerAttributeRepository.findOne(photoAlbum.getMarkerAttribute().getId());
+						markerAttribute.setPhotoAlbum(null);
+						markerAttributeRepository.save(markerAttribute);
+						
+						photoAlbumRepository.delete(photoAlbum.getId());
+						
+						markerAttributeRepository.delete(markerAttribute.getId());
+					}
+					catch (Exception e)
+					{
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
 		return markersAttributes;
 	}
 
@@ -296,13 +321,9 @@ public class MarkerService
 			photoAlbum = photoAlbumRepository.save(photoAlbum);	
 			
 			photoAlbum.setPhotos(photos);
-//			aux.setPhotos(photoAlbum.getPhotos());
-//			photoAlbum.setIdentifier(aux.getIdentifier());
-			System.out.println("AQUIIIIIIIIIIIIIIIIIIIIIIIIEEEEEEEEEEE ------------ > " + photoAlbum.getIdentifier());
 		}
 		catch (Exception e)
 		{
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		
@@ -321,8 +342,8 @@ public class MarkerService
 			}
 			photoAlbum.setPhotos(this.uploadPhoto(photoAlbum));
 		}
-		
 		return photoAlbum;
+		
 	}
 	
 	/**
@@ -383,8 +404,6 @@ public class MarkerService
 				}
 			}
 		}
-		
-		
 		
 		//Se o photoALbum não tem fotos deleta o mesmo
 		return this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
