@@ -919,7 +919,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.listMotivesByMarkerModeration = function (markerModerationId) {
         markerModerationService.listMotivesByMarkerModerationId(markerModerationId, {
             callback: function (result) {
-                console.log(result);
                 $scope.motiveMarkerModeration[markerModerationId] = result;
                 $scope.$apply();
             },
@@ -1028,7 +1027,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.cancelMarkerModeration = function (id) {
         markerModerationService.cancelMarkerModeration( id, {
             callback : function(result) {
-                console.log(result);
                 $scope.currentEntity = result;
                 $scope.updateStatus();
                 $scope.changeToListNoVectorMarkers($scope.currentPage);
@@ -1053,7 +1051,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
         markerModerationService.refuseMarker(id, motive, description, {
             callback: function (result) {
-                console.log(result);
                 $scope.currentEntity = result.marker;
                 $scope.updateStatus();
                 $scope.changeToListNoVectorMarkers($scope.currentPage);

@@ -628,9 +628,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
 
-        console.log(formattedLatitude);
-        console.log(formattedLongitude);
-
         formattedLatitude  = parseFloat(formattedLatitude);
         formattedLongitude = parseFloat(formattedLongitude);
 
@@ -673,7 +670,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var shadowStyle = $scope.setShadowMarker();
 
         var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326', 'EPSG:900913');
-        console.log(olCoordinates);
 
         $scope.currentEntity.latitude  = olCoordinates[0];
         $scope.currentEntity.longitude = olCoordinates[1];
@@ -1828,7 +1824,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   $scope.showMarkerDetail = function(marker) {
-    console.log(marker);
 
     $scope.marker = marker;
 
@@ -1919,7 +1914,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $('li.menu-item').each(function (index) {
 
           if ($(this).hasClass('ui-state-active') && !$(this).hasClass('bg-inactive')) {
-            console.log($(this).attr('id'));
             $scope.toggleSidebarMenu(300, '#' + $(this).attr('id'));
           }
 
@@ -2021,15 +2015,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.drag = true;
 
-        console.log($scope.selectedMarkers);
-
       });
 
       dragBox.on('boxstart', function (e) {
 
         $scope.clearShadowCreatingInternalLayer();
         //$scope.clearFeatures();
-        console.log('boxstart');
       });
 
       $scope.map.addInteraction(dragBox);
@@ -2121,7 +2112,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $('li.menu-item').each(function(index){
 
         if($(this).hasClass('ui-state-active') && !$(this).hasClass('bg-inactive')){
-          console.log($(this).attr('id'));
           $scope.toggleSidebarMenu(300, '#' + $(this).attr('id'));
         }
 
@@ -3252,8 +3242,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       if(attribute.attribute.files) {
 
-        console.log(attribute.attribute.files);
-
         angular.forEach(attribute.attribute.files, function(file, index){
 
           if(!file.id) {
@@ -3868,7 +3856,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     markerModerationService.refuseMarker(id, motive, description, {
       callback: function (result) {
-        console.log(result);
         $scope.marker.status = "REFUSED";
         $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-disabled"), dismiss: true};
         $("div.msgMap").show();
@@ -3891,7 +3878,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       var reader = new FileReader();
 
       reader.onload = function (e) {
-        console.log(e);
         $scope.imgResult = e.target.result;
         $scope.$apply();
         $('.marker-image').attr('src', e.target.result);
@@ -4869,8 +4855,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     angular.forEach($scope.importMarkers, function(marker){
 
-      console.log(marker);
-
       $scope.currentEntity = marker;
 
       var markerAttributes = marker.markerAttribute;
@@ -4925,8 +4909,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     markerService.insertMarker( importMarkers, {
       callback: function (result) {
-
-        console.log('Imported');
 
         $scope.isLoading = false;
 
@@ -5330,7 +5312,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     if (!(/\.(shp|dbf|shx)$/i).test(input.value)){
 
-      console.log('File type error');
+      $scope.msg = {
+        type: "danger",
+        text: $translate("map.Invalid-format") + ' .shp, .dbf' + $translate("and") + '.shx',
+        dismiss: true
+      };
+      $scope.fadeMsg();
+
       return false;
     }
 
@@ -5396,7 +5384,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
 
       $scope.attributesByMarker = result;
-      console.log(result);
 
     });
 

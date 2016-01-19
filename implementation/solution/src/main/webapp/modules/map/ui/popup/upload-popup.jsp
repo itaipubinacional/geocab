@@ -7,13 +7,14 @@
 <!DOCTYPE html>
 <html>
 <div class="modal-content">
+  <div ng-include="static/libs/eits-directives/alert/alert.html"></div>
 	<div class="modal-header">
 	  <h3 class="modal-title"><spring:message code="photos.Insert-Photos"/></h3>
 	</div>
 	<div class="modal-body" ng-init="initialize();" style="overflow: auto;max-height: 550px; min-height: 500px">
     <div>
       <div class="col-md-9" style="padding: 0">
-        <upload-file on-success="onSuccess(files)" attribute="attribute"></upload-file>
+        <upload-file on-success="onSuccess(files)" on-error="onError(msg)" attribute="attribute"></upload-file>
       </div>
       <div id="sidenav" class="col-md-3" style="padding: 0">
         <ul>
@@ -24,6 +25,7 @@
     </div>
 	</div>
   <div class="modal-footer">
+    <span style="background-color: initial" class="error">{{ msg.text }}</span>
     <a href="#" ng-click="clearFiles()"><spring:message code="photos.Clear-All"/></a>
     <button class="btn btn-default" ng-click="removeChecked()"><spring:message code="photos.Remove-Selected"/></button>
     <button id="buttonClose" class="btn btn-primary" ng-click="close(false)"><spring:message code="photos.Continue"/></button>

@@ -769,7 +769,6 @@ ront controller of angle won't let enter an invalid URL.
             }
 
             $scope.attributesByMarker = result;
-            console.log(result);
 
         });
 
@@ -995,7 +994,6 @@ ront controller of angle won't let enter an invalid URL.
     $scope.listMotivesByMarkerModeration = function (markerModerationId) {
         markerModerationService.listMotivesByMarkerModerationId(markerModerationId, {
             callback: function (result) {
-                console.log(result);
                 $scope.motiveMarkerModeration[markerModerationId] = result;
                 $scope.$apply();
             },
@@ -1631,8 +1629,6 @@ ront controller of angle won't let enter an invalid URL.
             }
 
             if(attribute.attribute.files) {
-
-                console.log(attribute.attribute.files);
 
                 angular.forEach(attribute.attribute.files, function(file, index){
 

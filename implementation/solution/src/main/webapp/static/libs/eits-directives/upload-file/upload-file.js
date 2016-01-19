@@ -13,7 +13,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
     templateUrl: 'static/libs/eits-directives/upload-file/upload-file.jsp',
     scope: {
       attribute: '=',
-      onSuccess: '&'
+      onSuccess: '&',
+      onError: '&'
     },
     link: function(scope, element, attrs){
 
@@ -21,6 +22,9 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       scope.over = false;
       scope.fileSelected = {};
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
+
+      scope.maxSize = 1;
+      scope.formats = ['image/jpeg', 'image/jpg', 'image/png'];
 
       element.on('load', function (event) {
         console.debug('load');
@@ -51,6 +55,25 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         scope.files = newVal.files != undefined ? newVal.files : [];
 
       });
+
+      scope.isValidFormat = function (fileFormat) {
+        if (scope.formats.indexOf(fileFormat) != -1)
+          return true;
+
+        scope.isLoading = false;
+        scope.onError({msg: 'Invalid-format-only-jpg-png'});
+        scope.$apply();
+      };
+
+      scope.isValidSize = function (fileSize) {
+        var maxSize = (scope.maxSize * 1024) * 1024;
+        if (maxSize > fileSize)
+          return true;
+
+        scope.isLoading = false;
+        scope.onError({msg: 'Invalid-size-max-2-mb'});
+        scope.$apply();
+      };
 
       //============== DRAG & DROP =============
       // source for drag&drop: http://www.webappers.com/2011/09/28/drag-drop-file-upload-with-html5-javascript/
@@ -128,7 +151,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
               }
             })(file);
 
-            reader.readAsDataURL(file);
+            if(scope.isValidFormat(file.type) && scope.isValidSize(file.size))
+              reader.readAsDataURL(file);
           }
         }
       }, false);
@@ -166,7 +190,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
               }
             })(file);
 
-            reader.readAsDataURL(file);
+            if(scope.isValidFormat(file.type) && scope.isValidSize(file.size))
+              reader.readAsDataURL(file);
           }
 
         });
