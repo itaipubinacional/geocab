@@ -1090,12 +1090,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $scope.hasPermissionKML = true;
             enableFileKML();
           }
+          else if (result[i].id == $scope.PERMISSION_SHP) {
+            $scope.hasPermissionSHP = true;
+          }
 
         }
 
         if ($scope.hasPermissionKML == false) {
           $("#menu-item-3").remove();
           $("#tabs-3").remove();
+        }
+
+        if ($scope.hasPermissionSHP == false) {
+          $("#menu-item-4").remove();
+          $("#tabs-4").remove();
         }
 
         $scope.$apply();
