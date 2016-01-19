@@ -34,7 +34,7 @@
                     <th>Ações</th>
                 </tr>
                 </thead>
-                <tbody ui-sortable ng-model="attributes">
+                <tbody ui-sortable ng-model="markerAttributes">
                     <tr ng-repeat="attribute in markerAttributes">
                         <td><input type="text" class="form-control" ng-model="attribute.attribute.name"></td>
                         <td>

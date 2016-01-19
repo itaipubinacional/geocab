@@ -3352,6 +3352,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.insertMarkerSaved = function() {
     $scope.currentEntity.status = 'SAVED';
+    $scope.$apply();
     $('#buttonInsert').trigger('click');
   };
 
