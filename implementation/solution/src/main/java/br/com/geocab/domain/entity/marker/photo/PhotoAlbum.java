@@ -128,7 +128,10 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 */
 	private void generateIdentifier()
 	{
-		this.identifier = String.format( PhotoAlbum.PHOTO_ALBUM_FOLDER, this.getMarkerAttribute().getMarker().getId(), this.getId() );
+		if (this.getMarkerAttribute() != null && this.getMarkerAttribute().getMarker() != null && this.getMarkerAttribute().getMarker().getId() != null)
+		{
+			this.identifier = String.format( PhotoAlbum.PHOTO_ALBUM_FOLDER, this.getMarkerAttribute().getMarker().getId(), this.getId() );
+		}
 	}
 
 	/*-------------------------------------------------------------------

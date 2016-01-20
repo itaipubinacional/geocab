@@ -196,20 +196,22 @@ public class MarkerService
 		validateAttribute(marker.getMarkerAttribute());
 		
 		
-//		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
-//		{
-//			System.out.println(markerAttribute.getValue());
-//		}
-		
 		/*marker =*/ this.markerRepository.save(marker);
-		
+		try
+		{
 		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
+		
+			
 		
 		MarkerModeration markerModeration = new MarkerModeration();
 		markerModeration.setMarker(marker);
 		markerModeration.setStatus(marker.getStatus());
 		this.markerModerationRepository.save(markerModeration);
-		
+		}
+		catch (Exception e)
+		{e.printStackTrace();
+			// TODO: handle exception
+		}
 		return marker;
 	}
 	
