@@ -418,10 +418,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 //                })
 //            }).extend([$scope.mousePositionControl, new ol.control.FullScreen()]),
 
-      controls: ol.control.defaults().extend([
-        new ol.control.ScaleLine(), $scope.mousePositionControl
-      ]),
+      //controls: ol.control.defaults().extend([
+      //  new ol.control.ScaleLine(), $scope.mousePositionControl
+      //]),
 
+      controls: [
+        $scope.mousePositionControl
+      ],
 
       // rotation
       interactions: ol.interaction.defaults({
@@ -3221,9 +3224,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.clearFcMarker = function (close) {
 
     if ($scope.screenMarkerOpenned && close) {
-      //$timeout(function(){
+      $timeout(function(){
         $scope.toggleSidebar(300, '', '#sidebar-marker-create');
-      //}, 400);
+      }, 400);
       $scope.menu.fcMarker = false;
 
       $scope.latitude = null;
