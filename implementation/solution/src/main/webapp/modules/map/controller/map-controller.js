@@ -667,7 +667,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           }))
         });
 
-        var shadowStyle = $scope.setShadowMarker();
+        var styleType = 'marker';
+        if($scope.currentEntity.layer)
+          styleType = false;
+
+        var shadowStyle = $scope.setShadowMarker(styleType);
 
         var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326', 'EPSG:900913');
 
@@ -748,7 +752,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         var coord = evt.coordinate;
         var transformed_coordinate = ol.proj.transform(coord, 'EPSG:900913', 'EPSG:4326');
-        //console.log(transformed_coordinate);
 
         $scope.longitude = transformed_coordinate[0];
         $scope.latitude  = transformed_coordinate[1];
@@ -756,8 +759,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.clearFcMarker(false);
 
         $scope.screenMarkerOpenned = true;
-
-        //$scope.toggleSidebarMarkerCreate(300);
 
         var iconStyle = new ol.style.Style({
           image: new ol.style.Icon({
@@ -1840,7 +1841,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.clearShadowCreatingInternalLayer = function() {
 
-    if (!$scope.currentCreatingInternalLayer && $scope.currentCreatingInternalLayer != undefined && $scope.marker != undefined && $scope.marker.layer != undefined) {
+    if ($scope.currentCreatingInternalLayer != undefined && $scope.marker != undefined && $scope.marker.layer != undefined) {
 
       var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
@@ -3213,9 +3214,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.currentEntity = new Marker();
 
-    $scope.currentCreatingInternalLayer = {};
-
     $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+
+    $scope.currentCreatingInternalLayer = {};
 
     $scope.screenMarkerOpenned = false;
     $scope.attributesByLayer = [];
