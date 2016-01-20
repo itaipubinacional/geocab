@@ -267,9 +267,9 @@ public class AccessGroupService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public List<Tool> listTools()
+	public Page<Tool> listTools(PageRequest pageable)
 	{
-		return this.toolRepository.findAll();
+		return this.toolRepository.findAll(pageable);
 	}
 	
 	/**
