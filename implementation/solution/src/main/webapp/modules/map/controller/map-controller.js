@@ -418,10 +418,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 //                })
 //            }).extend([$scope.mousePositionControl, new ol.control.FullScreen()]),
 
-      controls: ol.control.defaults().extend([
-        new ol.control.ScaleLine(), $scope.mousePositionControl
-      ]),
+      //controls: ol.control.defaults().extend([
+      //  new ol.control.ScaleLine(), $scope.mousePositionControl
+      //]),
 
+      controls: [
+        $scope.mousePositionControl
+      ],
 
       // rotation
       interactions: ol.interaction.defaults({
@@ -609,96 +612,100 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.setMarkerCoordinates = function(){
 
-      var formattedLatitude  = $scope.formattedLatitude.toString();
-      var formattedLongitude = $scope.formattedLongitude.toString();
+      if($scope.formattedLatitude && $scope.formattedLongitude) {
+        var formattedLatitude = $scope.formattedLatitude.toString();
+        var formattedLongitude = $scope.formattedLongitude.toString();
 
-      var regEx = '';
+        var regEx = '';
 
-      if($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
+        if ($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
 
-        regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.\d+?[″|"]\s?[N|S|W|O]?$/;
+          regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.\d+?[″|"]\s?[N|S|W|O]?$/;
 
-        if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
-          formattedLatitude  = $scope.convertDMSToDD(formattedLatitude);
-          formattedLongitude = $scope.convertDMSToDD(formattedLongitude);
-        }
-      }
-
-      regEx = /\d{2}[.|,]\d{6}/;
-
-      if(regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
-
-        formattedLatitude  = parseFloat(formattedLatitude);
-        formattedLongitude = parseFloat(formattedLongitude);
-
-        $scope.latitude  = formattedLatitude;
-        $scope.longitude = formattedLongitude;
-
-        var iconStyle = new ol.style.Style({
-          image: new ol.style.Icon(({
-            anchor: [0.5, 1],
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            src: ''
-          }))
-        });
-
-        $scope.currentCreatingInternalLayer.setStyle(iconStyle);
-
-        $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-
-        //$scope.clearFcMarker();
-
-        if($scope.currentEntity.layer && $scope.currentEntity.layer.layerIcon == undefined) {
-          $scope.currentEntity.layer.layerIcon = $scope.currentEntity.layer.icon;
+          if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+            formattedLatitude = $scope.convertDMSToDD(formattedLatitude);
+            formattedLongitude = $scope.convertDMSToDD(formattedLongitude);
+          }
         }
 
-        var icon = 'static/images/marker.png';
-        if($scope.currentEntity.layer) {
-          icon = $scope.currentEntity.layer.layerIcon;
+        regEx = /\d{2}[.|,]\d{6}/;
+
+        if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+
+          formattedLatitude = parseFloat(formattedLatitude);
+          formattedLongitude = parseFloat(formattedLongitude);
+
+          $scope.latitude = formattedLatitude;
+          $scope.longitude = formattedLongitude;
+
+          var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+              anchor: [0.5, 1],
+              anchorXUnits: 'fraction',
+              anchorYUnits: 'fraction',
+              src: ''
+            }))
+          });
+
+          if($scope.currentCreatingInternalLaye) {
+            $scope.currentCreatingInternalLayer.setStyle(iconStyle);
+            $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+          }
+
+          //$scope.clearFcMarker();
+
+          if ($scope.currentEntity.layer && $scope.currentEntity.layer.layerIcon == undefined) {
+            $scope.currentEntity.layer.layerIcon = $scope.currentEntity.layer.icon;
+          }
+
+          var icon = 'static/images/marker.png';
+          if ($scope.currentEntity.layer) {
+            icon = $scope.currentEntity.layer.layerIcon;
+          }
+
+          var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+              anchor: [0.5, 1],
+              anchorXUnits: 'fraction',
+              anchorYUnits: 'fraction',
+              src: icon
+            }))
+          });
+
+          var styleType = 'marker';
+          if ($scope.currentEntity.layer)
+            styleType = false;
+
+          var shadowStyle = $scope.setShadowMarker(styleType);
+
+          var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326', 'EPSG:900913');
+
+          $scope.currentEntity.latitude = olCoordinates[0];
+          $scope.currentEntity.longitude = olCoordinates[1];
+
+          var iconFeature = new ol.Feature({
+            geometry: new ol.geom.Point([olCoordinates[0], olCoordinates[1]])
+          });
+
+          var layer = new ol.layer.Vector({
+            source: new ol.source.Vector({features: [iconFeature]})
+          });
+
+          layer.setStyle([iconStyle, shadowStyle]);
+
+          $scope.currentCreatingInternalLayer = layer;
+          $scope.map.addLayer(layer);
+
+          var zoom = $scope.map.getView().getZoom();
+
+          var extent = layer.getSource().getExtent();
+          $scope.map.getView().fitExtent(extent, $scope.map.getSize());
+
+          $scope.map.getView().setZoom(zoom);
+
+
+          //$scope.setMarkerCoordinatesFormat();
         }
-
-        var iconStyle = new ol.style.Style({
-          image: new ol.style.Icon(({
-            anchor: [0.5, 1],
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            src: icon
-          }))
-        });
-
-        var styleType = 'marker';
-        if($scope.currentEntity.layer)
-          styleType = false;
-
-        var shadowStyle = $scope.setShadowMarker(styleType);
-
-        var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326', 'EPSG:900913');
-
-        $scope.currentEntity.latitude  = olCoordinates[0];
-        $scope.currentEntity.longitude = olCoordinates[1];
-
-        var iconFeature = new ol.Feature({
-          geometry: new ol.geom.Point([olCoordinates[0], olCoordinates[1]])
-        });
-
-        var layer = new ol.layer.Vector({
-          source: new ol.source.Vector({features: [iconFeature]})
-        });
-
-        layer.setStyle([iconStyle, shadowStyle]);
-
-        $scope.currentCreatingInternalLayer = layer;
-        $scope.map.addLayer(layer);
-
-        var zoom = $scope.map.getView().getZoom();
-
-        var extent = layer.getSource().getExtent();
-        $scope.map.getView().fitExtent(extent, $scope.map.getSize());
-
-        $scope.map.getView().setZoom(zoom);
-
-        //$scope.setMarkerCoordinatesFormat();
       }
 
     };
@@ -1550,9 +1557,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.initializeGMAP = function initializeGMAP() {
 
+    $("#olmap").removeClass('loading');
+    $("gmap").addClass('loading');
+
     // only runs if the currently active forest is not google maps
     if ($scope.mapConf.active != $scope.MAP_TYPE_GMAP) {
 
+      //$("#olmap").css({'background': 'initial'});
 
       // case map active MAP QUEST OSM
       if ($scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM) {
@@ -1570,7 +1581,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
 
       //adjust div css gmap-to show it
-      $("#gmap").css({"width": "100%", "height": "100%"})
+      $("#gmap").css({"width": "100%", "height": "100%"});
 
       // set the mapGoogleOptions
       $scope.mapGoogle = new google.maps.Map(document.getElementById("gmap"), $scope.mapGoogleOptions);
@@ -1590,6 +1601,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       // set the view from google maps
       $scope.view.setCenter($scope.view.getCenter());
       $scope.view.setZoom($scope.view.getZoom());
+
     }
 
     //$scope.mapGoogle.setMapTypeId('hybrid');
@@ -1610,7 +1622,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     setTimeout(function(){
       $('.gmnoprint:eq(4)').hide();
-    }, 1000);
+    }, 3000);
 
   };
 
@@ -1618,6 +1630,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * Method that initializes the Open Street Map map and its settings
    */
   $scope.initializeOSM = function initializeOSM() {
+
+    $("#olmap").addClass('loading');
+    $("gmap").removeClass('loading');
 
     // only runs if the map currently active is not the OSM
     if ($scope.mapConf.active != $scope.MAP_TYPE_OSM) {
@@ -1661,6 +1676,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    *
    */
   $scope.initializeMapQuestOSM = function () {
+
+    $("#olmap").addClass('loading');
+    $("gmap").removeClass('loading');
 
     // only runs if the map active in memento is not the OSM
     if ($scope.mapConf.active != $scope.MAP_TYPE_MAPQUEST_OSM) {
@@ -3206,9 +3224,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.clearFcMarker = function (close) {
 
     if ($scope.screenMarkerOpenned && close) {
-      //$timeout(function(){
+      $timeout(function(){
         $scope.toggleSidebar(300, '', '#sidebar-marker-create');
-      //}, 400);
+      }, 400);
       $scope.menu.fcMarker = false;
 
       $scope.latitude = null;
@@ -3530,7 +3548,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     var shadowStyle = $scope.setShadowMarker();
 
-    $scope.currentCreatingInternalLayer.setStyle([iconStyle, shadowStyle]);
+    if($scope.currentCreatingInternalLayer)
+      $scope.currentCreatingInternalLayer.setStyle([iconStyle, shadowStyle]);
 
     layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId, {
       callback: function (result) {

@@ -1399,6 +1399,8 @@ ront controller of angle won't let enter an invalid URL.
 
                 $scope.itensMarcados = [];
 
+                $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-published"), dismiss: true};
+
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
@@ -1415,6 +1417,8 @@ ront controller of angle won't let enter an invalid URL.
             callback: function (result) {
 
                 $scope.changeToList();
+
+                $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-published"), dismiss: true};
 
                 $scope.$apply();
             },
@@ -1439,6 +1443,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.changeToList();
 
                 $scope.itensMarcados = [];
+                $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
 
                 $scope.$apply();
             },
@@ -1516,8 +1521,9 @@ ront controller of angle won't let enter an invalid URL.
                 //$scope.removeInternalLayer($scope.marker.layer.id, function (layerId) {
                 //    $scope.addInternalLayer(layerId);
                 //});
-
                 $scope.changeToList();
+
+                $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
 
                 $scope.apply();
 
@@ -1558,25 +1564,6 @@ ront controller of angle won't let enter an invalid URL.
 
     };
 
-    $scope.removeMarker = function () {
-        markerService.removeMarker($scope.currentEntity.id, {
-            callback: function (result) {
-
-                //$scope.removeInternalLayer($scope.marker.layer.id, function (layerId) {
-                //    $scope.addInternalLayer(layerId);
-                //});
-
-                $scope.changeToList();
-
-                $scope.apply();
-
-            },
-            errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
-                $scope.$apply();
-            }
-        });
-    }
     /**
      * Calls the dialog to accept a marker
      */
@@ -1702,6 +1689,8 @@ ront controller of angle won't let enter an invalid URL.
             callback: function (result) {
 
                 $scope.changeToList();
+
+                $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully"), dismiss: true};
 
                 $scope.$apply();
             },
