@@ -61,7 +61,6 @@ import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoRepository;
 import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
 import br.com.geocab.domain.service.DataSourceService;
-import ucar.ma2.ArrayDouble.D3.IF;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -163,7 +162,7 @@ public class MarkerService
 		
 		validateAttribute(marker.getMarkerAttribute());
 		
-		marker = this.markerRepository.save(marker);
+		marker = this.markerRepository.save(marker);	
 
 		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
 		
@@ -268,7 +267,9 @@ public class MarkerService
 					markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
 					
 					markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
-				} else {
+				} 
+				else 
+				{
 					markerAttribute = this.markerAttributeRepository.save(markerAttribute);
 				}
 			}

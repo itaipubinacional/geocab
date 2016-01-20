@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
@@ -76,20 +78,17 @@ public class ShapeFileService
 {
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
-	 *-------------------------------------------------------------------*/	
-	/**
-	 * shapeFile path
-	 */
-	@Value("${path.shapefiles}")
-	private String pathShapefiles;	
+	 *-------------------------------------------------------------------*/
 	/**
 	 * export shapeFile path
 	 */
-	private String pathShapefilesExport = pathShapefiles + "export/";
+	@Value("${path.shapefiles:/tmp/geocab/files/shapefile/}" + "export/")
+	private String pathShapefilesExport;
 	/**
 	 * import shapeFile path
 	 */
-	private String pathShapefilesImport = pathShapefiles + "import/";
+	@Value("${path.shapefiles:/tmp/geocab/files/shapefile/}" + "import/")
+	private String pathShapefilesImport;
 	/**
 	 * Log
 	 */
@@ -113,13 +112,18 @@ public class ShapeFileService
 	 *				 		    CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
 	
+	/*-------------------------------------------------------------------
+	 *				 		    BEHAVIORS
+	 *-------------------------------------------------------------------*/
+	 	
+	
 	/**
-	 * Sempre que o component for instanciado, 
-	 * o mesmo vai verificar se existe a pasta shapefile e caso a mesma não exista será criada
+	 * Logo após o component ser instanciado, 
+	 * o mesmo verifica se existe a pasta shapefile e caso a mesma não exista será criada
 	 */
-	public ShapeFileService()
+	@PostConstruct
+	public void createPaths()
 	{
-		super();
 		try
 		{
 			new File(pathShapefilesExport).mkdirs();
@@ -131,11 +135,7 @@ public class ShapeFileService
 			LOG.info(e.getMessage());
 		}
 	}
-		
 	
-	/*-------------------------------------------------------------------
-	 *				 		    BEHAVIORS
-	 *-------------------------------------------------------------------*/
 	/**
 	 * TODO alterar shapeFile para shapefile
 	 * 
@@ -244,6 +244,26 @@ public class ShapeFileService
 				}
 				markers.add(marker);
 	        }
+	    	
+	    	//TODO MELHORAR ESSE ALGORITMO DE REORDENAÇÃO
+	    	
+	    	Marker markerAux = new Marker();
+	    	for (Marker marker : markers)
+			{
+				if (markerAux.getMarkerAttribute().size() < marker.getMarkerAttribute().size())
+				{
+					markerAux = marker;
+				}
+			}
+	    	for (Marker marker : markers)
+			{
+				if (markerAux.getId() == marker.getId())
+				{
+					markers.remove(marker);
+					markers.add(markerAux);
+					break;
+				}
+			}
 		    	
 		    return markers;
 		}
@@ -322,7 +342,7 @@ public class ShapeFileService
 		
 		final List<Layer> layers = groupByLayers(markers);
 		
-		String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis() );
+		final String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis() );
 		 
 		for (final Layer layer : layers)
 		{
@@ -446,16 +466,21 @@ public class ShapeFileService
 	 */
 	private static final MarkerAttribute extractAttributes(final SimpleFeature feature, final Attribute attribute, final Property property, final Marker marker)
 	{		
-		
+		final String propertyDescriptor = property.getDescriptor().getName().getLocalPart();
+		final Object featureAttribute = feature.getAttribute(propertyDescriptor);
+		if (featureAttribute == null)
+		{
+			return new MarkerAttribute(null, "", marker, attribute);
+		}
 		// Se a feature for no formato tipo data, deve formatar a mesma
 		if (attribute.getType() == AttributeType.DATE)
 		{
-			Date date = (Date) feature.getAttribute(property.getDescriptor().getName().getLocalPart());
+			Date date = (Date) featureAttribute;
 			return new MarkerAttribute(null, new SimpleDateFormat("dd/MM/yyyy").format(date), marker, attribute); 
 		}
 		else if (attribute.getType() == AttributeType.BOOLEAN)
 		{
-			if ((boolean) feature.getAttribute(property.getDescriptor().getName().getLocalPart()))
+			if ((boolean) featureAttribute)
 			{
 				return new MarkerAttribute(null, "Yes", marker, attribute);
 			}
@@ -466,7 +491,7 @@ public class ShapeFileService
 		}
 		else
 		{
-			return new MarkerAttribute(null, feature.getAttribute(property.getDescriptor().getName().getLocalPart()).toString(), marker, attribute);
+			return new MarkerAttribute(null, featureAttribute.toString(), marker, attribute);
 		}
 	}
 	
@@ -480,20 +505,22 @@ public class ShapeFileService
 	 */
 	private static final SimpleFeature extractFeatures(final SimpleFeature feature, final MarkerAttribute markerAttribute)
 	{		
+		final String attribute = markerAttribute.getAttribute().getName().replaceAll(" ", "_");
+		
 		if (markerAttribute.getValue().toLowerCase().trim().equals("yes") || markerAttribute.getValue().toLowerCase().trim().equals("sim") && markerAttribute.getAttribute().getType() == AttributeType.BOOLEAN)
 		{
-			feature.setAttribute(markerAttribute.getAttribute().getName(), new Boolean(true));
+			feature.setAttribute(attribute, new Boolean(true));
 		}
 		else if (markerAttribute.getValue().toLowerCase().trim().equals("no") || markerAttribute.getValue().toLowerCase().trim().equals("nao") && markerAttribute.getAttribute().getType() == AttributeType.BOOLEAN)
 		{
-			feature.setAttribute(markerAttribute.getAttribute().getName(), new Boolean(false));
+			feature.setAttribute(attribute, new Boolean(false));
 		}
 		else if (markerAttribute.getAttribute().getType() == AttributeType.DATE)
 		{
 			try
 			{
 				Date date = new SimpleDateFormat("dd/MM/yyyy").parse(markerAttribute.getValue());
-				feature.setAttribute(markerAttribute.getAttribute().getName(), date);
+				feature.setAttribute(attribute, date);
 			}
 			catch (ParseException e)
 			{
@@ -504,7 +531,7 @@ public class ShapeFileService
 		}
 		else
 		{
-			feature.setAttribute(markerAttribute.getAttribute().getName(), markerAttribute.getValue());
+			feature.setAttribute(attribute, markerAttribute.getValue());
 		}
 		
 		return feature;

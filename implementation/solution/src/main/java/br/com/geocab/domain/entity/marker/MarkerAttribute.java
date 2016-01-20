@@ -47,7 +47,7 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	 * 
 	 */
 	@NotNull
-	private String value;
+	private String value = "";
 	/**
 	 * 
 	 */
@@ -146,26 +146,34 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	/*-------------------------------------------------------------------
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
-	
-	/*-------------------------------------------------------------------
-	 *							SETTERS AND GETTERS
-	 *-------------------------------------------------------------------*/
 	/**
 	 * @return the value
 	 */
 	public String getValue()
 	{
+		if (this.value == null)
+		{
+			this.value = "";
+		}
 		return value;
 	}
-
+	
 	/**
 	 * @param value
 	 *            the value to set
 	 */
 	public void setValue(String value)
-	{
+	{	
+		if (value == null)
+		{
+			value = "";
+		}
 		this.value = value;
 	}
+	
+	/*-------------------------------------------------------------------
+	 *							SETTERS AND GETTERS
+	 *-------------------------------------------------------------------*/
 
 	/**
 	 * @return the marker

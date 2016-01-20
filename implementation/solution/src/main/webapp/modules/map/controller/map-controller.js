@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 /**
  *
@@ -4866,7 +4866,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       var markerAttributes = marker.markerAttribute;
 
       var layer = new Layer();
-      layer.id = $scope.shapeFile.form.layer.id;
+
+      //TODO substituir por if ternário
+      if($scope.shapeFile.form.layer.id){
+        layer.id = $scope.shapeFile.form.layer.id;
+      }else if ($scope.shapeFile.form.layer.layerId){
+        layer.id = $scope.shapeFile.form.layer.layerId;  
+      }
+
       $scope.currentEntity.layer = layer;
 
       $scope.currentEntity.markerAttribute = [];
@@ -4918,10 +4925,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.isLoading = false;
 
+        $scope.msg = {
+          type: "success",
+          text: $translate("map.Markers-inserted-succesfully"),
+          dismiss: true
+        };
+        $scope.fadeMsg();
         $scope.$apply();
 
       }, errorHandler: function (message, exception) {
-        $scope.message = {type: "error", text: message};
+        $scope.msg = {type: "error", text: message};
         $scope.$apply();
       }
     });
