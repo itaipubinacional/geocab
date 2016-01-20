@@ -1009,7 +1009,7 @@ uri="http://www.springframework.org/security/tags"%>
               </div>
             </div>
 
-            <div id="tabs-4" style="min-width: 338px; position: absolute; top:0; right:0; left:0; bottom:0;">
+            <div id="tabs-4" style="min-width: 338px; position: absolute; top:0; right:0; left:0; bottom:0;overflow-x: hidden;height: auto;overflow-y: overlay;">
 
               <div class="sidebar-content-header"><spring:message code="map.SHP-export-import"/></div>
               <br style="clear: both; ">
