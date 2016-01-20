@@ -19,7 +19,7 @@
   </div>
   <div ng-if="files.length" style="width: 100%;float: left">
     <div class="row" ng-if="!isLoading">
-      <div class="col-md-9">
+      <div class="col-md-8">
         <div class="form-group" style="width:100%;margin-bottom: 10px; padding-right: 10px">
           <label class="detail-label">
             <spring:message code="Description"/>

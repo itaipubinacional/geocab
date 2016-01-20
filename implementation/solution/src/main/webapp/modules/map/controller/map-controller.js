@@ -3210,6 +3210,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.toggleSidebar(300, '', '#sidebar-marker-create');
       //}, 400);
       $scope.menu.fcMarker = false;
+
+      $scope.latitude = null;
+      $scope.longitude = null;
+      $scope.formattedLatitude = null;
+      $scope.formattedLongitude = null;
     }
 
     $scope.currentEntity = new Marker();
