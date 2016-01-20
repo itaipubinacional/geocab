@@ -1554,9 +1554,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.initializeGMAP = function initializeGMAP() {
 
+    $("#olmap").removeClass('loading');
+    $("gmap").addClass('loading');
+
     // only runs if the currently active forest is not google maps
     if ($scope.mapConf.active != $scope.MAP_TYPE_GMAP) {
 
+      //$("#olmap").css({'background': 'initial'});
 
       // case map active MAP QUEST OSM
       if ($scope.mapConf.active == $scope.MAP_TYPE_MAPQUEST_OSM) {
@@ -1574,7 +1578,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
 
       //adjust div css gmap-to show it
-      $("#gmap").css({"width": "100%", "height": "100%"})
+      $("#gmap").css({"width": "100%", "height": "100%"});
 
       // set the mapGoogleOptions
       $scope.mapGoogle = new google.maps.Map(document.getElementById("gmap"), $scope.mapGoogleOptions);
@@ -1594,6 +1598,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       // set the view from google maps
       $scope.view.setCenter($scope.view.getCenter());
       $scope.view.setZoom($scope.view.getZoom());
+
     }
 
     //$scope.mapGoogle.setMapTypeId('hybrid');
@@ -1614,7 +1619,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     setTimeout(function(){
       $('.gmnoprint:eq(4)').hide();
-    }, 1000);
+    }, 3000);
 
   };
 
@@ -1622,6 +1627,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * Method that initializes the Open Street Map map and its settings
    */
   $scope.initializeOSM = function initializeOSM() {
+
+    $("#olmap").addClass('loading');
+    $("gmap").removeClass('loading');
 
     // only runs if the map currently active is not the OSM
     if ($scope.mapConf.active != $scope.MAP_TYPE_OSM) {
@@ -1665,6 +1673,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    *
    */
   $scope.initializeMapQuestOSM = function () {
+
+    $("#olmap").addClass('loading');
+    $("gmap").removeClass('loading');
 
     // only runs if the map active in memento is not the OSM
     if ($scope.mapConf.active != $scope.MAP_TYPE_MAPQUEST_OSM) {

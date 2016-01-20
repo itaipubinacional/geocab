@@ -23,6 +23,10 @@
     right: 4px !important;
 }
 
+#gmap.loading, #olmap.loading{
+    background: transparent url("../../images/ajax-loader-transparent.gif") no-repeat center center;
+}
+
 /* TOOLTIP MOUSE POSITION */
 #info {
     position: absolute;
