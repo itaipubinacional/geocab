@@ -88,12 +88,12 @@
 		</div>-->
 
 		<div class="row" ng-if="!itensMarcados.length">
-			<div class="col-md-4">
+			<div class="col-md-5">
 				<h4 style="margin: 0;height: 42px;line-height: 42px"><spring:message code="admin.access-group.my-markers"/></h4>
 			</div>
 		</div>
 		<div class="row" ng-if="itensMarcados.length" style="height: 42px;line-height: 42px">
-			<div class="col-md-4">
+			<div class="col-md-5">
 				<h4 ng-if="itensMarcados.length > 1">{{itensMarcados.length}}
 					<spring:message code="admin.marker-moderation.Selected-items"/>
 				</h4>
@@ -117,7 +117,7 @@
 			<!--<i style="font-size: 18px" class="icon itaipu-icon-delete"></i>-->
 			<!--</button>-->
 			<!--</div>-->
-			<div class="col-md-4 col-md-offset-4">
+			<div class="col-md-7">
 
 				<button type="button" class="btn btn-default pull-right" name="btnSave" ng-click="removeMarkersModal()">
           <i class="itaipu-icon-delete"></i>
