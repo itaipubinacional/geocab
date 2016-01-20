@@ -1040,7 +1040,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <!--<p><b><spring:message code="admin.filter-active-layers"/></b></p>-->
 
                 <div>
-                  <select placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
+                  <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer'/>" name="camada"
                           ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                           ng-model="shapeFile.filter.layer" chosen class="form-control"
                           ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
