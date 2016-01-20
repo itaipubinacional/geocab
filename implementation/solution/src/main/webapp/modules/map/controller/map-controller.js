@@ -5126,35 +5126,37 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     markerService.listMarkerByFilters(layer, $scope.shapeFile.filter.status, $scope.shapeFile.filter.dateStart, $scope.shapeFile.filter.dateEnd, userEmail, null, {
       callback: function (result) {
 
-        $scope.internalLayers.forEach(function(layer) {
-          var marker = layer.feature.getProperties().marker;
+        if(result.content.length) {
+          $scope.internalLayers.forEach(function (layer) {
+            var marker = layer.feature.getProperties().marker;
 
-          var index = $filter('filter')(result.content, {id: marker.id})[0];
+            var index = $filter('filter')(result.content, {id: marker.id})[0];
 
-          if(index) {
-            $scope.map.addLayer(layer.layer);
-            $scope.exportLayers.push(layer);
-            $scope.exportMarkers.push(marker);
-          }
+            if (index) {
+              $scope.map.addLayer(layer.layer);
+              $scope.exportLayers.push(layer);
+              $scope.exportMarkers.push(marker);
+            }
 
-        });
+          });
 
-        var coordinates = [];
-        var extent = '';
+          var coordinates = [];
+          var extent = '';
 
-        angular.forEach(result.content, function(marker){
+          angular.forEach(result.content, function (marker) {
 
-          var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
-          coordinates.push(geometry.getCoordinates());
-          extent = new ol.extent.boundingExtent(coordinates);
+            var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+            coordinates.push(geometry.getCoordinates());
+            extent = new ol.extent.boundingExtent(coordinates);
 
-        });
+          });
 
-        var zoom = $scope.map.getView().getZoom();
-        $scope.map.getView().fitExtent(extent, $scope.map.getSize());
-        $scope.map.getView().setZoom(zoom);
+          var zoom = $scope.map.getView().getZoom();
+          $scope.map.getView().fitExtent(extent, $scope.map.getSize());
+          $scope.map.getView().setZoom(zoom);
 
-        $scope.$apply();
+          $scope.$apply();
+        }
 
       },
       errorHandler: function (message, exception) {
