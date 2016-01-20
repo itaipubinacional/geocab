@@ -1035,7 +1035,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <hr style="border-color: #d9d9d9;"/>
 
               </div>
-              <div ng-if="isExport && !isLoading">
+              <div ng-if="isExport">
 
                 <!--<p><b><spring:message code="admin.filter-active-layers"/></b></p>-->
 
