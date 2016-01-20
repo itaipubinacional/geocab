@@ -342,7 +342,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             },
 
             {
-                displayName: $translate('admin.marker-moderation.Date-posting'),
+                displayName: $translate('admin.marker-moderation.Created-at'),
                 width: '150px',
                 field: 'created',
                 cellTemplate:

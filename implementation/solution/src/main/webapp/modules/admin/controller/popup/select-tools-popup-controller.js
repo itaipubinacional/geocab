@@ -86,7 +86,7 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
 
         accessGroupService.listTools(pageRequest, {
             callback : function(result) {
-                $scope.tools = result;
+                $scope.tools = result.content;
                 $scope.showLoading = false;
                 $scope.$apply();
 
