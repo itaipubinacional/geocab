@@ -4905,7 +4905,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var markerAttribute = new MarkerAttribute();
 
         angular.forEach(markerAttributes, function(attr){
-          if(attr.attribute.name == val.name && attr.attribute.type == val.type) {
+          if(attr.attribute.name + ' (' + attr.attribute.type + ')' == val.option) {
             markerAttribute.value = attr.value;
           }
         });
