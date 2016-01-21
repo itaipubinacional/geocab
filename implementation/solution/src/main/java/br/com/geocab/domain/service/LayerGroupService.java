@@ -866,9 +866,6 @@ public class LayerGroupService
 				{
 					
 					JSONObject jsonOb = (JSONObject) propertiesArray.get(i);
-//					FieldLayer fieldLayer = new FieldLayer();
-//					fieldLayer.setName(jsonOb.get("name").toString());
-//					fieldLayer.set(jsonOb.get("type").toString());
 							
 					LayerField layerField = new LayerField();
 					
@@ -1005,22 +1002,6 @@ public class LayerGroupService
 		layer.setName(layerDatabase.getName());
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		
-		
-		//Pega os atributos para serem salvos no banco de dados
-//		List<Attribute> attributesToSave = layer.getAttributes();
-		
-		//Seta 'null' nos atributos da camada para o hibernate não dar cascade nos mesmos
-//		layer.setAttributes(null);
-		
-		//Atualiza a camada
-//		layer =	this.layerRepository.save( layer );
-		
-		//Atualiza todos os atributos antes separadamente da camada. Assim o sistema não fica confiado ao cascade do hibernate
-//		for (Attribute attribute : attributesToSave)
-//		{
-//			this.attributeRepository.save(attribute);
-//		}
-		
 		return this.layerRepository.save( layer );
 	}
 	
@@ -1045,7 +1026,7 @@ public class LayerGroupService
 		}
 		catch (ConstraintViolationException e)
 		{
-			
+			e.printStackTrace();
 		}
 		
 	}
@@ -1090,7 +1071,6 @@ public class LayerGroupService
 			if( layer.getDataSource().getUrl() != null) {
 				layer.setLegend(getLegendLayerFromGeoServer(layer));
 			}
-			
 		}
 		
 		return layers;
@@ -1188,7 +1168,6 @@ public class LayerGroupService
 				System.out.println(e.getMessage()	);
 				continue;
 			}
-			
 		}
 		
 		return listFeatures;
@@ -1227,13 +1206,6 @@ public class LayerGroupService
 		
 		return this.attributeRepository.listAttributeByLayer(layerId);
 	}
-	/*
-	public List<File> listIcons(){
-		//File diretorio = new File(); 
-		//InputStream input = getClass().getResourceAsStream("/main/webapp/static/icons");
-		File folder = new File("/main/webapp/static/icons");
-		
-	}*/
 	
 	/**
 	 * Method that return a list of tools by user access group

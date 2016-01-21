@@ -3355,7 +3355,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.$apply();
       },
       errorHandler: function (message, exception) {
-        $scope.message = {type: "error", text: message};
+
+        $scope.msg = {type: "danger", text: message, dismiss: true};
+        $("div.msgMap").show();
+
+        setTimeout(function () {
+          $("div.msgMap").fadeOut();
+        }, 5000);
+
         $scope.$apply();
       }
     });

@@ -17,17 +17,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.codec.binary.Base64;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,23 +40,12 @@ import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
-import br.com.geocab.domain.entity.datasource.DataSource;
-import br.com.geocab.domain.entity.layer.Attribute;
-import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.marker.photo.Photo;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
-import br.com.geocab.domain.repository.IMetaFileRepository;
-import br.com.geocab.domain.repository.attribute.IAttributeRepository;
-import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
-import br.com.geocab.domain.repository.marker.IMarkerRepository;
-import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
-import br.com.geocab.domain.repository.marker.photo.IPhotoRepository;
-import br.com.geocab.domain.repository.markermoderation.IMarkerModerationRepository;
-import br.com.geocab.domain.service.DataSourceService;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -70,60 +55,11 @@ import br.com.geocab.domain.service.DataSourceService;
 @Service
 @Transactional
 @RemoteProxy(name = "markerService")
-public class MarkerService
+public class MarkerService extends AbstractMarkerService
 {
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	/**
-	 * Log
-	 */
-	private static final Logger LOG = Logger.getLogger(DataSourceService.class.getName());
-
-	/**
-	 * Repository of {@link DataSource}
-	 */
-	@Autowired
-	private IMarkerRepository markerRepository;
-
-	/**
-	 * 
-	 */
-	@Autowired
-	private IMarkerAttributeRepository markerAttributeRepository;
-
-	/**
-	 * 
-	 */
-	@Autowired
-	private IMarkerModerationRepository markerModerationRepository;
-
-	/**
-	 * 
-	 */
-	@Autowired
-	private IPhotoAlbumRepository photoAlbumRepository;
-	/**
-	 * 
-	 */
-	@Autowired
-	private IPhotoRepository photoRepository;
-
-	/**
-	 * I18n
-	 */
-	 @Autowired
-	 private MessageSource messages;
-	/**
-	 * 
-	 */
-	@Autowired
-	private IAttributeRepository attributeRepository;
-	/**
-	 * 
-	 */
-	@Autowired
-	private IMetaFileRepository metaFileRepository;
 
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
@@ -157,7 +93,6 @@ public class MarkerService
 
 		marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
 
-		//marker.setStatus(MarkerStatus.SAVED);
 		marker.setUser(user);
 		
 		validateAttribute(marker.getMarkerAttribute());
@@ -196,221 +131,19 @@ public class MarkerService
 		validateAttribute(marker.getMarkerAttribute());
 		
 		
-		/*marker =*/ this.markerRepository.save(marker);
-		try
-		{
-		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
+		this.markerRepository.save(marker);
 		
-			
+		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
 		
 		MarkerModeration markerModeration = new MarkerModeration();
 		markerModeration.setMarker(marker);
 		markerModeration.setStatus(marker.getStatus());
 		this.markerModerationRepository.save(markerModeration);
-		}
-		catch (Exception e)
-		{e.printStackTrace();
-			// TODO: handle exception
-		}
+		
 		return marker;
 	}
 	
-	/**
-	 * Valida os atributos a serem inseridos, caso o atributo seja "required" e não estiver setado, estoura exceção
-	 * @param markerAttributes
-	 */
-	private void validateAttribute(List<MarkerAttribute> markerAttributes)
-	{
-		for (int i = 0; i < markerAttributes.size(); i++)
-		{
-			
-			MarkerAttribute markerAttribute = markerAttributes.get(i);
-			
-			Attribute attribute = attributeRepository.findOne(markerAttribute.getAttribute().getId());
-			
-			if (attribute.getRequired() && attribute.getType() != AttributeType.PHOTO_ALBUM && markerAttribute.getValue() == null)
-			{
-				throw new RuntimeException(messages.getMessage("admin.shape.error.value-attribute-can-not-be-null", null, null));
-			}
-			else if (attribute.getRequired() && attribute.getType() == AttributeType.PHOTO_ALBUM && (markerAttribute.getPhotoAlbum() == null || markerAttribute.getPhotoAlbum().getPhotos() == null || markerAttribute.getPhotoAlbum().getPhotos().size() == 0))
-			{
-				throw new RuntimeException(messages.getMessage("photos.Insert-Photos", null, null));
-			}
-			
-//			if (attribute.getType() == AttributeType.PHOTO_ALBUM && (markerAttribute.getPhotoAlbum() == null || markerAttribute.getPhotoAlbum().getPhotos() == null || markerAttribute.getPhotoAlbum().getPhotos().size() == 0))
-//			{
-//				markerAttributes.remove(i);
-//				throw new RuntimeException(messages.getMessage("photos.Insert-Photos", null, null)); TODO marcar para excluir o photoAlbum aqui
-//			}
-		}
-	}
-
-	/**
-	 * Salva todos os atributos de um ponto
-	 * 
-	 * @param marker
-	 * @return
-	 * @throws RepositoryException 
-	 * @throws IOException 
-	 */
-	public List<MarkerAttribute> insertMarkersAttributes(List<MarkerAttribute> markersAttributes)
-	{
-
-		for (MarkerAttribute markerAttribute : markersAttributes)
-		{
-			if (markerAttribute.getValue() != null)
-			{				
-				if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM && markerAttribute.getPhotoAlbum() != null)
-				{
-					List<Photo> photos = markerAttribute.getPhotoAlbum().getPhotos();
-					markerAttribute = this.markerAttributeRepository.save(markerAttribute);
-					
-					markerAttribute.getPhotoAlbum().setPhotos(photos);
-					markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
-					
-					markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
-				} 
-				else 
-				{
-					markerAttribute = this.markerAttributeRepository.save(markerAttribute);
-				}
-			}
-		}
-		
-		for (MarkerAttribute markerAttribute : markersAttributes)
-		{
-			if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM && markerAttribute.getPhotoAlbum() != null)
-			{
-				PhotoAlbum photoAlbum = markerAttribute.getPhotoAlbum();
-				if (photoAlbum.getPhotos().size() == 0)
-				{
-					try
-					{
-						markerAttribute = markerAttributeRepository.findOne(photoAlbum.getMarkerAttribute().getId());
-						markerAttribute.setPhotoAlbum(null);
-						markerAttributeRepository.save(markerAttribute);
-						
-						photoAlbumRepository.delete(photoAlbum.getId());
-						
-						markerAttributeRepository.delete(markerAttribute.getId());
-					}
-					catch (Exception e)
-					{
-						// TODO: handle exception
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		
-		return markersAttributes;
-	}
-
-	/**
-	 * Salva todos os albuns de fotos no banco de dados e todas as fotos nos
-	 * sistemas de arquivos
-	 * 
-	 * @param marker
-	 * @return
-	 * @throws RepositoryException 
-	 * @throws IOException 
-	 */
-	public PhotoAlbum insertPhotoAlbum(PhotoAlbum photoAlbum)
-	{
-		try
-		{
-			List<Photo> photos = photoAlbum.getPhotos();
-			
-			photoAlbum = photoAlbumRepository.save(photoAlbum);	
-			
-			photoAlbum.setPhotos(photos);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		// Caso não haja o foto_album dentro da foto, seta lá então.
-		// Caso seja uma inserção de um album de fotos ou uma atualização de um
-		// album de fotos
-		if (photoAlbum.getPhotos() != null)
-		{
-			for (Photo photo : photoAlbum.getPhotos())
-			{
-				//TODO verificar remover esse if
-				if (photo.getPhotoAlbum() == null)
-				{
-					photo.setPhotoAlbum(photoAlbum);
-				}
-			}
-			photoAlbum.setPhotos(this.uploadPhoto(photoAlbum));
-		}
-		return photoAlbum;
-		
-	}
 	
-	/**
-	 * Salva todas as fotos no sistema de arquivos
-	 * @param photos
-	 * @return
-	 */
-	public List<Photo> uploadPhoto(PhotoAlbum photoAlbum)
-	{
-		
-	    List<Photo> photos = photoAlbum.getPhotos();
-	    
-    	List<Photo> photosDatabase = this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
-    	//Handler para deletar fotos
-		for (Photo photoDatabase : photosDatabase)
-		{
-			boolean photoToExclude = true;
-			for (Photo photo : photos)
-			{
-				if (photoDatabase.getId().equals(photo.getId()) )
-				{
-					photoToExclude = false;
-				}
-			}
-			if (photoToExclude)
-			{
-				MetaFile metaFile = null;	
-				try
-				{
-					metaFile = this.metaFileRepository.findByPath( photoDatabase.getIdentifier(), true);
-				}
-				catch (RepositoryException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				this.removeImg(metaFile.getId());
-				this.photoRepository.delete(photoDatabase.getId());
-				
-			}
-		}
-		
-		// Album de fotos já existente
-		if (photos.size() > 0)
-		{
-			for (Photo photo : photos)
-			{
-				if (photo.getId() != null)
-				{
-					// Se não é uma foto nova só atualiza a foto no banco de dados
-					photo = this.photoRepository.save(photo);
-				}
-				else
-				{
-					// Se é uma foto nova, salva a foto no banco de dados e no sistema de arquivos
-					photo = this.photoRepository.save(photo);
-					photo = this.uploadImg(photo);
-				}
-			}
-		}
-		
-		//Se o photoALbum não tem fotos deleta o mesmo
-		return this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
-	}
 	
 	/**
 	 * Pega a ultima foto salva 
@@ -856,113 +589,7 @@ public class MarkerService
 	{
 		return this.markerRepository.listByMarkers(ids, pageable);
 	}
-
-//	/**
-//	 * Method to verify DataIntegrityViolations and throw
-//	 * IllegalArgumentException with the field name
-//	 * 
-//	 * @param error
-//	 * @throws IllegalArgumentException
-//	 * @return void
-//	 */
-//	private void dataIntegrityViolationException(String error)
-//	{
-//		/*
-//		 * String fieldError = ""; if(error.contains("uk_data_source_name")) {
-//		 * fieldError = this.messages.getMessage("Name", new Object [] {}, null
-//		 * ); } else if(error.contains("uk_data_source_url")) { fieldError =
-//		 * this.messages.getMessage("Address", new Object [] {}, null ); }
-//		 * if(!fieldError.isEmpty()){ throw new IllegalArgumentException(
-//		 * this.messages
-//		 * .getMessage("The-field-entered-already-exists,-change-and-try-again",
-//		 * new Object [] {fieldError}, null) ); }
-//		 */
-//	}
-
-	/**
-	 * 
-	 * @param metaFileId
-	 * @throws IOException
-	 * @throws RepositoryException
-	 */
-	public void removeImg(String metaFileId) 
-	{
-		try
-		{
-			this.metaFileRepository.remove(metaFileId);
-		}
-		catch (RepositoryException e)
-		{
-			LOG.info(e.getMessage());	
-		}
-	}
-
-	/**
-	 * Salva uma foto e devolve o objeto foto
-	 * @param photo
-	 * @return
-	 */
-	public Photo uploadImg(Photo photo)
-	{
-
-		try
-		{
-			if (photo.getSource() != null)
-			{
-				Base64 photoDecode = new Base64();
-				
-				byte[] data = photoDecode.decode(photo.getSource());
-				InputStream decodedMap = new ByteArrayInputStream(data);	
-				
-				final String mimeType = photo.getMimeType();
-		
-				final List<String> validMimeTypes = new ArrayList<String>();
-				validMimeTypes.add("image/gif");
-				validMimeTypes.add("image/jpeg");
-				validMimeTypes.add("image/bmp");
-				validMimeTypes.add("image/png");
-		
-				if (mimeType == null || !validMimeTypes.contains(mimeType))
-				{
-					throw new IllegalArgumentException("Formato inválido!");
-				}
-		
-				InputStream is = new BufferedInputStream(decodedMap);
-				final BufferedImage bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
-				Image image = ImageIO.read(is);
-				Graphics2D g = bufferedImage.createGraphics();
-				g.drawImage(image, 0, 0, 640, 480, null);
-				g.dispose();
-		
-				ByteArrayOutputStream os = new ByteArrayOutputStream();
-				ImageIO.write(bufferedImage, "png", os);
-				InputStream isteam = new ByteArrayInputStream(os.toByteArray());
-		
-				MetaFile metaFile = new MetaFile();
 	
-				// Gera o identificador
-				photo.getIdentifier();
-				
-				metaFile.setId(String.valueOf(photo.getId()));
-				metaFile.setContentType(photo.getMimeType());
-				metaFile.setContentLength(photo.getContentLength());
-				metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
-				metaFile.setInputStream(isteam);
-				metaFile.setName(photo.getName());
-		
-				this.metaFileRepository.insert(metaFile);
-			
-			}
-		
-		}
-		catch (IOException | RepositoryException e)
-		{
-			e.printStackTrace();
-			LOG.info(e.getMessage());
-		}
-
-		return photo;
-	}
 
 	/**
 	 * 
