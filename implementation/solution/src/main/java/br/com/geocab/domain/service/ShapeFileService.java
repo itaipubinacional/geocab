@@ -244,26 +244,6 @@ public class ShapeFileService
 				}
 				markers.add(marker);
 	        }
-	    	
-	    	//TODO MELHORAR ESSE ALGORITMO DE REORDENAÇÃO
-	    	
-	    	Marker markerAux = new Marker();
-	    	for (Marker marker : markers)
-			{
-				if (markerAux.getMarkerAttribute().size() < marker.getMarkerAttribute().size())
-				{
-					markerAux = marker;
-				}
-			}
-	    	for (Marker marker : markers)
-			{
-				if (markerAux.getId() == marker.getId())
-				{
-					markers.remove(marker);
-					markers.add(markerAux);
-					break;
-				}
-			}
 		    	
 		    return markers;
 		}

@@ -132,21 +132,13 @@ public abstract class AbstractMarkerService
 				PhotoAlbum photoAlbum = markerAttribute.getPhotoAlbum();
 				if (photoAlbum.getPhotos().size() == 0)
 				{
-					try
-					{
-						markerAttribute = markerAttributeRepository.findOne(photoAlbum.getMarkerAttribute().getId());
-						markerAttribute.setPhotoAlbum(null);
-						markerAttributeRepository.save(markerAttribute);
-						
-						photoAlbumRepository.delete(photoAlbum.getId());
-						
-						markerAttributeRepository.delete(markerAttribute.getId());
-					}
-					catch (Exception e)
-					{
-						// TODO: handle exception
-						e.printStackTrace();
-					}
+					markerAttribute = markerAttributeRepository.findOne(photoAlbum.getMarkerAttribute().getId());
+					markerAttribute.setPhotoAlbum(null);
+					markerAttributeRepository.save(markerAttribute);
+					
+					photoAlbumRepository.delete(photoAlbum.getId());
+					
+					markerAttributeRepository.delete(markerAttribute.getId());
 				}
 			}
 		}
@@ -165,19 +157,12 @@ public abstract class AbstractMarkerService
 	 */
 	public PhotoAlbum insertPhotoAlbum(PhotoAlbum photoAlbum)
 	{
-		try
-		{
-			List<Photo> photos = photoAlbum.getPhotos();
-			
-			photoAlbum = photoAlbumRepository.save(photoAlbum);	
-			
-			photoAlbum.setPhotos(photos);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		List<Photo> photos = photoAlbum.getPhotos();
 		
+		photoAlbum = photoAlbumRepository.save(photoAlbum);	
+		
+		photoAlbum.setPhotos(photos);
+			
 		// Caso não haja o foto_album dentro da foto, seta lá então.
 		// Caso seja uma inserção de um album de fotos ou uma atualização de um
 		// album de fotos
@@ -185,11 +170,7 @@ public abstract class AbstractMarkerService
 		{
 			for (Photo photo : photoAlbum.getPhotos())
 			{
-				//TODO verificar remover esse if
-				if (photo.getPhotoAlbum() == null)
-				{
-					photo.setPhotoAlbum(photoAlbum);
-				}
+				photo.setPhotoAlbum(photoAlbum);
 			}
 			photoAlbum.setPhotos(this.uploadPhoto(photoAlbum));
 		}
@@ -228,7 +209,6 @@ public abstract class AbstractMarkerService
 				}
 				catch (RepositoryException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				this.removeImg(metaFile.getId());
