@@ -1055,14 +1055,14 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.updateStatus();
                 $scope.changeToListNoVectorMarkers($scope.currentPage);
                 $scope.msg = {
-                    type: "danger",
+                    type: "success",
                     text: $translate('admin.marker-moderation.Marker-successfully-refused'),
                     dismiss: true
                 };
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
                 $scope.$apply();
             }
         });
