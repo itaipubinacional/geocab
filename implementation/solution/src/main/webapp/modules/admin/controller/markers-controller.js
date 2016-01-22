@@ -226,7 +226,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             $scope.$apply();
         },
         errorHandler: function (message, exception) {
-            $scope.message = {type: "error", text: message};
+            $scope.msg = {type: "error", text: message};
             $scope.$apply();
         }
     });
@@ -247,7 +247,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             $scope.$apply();
         },
         errorHandler: function (message, exception) {
-            $scope.message = {type: "error", text: message};
+            $scope.msg = {type: "error", text: message};
             $scope.$apply();
         }
     });
@@ -451,7 +451,7 @@ ront controller of angle won't let enter an invalid URL.
         $log.info("Starting the front controller.");
 
         $scope.loadMap();
-        
+
         if (toParams.id) {
         	markerService.findMarkerById(toParams.id,{
         		callback: function (result) {
@@ -459,7 +459,7 @@ ront controller of angle won't let enter an invalid URL.
         			$scope.$apply();
                 },
                 errorHandler: function (message, exception) {
-                    $scope.message = {type: "error", text: message};
+                    $scope.msg = {type: "error", text: message};
                     $scope.$apply();
                 }
         	});
@@ -468,7 +468,7 @@ ront controller of angle won't let enter an invalid URL.
 		}
 
     };
-    
+
     $scope.buildMarker = function(markers){
 
         $scope.drag = false;
@@ -587,10 +587,10 @@ ront controller of angle won't let enter an invalid URL.
      * To change to this State, one must first load the data from the query.
      */
     $scope.changeToList = function (markers) {
-    	 
-        
+
+
         $log.info("changeToList");
-        
+
         $scope.imgResult = null;
 
         $scope.itensMarcados = [];
@@ -838,7 +838,7 @@ ront controller of angle won't let enter an invalid URL.
 
         var page = layerGroupService.listLayersByFilters(filter, pageRequest, {
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "error", text: message};
                 $scope.$apply();
             },
             async: false //USE ONLY IN AUTOCOMPLETE
@@ -868,7 +868,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "error", text: message};
                 $scope.$apply();
             }
         });
@@ -1404,7 +1404,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
                 $scope.$apply();
 
             }
@@ -1423,7 +1423,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
                 $scope.$apply();
 
             }
@@ -1448,7 +1448,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
                 $scope.$apply();
 
             }
@@ -1529,7 +1529,7 @@ ront controller of angle won't let enter an invalid URL.
 
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
                 $scope.$apply();
             }
         });
@@ -1695,7 +1695,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
                 $scope.$apply();
             }
         });
@@ -1724,7 +1724,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "error", text: message};
                 $scope.$apply();
             }
         })
@@ -1755,7 +1755,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
                 $scope.$apply();
             }
         })
@@ -1804,7 +1804,7 @@ ront controller of angle won't let enter an invalid URL.
                         $scope.$apply();
                     },
                     errorHandler: function (message, exception) {
-                        $scope.message = {type: "error", text: message};
+                        $scope.msg = {type: "danger", text: message};
                         $scope.$apply();
                     }
                 });
@@ -1820,7 +1820,7 @@ ront controller of angle won't let enter an invalid URL.
 
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.msg = {type: "error", text: message};
                 $scope.$apply();
             }
         });

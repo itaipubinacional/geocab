@@ -55,8 +55,10 @@
                         <div ng-repeat="markerAttribute in attributesByMarker track by $index"
                              style="position: relative;margin-bottom:15px;">
 
-                            <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM' &&
-                                    (currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
+
+
+                            <%--<label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM' && (currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">--%>
+                            <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'">
                                 {{markerAttribute.attribute.name }}
                             </label>
 
@@ -73,7 +75,7 @@
                                     ng-model="markerAttribute.value"
                                     required="{{markerAttribute.attribute.required}}">
 
-                           
+
                            <input
                               name="date1"
                               ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
