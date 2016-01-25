@@ -1681,6 +1681,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.listMarkerByFiltersMap( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);
         $scope.dragMarkers = null;
         $scope.hasSearch = true;
+
+        if ($scope.filter.status == null)
+            $scope.filter.status = "";
+
     };
 
     $scope.clearFilters = function () {
