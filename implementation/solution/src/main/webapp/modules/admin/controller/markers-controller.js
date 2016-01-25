@@ -1724,8 +1724,8 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "error", text: message};
-                $scope.$apply();
+                //$scope.msg = {type: "error", text: message};
+                //$scope.$apply();
             }
         })
     };
@@ -1755,8 +1755,8 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message};
-                $scope.$apply();
+                //$scope.msg = {type: "danger", text: message};
+                //$scope.$apply();
             }
         })
 
