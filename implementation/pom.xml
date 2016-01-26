@@ -82,11 +82,60 @@
                 <mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/geocab</mvn.jdbc.jdbcUrl>
                 <mvn.jdbc.username>geocab</mvn.jdbc.username>
                 <mvn.jdbc.password>geocab</mvn.jdbc.password>
-			
-<!-- 				Database -->
-<!-- 				<mvn.jdbc.jdbcUrl>jdbc:postgresql://geocab/geocab</mvn.jdbc.jdbcUrl> -->
-<!-- 				<mvn.jdbc.username>geocab</mvn.jdbc.username> -->
-<!-- 				<mvn.jdbc.password>geocab</mvn.jdbc.password> -->
+
+				<!-- Hibernate -->
+				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
+				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
+				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
+				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
+				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
+				
+				<!-- Mail -->
+				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
+				<mvn.mail.port>25</mvn.mail.port>
+				<mvn.mail.username>no-reply</mvn.mail.username>
+				<mvn.mail.protocol>smtp</mvn.mail.protocol>
+				<mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
+				<mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
+				<mvn.mail.tls>false</mvn.mail.tls>
+				<mvn.mail.ssl>false</mvn.mail.ssl>
+				<mvn.mail.debug>true</mvn.mail.debug>
+				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
+				
+				<!-- ShapeFile -->
+				<mvn.path.shapefiles>/tmp/geocab/files/shapefile/</mvn.path.shapefiles>
+
+				<!-- Social -->
+				<!-- Facebook -->
+				<mvn.social.facebook.app.id>1565690900310619</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>d2d9844ea944dd01630804f4eea5b8fd</mvn.social.facebook.app.secret>
+
+				<!-- Google plus -->
+				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
+				<mvn.social.google.app.secret>G4iRWyyJ0hcdiylrzDesQmeL</mvn.social.google.app.secret>
+
+				<!-- geotools version -->
+				<geotools.version>13.2</geotools.version>
+				
+				<!-- jcaptcha version -->
+				<jcaptcha.version>1.0</jcaptcha.version>
+				
+				<!-- jcaptcha version -->
+				<mvn.geocab.url>http://localhost:8080/geocab</mvn.geocab.url>
+				
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>homologation</id>
+<!-- 			<activation> -->
+<!-- 				<activeByDefault>true</activeByDefault> -->
+<!-- 			</activation> -->
+			<properties>
+				<!-- Database -->
+                <mvn.jdbc.jdbcUrl>jdbc:postgresql://chi25/desenvolvimento</mvn.jdbc.jdbcUrl>
+                <mvn.jdbc.username>geocab_pool</mvn.jdbc.username>
+                <mvn.jdbc.password>geocab_pool</mvn.jdbc.password>
 
 				<!-- Hibernate -->
 				<mvn.hibernate.hbm2ddl>update</mvn.hibernate.hbm2ddl>
