@@ -3,4 +3,4 @@ implementation/gs-community-pmi/authkey/target/**
 implementation/solution/src/main/webapp/.idea/**
 implementation/geocab-multimodule.iml
 implementation/.idea/**
-
+implementation/mobile/android/geocab-mobile/libraries/**
