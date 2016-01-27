@@ -11,7 +11,7 @@
 	<div class="modal-header">
 	  <h3 class="modal-title"><spring:message code="photos.Insert-Photos"/></h3>
 	</div>
-	<div class="modal-body" ng-init="initialize();" style="overflow: auto;max-height: 550px; min-height: 500px">
+	<div class="modal-body" ng-init="initialize();" style="overflow: auto;max-height: 550px; min-height: 500px;overflow-x: hidden;">
     <div>
       <div class="col-md-9" style="padding: 0">
         <upload-file on-success="onSuccess(files)" on-error="onError(msg)" attribute="attribute"></upload-file>
