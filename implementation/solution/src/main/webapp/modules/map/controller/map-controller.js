@@ -613,6 +613,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.setMarkerCoordinates = function(){
 
       if($scope.formattedLatitude && $scope.formattedLongitude) {
+
+        $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+
         var formattedLatitude = $scope.formattedLatitude.toString();
         var formattedLongitude = $scope.formattedLongitude.toString();
 
@@ -3377,6 +3380,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.insertMarker = function () {
 
+    $scope.currentEntity.status = 'PENDING';
+
     $scope.isLoading = true;
 
     if (!$scope.isBooleanValid()) {
@@ -3388,11 +3393,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       return;
     }
 
+    var oldLayer = $scope.currentEntity.layer;
+
     var layer = new Layer();
     layer.id = $scope.currentEntity.layer.layerId;
     $scope.currentEntity.layer = layer;
 
     $scope.currentEntity.markerAttribute = [];
+
+
 
     angular.forEach($scope.attributesByLayer, function (val, ind) {
 
@@ -3463,6 +3472,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.isLoading = false;
 
         $scope.msg = {type: "danger", text: message};
+
+        $scope.currentEntity.layer = oldLayer;
 
         $("div.msgMap").show();
 
@@ -3555,8 +3566,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     var shadowStyle = $scope.setShadowMarker();
 
-    if($scope.currentCreatingInternalLayer)
-      $scope.currentCreatingInternalLayer.setStyle([iconStyle, shadowStyle]);
+    if($scope.currentCreatingInternalLayer){
+      if(!angular.equals($scope.currentCreatingInternalLayer , {})){
+        $scope.currentCreatingInternalLayer.setStyle([iconStyle, shadowStyle]);
+      }
+    }
 
     layerGroupService.listAttributesByLayer($scope.currentEntity.layer.layerId, {
       callback: function (result) {
@@ -4928,21 +4942,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.currentEntity.status = 'SAVED';
 
       importMarkers.push($scope.currentEntity);
-
-      /*markerService.insertMarker( $scope.currentEntity, {
-        callback: function (result) {
-
-          console.log(result);
-
-          $scope.$apply();
-        },
-        errorHandler: function (message, exception) {
-          $scope.message = {type: "error", text: message};
-          $scope.$apply();
-        }
-      });*/
-
-      //$scope.toggleSidebarMenu(300, 'closeButton');
 
     });
 
