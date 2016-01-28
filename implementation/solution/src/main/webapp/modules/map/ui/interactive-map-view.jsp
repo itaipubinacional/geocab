@@ -102,9 +102,11 @@ uri="http://www.springframework.org/security/tags"%>
                       <span style="float: left"><spring:message code="map.Created-by"/>: <b>{{ marker.user.name}}</b></span>
                       <span style="float: right">{{ marker.created |date:'dd/MM/yyyy' }}</span>
                       <br>
+                      <span style="float: left" ng-if="marker.status == 'SAVED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Saved"/></b></span>
                       <span style="float: left" ng-if="marker.status == 'PENDING'"><spring:message code="map.Status"/>: <b><spring:message code="map.Pending"/></b></span>
                       <span style="float: left" ng-if="marker.status == 'REFUSED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Refused"/></b></span>
                       <span style="float: left" ng-if="marker.status == 'ACCEPTED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Approved"/></b></span>
+                      <span style="float: left" ng-if="marker.status == 'CANCELED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Canceled"/></b></span>
                       <hr>
 
                       <button
