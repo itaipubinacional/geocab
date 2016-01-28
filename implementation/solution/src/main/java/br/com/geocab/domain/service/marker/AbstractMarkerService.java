@@ -157,17 +157,17 @@ public abstract class AbstractMarkerService
 	 */
 	public PhotoAlbum insertPhotoAlbum(PhotoAlbum photoAlbum)
 	{
-		List<Photo> photos = photoAlbum.getPhotos();
-		
-		photoAlbum = photoAlbumRepository.save(photoAlbum);	
-		
-		photoAlbum.setPhotos(photos);
-			
 		// Caso não haja o foto_album dentro da foto, seta lá então.
 		// Caso seja uma inserção de um album de fotos ou uma atualização de um
 		// album de fotos
 		if (photoAlbum.getPhotos() != null)
 		{
+			List<Photo> photos = photoAlbum.getPhotos();
+			
+			photoAlbum = photoAlbumRepository.save(photoAlbum);	
+			
+			photoAlbum.setPhotos(photos);
+			
 			for (Photo photo : photoAlbum.getPhotos())
 			{
 				photo.setPhotoAlbum(photoAlbum);
@@ -210,6 +210,7 @@ public abstract class AbstractMarkerService
 				catch (RepositoryException e)
 				{
 					e.printStackTrace();
+					LOG.info(e.getMessage());
 				}
 				this.removeImg(metaFile.getId());
 				this.photoRepository.delete(photoDatabase.getId());
@@ -321,7 +322,8 @@ public abstract class AbstractMarkerService
 		}
 		catch (RepositoryException e)
 		{
-			LOG.info(e.getMessage());	
+			e.printStackTrace();
+			LOG.info(e.getMessage());
 		}
 	}
 	

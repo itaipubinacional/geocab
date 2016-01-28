@@ -130,8 +130,12 @@ public class MarkerService extends AbstractMarkerService
 
 		validateAttribute(marker.getMarkerAttribute());
 		
+		List<MarkerAttribute> markersAttributes = marker.getMarkerAttribute();
 		
+		// Não deixa repetir os atributos, previne erros do cascade
+		marker.setMarkerAttribute(null);
 		this.markerRepository.save(marker);
+		marker.setMarkerAttribute(markersAttributes);
 		
 		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
 		
