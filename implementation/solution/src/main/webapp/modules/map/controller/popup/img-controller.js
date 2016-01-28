@@ -109,12 +109,9 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
   $scope.nextPage = function(){
 
-    $scope.pageable.page = $scope.pageable.page + 1;
-
-    if($scope.pageable.page <= $scope.currentAttribute.totalPages) {
-
+    if($scope.pageable.page + 1 < $scope.currentAttribute.totalPages) {
+      $scope.pageable.page = $scope.pageable.page + 1;
       $scope.setAttribute($scope.currentAttribute, true);
-
     }
 
   };
@@ -122,11 +119,8 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
   $scope.previousPage = function(){
 
     if($scope.pageable.page - 1 >= 0) {
-
       $scope.pageable.page = $scope.pageable.page - 1;
-
       $scope.setAttribute($scope.currentAttribute, true);
-
     }
 
   };
