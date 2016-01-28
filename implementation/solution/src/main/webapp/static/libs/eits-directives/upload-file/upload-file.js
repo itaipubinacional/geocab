@@ -23,7 +23,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       scope.fileSelected = {};
       scope.files = scope.attribute.files != undefined ? scope.attribute.files : [];
 
-      scope.maxSize = 1;
+      scope.maxSize = 2;
       scope.formats = ['image/jpeg', 'image/jpg', 'image/png'];
 
       element.on('load', function (event) {
