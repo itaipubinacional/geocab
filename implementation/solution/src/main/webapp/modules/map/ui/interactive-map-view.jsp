@@ -106,7 +106,7 @@ uri="http://www.springframework.org/security/tags"%>
                       <span style="float: left" ng-if="marker.status == 'PENDING'"><spring:message code="map.Status"/>: <b><spring:message code="map.Pending"/></b></span>
                       <span style="float: left" ng-if="marker.status == 'REFUSED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Refused"/></b></span>
                       <span style="float: left" ng-if="marker.status == 'ACCEPTED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Approved"/></b></span>
-                      <span style="float: left" ng-if="marker.status == 'ACCEPTED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Approved"/></b></span>
+                      <span style="float: left" ng-if="marker.status == 'CANCELED'"><spring:message code="map.Status"/>: <b><spring:message code="map.Canceled"/></b></span>
                       <hr>
 
                       <button
