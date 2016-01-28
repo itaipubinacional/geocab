@@ -118,7 +118,7 @@ uri="http://www.springframework.org/security/tags"%>
                       <i class="itaipu-icon-delete"></i>
                       </button>
                       <button
-                          ng-if="(marker.status != 'ACCEPTED' && userMe.id == marker.user.id)"
+                          ng-if="(marker.status == 'SAVED' && userMe.id == marker.user.id)"
                           style="float: right; margin-right: 5px" class="btn btn-default"
                           ng-click="changeToScreen('update')"
                           title="<spring:message code='map.Update'/>">
