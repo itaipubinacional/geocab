@@ -75,6 +75,16 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
         scope.$apply();
       };
 
+      scope.isValidName = function (fileName) {
+        var maxLength = 60;
+        if (fileName.length < maxLength)
+          return true;
+
+        scope.isLoading = false;
+        scope.onError({msg: 'Invalid-size-name-max-60-characters'});
+        scope.$apply();
+      };
+
       //============== DRAG & DROP =============
       // source for drag&drop: http://www.webappers.com/2011/09/28/drag-drop-file-upload-with-html5-javascript/
       var dropbox = document.getElementById("dropbox");
@@ -118,16 +128,17 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
       dropbox.addEventListener('drop', function (event) {
 
-        scope.over = false;
-        scope.isLoading = true;
-
-        scope.$apply();
-
         event.preventDefault();
 
         var files = event.dataTransfer.files;
 
         if (files.length > 0) {
+
+          scope.over = false;
+          scope.isLoading = true;
+
+          scope.$apply();
+
           for (var i = 0, file; file = files[i]; i++) {
 
             var reader = new FileReader();
@@ -151,7 +162,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
               }
             })(file);
 
-            if(scope.isValidFormat(file.type) && scope.isValidSize(file.size))
+            if(scope.isValidFormat(file.type) && scope.isValidSize(file.size) && scope.isValidName(file.name))
               reader.readAsDataURL(file);
           }
         }
@@ -161,37 +172,40 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
         scope.$apply(function (scope) {
 
-          scope.over = false;
-          scope.isLoading = true;
-
           // Turn the FileList object into an Array
           var files = element.files;
 
-          for (var i = 0, file; file = files[i]; i++) {
+          if (files.length > 0) {
 
-            var reader = new FileReader();
+            scope.over = false;
+            scope.isLoading = true;
 
-            reader.onloadend = (function (readFile) {
-              return function (e) {
+            for (var i = 0, file; file = files[i]; i++) {
 
-                readFile.src = e.target.result;
+              var reader = new FileReader();
 
-                var fileToObj = angular.copy(readFile);
-                scope.files.push(fileToObj);
+              reader.onloadend = (function (readFile) {
+                return function (e) {
 
-                if (files.length == i) {
-                  scope.fileSelected = scope.files[0];
-                  scope.isLoading = false;
-                  scope.$apply();
-                  scope.onSuccess({
-                    files: scope.files
-                  });
+                  readFile.src = e.target.result;
+
+                  var fileToObj = angular.copy(readFile);
+                  scope.files.push(fileToObj);
+
+                  if (files.length == i) {
+                    scope.fileSelected = scope.files[0];
+                    scope.isLoading = false;
+                    scope.$apply();
+                    scope.onSuccess({
+                      files: scope.files
+                    });
+                  }
                 }
-              }
-            })(file);
+              })(file);
 
-            if(scope.isValidFormat(file.type) && scope.isValidSize(file.size))
-              reader.readAsDataURL(file);
+              if (scope.isValidFormat(file.type) && scope.isValidSize(file.size))
+                reader.readAsDataURL(file);
+            }
           }
 
         });
