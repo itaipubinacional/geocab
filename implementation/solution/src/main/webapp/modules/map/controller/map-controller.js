@@ -3380,7 +3380,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.insertMarker = function () {
 
-    $scope.currentEntity.status = 'PENDING';
+    if (!$scope.currentEntity.status){
+      $scope.currentEntity.status = 'PENDING';
+    }
 
     $scope.isLoading = true;
 
