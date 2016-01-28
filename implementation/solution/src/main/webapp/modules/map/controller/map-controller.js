@@ -1862,7 +1862,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.clearShadowCreatingInternalLayer = function() {
 
-    if ($scope.currentCreatingInternalLayer && $scope.currentCreatingInternalLayer != undefined && $scope.marker != undefined && $scope.marker.layer != undefined) {
+    if (!jQuery.isEmptyObject($scope.currentCreatingInternalLayer) && $scope.currentCreatingInternalLayer != undefined && $scope.marker != undefined && $scope.marker.layer != undefined) {
 
       var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
@@ -3374,8 +3374,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.insertMarkerSaved = function() {
     $scope.currentEntity.status = 'SAVED';
-    $scope.$apply();
-    $('#buttonInsert').trigger('click');
+
+    $timeout(function(){
+      $('#buttonInsert').trigger('click');
+    });
   };
 
   $scope.insertMarker = function () {
