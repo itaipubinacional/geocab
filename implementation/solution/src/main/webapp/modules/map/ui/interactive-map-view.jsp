@@ -93,7 +93,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </accordion-heading>
 
 
-                          <span ng-if="feature.type == 'internal'">
+                    <span ng-if="feature.type == 'internal'">
 
                     <div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="height: 100%; width: 100%; padding: 0;">
 
@@ -539,7 +539,7 @@ uri="http://www.springframework.org/security/tags"%>
                     <accordion-heading>
                       <div style="cursor:pointer; padding: 10px 0;">
                         <i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-                        <span>{{ selected.name }} ({{ selected.markers.length }}) </span>
+                        <span>{{ selected.title }} ({{ selected.markers.length }}) </span>
                       </div>
                     </accordion-heading>
                     <div ng-repeat="marker in selected.markers">
