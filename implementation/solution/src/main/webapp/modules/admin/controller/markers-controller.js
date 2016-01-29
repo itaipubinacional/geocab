@@ -1413,6 +1413,93 @@ ront controller of angle won't let enter an invalid URL.
 
     $scope.postMarker = function () {
 
+        //=
+        if ($scope.currentEntity.layer == null) {
+            var layer = new Layer();
+            layer.id = $scope.currentEntity.layer;
+            $scope.currentEntity.layer = layer;
+        }
+
+        angular.forEach($scope.attributesByMarker, function (attribute) {
+
+            if (attribute.value == null) {
+                attribute.value = "";
+            }
+
+            if(attribute.attribute.files) {
+
+                angular.forEach(attribute.attribute.files, function(file, index){
+
+                    if(!file.id) {
+                        var photo = new Photo();
+                        var img = file.src.split(';base64,');
+                        photo.source = img[1];
+                        photo.name = file.name;
+                        photo.description = file.description;
+                        photo.contentLength = file.size;
+                        photo.mimeType = file.type;
+
+                        attribute.attribute.files[index] = photo;
+                    }
+                });
+
+                if(!attribute.photoAlbum) {
+                    var photoAlbum = new PhotoAlbum();
+                    photoAlbum.photos = new Array();
+
+                    attribute.photoAlbum = photoAlbum;
+                    attribute.photoAlbum.photos = attribute.attribute.files;
+
+                } else {
+                    attribute.photoAlbum.photos = attribute.attribute.files;
+                }
+
+            }
+        });
+
+        $scope.currentEntity.markerAttribute = $scope.attributesByMarker;
+
+        angular.forEach($scope.attributesByLayer, function (val, ind) {
+
+            var attribute = new Attribute();
+            attribute.id = val.id;
+
+            var markerAttribute = new MarkerAttribute();
+            if (val.value != "" && val.value != undefined) {
+                markerAttribute.value = val.value;
+            } else {
+                markerAttribute.value = "";
+            }
+
+
+
+            markerAttribute.attribute = attribute;
+            markerAttribute.marker = $scope.currentEntity;
+            $scope.currentEntity.markerAttribute.push(markerAttribute);
+
+        });
+
+        /* Remove image to update */
+        angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
+            if(markerAttribute.photoAlbum){
+                angular.forEach(markerAttribute.photoAlbum.photos, function(photo){
+
+                    if (markerAttribute.attribute.removePhotosIds) {
+                        var index = markerAttribute.attribute.removePhotosIds.indexOf(photo.id);
+
+                        if (index != -1)
+                            delete markerAttribute.photoAlbum.photos[index];
+                    }
+
+                    delete photo.image;
+                })
+            }
+        });
+
+
+        //=
+
+
         myMarkersService.postMarker($scope.currentEntity, {
             callback: function (result) {
 
