@@ -916,7 +916,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           if ($scope.features.length > 0) {
             $timeout(function () {
               $scope.toggleSidebarMarkerDetailUpdate(300);
-            }, 400)
+
+              $(".panel-body").height('inherit');
+              
+            }, 400);
           }
 
           if ($scope.features.length == 1) {
