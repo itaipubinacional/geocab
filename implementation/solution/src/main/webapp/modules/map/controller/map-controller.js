@@ -752,10 +752,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
      */
     $scope.map.on('click', function (evt) {
 
-      if ($scope.slideActived == '#sidebar-select-marker') {
-        $scope.closeSelectMarker();
-      }
-
       if ($scope.menu.fcMarker && $scope.screenMarkerOpenned) {
 
         $scope.clearShadowCreatingInternalLayer();
@@ -1838,7 +1834,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.closeSelectMarker = function() {
 
-    $scope.toggleSidebar(300, '', '#sidebar-select-marker');
+    $timeout(function() {
+      $scope.toggleSidebar(300, '', '#sidebar-select-marker');
+    }, 0);
+
     $scope.screenSelectMarkerOpenned = false;
     $scope.menu.fcSelect = false;
     $scope.selectMarkerTool = false;
@@ -2112,13 +2111,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.imgResult = null;
 
-    if ($scope.slideActived == '#sidebar-select-marker') {
+    if ($scope.slideActived == '#sidebar-select-marker' && $scope.screenSelectMarkerOpenned) {
       $scope.closeSelectMarker();
     }
 
-    /*if ($scope.slideActived == '#sidebar-marker-detail-update') {
+    if ($scope.slideActived == '#sidebar-marker-detail-update') {
       $scope.toggleSidebar(300, '', '#sidebar-marker-detail-update');
-    }*/
+    }
 
     if ($("#sidebar-marker-detail-update").css("display") == 'block') {
       $scope.clearDetailMarker();
@@ -3404,8 +3403,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.currentEntity.layer = layer;
 
     $scope.currentEntity.markerAttribute = [];
-
-
 
     angular.forEach($scope.attributesByLayer, function (val, ind) {
 
