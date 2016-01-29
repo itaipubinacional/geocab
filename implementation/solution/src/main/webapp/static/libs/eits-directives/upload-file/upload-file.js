@@ -203,7 +203,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                 }
               })(file);
 
-              if (scope.isValidFormat(file.type) && scope.isValidSize(file.size))
+              if (scope.isValidFormat(file.type) && scope.isValidSize(file.size) && scope.isValidName(file.name))
                 reader.readAsDataURL(file);
             }
           }
