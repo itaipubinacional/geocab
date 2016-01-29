@@ -84,44 +84,11 @@ public class MyMarkersService extends AbstractMarkerService
 
 	public Marker postMarker(Marker marker) throws IOException, RepositoryException
 	{
-		try
-		{
-			if (marker.getStatus() == MarkerStatus.SAVED || marker.getStatus() == MarkerStatus.REFUSED)
-			{
-
-				Marker markerTemporary = this.markerRepository.findOne(marker.getId());
-
-				if (markerTemporary.getLayer().getId() != marker.getLayer().getId())
-				{
-					List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
-
-					if (markerAttributes != null)
-					{
-						this.markerAttributeRepository.deleteInBatch(markerAttributes);
-					}
-				}
-
-				marker.setLocation(markerTemporary.getLocation());
-
-				marker.setStatus(MarkerStatus.PENDING);
-
-				MarkerModeration markerModeration = new MarkerModeration();
-				markerModeration.setMarker(marker);
-
-				markerModeration.setStatus(marker.getStatus());
-
-				this.markerModerationRepository.save(markerModeration);
-
-				
-				marker = this.markerRepository.save(marker);
-			}
-		}
-		catch (DataIntegrityViolationException e)
-		{
-			LOG.info(e.getMessage());
-		}
-		return marker;
+		marker.setStatus(MarkerStatus.PENDING);	
+		return this.updateMarker(marker);
 	}
+	
+	
 	
 	/**
 	 * Method to remove markers
