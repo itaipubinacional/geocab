@@ -1841,6 +1841,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.closeSelectMarker = function() {
 
+    $scope.clearAllSelectedMarkers();
+
     //$timeout(function() {
       $scope.toggleSidebar(300, 'closeButton', '#sidebar-select-marker');
     //}, 0);
@@ -2070,11 +2072,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.initializeDistanceCalc = function () {
 
     if ($scope.menu.fcMarker) {
-      $scope.clearFcMarker();
-    } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
+      $scope.clearFcMarker(true);
+    }
+
+    if ($("#sidebar-marker-detail-update").css("display") == 'block') {
       $scope.clearDetailMarker();
     }
 
+    if ($scope.menu.fcSelect) {
+      $scope.closeSelectMarker();
+    }
 
     // checks whether any functionality is already active
     if ($scope.menu.fcDistancia || $scope.menu.fcArea) {
@@ -2206,9 +2213,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.initializeAreaCalc = function () {
 
     if ($scope.menu.fcMarker) {
-      $scope.clearFcMarker();
-    } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
+      $scope.clearFcMarker(true);
+    }
+
+    if ($("#sidebar-marker-detail-update").css("display") == 'block') {
       $scope.clearDetailMarker();
+    }
+
+    if ($scope.menu.fcSelect) {
+      $scope.closeSelectMarker();
     }
 
     // checks whether any functionality is already active
