@@ -2043,9 +2043,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.drag = true;
 
-        $('.panel-body').height('auto');
-        $('.panel-body').css('overflow-y', 'auto');
-
       });
 
       dragBox.on('boxstart', function (e) {
@@ -2055,6 +2052,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
 
       $scope.map.addInteraction(dragBox);
+
+      $('.panel-body').height('auto');
+      $('.panel-body').css('overflow-y', 'auto');
     }
 
   };
@@ -2120,14 +2120,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.initializeMarker = function () {
 
     $scope.imgResult = null;
+    $scope.formattedLatitude = null;
+    $scope.formattedLongitude = null;
 
     if ($scope.slideActived == '#sidebar-select-marker' && $scope.screenSelectMarkerOpenned) {
       $scope.closeSelectMarker();
     }
 
-    if ($scope.slideActived == '#sidebar-marker-detail-update') {
-      $scope.toggleSidebar(300, '', '#sidebar-marker-detail-update');
-    }
+    /*if ($scope.slideActived == '#sidebar-marker-detail-update') {
+      $scope.toggleSidebar(0, 'closeButton', '#sidebar-marker-detail-update');
+    }*/
 
     if ($("#sidebar-marker-detail-update").css("display") == 'block') {
       $scope.clearDetailMarker();
@@ -2918,10 +2920,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.toggleSidebar(time, element, '#sidebar-marker-create');
     }*/
-    if($('#menu-item-4').css("display") != 'block') {
-      $scope.clearAllSelectedMarkers();
 
-      $scope.marker = {};
+    /**
+    * If the marker tab is open, close it and wait to open the new.
+    * */
+    if( $scope.menu.fcMarker ) {
+      $scope.clearFcMarker(true);
+
+      $timeout(function(){
+        $scope.toggleSidebar(time, element, '#sidebar-layers');
+      }, 400);
+
+    } else {
+
+      $scope.toggleSidebar(time, element, '#sidebar-layers');
     }
 
     if ($("#sidebar-marker-detail-update").css("display") == 'block') {
@@ -2930,33 +2942,21 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $timeout(function () {
         $scope.toggleSidebar(time, element, '#sidebar-layers');
-      }, 400)
+      }, 400);
     }
 
     if ($("#sidebar-select-marker").css("display") == 'block') {
 
+      $scope.clearAllSelectedMarkers();
+
       $scope.closeSelectMarker();
 
-      $timeout(function () {
+      $scope.marker = {};
+
+      /*$timeout(function () {
         $scope.toggleSidebar(time, element, '#sidebar-layers');
-      }, 400)
+      }, 400)*/
     }
-
-    /**
-     * If the marker tab is open, close it and wait to open the new.
-     * */
-    if ($scope.menu.fcMarker) {
-      $scope.clearFcMarker(true);
-
-      $timeout(function () {
-        $scope.toggleSidebar(time, element, '#sidebar-layers');
-      }, 400)
-
-    } else {
-
-      $scope.toggleSidebar(time, element, '#sidebar-layers');
-    }
-
 
   };
 
@@ -3236,9 +3236,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.clearFcMarker = function (close) {
 
     if ($scope.screenMarkerOpenned && close) {
-      $timeout(function(){
-        $scope.toggleSidebar(300, '', '#sidebar-marker-create');
-      }, 400);
+
+      $scope.toggleSidebar(300, 'closeButton', $scope.slideActived);
+
       $scope.menu.fcMarker = false;
 
       $scope.latitude = null;
