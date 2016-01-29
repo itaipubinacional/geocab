@@ -879,6 +879,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $scope.clearFcMarker();
           }
 
+          if ($scope.screenSelectMarkerOpenned) {
+            $scope.closeSelectMarker();
+          }
+
           $scope.currentCreatingInternalLayer = feature;
           $scope.screen = 'detail';
 
@@ -918,7 +922,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
               $scope.toggleSidebarMarkerDetailUpdate(300);
 
               $(".panel-body").height('inherit');
-              
+
             }, 400);
           }
 
@@ -2038,6 +2042,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
 
         $scope.drag = true;
+
+        $('.panel-body').height('auto');
+        $('.panel-body').css('overflow-y', 'auto');
 
       });
 
