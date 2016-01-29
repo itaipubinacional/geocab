@@ -1841,9 +1841,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.closeSelectMarker = function() {
 
-    $timeout(function() {
-      $scope.toggleSidebar(300, '', '#sidebar-select-marker');
-    }, 0);
+    //$timeout(function() {
+      $scope.toggleSidebar(300, 'closeButton', '#sidebar-select-marker');
+    //}, 0);
 
     $scope.screenSelectMarkerOpenned = false;
     $scope.menu.fcSelect = false;
@@ -2953,9 +2953,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.marker = {};
 
-      /*$timeout(function () {
+      $timeout(function () {
         $scope.toggleSidebar(time, element, '#sidebar-layers');
-      }, 400)*/
+      }, 400)
     }
 
   };
