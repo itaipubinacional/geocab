@@ -81,7 +81,7 @@ public class Email
 	 */
 	public void validate(Captcha captcha) throws Exception
 	{
-		Assert.isTrue(captcha.isCorrect(this.getAnswer()), "contact.SecurityVerification.Incorrect");
+		Assert.isTrue(this.getAnswer() != null && captcha.isCorrect(this.getAnswer()), "contact.SecurityVerification.Incorrect");
 
 		this.validate();
 	}
