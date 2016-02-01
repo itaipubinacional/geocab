@@ -3,6 +3,9 @@
  */
 package br.com.geocab.domain.entity.account;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.mail.internet.InternetAddress;
 
 import org.directwebremoting.annotations.DataTransferObject;
@@ -92,7 +95,7 @@ public class Email
 	 */
 	public void validate() throws Exception
 	{
-		this.validate(this.getEmail());
+		validate(this.getEmail());
 
 		Assert.isTrue(this.getName() != null, "contact.Insert.Name");
 
@@ -106,13 +109,19 @@ public class Email
 	 * @param email
 	 * @throws Exception
 	 */
-	public void validate(String email) throws Exception
+	public static final void validate(String email) throws Exception
 	{
-		Assert.isTrue(this.getEmail() != null, "contact.Insert.Email");
+		Assert.isTrue(email != null, "contact.Insert.Email");
+		
+		Pattern pat = Pattern.compile("[0-9]+");      
+		Matcher mat = pat.matcher(email.substring(email.indexOf('@') + 1, email.length()));
+		
+		Assert.isTrue(!mat.matches(), "contact.Email.Invalid");
+		
 		InternetAddress emailAddr = new InternetAddress(email);
         try
 		{
-        	emailAddr.validate();	
+        	emailAddr.validate();
 		}
 		catch (Exception e)
 		{
