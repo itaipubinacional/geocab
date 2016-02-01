@@ -2129,7 +2129,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.imgResult = null;
     $scope.formattedLatitude = null;
     $scope.formattedLongitude = null;
-    $scope.currentCreatingInternalLayer = {};
+    //$scope.currentCreatingInternalLayer = {};
 
     if ($scope.slideActived == '#sidebar-select-marker' && $scope.screenSelectMarkerOpenned) {
       $scope.closeSelectMarker();
