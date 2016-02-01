@@ -43,6 +43,24 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
 				)
 	public Page<Marker> listByFiltersWithoutOrder( @Param("layer") String layer, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user, Pageable pageable );
 
+//    /**
+//     * @param filter
+//     * @param pageable
+//     * @return
+//     */
+//    @Query(value="SELECT new Marker( marker.id, marker.status, marker.created, marker.location, layer, user) " +
+//                "FROM Marker marker " +
+//                "LEFT OUTER JOIN marker.layer layer " +
+//                "LEFT OUTER JOIN marker.user user " +
+//                "WHERE  ( ( LOWER(layer.title) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
+//                "AND ( marker.status = :status OR :status = NULL ) " +
+//                "AND ( marker.created >= :dateStart OR CAST( :dateStart as date ) = NULL ) " +
+//                "AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +              // "AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
+//                "AND ( LOWER(user.email) LIKE '%' || LOWER(CAST(:user AS string)) || '%' OR :user = NULL) ) " +
+//                "AND ( marker.deleted = NULL OR marker.deleted = FALSE ) order by marker.status"
+//                )
+//    public Page<Marker> listByFilters( @Param("layer") String layer, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user, Pageable pageable );
+    
     /**
      * @param filter
      * @param pageable
@@ -52,15 +70,35 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
                 "FROM Marker marker " +
                 "LEFT OUTER JOIN marker.layer layer " +
                 "LEFT OUTER JOIN marker.user user " +
-                "WHERE  ( ( LOWER(layer.title) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
+                "WHERE ( ( layer.id  = :layerId OR :layerId = NULL )" +
                 "AND ( marker.status = :status OR :status = NULL ) " +
                 "AND ( marker.created >= :dateStart OR CAST( :dateStart as date ) = NULL ) " +
                 "AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +              // "AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
                 "AND ( LOWER(user.email) LIKE '%' || LOWER(CAST(:user AS string)) || '%' OR :user = NULL) ) " +
                 "AND ( marker.deleted = NULL OR marker.deleted = FALSE ) order by marker.status"
                 )
-    public Page<Marker> listByFilters( @Param("layer") String layer, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user, Pageable pageable );
-     
+    public Page<Marker> listByFilters( @Param("layerId") Long layerId, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user, Pageable pageable );
+    
+//    
+//    /**
+//     * @param filter
+//     * @param pageable
+//     * @return
+//     */
+//    @Query(value="SELECT new Marker( marker.id, marker.status, marker.created, marker.location, layer, user) " +
+//                "FROM Marker marker " +
+//                "LEFT OUTER JOIN marker.layer layer " +
+//                "LEFT OUTER JOIN marker.user user " +
+//                "WHERE ( ( LOWER(layer.title) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
+//                "AND ( marker.status = :status OR :status = NULL ) " +
+//                "AND ( marker.created >= :dateStart OR CAST( :dateStart as date ) = NULL ) " +
+//                "AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
+//                "AND ( LOWER(user.email) LIKE '%' || LOWER(CAST(:user AS string)) || '%' OR :user = NULL) ) " +
+//                "AND ( marker.deleted = NULL OR marker.deleted = FALSE )"
+//                )
+//    public List<Marker> listByFiltersMap( @Param("layer") String layer, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user );
+    
+    
     /**
      * @param filter
      * @param pageable
@@ -70,15 +108,15 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
                 "FROM Marker marker " +
                 "LEFT OUTER JOIN marker.layer layer " +
                 "LEFT OUTER JOIN marker.user user " +
-                "WHERE  ( ( LOWER(layer.title) LIKE '%' || LOWER(CAST(:layer AS string))  || '%' OR :layer = NULL )  " +
+                "WHERE ( ( layer.id  = :layerId OR :layerId = NULL )" +
                 "AND ( marker.status = :status OR :status = NULL ) " +
                 "AND ( marker.created >= :dateStart OR CAST( :dateStart as date ) = NULL ) " +
                 "AND ( marker.created <= :dateEnd OR CAST( :dateEnd as date ) = NULL  ) " +
                 "AND ( LOWER(user.email) LIKE '%' || LOWER(CAST(:user AS string)) || '%' OR :user = NULL) ) " +
                 "AND ( marker.deleted = NULL OR marker.deleted = FALSE )"
                 )
-    public List<Marker> listByFiltersMap( @Param("layer") String layer, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user );
-     
+    public List<Marker> listByFiltersMap( @Param("layerId") Long layerId, @Param("status") MarkerStatus status, @Param("dateStart") Calendar dateStart, @Param("dateEnd") Calendar dateEnd, @Param("user") String user );
+    
      
     /**
      * 
