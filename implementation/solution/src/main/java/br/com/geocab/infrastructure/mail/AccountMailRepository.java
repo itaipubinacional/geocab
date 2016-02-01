@@ -114,7 +114,7 @@ public class AccountMailRepository implements IAccountMailRepository
                model.put("userName", user.getName() );
                model.put("marker", marker.getLayer().getName());
                
-               model.put("url", geocabUrl + "/admin#/markers/detail/" + marker.getId());
+               model.put("url", geocabUrl + "/admin#/markers?id=" + marker.getId());
 
                final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/accept-marker.html", StandardCharsets.ISO_8859_1.toString(), model);
                message.setText(content, true);
@@ -149,7 +149,7 @@ public class AccountMailRepository implements IAccountMailRepository
   	          model.put("marker", marker.getLayer().getName());
   	          model.put("motive", motiveMarkerModeration.getMotive().getName() + " - " + motiveMarkerModeration.getDescription());
   	          
-  	          model.put("url", geocabUrl + "/admin#/markers/detail/" + marker.getId());
+  	          model.put("url", geocabUrl + "/admin#/markers?id=" + marker.getId());
 
               final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/refuse-marker.html", StandardCharsets.ISO_8859_1.toString(), model);
               message.setText(content, true);
@@ -184,7 +184,7 @@ public class AccountMailRepository implements IAccountMailRepository
  	          model.put("userName", user.getName() );
  	          model.put("marker", marker.getLayer().getName());
  	          
- 	          model.put("url", geocabUrl + "/admin#/markers/detail/" + marker.getId());
+ 	          model.put("url", geocabUrl + "/admin#/markers?id=" + marker.getId());
 
              final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mail-templates/cancel-marker.html", StandardCharsets.ISO_8859_1.toString(), model);
              message.setText(content, true);

@@ -123,6 +123,9 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
   $scope.onSuccess = function (files) {
 
     $scope.attribute.files = files;
+    
+    $("span.error").hide();
+    
     $scope.$apply();
 
   };
@@ -135,7 +138,9 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
       type: "danger",
       text: $translate(msg)
     };
-    $scope.fadeMsg();
+    
+    $("span.error").show();
+//    $scope.fadeMsg();
 
     $scope.$apply();
   };
