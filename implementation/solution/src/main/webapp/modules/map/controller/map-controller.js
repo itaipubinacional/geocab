@@ -1870,7 +1870,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.clearShadowCreatingInternalLayer = function() {
 
-    if (!jQuery.isEmptyObject($scope.currentCreatingInternalLayer) && $scope.currentCreatingInternalLayer != undefined && $scope.marker != undefined && $scope.marker.layer != undefined) {
+    if (!angular.equals($scope.currentCreatingInternalLayer, {}) && $scope.currentCreatingInternalLayer != undefined && $scope.marker != undefined && $scope.marker.layer != undefined) {
 
       var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
@@ -2129,6 +2129,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.imgResult = null;
     $scope.formattedLatitude = null;
     $scope.formattedLongitude = null;
+    $scope.currentCreatingInternalLayer = {};
 
     if ($scope.slideActived == '#sidebar-select-marker' && $scope.screenSelectMarkerOpenned) {
       $scope.closeSelectMarker();
