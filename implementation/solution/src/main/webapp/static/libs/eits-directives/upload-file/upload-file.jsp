@@ -42,10 +42,10 @@
             <label ng-click="toggleCheckbox(file);$event.stopPropagation();">
               <input type="checkbox" ng-model="file.checked" name="file_{{ $index }}">
               <span ng-if="file.description">
-                {{ file.description | limitTo: 30 }} {{ file.description.length > 30 ? '...' : '' }}
+                {{ file.description | limitTo: 20 }} {{ file.description.length > 20 ? '...' : '' }}
               </span>
               <span ng-if="file.name && !file.description">
-                {{ file.name | limitTo: 30 }} {{ file.name.length > 30 ? '...' : '' }}
+                {{ file.name | limitTo: 20 }} {{ file.name.length > 20 ? '...' : '' }}
               </span>
             </label>
           </div>
