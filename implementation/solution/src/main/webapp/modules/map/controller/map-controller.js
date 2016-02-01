@@ -5216,9 +5216,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           });
 
-          var zoom = $scope.map.getView().getZoom();
+          //var zoom = $scope.map.getView().getZoom();
           $scope.map.getView().fitExtent(extent, $scope.map.getSize());
-          $scope.map.getView().setZoom(zoom);
+          //$scope.map.getView().setZoom(zoom);
 
           $scope.$apply();
         }
