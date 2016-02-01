@@ -2206,6 +2206,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         fcSelect: false
       };
     }
+
+    $scope.resolveDatepicker();
   };
 
   /**
@@ -4010,7 +4012,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         });
 
         $('.datepicker').mask("99/99/9999");
-      }, 200);
+      }, 400);
     });
     $scope.$watch('screen', function (oldValue, newValue) {
       $timeout(function () {
@@ -4026,7 +4028,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         });
 
         $('.datepicker').mask("99/99/9999");
-      }, 200);
+      }, 400);
     })
 
   };
