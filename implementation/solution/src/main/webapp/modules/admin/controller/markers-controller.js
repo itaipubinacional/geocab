@@ -2027,7 +2027,7 @@ ront controller of angle won't let enter an invalid URL.
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
         if ($scope.filter.layer != null)
-            var layer = $scope.filter.layer.title.layerTitle;
+            var layer = $scope.filter.layer.title.layerId;
 
         $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, pageRequest);
         $scope.listMarkerByFiltersMap( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd);
