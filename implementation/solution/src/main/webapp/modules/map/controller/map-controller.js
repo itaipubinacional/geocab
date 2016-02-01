@@ -5186,7 +5186,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     if ($scope.shapeFile.filter.dateEnd == "")
       $scope.shapeFile.filter.dateEnd = null;
     if ($scope.shapeFile.filter.layer != null)
-      layer = $scope.shapeFile.filter.layer.layerTitle;
+      layer = $scope.shapeFile.filter.layer.layerId;
 
     markerService.listMarkerByFilters(layer, $scope.shapeFile.filter.status, $scope.shapeFile.filter.dateStart, $scope.shapeFile.filter.dateEnd, userEmail, null, {
       callback: function (result) {
