@@ -72,7 +72,7 @@ uri="http://www.springframework.org/security/tags"%>
         <div class='rui-resizable-content' style="position: static;">
           <form name="sidebarMarkerDetail" ng-show="screen == 'detail'">
 
-            <div style="position: absolute; top:0; right:0; left:0; bottom:0">
+            <div style="position: absolute; top:0; right:0; left:0; bottom:0; overflow-y: auto;">
               <!-- <div class="sidebar-coloredbar"></div> -->
               <div style="height: 35px">
                 <span ng-click="toggleSidebarMarkerDetailUpdate(300, 'closeButton');"
