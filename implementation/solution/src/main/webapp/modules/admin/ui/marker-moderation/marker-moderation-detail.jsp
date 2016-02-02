@@ -112,24 +112,24 @@
         <!--BUTTONS-->
 
         <div class="col-md-12" style="position: fixed ;bottom: 0;width: 36%;
-            padding-top: 10px; background-color: white; border-top: 1px solid #c5c5c5;
+            padding-top: 21px; background-color: white; border-top: 1px solid #c5c5c5;
             height: 100px; ">
 
             <div class="btn-group col-md-12" role="group" aria-label="group buttons">
                 <button ng-disabled="currentEntity.status == ACCEPTED" ng-click="approveMarker()" type="button"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Approve'/>"
                         class="btn btn-secondary col-md-4 btn-icon">
-                    <i style="font-size: 40px" class="icon itaipu-icon-like-filled"></i>
+                    <i style="font-size: 24px" class="icon itaipu-icon-like-filled"></i>
                 </button>
                 <button type="button" ng-disabled="currentEntity.status == REFUSED"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Refuse'/>"
                         ng-click="refuseMarker()" class="btn btn-secondary col-md-4 btn-icon">
-                    <i style="font-size: 40px" class="icon itaipu-icon-dislike"></i>
+                    <i style="font-size: 24px" class="icon itaipu-icon-dislike"></i>
                 </button>
                 <button type="button" ng-click="cancelMarker()"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Cancel'/>"
                         ng-disabled="currentEntity.status == CANCELED" class="btn btn-secondary col-md-4 btn-icon">
-                    <i style="font-size: 40px" class="icon itaipu-icon-close"></i>
+                    <i style="font-size: 24px" class="icon itaipu-icon-close"></i>
                 </button>
 
             </div>

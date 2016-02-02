@@ -140,7 +140,7 @@
 
         <!--BUTTONS-->
         <div class="col-md-12" style="position: fixed ;bottom: 0;width: 36%;
-            padding-top: 10px; background-color: white; border-top: 1px solid #c5c5c5;
+            padding-top: 21px; background-color: white; border-top: 1px solid #c5c5c5;
             height: 100px; ">
 
             <div class="btn-group col-md-12" role="group" aria-label="group buttons">
@@ -150,18 +150,18 @@
                         ng-click="saveMarkerModal()" type="button"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Save'/>"
                         class="btn btn-secondary col-md-4 btn-icon">
-                    <i style="font-size: 40px" class="icon itaipu-icon-save"></i>
+                    <i style="font-size: 24px" class="icon itaipu-icon-save"></i>
                 </button>
                 <button type="button" ng-click="postMarkerModal()"
                         ng-disabled="currentEntity.status == PENDING ||currentEntity.status == ACCEPTED ||currentEntity.status == CANCELED"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Post'/>"
                         class="btn btn-secondary col-md-4 btn-icon">
-                    <i style="font-size: 40px" class="icon itaipu-icon-export"></i>
+                    <i style="font-size: 24px" class="icon itaipu-icon-export"></i>
                 </button>
                 <button type="button" ng-click="removeMarkerModal()"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Delete'/>"
                         class="btn btn-secondary col-md-4 btn-icon">
-                    <i style="font-size: 40px" class="icon itaipu-icon-delete"></i>
+                    <i style="font-size: 24px" class="icon itaipu-icon-delete"></i>
                 </button>
 
             </div>
