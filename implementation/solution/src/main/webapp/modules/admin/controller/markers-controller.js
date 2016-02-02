@@ -371,7 +371,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             },
             {
                 displayName: $translate('admin.marker-moderation.Created-at'),
-                width: '150px',
+                width: '100px',
                 field: 'created',
                 cellTemplate: '<span ' +
                 'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
