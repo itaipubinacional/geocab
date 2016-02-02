@@ -9,6 +9,7 @@
 <div class="modal-content">
   <div ng-include="static/libs/eits-directives/alert/alert.html"></div>
 	<div class="modal-header">
+	  <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>	
 	  <h3 class="modal-title"><spring:message code="photos.Insert-Photos"/></h3>
 	</div>
 	<div class="modal-body" ng-init="initialize();" style="overflow: hidden;max-height: 550px; min-height: 500px;">
