@@ -470,7 +470,7 @@ input:-moz-placeholder {
     border-right: 1px solid #d9d9d9;
     border-bottom: 1px solid #d9d9d9;
     height: 50px;
-    width: 110px;
+    width: 150px;
     text-align: center;
 }
 
@@ -608,7 +608,7 @@ input:-moz-placeholder {
 
 .navbar-inner {
 	min-height: 40px;
-	padding-left: 47px;
+	padding-left: 20px;
 	padding-right: 46px;
 	border: 1px solid #dedede; /* stroke */
 	margin-bottom: 8px;
