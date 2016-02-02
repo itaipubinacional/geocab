@@ -93,23 +93,6 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
         }
     });
-    
-    /**
-     * Handler que escuta as mudanças de URLs pertecentes ao estado da tela.
-     * Ex.: list, add, detail, edit
-     *
-     * Toda vez que ocorre uma mudança de URL se via botão, troca de URL manual, ou ainda
-     * ao vançar e voltar do browser, este evento é chamado.
-     *
-     */
-    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-
-    	if ($state.current.name == 'markers.detail'){
-//    		console.log('HERE');
-//    		$scope.changeToList();
-    	};
-    });
-    
 
 
     /*-------------------------------------------------------------------
@@ -443,29 +426,31 @@ ront controller of angle won't let enter an invalid URL.
      */
     $scope.initialize = function (toState, toParams, fromState, fromParams) {
 
+        $scope.loadMap();
+
+        var search = $location.search();
+
+        if(search.id) {
+            markerService.findMarkerById(search.id,{
+                callback: function (result) {
+                    $scope.changeToDetail(result);
+                    $scope.$apply();
+                },
+                errorHandler: function (message, exception) {
+                    $scope.msg = {type: "error", text: message};
+                    $scope.$apply();
+                }
+            });
+        } else{
+            $scope.changeToList();
+        }
+
     	/**
          * It is necessary to remove the sortInfo attribute because the return of an edition was doubling the value of the same with the Sort attribute
          * preventing the ordinations in the columns of the grid.
          */
 
         $log.info("Starting the front controller.");
-
-        $scope.loadMap();
-
-        if (toParams.id) {
-        	markerService.findMarkerById(toParams.id,{
-        		callback: function (result) {
-        			$scope.changeToDetail(result);
-        			$scope.$apply();
-                },
-                errorHandler: function (message, exception) {
-                    $scope.msg = {type: "error", text: message};
-                    $scope.$apply();
-                }
-        	});
-		}else{
-	        $scope.changeToList();
-		}
 
     };
 
@@ -588,6 +573,7 @@ ront controller of angle won't let enter an invalid URL.
      */
     $scope.changeToList = function (markers) {
 
+        $location.search('');
 
         $log.info("changeToList");
 
@@ -1098,8 +1084,6 @@ ront controller of angle won't let enter an invalid URL.
         });
 
         $scope.resolveDatePicker();
-
-
 
     };
 
@@ -2027,7 +2011,7 @@ ront controller of angle won't let enter an invalid URL.
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
         if ($scope.filter.layer != null)
-            var layer = $scope.filter.layer.title.layerTitle;
+            var layer = $scope.filter.layer.title.layerId;
 
         $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, pageRequest);
         $scope.listMarkerByFiltersMap( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd);

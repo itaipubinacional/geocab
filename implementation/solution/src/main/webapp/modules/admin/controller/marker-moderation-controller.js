@@ -1675,7 +1675,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
         if ($scope.filter.layer != null)
-            layer = $scope.filter.layer.title.layerTitle;
+            layer = $scope.filter.layer.title.layerId;
 
         $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest);
         $scope.listMarkerByFiltersMap( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail);

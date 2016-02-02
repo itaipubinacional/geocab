@@ -474,14 +474,23 @@ public class MarkerService extends AbstractMarkerService
 	{
 		return this.markerAttributeRepository.listAttributeByMarker(id);
 	}
-
+	
+	/**
+	 * 
+	 * @param layer
+	 * @param status
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param pageable
+	 * @return
+	 */
 	@Transactional(readOnly = true)
-	public Page<Marker> listMarkerByFiltersByUser(String layer, MarkerStatus status, String dateStart, String dateEnd, PageRequest pageable)
+	public Page<Marker> listMarkerByFiltersByUser(Long layer, MarkerStatus status, String dateStart, String dateEnd, PageRequest pageable)
 	{
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
 		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, user, pageable);
 	}
-
+	
 	/**
 	 * Method to list {@link FonteDados} pageable with filter options
 	 * 
@@ -491,27 +500,37 @@ public class MarkerService extends AbstractMarkerService
 	 * @throws java.text.ParseException
 	 */
 	@Transactional(readOnly = true)
-	public Page<Marker> listMarkerByFilters(String layer, MarkerStatus status,
-			String dateStart, String dateEnd, String user, PageRequest pageable)
+	public Page<Marker> listMarkerByFilters(Long layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable)
 	{
 		if(this.getUserMe().getRole() != UserRole.ADMINISTRATOR)
 		{
 			user = this.getUserMe().getEmail();	
 		}
-		
 		return this.markerRepository.listByFilters(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], user, pageable);
 	}
 	
-
+	/**
+	 * 
+	 * @param layer
+	 * @param status
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param pageable
+	 * @return
+	 * @throws java.text.ParseException
+	 */
 	@Transactional(readOnly = true)
-	public List<Marker> listMarkerByFiltersMapByUser(String layer,
-			MarkerStatus status, String dateStart, String dateEnd,
-			PageRequest pageable) throws java.text.ParseException
+	public List<Marker> listMarkerByFiltersMapByUser(Long layer, MarkerStatus status, String dateStart, String dateEnd, PageRequest pageable) throws java.text.ParseException
 	{
 		String user = ContextHolder.getAuthenticatedUser().getEmail();
 		return this.listMarkerByFiltersMap(layer, status, dateStart, dateEnd, user, pageable);
 	}
 	
+	/**
+	 * @param dateStart
+	 * @param dateEnd
+	 * @return
+	 */
 	private Calendar[] formattDates(String dateStart, String dateEnd){
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Calendar dEnd = null;
@@ -540,17 +559,20 @@ public class MarkerService extends AbstractMarkerService
 		}
 		return new Calendar[] {dStart, dEnd};
 	}
-
+	
 	/**
 	 * Method to list {@link FonteDados} pageable with filter options
-	 * 
-	 * @param filter
+	 * @param layer
+	 * @param status
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param user
 	 * @param pageable
 	 * @return
 	 * @throws java.text.ParseException
 	 */
 	@Transactional(readOnly = true)
-	public List<Marker> listMarkerByFiltersMap(String layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable) throws java.text.ParseException
+	public List<Marker> listMarkerByFiltersMap(Long layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable) throws java.text.ParseException
 	{
 
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -577,7 +599,7 @@ public class MarkerService extends AbstractMarkerService
 		}
 		
 		
-		return this.markerRepository.listByFiltersMap(layer, status, dStart, dEnd, user);
+		return this.markerRepository.listByFiltersMap(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], user);
 	}
 
 	/**
