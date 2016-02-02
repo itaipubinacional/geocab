@@ -28,9 +28,6 @@
 		<hibernate.version>4.3.5.Final</hibernate.version>
 		<hibernatevalidator.version>5.1.1.Final</hibernatevalidator.version>
 		<!-- ModeShape -->
-		<mvn.jcr.indexes>/tmp/geocab/indexes</mvn.jcr.indexes>
-		<mvn.jcr.files>/tmp/geocab/files</mvn.jcr.files>
-		<mvn.jcr.caches>/tmp/geocab/files</mvn.jcr.caches>
 		<modeshape.version>3.6.0.Final</modeshape.version>
 		<infinispan.version>5.3.0.Final</infinispan.version>
 		
@@ -102,7 +99,10 @@
 				<mvn.mail.debug>true</mvn.mail.debug>
 				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
 				
-				<!-- ShapeFile -->
+				<!-- ModeShape -->
+				<mvn.jcr.indexes>/tmp/geocab/indexes</mvn.jcr.indexes>
+				<mvn.jcr.files>/tmp/geocab/files</mvn.jcr.files>
+				<mvn.jcr.caches>/tmp/geocab/files</mvn.jcr.caches>
 				<mvn.path.shapefiles>/tmp/geocab/files/shapefile/</mvn.path.shapefiles>
 
 				<!-- Social -->
@@ -156,8 +156,11 @@
 				<mvn.mail.debug>true</mvn.mail.debug>
 				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
 				
-				<!-- ShapeFile -->
-				<mvn.path.shapefiles>/tmp/geocab/files/shapefile/</mvn.path.shapefiles>
+				<!-- ModeShape -->
+				<mvn.jcr.indexes>/tmp/geocab-homologation/indexes</mvn.jcr.indexes>
+				<mvn.jcr.files>/tmp/geocab-homologation/files</mvn.jcr.files>
+				<mvn.jcr.caches>/tmp/geocab-homologation/files</mvn.jcr.caches>
+				<mvn.path.shapefiles>/tmp/geocab-homologation/files/shapefile/</mvn.path.shapefiles>
 
 				<!-- Social -->
 				<!-- Facebook -->
@@ -207,8 +210,11 @@
 				<mvn.mail.debug>true</mvn.mail.debug>
 				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
 				
-				<!-- ShapeFile -->
-				<mvn.path.shapefiles>/tmp/geocab/files/shapefile/</mvn.path.shapefiles>
+				<!-- ModeShape -->
+				<mvn.jcr.indexes>/tmp/geocab-sandbox/indexes</mvn.jcr.indexes>
+				<mvn.jcr.files>/tmp/geocab-sandbox/files</mvn.jcr.files>
+				<mvn.jcr.caches>/tmp/geocab-sandbox/files</mvn.jcr.caches>
+				<mvn.path.shapefiles>/tmp/geocab-sandbox/files/shapefile/</mvn.path.shapefiles>
 
 				<!-- Social -->
 				<!-- Facebook -->
