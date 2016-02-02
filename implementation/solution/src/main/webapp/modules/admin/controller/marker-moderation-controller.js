@@ -87,7 +87,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.filter.dateStart = null;
             if ($scope.filter.dateEnd == "")
                 $scope.filter.dateEnd = null;
-            if ($scope.filter.layer.title.layerId != null)
+            if ($scope.filter.layer != null)
                 var layer = $scope.filter.layer.title.layerId;
             $scope.listMarkerByFilters(layer , $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, $scope.currentPage.pageable);
 
@@ -1675,7 +1675,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $scope.filter.dateStart = null;
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
-        if ($scope.filter.layer.title.layerId != null)
+        if ($scope.filter.layer != null)
             layer = $scope.filter.layer.title.layerId;
 
         $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, userEmail, pageRequest);
@@ -1698,7 +1698,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $scope.dragMarkers = null;
         }
 
-        $scope.filter.layer.title.layerId = null;
+        $scope.filter.layer = null;
         $scope.filter.status = "";
         $scope.filter.dateStart = null;
         $scope.filter.dateEnd = null;

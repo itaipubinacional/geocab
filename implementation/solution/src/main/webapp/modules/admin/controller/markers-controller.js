@@ -88,7 +88,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
                 $scope.filter.dateStart = null;
             if ($scope.filter.dateEnd == "")
                 $scope.filter.dateEnd = null;
-            if ($scope.filter.layer.title.layerId != null)
+            if ($scope.filter.layer != null)
                 var layer = $scope.filter.layer.title.layerId;
 
             //$scope.currentPage.pageable.size = 10;
@@ -2014,7 +2014,7 @@ ront controller of angle won't let enter an invalid URL.
             $scope.filter.dateStart = null;
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
-        if ($scope.filter.layer.title.layerId != null)
+        if ($scope.filter.layer != null)
             var layer = $scope.filter.layer.title.layerId;
 
         $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, pageRequest);
@@ -2033,7 +2033,7 @@ ront controller of angle won't let enter an invalid URL.
             $scope.dragMarkers = null;
         }
 
-        $scope.filter.layer.title.layerId = null;
+        $scope.filter.layer = null;
         $scope.filter.status = null;
         $scope.filter.dateStart = null;
         $scope.filter.dateEnd = null;
