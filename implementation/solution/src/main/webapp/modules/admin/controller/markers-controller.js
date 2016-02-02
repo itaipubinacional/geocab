@@ -75,7 +75,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
             order.property = sort.fields[0];
 
             //Sort do spring-data
-            $scope.currentPage.pageable = {};
+            //$scope.currentPage.pageable = {};
 
             $scope.currentPage.pageable.sort = new Sort();
 
@@ -88,8 +88,12 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
                 $scope.filter.dateStart = null;
             if ($scope.filter.dateEnd == "")
                 $scope.filter.dateEnd = null;
+            if ($scope.filter.layer.title.layerId != null)
+                var layer = $scope.filter.layer.title.layerId;
 
-            $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.currentPage.pageable);
+            //$scope.currentPage.pageable.size = 10;
+
+            $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.currentPage.pageable);
 
         }
     });
@@ -715,7 +719,7 @@ ront controller of angle won't let enter an invalid URL.
         if ($scope.dragMarkers != null) {
             $scope.listMarkerByMarkers($scope.dragMarkers, $scope.currentPage.pageable);
         } else {
-            $scope.listMarkerByFilters($scope.filter.layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.currentPage.pageable);
+            $scope.listMarkerByFilters($scope.filter.layer.title.layerId, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.currentPage.pageable);
         }
 
     };
@@ -2010,7 +2014,7 @@ ront controller of angle won't let enter an invalid URL.
             $scope.filter.dateStart = null;
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
-        if ($scope.filter.layer != null)
+        if ($scope.filter.layer.title.layerId != null)
             var layer = $scope.filter.layer.title.layerId;
 
         $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, pageRequest);
@@ -2029,7 +2033,7 @@ ront controller of angle won't let enter an invalid URL.
             $scope.dragMarkers = null;
         }
 
-        $scope.filter.layer = null;
+        $scope.filter.layer.title.layerId = null;
         $scope.filter.status = null;
         $scope.filter.dateStart = null;
         $scope.filter.dateEnd = null;
