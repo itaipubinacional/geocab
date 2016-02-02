@@ -336,14 +336,14 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 field: 'user.email',
                 cellTemplate:
                 '<span title="{{row.entity.user.email}}" ' +
-                'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
+                'style="font-size: 14px; max-width:95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
                 '{{row.entity.user.email}}' +
                 '</span>'
             },
 
             {
                 displayName: $translate('admin.marker-moderation.Created-at'),
-                width: '150px',
+                width: '100px',
                 field: 'created',
                 cellTemplate:
                     '<span ' +
@@ -355,7 +355,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             {
                 displayName: $translate('admin.marker-moderation.Situation'),
                 cellTemplate: IMAGE_MODERATION,
-                width: '100px'
+                width: '90px'
             }//,
             //     {displayName: $translate('Actions'), sortable: false, cellTemplate: GRID_ACTION_BUTTONS, width: '100px'}
         ]
