@@ -608,9 +608,17 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $scope.listMarkerByMarkers($scope.dragMarkers, $scope.currentPage.pageable);
         } else {
             if ($scope.filter.user == null) {
-                $scope.listMarkerByFilters($scope.filter.layer.title.layerId, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, null, $scope.currentPage.pageable);
+
+                if ($scope.filter.layer != null)
+                    var layer = $scope.filter.layer.title.layerId;
+
+                $scope.listMarkerByFilters(layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, null, $scope.currentPage.pageable);
             } else {
-                $scope.listMarkerByFilters($scope.filter.layer.title.layerId, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user.email, $scope.currentPage.pageable);
+
+                if ($scope.filter.layer != null)
+                    var layer = $scope.filter.layer.title.layerId;
+
+                $scope.listMarkerByFilters(layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.filter.user.email, $scope.currentPage.pageable);
             }
         }
 

@@ -719,7 +719,11 @@ ront controller of angle won't let enter an invalid URL.
         if ($scope.dragMarkers != null) {
             $scope.listMarkerByMarkers($scope.dragMarkers, $scope.currentPage.pageable);
         } else {
-            $scope.listMarkerByFilters($scope.filter.layer.title.layerId, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.currentPage.pageable);
+
+            if ($scope.filter.layer != null)
+                var layer = $scope.filter.layer.title.layerId;
+
+            $scope.listMarkerByFilters(layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, $scope.currentPage.pageable);
         }
 
     };
