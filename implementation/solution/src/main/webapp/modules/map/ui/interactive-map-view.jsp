@@ -527,7 +527,7 @@ uri="http://www.springframework.org/security/tags"%>
                     class="icon itaipu-icon-close sidebar-close"
                     title="<spring:message code='map.Close' />"
                   ></span>
-            <div style="position: absolute; left: 0; right: 0; bottom: 0; top: 0">
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; top: 0;overflow: auto;">
               <div id="tabs-6" ng-switch="LAYER_MENU_STATE" style="overflow:auto; width: auto" class="container">
                 <div class="sidebar-content-header"><spring:message code="map.Select-posts" /></div>
 

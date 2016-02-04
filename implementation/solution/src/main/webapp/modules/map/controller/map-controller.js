@@ -2070,8 +2070,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.drag = true;
 
         $timeout(function () {
-          $(".panel-body").height($("#sidebar-select-marker").height() - 68 - 30);
-          $(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
+          $(".panel-body").css('overflow-y', 'hidden');
+          //$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
         }, 100);
 
       });
