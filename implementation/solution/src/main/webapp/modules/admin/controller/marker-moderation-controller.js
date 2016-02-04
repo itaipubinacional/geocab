@@ -1134,6 +1134,26 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     };
 
     /**
+     * Resolve date picker
+     */
+    $scope.resolveDatePicker = function () {
+        $timeout(function () {
+            $('.datepicker').datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Próximo',
+                prevText: 'Anterior'
+            });
+
+            $('.datepicker').mask("99/99/9999");
+        }, 300);
+    };
+
+    /**
      * Load map
      */
     $scope.loadMap = function () {
@@ -1178,25 +1198,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         $scope.resolveDatePicker();
     };
 
-    /**
-     * Resolve date picker
-     */
-    $scope.resolveDatePicker = function () {
-        $timeout(function () {
-            $('.datepicker').datepicker({
-                dateFormat: 'dd/mm/yy',
-                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                nextText: 'Próximo',
-                prevText: 'Anterior'
-            });
 
-            $('.datepicker').mask("99/99/9999");
-        }, 300);
-    };
 
     $scope.buildMarker = function(markers){
 

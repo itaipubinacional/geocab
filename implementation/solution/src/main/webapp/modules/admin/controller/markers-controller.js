@@ -61,9 +61,9 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.$on('ngGridEventSorted', function (event, sort) {
 
-        //if(event.targetScope.gridId != $scope.gridOptions.gridId) {
-        //    return;
-        //}
+        if(event.targetScope.gridId != $scope.gridOptions.gridId) {
+            return;
+        }
 
         //run only once
         if (!angular.equals(sort, $scope.gridOptions.sortInfo)) {
@@ -577,7 +577,7 @@ ront controller of angle won't let enter an invalid URL.
      */
     $scope.changeToList = function (markers) {
 
-        $location.search('');
+        //$location.search('');
 
         $log.info("changeToList");
 
@@ -965,9 +965,8 @@ ront controller of angle won't let enter an invalid URL.
         });
 
         $('.datepicker').mask("99/99/9999");
-      }, 300);
+      }, 500);
     };
-
 
     /**
      * Update the status of the marker in the listView
@@ -980,7 +979,7 @@ ront controller of angle won't let enter an invalid URL.
                 return;
             }
         }
-    }
+    };
 
     /*
      * List motives of marker moderation
@@ -1015,8 +1014,7 @@ ront controller of angle won't let enter an invalid URL.
             $scope.listMarkerByFiltersMap(null, null, null, null);
         }
 
-    }
-
+    };
 
     /**
      * Performs the query logs, considering filter, paging and sorting.
@@ -1093,26 +1091,6 @@ ront controller of angle won't let enter an invalid URL.
 
         $scope.resolveDatePicker();
 
-    };
-
-    /**
-     * Resolve date picker
-     */
-    $scope.resolveDatePicker = function () {
-        $timeout(function () {
-            $('.datepicker').datepicker({
-                dateFormat: 'dd/mm/yy',
-                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                nextText: 'Próximo',
-                prevText: 'Anterior'
-            });
-
-            $('.datepicker').mask("99/99/9999");
-        }, 300);
     };
 
     /**
@@ -1879,7 +1857,6 @@ ront controller of angle won't let enter an invalid URL.
                             }
 
                         });
-                        $scope.resolveDatePicker();
                         $scope.$apply();
                     },
                     errorHandler: function (message, exception) {
@@ -2012,6 +1989,8 @@ ront controller of angle won't let enter an invalid URL.
         pageRequest.size = 10;
         $scope.pageRequest = pageRequest;
 
+        var layer = null;
+
         if ($scope.filter.status == "")
             $scope.filter.status = null;
         if ($scope.filter.dateStart == "")
@@ -2019,7 +1998,7 @@ ront controller of angle won't let enter an invalid URL.
         if ($scope.filter.dateEnd == "")
             $scope.filter.dateEnd = null;
         if ($scope.filter.layer != null)
-            var layer = $scope.filter.layer.title.layerId;
+            layer = $scope.filter.layer.title.layerId;
 
         $scope.listMarkerByFilters( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd, pageRequest);
         $scope.listMarkerByFiltersMap( layer, $scope.filter.status, $scope.filter.dateStart, $scope.filter.dateEnd);
