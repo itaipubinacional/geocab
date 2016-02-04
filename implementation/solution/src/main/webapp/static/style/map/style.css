@@ -506,6 +506,7 @@ div.gallery-thumbnails{}
     content: " ";
     height: 0;
     width: 0;
+    left: 50%;
     position: absolute;
     pointer-events: none;
 }
