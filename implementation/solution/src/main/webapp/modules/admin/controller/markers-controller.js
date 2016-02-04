@@ -382,6 +382,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
                 '{{row.entity.created | date:"dd/MM/yyyy"}}</span>'
             },
             {
+                sortable: false,
                 displayName: $translate('admin.marker-moderation.Situation'),
                 cellTemplate: IMAGE_MODERATION,
                 width: '100px'

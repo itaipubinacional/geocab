@@ -354,6 +354,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
             },
             {
+                sortable: false,
                 displayName: $translate('admin.marker-moderation.Situation'),
                 cellTemplate: IMAGE_MODERATION,
                 width: '90px'
