@@ -116,7 +116,7 @@
     border: none!important;
     list-style: none;
     padding: 16px 8px;
-    height: 50px;
+    height: 48px;
     width: 60px;
     text-align: center;
     clear: both;
@@ -214,7 +214,7 @@
     border: none;
     width: 58px;
     z-index: 2;
-    margin-top: 70px;
+    margin-top: 50px;
 }
 
 .sidebar-coloredbar {
