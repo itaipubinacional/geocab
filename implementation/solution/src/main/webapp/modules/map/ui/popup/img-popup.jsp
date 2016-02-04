@@ -25,7 +25,7 @@
           <p style="float: left">{{ currentPhoto.description }}</p>
           <span style="float: right">{{ pageable.page + 1 }} <spring:message code="of"/> {{ currentAttribute.totalPages }}</span>
         </div>
-        <div class="current-photo">
+        <div class="current-photo" style="clear: both">
           <div class="left-nav" ng-click="previousPhoto()"><i class="icon-chevron-left icon-large"></i></div>
           <img ng-src="{{ currentPhoto.image }}">
           <div class="right-nav" ng-click="nextPhoto()"><i class="icon-chevron-right icon-large"></i></div>
