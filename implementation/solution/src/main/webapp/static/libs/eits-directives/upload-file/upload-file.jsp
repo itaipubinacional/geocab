@@ -56,6 +56,6 @@
   <div ng-if="over && files.length" id="dropbox-over-msg">
     <span><spring:message code="photos.Drop-The-Files-To-Upload"/> <spring:message code="in"/> <br/><b>{{ attribute.name }}</b></span>
   </div>
-  <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" style="text-indent:999999px; color:transparent"/>
+  <input type="file" id="files" multiple onchange="angular.element(this).scope().setFiles(this)" style="height:0px;text-indent:999999px; color:transparent"/>
 </div>
 </html>
