@@ -130,7 +130,7 @@
             <version>1.11</version>
             <exclusions>
                 <exclusion>
-                    <groupId>xerces</groupId>war
+                    <groupId>xerces</groupId>
                     <artifactId>xercesImpl</artifactId>
                 </exclusion>
             </exclusions>
