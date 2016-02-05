@@ -42,19 +42,27 @@ import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.TransformException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.util.Assert;
 
 import br.com.geocab.domain.entity.layer.Attribute;
@@ -182,11 +190,35 @@ public class ShapeFileService
 	}
 	
 	/**
+	 * 
+	 * @param wktPoint
+	 * @return
+	 */
+	private static Geometry wktToGeometry(String wktPoint)
+	{
+		WKTReader fromText = new WKTReader();
+		Geometry geom = null;
+		try
+		{
+			geom = fromText.read(wktPoint);
+		}
+		catch (com.vividsolutions.jts.io.ParseException e)
+		{
+			throw new RuntimeException("Not a WKT string:" + wktPoint);
+		}
+		return geom;
+	}
+	
+	/**
 	 * Importa a lista de postagem dos shapeFiles já gravados no sistema de arquivos
 	 * @param file
 	 * @return
+	 * @throws FactoryException 
+	 * @throws NoSuchAuthorityCodeException 
+	 * @throws TransformException 
+	 * @throws MismatchedDimensionException 
 	 */
-	private static final List<Marker> importt(final File file)
+	private static final List<Marker> importt(final File file) throws NoSuchAuthorityCodeException, FactoryException, MismatchedDimensionException, TransformException
 	{
 		try
 		{
@@ -194,6 +226,7 @@ public class ShapeFileService
 		    map.put("url", file.toURI().toURL());
 
 		    final DataStore dataStore = DataStoreFinder.getDataStore(map);
+		    
 		    final String typeName = dataStore.getTypeNames()[0];
 
 		    final FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore.getFeatureSource(typeName);
@@ -207,12 +240,22 @@ public class ShapeFileService
 	    	while (features.hasNext()) 
 	        {
 	    		final SimpleFeature feature = features.next();
-	            
-	    		final Marker marker = new Marker();
-    			    			
-    			final Coordinate coordinate = new Coordinate(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
+
+//	    		double coordinates[] = MercatorTransform.forward(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
+	    		
+//    			final Coordinate coordinate = new Coordinate(-getX(feature.getDefaultGeometryProperty().getValue().toString()), -getY(feature.getDefaultGeometryProperty().getValue().toString()));
+//    			JTS.transform(source, dest, transform)
     			
-    			marker.setLocation(new Point(coordinate));
+    			CoordinateReferenceSystem sourceCRS = CRS.decode("WGS84(DD)");
+//    			CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:3785");// TODO
+//    			MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS /*source.getSchema().getCoordinateReferenceSystem()*/, false);
+	    		
+//    			Geometry targetGeometry = JTS.transform( wktToGeometry(  feature.getDefaultGeometryProperty().getValue().toString()).getEnvelope(), transform);
+	    		
+    			final Marker marker = new Marker(new Point(/*coordinate*/));
+//    			CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326", true);
+    			Geometry targetGeometry = JTS.toGeographic(wktToGeometry(feature.getDefaultGeometryProperty().getValue().toString()), sourceCRS /*DefaultGeographicCRS.WGS84*/);
+    			marker.setLocation((Point) targetGeometry);
     			
 	            final List<MarkerAttribute> markersAttributes = new ArrayList<>();
 				for (final Property property : feature.getProperties())
@@ -228,7 +271,7 @@ public class ShapeFileService
 							final MarkerAttribute markerAttribute = extractAttributes(feature, attribute, property, marker);
 							
 							//Valida o atributo
-							validateMarkerAttribute(markerAttribute);
+//							validateMarkerAttribute(markerAttribute);
 							markersAttributes.add(markerAttribute);
 							
 							marker.setMarkerAttribute(markersAttributes);
@@ -343,7 +386,12 @@ public class ShapeFileService
 					marker.formattedNameAttributes();
 					
 	            	if ((i != 0 && marker.getLayer().getId() != layer.getMarkers().get(i - 1).getId()) || TYPE == null)
+	            	{
 	            		TYPE = DataUtilities.createType(layer.getName(), "the_geom:Point,"+marker.formattedAttributes());
+//	            		CoordinateReferenceSystem crs = CRS.decode( "EPSG:4326" );
+//	            		TYPE = DataUtilities.createSubType(TYPE, null, crs);
+	            	}
+	            		
 					
 	            	final GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(null);
 	            	
@@ -351,13 +399,17 @@ public class ShapeFileService
 	                final double latitude = marker.getLocation().getY();
 	
 	                final Point point = factory.createPoint(new Coordinate(longitude, latitude));
+	                
+	                
+	                
 	                // O ponto também é um atributo "new Object[]{point}"
 	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
 	                
+	                
 	                // Extrai os atributos da feature 
 	                feature = extractFeatures(feature, marker);
-	                
-	                collection.add(feature);
+	                	
+	                collection.add(feature);	
 	            }
 	            
 		        final DataStoreFactorySpi dataStoreFactorySpi = new ShapefileDataStoreFactory();
@@ -369,8 +421,11 @@ public class ShapeFileService
 	
 		        final ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactorySpi.createNewDataStore(create);
 		        newDataStore.createSchema(TYPE);
-		        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
-	
+		        
+//		        CoordinateReferenceSystem crs = CRS.decode("EPSG:4326");
+//		        newDataStore.forceSchemaCRS( crs );
+//		        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84_3D);// TODO
+		        
 		        final Transaction transaction = new DefaultTransaction("create");
 		        final String typeName = newDataStore.getTypeNames()[0];
 		        
@@ -499,7 +554,11 @@ public class ShapeFileService
 		{
 			try
 			{
-				Date date = new SimpleDateFormat("dd/MM/yyyy").parse(markerAttribute.getValue());
+				Date date = null;
+				if (markerAttribute.getValue() != null && !markerAttribute.getValue().equals(""))
+				{
+					date = new SimpleDateFormat("dd/MM/yyyy").parse(markerAttribute.getValue());
+				}
 				feature.setAttribute(attribute, date);
 			}
 			catch (ParseException e)
@@ -632,5 +691,5 @@ public class ShapeFileService
 		double doubleCoordinate = Double.parseDouble(coordinateString);
 		return doubleCoordinate;
 	}
-
+	
 }

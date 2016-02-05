@@ -255,6 +255,14 @@ public class Marker extends AbstractEntity implements Serializable
 		this.setCreated(created);
 	}
 	
+	/**
+	 * @param point
+	 */
+	public Marker(Point point)
+	{
+		this.setLocation(point);
+	}
+	
 	/*-------------------------------------------------------------------
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
