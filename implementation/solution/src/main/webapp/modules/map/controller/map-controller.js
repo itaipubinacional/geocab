@@ -2070,8 +2070,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.drag = true;
 
         $timeout(function () {
-          $(".panel-body").height($("#sidebar-select-marker").height() - 68 - 30);
-          $(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
+          $(".panel-body").css('overflow-y', 'hidden');
+          //$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
         }, 100);
 
       });
@@ -3292,6 +3292,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.formattedLongitude = null;
     }
 
+    $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+
     if(close) {
       $scope.currentEntity = new Marker();
 
@@ -3301,7 +3303,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.attributesByLayer = [];
     }
 
-    $scope.map.removeLayer($scope.currentCreatingInternalLayer);
   };
 
   $scope.updateMarker = function () {
