@@ -5341,7 +5341,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.$watch('testFiles', function(newVal, oldVal){
 
-    if(newVal.length == 3) {
+    if(newVal.length == 4) {
       shapeFileService.importShapeFile(data, {
         callback: function (result) {
 
@@ -5415,7 +5415,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.setAction('import');
 
-    if (!(/\.(shp|dbf|shx)$/i).test(input.value)){
+    if (!(/\.(shp|dbf|shx|prj)$/i).test(input.value)){
 
       $scope.msg = {
         type: "danger",

@@ -1032,7 +1032,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <i ng-if="isLoading && isImport" class="loading"></i>
                 </button>
 
-                <input id="upload" style="visibility: hidden" multiple="true" type="file" accept=".shp, .shx, .dbf" name="upload" onchange="angular.element(this).scope().onFileChange(this)">
+                <input id="upload" style="visibility: hidden" multiple="true" type="file" accept=".shp, .shx, .dbf, .prj" name="upload" onchange="angular.element(this).scope().onFileChange(this)">
 
                 <hr style="border-color: #d9d9d9;"/>
 
