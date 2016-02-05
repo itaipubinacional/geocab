@@ -415,7 +415,7 @@ public class ShapeFileService
 		        final ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactorySpi.createNewDataStore(create);
 		        newDataStore.createSchema(TYPE);
 		        
-		        CoordinateReferenceSystem crs = CRS.decode("EPSG:900913");
+		        CoordinateReferenceSystem crs = CRS.decode("EPSG:3857");
 		        newDataStore.forceSchemaCRS( crs );
 //		        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84_3D);// TODO
 		        
