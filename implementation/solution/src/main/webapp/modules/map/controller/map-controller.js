@@ -23,7 +23,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $importService("customSearchService");
   $importService("markerModerationService");
   $importService("accountService");
-  $importService("shapeFileService");
+  $importService("shapefileService");
 
   /*-------------------------------------------------------------------
    * 		 				 	EVENT HANDLERS
@@ -4934,7 +4934,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.isLoading = true;
 
-	  shapeFileService.exportShapeFile( $scope.exportMarkers, {
+	  shapefileService.exportShapefile( $scope.exportMarkers, {
          callback: function (result) {
 
            $scope.isLoading = false;
@@ -5346,7 +5346,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.$watch('testFiles', function(newVal, oldVal){
 
     if(newVal.length == 4) {
-      shapeFileService.importShapeFile(data, {
+      shapefileService.importShapefile(data, {
         callback: function (result) {
 
           $scope.isLoading = false;
@@ -5406,7 +5406,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.isLoading = false;
           $scope.clearImportMarkers();
 
-          alert(message); //TODO alterar para mensagem customizada
+          $scope.msg = {
+	        type: "danger",
+	        text: message,
+	        dismiss: true
+	      };
+	      $scope.fadeMsg();
           $scope.$apply();
         }
       });

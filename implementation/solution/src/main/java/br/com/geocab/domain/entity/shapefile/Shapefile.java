@@ -11,8 +11,8 @@ import org.geotools.data.shapefile.files.ShpFileType;
  *
  * Classe responsável por trazer os arquivos shapefile do front-end para o back-end
  */
-@DataTransferObject(javascript = "ShapeFile")
-public class ShapeFile
+@DataTransferObject(javascript = "Shapefile")
+public class Shapefile
 {
 
 	/*-------------------------------------------------------------------
@@ -45,7 +45,7 @@ public class ShapeFile
 	/**
 	 * 
 	 */
-	public ShapeFile()
+	public Shapefile()
 	{
 		super();
 	}
@@ -57,7 +57,7 @@ public class ShapeFile
 	 * @param contentLength
 	 * @param name
 	 */
-	public ShapeFile(ShpFileType type, String source, Integer contentLength, String name)
+	public Shapefile(ShpFileType type, String source, Integer contentLength, String name)
 	{
 		super();
 		this.type = type;
