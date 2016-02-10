@@ -206,6 +206,43 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
     $scope.selectLayerGroup = [];
 
+    $scope.resolveDatepicker = function () {
+
+        $scope.$watch('attributesByLayer', function (oldValue, newValue) {
+            $timeout(function () {
+                $('.datepicker').datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    nextText: 'Próximo',
+                    prevText: 'Anterior'
+                });
+
+                $('.datepicker').mask("99/99/9999");
+            }, 400);
+        });
+        $scope.$watch('screen', function (oldValue, newValue) {
+            $timeout(function () {
+                $('.datepicker').datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    nextText: 'Próximo',
+                    prevText: 'Anterior'
+                });
+
+                $('.datepicker').mask("99/99/9999");
+            }, 400);
+        })
+
+    };
+
     accountService.getUserAuthenticated({
         callback: function (result) {
             $scope.userMe = result;
@@ -727,6 +764,8 @@ ront controller of angle won't let enter an invalid URL.
 
             //Constrói o ponto no mapa
             $scope.buildMarker({content: [marker]});
+
+            $scope.resolveDatepicker();
         }
     };
 
@@ -1071,7 +1110,7 @@ ront controller of angle won't let enter an invalid URL.
         });
 
         $('.datepicker').mask("99/99/9999");
-      }, 500);
+      }, 400);
     };
 
     /**

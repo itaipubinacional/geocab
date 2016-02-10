@@ -52,7 +52,7 @@
                         </div>
                         </br>
 
-                        <div ng-repeat="markerAttribute in attributesByMarker track by $index"
+                        <div ng-repeat="markerAttribute in attributesByMarker"
                              style="position: relative;margin-bottom:15px;">
 
 
@@ -69,42 +69,52 @@
                             </label>
 
                             <input
-                                    type="number" name="number1"
-                                    ng-if="markerAttribute.attribute.type == 'NUMBER'"
-                                    class="form-control"
-                                    ng-model="markerAttribute.value"
-                                    required="{{markerAttribute.attribute.required}}">
+                            type="number"
+                            name="number1"
+                            ng-if="markerAttribute.attribute.type == 'NUMBER'"
+                            class="form-control"
+                            ng-model="markerAttribute.value"
+                            maxlength="255"
+                            ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+                            ng-required="markerAttribute.attribute.required"
+                            >
 
-
-                           <input
-                              name="date1"
-                              ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
-                              class="form-control datepicker" ng-model="markerAttribute.value"
-                              required
-                              >
-
-
-                            <input name="texto"
-                                   ng-if="markerAttribute.attribute.type == 'TEXT'"
-                                   ng-model="markerAttribute.value"
-                                   required="{{markerAttribute.attribute.required}}"
-                                   class="form-control">
+                            <input
+                            name="date1"
+                            ng-if="markerAttribute.attribute.type == 'DATE'"
+                            class="form-control datepicker" ng-model="markerAttribute.value"
+                            ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+                            required
+                            ng-required="markerAttribute.attribute.required"
+                            >
 
                             <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
-                                <input
-                                        type="radio"
-                                        ng-checked="markerAttribute.value == 'Yes'"
-                                        ng-model="markerAttribute.value"
-                                        value="Yes">
-                                <spring:message code="map.Yes"/>
 
-                                <input
-                                        type="radio"
-                                        ng-checked="markerAttribute.value == 'No'"
-                                        ng-model="markerAttribute.value"
-                                        value="No">
-                                <spring:message code="map.No"/>
+                            <input
+                            type="radio"
+                            ng-checked="markerAttribute.value == 'Yes'"
+                            ng-model="markerAttribute.value"
+                            value="Yes"
+                            >
+                            <spring:message code="map.Yes" />
+
+                            <input
+                            type="radio"
+                            ng-checked="markerAttribute.value == 'No'"
+                            ng-model="markerAttribute.value"
+                            value="No"
+                            >
+                            <spring:message code="map.No" />
+
                             </div>
+
+                            <input type="text"
+                            ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
+                            class="form-control" ng-model="markerAttribute.value"
+                            ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+                            maxlength="255"
+                            ng-required="markerAttribute.attribute.required"
+                            >
 
                             <div ng-if="(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')"
                                     style="float: left;">
