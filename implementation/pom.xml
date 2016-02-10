@@ -128,9 +128,6 @@
 		
 		<profile>
 			<id>homologation</id>
-<!-- 			<activation> -->
-<!-- 				<activeByDefault>true</activeByDefault> -->
-<!-- 			</activation> -->
 			<properties>
 				<!-- Database -->
                 <mvn.jdbc.jdbcUrl>jdbc:postgresql://chi25/desenvolvimento</mvn.jdbc.jdbcUrl>
