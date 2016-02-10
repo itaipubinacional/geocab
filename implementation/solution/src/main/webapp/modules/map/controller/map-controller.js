@@ -1929,10 +1929,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.initializeSelectionTool = function () {
 
-    /*if($scope.menu.fcSelect) {
+    if($scope.menu.fcSelect) {
       $scope.menu.fcSelect = false;
       $scope.selectMarkerTool = false;
-    }*/
+    }
 
     if($scope.screenSelectMarkerOpenned) {
 
