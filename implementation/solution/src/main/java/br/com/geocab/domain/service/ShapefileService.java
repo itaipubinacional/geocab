@@ -42,27 +42,37 @@ import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.util.Assert;
 
+import br.com.geocab.application.aspect.GeodesicCoordinatesAcceptedException;
 import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
-import br.com.geocab.domain.entity.shapefile.ShapeFile;
+import br.com.geocab.domain.entity.shapefile.Shapefile;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
@@ -72,21 +82,21 @@ import br.com.geocab.domain.repository.marker.IMarkerRepository;
  */
 @Component
 //@Service //não lê os properties
-@RemoteProxy(name = "shapeFileService")
+@RemoteProxy(name = "shapefileService")
 @SuppressWarnings("unchecked")
-public class ShapeFileService
+public class ShapefileService
 {
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
 	
 	/**
-	 * export shapeFile path
+	 * export shapefile path
 	 */
 	@Value("${path.shapefiles:/tmp/geocab/files/shapefile/}" + "export/")
 	private String pathShapefilesExport;
 	/**
-	 * import shapeFile path
+	 * import shapefile path
 	 */
 	@Value("${path.shapefiles:/tmp/geocab/files/shapefile/}" + "import/")
 	private String pathShapefilesImport;
@@ -138,14 +148,14 @@ public class ShapeFileService
 	}
 	
 	/**
-	 * TODO alterar shapeFile para shapefile
+	 * TODO alterar shapefile para shapefile
 	 * 
-	 * Serviço de importação de shapeFile
+	 * Serviço de importação de shapefile
 	 * 
-	 * @param shapeFile
+	 * @param shapefile
 	 * @return
 	 */
-	public final List<Marker> importShapeFile(final List<ShapeFile> shapeFiles)
+	public final List<Marker> importShapefile(final List<Shapefile> shapefiles)
 	{
 		try
 		{
@@ -153,18 +163,18 @@ public class ShapeFileService
 			// Lê os arquivos
 			final List<File> files = new ArrayList<File>();
 			
-			for (final ShapeFile shapeFile : shapeFiles)
+			for (final Shapefile shapefile : shapefiles)
 			{
-				files.add(readFile(shapeFile, pathFile));
+				files.add(readFile(shapefile, pathFile));
 			}
 			
 			List<Marker> markers = new ArrayList<>();
 			
-			for (final ShapeFile shapeFile : shapeFiles)
+			for (final Shapefile shapefile : shapefiles)
 			{
-				if (shapeFile.getType() == ShpFileType.SHP)
+				if (shapefile.getType() == ShpFileType.SHP)
 				{
-					markers = importt(readFile(shapeFile, pathFile));
+					markers = importt(readFile(shapefile, pathFile), this.messages);
 				}
 			}
 			
@@ -172,6 +182,12 @@ public class ShapeFileService
 			delete(new File(pathShapefilesImport));
 			
 			return markers;
+		}
+		catch (final GeodesicCoordinatesAcceptedException e)
+		{
+			e.printStackTrace();
+			LOG.info(e.getMessage());
+			throw new RuntimeException(messages.getMessage("map.Tips-coordinate", null, null));
 		}
 		catch (final Exception e)
 		{
@@ -182,11 +198,38 @@ public class ShapeFileService
 	}
 	
 	/**
-	 * Importa a lista de postagem dos shapeFiles já gravados no sistema de arquivos
-	 * @param file
+	 * 
+	 * @param wktPoint
 	 * @return
 	 */
-	private static final List<Marker> importt(final File file)
+	private static Geometry wktToGeometry(String wktPoint)
+	{
+		WKTReader fromText = new WKTReader();
+		Geometry geom = null;
+		try
+		{
+			geom = fromText.read(wktPoint);
+		}
+		catch (com.vividsolutions.jts.io.ParseException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException("Not a WKT string:" + wktPoint);
+		}
+		return geom;
+	}
+	
+	/**
+	 * Importa a lista de postagem dos shapefiles já gravados no sistema de arquivos
+	 * @param file
+	 * @param messages2 
+	 * @return
+	 * @throws GeodesicCoordinatesAcceptedException 
+	 * @throws FactoryException 
+	 * @throws NoSuchAuthorityCodeException 
+	 * @throws TransformException 
+	 * @throws MismatchedDimensionException 
+	 */
+	private static final List<Marker> importt(final File file, final MessageSource messages ) throws GeodesicCoordinatesAcceptedException 
 	{
 		try
 		{
@@ -194,10 +237,11 @@ public class ShapeFileService
 		    map.put("url", file.toURI().toURL());
 
 		    final DataStore dataStore = DataStoreFinder.getDataStore(map);
+		    
 		    final String typeName = dataStore.getTypeNames()[0];
 
 		    final FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore.getFeatureSource(typeName);
-
+		    
 		    final FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures();
 		    
 		    final List<Marker> markers = new ArrayList<>();
@@ -207,12 +251,28 @@ public class ShapeFileService
 	    	while (features.hasNext()) 
 	        {
 	    		final SimpleFeature feature = features.next();
-	            
-	    		final Marker marker = new Marker();
-    			    			
-    			final Coordinate coordinate = new Coordinate(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
-    			
-    			marker.setLocation(new Point(coordinate));
+
+//	    		double coordinates[] = MercatorTransform.forward(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
+	    		
+//    			final Coordinate coordinate = new Coordinate(-getX(feature.getDefaultGeometryProperty().getValue().toString()), -getY(feature.getDefaultGeometryProperty().getValue().toString()));
+//    			JTS.transform(source, dest, transform) 
+	    		
+	    		final CoordinateReferenceSystem entryCRS = source.getSchema().getCoordinateReferenceSystem(); // CRS.decode(source.getSchema().getCoordinateReferenceSystem().getCoordinateSystem());
+
+	    		if (!entryCRS.getCoordinateSystem().getName().getCode().contains("GCS_WGS_1984") && !entryCRS.getCoordinateSystem().getName().getCode().contains("SIRGAS_2000"))
+				{
+	    			throw new GeodesicCoordinatesAcceptedException();
+				}
+	    		
+	    		final CoordinateReferenceSystem exitCRS = CRS.decode("EPSG:3857");
+    			final MathTransform transform = CRS.findMathTransform(entryCRS, exitCRS, true);
+	    		
+    			final Geometry targetGeometry = JTS.transform( wktToGeometry(  feature.getDefaultGeometryProperty().getValue().toString()).getEnvelope(), transform);
+	    		
+    			final Marker marker = new Marker(new Point(/*coordinate*/));
+//    			CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326", true);
+//    			Geometry targetGeometry = JTS.toGeographic(wktToGeometry(feature.getDefaultGeometryProperty().getValue().toString()), entryCRS /*DefaultGeographicCRS.WGS84*/);
+    			marker.setLocation((Point) targetGeometry);
     			
 	            final List<MarkerAttribute> markersAttributes = new ArrayList<>();
 				for (final Property property : feature.getProperties())
@@ -228,7 +288,7 @@ public class ShapeFileService
 							final MarkerAttribute markerAttribute = extractAttributes(feature, attribute, property, marker);
 							
 							//Valida o atributo
-							validateMarkerAttribute(markerAttribute);
+//							validateMarkerAttribute(markerAttribute);
 							markersAttributes.add(markerAttribute);
 							
 							marker.setMarkerAttribute(markersAttributes);
@@ -247,7 +307,7 @@ public class ShapeFileService
 		    	
 		    return markers;
 		}
-		catch ( final IOException e )
+		catch ( final IOException | FactoryException | MismatchedDimensionException | TransformException e )
 		{	
 			e.printStackTrace();
 			LOG.info(e.getMessage());
@@ -256,17 +316,17 @@ public class ShapeFileService
 	}
 	
 	/**
-	 * Insere no sistema de arquivos o shapeFile, provisoriamente
+	 * Insere no sistema de arquivos o shapefile, provisoriamente
 	 * 
-	 * @param shapeFile
+	 * @param shapefile
 	 * @return
 	 */
-	private static final File readFile(final ShapeFile shapeFile, String pathFile)
+	private static final File readFile(final Shapefile shapefile, String pathFile)
 	{
-		pathFile += "." + shapeFile.getType().toString().toLowerCase();//".shp";
+		pathFile += "." + shapefile.getType().toString().toLowerCase();//".shp";
 
 		final Base64 decoder = new Base64();
-		final byte[] shpBytes = decoder.decode(shapeFile.getSource());
+		final byte[] shpBytes = decoder.decode(shapefile.getSource());
 		try
 		{
 			final FileOutputStream osf = new FileOutputStream(new File(pathFile));
@@ -312,12 +372,12 @@ public class ShapeFileService
 	}	
 	
 	/**
-	 * Serviço de exportação para shapeFile (Obs:. FileTransfer do DWR não pode ser final)
+	 * Serviço de exportação para shapefile (Obs:. FileTransfer do DWR não pode ser final)
 	 * 
 	 * @param markers
 	 * @return
 	 */
-	public FileTransfer exportShapeFile(final List<Marker> markers)
+	public FileTransfer exportShapefile(final List<Marker> markers)
 	{
 		
 		final List<Layer> layers = groupByLayers(markers);
@@ -351,13 +411,14 @@ public class ShapeFileService
 	                final double latitude = marker.getLocation().getY();
 	
 	                final Point point = factory.createPoint(new Coordinate(longitude, latitude));
+	                
 	                // O ponto também é um atributo "new Object[]{point}"
 	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
 	                
 	                // Extrai os atributos da feature 
 	                feature = extractFeatures(feature, marker);
 	                
-	                collection.add(feature);
+	                collection.add(feature);	
 	            }
 	            
 		        final DataStoreFactorySpi dataStoreFactorySpi = new ShapefileDataStoreFactory();
@@ -369,8 +430,10 @@ public class ShapeFileService
 	
 		        final ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactorySpi.createNewDataStore(create);
 		        newDataStore.createSchema(TYPE);
-		        newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
-	
+		        
+		        CoordinateReferenceSystem crs = CRS.decode("EPSG:3857");
+		        newDataStore.forceSchemaCRS( crs );
+		        
 		        final Transaction transaction = new DefaultTransaction("create");
 		        final String typeName = newDataStore.getTypeNames()[0];
 		        
@@ -499,7 +562,11 @@ public class ShapeFileService
 		{
 			try
 			{
-				Date date = new SimpleDateFormat("dd/MM/yyyy").parse(markerAttribute.getValue());
+				Date date = null;
+				if (markerAttribute.getValue() != null && !markerAttribute.getValue().equals(""))
+				{
+					date = new SimpleDateFormat("dd/MM/yyyy").parse(markerAttribute.getValue());
+				}
 				feature.setAttribute(attribute, date);
 			}
 			catch (ParseException e)
@@ -605,32 +672,34 @@ public class ShapeFileService
 		}
 	}
 	
-	/**
-	 * Pega a string com as coordenadas e retorna a coordenada 'X'
-	 * @param coordinateString
-	 * @return
-	 */
-	private static final double getX(String coordinateString)
-	{
-		coordinateString = coordinateString.replace("POINT (", "");
-		coordinateString = coordinateString.replace(")", "");
-		coordinateString = coordinateString.substring(0, coordinateString.indexOf(" "));
-		double doubleCoordinate = Double.parseDouble(coordinateString);
-		return doubleCoordinate;
-	}
+//	/**
+//	 * Pega a string com as coordenadas e retorna a coordenada 'X'
+//	 * @param coordinateString
+//	 * @return
+//	 */
+//	private static final double getX(String coordinateString)
+//	{
+//		coordinateString = coordinateString.replace("POINT (", "");
+//		coordinateString = coordinateString.replace(")", "");
+//		coordinateString = coordinateString.substring(0, coordinateString.indexOf(" "));
+//		double doubleCoordinate = Double.parseDouble(coordinateString);
+//		return doubleCoordinate;
+//	}
+//	
+//	/**
+//	 * Pega a string com as coordenadas e retorna a coordenada 'Y'
+//	 * @param coordinateString
+//	 * @return
+//	 */
+//	private static final double getY(String coordinateString)
+//	{
+//		coordinateString = coordinateString.replace("POINT (", "");
+//		coordinateString = coordinateString.replace(")", "");
+//		coordinateString = coordinateString.substring(coordinateString.indexOf(" "), coordinateString.length());
+//		double doubleCoordinate = Double.parseDouble(coordinateString);
+//		return doubleCoordinate;
+//	}
 	
-	/**
-	 * Pega a string com as coordenadas e retorna a coordenada 'Y'
-	 * @param coordinateString
-	 * @return
-	 */
-	private static final double getY(String coordinateString)
-	{
-		coordinateString = coordinateString.replace("POINT (", "");
-		coordinateString = coordinateString.replace(")", "");
-		coordinateString = coordinateString.substring(coordinateString.indexOf(" "), coordinateString.length());
-		double doubleCoordinate = Double.parseDouble(coordinateString);
-		return doubleCoordinate;
-	}
-
+	
+	
 }

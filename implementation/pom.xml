@@ -145,17 +145,17 @@
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
 				
 				<!-- Mail -->
-				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
+				<mvn.mail.host>host</mvn.mail.host>
 				<mvn.mail.port>25</mvn.mail.port>
-				<mvn.mail.username>no-reply</mvn.mail.username>
+				<mvn.mail.username>user</mvn.mail.username>
 				<mvn.mail.protocol>smtp</mvn.mail.protocol>
-				<mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
-				<mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
+				<mvn.mail.password>password</mvn.mail.password>
+				<mvn.mail.from>geocab@itaipu.gov.br</mvn.mail.from>
 				<mvn.mail.tls>false</mvn.mail.tls>
 				<mvn.mail.ssl>false</mvn.mail.ssl>
 				<mvn.mail.debug>true</mvn.mail.debug>
-				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
-				
+				<mvn.mail.support>geocab@itaipu.gov.br</mvn.mail.support>			
+			
 				<!-- ModeShape -->
 				<mvn.jcr.indexes>/tmp/geocab-homologation/indexes</mvn.jcr.indexes>
 				<mvn.jcr.files>/tmp/geocab-homologation/files</mvn.jcr.files>
@@ -401,6 +401,8 @@
 			<artifactId>dwr</artifactId>
 			<version>${dwr.version}</version>
 		</dependency>
+		
+		
 
 		<!-- Testing -->
 		<dependency>

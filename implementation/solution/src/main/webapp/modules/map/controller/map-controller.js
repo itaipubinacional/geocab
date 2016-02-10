@@ -23,7 +23,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $importService("customSearchService");
   $importService("markerModerationService");
   $importService("accountService");
-  $importService("shapeFileService");
+  $importService("shapefileService");
 
   /*-------------------------------------------------------------------
    * 		 				 	EVENT HANDLERS
@@ -4934,7 +4934,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.isLoading = true;
 
-	  shapeFileService.exportShapeFile( $scope.exportMarkers, {
+	  shapefileService.exportShapefile( $scope.exportMarkers, {
          callback: function (result) {
 
            $scope.isLoading = false;
@@ -5004,20 +5004,22 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     });
 
+    // Utiliza sobrecarga de métodos no Java
     markerService.insertMarker( importMarkers, {
       callback: function (result) {
 
         $scope.isLoading = false;
-
+        $scope.importedFromShapefileNewLayerSaved = $scope.importedFromShapefileNewLayerSaved ? "map.Markers-inserted-succesfully-from-shapefile-and-new-layer" : "map.Markers-inserted-succesfully";
         $scope.msg = {
           type: "success",
-          text: $translate("map.Markers-inserted-succesfully"),
+          text: $translate($scope.importedFromShapefileNewLayerSaved),
           dismiss: true
         };
         $scope.fadeMsg();
         $scope.$apply();
 
       }, errorHandler: function (message, exception) {
+    	$scope.isLoading = false;
         $scope.msg = {type: "error", text: message};
         $scope.$apply();
       }
@@ -5093,6 +5095,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             text: $translate("admin.layer-config.The-layer-has-been-created-successfully") + "!",
             dismiss: true
           };
+          
+          $scope.importedFromShapefileNewLayerSaved = true;
 
           $scope.shapeFile.form.layer = result;
 
@@ -5341,11 +5345,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.$watch('testFiles', function(newVal, oldVal){
 
-    if(newVal.length == 3) {
-      shapeFileService.importShapeFile(data, {
+    if(newVal.length == 4) {
+      shapefileService.importShapefile(data, {
         callback: function (result) {
-
-          //console.log(result);
 
           $scope.isLoading = false;
 
@@ -5400,10 +5402,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.$apply();
         },
         errorHandler: function (message, exception) {
-
+          
+          $scope.isLoading = false;
           $scope.clearImportMarkers();
 
-          alert(message);
+          $scope.msg = {
+	        type: "danger",
+	        text: message,
+	        dismiss: true
+	      };
+	      $scope.fadeMsg();
           $scope.$apply();
         }
       });
@@ -5415,7 +5423,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.setAction('import');
 
-    if (!(/\.(shp|dbf|shx)$/i).test(input.value)){
+    if (!(/\.(shp|dbf|shx|prj)$/i).test(input.value)){
 
       $scope.msg = {
         type: "danger",
@@ -5430,8 +5438,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     if (input.files) {
 
       $scope.isLoading = true;
-      $scope.$apply();
-
+      
       var files = input.files;
 
       for (var i = 0, file; file = files[i]; i++) {
@@ -5448,7 +5455,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $scope.testFiles.push(readFile.name);
 
             data.push({type: type.toUpperCase(), source: base64[1], contentLength: readFile.size, name: readFile.name});
-
+            $scope.$apply();
           }
         })(file);
 
