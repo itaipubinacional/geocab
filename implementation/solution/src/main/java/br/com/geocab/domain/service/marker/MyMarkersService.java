@@ -271,8 +271,7 @@ public class MyMarkersService extends AbstractMarkerService
 	@Transactional(readOnly = true)
 	public Page<Marker> listMarkerByFiltersByUser(Long layer, MarkerStatus status, String dateStart, String dateEnd, PageRequest pageable)
 	{
-		String user = ContextHolder.getAuthenticatedUser().getEmail();
-		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, user, pageable);
+		return this.listMarkerByFilters(layer, status, dateStart, dateEnd, ContextHolder.getAuthenticatedUser().getEmail(), pageable);
 	}
 	
 	/**
@@ -286,11 +285,7 @@ public class MyMarkersService extends AbstractMarkerService
 	@Transactional(readOnly = true)
 	public Page<Marker> listMarkerByFilters(Long layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable)
 	{
-		if(this.getUserMe().getRole() != UserRole.ADMINISTRATOR)
-		{
-			user = this.getUserMe().getEmail();	
-		}
-		return this.markerRepository.listByFilters(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], user, pageable);
+		return this.markerRepository.listByFilters(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], this.getUserMe().getEmail(), pageable);
 	}
 	
 	/**
@@ -325,13 +320,8 @@ public class MyMarkersService extends AbstractMarkerService
 			dEnd.add(Calendar.DAY_OF_MONTH, 1);
 			dEnd.setTime(dEnd.getTime());
 		}
-
-//		if(this.getUserMe().getRole() != UserRole.ADMINISTRATOR)
-//		{
-			user = this.getUserMe().getEmail();	
-//		}
 		
-		return this.markerRepository.listByFiltersMap(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], user);
+		return this.markerRepository.listByFiltersMap(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], this.getUserMe().getEmail());
 	}
 	
 	/**
@@ -347,8 +337,7 @@ public class MyMarkersService extends AbstractMarkerService
 	@Transactional(readOnly = true)
 	public List<Marker> listMarkerByFiltersMapByUser(Long layer, MarkerStatus status, String dateStart, String dateEnd, PageRequest pageable) throws java.text.ParseException
 	{
-		String user = ContextHolder.getAuthenticatedUser().getEmail();
-		return this.listMarkerByFiltersMap(layer, status, dateStart, dateEnd, user, pageable);
+		return this.listMarkerByFiltersMap(layer, status, dateStart, dateEnd, ContextHolder.getAuthenticatedUser().getEmail(), pageable);
 	}
 	
 	/**

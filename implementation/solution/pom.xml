@@ -276,15 +276,6 @@
             <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/simplecaptcha-1.2.1.jar</systemPath>
         </dependency>
  
-        <!-- simple captcha version -->
-<!--         <dependency> -->
-<!--             <groupId>com.liferay</groupId> -->
-<!--             <artifactId>nl.captcha.simplecaptcha</artifactId> -->
-<!--             <version>1.1.1</version> -->
-<!--         </dependency> -->
- 
- 
- 
         <!-- geotools version -->
         <dependency>
             <groupId>org.geotools</groupId>
