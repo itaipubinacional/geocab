@@ -83,7 +83,7 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
                   //photo.src = photo.image;
                   //photo.name = photo.description;
 
-                  if (attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
+                  if ($scope.attribute.removePhotosIds && attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
                     attributesByLayer.files.push(photo);
                   }
 
@@ -205,7 +205,7 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
             //photo.src  = photo.image;
             //photo.name = photo.description;
 
-            if ($scope.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
+            if ($scope.attribute.removePhotosIds && $scope.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
               $scope.attribute.files.push(photo);
             }
 

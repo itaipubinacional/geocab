@@ -206,6 +206,36 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
     $scope.selectLayerGroup = [];
 
+    $scope.fadeMsg = function(){
+        $("div.msg").show();
+
+        setTimeout(function(){
+            $("div.msg").fadeOut();
+        }, 5000);
+    };
+
+    $scope.isBooleanValid = function () {
+
+        $scope.ok = true;
+        $.each($(".boolean").parent().parent(), function (index, value) {
+            if ($(this).attr("required")) {
+
+
+                if (!$(this).find(".boolean-1").is(":checked") && !$(this).find(".boolean-2").is(":checked")) {
+                    $scope.ok = false;
+
+                    $(this).find(".required-boolean").css("border", "1px solid red");
+                    $(this).find(".required-boolean").css("border-radius", "5px");
+                    $(this).prepend('<span class="tooltip-validation"style="top: 15px">' + $translate("map.Field-required") + '</span>');
+                }
+
+
+            }
+        });
+
+        return $scope.ok;
+    };
+
     $scope.resolveDatepicker = function () {
 
         $scope.$watch('attributesByLayer', function (oldValue, newValue) {
@@ -839,12 +869,10 @@ ront controller of angle won't let enter an invalid URL.
 
         dialog.result.then(function (result) {
 
-            if(attribute.attribute) {
-                angular.forEach(result, function (attribute) {
-                    if (attribute.attribute.type == 'PHOTO_ALBUM')
-                        attribute.photoAlbum.photos = attribute.attribute.files;
-                });
-            }
+            angular.forEach(result, function (attribute) {
+                if (attribute.attribute.type == 'PHOTO_ALBUM')
+                    attribute.photoAlbum != null ? attribute.attribute.files : attribute.photoAlbum = {'photos': attribute.attribute.files};
+            });
 
             $scope.attributesByMarker = result;
 
@@ -975,7 +1003,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "error", text: message, dismiss: true};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -996,7 +1024,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "error", text: message, dismiss: true};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -1023,7 +1051,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "error", text: message, dismiss: true};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -1046,7 +1074,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "error", text: message, dismiss: true};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -1086,7 +1114,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "error", text: message, dismiss: true};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -1136,7 +1164,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "error", text: message, dismiss: true};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -1185,7 +1213,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "error", text: message, dismiss: true};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -1627,7 +1655,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message};
+                $scope.msg = {type: "error", text: message};
                 $scope.$apply();
 
             }
@@ -1729,11 +1757,11 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.changeToList();
 
                 $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-published"), dismiss: true};
-
+                $scope.fadeMsg();
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message};
+                $scope.msg = {type: "error", text: message};
                 $scope.$apply();
 
             }
@@ -1758,7 +1786,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message};
+                $scope.msg = {type: "error", text: message};
                 $scope.$apply();
 
             }
@@ -1782,7 +1810,7 @@ ront controller of angle won't let enter an invalid URL.
                 buttons: function () {
                     return [{
                         label: $translate("layer-group-popup.Delete"),
-                        css: 'btn btn-danger'
+                        css: 'btn btn-error'
                     }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
                 }
             }
@@ -1811,7 +1839,7 @@ ront controller of angle won't let enter an invalid URL.
                 buttons: function () {
                     return [{
                         label: $translate("layer-group-popup.Delete"),
-                        css: 'btn btn-danger'
+                        css: 'btn btn-error'
                     }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
                 }
             }
@@ -1839,7 +1867,7 @@ ront controller of angle won't let enter an invalid URL.
 
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message};
+                $scope.msg = {type: "error", text: message};
                 $scope.$apply();
             }
         });
@@ -1861,7 +1889,7 @@ ront controller of angle won't let enter an invalid URL.
                 buttons: function () {
                     return [{
                         label: $translate("layer-group-popup.Delete"),
-                        css: 'btn btn-danger'
+                        css: 'btn btn-error'
                     }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
                 }
             }
@@ -1878,6 +1906,21 @@ ront controller of angle won't let enter an invalid URL.
      * Calls the dialog to accept a marker
      */
     $scope.saveMarkerModal = function () {
+
+        if (!$scope.form('sidebarMarkerUpdate').$valid) {
+            $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
+            $scope.fadeMsg();
+            return;
+        }
+
+        if (!$scope.isBooleanValid()) {
+            return false;
+        }
+
+        /*if (!$scope.form('markerDetail').$valid) {
+            $scope.isLoading = false;
+            return;
+        }*/
 
         if (!($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED)) {
 
@@ -1912,6 +1955,8 @@ ront controller of angle won't let enter an invalid URL.
     };
 
     $scope.updateMarker = function () {
+
+
 
         if ($scope.currentEntity.layer == null) {
             var layer = new Layer();
@@ -2001,7 +2046,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.changeToList();
 
                 $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully"), dismiss: true};
-
+                $scope.fadeMsg();
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
@@ -2065,7 +2110,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                //$scope.msg = {type: "danger", text: message};
+                //$scope.msg = {type: "error", text: message};
                 //$scope.$apply();
             }
         })
@@ -2105,6 +2150,8 @@ ront controller of angle won't let enter an invalid URL.
                             });
 
                             if (!exist) {
+
+                                $scope.attributesByMarker.push({'attribute': attribute, 'marker': $scope.currentEntity});
                                 $scope.attributesByLayer.push(attribute);
                                 $scope.showNewAttributes = true;
                             }
@@ -2113,7 +2160,7 @@ ront controller of angle won't let enter an invalid URL.
                         $scope.$apply();
                     },
                     errorHandler: function (message, exception) {
-                        $scope.msg = {type: "danger", text: message};
+                        $scope.msg = {type: "error", text: message};
                         $scope.$apply();
                     }
                 });
@@ -2571,4 +2618,11 @@ ront controller of angle won't let enter an invalid URL.
         return output;
     };
 
+
+
 }
+
+function isBooleanChecked(that) {
+    $(that).parent().css("border", "0");
+    $(that).parent().parent().find("span.tooltip-validation").remove();
+};

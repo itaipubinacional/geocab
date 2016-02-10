@@ -28,7 +28,7 @@
         </div>
 
         <div class="col-md-12">
-            <form role="form">
+            <form name="sidebarMarkerUpdate" default-button="buttonUpdate" method="post" novalidate>
 
                 <fieldset
                         ng-disabled="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
@@ -52,85 +52,98 @@
                         </div>
                         </br>
 
+                        <span class="tooltip-validation"
+                        ng-show="sidebarMarker.$submitted && sidebarMarker.layer.$error.required"
+                        style="top: -20px"><spring:message code="map.Field-required"/></span> <br>
+
                         <div ng-repeat="markerAttribute in attributesByMarker"
-                             style="position: relative;margin-bottom:15px;">
+                        style="position: relative;margin-bottom:15px;">
+
+                            <ng-form name="ngSideMarker" default-button="buttonUpdate">
 
 
 
-                            <%--<label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM' && (currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">--%>
-                            <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'">
-                                {{markerAttribute.attribute.name }}
-                            </label>
+                                <!--<label style="padding-top: 10px">{{ markerAttribute.attribute.name }}</label>-->
+                                <div ng-if="(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
 
-                            <label ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM' &&
-                                      (currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')"
-                                style="margin-top: 9px">
-                              {{markerAttribute.attribute.name }}
-                            </label>
-
-                            <input
-                            type="number"
-                            name="number1"
-                            ng-if="markerAttribute.attribute.type == 'NUMBER'"
-                            class="form-control"
-                            ng-model="markerAttribute.value"
-                            maxlength="255"
-                            ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-                            ng-required="markerAttribute.attribute.required"
-                            >
-
-                            <input
-                            name="date1"
-                            ng-if="markerAttribute.attribute.type == 'DATE'"
-                            class="form-control datepicker" ng-model="markerAttribute.value"
-                            ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
-                            required
-                            ng-required="markerAttribute.attribute.required"
-                            >
-
-                            <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
-
-                            <input
-                            type="radio"
-                            ng-checked="markerAttribute.value == 'Yes'"
-                            ng-model="markerAttribute.value"
-                            value="Yes"
-                            >
-                            <spring:message code="map.Yes" />
-
-                            <input
-                            type="radio"
-                            ng-checked="markerAttribute.value == 'No'"
-                            ng-model="markerAttribute.value"
-                            value="No"
-                            >
-                            <spring:message code="map.No" />
-
-                            </div>
-
-                            <input type="text"
-                            ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
-                            class="form-control" ng-model="markerAttribute.value"
-                            ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
-                            maxlength="255"
-                            ng-required="markerAttribute.attribute.required"
-                            >
-
-                            <div ng-if="(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')"
-                                    style="float: left;">
                                 <button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
-                                        ng-click="showUpload(markerAttribute.attribute, attributesByMarker)"
-                                        style="float: left;margin-right: 5px"
-                                        title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
+                                ng-click="showUpload(markerAttribute.attribute, attributesByMarker)"
+                                style="float: left;margin-right: 5px"
+                                title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                                 </button>
-                                </br>
-                            </div>
 
+                                 <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'" style="margin-top: 10px">{{ markerAttribute.attribute.name }}</label>
+                                 <label ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" style="height: 34px;line-height: 34px; margin-bottom: 15px;">{{ markerAttribute.attribute.name }}</label>
+                                </div>
+
+                                <input
+                                type="number"
+                                name="number1"
+                                ng-if="markerAttribute.attribute.type == 'NUMBER'"
+                                class="form-control"
+                                ng-model="markerAttribute.value"
+                                maxlength="255"
+                                ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+                                ng-required="markerAttribute.attribute.required"
+                                >
+
+                                <input
+                                name="date1"
+                                ng-if="markerAttribute.attribute.type == 'DATE'"
+                                class="form-control datepicker" ng-model="markerAttribute.value"
+                                ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
+                                required
+                                ng-required="markerAttribute.attribute.required"
+                                >
+
+                                <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'" ng-required="attribute.required">
+
+                                        <div class="required-boolean" >
+                                        <input type="radio" name="boolean{{ $index }}" class="boolean-1 boolean" ng-model="attribute.value"
+                                        value="Yes" onClick="isBooleanChecked(this)" ><spring:message code="map.Yes" />
+
+                                        <input type="radio" name="boolean{{ $index }}" class="boolean-2 boolean" ng-model="attribute.value"
+                                        value="No" onClick="isBooleanChecked(this)"><spring:message code="map.No" />
+                                        </div>
+
+                                </div>
+
+                                <input type="text"
+                                ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
+                                class="form-control" ng-model="markerAttribute.value"
+                                ng-class="{ ngInvalid: ngSideMarker.$submitted && ngSideMarker.texto.$error.required }"
+                                maxlength="255"
+                                ng-required="markerAttribute.attribute.required"
+                                >
+
+                                <span class="tooltip-validation"
+                                ng-show="  (ngSideMarker.texto.$error.required && ngSideMarker.$submitted)"
+                                style="top: 13px"><spring:message code="map.Field-required"/>
+                                </span>
+
+                                <span
+                                class="tooltip-validation"
+                                ng-show="  (ngSideMarker.number1.$error.required && ngSideMarker.$submitted)"
+                                style="top: 13px" ><spring:message code="map.Field-required"/>
+                                </span>
+
+                                <span
+                                class="tooltip-validation"
+                                ng-show="!(ngSideMarker.number1.$error.required && ngSideMarker.$submitted) && (ngSideMarker.number1.$error.number)"
+                                style="top: 13px"><spring:message code="map.Must-be-a-number"/>
+                                </span>
+
+                                <span
+                                class="tooltip-validation"
+                                ng-show=" (ngSideMarker.date1.$error.required && ngSideMarker.$submitted)"
+                                style="top: 13px"><spring:message code="map.Field-required"/>
+                                </span>
+                            <ng-form>
 
                         </div>
 
-                        <!-- PHOTO ALBUM-->
 
+                        <!-- PHOTO ALBUM-->
                         <div class="col-md-12" style="text-align:center;"
                              ng-if="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
                             <img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult"
@@ -159,7 +172,8 @@
                 <button ng-disabled="currentEntity.status == PENDING ||currentEntity.status == ACCEPTED"
                         ng-click="saveMarkerModal()" type="button"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Save'/>"
-                        class="btn btn-secondary col-md-4 btn-icon">
+                        class="btn btn-secondary col-md-4 btn-icon"
+                        id="buttonUpdate">
                     <i style="font-size: 24px" class="icon itaipu-icon-save"></i>
                 </button>
                 <button type="button" ng-click="postMarkerModal()"
