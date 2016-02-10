@@ -66,6 +66,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.util.Assert;
 
+import br.com.geocab.application.aspect.GeodesicCoordinatesAcceptedException;
 import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.Layer;
@@ -173,7 +174,7 @@ public class ShapefileService
 			{
 				if (shapefile.getType() == ShpFileType.SHP)
 				{
-					markers = importt(readFile(shapefile, pathFile));
+					markers = importt(readFile(shapefile, pathFile), this.messages);
 				}
 			}
 			
@@ -181,6 +182,12 @@ public class ShapefileService
 			delete(new File(pathShapefilesImport));
 			
 			return markers;
+		}
+		catch (final GeodesicCoordinatesAcceptedException e)
+		{
+			e.printStackTrace();
+			LOG.info(e.getMessage());
+			throw new RuntimeException(messages.getMessage("map.Tips-coordinate", null, null));
 		}
 		catch (final Exception e)
 		{
@@ -214,13 +221,15 @@ public class ShapefileService
 	/**
 	 * Importa a lista de postagem dos shapefiles já gravados no sistema de arquivos
 	 * @param file
+	 * @param messages2 
 	 * @return
+	 * @throws GeodesicCoordinatesAcceptedException 
 	 * @throws FactoryException 
 	 * @throws NoSuchAuthorityCodeException 
 	 * @throws TransformException 
 	 * @throws MismatchedDimensionException 
 	 */
-	private static final List<Marker> importt(final File file) 
+	private static final List<Marker> importt(final File file, final MessageSource messages ) throws GeodesicCoordinatesAcceptedException 
 	{
 		try
 		{
@@ -246,10 +255,16 @@ public class ShapefileService
 //	    		double coordinates[] = MercatorTransform.forward(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
 	    		
 //    			final Coordinate coordinate = new Coordinate(-getX(feature.getDefaultGeometryProperty().getValue().toString()), -getY(feature.getDefaultGeometryProperty().getValue().toString()));
-//    			JTS.transform(source, dest, transform)
-    			
+//    			JTS.transform(source, dest, transform) 
+	    		
 	    		final CoordinateReferenceSystem entryCRS = source.getSchema().getCoordinateReferenceSystem(); // CRS.decode(source.getSchema().getCoordinateReferenceSystem().getCoordinateSystem());
-    			final CoordinateReferenceSystem exitCRS = CRS.decode("EPSG:3857");// TODO
+
+	    		if (!entryCRS.getCoordinateSystem().getName().getCode().contains("GCS_WGS_1984") && !entryCRS.getCoordinateSystem().getName().getCode().contains("SIRGAS_2000"))
+				{
+	    			throw new GeodesicCoordinatesAcceptedException();
+				}
+	    		
+	    		final CoordinateReferenceSystem exitCRS = CRS.decode("EPSG:3857");
     			final MathTransform transform = CRS.findMathTransform(entryCRS, exitCRS, true);
 	    		
     			final Geometry targetGeometry = JTS.transform( wktToGeometry(  feature.getDefaultGeometryProperty().getValue().toString()).getEnvelope(), transform);
@@ -684,5 +699,7 @@ public class ShapefileService
 //		double doubleCoordinate = Double.parseDouble(coordinateString);
 //		return doubleCoordinate;
 //	}
+	
+	
 	
 }
