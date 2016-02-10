@@ -63,19 +63,15 @@ public class ContactMailRepository implements IContactMailRepository
 			public void prepare(MimeMessage mimeMessage) throws Exception
 			{
 
-				final MimeMessageHelper message = new MimeMessageHelper(
-						mimeMessage);
+				final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
 				message.setSubject(email.getSubject());
-				message.setTo("tbecker@itaipu.gov.br");
+				message.setTo(mailSupport);
 				message.setFrom(email.getEmail());
 
 				final Map<String, Object> model = new HashMap<String, Object>();
 				model.put("email", email);
 
-				final String content = VelocityEngineUtils
-						.mergeTemplateIntoString(velocityEngine,
-								"mail-templates/contact-us.html",
-								StandardCharsets.ISO_8859_1.toString(), model);
+				final String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,"mail-templates/contact-us.html", StandardCharsets.ISO_8859_1.toString(), model);
 				message.setText(content, true);
 			}
 		};

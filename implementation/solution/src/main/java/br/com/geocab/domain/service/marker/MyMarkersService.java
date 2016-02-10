@@ -326,10 +326,10 @@ public class MyMarkersService extends AbstractMarkerService
 			dEnd.setTime(dEnd.getTime());
 		}
 
-		if(this.getUserMe().getRole() != UserRole.ADMINISTRATOR)
-		{
+//		if(this.getUserMe().getRole() != UserRole.ADMINISTRATOR)
+//		{
 			user = this.getUserMe().getEmail();	
-		}
+//		}
 		
 		return this.markerRepository.listByFiltersMap(layer, status, this.formattDates(dateStart, dateEnd)[0], this.formattDates(dateStart, dateEnd)[1], user);
 	}
