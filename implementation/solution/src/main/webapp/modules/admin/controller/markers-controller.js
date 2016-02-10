@@ -945,7 +945,7 @@ ront controller of angle won't let enter an invalid URL.
 
     $scope.listMarkerByFiltersMapNoVectorMarkers = function (layer, status, dateStart, dateEnd, user) {
 
-        markerService.listMarkerByFiltersMap(layer, status, dateStart, dateEnd, user, {
+        myMarkersService.listMarkerByFiltersMap(layer, status, dateStart, dateEnd, user, {
             callback: function (result) {
                 if ($scope.features.length) {
                     $scope.clearFeatures();

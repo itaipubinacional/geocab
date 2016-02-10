@@ -1191,7 +1191,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             if (feature) {
                 var marker = feature.getProperties().marker;
 
-                $scope.changeToDetail(marker);
+                if(marker)
+                    $scope.changeToDetail(marker);
+
                 return false;
             } else {
                 $scope.clearFeatures();
