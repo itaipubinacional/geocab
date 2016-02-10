@@ -450,7 +450,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
             $scope.listMarkerByMarkers(markersId, pageRequest);
 
-
         } else {
             $scope.listMarkerByMarkers(markers, pageRequest);
         }
@@ -458,6 +457,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     };
 
     $scope.changeToListNoVectorMarkers = function (markers) {
+
+        $log.info("changeToList");
+
+        $scope.currentState = $scope.LIST_STATE;
 
         $scope.listAllInternalLayerGroups();
         $scope.listAllUsers();

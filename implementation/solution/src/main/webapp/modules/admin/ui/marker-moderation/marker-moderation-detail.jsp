@@ -13,7 +13,7 @@
 
         <div class="col-md-12" style="padding: 15px; background-color: #f5f5f5">
             <div class="col-md-1" style="margin-top: 10px">
-                <i style="cursor:pointer; font-size: 25px;" ng-click="changeToList(currentPage)"
+                <i style="cursor:pointer; font-size: 25px;" ng-click="changeToListNoVectorMarkers(currentPage)"
                    class="icon itaipu-icon-arrow-left-1">
                 </i>
             </div>

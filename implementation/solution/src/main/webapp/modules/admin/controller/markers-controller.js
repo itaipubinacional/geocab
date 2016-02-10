@@ -586,6 +586,8 @@ ront controller of angle won't let enter an invalid URL.
 
         $scope.itensMarcados = [];
 
+        $scope.gridOptions.selectedItems = [];
+
         $scope.currentState = $scope.LIST_STATE;
 
         $scope.listAllInternalLayerGroups();
@@ -612,6 +614,48 @@ ront controller of angle won't let enter an invalid URL.
 
         } else {
             $scope.listMarkerByMarkers(markers, pageRequest);
+        }
+
+    };
+
+    $scope.changeToListNoVectorMarkers = function (markers) {
+
+        //$location.search('');
+
+        $log.info("changeToList");
+
+        $scope.imgResult = null;
+
+        $scope.itensMarcados = [];
+
+        $scope.gridOptions.selectedItems = [];
+
+        $scope.currentState = $scope.LIST_STATE;
+
+        $scope.listAllInternalLayerGroups();
+
+        var pageRequest = new PageRequest();
+        pageRequest.size = 10;
+        pageRequest.sort = new Sort();
+        pageRequest.sort.orders = [{direction: 'DESC', property: 'created'}];
+        $scope.pageRequest = pageRequest;
+
+        if (typeof markers == 'undefined') {
+            $scope.listMarkerByFilters(null, null, null, null, pageRequest);
+            $scope.listMarkerByFiltersMapNoVectorMarkers(null, null, null, null);
+        } else if (typeof markers.content != 'undefined') {
+
+            var markersId = [];
+
+            for (var k = 0; k < markers.content.length; k++) {
+                markersId.push(markers.content[k].id);
+            }
+
+            $scope.listMarkerByMarkersNoVectorMarkers(markersId, pageRequest);
+
+
+        } else {
+            $scope.listMarkerByMarkersNoVectorMarkers(markers, pageRequest);
         }
 
     };
@@ -899,6 +943,27 @@ ront controller of angle won't let enter an invalid URL.
         });
     };
 
+    $scope.listMarkerByFiltersMapNoVectorMarkers = function (layer, status, dateStart, dateEnd, user) {
+
+        markerService.listMarkerByFiltersMap(layer, status, dateStart, dateEnd, user, {
+            callback: function (result) {
+                if ($scope.features.length) {
+                    $scope.clearFeatures();
+                    $scope.removeLayers();
+                }
+                var markers = {'content': null};
+                markers.content = result;
+                $scope.buildMarker(markers);
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.fadeMsg();
+                $scope.$apply();
+            }
+        });
+    };
+
     /**
      * Performs the query logs, considering filter, paging and sorting.
      * When ok, change the state of the screen to list.
@@ -939,6 +1004,46 @@ ront controller of angle won't let enter an invalid URL.
             callback: function (result) {
                 $scope.markersModeration = result.content;
                 $scope.currentState = $scope.HISTORY_STATE;
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.fadeMsg();
+                $scope.$apply();
+            }
+        });
+    };
+
+    $scope.refreshMapNoVectorMarkers = function (markers) {
+
+        if ($scope.features.length) {
+            $scope.clearFeatures();
+            $scope.removeLayers();
+        }
+
+        if ($scope.hasSearch) {
+            //if it was done some search, return the searched markers on the map
+            $scope.buildMarker(markers);
+        } else {
+            //else return all the markers
+            $scope.listMarkerByFiltersMapNoVectorMarkers(null, null, null, null);
+        }
+    }
+
+    $scope.listMarkerByMarkersNoVectorMarkers = function (markers, pageRequest) {
+
+        markerService.listMarkerByMarkers(markers, pageRequest, {
+            callback: function (result) {
+                if (!$scope.drag) {
+                    $scope.refreshMapNoVectorMarkers(result);
+                }
+
+                if ($scope.hasSearch || $scope.drag) {
+                    $scope.currentPage = result;
+                    $scope.currentPage.pageable.pageNumber++;
+                }
+
+                $scope.currentState = $scope.LIST_STATE;
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
@@ -1092,6 +1197,114 @@ ront controller of angle won't let enter an invalid URL.
 
         $scope.resolveDatePicker();
 
+    };
+
+    $scope.buildMarker = function(markers){
+
+        $scope.drag = false;
+        var coordenates = [];
+
+        angular.forEach(markers.content, function (marker, index) {
+
+            /**
+             * Verify status
+             * */
+            var statusColor = $scope.verifyStatusColor(marker.status);
+
+            var dragBox = new ol.interaction.DragBox({
+                condition: function () {
+                    return $scope.selectMarkerTool;
+                },
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [0, 0, 255, 1]
+                    })
+                })
+            });
+
+            dragBox.on('boxend', function (e) {
+
+                var extent = dragBox.getGeometry().getExtent();
+                var markers = [];
+
+                angular.forEach($scope.features, function (feature, index) {
+                    var marker = feature.feature.getProperties().marker;
+                    $scope.selectMarker(marker);
+
+                    var extentMarker = feature.extent;
+                    var feature = feature.feature;
+
+                    if (ol.extent.containsExtent(extent, extentMarker)) {
+                        markers.push(marker.id);
+
+                        angular.forEach($scope.selectedFeatures, function (selected, index) {
+                            if (selected.marker.id == marker.id) {
+                                selected.feature.push(feature);
+                            }
+                        });
+
+                    }
+                });
+
+                if (markers.length) {
+                    $scope.changeToList(markers);
+                    $scope.dragMarkers = markers;
+                }
+
+
+                $scope.drag = true;
+            });
+
+
+            dragBox.on('boxstart', function (e) {
+                $scope.clearFeatures();
+            });
+
+            $scope.map.addInteraction(dragBox);
+
+            var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+            var feature = new ol.Feature({
+                geometry: geometry,
+                marker: marker,
+            });
+
+            var fill = new ol.style.Fill({
+                color: statusColor,
+                width: 4.53
+            });
+            var stroke = new ol.style.Stroke({
+                color: '#3399CC',
+                width: 1.25
+            });
+
+            var source = new ol.source.Vector({features: [feature]});
+            var layer = new ol.layer.Vector({
+                source: source,
+                style: new ol.style.Style(
+                    {
+                        image: new ol.style.Circle({
+                            fill: fill,
+                            stroke: stroke,
+                            radius: 10,
+                        }),
+                        fill: fill,
+                        stroke: stroke
+                    }
+                ),
+                maxResolution: minScaleToMaxResolution(marker.layer.minimumScaleMap),
+                minResolution: maxScaleToMinResolution(marker.layer.maximumScaleMap)
+            });
+
+            source.addFeatures(source);
+
+            coordenates.push(geometry.getCoordinates());
+
+            $scope.features.push({'feature': feature, "extent": source.getExtent(), 'layer': layer});
+
+            $scope.map.addLayer(layer);
+
+            $scope.extent = new ol.extent.boundingExtent(coordenates);
+        });
     };
 
     /**
