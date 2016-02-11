@@ -49,6 +49,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      */
     $scope.SAVED = "SAVED";
 
+    $scope.isPostMarker = false;
 
     /*-------------------------------------------------------------------
      * 		 				 	EVENT HANDLERS
@@ -1611,35 +1612,14 @@ ront controller of angle won't let enter an invalid URL.
      */
     $scope.postMarkerModal = function () {
 
-        //if ($scope.currentEntity.status != 'REFUSED') {
+        $scope.isPostMarker = true;
 
-        var dialog = $modal.open({
-            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-            controller: DialogController,
-            windowClass: 'dialog-success',
-            resolve: {
-                title: function () {
-                    return $translate('layer-group-view.Post');
-                },
-                message: function () {
-                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-post-this-marker') + ' ?';
-                },
-                buttons: function () {
-                    return [
-                        {label: $translate('layer-group-view.Post'), css: 'btn btn-success'},
-                        {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
-                    ];
-                }
-            }
+        $timeout(function(){
+            $('#buttonUpdate').trigger('click');
         });
 
-        dialog.result.then(function () {
 
-            $scope.postMarker();
 
-        });
-
-        //}
     };
 
     $scope.postMarkers = function () {
@@ -1932,10 +1912,12 @@ ront controller of angle won't let enter an invalid URL.
         if (!$scope.form('sidebarMarkerUpdate').$valid) {
             $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
             $scope.fadeMsg();
+            $scope.isPostMarker = false;
             return;
         }
 
         if (!$scope.isBooleanValid()) {
+            $scope.isPostMarker = false;
             return false;
         }
 
@@ -1944,7 +1926,37 @@ ront controller of angle won't let enter an invalid URL.
             return;
         }*/
 
-        if (!($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED)) {
+        if(!$scope.isPostMarker) {
+            if (!($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED)) {
+
+                var dialog = $modal.open({
+                    templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+                    controller: DialogController,
+                    windowClass: 'dialog-success',
+                    resolve: {
+                        title: function () {
+                            return $translate('admin.marker-moderation.Save-marker');
+                        },
+                        message: function () {
+                            return $translate('admin.marker-moderation.Are-you-sure-you-want-to-save-this-marker') + ' ?';
+                        },
+                        buttons: function () {
+                            return [
+                                {label: $translate('admin.marker-moderation.Save-marker'), css: 'btn btn-success'},
+                                {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                            ];
+                        }
+                    }
+                });
+
+                dialog.result.then(function () {
+
+                    $scope.updateMarker();
+
+                });
+
+            }
+        } else {
 
             var dialog = $modal.open({
                 templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
@@ -1952,14 +1964,14 @@ ront controller of angle won't let enter an invalid URL.
                 windowClass: 'dialog-success',
                 resolve: {
                     title: function () {
-                        return $translate('admin.marker-moderation.Save-marker');
+                        return $translate('layer-group-view.Post');
                     },
                     message: function () {
-                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-save-this-marker') + ' ?';
+                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-post-this-marker') + ' ?';
                     },
                     buttons: function () {
                         return [
-                            {label: $translate('admin.marker-moderation.Save-marker'), css: 'btn btn-success'},
+                            {label: $translate('layer-group-view.Post'), css: 'btn btn-success'},
                             {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
                         ];
                     }
@@ -1968,10 +1980,9 @@ ront controller of angle won't let enter an invalid URL.
 
             dialog.result.then(function () {
 
-                $scope.updateMarker();
+                $scope.postMarker();
 
             });
-
         }
 
     };
