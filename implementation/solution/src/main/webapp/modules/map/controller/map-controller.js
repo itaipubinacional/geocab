@@ -1931,6 +1931,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.menu.fcSelect = !$scope.menu.fcSelect;
 
+    // checks whether any functionality is already active
+    if ($scope.menu.fcDistancia || $scope.menu.fcArea) {
+
+      // If this functionality is active is necessary to leave the funcionality
+      $scope.map.removeInteraction(draw);
+      source.clear();
+      $scope.map.removeLayer(vector);
+      $('#popup').css("display", "none");
+      sketch = null;
+
+    }
+
     if($scope.screenSelectMarkerOpenned) {
 
       $scope.closeSelectMarker();
