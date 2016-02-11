@@ -281,6 +281,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         },
         errorHandler: function (message, exception) {
             $scope.msg = {type: "error", text: message};
+            $scope.fadeMsg();
             $scope.$apply();
         }
     });
@@ -302,6 +303,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
         },
         errorHandler: function (message, exception) {
             $scope.msg = {type: "error", text: message};
+            $scope.fadeMsg();
             $scope.$apply();
         }
     });
@@ -510,6 +512,7 @@ ront controller of angle won't let enter an invalid URL.
                 },
                 errorHandler: function (message, exception) {
                     $scope.msg = {type: "error", text: message};
+                    $scope.fadeMsg();
                     $scope.$apply();
                 }
             });
@@ -945,6 +948,7 @@ ront controller of angle won't let enter an invalid URL.
         var page = layerGroupService.listLayersByFilters(filter, pageRequest, {
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "error", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
             },
             async: false //USE ONLY IN AUTOCOMPLETE
@@ -1579,7 +1583,9 @@ ront controller of angle won't let enter an invalid URL.
                     return $translate('layer-group-view.Post');
                 },
                 message: function () {
-                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-post-this-marker') + ' ?';
+                    if($scope.itensMarcados.length > 1)
+                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-post-the-selected-markers') + '?';
+                    return $translate('admin.marker-moderation.Are-you-sure-you-want-to-post-the-selected-marker') + '?';
                 },
                 buttons: function () {
                     return [
@@ -1646,18 +1652,28 @@ ront controller of angle won't let enter an invalid URL.
         myMarkersService.postMarkers(markersId, {
             callback: function (result) {
 
+                if($scope.itensMarcados.length > 1) {
+                    $scope.msg = {
+                        type: "success",
+                        text: $translate("map.Markers-was-successfully-published"),
+                        dismiss: true
+                    };
+                } else {
+                    $scope.msg = {
+                        type: "success",
+                        text: $translate("map.Marker-was-successfully-published"),
+                        dismiss: true
+                    };
+                }
+
+                $scope.fadeMsg();
                 $scope.changeToList();
-
-                $scope.itensMarcados = [];
-
-                $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-published"), dismiss: true};
-
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
-
             }
         });
     };
@@ -1762,6 +1778,7 @@ ront controller of angle won't let enter an invalid URL.
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "error", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
 
             }
@@ -1778,15 +1795,18 @@ ront controller of angle won't let enter an invalid URL.
         myMarkersService.removeMarkers(markersId, {
             callback: function (result) {
 
+                if($scope.itensMarcados.length > 1)
+                    $scope.msg = {type: "success", text: $translate("map.Markers-was-successfully-deleted"), dismiss: true};
+                else
+                    $scope.msg = {type: "success", text: $translate("map.Marker-was-successfully-deleted"), dismiss: true};
+
+                $scope.fadeMsg();
                 $scope.changeToList();
-
-                $scope.itensMarcados = [];
-                $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
-
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "error", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
 
             }
@@ -1802,15 +1822,17 @@ ront controller of angle won't let enter an invalid URL.
             windowClass: 'dialog-enable',
             resolve: {
                 title: function () {
-                    return $translate("map.Delete-mark")
+                    return $translate("map.Delete-mark");
                 },
                 message: function () {
-                    return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"
+                    if($scope.itensMarcados.length > 1)
+                        return $translate("map.Are-you-sure-you-want-to-delete-the-selected-markers") + "?";
+                    return $translate("map.Are-you-sure-you-want-to-delete-the-selected-marker") + "?";
                 },
                 buttons: function () {
                     return [{
                         label: $translate("layer-group-popup.Delete"),
-                        css: 'btn btn-error'
+                        css: 'btn btn-danger'
                     }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
                 }
             }
@@ -1834,12 +1856,12 @@ ront controller of angle won't let enter an invalid URL.
                     return $translate("map.Delete-mark")
                 },
                 message: function () {
-                    return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"
+                    return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + "?"
                 },
                 buttons: function () {
                     return [{
                         label: $translate("layer-group-popup.Delete"),
-                        css: 'btn btn-error'
+                        css: 'btn btn-danger'
                     }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
                 }
             }
@@ -1889,7 +1911,7 @@ ront controller of angle won't let enter an invalid URL.
                 buttons: function () {
                     return [{
                         label: $translate("layer-group-popup.Delete"),
-                        css: 'btn btn-error'
+                        css: 'btn btn-danger'
                     }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
                 }
             }
