@@ -54,12 +54,12 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
       var attributesByLayer = {};
 
       if(attr.type == 'PHOTO_ALBUM') {
-
         attributesByLayer = attr;
         $scope.attributesByLayer.push(attr);
       }
 
       if(attr.attribute && attr.attribute.type == 'PHOTO_ALBUM') {
+
         attr.attribute.markerAttribute = {id: attr.id};
 
         attributesByLayer = attr.attribute;
@@ -83,7 +83,8 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
                   //photo.src = photo.image;
                   //photo.name = photo.description;
 
-                  if ($scope.attribute.removePhotosIds && attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
+                  //if (attr.attribute.removePhotosIds && attr.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
+                  if (attr.attribute.removePhotosIds == undefined || (attr.attribute.removePhotosIds != undefined && attr.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1)) {
                     attributesByLayer.files.push(photo);
                   }
 
