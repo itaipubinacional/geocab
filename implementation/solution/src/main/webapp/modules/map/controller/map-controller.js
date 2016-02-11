@@ -3454,6 +3454,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.isLoading = true;
 
     if (!$scope.isBooleanValid()) {
+      $scope.isLoading = false;
       return false;
     }
 
