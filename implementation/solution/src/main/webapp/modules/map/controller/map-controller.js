@@ -1929,10 +1929,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.initializeSelectionTool = function () {
 
-    if($scope.menu.fcSelect) {
-      $scope.menu.fcSelect = false;
-      $scope.selectMarkerTool = false;
-    }
+    $scope.menu.fcSelect = !$scope.menu.fcSelect;
 
     if($scope.screenSelectMarkerOpenned) {
 
@@ -1977,7 +1974,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         fcArea: false,
         fcKml: false,
         fcMarker: false,
-        fcSelect: true
+        fcSelect: $scope.menu.fcSelect
       };
 
       var dragBox = new ol.interaction.DragBox({
@@ -2083,8 +2080,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
 
       $scope.map.addInteraction(dragBox);
-
-
 
     }
 
