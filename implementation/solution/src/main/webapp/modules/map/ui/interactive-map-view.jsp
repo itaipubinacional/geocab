@@ -734,9 +734,9 @@ uri="http://www.springframework.org/security/tags"%>
                       ng-click="insertMarker()"
                       style="float: right;"
                       ng-disabled="isLoading"
-                      title="<spring:message code="map.Submit" />"
+                      title="<spring:message code="map.Publish" />"
                   >
-                  <spring:message code="map.Submit" />
+                  <spring:message code="map.Publish" />
                   <i ng-if="isLoading && currentEntity.status == 'PENDING'" class="loading"></i>
                   </button>
 
