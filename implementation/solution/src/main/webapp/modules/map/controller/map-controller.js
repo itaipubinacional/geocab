@@ -2078,11 +2078,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.drag = true;
 
-        $timeout(function () {
-          $(".panel-body").css('overflow-y', 'hidden');
-          //$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
-        }, 100);
-
       });
 
       dragBox.on('boxstart', function (e) {
@@ -2094,6 +2089,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.map.addInteraction(dragBox);
 
     }
+
+    $timeout(function () {
+      $(".panel-body").css('height', 'auto');
+      $(".panel-body").css('overflow-y', 'hidden');
+      //$(".min-height-accordion .panel-collapse .panel-body").removeAttr("style")
+    }, 100);
 
   };
 
