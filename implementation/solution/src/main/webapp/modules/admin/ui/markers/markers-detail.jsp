@@ -99,11 +99,11 @@
                                 <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'" ng-required="attribute.required">
 
                                         <div class="required-boolean" >
-                                        <input type="radio" name="boolean{{ $index }}" class="boolean-1 boolean" ng-model="attribute.value"
-                                        value="Yes" onClick="isBooleanChecked(this)" ><spring:message code="map.Yes" />
+                                        <input type="radio" name="boolean{{ $index }}" class="boolean-1 boolean" ng-model="markerAttribute.value"
+                                        value="Yes" onClick="isBooleanChecked(this)" ng-checked="markerAttribute.value == 'Yes'"><spring:message code="map.Yes" />
 
-                                        <input type="radio" name="boolean{{ $index }}" class="boolean-2 boolean" ng-model="attribute.value"
-                                        value="No" onClick="isBooleanChecked(this)"><spring:message code="map.No" />
+                                        <input type="radio" name="boolean{{ $index }}" class="boolean-2 boolean" ng-model="markerAttribute.value"
+                                        value="No" onClick="isBooleanChecked(this)" ng-checked="markerAttribute.value == 'No'"><spring:message code="map.No" />
                                         </div>
 
                                 </div>
