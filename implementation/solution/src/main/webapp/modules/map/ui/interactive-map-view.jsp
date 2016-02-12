@@ -508,8 +508,8 @@ uri="http://www.springframework.org/security/tags"%>
                     class="btn btn-primary"
                     ng-click="updateMarker()"
                     style="float: right"
-                    title="<spring:message code='map.Submit' />">
-                  <spring:message code="map.Submit" />
+                    title="<spring:message code='map.Save' />">
+                  <spring:message code="map.Save" />
                 </button>
               </div>
             </div>
