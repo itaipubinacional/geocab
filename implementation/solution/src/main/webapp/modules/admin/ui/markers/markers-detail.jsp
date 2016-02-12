@@ -62,18 +62,19 @@
                             <ng-form name="ngSideMarker" default-button="buttonUpdate">
 
 
-
                                 <!--<label style="padding-top: 10px">{{ markerAttribute.attribute.name }}</label>-->
+
+                                <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'" style="margin-top: 10px">{{ markerAttribute.attribute.name }}</label>
+
                                 <div ng-if="(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
 
-                                <button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
-                                ng-click="showUpload(markerAttribute.attribute, attributesByMarker)"
-                                style="float: left;margin-right: 5px"
-                                title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
-                                </button>
+                                        <button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
+                                        ng-click="showUpload(markerAttribute.attribute, attributesByMarker)"
+                                        style="float: left;margin-right: 5px"
+                                        title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
+                                        </button>
 
-                                 <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'" style="margin-top: 10px">{{ markerAttribute.attribute.name }}</label>
-                                 <label ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" style="height: 34px;line-height: 34px;">{{ markerAttribute.attribute.name }}</label>
+                                         <label ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" style="height: 34px;line-height: 34px;">{{ markerAttribute.attribute.name }}</label>
 
                                 </div>
 
