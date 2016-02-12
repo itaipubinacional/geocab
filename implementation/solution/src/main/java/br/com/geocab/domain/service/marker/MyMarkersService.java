@@ -84,7 +84,7 @@ public class MyMarkersService extends AbstractMarkerService
 
 	public Marker postMarker(Marker marker) throws IOException, RepositoryException
 	{
-		marker.setStatus(MarkerStatus.PENDING);	
+		marker.setStatus(MarkerStatus.PENDING);
 		return this.updateMarker(marker);
 	}
 	
@@ -120,9 +120,9 @@ public class MyMarkersService extends AbstractMarkerService
 		{
 			for (Long markerId : markersId)
 			{
-				Marker marker = new Marker(markerId);
-				marker = this.markerRepository.findOne(markerId);
-				this.postMarker(marker);
+				Marker marker = this.markerRepository.findOne(markerId);
+				marker.setStatus(MarkerStatus.PENDING);
+				this.markerRepository.save(marker);
 			}
 		}
 		catch (DataIntegrityViolationException e)

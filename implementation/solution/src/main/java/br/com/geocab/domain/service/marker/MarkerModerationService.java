@@ -4,6 +4,7 @@
 package br.com.geocab.domain.service.marker;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -237,7 +239,20 @@ public class MarkerModerationService
 		
 		try
 		{
-			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(markerId).get(0);
+			Order order = new Order();
+			order.setDirection(Direction.ASC);
+			order.setProperty("created");
+			
+			List<Order> orders = new ArrayList<>();
+			
+			orders.add(order);
+			
+			Sort sort = new Sort();
+			sort.setOrders(orders);
+			PageRequest pageable = new PageRequest();
+			pageable.setSort(sort);
+			
+			final MarkerModeration lastMarkerModeration = this.markerModerationRepository.listMarkerModerationByMarker(markerId, pageable).getContent().get(0);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
 			
@@ -317,7 +332,7 @@ public class MarkerModerationService
 	{
 		pageable.setSort(new Sort(Direction.ASC, "id"));
 
-		return this.markerModerationRepository.listByMarker(markerId, pageable);
+        return this.markerModerationRepository.listMarkerModerationByMarker(markerId, pageable);
 	}
 	
 }
