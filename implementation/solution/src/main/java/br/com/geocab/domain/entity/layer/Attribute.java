@@ -159,8 +159,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param orderAttribute
 	 * @param visible
 	 */
-	public Attribute(Long id, String name, Boolean required, AttributeType type,
-			Integer orderAttribute, Boolean visible)
+	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute, Boolean visible)
 	{
 		this.setId(id);
 		this.setTemporaryId(id);

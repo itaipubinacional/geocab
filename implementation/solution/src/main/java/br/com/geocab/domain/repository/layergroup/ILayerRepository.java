@@ -101,4 +101,5 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
             "WHERE ( layer.name = :layerName) AND ( layer.dataSource.id = :dataSourceId )")
     public List<Long> listLayerGroupIdsByNameAndDataSource( @Param("layerName") String layerName, @Param("dataSourceId") Long dataSourceId);
 
+
 }

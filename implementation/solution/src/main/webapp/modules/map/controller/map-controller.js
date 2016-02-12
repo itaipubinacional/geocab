@@ -3057,10 +3057,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
 
     if (typeof $scope.marker != "undefined") {
-      markerService.findImgByMarker($scope.marker.id, {
+      markerService.lastPhotoByMarkerId($scope.marker.id, {
         callback: function (result) {
 
-          $scope.imgResult = result;
+          $scope.imgResult = result.image;
         },
         errorHandler: function (message, exception) {
           $scope.message = {type: "error", text: message};
@@ -4118,10 +4118,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
 
     if (typeof $scope.marker != "undefined") {
-      markerService.findImgByMarker($scope.marker.id, {
+      markerService.lastPhotoByMarkerId($scope.marker.id, {
         callback: function (result) {
 
-          $scope.imgResult = result;
+          $scope.imgResult = result.image;
         },
         errorHandler: function (message, exception) {
           $scope.message = {type: "error", text: message};

@@ -102,7 +102,7 @@
 				<!-- ModeShape -->
 				<mvn.jcr.indexes>/tmp/geocab/indexes</mvn.jcr.indexes>
 				<mvn.jcr.files>/tmp/geocab/files</mvn.jcr.files>
-				<mvn.jcr.caches>/tmp/geocab/files</mvn.jcr.caches>
+				<mvn.jcr.caches>/tmp/geocab/caches</mvn.jcr.caches>
 				<mvn.path.shapefiles>/tmp/geocab/files/shapefile/</mvn.path.shapefiles>
 
 				<!-- Social -->
