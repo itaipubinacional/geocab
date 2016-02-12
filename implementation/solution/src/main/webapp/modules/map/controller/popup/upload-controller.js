@@ -68,7 +68,7 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
         if(attr.photoAlbum){
 
-          markerService.listPhotosByPhotoAlbumId(attr.photoAlbum.id, {
+          markerService.listPhotosByPhotoAlbumIdentifier(attr.photoAlbum.identifier, {
             callback: function (result) {
 
               if(result.content.length) {

@@ -3063,6 +3063,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.imgResult = result.image;
         },
         errorHandler: function (message, exception) {
+          $scope.imgResult = null;
           $scope.message = {type: "error", text: message};
           $scope.$apply();
         }
@@ -4124,6 +4125,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.imgResult = result.image;
         },
         errorHandler: function (message, exception) {
+          $scope.imgResult = null;
           $scope.message = {type: "error", text: message};
           $scope.$apply();
         }
@@ -4148,11 +4150,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
                   if (attributeByMarker.attribute.id == attribute.id) {
                     exist = true;
-
-                    if(attributeByMarker.attribute.type == 'PHOTO_ALBUM')
-                      $scope.getPhotosByAttribute(attributeByMarker, index);
-
                   }
+                  
+                  if(attributeByMarker.attribute.type == 'PHOTO_ALBUM')
+                      $scope.getPhotosByAttribute(attributeByMarker, index);
 
                 });
 

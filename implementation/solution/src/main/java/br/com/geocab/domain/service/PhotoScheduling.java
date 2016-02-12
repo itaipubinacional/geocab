@@ -27,7 +27,6 @@ import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.photo.Photo;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
-import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
@@ -87,11 +86,6 @@ public class PhotoScheduling
 	/**
 	 * 
 	 */
-	@Autowired
-	protected ILayerRepository layerRepository;
-	/**
-	 * 
-	 */
 	@PostConstruct
 	public void postConstruct()
 	{
@@ -101,7 +95,8 @@ public class PhotoScheduling
 			{
 				// Verifica se o marker tem fotos relacionadas diretamente a ele
 				final FileTransfer fileTransfer = this.verifyMarker(marker);
-											
+				
+				// Faz requisição de todos os marker_attributes do marker
 				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
 								
 				//Cria o atributo
@@ -109,13 +104,13 @@ public class PhotoScheduling
 				attribute.setVisible(false);
 				attribute.setRequired(true);
 				
-				attributeRepository.save(attribute);
+				this.attributeRepository.save(attribute);
 				
 				// Cria o novo marker_attribute (que será o photo_album) a ser inserido
 				MarkerAttribute markerAttribute = new MarkerAttribute();
 				markerAttribute.setMarker(marker);
 				markerAttribute.setAttribute(attribute);
-				markerAttribute.setValue("Default photo album");
+				markerAttribute.setValue("");
 				
 				//Salva o marker_attribute
 				markerAttribute = markerAttributeRepository.save(markerAttribute);
@@ -135,7 +130,7 @@ public class PhotoScheduling
 				
 				// Cria o photo com o photo_album recém salvo
 				Photo photo = new Photo();
-				photo.setDescription("Default description");
+				photo.setDescription(fileTransfer.getFilename());
 				photo.setPhotoAlbum(photoAlbum);
 				
 				//Salva a foto
@@ -145,7 +140,7 @@ public class PhotoScheduling
 				
 				// Seta o metafile no objeto photo
 				photo.setImage(fileTransfer);
-								
+								System.out.println(fileTransfer.getFilename());
 				// Realiza o upload da foto
 				photo = this.uploadImg(photo);
 				
@@ -195,7 +190,6 @@ public class PhotoScheduling
 		}
 		catch (IOException | RepositoryException e)
 		{
-			e.printStackTrace();
 			LOG.info(e.getMessage());
 		}
 

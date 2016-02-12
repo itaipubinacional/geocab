@@ -193,12 +193,13 @@ public class MarkerService extends AbstractMarkerService
 	
 	/**
 	 * 
-	 * @param photoAlbumId
+	 * @param identifier
 	 * @return
 	 */
-	public Page<Photo> listPhotosByPhotoAlbumId(final String photoAlbumId, final PageRequest pageRequest)
+	public Page<Photo> listPhotosByPhotoAlbumIdentifier(final String identifier, final PageRequest pageRequest)
 	{
-		Page<Photo> photos = this.photoRepository.findByIdentifierContaining(photoAlbumId, pageRequest);
+		
+		Page<Photo> photos = this.photoRepository.findByIdentifierContaining(identifier, pageRequest);
 		
 		for (Photo photo : photos.getContent())
 		{
@@ -225,7 +226,7 @@ public class MarkerService extends AbstractMarkerService
 	public Page<Photo> findPhotoAlbumByAttributeMarkerId(Long markerAttributeId, final PageRequest pageRequest)
 	{
 		PhotoAlbum photoAlbum = this.photoAlbumRepository.findByMarkerAttributeId(markerAttributeId);
-		return this.listPhotosByPhotoAlbumId(photoAlbum.getIdentifier(), pageRequest);
+		return this.listPhotosByPhotoAlbumIdentifier(photoAlbum.getIdentifier(), pageRequest);
 	}
 	
 	

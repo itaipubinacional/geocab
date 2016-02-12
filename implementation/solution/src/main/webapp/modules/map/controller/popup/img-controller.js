@@ -78,7 +78,7 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
       if(attribute.content[0].photoAlbum.id != $scope.currentAttribute.content[0].photoAlbum.id)
         $scope.pageable.page = 0;
 
-      markerService.listPhotosByPhotoAlbumId(attribute.content[0].photoAlbum.id, $scope.pageable, {
+      markerService.listPhotosByPhotoAlbumIdentifier(attribute.content[0].photoAlbum.identifier, $scope.pageable, {
 
         callback: function (result) {
 
@@ -174,7 +174,7 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
             if (markerAttribute.photoAlbum != null) {
 
-              markerService.listPhotosByPhotoAlbumId(markerAttribute.photoAlbum.id, $scope.pageable, {
+              markerService.listPhotosByPhotoAlbumIdentifier(markerAttribute.photoAlbum.identifier, $scope.pageable, {
 
                 callback: function (result) {
 
