@@ -85,7 +85,7 @@ public class MyMarkersService extends AbstractMarkerService
 	public Marker postMarker(Marker marker) throws IOException, RepositoryException
 	{
 		marker.setStatus(MarkerStatus.PENDING);	
-		return this.markerRepository.save(marker);
+		return this.updateMarker(marker);
 	}
 	
 	
