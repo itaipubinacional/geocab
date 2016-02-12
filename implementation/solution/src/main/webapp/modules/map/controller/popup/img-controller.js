@@ -57,17 +57,18 @@ function ImgPopUpController($scope, $modalInstance, $log, attributesByMarker, $i
 
     $scope.photoIndex = index;
 
-    markerService.findPhotoById(photo.id, {
-      callback: function (result) {
-        $scope.currentPhoto = result;
-        $scope.$apply();
-      },
-      errorHandler: function (message, exception) {
-        $scope.message = {type: "error", text: message};
-        $scope.$apply();
-      }
-    });
-
+    if(photo != undefined) {
+      markerService.findPhotoById(photo.id, {
+        callback: function (result) {
+          $scope.currentPhoto = result;
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+          $scope.message = {type: "error", text: message};
+          $scope.$apply();
+        }
+      });
+    }
 
   };
 

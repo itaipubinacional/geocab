@@ -2138,7 +2138,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.attributesByMarker[index].photoAlbum = result.content[0].photoAlbum;
                 $scope.attributesByMarker[index].photoAlbum.photos = result.content;
 
-                $scope.imgResult = result.content[0].image;
+                //$scope.imgResult = result.content[0].image;
 
                 $scope.$apply();
             },
@@ -2296,6 +2296,8 @@ ront controller of angle won't let enter an invalid URL.
 
     $scope.eventMarkerTool = function () {
         $scope.selectMarkerTool = $scope.menu.selectMarker = ($scope.selectMarkerTool == true) ? false : true;
+
+
 
     };
 
