@@ -3061,6 +3061,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         callback: function (result) {
 
           $scope.imgResult = result.image;
+          $scope.$apply();
+
         },
         errorHandler: function (message, exception) {
           $scope.imgResult = null;
@@ -4094,8 +4096,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.attributesByMarker[index].photoAlbum = result.content[0].photoAlbum;
         $scope.attributesByMarker[index].photoAlbum.photos = result.content;
-
-        $scope.imgResult = result.content[0].image;
 
         $scope.$apply();
       },
