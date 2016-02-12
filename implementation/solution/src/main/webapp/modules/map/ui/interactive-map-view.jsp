@@ -403,9 +403,8 @@ uri="http://www.springframework.org/security/tags"%>
 
                 </div>
                 <div ng-repeat="attribute in attributesByLayer"
-                     ng-if="showAttributesAlone || showNewAttributes"
+                     ng-if="showAttributesAlone"
                      style="position: relative">
-
                   <ng-form name="ngSideMarker" default-button="buttonInsert">
 
                     <button ng-if="attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
@@ -413,8 +412,6 @@ uri="http://www.springframework.org/security/tags"%>
                             style="float: left;margin-right: 5px"
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>
-
-                    <!--<label style="margin-top: 15px">{{ attribute.name }}</label>-->
 
                     <label ng-if="attribute.type != 'PHOTO_ALBUM'" style="margin-top: 15px">{{ attribute.name }}</label>
 
@@ -433,15 +430,6 @@ uri="http://www.springframework.org/security/tags"%>
                         ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.date1.$error.required}"
                         ng-required="attribute.required"
                         >
-
-                    <!-- 								<div ng-if="attribute.type == 'BOOLEAN'" id="radioBoolean" class="boolean-required" > -->
-
-                    <!-- 									<input type="radio" name="boolean" ng-model="attribute.value" -->
-                    <%-- 										value="Yes" ng-required="attribute.required" ><spring:message code="map.Yes" />  --%>
-
-                    <!-- 									<input type="radio" name="boolean" ng-model="attribute.value"  -->
-                    <%-- 										value="No" ng-required="attribute.required"><spring:message code="map.No" />  --%>
-                    <!-- 								</div> -->
 
                     <div ng-if="attribute.type == 'BOOLEAN'" ng-required="attribute.required"  >
                       <div class="required-boolean" >

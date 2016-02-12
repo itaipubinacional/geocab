@@ -1997,7 +1997,7 @@ ront controller of angle won't let enter an invalid URL.
             $scope.currentEntity.layer = layer;
         }
 
-        angular.forEach($scope.attributesByMarker, function (attribute) {
+        angular.forEach($scope.attributesByMarker, function (attribute, i) {
 
             if (attribute.value == null) {
                 attribute.value = "";
@@ -2030,13 +2030,14 @@ ront controller of angle won't let enter an invalid URL.
                 } else {
                     attribute.photoAlbum.photos = attribute.attribute.files;
                 }
-
             }
         });
 
         $scope.currentEntity.markerAttribute = $scope.attributesByMarker;
 
-        angular.forEach($scope.attributesByLayer, function (val, ind) {
+        /*angular.forEach($scope.attributesByLayer, function (val, ind) {
+
+            //var markerAttribute = $filter('filter')($scope.currentEntity.markerAttribute, {id: val.id});
 
             var attribute = new Attribute();
             attribute.id = val.id;
@@ -2052,7 +2053,7 @@ ront controller of angle won't let enter an invalid URL.
             markerAttribute.marker = $scope.currentEntity;
             $scope.currentEntity.markerAttribute.push(markerAttribute);
 
-        });
+        });*/
 
         /* Remove image to update */
         angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
@@ -2183,7 +2184,7 @@ ront controller of angle won't let enter an invalid URL.
 
                             if (!exist) {
 
-                                $scope.attributesByMarker.push({attribute: attribute, marker: $scope.currentEntity, isNew: true});
+                                $scope.attributesByMarker.push({attribute: attribute, marker: $scope.currentEntity});
                                 $scope.attributesByLayer.push(attribute);
                                 $scope.showNewAttributes = true;
                             }

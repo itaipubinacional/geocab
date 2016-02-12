@@ -3094,6 +3094,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                 });
 
                 if (!exist) {
+                  $scope.attributesByMarker.push({attribute: attribute, marker: $scope.currentEntity});
                   $scope.attributesByLayer.push(attribute);
                   $scope.showNewAttributes = true;
                 }
@@ -3367,7 +3368,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.currentEntity.markerAttribute = $scope.attributesByMarker;
 
-    angular.forEach($scope.attributesByLayer, function (val, ind) {
+    /*angular.forEach($scope.attributesByLayer, function (val, ind) {
 
       var attribute = new Attribute();
       attribute.id = val.id;
@@ -3383,7 +3384,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       markerAttribute.marker = $scope.currentEntity;
       $scope.currentEntity.markerAttribute.push(markerAttribute);
 
-    });
+    });*/
 
     if($scope.currentEntity.latitude == null){
       var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
@@ -3594,6 +3595,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
               });
 
               if (!exist) {
+
+                $scope.attributesByMarker.push({attribute: attribute, marker: $scope.currentEntity});
                 $scope.attributesByLayer.push(attribute);
                 $scope.showNewAttributes = true;
               }
@@ -4158,6 +4161,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                 });
 
                 if (!exist) {
+                  $scope.attributesByMarker.push({attribute: attribute, marker: $scope.currentEntity});
                   $scope.attributesByLayer.push(attribute);
                   $scope.showNewAttributes = true;
                 }
@@ -4189,7 +4193,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
     }
 
-    layerGroupService.listAllInternalLayerGroups({
+    /*layerGroupService.listAllInternalLayerGroups({
       callback: function (result) {
 
         $scope.selectLayerGroup = [];
@@ -4236,7 +4240,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.message = {type: "error", text: message};
         $scope.$apply();
       }
-    });
+    });*/
 
     if ($scope.slideActived == '#sidebar-marker-detail-update') {
       $(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
