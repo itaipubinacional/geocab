@@ -197,6 +197,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * Responsible for controlling variable if the functionalities are active or not
      */
     $scope.menu = {
+        fcDistancia: false,
+        fcArea: false,
         selectMarker: false
     };
 
@@ -2295,9 +2297,28 @@ ront controller of angle won't let enter an invalid URL.
     };
 
     $scope.eventMarkerTool = function () {
-        $scope.selectMarkerTool = $scope.menu.selectMarker = ($scope.selectMarkerTool == true) ? false : true;
 
+        $scope.menu.selectMarker = !$scope.menu.selectMarker;
 
+        // checks whether any functionality is already active
+        if ($scope.menu.fcDistancia || $scope.menu.fcArea) {
+
+            // If this functionality is active is necessary to leave the funcionality
+            $scope.map.removeInteraction(draw);
+            source.clear();
+            $scope.map.removeLayer(vector);
+            $('#popup').css("display", "none");
+            sketch = null;
+
+        }
+
+        $scope.menu = {
+            fcDistancia: false,
+            fcArea: false,
+            selectMarker: $scope.menu.selectMarker
+        };
+
+        $scope.selectMarkerTool = $scope.menu.selectMarker;
 
     };
 
@@ -2392,6 +2413,8 @@ ront controller of angle won't let enter an invalid URL.
      */
     $scope.initializeDistanceCalc = function () {
 
+        $scope.selectMarkerTool = false;
+
         if ($scope.menu.fcMarker) {
             $scope.clearFcMarker();
         } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
@@ -2425,7 +2448,8 @@ ront controller of angle won't let enter an invalid URL.
                 fcDistancia: true,
                 fcArea: false,
                 fcKml: false,
-                fcMarker: false
+                fcMarker: false,
+                selectMarker: false
             };
 
             // add the measuring layer on a map
@@ -2437,7 +2461,8 @@ ront controller of angle won't let enter an invalid URL.
             // initializes the interaction
             addInteraction('LineString');
         }
-    }
+
+    };
 
 
     $scope.initializeMarker = function () {
@@ -2473,12 +2498,14 @@ ront controller of angle won't let enter an invalid URL.
             };
 
         }
-    }
+    };
 
     /**
      * Method that calculates the area of points on interactive map
      */
     $scope.initializeAreaCalc = function () {
+
+        $scope.selectMarkerTool = false;
 
         if ($scope.menu.fcMarker) {
             $scope.clearFcMarker();
@@ -2512,7 +2539,9 @@ ront controller of angle won't let enter an invalid URL.
                 fcDistancia: false,
                 fcArea: true,
                 fcKml: false,
-                fcMarker: false
+                fcMarker: false,
+                selectMarker: false
+
             };
 
             // Add the layer of measurement on the map
@@ -2525,7 +2554,9 @@ ront controller of angle won't let enter an invalid URL.
             addInteraction('Polygon');
         }
 
-    }
+        $scope.menu.selectMarker = false;
+
+    };
 
 
     /**

@@ -197,6 +197,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Responsible for controlling variable if the functionalities are active or not
      */
     $scope.menu = {
+        fcDistancia: false,
+        fcArea: false,
         selectMarker: false
     };
 
@@ -1653,7 +1655,28 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     };
 
     $scope.eventMarkerTool = function () {
-        $scope.selectMarkerTool = $scope.menu.selectMarker = ($scope.selectMarkerTool == true) ? false : true;
+
+        $scope.menu.selectMarker = !$scope.menu.selectMarker;
+
+        // checks whether any functionality is already active
+        if ($scope.menu.fcDistancia || $scope.menu.fcArea) {
+
+            // If this functionality is active is necessary to leave the funcionality
+            $scope.map.removeInteraction(draw);
+            source.clear();
+            $scope.map.removeLayer(vector);
+            $('#popup').css("display", "none");
+            sketch = null;
+
+        }
+
+        $scope.menu = {
+            fcDistancia: false,
+            fcArea: false,
+            selectMarker: $scope.menu.selectMarker
+        };
+
+        $scope.selectMarkerTool = $scope.menu.selectMarker;
 
     };
 
@@ -1755,6 +1778,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.initializeDistanceCalc = function () {
 
+        $scope.selectMarkerTool = false;
+
         if ($scope.menu.fcMarker) {
             $scope.clearFcMarker();
         } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
@@ -1842,6 +1867,8 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      * Method that calculates the area of points on interactive map
      */
     $scope.initializeAreaCalc = function () {
+
+        $scope.selectMarkerTool = false;
 
         if ($scope.menu.fcMarker) {
             $scope.clearFcMarker();
