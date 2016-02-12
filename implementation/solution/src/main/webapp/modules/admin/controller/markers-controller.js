@@ -1991,8 +1991,6 @@ ront controller of angle won't let enter an invalid URL.
 
     $scope.updateMarker = function () {
 
-
-
         if ($scope.currentEntity.layer == null) {
             var layer = new Layer();
             layer.id = $scope.currentEntity.layer;
@@ -2049,8 +2047,6 @@ ront controller of angle won't let enter an invalid URL.
             } else {
                 markerAttribute.value = "";
             }
-
-
 
             markerAttribute.attribute = attribute;
             markerAttribute.marker = $scope.currentEntity;
@@ -2114,6 +2110,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
+                $scope.imgResult = null;
                 //$scope.msg = {type: "error", text: message};
                 //$scope.$apply();
             }
@@ -2186,7 +2183,7 @@ ront controller of angle won't let enter an invalid URL.
 
                             if (!exist) {
 
-                                $scope.attributesByMarker.push({'attribute': attribute, 'marker': $scope.currentEntity});
+                                $scope.attributesByMarker.push({attribute: attribute, marker: $scope.currentEntity, isNew: true});
                                 $scope.attributesByLayer.push(attribute);
                                 $scope.showNewAttributes = true;
                             }
