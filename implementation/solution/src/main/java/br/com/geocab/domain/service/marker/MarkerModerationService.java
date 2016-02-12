@@ -236,8 +236,11 @@ public class MarkerModerationService
 	{			
 		
 		try
-		{
-			final MarkerModeration lastMarkerModeration = this.listMarkerModerationByMarker(markerId).get(0);
+		{			
+			PageRequest pageable = new PageRequest();
+			pageable.setSort(new Sort(Direction.ASC, "created"));
+			
+			final MarkerModeration lastMarkerModeration = this.markerModerationRepository.listMarkerModerationByMarker(markerId, pageable).getContent().get(0);
 			
 			MarkerModeration markerModeration = new MarkerModeration();
 			
@@ -317,7 +320,7 @@ public class MarkerModerationService
 	{
 		pageable.setSort(new Sort(Direction.ASC, "id"));
 
-		return this.markerModerationRepository.listByMarker(markerId, pageable);
+        return this.markerModerationRepository.listMarkerModerationByMarker(markerId, pageable);
 	}
 	
 }

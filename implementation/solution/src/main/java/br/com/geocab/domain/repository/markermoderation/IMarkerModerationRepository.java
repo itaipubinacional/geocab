@@ -42,7 +42,7 @@ public interface IMarkerModerationRepository extends IDataRepository<MarkerModer
 				"FROM MarkerModeration markerModeration "+
 				"LEFT OUTER JOIN markerModeration.marker marker " +
 				"WHERE marker.id = :markerId" )
-	public Page<MarkerModeration> listByMarker(@Param("markerId") Long markerId, Pageable pageable);
+	public Page<MarkerModeration> listMarkerModerationByMarker(@Param("markerId") Long markerId, Pageable pageable);
 	
 	/**
 	 * 
