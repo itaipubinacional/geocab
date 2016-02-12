@@ -100,7 +100,7 @@ public class PhotoScheduling
 				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
 								
 				//Cria o atributo
-				Attribute attribute= new Attribute(null, "Default photo album", AttributeType.PHOTO_ALBUM, null);
+				Attribute attribute= new Attribute(null, "Fotos", AttributeType.PHOTO_ALBUM, null);
 				attribute.setVisible(false);
 				attribute.setRequired(true);
 				
