@@ -144,7 +144,7 @@ uri="http://www.springframework.org/security/tags"%>
                       <br>
                       <div style="text-align:center">
                         <img ng-click="showGallery(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-                             style="margin-top: 12px;cursor: pointer;max-width:360px"> <br>
+                             style="margin-top: 12px;cursor: pointer;max-width:355px"> <br>
                       </div>
                       <br>
 
