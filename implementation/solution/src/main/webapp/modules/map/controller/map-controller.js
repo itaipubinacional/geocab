@@ -991,11 +991,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.changeToScreen = function (screen) {
     $scope.screen = screen;
-  }
+  };
 
   $scope.objectKeys = function (obj) {
     return Object.keys(obj);
-  }
+  };
 
   /**
    * Function that makes request to geo server to bring the features
@@ -4087,17 +4087,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.getPhotosByAttribute = function(attribute, index){
 
-    var pageable = {
-      size: 1,
-      page: 0,
-      sort: {//Sort
-        orders: [
-          {direction: 'DESC', property: 'created'}
-        ]
-      }
-    };
-
-    markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, pageable, {
+    markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, null, {
       callback: function (result) {
         /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
         $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
