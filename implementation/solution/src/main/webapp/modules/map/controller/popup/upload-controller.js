@@ -188,8 +188,6 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
   $scope.setAttribute = function (attribute) {
 
-    $('#files').val('');
-
     $scope.attribute = attribute;
 
     $scope.attribute.removePhotosIds = attribute.removePhotosIds ? attribute.removePhotosIds : [];

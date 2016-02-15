@@ -19,6 +19,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
     },
     link: function(scope, element, attrs){
 
+      scope.count = 0;
       scope.isLoading = false;
       scope.over = false;
       scope.fileSelected = {};
@@ -129,6 +130,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
       dropbox.addEventListener('drop', function (event) {
 
+        scope.count = scope.files.length;
+
         scope.onLoading({isLoading: true});
 
         event.preventDefault();
@@ -154,9 +157,10 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                 var fileToObj = angular.copy(readFile);
                 scope.files.push(fileToObj);
 
-                if(scope.files.length == i) {
+                if (files.length == scope.files.length - scope.count) {
                   scope.fileSelected = scope.files[0];
                   scope.isLoading = false;
+                  $('#files').val('');
                   scope.$apply();
                   scope.onSuccess({
                     files: scope.files
@@ -173,6 +177,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       }, false);
 
       scope.setFiles = function (element) {
+
+        scope.count = scope.files.length;
 
         scope.onLoading({isLoading: true});
 
@@ -198,9 +204,10 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                   var fileToObj = angular.copy(readFile);
                   scope.files.push(fileToObj);
 
-                  if (scope.files.length == i) {
+                  if (files.length == scope.files.length - scope.count) {
                     scope.fileSelected = scope.files[0];
                     scope.isLoading = false;
+                    $('#files').val('');
                     scope.$apply();
                     scope.onSuccess({
                       files: scope.files
