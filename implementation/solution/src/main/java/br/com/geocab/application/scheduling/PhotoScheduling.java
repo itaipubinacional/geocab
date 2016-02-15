@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.jcr.RepositoryException;
-import javax.measure.unit.SystemOfUnits;
 import javax.transaction.Transactional;
 
 import org.directwebremoting.io.FileTransfer;
@@ -21,11 +20,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import br.com.geocab.domain.entity.MetaFile;
+import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.photo.Photo;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
+import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
@@ -78,63 +79,80 @@ public class PhotoScheduling
 	@Autowired
 	private IPhotoRepository photoRepository;
 	
-//	/**
-//	 * 
-//	 */
-//	@PostConstruct
-//	public void postConstruct()
-//	{
-//		for (Marker marker : markerRepository.listAll())
-//		{
-//			System.out.println("HEEEEEEEEEEEEEEEEEEEEEREEEEEEEEEEEEE");
-//			try
-//			{
-//				// Verifica se o marker tem fotos relacionadas diretamente a ele
-//				final FileTransfer fileTransfer = this.verifyMarker(marker);
-//											
-//				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
-//				
-//				// Cria o novo marker_attribute (que será o photo_album) a ser inserido
-//				MarkerAttribute markerAttribute = new MarkerAttribute();
-//				markerAttribute.setMarker(marker);
-//				markerAttribute.setValue("Default photo album");
-//				
-//				//Salva o marker_attribute
-//				markerAttribute = markerAttributeRepository.save(markerAttribute);
-//				
-//				// Cria o photo_album com o marker_attribute recém salvo
-//				PhotoAlbum photoAlbum = new PhotoAlbum();
-//				photoAlbum.setMarkerAttribute(markerAttribute);
-//				
-//				// Salva o photo_album 
-//				photoAlbum = photoAlbumRepository.save(photoAlbum);
-//				photoAlbum.getIdentifier(); // Já tem o id então pode criar o identificador (GJ)
-//				photoAlbum = photoAlbumRepository.save(photoAlbum);
-//				
-//				// Cria o photo com o photo_album recém salvo
-//				Photo photo = new Photo();
-//				photo.setDescription("Default description");
-//				photo.setPhotoAlbum(photoAlbum);
-//				
-//				//Salva a foto
-//				photo = photoRepository.save(photo);
-//				photo.getIdentifier(); // Já tem o id então pode criar o identificador  (GJ)
-//				photo = photoRepository.save(photo);
-//				
-//				// Seta o metafile no objeto photo
-//				photo.setImage(fileTransfer);
-//								
-//				// Realiza o upload da foto
-//				photo = this.uploadImg(photo);
-//				
-//			}
-//			catch (RepositoryException | RuntimeException e)
-//			{
-//				e.printStackTrace();
-//				continue;
-//			}
-//		}	
-//	}
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAttributeRepository attributeRepository;
+	/**
+	 * 
+	 */
+	@PostConstruct
+	public void postConstruct()
+	{
+		for (Marker marker : markerRepository.listAll())
+		{
+			try
+			{
+				// Faz requisição de todos os marker_attributes do marker
+				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
+				
+				// Verifica se o marker tem fotos relacionadas diretamente a ele
+				final FileTransfer fileTransfer = this.verifyMarker(marker);
+				
+				//Cria o atributo
+				Attribute attribute= new Attribute(null, "Fotos", AttributeType.PHOTO_ALBUM, null);
+				attribute.setVisible(false);
+				attribute.setRequired(true);
+				
+				this.attributeRepository.save(attribute);
+				
+				// Cria o novo marker_attribute (que será o photo_album) a ser inserido
+				MarkerAttribute markerAttribute = new MarkerAttribute();
+				markerAttribute.setMarker(marker);
+				markerAttribute.setAttribute(attribute);
+				markerAttribute.setValue("");
+				
+				//Salva o marker_attribute
+				markerAttribute = markerAttributeRepository.save(markerAttribute);
+				
+				// Cria o photo_album com o marker_attribute recém salvo
+				PhotoAlbum photoAlbum = new PhotoAlbum();
+				photoAlbum.setMarkerAttribute(markerAttribute);
+				
+				// Salva o photo_album 
+				photoAlbum = photoAlbumRepository.save(photoAlbum);
+				photoAlbum.getIdentifier(); // Já tem o id então pode criar o identificador (GJ)
+				photoAlbum = photoAlbumRepository.save(photoAlbum);
+				
+				//Salva o marker_attribute
+				markerAttribute.setPhotoAlbum(photoAlbum);
+				markerAttribute = markerAttributeRepository.save(markerAttribute);
+				
+				// Cria o photo com o photo_album recém salvo
+				Photo photo = new Photo();
+				photo.setDescription(fileTransfer.getFilename());
+				photo.setPhotoAlbum(photoAlbum);
+				
+				//Salva a foto
+				photo = photoRepository.save(photo);
+				photo.getIdentifier(); // Já tem o id então pode criar o identificador  (GJ)
+				photo = photoRepository.save(photo);
+				
+				// Seta o metafile no objeto photo
+				photo.setImage(fileTransfer);
+				System.out.println(fileTransfer.getFilename());
+				// Realiza o upload da foto
+				photo = this.uploadImg(photo);
+				
+			}
+			catch (RepositoryException | RuntimeException e)
+			{
+				e.printStackTrace();
+				continue;
+			}
+		}	
+	}
 	
 	
 	/**
@@ -146,8 +164,7 @@ public class PhotoScheduling
 	{
 		try
 		{
-			
-			final String mimeType = photo.getMimeType();
+			final String mimeType = photo.getImage().getMimeType();
 	
 			final List<String> validMimeTypes = new ArrayList<String>();
 			validMimeTypes.add("image/gif");
@@ -163,18 +180,17 @@ public class PhotoScheduling
 			MetaFile metaFile = new MetaFile();
 			
 			metaFile.setId(String.valueOf(photo.getId()));
-			metaFile.setContentType(photo.getMimeType());
-			metaFile.setContentLength(photo.getContentLength());
+			metaFile.setContentType(photo.getImage().getMimeType());
+			metaFile.setContentLength(photo.getImage().getSize());
 			metaFile.setFolder(photo.getPhotoAlbum().getIdentifier());
 			metaFile.setInputStream(photo.getImage().getInputStream());
-			metaFile.setName(photo.getName());
+			metaFile.setName(photo.getImage().getFilename());
 	
 			this.metaFileRepository.insert(metaFile);
 		
 		}
 		catch (IOException | RepositoryException e)
 		{
-			e.printStackTrace();
 			LOG.info(e.getMessage());
 		}
 
@@ -191,7 +207,8 @@ public class PhotoScheduling
 		// Se já tiver photo_album não pode migrar		
 		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
 		{
-			if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
+			System.out.println(markerAttribute.getAttribute().getType());
+			if (markerAttribute.getAttribute().getType().equals(AttributeType.PHOTO_ALBUM) || markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
 			{
 				throw new RuntimeException("Já tem album de photos");
 			}

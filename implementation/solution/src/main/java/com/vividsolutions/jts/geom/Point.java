@@ -162,7 +162,7 @@ public class Point extends Geometry implements Puntal
 
 	public Coordinate getCoordinate()
 	{
-		return coordinates.size() != 0 ? coordinates.getCoordinate(0) : null;
+		return coordinates != null && coordinates.size() != 0 ? coordinates.getCoordinate(0) : null;
 	}
 
 	public String getGeometryType()

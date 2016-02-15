@@ -93,12 +93,12 @@ public class PhotoScheduling
 		{
 			try
 			{
+				// Faz requisição de todos os marker_attributes do marker
+				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
+				
 				// Verifica se o marker tem fotos relacionadas diretamente a ele
 				final FileTransfer fileTransfer = this.verifyMarker(marker);
 				
-				// Faz requisição de todos os marker_attributes do marker
-				marker.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(marker.getId()));
-								
 				//Cria o atributo
 				Attribute attribute= new Attribute(null, "Fotos", AttributeType.PHOTO_ALBUM, null);
 				attribute.setVisible(false);
@@ -140,7 +140,7 @@ public class PhotoScheduling
 				
 				// Seta o metafile no objeto photo
 				photo.setImage(fileTransfer);
-								System.out.println(fileTransfer.getFilename());
+				System.out.println(fileTransfer.getFilename());
 				// Realiza o upload da foto
 				photo = this.uploadImg(photo);
 				
@@ -206,7 +206,8 @@ public class PhotoScheduling
 		// Se já tiver photo_album não pode migrar		
 		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
 		{
-			if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
+			System.out.println(markerAttribute.getAttribute().getType());
+			if (markerAttribute.getAttribute().getType().equals(AttributeType.PHOTO_ALBUM) || markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
 			{
 				throw new RuntimeException("Já tem album de photos");
 			}
