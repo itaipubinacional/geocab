@@ -138,7 +138,6 @@ public class PhotoScheduling
 				
 				// Seta o metafile no objeto photo
 				photo.setImage(fileTransfer);
-				System.out.println(fileTransfer.getFilename());
 				// Realiza o upload da foto
 				photo = this.uploadImg(photo);
 				
@@ -204,7 +203,6 @@ public class PhotoScheduling
 		// Se já tiver photo_album não pode migrar		
 		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
 		{
-			System.out.println(markerAttribute.getAttribute().getType());
 			if (markerAttribute.getAttribute().getType().equals(AttributeType.PHOTO_ALBUM) || markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM)
 			{
 				throw new RuntimeException("Já tem album de photos");
