@@ -158,6 +158,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                   scope.onSuccess({
                     files: scope.files
                   });
+                  $('#files').val('');
                 }
               }
             })(file);
@@ -199,6 +200,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                     scope.onSuccess({
                       files: scope.files
                     });
+                    $('#files').val('');
                   }
                 }
               })(file);

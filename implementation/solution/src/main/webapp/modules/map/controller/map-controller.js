@@ -4159,9 +4159,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                   if (attributeByMarker.attribute.id == attribute.id) {
                     exist = true;
                   }
-                  
-                  if(attributeByMarker.attribute.type == 'PHOTO_ALBUM')
-                      $scope.getPhotosByAttribute(attributeByMarker, index);
+
+                  /*if(attributeByMarker.attribute.type == 'PHOTO_ALBUM')
+                      $scope.getPhotosByAttribute(attributeByMarker, index);*/
 
                 });
 
@@ -4185,8 +4185,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             if (markerAttribute.attribute.type == "NUMBER") {
               markerAttribute.value = parseInt(markerAttribute.value);
             }
-          })
 
+            if(markerAttribute.attribute.type == 'PHOTO_ALBUM')
+              $scope.getPhotosByAttribute(markerAttribute, index);
+
+          });
 
           $scope.$apply();
 
