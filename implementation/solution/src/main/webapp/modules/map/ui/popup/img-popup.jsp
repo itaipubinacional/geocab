@@ -23,7 +23,7 @@
 
         <div style="margin: 0 45px">
           <p style="float: left">{{ currentPhoto.description }}</p>
-          <span style="float: right">{{ pageable.page + 1 }} <spring:message code="of"/> {{ currentAttribute.totalPages }}</span>
+          <span style="float: right"><spring:message code="Page"/> {{ pageable.page + 1 }} <spring:message code="of"/> {{ currentAttribute.totalPages }}</span>
         </div>
         <div class="current-photo" style="clear: both">
           <div class="left-nav" ng-click="previousPhoto()"><i class="icon-chevron-left icon-large"></i></div>
@@ -37,7 +37,7 @@
         <div class="gallery-thumbnails">
           <!--<div class="left-nav" ng-click="previousPage()"><i class="icon-chevron-left icon-large"></i></div>-->
           <img ng-click="setCurrentPhoto(photo, $index)" ng-repeat="photo in currentAttribute.content"
-               ng-src="{{ photo.image }}">
+               ng-src="{{ photo.image }}" ng-class="{'selected': photoIndex == $index}">
           <!--<div class="right-nav" ng-click="nextPage()"><i class="icon-chevron-right icon-large"></i></div>-->
         </div>
         <!--<div>
@@ -48,7 +48,7 @@
       <div id="sidenav" class="col-md-2" style="padding: 0">
         <ul>
           <li ng-repeat="attr in attributes" ng-click="setAttribute(attr, true)"
-              ng-class="{'active': currentAttribute.content[0].photoAlbum.markerAttribute.attribute.name == attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name}">
+              ng-class="{'active': currentAttribute.content[0].photoAlbum.markerAttribute.attribute.id == attributes[$index].content[0].photoAlbum.markerAttribute.attribute.id}">
             {{ attributes[$index].content[0].photoAlbum.markerAttribute.attribute.name }} ({{ attributes[$index].total }})
           </li>
         </ul>
