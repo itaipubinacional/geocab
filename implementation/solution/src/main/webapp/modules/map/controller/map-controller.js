@@ -3324,6 +3324,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       return;
     }
 
+    if (!$scope.isBooleanValid()) {
+      $scope.isPostMarker = false;
+      return false;
+    }
+
     if ($scope.currentEntity.layer == null) {
       var layer = new Layer();
       layer.id = $scope.currentEntity.layer;

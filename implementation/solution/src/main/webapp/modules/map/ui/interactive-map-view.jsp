@@ -349,23 +349,25 @@ uri="http://www.springframework.org/security/tags"%>
                         ng-required="markerAttribute.attribute.required"
                         >
 
-                    <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'">
+                    <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'" ng-required="markerAttribute.attribute.required">
 
-                      <input
-                          type="radio"
-                          ng-checked="markerAttribute.value == 'Yes'"
-                          ng-model="markerAttribute.value"
-                          value="Yes"
-                          >
-                      <spring:message code="map.Yes" />
+                        <div class="required-boolean" >
+                          <input name="boolean{{ $index }}" class="boolean-1 boolean"
+                                type="radio"
+                              ng-checked="markerAttribute.value == 'Yes'"
+                              ng-model="markerAttribute.value"
+                              value="Yes"
+                              >
+                          <spring:message code="map.Yes" />
 
-                      <input
-                          type="radio"
-                          ng-checked="markerAttribute.value == 'No'"
-                          ng-model="markerAttribute.value"
-                          value="No"
-                          >
-                      <spring:message code="map.No" />
+                          <input name="boolean{{ $index }}" class="boolean-2 boolean"
+                              type="radio"
+                              ng-checked="markerAttribute.value == 'No'"
+                              ng-model="markerAttribute.value"
+                              value="No"
+                              >
+                          <spring:message code="map.No" />
+                        </div>
 
                     </div>
 

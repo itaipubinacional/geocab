@@ -98,7 +98,7 @@
                                 ng-required="markerAttribute.attribute.required"
                                 >
 
-                                <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'" ng-required="attribute.required">
+                                <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'" ng-required="markerAttribute.attribute.required">
 
                                         <div class="required-boolean" >
                                         <input type="radio" name="boolean{{ $index }}" class="boolean-1 boolean" ng-model="markerAttribute.value"
