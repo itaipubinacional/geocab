@@ -2126,17 +2126,7 @@ ront controller of angle won't let enter an invalid URL.
 
     $scope.getPhotosByAttribute = function(attribute, index){
 
-        var pageable = {
-            size: 1,
-            page: 0,
-            sort: {//Sort
-                orders: [
-                    {direction: 'DESC', property: 'created'}
-                ]
-            }
-        };
-
-        markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, pageable, {
+        markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, null, {
             callback: function (result) {
                 /*$(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum.photos = result;
                  $(filter)('filter')($scope.attributesByMarker, {id: attribute.id})[0].photoAlbum = new PhotoAlbum();*/
