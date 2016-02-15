@@ -356,15 +356,15 @@ uri="http://www.springframework.org/security/tags"%>
                                 type="radio"
                               ng-checked="markerAttribute.value == 'Yes'"
                               ng-model="markerAttribute.value"
-                              value="Yes"
+                              value="Yes" onClick="isBooleanChecked(this)"
                               >
-                          <spring:message code="map.Yes" />
+                          <spring:message code="map.Yes"  />
 
                           <input name="boolean{{ $index }}" class="boolean-2 boolean"
                               type="radio"
                               ng-checked="markerAttribute.value == 'No'"
                               ng-model="markerAttribute.value"
-                              value="No"
+                              value="No" onClick="isBooleanChecked(this)"
                               >
                           <spring:message code="map.No" />
                         </div>
