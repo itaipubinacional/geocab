@@ -258,7 +258,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <div class="sidebar-content-header"><spring:message code="map.Edit-post"/></div>
 
                 <br style="clear: both;"> <br>
-                <label>Camada</label>
+                <!--<label>Camada</label>
                 <div style="margin-bottom:5px;">
                   <select ng-disabled="selectLayerGroup"
                           data-placeholder="<spring:message code="admin.layer-config.Enter-the-layer"/>" name="camada"
@@ -270,7 +270,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </select>
                 </div>
 
-                <br style="clear: both;">
+                <br style="clear: both;">-->
 
                 <span><b><spring:message code='map.Input-format'/></b></span>
                 <i class="icon-question-sign icon-large" tooltip-placement="right"
@@ -498,8 +498,10 @@ uri="http://www.springframework.org/security/tags"%>
                     class="btn btn-primary"
                     ng-click="updateMarker()"
                     style="float: right"
+                    ng-disabled="isLoading"
                     title="<spring:message code='map.Save' />">
                   <spring:message code="map.Save" />
+                  <i ng-if="isLoading" class="loading"></i>
                 </button>
               </div>
             </div>

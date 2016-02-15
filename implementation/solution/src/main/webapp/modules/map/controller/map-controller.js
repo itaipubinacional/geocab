@@ -3319,6 +3319,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.updateMarker = function () {
 
+    $scope.isLoading = true;
+
     if (!$scope.form('sidebarMarkerUpdate').$valid) {
       $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
       return;
@@ -3420,6 +3422,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     markerService.updateMarker($scope.currentEntity, {
       callback: function (result) {
 
+        $scope.isLoading = false;
+
         $scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
 
         $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully"), dismiss: true};
@@ -3432,6 +3436,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.$apply();
       },
       errorHandler: function (message, exception) {
+
+        $scope.isLoading = false;
 
         $scope.msg = {type: "danger", text: message, dismiss: true};
         $("div.msgMap").show();

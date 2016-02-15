@@ -34,6 +34,8 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
   $scope.attributesByLayer = [];
 
   $scope.removePhotosIds = [];
+
+  $scope.isLoading = false;
   /*-------------------------------------------------------------------
    * 		 				 	  NAVIGATIONS
    *-------------------------------------------------------------------*/
@@ -121,12 +123,18 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
     }
   };
 
+  $scope.onLoading = function(isLoading) {
+    $scope.isLoading = isLoading;
+  };
+
   $scope.onSuccess = function (files) {
 
     $scope.attribute.files = files;
     
     $("span.error").hide();
-    
+
+    $scope.isLoading = false;
+
     $scope.$apply();
 
   };
@@ -142,6 +150,8 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
     
     $("span.error").show();
 //    $scope.fadeMsg();
+
+    $scope.isLoading = false;
 
     $scope.$apply();
   };
@@ -178,6 +188,7 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
   $scope.setAttribute = function (attribute) {
 
+    $('#files').val('');
 
     $scope.attribute = attribute;
 

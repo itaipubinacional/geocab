@@ -14,7 +14,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
     scope: {
       attribute: '=',
       onSuccess: '&',
-      onError: '&'
+      onError: '&',
+      onLoading: '&'
     },
     link: function(scope, element, attrs){
 
@@ -128,6 +129,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
 
       dropbox.addEventListener('drop', function (event) {
 
+        scope.onLoading({isLoading: true});
+
         event.preventDefault();
 
         var files = event.dataTransfer.files;
@@ -151,14 +154,14 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                 var fileToObj = angular.copy(readFile);
                 scope.files.push(fileToObj);
 
-                if(files.length == i) {
+                if(scope.files.length == i) {
                   scope.fileSelected = scope.files[0];
                   scope.isLoading = false;
                   scope.$apply();
                   scope.onSuccess({
                     files: scope.files
                   });
-                  $('#files').val('');
+
                 }
               }
             })(file);
@@ -170,6 +173,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       }, false);
 
       scope.setFiles = function (element) {
+
+        scope.onLoading({isLoading: true});
 
         scope.$apply(function (scope) {
 
@@ -193,14 +198,14 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
                   var fileToObj = angular.copy(readFile);
                   scope.files.push(fileToObj);
 
-                  if (files.length == i) {
+                  if (scope.files.length == i) {
                     scope.fileSelected = scope.files[0];
                     scope.isLoading = false;
                     scope.$apply();
                     scope.onSuccess({
                       files: scope.files
                     });
-                    $('#files').val('');
+
                   }
                 }
               })(file);
