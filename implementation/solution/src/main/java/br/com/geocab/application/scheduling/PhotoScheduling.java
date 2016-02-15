@@ -14,8 +14,6 @@ import javax.transaction.Transactional;
 
 import org.directwebremoting.io.FileTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -39,7 +37,6 @@ import br.com.geocab.infrastructure.jcr.MetaFileRepository;
  *
  */
 @Component
-@Scope(proxyMode=ScopedProxyMode.TARGET_CLASS)
 @Transactional
 public class PhotoScheduling
 {
