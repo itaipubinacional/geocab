@@ -221,7 +221,7 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
 
         $scope.ok = true;
         $.each($(".boolean").parent().parent(), function (index, value) {
-            if ($(this).attr("required")) {
+            if ($(this).attr("required") && $(this).is(':visible')) {
 
 
                 if (!$(this).find(".boolean-1").is(":checked") && !$(this).find(".boolean-2").is(":checked")) {
