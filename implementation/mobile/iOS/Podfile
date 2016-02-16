@@ -1,7 +1,0 @@
-platform :ios, '7.0'
-    pod 'RestKit', '~> 0.24.1'
-    pod 'Facebook-iOS-SDK', '~> 3.18.2'
-    pod 'Google/SignIn'
-    pod 'FDTake', '~> 0.2.2'
-    pod 'TPKeyboardAvoiding', '~> 1.2'
-	pod 'MBProgressHUD', '~> 0.9.1'

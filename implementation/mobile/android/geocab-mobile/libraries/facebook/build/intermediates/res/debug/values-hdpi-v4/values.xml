@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/D:/JOAZ/DEV/MOBILE/geocab-scm/itaipu-geocab/implementation/mobile/android/geocab-mobile/libraries/facebook/res/values-hdpi/dimens.xml -->
-    <eat-comment/>
-    <dimen name="com_facebook_picker_divider_width">1px</dimen>
-</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget id="br.com.geocab.mobile" version="2.0.0-RELEASE"
+	xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+	<name>Geocab Mobile</name>
+	<description />
+
+	<allow-navigation href="http://*/*" />
+	<content src="index.html" />
+	<access origin="*" />
+	<preference name="webviewbounce" value="false" />
+	<preference name="UIWebViewBounce" value="false" />
+	<preference name="DisallowOverscroll" value="true" />
+	<preference name="android-minSdkVersion" value="16" />
+	<preference name="BackupWebStorage" value="none" />
+	<preference name="xwalkVersion" value="16+" />
+	<preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
+	<preference name="xwalkMode" value="embedded" />
+	<preference name="xwalkMultipleApk" value="true" />
+	<feature name="StatusBar">
+		<param name="ios-package" value="CDVStatusBar" onload="true" />
+	</feature>
+	<feature name="Whitelist">
+		<param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
+		<param name="onload" value="true" />
+		<param name="id" value="cordova-plugin-whitelist" />
+	</feature>
+<author email="contact@eits.com.br" href="http://www.eits.com.br">eits it solutions</author></widget>
