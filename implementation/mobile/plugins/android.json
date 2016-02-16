@@ -10,10 +10,10 @@
         "cordova-plugin-crosswalk-webview": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-whitelist": {
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-splashscreen": {
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },

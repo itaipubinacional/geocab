@@ -45,7 +45,12 @@
 	<!-- DWR - Defines the dwrController. During production, set the debug property to false -->
 	<dwr:controller debug="false">
 		<dwr:config-param name="scriptCompressed" value="true"/>
-    	<dwr:config-param name="activeReverseAjaxEnabled" value="false"/> 
+		<!-- Enable CORS -->
+    	<dwr:config-param name="activeReverseAjaxEnabled" value="false"/>
+    	<dwr:config-param name="allowScriptTagRemoting" value="true"/>
+    	<dwr:config-param name="crossDomainSessionSecurity" value="false"/>
+    	<dwr:config-param name="allowGetForSafariButMakeForgeryEasier" value="true"/>
+    	<dwr:config-param name="overridePath" value="http://192.168.20.84:8080/geocab/broker"/>
 	</dwr:controller>
 	
 	<!--
