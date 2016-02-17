@@ -1,0 +1,85 @@
+<ion-view view-title="Map">
+
+  <ion-side-menus>
+    <!-- Center content -->
+    <ion-header-bar class="bar bar-header bar-stable nav-title-slide-ios7 has-tabs-top disable-user-behavior"
+                    align-title="center">
+      <div class="buttons buttons-left header-item"><span class="left-buttons">
+      <button class="button button-icon icon ion-navicon animate drawerToggle" drawer-toggle="" animate="true"
+              style="transform: translate3d(0px, 0px, 0px);">
+      </button>
+   </span></div>
+      <div class="title title-center header-item"><span class="nav-bar-title">
+    Ionic App
+   </span></div>
+    </ion-header-bar>
+
+    <ion-side-menu-content>
+      <ion-view title="Ionic App">
+        <ion-content scroll="false">
+          <openlayers on-hold="onHold($event)" ol-center="center" width="100%" height="100%" ol-defaults="defaults">
+            <ol-marker ng-repeat="marker in markers" ol-marker-properties="marker" lat="marker.lat"
+                       lon="marker.lon"></ol-marker>
+          </openlayers>
+        </ion-content>
+      </ion-view>
+    </ion-side-menu-content>
+
+    <!-- Left menu -->
+    <drawer side="left">
+      <ion-nav-bar class="bar-stable nav-title-slide-ios7 has-tabs-top">
+        <ion-nav-buttons side="left">
+          <button class="button button-icon icon ion-navicon" ng-click="toggleDrawer()">
+          </button>
+        </ion-nav-buttons>
+      </ion-nav-bar>
+
+      <ion-view title="Menu">
+        <ion-content>
+
+          <ion-list>
+            <ion-item ng-click="toggleDrawer()">
+              Menu 1
+            </ion-item>
+            <ion-item >
+              Menu 2
+            </ion-item>
+          </ion-list>
+
+        </ion-content>
+      </ion-view>
+    </drawer>
+
+    <ion-pull-up-footer id="pull-up" ng-if="currentEntity.lat" initial-state="minimized" default-behavior="expand"
+                        on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()">
+      <ion-pull-up-handle ng-if="!showMarkerDetails" ion-pull-up-trigger left="0" width="100" height="90px">
+
+        <div class="row">
+          <b>{{ currentEntity.name }}</b>
+        </div>
+        <div class="row">
+          <div class="col">Latitude</div>
+          <div class="col">
+            {{ currentEntity.lat }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">Longitude</div>
+          <div class="col">{{ currentEntity.lon }}</div>
+        </div>
+
+      </ion-pull-up-handle>
+      <ion-pull-up-content scroll="false">
+        <div class="title bar-header" ng-if="showMarkerDetails" style="text-align: left"
+             ng-class="{'bar-positive': showMarkerDetails}">
+          <button ng-click="footerMinimize()" style="margin-top: 5px"
+                  class="button button-icon icon ion-chevron-left"></button>
+          <div class="h1 title">{{ currentEntity.name }}</div>
+        </div>
+        <img ng-src="{{currentEntity.image}}"/>
+        <button type="button" ng-click="getPhoto()">Camera</button>
+      </ion-pull-up-content>
+    </ion-pull-up-footer>
+
+  </ion-side-menus>
+</ion-view>

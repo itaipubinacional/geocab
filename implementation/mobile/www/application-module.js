@@ -2,12 +2,12 @@
   'use strict';
 
   //Start the AngularJS
-  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng']);
+  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer']);
 
   /**
    *
    */
-  module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
+  module.constant('$API_ENDPOINT', 'http://192.168.20.136:8080/geocab');
 
   /**
    *
@@ -42,7 +42,14 @@
       controller: 'AuthenticationController'
     }).state('authentication.login', {
       url: "/login",
-      templateUrl: './views/authentication/authentication-index.html',
+      templateUrl: './views/authentication/authentication-index.html'
+    });
+
+    //MAP
+    $stateProvider.state('map', {
+      url: "/map",
+      controller: 'MapController',
+      templateUrl: './views/map/map-index.html'
     });
 
     //HOME
@@ -51,7 +58,23 @@
       controller: 'HomeController',
       templateUrl: './views/home/home-index.html'
     });
-  });
+  }).factory('Camera', ['$q', function($q) {
+
+    return {
+      getPicture: function(options) {
+        var q = $q.defer();
+
+        navigator.camera.getPicture(function(result) {
+          // Do any magic you need
+          q.resolve(result);
+        }, function(err) {
+          q.reject(err);
+        }, options);
+
+        return q.promise;
+      }
+    }
+  }]);
 
   /**
    *
@@ -63,6 +86,7 @@
     $rootScope.$API_ENDPOINT = $API_ENDPOINT;
 
     $ionicPlatform.ready(function () {
+
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard for form inputs
       if (window.cordova && window.cordova.plugins.Keyboard) {
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);

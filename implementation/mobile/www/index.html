@@ -21,26 +21,44 @@
   <link rel="stylesheet" href="./lib/ionic/css/ionic.css">
   <link rel="stylesheet" href="./static/css/style.css">
 
+  <link href="./lib/ionic/css/ionic.css" rel="stylesheet">
+
+  <link href="./lib/ionic-ion-drawer/ionic.contrib.drawer.css" rel="stylesheet">
+  <link href="./lib/openlayers3/build/ol.css" rel="stylesheet">
+
+  <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+  <link href="css/ionic.app.css" rel="stylesheet">
+  -->
+
+  <script src="lib/openlayers3/build/ol.js"></script>
+
   <!--
         Libraries (Bower)
     -->
-  <script type="text/javascript" src="./lib/jquery/dist/jquery.min.js"></script>
-  <script type="text/javascript" src="./lib/ionic/js/ionic.bundle.js"></script>
-  <script type="text/javascript" src="./lib/angular-messages/angular-messages.min.js"></script>
+  <script src="./lib/jquery/dist/jquery.min.js"></script>
+  <script src="./lib/ionic/js/ionic.bundle.js"></script>
+  <script src="./lib/angular-messages/angular-messages.min.js"></script>
+
+  <script src="./lib/angular-openlayers-directive/dist/angular-openlayers-directive.js"></script>
+  <script src="./lib/ionic-pullup/dist/ion-pullup.js"></script>
+  <script src="./lib/ionic-ion-drawer/ionic.contrib.drawer.js"></script>
+
   <!-- Cordova (this will be a 404 during development) -->
   <script type="text/javascript" src="cordova.js"></script>
 
   <!-- DWR -->
-  <script type="text/javascript" ng-src="{{$API_ENDPOINT + '/broker/engine.js'}}"></script>
-  <script type="text/javascript" ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
+  <script ng-src="{{$API_ENDPOINT + '/broker/engine.js'}}"></script>
+  <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
 
   <!-- Others -->
-  <script type="text/javascript" src="./lib/webjars/eits-ng/1.1.0-SNAPSHOT/eits-ng.js"></script>
+  <script src="./lib/webjars/eits-ng/1.1.0-SNAPSHOT/eits-ng.js"></script>
 
   <!-- Controllers -->
-  <script type="text/javascript" src="./application-module.js"></script>
-  <script type="text/javascript" src="./controllers/authentication-controller.js"></script>
-  <script type="text/javascript" src="./controllers/home-controller.js"></script>
+  <script src="./application-module.js"></script>
+  <script src="./controllers/authentication-controller.js"></script>
+  <script src="./controllers/home-controller.js"></script>
+  <script src="./controllers/map-controller.js"></script>
+  <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
 </head>
 
 <body>

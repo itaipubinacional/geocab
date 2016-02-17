@@ -1,0 +1,49 @@
+{
+  "name": "angular-openlayers-directive",
+  "description": "AngularJS directive to embed an interact with maps managed by OpenLayers library",
+  "keywords": [
+    "angularjs",
+    "javascript",
+    "directive",
+    "openlayers"
+  ],
+  "main": [
+    "dist/angular-openlayers-directive.min.js"
+  ],
+  "dependencies": {
+    "angular": "*",
+    "angular-sanitize": "*",
+    "openlayers3": "https://github.com/tombatossals/ol3-compiled.git#3.8.2"
+  },
+  "devDependencies": {
+    "jquery": "*",
+    "angular-route": "*",
+    "angular-mocks": "*"
+  },
+  "ignore": [
+    "**/.*",
+    "src",
+    "doc",
+    "grunt",
+    "examples",
+    "test",
+    "*.md",
+    "Gruntfile.js",
+    "package.json",
+    "bower.json",
+    "node_modules",
+    "bower_components"
+  ],
+  "homepage": "https://github.com/tombatossals/angular-openlayers-directive",
+  "version": "1.8.2",
+  "_release": "1.8.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.8.2",
+    "commit": "77bbc69b985f5acc125d8befadfbe5c276f2136a"
+  },
+  "_source": "git://github.com/tombatossals/angular-openlayers-directive.git",
+  "_target": "^1.8.2",
+  "_originalSource": "angular-openlayers-directive",
+  "_direct": true
+}

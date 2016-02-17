@@ -46,7 +46,7 @@
 
           $http.post($API_ENDPOINT + "/j_spring_security_check", $.param($scope.model.user), config)
             .success(function (data, status, headers, config) {
-              $state.go("home");
+              $state.go('map');
             })
             .error(function (data, status, headers, config) {
                 $ionicPopup.alert({
