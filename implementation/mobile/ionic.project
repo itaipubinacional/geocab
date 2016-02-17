@@ -1,0 +1,11 @@
+{
+  "name": "Geocab Mobile",
+  "app_id": "br.com.geocab.mobile",
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
+    }
+  ]
+}

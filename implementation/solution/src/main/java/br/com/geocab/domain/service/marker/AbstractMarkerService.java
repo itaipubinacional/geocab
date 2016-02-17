@@ -206,13 +206,13 @@ public abstract class AbstractMarkerService
 				try
 				{
 					metaFile = this.metaFileRepository.findByPath( photoDatabase.getIdentifier(), true);
+					this.removeImg(metaFile.getId());
 				}
 				catch (RepositoryException e)
 				{
 					e.printStackTrace();
 					LOG.info(e.getMessage());
 				}
-				this.removeImg(metaFile.getId());
 				this.photoRepository.delete(photoDatabase.getId());
 				
 			}
@@ -254,7 +254,6 @@ public abstract class AbstractMarkerService
 			if (photo.getSource() != null)
 			{
 				Base64 photoDecode = new Base64();
-				
 				byte[] data = photoDecode.decode(photo.getSource());
 				InputStream decodedMap = new ByteArrayInputStream(data);	
 				

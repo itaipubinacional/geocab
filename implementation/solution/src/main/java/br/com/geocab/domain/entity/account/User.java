@@ -410,6 +410,10 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 */
 	public BackgroundMap getBackgroundMap()
 	{
+		if (backgroundMap == null)
+		{
+			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
+		}
 		return backgroundMap;
 	}
 
@@ -419,6 +423,10 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 */
 	public void setBackgroundMap(BackgroundMap backgroundMap)
 	{
+		if (backgroundMap == null)
+		{
+			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
+		}
 		this.backgroundMap = backgroundMap;
 	}
 
@@ -427,6 +435,10 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 */
 	public Coordinates getCoordinates()
 	{
+		if (coordinates == null)
+		{
+			coordinates = Coordinates.DEGREES_MINUTES_SECONDS;
+		}
 		return coordinates;
 	}
 
@@ -436,6 +448,10 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 */
 	public void setCoordinates(Coordinates coordinates)
 	{
+		if (coordinates == null)
+		{
+			coordinates = Coordinates.DEGREES_MINUTES_SECONDS;
+		}
 		this.coordinates = coordinates;
 	}
 

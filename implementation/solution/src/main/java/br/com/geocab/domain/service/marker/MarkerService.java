@@ -371,9 +371,8 @@ public class MarkerService extends AbstractMarkerService
 
 		if (!user.equals(User.ANONYMOUS))
 		{
-
-			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
-					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
+			
+			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE))
 			{
 				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
 			}
@@ -381,7 +380,7 @@ public class MarkerService extends AbstractMarkerService
 			{
 				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
 			}
-
+			
 		}
 		else
 		{
@@ -412,9 +411,7 @@ public class MarkerService extends AbstractMarkerService
 
 		if (!user.equals(User.ANONYMOUS))
 		{
-
-			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
-					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
+			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE))
 			{
 				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
 			}
@@ -575,7 +572,6 @@ public class MarkerService extends AbstractMarkerService
 	@Transactional(readOnly = true)
 	public List<Marker> listMarkerByFiltersMap(Long layer, MarkerStatus status, String dateStart, String dateEnd, String user, PageRequest pageable) throws java.text.ParseException
 	{
-
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Calendar dEnd = null;
 		Calendar dStart = null;

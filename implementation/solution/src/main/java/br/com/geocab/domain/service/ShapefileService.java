@@ -81,7 +81,6 @@ import br.com.geocab.domain.repository.marker.IMarkerRepository;
  *
  */
 @Component
-//@Service //não lê os properties
 @RemoteProxy(name = "shapefileService")
 @SuppressWarnings("unchecked")
 public class ShapefileService
@@ -259,7 +258,7 @@ public class ShapefileService
 	    		
 	    		final CoordinateReferenceSystem entryCRS = source.getSchema().getCoordinateReferenceSystem(); // CRS.decode(source.getSchema().getCoordinateReferenceSystem().getCoordinateSystem());
 
-	    		if (!entryCRS.getCoordinateSystem().getName().getCode().contains("GCS_WGS_1984") && !entryCRS.getCoordinateSystem().getName().getCode().contains("SIRGAS_2000"))
+	    		if (!entryCRS.getCoordinateSystem().getName().getCode().contains("WGS_1984") && !entryCRS.getCoordinateSystem().getName().getCode().contains("SIRGAS_2000"))
 				{
 	    			throw new GeodesicCoordinatesAcceptedException();
 				}
