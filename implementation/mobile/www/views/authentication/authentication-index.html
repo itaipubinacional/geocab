@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <ion-view view-title="Signin">
- 
+
 	<ion-content class="padding">
-	
+
 		<form name="model.form" class="list list-inset">
-			
+
 			<div style="width: 100%; text-align: center;">
 				<img alt="Logo" src="./static/images/logo.png" width="100" style="text-align:center;"/>
 			</div>
 
 			<h3 class="title" style="text-align: center;">Autenticação de Usuário</h3>
-			
-			<label class="item item-input"> 
+
+			<label class="item item-input">
 				<input name="email" type="email" placeholder="Email" ng-model="model.user.email" required/>
 			</label>
           	<ng-messages class="padding" for="model.form.email.$touched && model.form.email.$error" role="alert">
 				<ng-message when="required">É necessário informar seu e-mail.</ng-message>
 				<ng-message when="email">O e-mail digitado está inválido.</ng-message>
 			</ng-messages>
-			
+
 			<label class="item item-input">
 				<input name="password" type="password" placeholder="Password" ng-model="model.user.password" required/>
 			</label>
@@ -26,8 +26,8 @@
 				<ng-message when="required">É necessário informar sua senha.</ng-message>
 			</ng-messages>
 		</form>
-		
-		<button class="button button-block button-calm" ng-click="signinHandler()">Entrar</button>
+
+		<button class="button button-block button-calm" ng-click="loginHandler()">Entrar</button>
 	</ion-content>
-	 
+
 </ion-view>
