@@ -40,8 +40,8 @@
       url: "/authentication",
       template: '<ion-nav-view></ion-nav-view>',
       controller: 'AuthenticationController'
-    }).state('authentication.signin', {
-      url: "/signin",
+    }).state('authentication.login', {
+      url: "/login",
       templateUrl: './views/authentication/authentication-index.html',
     });
 
@@ -49,7 +49,7 @@
     $stateProvider.state('home', {
       url: "/home",
       controller: 'HomeController',
-      templateUrl: './views/home/home-index.html',
+      templateUrl: './views/home/home-index.html'
     });
   });
 
