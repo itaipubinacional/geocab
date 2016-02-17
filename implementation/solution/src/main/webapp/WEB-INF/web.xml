@@ -62,6 +62,16 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
+    <!-- CORS Filter -->
+    <filter>
+        <filter-name>corsFilter</filter-name>
+        <filter-class>br.com.geocab.application.security.CorsFilter</filter-class>
+    </filter>
+	<filter-mapping>
+        <filter-name>corsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
 	<!-- SpringSecurityFilterChain -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
