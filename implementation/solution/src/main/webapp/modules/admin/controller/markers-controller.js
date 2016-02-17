@@ -170,11 +170,11 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * filter
      */
     $scope.filter = {
-        'layer': null,
-        'status': null,
-        'dateStart': null,
-        'dateEnd': null,
-        'user': null
+        layer: null,
+        status: null,
+        dateStart: null,
+        dateEnd: null,
+        user: null
     };
 
 
@@ -543,57 +543,6 @@ ront controller of angle won't let enter an invalid URL.
              * Verify status
              * */
             var statusColor = $scope.verifyStatusColor(marker.status);
-
-            var dragBox = new ol.interaction.DragBox({
-                condition: function () {
-                    return $scope.selectMarkerTool;
-                },
-                style: new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: [0, 0, 255, 1]
-                    })
-                })
-            });
-
-            dragBox.on('boxend', function (e) {
-
-                var extent = dragBox.getGeometry().getExtent();
-                var markers = [];
-
-                angular.forEach($scope.features, function (feature, index) {
-                    var marker = feature.feature.getProperties().marker;
-                    $scope.selectMarker(marker);
-
-                    var extentMarker = feature.extent;
-                    var feature = feature.feature;
-
-                    if (ol.extent.containsExtent(extent, extentMarker)) {
-                        markers.push(marker.id);
-
-                        angular.forEach($scope.selectedFeatures, function (selected, index) {
-                            if (selected.marker.id == marker.id) {
-                                selected.feature.push(feature);
-                            }
-                        });
-
-                    }
-                });
-
-                if (markers.length) {
-                    $scope.changeToList(markers);
-                    $scope.dragMarkers = markers;
-                }
-
-
-                $scope.drag = true;
-            });
-
-
-            dragBox.on('boxstart', function (e) {
-                $scope.clearFeatures();
-            });
-
-            $scope.map.addInteraction(dragBox);
 
             var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
             var feature = new ol.Feature({
@@ -1285,57 +1234,6 @@ ront controller of angle won't let enter an invalid URL.
              * */
             var statusColor = $scope.verifyStatusColor(marker.status);
 
-            var dragBox = new ol.interaction.DragBox({
-                condition: function () {
-                    return $scope.selectMarkerTool;
-                },
-                style: new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: [0, 0, 255, 1]
-                    })
-                })
-            });
-
-            dragBox.on('boxend', function (e) {
-
-                var extent = dragBox.getGeometry().getExtent();
-                var markers = [];
-
-                angular.forEach($scope.features, function (feature, index) {
-                    var marker = feature.feature.getProperties().marker;
-                    $scope.selectMarker(marker);
-
-                    var extentMarker = feature.extent;
-                    var feature = feature.feature;
-
-                    if (ol.extent.containsExtent(extent, extentMarker)) {
-                        markers.push(marker.id);
-
-                        angular.forEach($scope.selectedFeatures, function (selected, index) {
-                            if (selected.marker.id == marker.id) {
-                                selected.feature.push(feature);
-                            }
-                        });
-
-                    }
-                });
-
-                if (markers.length) {
-                    $scope.changeToList(markers);
-                    $scope.dragMarkers = markers;
-                }
-
-
-                $scope.drag = true;
-            });
-
-
-            dragBox.on('boxstart', function (e) {
-                $scope.clearFeatures();
-            });
-
-            $scope.map.addInteraction(dragBox);
-
             var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
             var feature = new ol.Feature({
                 geometry: geometry,
@@ -1385,6 +1283,9 @@ ront controller of angle won't let enter an invalid URL.
      * Build the vectors in the map
      */
     $scope.buildVectorMarker = function (markers) {
+
+        $scope.features = [];
+
         $scope.drag = false;
         var coordenates = [];
 
@@ -1394,57 +1295,6 @@ ront controller of angle won't let enter an invalid URL.
              * Verify status
              * */
             var statusColor = $scope.verifyStatusColor(marker.status);
-
-            var dragBox = new ol.interaction.DragBox({
-                condition: function () {
-                    return $scope.selectMarkerTool;
-                },
-                style: new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: [0, 0, 255, 1]
-                    })
-                })
-            });
-
-            dragBox.on('boxend', function (e) {
-
-                var extent = dragBox.getGeometry().getExtent();
-                var markers = [];
-
-                angular.forEach($scope.features, function (feature, index) {
-                    var marker = feature.feature.getProperties().marker;
-                    $scope.selectMarker(marker);
-
-                    var extentMarker = feature.extent;
-                    var feature = feature.feature;
-
-                    if (ol.extent.containsExtent(extent, extentMarker)) {
-                        markers.push(marker.id);
-
-                        angular.forEach($scope.selectedFeatures, function (selected, index) {
-                            if (selected.marker.id == marker.id) {
-                                selected.feature.push(feature);
-                            }
-                        });
-
-                    }
-                });
-
-                if (markers.length) {
-                    $scope.changeToList(markers);
-                    $scope.dragMarkers = markers;
-                }
-
-
-                $scope.drag = true;
-            });
-
-
-            dragBox.on('boxstart', function (e) {
-                $scope.clearFeatures();
-            });
-
-            $scope.map.addInteraction(dragBox);
 
             var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
             var feature = new ol.Feature({
@@ -2315,6 +2165,58 @@ ront controller of angle won't let enter an invalid URL.
         };
 
         $scope.selectMarkerTool = $scope.menu.selectMarker;
+
+        var dragBox = new ol.interaction.DragBox({
+            condition: function () {
+                return $scope.selectMarkerTool;
+            },
+            style: new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: [0, 0, 255, 1]
+                })
+            })
+        });
+
+        dragBox.on('boxend', function (e) {
+
+            var extent = dragBox.getGeometry().getExtent();
+            var markers = [];
+
+            angular.forEach($scope.features, function (feature, index) {
+                var marker = feature.feature.getProperties().marker;
+
+                $scope.selectMarker(marker);
+
+                var extentMarker = feature.extent;
+                var feature = feature.feature;
+
+                if (ol.extent.containsExtent(extent, extentMarker)) {
+                    markers.push(marker.id);
+
+                    angular.forEach($scope.selectedFeatures, function (selected, index) {
+                        if (selected.marker.id == marker.id) {
+                            selected.feature.push(feature);
+                        }
+                    });
+
+                }
+            });
+
+            if (markers.length) {
+                $scope.changeToList(markers);
+                $scope.dragMarkers = markers;
+            }
+
+
+            $scope.drag = true;
+        });
+
+
+        dragBox.on('boxstart', function (e) {
+            $scope.clearFeatures();
+        });
+
+        $scope.map.addInteraction(dragBox);
 
     };
 
