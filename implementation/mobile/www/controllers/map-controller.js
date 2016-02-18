@@ -11,12 +11,14 @@
 
       /**
        *
-       */
+      */
+      setTimeout(function(){
+          $importService("accountService");
+          $importService("layerGroupService");
+      }
 
-      $timeout(function(){
-        $importService("accountService");
-        $importService("layerGroupService");
-      });
+      , 300);
+
 
 
       /*-------------------------------------------------------------------
@@ -26,7 +28,9 @@
        *
        */
       $scope.model = {
-        user: null
+        user: null,
+        layers: null,
+        marker: null
       };
 
       $scope.toggleLeftSideMenu = function() {
@@ -268,8 +272,6 @@
        */
       $scope.findUserById = function () {
 
-        accountService._path = $rootScope.$API_ENDPOINT + '/broker';
-
         accountService.findUserById(1, {
           callback: function (result) {
 
@@ -293,18 +295,18 @@
         });
 
       };
+      /*-------------------------------------------------------------------
+       * 		 				 	  HANDLERS
+       *-------------------------------------------------------------------*/
 
-      $scope.findLayers = function () {
-
+      /**
+       *
+       */
+      $scope.listAllInternalLayerGroups = function(){
         layerGroupService.listAllInternalLayerGroups({
           callback: function (result) {
 
-            $scope.model.user = result;
-
-            $ionicPopup.alert({
-              title: 'Serviço executado com sucesso',
-              template: ':D'
-            });
+            $scope.model.layers = result;
 
             $scope.$apply();
           },
@@ -317,12 +319,29 @@
             $scope.$apply();
           }
         });
-
       };
 
-      /*-------------------------------------------------------------------
-       * 		 				 	  HANDLERS
-       *-------------------------------------------------------------------*/
+      /**
+       *
+       */
+      $scope.listAttributesByLayer = function(layer){
+        layerGroupService.listAttributesByLayer(layer.id, {
+          callback: function (result) {
+
+            layer.attributes = result;
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $ionicPopup.alert({
+              title: 'Opss...',
+              template: message
+            });
+
+            $scope.$apply();
+          }
+        });
+      };
     });
 
 }(window.angular));
