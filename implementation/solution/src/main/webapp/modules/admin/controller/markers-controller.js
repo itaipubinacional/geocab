@@ -1044,7 +1044,7 @@ ront controller of angle won't let enter an invalid URL.
             $scope.removeLayers();
         }
 
-        if ($scope.hasSearch) {
+        if (!$scope.hasSearch) {
             //if it was done some search, return the searched markers on the map
             $scope.buildMarker(markers);
         } else {
@@ -1055,8 +1055,9 @@ ront controller of angle won't let enter an invalid URL.
 
     $scope.listMarkerByMarkersNoVectorMarkers = function (markers, pageRequest) {
 
-        markerService.listMarkerByMarkers(markers, pageRequest, {
+        myMarkersService.listMarkerByFiltersByUser(null, null, null, null, pageRequest, {
             callback: function (result) {
+
                 if (!$scope.drag) {
                     $scope.refreshMapNoVectorMarkers(result);
                 }
@@ -1075,6 +1076,27 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             }
         });
+
+        /*markerService.listMarkerByMarkers(markers, pageRequest, {
+            callback: function (result) {
+                if (!$scope.drag) {
+                    $scope.refreshMapNoVectorMarkers(result);
+                }
+
+                if ($scope.hasSearch || $scope.drag) {
+                    $scope.currentPage = result;
+                    $scope.currentPage.pageable.pageNumber++;
+                }
+
+                $scope.currentState = $scope.LIST_STATE;
+                $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+                $scope.msg = {type: "error", text: message, dismiss: true};
+                $scope.fadeMsg();
+                $scope.$apply();
+            }
+        });*/
     };
 
     /**
