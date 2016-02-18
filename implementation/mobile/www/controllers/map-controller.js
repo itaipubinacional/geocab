@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function ($rootScope, $scope, $state, $importService, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout) {
+    .controller('MapController', function ($rootScope, $scope, $state, $importService, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaGeolocation) {
 
       /**
        *
@@ -342,6 +342,41 @@
           }
         });
       };
+      /**
+       *
+       */
+      $scope.getGPSPosition = function() {
+        var posOptions = {timeout: 10000, enableHighAccuracy: true};
+        $cordovaGeolocation
+          .getCurrentPosition(posOptions)
+          .then(function (position) {
+            var lat = position.coords.latitude;
+            var long = position.coords.longitude;
+
+            $ionicPopup.alert({
+              title: 'GPS funcionando',
+              template: lat + ' ' +long
+            });
+          }, function (err) {
+            console.log(err);
+          });
+      };
+      var watchOptions = {
+        timeout : 3000,
+        enableHighAccuracy: true // may cause errors if true
+      };
+
+      var watch = $cordovaGeolocation.watchPosition(watchOptions);
+      watch.then(
+        null,
+        function(err) {
+          // error
+        },
+        function(position) {
+          var lat  = position.coords.latitude;
+          var long = position.coords.longitude;
+          console.log(lat + ' ' + long)
+        });
     });
 
 }(window.angular));
