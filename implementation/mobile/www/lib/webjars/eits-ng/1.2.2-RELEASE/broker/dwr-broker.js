@@ -29,6 +29,23 @@
 		    async: false,
 		    url: null
 		};
+		
+		/**
+		 * 
+		 */
+		this.configureServicePath = function( service ) {
+			var $self = this;
+			
+			//setTimeout para evitar problemas de load time no mobile
+			setTimeout(function() {
+				if ( window[service] ) {
+					window[service]._path = this.url;
+				//se nao carregou ainda, espera o proximo ciclo
+				} else { 
+					$self.configureServicePath(service);
+				}
+	    	});
+		};
 			
 		/**
 		 * 
@@ -47,10 +64,7 @@
 		    		}
 		    	);
 		    	
-		    	//Atribui o path do broker
-		    	setTimeout(function() {//setTimeout para evitar problemas de mobile
-		    		window[service]._path = $self.url;
-		    	}, 300);
+		    	$self.configureServicePath( service );		    			
 		    	
 		    	//Retorna a instancia para quem solicitou (via DI)
 		    	return window[service];
