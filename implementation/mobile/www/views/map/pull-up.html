@@ -33,20 +33,21 @@
   <div class="list">
     <label class="item item-input item-select" ng-init="listAllInternalLayerGroups()">
       <div class="input-label">Camada</div>
-      {{layer}}
       <select ng-change="listAttributesByLayer(layer)" ng-model="layer" ng-options="layer.name for layer in model.layers">
       </select>
     </label>
-    <div ng-repeat="attribute in layer.attributes" >
+    <div ng-repeat="attribute in layer.attributes">
       <!--text or number-->
       <label class="item item-input item-floating-label" ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
-        <input type="{{attribute.type}}" ng-mode="marker.markerAttribues[$index]" placeholder="{{attribute.name}}">
+        <span class="input-label">{{attribute.name}}</span>
+        <input type="{{attribute.type}}" ng-model="marker.markerAttribues[$index]" placeholder="{{attribute.name}}">
       </label>
       <!--boolean-->
-      <ion-checkbox ng-if="attribute.type == 'BOOLEAN'" ng-mode="marker.markerAttribues[$index]" >{{attribute.name}}</ion-checkbox>
+      <ion-checkbox ng-if="attribute.type == 'BOOLEAN'" ng-model="marker.markerAttribues[$index]" >{{attribute.name}}</ion-checkbox>
       <!--date-->
       <label class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
-        <input type="{{attribute.type}}" ng-mode="marker.markerAttribues[$index]"  placeholder="{{attribute.name}}">
+        <span class="input-label">{{attribute.name}}</span>
+        <input type="text" ng-model="marker.markerAttribues[$index]" ng-click="showDatePicker(attribute)" placeholder="{{attribute.name}}">
       </label>
       <!--photo_album in action bar-->
     </div>

@@ -20,8 +20,8 @@
         user: {}
       };
 
-      $scope.model.user.email = 'tbecker@itaipu.gov.br';
-      $scope.model.user.password = 'itaipu';
+      $scope.model.user.email = 'test_prognus@mailinator.com';
+      $scope.model.user.password = 'admin';
 
       /*-------------------------------------------------------------------
        * 		 				 	  HANDLERS

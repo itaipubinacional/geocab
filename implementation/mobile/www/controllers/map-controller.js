@@ -7,19 +7,15 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function ($rootScope, $scope, $state, $importService, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout) {
+    .controller('MapController', function ($rootScope, $scope, $state, $importService, $ionicPopup, $ionicSideMenuDelegate, $cordovaDatePicker, Camera, $timeout) {
 
       /**
        *
       */
-      setTimeout(function(){
+      $timeout(function(){
           $importService("accountService");
           $importService("layerGroupService");
-      }
-
-      , 300);
-
-
+      });
 
       /*-------------------------------------------------------------------
        * 		 				 	ATTRIBUTES
@@ -32,6 +28,28 @@
         layers: null,
         marker: null
       };
+
+      $scope.layer = {};
+
+      var options = {
+          date: new Date(),
+          mode: 'date', // or 'time'
+          minDate: new Date() - 10000,
+          allowOldDates: true,
+          allowFutureDates: false,
+          doneButtonLabel: 'DONE',
+          doneButtonColor: '#F2F3F4',
+          cancelButtonLabel: 'CANCEL',
+          cancelButtonColor: '#000000'
+        };
+
+      $scope.showDatePicker = function(index) {
+        $cordovaDatePicker.show(options).then(function(date){
+            var month = date.getMonth() < 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+            $scope.attribute[index].value = date.getDate() + '/' + month + '/' + date.getFullYear();
+            //alert(date);
+        });
+      }
 
       $scope.toggleLeftSideMenu = function() {
         $ionicSideMenuDelegate.toggleLeft();
