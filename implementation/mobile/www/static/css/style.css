@@ -13,6 +13,21 @@ map {
 #pull-up .title.bar-positive div.h1{color: #fff}
 
 
+/*LOGIN*/
+
+.login-label{
+  border-width: 0 0 1px 0;
+  padding: 0;
+}
+
+.login-image-footer {
+  padding: 50px;
+  /*background-image: url(./static/images/logo.png);*/
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
 
 /*SLIDE INTRO*/
 
@@ -29,3 +44,4 @@ map {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
 }
+

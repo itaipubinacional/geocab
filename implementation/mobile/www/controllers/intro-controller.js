@@ -10,7 +10,7 @@
      * @param $state
      */
     angular.module('application')
-        .controller('IntroController', function ($rootScope, $scope, $state, $ionicSlideBoxDelegate, $importService, $ionicPopup, $timeout) {
+        .controller('IntroController', function ($rootScope, $scope, $state, $ionicSlideBoxDelegate) {
 
 
             /*-------------------------------------------------------------------

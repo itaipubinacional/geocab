@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <ion-view view-title="Signin">
 
-    <ion-content class="padding">
+    <ion-content class="padding login-image-footer" style="background-image: url('./static/images/logo.png')">
 
         <form name="model.form">
-            <div style="width: 100%; text-align: center;">
-                <img alt="Logo" src="./static/images/logo.png" width="100" style="text-align:center;"/>
+            <div style="width: 100%; text-align: center">
+                <img alt="Logo" src="./static/images/logo.png" width="200" style="text-align:center;"/>
             </div>
 
-            <h3 class="title" style="text-align: center;">Autenticação de Usuário</h3>
 
             <div class="list">
 
-                <label class="item item-input">
-                    <span class="input-label">Email</span>
-                    <input type="text" ng-model="model.user.email">
+                <label class="item item-input item-floating-label login-label">
+                    <span class="input-label">Login</span>
+                    <input type="text" placeholder="Login" ng-model="model.user.email">
                 </label>
                 <ng-messages class="padding" for="model.form.email.$touched && model.form.email.$error" role="alert">
                     <ng-message when="required">É necessário informar seu e-mail.</ng-message>
@@ -22,53 +21,34 @@
                 </ng-messages>
 
 
-                <label class="item item-input">
-                    <span class="input-label">Password</span>
-                    <input type="password" ng-model="model.user.password">
+                <label class="item item-input item-floating-label login-label">
+                    <span class="input-label">Senha</span>
+                    <input type="password" placeholder="Senha" ng-model="model.user.password">
                 </label>
                 <ng-messages class="padding" for="model.form.password.$touched && model.form.password.$error" role="alert">
                     <ng-message when="required">É necessário informar sua senha.</ng-message>
                 </ng-messages>
 
             </div>
-            <div class="padding">
-                <button nav-clear class="button button-block button-calm" ng-click="loginHandler()">
-                    Entrar
+
+            <div>
+                <button nav-clear class="button button-block button-positive" ng-click="loginHandler()">
+                    <b>ENTRAR</b>
                 </button>
-                <div class="row">
 
-                    <button nav-clear class="button button-block button-calm col-40">
-                        google
-                    </button>
-                    <button nav-clear class="button button-block button-calm col-40 col-offset-20">
-                        face
-                    </button>
+                <div style="margin-top: 50px"></div>
 
-                </div>
-
-
+                <button nav-clear class="button button-block button-small button-assertive">
+                    <b>ACESSAR COM O GOOGLE +</b>
+                </button>
+                <button nav-clear class="button button-block button-small button-calm">
+                    <b>ACESSAR COM O FACEBOOK</b>
+                </button>
             </div>
+
         </form>
 
-        <!--<form name="model.form" class="list list-inset">-->
-
-            <!--<label class="item item-input">-->
-                <!--<input name="email" type="email" placeholder="Email" ng-model="model.user.email" required/>-->
-            <!--</label>-->
-            <!--<ng-messages class="padding" for="model.form.email.$touched && model.form.email.$error" role="alert">-->
-                <!--<ng-message when="required">É necessário informar seu e-mail.</ng-message>-->
-                <!--<ng-message when="email">O e-mail digitado está inválido.</ng-message>-->
-            <!--</ng-messages>-->
-
-            <!--<label class="item item-input">-->
-                <!--<input name="password" type="password" placeholder="Password" ng-model="model.user.password" required/>-->
-            <!--</label>-->
-            <!--<ng-messages class="padding" for="model.form.password.$touched && model.form.password.$error" role="alert">-->
-                <!--<ng-message when="required">É necessário informar sua senha.</ng-message>-->
-            <!--</ng-messages>-->
-        <!--</form>-->
-
-        <!--<button class="button button-block button-calm" ng-click="loginHandler()">Entrar</button>-->
     </ion-content>
+
 
 </ion-view>
