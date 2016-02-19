@@ -7,16 +7,19 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-datepicker": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
         "cordova-plugin-crosswalk-webview": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "ionic-plugin-keyboard": {
+        "cordova-plugin-keyboard": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
         "cordova-plugin-geolocation": {

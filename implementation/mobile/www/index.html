@@ -10,8 +10,7 @@
               * Enable inline JS: add 'unsafe-inline' to default-src
               * Enable eval(): add 'unsafe-eval' to default-src
       -->
-  <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' http: https data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *">
+  <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com *.ionic.io *.openstreetmap.org; style-src 'self' 'unsafe-inline'; media-src *; img-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval'">-->
 
   <title>Geocab Mobile</title>
 
@@ -28,7 +27,8 @@
   <link href="css/ionic.app.css" rel="stylesheet">
   -->
 
-  <script src="lib/openlayers3/build/ol.js"></script>
+  <!-- openlayers3 -->
+  <script src="./lib/openlayers3/build/ol.js"></script>
 
   <!--
         Libraries (Bower)
@@ -40,6 +40,8 @@
   <script src="./lib/angular-openlayers-directive/dist/angular-openlayers-directive.js"></script>
   <script src="./lib/ionic-pullup/dist/ion-pullup.js"></script>
   <script src="./lib/ionic-ion-drawer/ionic.contrib.drawer.js"></script>
+
+  <script src="./lib/ngCordova/dist/ng-cordova.js"></script>
 
   <!-- Cordova (this will be a 404 during development) -->
   <script src="./lib/dist/ng-cordova.min.js"></script>
