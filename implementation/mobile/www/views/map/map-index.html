@@ -41,7 +41,7 @@
 
           <div class="list">
             <ion-checkbox ng-repeat="layer in model.layers">{{layer.name}}
-              <img ng-src="http://192.168.20.108:8080/geocab/{{layer.icon}}">
+              <img ng-src="{{$API_ENDPOINT}}/{{layer.icon}}">
             </ion-checkbox>
           </div>
         </ion-content>
