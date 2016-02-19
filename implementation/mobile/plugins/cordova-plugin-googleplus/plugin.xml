@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="cordova-plugin-googleplus"
+        version="4.0.8">
+
+  <name>Google+</name>
+
+  <description>Use your Google account to authenticate with the app.</description>
+
+  <author>Eddy Verbruggen</author>
+
+  <license>MIT</license>
+
+  <keywords>Google, Google+, GooglePlus, Google Plus, Google Login, Login, OAuth</keywords>
+
+  <repo>https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git</repo>
+
+  <issue>https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues</issue>
+
+  <engines>
+    <engine name="cordova" version=">=3.3.0"/>
+  </engines>
+
+  <js-module src="www/GooglePlus.js" name="GooglePlus">
+    <clobbers target="window.plugins.googleplus" />
+  </js-module>
+
+  <!-- android -->
+  <platform name="android">
+
+    <framework src="com.google.android.gms:play-services-plus:+" />
+    <framework src="com.google.android.gms:play-services-identity:+" />
+
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="GooglePlus">
+        <param name="android-package" value="nl.xservices.plugins.GooglePlus" />
+        <param name="onload" value="true" />
+      </feature>
+      <access origin="https://accounts.google.com/*" />
+    </config-file>
+
+    <config-file target="AndroidManifest.xml" parent="/manifest">
+      <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+      <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    </config-file>
+
+    <source-file src="src/android/GooglePlus.java" target-dir="src/nl/xservices/plugins"/>
+  </platform>
+
+  <!-- ios -->
+  <platform name="ios">
+
+    <config-file target="config.xml" parent="/*">
+      <feature name="GooglePlus">
+        <param name="ios-package" value="GooglePlus"/>
+        <param name="onload" value="true" />
+      </feature>
+      <access origin="https://accounts.google.com/*" />
+    </config-file>
+
+    <header-file src="src/ios/GooglePlus.h"/>
+    <source-file src="src/ios/GooglePlus.m"/>
+
+    <preference name="REVERSED_CLIENT_ID"/>
+
+    <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+      <array>
+        <dict>
+          <key>CFBundleTypeRole</key>
+          <string>Editor</string>
+          <key>CFBundleURLName</key>
+          <string>$PACKAGE_NAME</string>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>$PACKAGE_NAME</string>
+          </array>
+        </dict>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>REVERSED_CLIENT_ID</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>$REVERSED_CLIENT_ID</string>
+            </array>
+        </dict>
+      </array>
+    </config-file>
+
+    <!-- iOS9 whitelisting -->
+    <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+      <array>
+        <string>$PACKAGE_NAME</string>
+        <string>$REVERSED_CLIENT_ID</string>
+        <string>com-google-gidconsent</string>
+        <string>com-google-gidconsent-google</string>
+        <string>com.google.gppconsent.2.4.0</string>
+        <string>com.google.gppconsent.2.4.1</string>
+      </array>
+    </config-file>
+
+    <!-- Google frameworks -->
+    <framework src="src/ios/libs/GoogleOpenSource.framework" custom="true" />
+    <!-- Downloaded here: https://developers.google.com/identity/sign-in/ios/sdk/ -->
+    <framework src="src/ios/libs/GoogleSignIn.framework" custom="true" />
+
+    <!-- System frameworks -->
+    <framework src="AddressBook.framework" weak="true" />
+    <framework src="CoreText.framework" weak="true" />
+    <framework src="Security.framework" weak="true" />
+    <framework src="StoreKit.framework" weak="true" />
+    <framework src="SystemConfiguration.framework" weak="true" />
+    <framework src="libz.tbd" weak="true" />
+    <framework src="libz.dylib" weak="true" />
+
+  </platform>
+
+</plugin>

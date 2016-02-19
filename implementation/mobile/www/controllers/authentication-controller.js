@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('AuthenticationController', function ($scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT) {
+    .controller('AuthenticationController', function ($scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading) {
 
       /*-------------------------------------------------------------------
        * 		 				 	ATTRIBUTES
@@ -47,16 +47,7 @@
 
           $http.post($API_ENDPOINT + "/j_spring_security_check", $.param($scope.model.user), config)
             .success(function (data, status, headers, config) {
-                if(!localStorage.getItem('doneIntro')){
-
-                    localStorage.setItem('doneIntro','true');
-                    $state.go('intro');
-
-                } else {
-
-                    $state.go('map');
-
-                }
+                $scope.loginSuccess();
             })
             .error(function (data, status, headers, config) {
                 $ionicPopup.alert({
@@ -68,6 +59,61 @@
           );
         }
       }
-    });
+      /**
+       *
+       */
+      $scope.fbLogin = function () {
+        ngFB.login({scope: 'email,public_profile,user_friends'})
+        .then(function (response) {
+          if (response.status === 'connected') {
+            $scope.loginSuccess();
+          } else {
+            $ionicPopup.alert({
+              title: 'Facebook login failed',
+              template: ':('
+            });
+          }
+        });
+      };
+      
+
+    // This method is executed when the user press the "Sign in with Google" button
+    /**
+       *
+    */          
+    $scope.googleSignIn = function() {
+      $ionicLoading.show({
+        template: 'Logging in...'
+      });
+
+      window.plugins.googleplus.login(
+        {},
+        function (user_data) {
+          // For the purpose of this example I will store user data on local storage
+          
+          console.log(user_data);
+
+          $ionicLoading.hide();
+          $scope.loginSuccess();
+        },
+        function (msg) {
+          $ionicLoading.hide();
+        }
+      );
+    };
+
+    /**
+      *
+    */
+    $scope.loginSuccess = function () {
+      if(!localStorage.getItem('doneIntro')){
+        localStorage.setItem('doneIntro','true');
+        $state.go('intro');
+      } else {
+        $state.go('map');
+      }
+    };
+
+  });
 
 }(window.angular));

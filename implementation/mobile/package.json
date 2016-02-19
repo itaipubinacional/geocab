@@ -20,7 +20,9 @@
     "cordova-plugin-crosswalk-webview",
     "cordova-plugin-splashscreen",
     "cordova-plugin-keyboard",
-    "cordova-plugin-geolocation"
+    "cordova-plugin-geolocation",
+    "org.apache.cordova.inappbrowser",
+    "cordova-plugin-googleplus"
   ],
   "cordovaPlatforms": [
     "ios"

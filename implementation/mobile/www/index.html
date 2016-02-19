@@ -25,9 +25,8 @@
   <link href="./lib/ionic-ion-drawer/ionic.contrib.drawer.css" rel="stylesheet">
   <link href="./lib/openlayers3/build/ol.css" rel="stylesheet">
 
-  <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+  <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above-->
   <link href="css/ionic.app.css" rel="stylesheet">
-  -->
 
   <!--
         Libraries (Bower)
@@ -52,8 +51,14 @@
   <!-- Cordova (this will be a 404 during development) -->
   <script src="./lib/dist/ng-cordova.min.js"></script>
   <script type="text/javascript" src="cordova.js"></script>
+  
+ <!-- oauth login facebook -->
+  <script src="./lib/openfb/openfb.js"></script>
+  <script src="./lib/openfb/ngopenfb.js"></script>
 
-
+  <!-- DWR -->
+  <script ng-src="{{$API_ENDPOINT + '/broker/engine.js'}}"></script>
+  <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
 
   <!-- Others -->
   <script src="./lib/webjars/eits-ng/1.2.2-RELEASE/eits-ng.js"></script>

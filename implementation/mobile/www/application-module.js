@@ -2,7 +2,7 @@
   'use strict';
 
   //Start the AngularJS
-  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova']);
+  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova', 'ngOpenFB']);
 
   /**
    *
@@ -68,7 +68,6 @@
       templateUrl: './views/home/intro.html'
     });
 
-
   }).factory('Camera', ['$q', function($q) {
 
     return {
@@ -90,7 +89,7 @@
   /**
    *
    */
-  module.run(function ($rootScope, $ionicPlatform, $state, $stateParams, $API_ENDPOINT) {
+  module.run(function ($rootScope, $ionicPlatform, $state, $stateParams, $API_ENDPOINT, ngFB) {
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
@@ -109,7 +108,8 @@
         StatusBar.styleDefault();
       }
     });
-
+    
+    ngFB.init({appId: '801316929973059'});
 
   });
 

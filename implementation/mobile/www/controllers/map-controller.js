@@ -436,7 +436,7 @@
         });
 
         $scope.currentEntity.status = "SAVED";
-        
+
         markerService.insertMarker( $scope.currentEntity, {
           callback: function (result) {
 
