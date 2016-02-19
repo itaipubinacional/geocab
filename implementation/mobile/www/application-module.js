@@ -2,12 +2,12 @@
   'use strict';
 
   //Start the AngularJS
-  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer']);
+  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova']);
 
   /**
    *
    */
-  module.constant('$API_ENDPOINT', 'http://192.168.20.136:8080/geocab');
+  module.constant('$API_ENDPOINT', 'http://192.168.20.108:8080/geocab');
 
   /**
    *
@@ -16,7 +16,7 @@
     //-------
     //Broker configuration
     //-------
-    $importServiceProvider.setBrokerURL($API_ENDPOINT + "/broker/interface");
+    $importServiceProvider.setBrokerURL($API_ENDPOINT + "/broker");
 
     //-------
     //Strict Contextual Escaping
@@ -97,7 +97,7 @@
     $ionicPlatform.ready(function () {
 
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard for form inputs
-      if (window.cordova && window.cordova.plugins.Keyboard) {
+    	if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         cordova.plugins.Keyboard.disableScroll(true);
       }
@@ -107,6 +107,8 @@
         StatusBar.styleDefault();
       }
     });
+
+
   });
 
   /**

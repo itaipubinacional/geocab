@@ -9,7 +9,7 @@
 		//-------
 		//Broker configuration
 		//-------
-		$importServiceProvider.setBrokerURL('broker/interface');
+		$importServiceProvider.setBrokerURL('./broker');
 		
 		//-------
 		//Translate configuration

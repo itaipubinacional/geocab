@@ -13,10 +13,8 @@
        *
        */
 
-      $timeout(function(){
-        $importService("accountService");
-        $importService("layerGroupService");
-      });
+      $importService("accountService");
+      $importService("layerGroupService");
 
 
       /*-------------------------------------------------------------------
@@ -36,8 +34,6 @@
        *
        */
       $scope.findUserById = function () {
-
-        accountService._path = $rootScope.$API_ENDPOINT + '/broker';
 
         accountService.findUserById(1, {
           callback: function (result) {

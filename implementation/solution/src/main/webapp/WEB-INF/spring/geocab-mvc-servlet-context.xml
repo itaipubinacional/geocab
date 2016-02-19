@@ -50,9 +50,6 @@
     	<dwr:config-param name="allowScriptTagRemoting" value="true"/>
     	<dwr:config-param name="crossDomainSessionSecurity" value="false"/>
     	<dwr:config-param name="allowGetForSafariButMakeForgeryEasier" value="true"/>
-    	<!-- 
-    	<dwr:config-param name="overridePath" value="http://192.168.20.108:8080/geocab/broker"/>
-    	 -->
 	</dwr:controller>
 	
 	<!--

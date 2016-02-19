@@ -21,8 +21,6 @@
   <link rel="stylesheet" href="./lib/ionic/css/ionic.css">
   <link rel="stylesheet" href="./static/css/style.css">
 
-  <link href="./lib/ionic/css/ionic.css" rel="stylesheet">
-
   <link href="./lib/ionic-ion-drawer/ionic.contrib.drawer.css" rel="stylesheet">
   <link href="./lib/openlayers3/build/ol.css" rel="stylesheet">
 
@@ -44,6 +42,7 @@
   <script src="./lib/ionic-ion-drawer/ionic.contrib.drawer.js"></script>
 
   <!-- Cordova (this will be a 404 during development) -->
+  <script src="./lib/dist/ng-cordova.min.js"></script>
   <script type="text/javascript" src="cordova.js"></script>
 
   <!-- DWR -->
@@ -51,18 +50,21 @@
   <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
 
   <!-- Others -->
-  <script src="./lib/webjars/eits-ng/1.1.0-SNAPSHOT/eits-ng.js"></script>
+  <script src="./lib/webjars/eits-ng/1.2.2-RELEASE/eits-ng.js"></script>
 
   <!-- Controllers -->
   <script src="./application-module.js"></script>
   <script src="./controllers/authentication-controller.js"></script>
   <script src="./controllers/home-controller.js"></script>
   <script src="./controllers/map-controller.js"></script>
+<<<<<<< HEAD
   <script src="./controllers/intro-controller.js"></script>
   <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
+=======
+>>>>>>> 3b8e1fc7eede8bc8c21c5012571768f2fa2e2d80
 </head>
 
 <body>
-<ion-nav-view></ion-nav-view>
+	<ion-nav-view></ion-nav-view>
 </body>
 </html>
