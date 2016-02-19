@@ -12,13 +12,9 @@
             /**
              *
              */
-            setTimeout(function(){
-                    $importService("accountService");
-                    $importService("layerGroupService");
-                }
 
-                , 300);
-
+              $importService("accountService");
+              $importService("layerGroupService");
 
 
             /*-------------------------------------------------------------------
@@ -361,22 +357,7 @@
                         console.log(err);
                     });
             };
-            var watchOptions = {
-                timeout : 3000,
-                enableHighAccuracy: true // may cause errors if true
-            };
 
-            var watch = $cordovaGeolocation.watchPosition(watchOptions);
-            watch.then(
-                null,
-                function(err) {
-                    // error
-                },
-                function(position) {
-                    var lat  = position.coords.latitude;
-                    var long = position.coords.longitude;
-                    console.log(lat + ' ' + long)
-                });
         });
 
 }(window.angular));
