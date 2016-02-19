@@ -320,6 +320,32 @@
 
       };
 
+      $scope.findLayers = function () {
+
+        layerGroupService.listAllInternalLayerGroups({
+          callback: function (result) {
+
+            $scope.model.user = result;
+
+            $ionicPopup.alert({
+              title: 'Serviço executado com sucesso',
+              template: ':D'
+            });
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $ionicPopup.alert({
+              title: 'Opss...',
+              template: message
+            });
+
+            $scope.$apply();
+          }
+        });
+
+      };
+
       /*-------------------------------------------------------------------
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/

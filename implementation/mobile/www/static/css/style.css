@@ -11,3 +11,21 @@ map {
 #pull-up .title{margin: 0px}
 #pull-up .title.bar-positive{background-color: #387ef5}
 #pull-up .title.bar-positive div.h1{color: #fff}
+
+
+
+/*SLIDE INTRO*/
+
+.slider {
+  height: 100%;
+}
+
+.slider-slide {
+  padding-top: 80px;
+  color: #000;
+  background-color: #9a9a9a;
+  text-align: center;
+
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+}

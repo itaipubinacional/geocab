@@ -58,6 +58,15 @@
       controller: 'HomeController',
       templateUrl: './views/home/home-index.html'
     });
+
+    //INTRO
+    $stateProvider.state('intro', {
+      url: "/intro",
+      controller: 'IntroController',
+      templateUrl: './views/home/intro.html'
+    });
+
+
   }).factory('Camera', ['$q', function($q) {
 
     return {
