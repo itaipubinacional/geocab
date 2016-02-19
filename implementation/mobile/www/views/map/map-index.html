@@ -8,6 +8,8 @@
       <button class="button button-icon icon ion-navicon animate drawerToggle" drawer-toggle="" animate="true"
               style="transform: translate3d(0px, 0px, 0px);">
       </button>
+      <h1 class="title"></h1>
+      <button class="button" ng-click="getGPSPosition()">gps</button>
    </span></div>
       <div class="title title-center header-item"><span class="nav-bar-title">
     Ionic Ap
@@ -37,48 +39,18 @@
       <ion-view title="Menu">
         <ion-content>
 
-          <ion-list>
-            <ion-item ng-click="toggleDrawer()">
-              Menu 1
-            </ion-item>
-            <ion-item >
-              Menu 2
-            </ion-item>
-          </ion-list>
-
+          <div class="list">
+            <ion-checkbox ng-repeat="layer in model.layers">{{layer.name}}
+              <img ng-src="http://192.168.20.108:8080/geocab/{{layer.icon}}">
+            </ion-checkbox>
+          </div>
         </ion-content>
       </ion-view>
     </drawer>
 
     <ion-pull-up-footer id="pull-up" ng-if="currentEntity.lat" initial-state="minimized" default-behavior="expand"
-                        on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()">
-      <ion-pull-up-handle ng-if="!showMarkerDetails" ion-pull-up-trigger left="0" width="100" height="90px">
+                        on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()" ng-include="'./views/map/pull-up.html'">
 
-        <div class="row">
-          <b>{{ currentEntity.name }}</b>
-        </div>
-        <div class="row">
-          <div class="col">Latitude</div>
-          <div class="col">
-            {{ currentEntity.lat }}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">Longitude</div>
-          <div class="col">{{ currentEntity.lon }}</div>
-        </div>
-
-      </ion-pull-up-handle>
-      <ion-pull-up-content scroll="false">
-        <div class="title bar-header" ng-if="showMarkerDetails" style="text-align: left"
-             ng-class="{'bar-positive': showMarkerDetails}">
-          <button ng-click="footerMinimize()" style="margin-top: 5px"
-                  class="button button-icon icon ion-chevron-left"></button>
-          <div class="h1 title">{{ currentEntity.name }}</div>
-        </div>
-        <img ng-src="{{currentEntity.image}}"/>
-        <button type="button" ng-click="getPhoto()">Camera</button>
-      </ion-pull-up-content>
     </ion-pull-up-footer>
 
   </ion-side-menus>

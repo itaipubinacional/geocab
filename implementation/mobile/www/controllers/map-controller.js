@@ -7,16 +7,18 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function ($rootScope, $scope, $state, $importService, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout) {
+    .controller('MapController', function ($rootScope, $scope, $state, $importService, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaGeolocation) {
 
       /**
        *
-       */
+      */
+      setTimeout(function(){
+          $importService("accountService");
+          $importService("layerGroupService");
+      }
 
-      $timeout(function(){
-        $importService("accountService");
-        $importService("layerGroupService");
-      });
+      , 300);
+
 
 
       /*-------------------------------------------------------------------
@@ -26,7 +28,9 @@
        *
        */
       $scope.model = {
-        user: null
+        user: null,
+        layers: null,
+        marker: null
       };
 
       $scope.toggleLeftSideMenu = function() {
@@ -268,8 +272,6 @@
        */
       $scope.findUserById = function () {
 
-        accountService._path = $rootScope.$API_ENDPOINT + '/broker';
-
         accountService.findUserById(1, {
           callback: function (result) {
 
@@ -293,18 +295,18 @@
         });
 
       };
+      /*-------------------------------------------------------------------
+       * 		 				 	  HANDLERS
+       *-------------------------------------------------------------------*/
 
-      $scope.findLayers = function () {
-
+      /**
+       *
+       */
+      $scope.listAllInternalLayerGroups = function(){
         layerGroupService.listAllInternalLayerGroups({
           callback: function (result) {
 
-            $scope.model.user = result;
-
-            $ionicPopup.alert({
-              title: 'Serviço executado com sucesso',
-              template: ':D'
-            });
+            $scope.model.layers = result;
 
             $scope.$apply();
           },
@@ -317,12 +319,64 @@
             $scope.$apply();
           }
         });
-
       };
 
-      /*-------------------------------------------------------------------
-       * 		 				 	  HANDLERS
-       *-------------------------------------------------------------------*/
+      /**
+       *
+       */
+      $scope.listAttributesByLayer = function(layer){
+        layerGroupService.listAttributesByLayer(layer.id, {
+          callback: function (result) {
+
+            layer.attributes = result;
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $ionicPopup.alert({
+              title: 'Opss...',
+              template: message
+            });
+
+            $scope.$apply();
+          }
+        });
+      };
+      /**
+       *
+       */
+      $scope.getGPSPosition = function() {
+        var posOptions = {timeout: 10000, enableHighAccuracy: true};
+        $cordovaGeolocation
+          .getCurrentPosition(posOptions)
+          .then(function (position) {
+            var lat = position.coords.latitude;
+            var long = position.coords.longitude;
+
+            $ionicPopup.alert({
+              title: 'GPS funcionando',
+              template: lat + ' ' +long
+            });
+          }, function (err) {
+            console.log(err);
+          });
+      };
+      var watchOptions = {
+        timeout : 3000,
+        enableHighAccuracy: true // may cause errors if true
+      };
+
+      var watch = $cordovaGeolocation.watchPosition(watchOptions);
+      watch.then(
+        null,
+        function(err) {
+          // error
+        },
+        function(position) {
+          var lat  = position.coords.latitude;
+          var long = position.coords.longitude;
+          console.log(lat + ' ' + long)
+        });
     });
 
 }(window.angular));

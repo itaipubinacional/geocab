@@ -2,12 +2,12 @@
   'use strict';
 
   //Start the AngularJS
-  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer']);
+  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova']);
 
   /**
    *
    */
-  module.constant('$API_ENDPOINT', 'http://192.168.20.136:8080/geocab');
+  module.constant('$API_ENDPOINT', 'http://192.168.20.108:8080/geocab');
 
   /**
    *
@@ -98,6 +98,8 @@
         StatusBar.styleDefault();
       }
     });
+
+
   });
 
   /**
