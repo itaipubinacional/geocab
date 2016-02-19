@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('AuthenticationController', function ($scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT) {
+    .controller('AuthenticationController', function ($scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB) {
 
       /*-------------------------------------------------------------------
        * 		 				 	ATTRIBUTES
@@ -47,16 +47,7 @@
 
           $http.post($API_ENDPOINT + "/j_spring_security_check", $.param($scope.model.user), config)
             .success(function (data, status, headers, config) {
-                if(!localStorage.getItem('doneIntro')){
-
-                    localStorage.setItem('doneIntro','true');
-                    $state.go('intro');
-
-                } else {
-
-                    $state.go('map');
-
-                }
+                $scope.loginSuccess();
             })
             .error(function (data, status, headers, config) {
                 $ionicPopup.alert({
@@ -68,6 +59,34 @@
           );
         }
       }
+      /**
+       *
+       */
+      $scope.fbLogin = function () {
+        ngFB.login({scope: 'email,public_profile,user_friends'})
+        .then(function (response) {
+          if (response.status === 'connected') {
+            $scope.loginSuccess();
+          } else {
+            $ionicPopup.alert({
+              title: 'Facebook login failed',
+              template: ':('
+            });
+          }
+        });
+      };
+      /**
+       *
+       */
+      $scope.loginSuccess = function () {
+        if(!localStorage.getItem('doneIntro')){
+          localStorage.setItem('doneIntro','true');
+          $state.go('intro');
+        } else {
+          $state.go('map');
+        }
+      };
+
     });
 
 }(window.angular));
