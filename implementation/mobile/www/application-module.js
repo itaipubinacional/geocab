@@ -2,7 +2,7 @@
   'use strict';
 
   //Start the AngularJS
-  var module = angular.module('application', ['ngCordova', 'ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer']);
+  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova']);
 
   /**
    *
@@ -58,6 +58,15 @@
       controller: 'HomeController',
       templateUrl: './views/home/home-index.html'
     });
+
+    //INTRO
+    $stateProvider.state('intro', {
+      url: "/intro",
+      controller: 'IntroController',
+      templateUrl: './views/home/intro.html'
+    });
+
+
   }).factory('Camera', ['$q', function($q) {
 
     return {
@@ -98,6 +107,8 @@
         StatusBar.styleDefault();
       }
     });
+
+
   });
 
   /**

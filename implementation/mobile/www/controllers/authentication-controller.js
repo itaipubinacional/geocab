@@ -44,9 +44,19 @@
             headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
           };
 
+
           $http.post($API_ENDPOINT + "/j_spring_security_check", $.param($scope.model.user), config)
             .success(function (data, status, headers, config) {
-              $state.go('map');
+                if(!localStorage.getItem('doneIntro')){
+
+                    localStorage.setItem('doneIntro','true');
+                    $state.go('intro');
+
+                } else {
+
+                    $state.go('map');
+
+                }
             })
             .error(function (data, status, headers, config) {
                 $ionicPopup.alert({
@@ -55,7 +65,7 @@
                   template: (data && data.message) ? data.message : data
                 });
               }
-            );
+          );
         }
       }
     });

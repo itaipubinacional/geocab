@@ -45,6 +45,7 @@
   <script src="./lib/ngCordova/dist/ng-cordova.js"></script>
 
   <!-- Cordova (this will be a 404 during development) -->
+  <script src="./lib/dist/ng-cordova.min.js"></script>
   <script type="text/javascript" src="cordova.js"></script>
 
   <!-- DWR -->
@@ -52,13 +53,16 @@
   <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
 
   <!-- Others -->
-  <script src="./lib/webjars/eits-ng/1.2.1-RELEASE/eits-ng.js"></script>
+  <script src="./lib/webjars/eits-ng/1.2.2-RELEASE/eits-ng.js"></script>
 
   <!-- Controllers -->
   <script src="./application-module.js"></script>
   <script src="./controllers/authentication-controller.js"></script>
   <script src="./controllers/home-controller.js"></script>
   <script src="./controllers/map-controller.js"></script>
+  <script src="./controllers/intro-controller.js"></script>
+  <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
+
 </head>
 
 <body>

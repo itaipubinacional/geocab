@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups xmlns="http://www.isdc.ro/wro">
     <group name="eits-ng">
-        <js>classpath:META-INF/resources/webjars/eits-ng/1.2.1-RELEASE/eits-ng.js</js>
+        <js>classpath:META-INF/resources/webjars/eits-ng/1.2.2-RELEASE/eits-ng.js</js>
         
-        <js>classpath:META-INF/resources/webjars/eits-ng/1.2.1-RELEASE/translate/translate.js</js>
-        <js>classpath:META-INF/resources/webjars/eits-ng/1.2.1-RELEASE/broker/dwr-broker.js</js>
+        <js>classpath:META-INF/resources/webjars/eits-ng/1.2.2-RELEASE/translate/translate.js</js>
+        <js>classpath:META-INF/resources/webjars/eits-ng/1.2.2-RELEASE/broker/dwr-broker.js</js>
     </group>
 </groups>
