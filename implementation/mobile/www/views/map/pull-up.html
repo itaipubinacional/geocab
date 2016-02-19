@@ -31,23 +31,23 @@
     </div>
   </div>
   <div class="list">
-    <label class="item item-input item-select" ng-init="listAllInternalLayerGroups()">
+    <label class="item item-input item-select">
       <div class="input-label">Camada</div>
-      <select ng-change="listAttributesByLayer(layer)" ng-model="layer" ng-options="layer.name for layer in model.layers">
+      <select ng-change="listAttributesByLayer(currentEntity.layer)" ng-model="currentEntity.layer" ng-options="layer.name for layer in model.layers">
       </select>
     </label>
-    <div ng-repeat="attribute in layer.attributes">
+    <div ng-repeat="attribute in currentEntity.markerAttribute">
       <!--text or number-->
       <label class="item item-input item-floating-label" ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
         <span class="input-label">{{attribute.name}}</span>
-        <input type="{{attribute.type}}" ng-model="marker.markerAttribues[$index]" placeholder="{{attribute.name}}">
+        <input type="{{attribute.type}}" ng-model="attribute.value" placeholder="{{attribute.name}}">
       </label>
       <!--boolean-->
-      <ion-checkbox ng-if="attribute.type == 'BOOLEAN'" ng-model="marker.markerAttribues[$index]" >{{attribute.name}}</ion-checkbox>
+      <ion-checkbox ng-if="attribute.type == 'BOOLEAN'" ng-model="attribute.value" >{{attribute.name}}</ion-checkbox>
       <!--date-->
       <label class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
         <span class="input-label">{{attribute.name}}</span>
-        <input type="text" ng-model="marker.markerAttribues[$index]" ng-click="showDatePicker(attribute)" placeholder="{{attribute.name}}">
+        <input type="text" ng-model="attribute.value" ng-click="showDatePicker(attribute)" placeholder="{{attribute.name}}">
       </label>
       <!--photo_album in action bar-->
     </div>
@@ -58,4 +58,5 @@
   </div>
   <img ng-src="{{currentEntity.image}}"/>
   <button type="button" ng-click="getPhoto()">Camera</button>
+  <button type="button" ng-click="save()">Salvar</button>
 </ion-pull-up-content>

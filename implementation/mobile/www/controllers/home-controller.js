@@ -13,8 +13,10 @@
        *
        */
 
-      $importService("accountService");
-      $importService("layerGroupService");
+      $timeout(function () {
+        $importService("accountService");
+        $importService("layerGroupService");
+      });
 
 
       /*-------------------------------------------------------------------

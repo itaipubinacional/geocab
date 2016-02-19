@@ -89,23 +89,33 @@ public class MarkerService extends AbstractMarkerService
 	 */
 	public Marker insertMarker(Marker marker) 
 	{
-		User user = ContextHolder.getAuthenticatedUser();
+		try
+		{
+			User user = ContextHolder.getAuthenticatedUser();
 
-		marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
+			marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
 
-		marker.setUser(user);
-		
-		validateAttribute(marker.getMarkerAttribute());
-		
-		marker = this.markerRepository.save(marker);	
-
-		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
-		
-		MarkerModeration markerModeration = new MarkerModeration();
-		markerModeration.setMarker(marker);
-		markerModeration.setStatus(marker.getStatus());
-		this.markerModerationRepository.save(markerModeration);
+			marker.setUser(user);
 			
+			validateAttribute(marker.getMarkerAttribute());
+			
+			marker = this.markerRepository.save(marker);	
+
+			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
+			
+			MarkerModeration markerModeration = new MarkerModeration();
+			markerModeration.setMarker(marker);
+			markerModeration.setStatus(marker.getStatus());
+			this.markerModerationRepository.save(markerModeration);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		marker.setMarkerAttribute(null);
+		marker.setMarkerModeration(null);
+		
 		return marker;
 	}
 	

@@ -10,7 +10,9 @@
               * Enable inline JS: add 'unsafe-inline' to default-src
               * Enable eval(): add 'unsafe-eval' to default-src
       -->
-  <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com *.ionic.io *.openstreetmap.org; style-src 'self' 'unsafe-inline'; media-src *; img-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval'">-->
+  <!--<meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' ws: http: https: data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *;">-->
+
 
   <title>Geocab Mobile</title>
 
@@ -27,12 +29,16 @@
   <link href="css/ionic.app.css" rel="stylesheet">
   -->
 
-  <!-- openlayers3 -->
-  <script src="./lib/openlayers3/build/ol.js"></script>
-
   <!--
         Libraries (Bower)
     -->
+  <!-- DWR -->
+  <script ng-src="{{$API_ENDPOINT + '/broker/engine.js'}}"></script>
+  <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
+
+    <!-- openlayers3 -->
+    <script src="./lib/openlayers3/build/ol.js"></script>
+
   <script src="./lib/jquery/dist/jquery.min.js"></script>
   <script src="./lib/ionic/js/ionic.bundle.js"></script>
   <script src="./lib/angular-messages/angular-messages.min.js"></script>
@@ -47,9 +53,7 @@
   <script src="./lib/dist/ng-cordova.min.js"></script>
   <script type="text/javascript" src="cordova.js"></script>
 
-  <!-- DWR -->
-  <script ng-src="{{$API_ENDPOINT + '/broker/engine.js'}}"></script>
-  <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
+
 
   <!-- Others -->
   <script src="./lib/webjars/eits-ng/1.2.2-RELEASE/eits-ng.js"></script>
@@ -60,7 +64,6 @@
   <script src="./controllers/home-controller.js"></script>
   <script src="./controllers/map-controller.js"></script>
   <script src="./controllers/intro-controller.js"></script>
-  <script ng-src="{{$API_ENDPOINT + '/broker/util.js'}}"></script>
 
 </head>
 
