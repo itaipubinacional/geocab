@@ -29,7 +29,7 @@
 
             // Called to navigate to the main app
             $scope.startApp = function () {
-                $state.go('home');
+                $state.go('map');
             };
 
             $scope.next = function () {
