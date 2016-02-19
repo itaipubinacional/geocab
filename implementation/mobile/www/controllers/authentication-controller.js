@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('AuthenticationController', function ($scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB) {
+    .controller('AuthenticationController', function ($scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading) {
 
       /*-------------------------------------------------------------------
        * 		 				 	ATTRIBUTES
@@ -75,18 +75,45 @@
           }
         });
       };
-      /**
-       *
-       */
-      $scope.loginSuccess = function () {
-        if(!localStorage.getItem('doneIntro')){
-          localStorage.setItem('doneIntro','true');
-          $state.go('intro');
-        } else {
-          $state.go('map');
-        }
-      };
+      
 
-    });
+    // This method is executed when the user press the "Sign in with Google" button
+    /**
+       *
+    */          
+    $scope.googleSignIn = function() {
+      $ionicLoading.show({
+        template: 'Logging in...'
+      });
+
+      window.plugins.googleplus.login(
+        {},
+        function (user_data) {
+          // For the purpose of this example I will store user data on local storage
+          
+          console.log(user_data);
+
+          $ionicLoading.hide();
+          $scope.loginSuccess();
+        },
+        function (msg) {
+          $ionicLoading.hide();
+        }
+      );
+    };
+
+    /**
+      *
+    */
+    $scope.loginSuccess = function () {
+      if(!localStorage.getItem('doneIntro')){
+        localStorage.setItem('doneIntro','true');
+        $state.go('intro');
+      } else {
+        $state.go('map');
+      }
+    };
+
+  });
 
 }(window.angular));

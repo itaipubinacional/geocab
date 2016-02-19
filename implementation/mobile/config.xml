@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="br.com.geocab.mobile" version="2.0.0-RELEASE" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="br.com.geocab.mobile" version="2.0.0-RELEASE" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
   <name>Geocab Mobile</name>
   <description></description>
   <content src="index.html"/>
@@ -46,4 +46,7 @@
     <splash src="resources/android/splash/drawable-port-xxhdpi-screen.png" density="port-xxhdpi"/>
     <splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
   </platform>
+  <gap:plugin name="cordova-plugin-googleplus" source="npm">
+    <param name="REVERSED_CLIENT_ID" value="856589923551-hkf4kleh4inqmevpvbul3ualklkm3tqm.apps.googleusercontent.com"/>
+  </gap:plugin>
 </widget>
