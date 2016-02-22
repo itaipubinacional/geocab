@@ -182,6 +182,8 @@
         console.log('onDragStart');
         $scope.isDragStart = true;
         $scope.defaults.interactions.dragPan = false;
+
+        $scope.listAllInternalLayerGroups();
       };
 
       $scope.onDragEnd = function (event) {
@@ -193,6 +195,8 @@
 
       $scope.toggleDrawer = function () {
         $rootScope.$broadcast('toggleDrawer');
+        $scope.isDrawerOpen = !$scope.isDrawerOpen;
+        $scope.listAllInternalLayerGroups();
       };
 
       $ionicGesture.on('drag', function (e) {
@@ -320,55 +324,62 @@
 
         console.log($scope.isNewMarker);
 
-        if ($scope.isNewMarker) {
+        if($scope.isDrawerOpen) {
 
-          $scope.isNewMarker = false;
-
-          $scope.$apply(function (scope) {
-            if (data) {
-              var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
-              scope.mouseClickMap = p[0] + ', ' + p[1];
-
-              var newMarker = {
-                name: 'Novo ponto',
-                lat: p[1],
-                lon: p[0],
-                style: custom_style,
-                projection: 'EPSG:4326'
-              };
-
-              $scope.markers.push(newMarker);
-
-              $scope.currentEntity = newMarker;
-
-            }
-          });
+          $scope.toggleDrawer();
 
         } else {
 
-          var map = data.event.map;
-          var pixel = data.event.pixel;
-          var feature = map.forEachFeatureAtPixel(pixel, function (feature, olLayer) {
-            if (angular.isDefined(feature.getProperties().marker.name)) {
-              return feature;
+          if ($scope.isNewMarker) {
+
+            $scope.isNewMarker = false;
+
+            $scope.$apply(function (scope) {
+              if (data) {
+                var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
+                scope.mouseClickMap = p[0] + ', ' + p[1];
+
+                var newMarker = {
+                  name: 'Novo ponto',
+                  lat: p[1],
+                  lon: p[0],
+                  style: custom_style,
+                  projection: 'EPSG:4326'
+                };
+
+                $scope.markers.push(newMarker);
+
+                $scope.currentEntity = newMarker;
+
+              }
+            });
+
+          } else {
+
+            var map = data.event.map;
+            var pixel = data.event.pixel;
+            var feature = map.forEachFeatureAtPixel(pixel, function (feature, olLayer) {
+              if (angular.isDefined(feature.getProperties().marker.name)) {
+                return feature;
+              } else {
+                $scope.currentEntity = {};
+              }
+            });
+            if (angular.isDefined(feature)) {
+              $scope.$broadcast('markers.click', feature, data.event);
+              return;
             } else {
               $scope.currentEntity = {};
             }
-          });
-          if (angular.isDefined(feature)) {
-            $scope.$broadcast('markers.click', feature, data.event);
-            return;
-          } else {
-            $scope.currentEntity = {};
+            $scope.$apply(function (scope) {
+              if (data) {
+                var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
+                scope.mouseClickMap = p[0] + ', ' + p[1];
+              } else {
+                scope.mouseClickVector = '';
+              }
+            });
           }
-          $scope.$apply(function (scope) {
-            if (data) {
-              var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
-              scope.mouseClickMap = p[0] + ', ' + p[1];
-            } else {
-              scope.mouseClickVector = '';
-            }
-          });
         }
 
       });
