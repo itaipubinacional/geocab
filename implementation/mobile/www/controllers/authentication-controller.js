@@ -25,7 +25,7 @@ angular.module('application')
     *                POST CONSTRUCT
     *-------------------------------------------------------------------*/
     if(localStorage.getItem('userEmail')){
-      $scope.model.user.email  = 'userEmail';
+      $scope.model.user.email  = localStorage.getItem('userEmail');
       $state.go('map');
     };
     /**
@@ -83,8 +83,9 @@ angular.module('application')
             params: {fields: 'id,name,email'}
           }).then(
             function (user) {
-              $scope.model.user.email = user.email;
-              $scope.verifyUser();
+              $state.go('home');
+              // $scope.model.user.email = user.email;
+              // $scope.verifyUser();
             },
             function (error) {
               $scope.loginFailed();
@@ -125,6 +126,8 @@ angular.module('application')
       loginService.findUserByEmail( $scope.model.user.email, {
         callback: function (result) {
           $scope.model.user = result;
+          //Deleta a criptografia do password
+          delete $scope.model.user.password;
           if (result && result.enabled) {
             $scope.loginSuccess();
           } else {
@@ -143,12 +146,8 @@ angular.module('application')
       *
     */
     $scope.loginSuccess = function () {
-      if(!localStorage.getItem('userEmail')){
-        localStorage.setItem('userEmail', $scope.model.user.email);
-        $state.go('intro');
-      } else {
-        $state.go('map');
-      }
+      localStorage.setItem('userEmail', $scope.model.user.email);
+      $state.go('intro');
     };
 
     /**
