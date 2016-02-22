@@ -23,10 +23,18 @@
       $scope.model.user.email = 'test_prognus@mailinator.com';
       $scope.model.user.password = 'admin';
 
+
       /*-------------------------------------------------------------------
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/
       /**
+       *
+       */
+
+    
+
+
+       /**
        *
        */
       $scope.loginHandler = function () {
@@ -75,12 +83,12 @@
           }
         });
       };
-      
+
 
     // This method is executed when the user press the "Sign in with Google" button
     /**
        *
-    */          
+    */
     $scope.googleSignIn = function() {
       $ionicLoading.show({
         template: 'Logging in...'
@@ -90,7 +98,7 @@
         {},
         function (user_data) {
           // For the purpose of this example I will store user data on local storage
-          
+
           console.log(user_data);
 
           $ionicLoading.hide();

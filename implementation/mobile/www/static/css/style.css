@@ -20,12 +20,19 @@ map {
   padding: 0;
 }
 
+.login-content{
+    padding: 50px;
+}
+
 .login-image-footer {
-  padding: 50px;
-  /*background-image: url(./static/images/logo.png);*/
+
   background-size: contain;
   background-repeat: no-repeat;
   background-position: bottom;
+  background-attachment: scroll;
+  background-image : url('./../images/WAVE-CAB.svg');
+
+
 }
 
 
@@ -44,4 +51,3 @@ map {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
 }
-
