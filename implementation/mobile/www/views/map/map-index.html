@@ -3,7 +3,6 @@
   <ion-side-menus>
 
     <button class="button button-icon icon ion-navicon drawer-button" ng-click="toggleDrawer()"></button>
-
     <button class="button button-icon icon ion-arrow-shrink gps-button" ng-click="getGPSPosition()"></button>
 
     <ion-side-menu-content>
@@ -19,17 +18,7 @@
 
     <!-- Left menu -->
     <drawer side="left" on-drag-end="onDragEnd(event)" on-drag-start="onDragStart(event)">
-      <!--<ion-nav-bar class="bar-stable nav-title-slide-ios7 has-tabs-top">
-        <ion-nav-buttons side="left">
-          <button class="button button-icon icon ion-navicon" ng-click="toggleDrawer()">
-          </button>
-        </ion-nav-buttons>
-      </ion-nav-bar>-->
-
       <div class="list">
-        <!--<div class="bar bar-header bar-light">
-          <h1 class="title">bar-light</h1>
-        </div>-->
         <div>
           <label class="item item-input">
             <i class="icon ion-search placeholder-icon"></i>
@@ -42,14 +31,11 @@
           </ion-checkbox>
         </ion-list>
       </div>
-
     </drawer>
-
     <ion-pull-up-footer id="pull-up" ng-if="currentEntity.lat" initial-state="minimized" default-behavior="expand"
                         on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()"
                         ng-include="'./views/map/pull-up.html'">
 
     </ion-pull-up-footer>
-
   </ion-side-menus>
 </ion-view>

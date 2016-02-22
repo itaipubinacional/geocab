@@ -34,9 +34,9 @@
       var side;
 
       // How far to drag before triggering
-      var thresholdX = 10;
+      var thresholdX = 15;
       // How far from edge before triggering
-      var edgeX = 25;
+      var edgeX = 40;
 
       var LEFT = 0;
       var RIGHT = 1;
@@ -103,8 +103,6 @@
         dragging = false;
 
         //console.log('End drag');
-
-        vm.onDragEnd({event: e});
 
         enableAnimation();
 
