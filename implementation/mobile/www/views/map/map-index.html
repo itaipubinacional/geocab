@@ -19,23 +19,30 @@
 
     <!-- Left menu -->
     <drawer side="left" on-drag-end="onDragEnd(event)" on-drag-start="onDragStart(event)">
-      <ion-nav-bar class="bar-stable nav-title-slide-ios7 has-tabs-top">
+      <!--<ion-nav-bar class="bar-stable nav-title-slide-ios7 has-tabs-top">
         <ion-nav-buttons side="left">
           <button class="button button-icon icon ion-navicon" ng-click="toggleDrawer()">
           </button>
         </ion-nav-buttons>
-      </ion-nav-bar>
+      </ion-nav-bar>-->
 
-      <ion-view title="Menu">
-        <ion-content>
+      <div class="list">
+        <!--<div class="bar bar-header bar-light">
+          <h1 class="title">bar-light</h1>
+        </div>-->
+        <div>
+          <label class="item item-input">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="text" placeholder="Search">
+          </label>
+        </div>
+        <div ng-repeat="layer in model.layers">
+          <ion-checkbox>{{layer.name}}
+            <img ng-src="{{$API_ENDPOINT}}/{{layer.icon}}">
+          </ion-checkbox>
+        </div>
+      </div>
 
-          <div class="list">
-            <ion-checkbox ng-repeat="layer in model.layers">{{layer.name}}
-              <img ng-src="{{$API_ENDPOINT}}/{{layer.icon}}">
-            </ion-checkbox>
-          </div>
-        </ion-content>
-      </ion-view>
     </drawer>
 
     <ion-pull-up-footer id="pull-up" ng-if="currentEntity.lat" initial-state="minimized" default-behavior="expand"

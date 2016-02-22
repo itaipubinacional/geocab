@@ -42,7 +42,7 @@ angular.module('ionic-pullup', [])
               function computeDefaultHeights() {
                   tabs = document.querySelector('.tabs');
                   hasBottomTabs = document.querySelector('.tabs-bottom');
-                  header = document.querySelector('.bar-header');
+                  header = 0;
                   tabsHeight = tabs ? tabs.offsetHeight : 0;
                   headerHeight = header ? header.offsetHeight : 0;
               }
@@ -210,7 +210,7 @@ angular.module('ionic-pullup', [])
           restrict: 'AE',
           require: '^ionPullUpFooter',
           link: function (scope, element, attrs, controller) {
-              var height = parseInt(attrs.height,10) || 25, width = parseInt(attrs.width, 10) || 100,
+              var height = parseInt(attrs.height, 10) || 25, width = parseInt(attrs.width, 10) || 100,
                 background =  controller.getBackground(),
                 toggleClasses = attrs.toggle;
 
