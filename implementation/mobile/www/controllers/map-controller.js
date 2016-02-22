@@ -38,10 +38,6 @@
         marker: null
       };
 
-      $scope.toggleLeftSideMenu = function () {
-        $ionicSideMenuDelegate.toggleLeft();
-      };
-
       $scope.showMarkerDetails = false;
 
       //$scope.markerDetail = {};
@@ -180,6 +176,7 @@
 
       $scope.onDragStart = function (event) {
         console.log('onDragStart');
+        $scope.isDrawerOpen = !$scope.isDrawerOpen;
         $scope.isDragStart = true;
         $scope.defaults.interactions.dragPan = false;
 
@@ -187,21 +184,21 @@
       };
 
       $scope.onDragEnd = function (event) {
-        //console.log(event);
-        $scope.isDrawerOpen = true;
+        console.log('onDragEnd');
+        $scope.isDrawerOpen = !$scope.isDrawerOpen;
         $scope.isDragStart = false;
         $scope.defaults.interactions.dragPan = true;
       };
 
       $scope.toggleDrawer = function () {
+        console.log('toggleDrawer');
+
         $rootScope.$broadcast('toggleDrawer');
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
         $scope.listAllInternalLayerGroups();
       };
 
       $ionicGesture.on('drag', function (e) {
-        //e.preventDefault();
-
         $scope.$apply(function () {
           $scope.direction = e.gesture.direction;
         });
@@ -215,7 +212,7 @@
          console.log($scope.defaults.interactions.dragPan);
          console.log($scope.direction);*/
 
-        if (data.event.pixel[0] < 25 || !$scope.defaults.interactions.dragPan || $scope.isDragStart) {
+        if (data.event.pixel[0] < 40 || !$scope.defaults.interactions.dragPan || $scope.isDragStart) {
 
           //console.log(data.event.pixel);
 

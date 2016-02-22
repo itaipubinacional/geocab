@@ -98,7 +98,7 @@ angular.module('application')
     // This method is executed when the user press the "Sign in with Google" button
     /**
        *
-    */          
+    */
     $scope.googleSignIn = function() {
       $ionicLoading.show({
         template: 'Logging in...' //TODO translate
@@ -128,7 +128,7 @@ angular.module('application')
           if (result && result.enabled) {
             $scope.loginSuccess();
           } else {
-            $scope.loginFailed();  
+            $scope.loginFailed();
           }
           $scope.$apply();
         },
