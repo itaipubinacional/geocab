@@ -8,7 +8,7 @@
    *
    */
 
-  module.constant('$API_ENDPOINT', 'http://192.168.20.136:8080/geocab');
+  module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
 
 
   /**
@@ -108,7 +108,7 @@
         StatusBar.styleDefault();
       }
     });
-    
+
     ngFB.init({appId: '801316929973059'});
 
   });

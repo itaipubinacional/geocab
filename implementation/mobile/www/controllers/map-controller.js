@@ -7,12 +7,12 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function ($rootScope, $scope, $state, $importService, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation) {
+    .controller('MapController', function ($rootScope, $scope, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation) {
 
+      
       /**
        *
        */
-
       $timeout(function () {
         $importService("accountService");
         $importService("layerGroupService");
@@ -23,6 +23,12 @@
       /*-------------------------------------------------------------------
        * 		 				 	ATTRIBUTES
        *-------------------------------------------------------------------*/
+
+      $scope.direction = '';
+      $scope.isNewMarker = false;
+      $scope.isDragStart = false;
+      $scope.isDrawerOpen = false;
+
       /**
        *
        */
@@ -30,10 +36,6 @@
         user: null,
         layers: null,
         marker: null
-      };
-
-      $scope.toggleLeftSideMenu = function () {
-        $ionicSideMenuDelegate.toggleLeft();
       };
 
       $scope.showMarkerDetails = false;
@@ -85,7 +87,7 @@
           rotate: false
         },
         events: {
-          map: ['singleclick', 'click'],
+          map: ['singleclick', 'click', 'pointerdrag'],
           //markers: [ 'change', 'change:layerGroup', 'change:size', 'change:target', 'change:view', 'click', 'dblclick', 'moveend', 'pointerdrag', 'pointermove', 'postcompose', 'postrender', 'precompose', 'propertychange', 'singleclick' ]
         }
       };
@@ -172,6 +174,66 @@
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/
 
+      $scope.onDragStart = function (event) {
+        console.log('onDragStart');
+        $scope.isDrawerOpen = !$scope.isDrawerOpen;
+        $scope.isDragStart = true;
+        $scope.defaults.interactions.dragPan = false;
+
+        $scope.listAllInternalLayerGroups();
+      };
+
+      $scope.onDragEnd = function (event) {
+        console.log('onDragEnd');
+        $scope.isDrawerOpen = !$scope.isDrawerOpen;
+        $scope.isDragStart = false;
+        $scope.defaults.interactions.dragPan = true;
+      };
+
+      $scope.toggleDrawer = function () {
+        console.log('toggleDrawer');
+
+        $rootScope.$broadcast('toggleDrawer');
+        $scope.isDrawerOpen = !$scope.isDrawerOpen;
+        $scope.listAllInternalLayerGroups();
+      };
+
+      $ionicGesture.on('drag', function (e) {
+        $scope.$apply(function () {
+          $scope.direction = e.gesture.direction;
+        });
+
+      }, $document);
+
+      $scope.$on('openlayers.map.pointerdrag', function (event, data) {
+
+        /*console.log($scope.isDragStart);
+         console.log(data.event.pixel);
+         console.log($scope.defaults.interactions.dragPan);
+         console.log($scope.direction);*/
+
+        if (data.event.pixel[0] < 40 || !$scope.defaults.interactions.dragPan || $scope.isDragStart) {
+
+          //console.log(data.event.pixel);
+
+          if ($scope.direction === 'right') {
+            data.event.preventDefault();
+
+            $scope.$apply(function () {
+              $scope.defaults.interactions.dragPan = false;
+            });
+
+          } else {
+
+            $scope.$apply(function () {
+              $scope.defaults.interactions.dragPan = true;
+            });
+          }
+
+        }
+
+      });
+
       /**
        *
        */
@@ -203,7 +265,7 @@
         layerGroupService.listAttributesByLayer(layer.id, {
           callback: function (result) {
 
-            $scope.currentEntity.layer = layer;
+            $scope.currentEntity.layer = {id: layer.id};
 
             angular.forEach(result, function(layerAttributes){
 
@@ -259,55 +321,62 @@
 
         console.log($scope.isNewMarker);
 
-        if ($scope.isNewMarker) {
+        if($scope.isDrawerOpen) {
 
-          $scope.isNewMarker = false;
-
-          $scope.$apply(function (scope) {
-            if (data) {
-              var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
-              scope.mouseClickMap = p[0] + ', ' + p[1];
-
-              var newMarker = {
-                name: 'Novo ponto',
-                lat: p[1],
-                lon: p[0],
-                style: custom_style,
-                projection: 'EPSG:4326'
-              };
-
-              $scope.markers.push(newMarker);
-
-              $scope.currentEntity = newMarker;
-
-            }
-          });
+          $scope.toggleDrawer();
 
         } else {
 
-          var map = data.event.map;
-          var pixel = data.event.pixel;
-          var feature = map.forEachFeatureAtPixel(pixel, function (feature, olLayer) {
-            if (angular.isDefined(feature.getProperties().marker.name)) {
-              return feature;
+          if ($scope.isNewMarker) {
+
+            $scope.isNewMarker = false;
+
+            $scope.$apply(function (scope) {
+              if (data) {
+                var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
+                scope.mouseClickMap = p[0] + ', ' + p[1];
+
+                var newMarker = {
+                  name: 'Novo ponto',
+                  lat: p[1],
+                  lon: p[0],
+                  style: custom_style,
+                  projection: 'EPSG:4326'
+                };
+
+                $scope.markers.push(newMarker);
+
+                $scope.currentEntity = newMarker;
+
+              }
+            });
+
+          } else {
+
+            var map = data.event.map;
+            var pixel = data.event.pixel;
+            var feature = map.forEachFeatureAtPixel(pixel, function (feature, olLayer) {
+              if (angular.isDefined(feature.getProperties().marker.name)) {
+                return feature;
+              } else {
+                $scope.currentEntity = {};
+              }
+            });
+            if (angular.isDefined(feature)) {
+              $scope.$broadcast('markers.click', feature, data.event);
+              return;
             } else {
               $scope.currentEntity = {};
             }
-          });
-          if (angular.isDefined(feature)) {
-            $scope.$broadcast('markers.click', feature, data.event);
-            return;
-          } else {
-            $scope.currentEntity = {};
+            $scope.$apply(function (scope) {
+              if (data) {
+                var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
+                scope.mouseClickMap = p[0] + ', ' + p[1];
+              } else {
+                scope.mouseClickVector = '';
+              }
+            });
           }
-          $scope.$apply(function (scope) {
-            if (data) {
-              var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
-              scope.mouseClickMap = p[0] + ', ' + p[1];
-            } else {
-              scope.mouseClickVector = '';
-            }
-          });
         }
 
       });
@@ -430,11 +499,12 @@
           }
 
           markerAttribute.attribute = attribute;
-          markerAttribute.marker = {layer: {id: $scope.currentEntity.layer.id}};
+          markerAttribute.marker = {layer: {id: $scope.currentEntity.layer.id}, marker: $scope.currentEntity.markerAttribute};
           $scope.currentEntity.markerAttribute[index] = markerAttribute;
 
         });
 
+        $scope.currentEntity.markerModeration = null;
         $scope.currentEntity.status = "SAVED";
 
         markerService.insertMarker( $scope.currentEntity, {
