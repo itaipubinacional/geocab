@@ -9,10 +9,10 @@
   angular.module('application')
     .controller('MapController', function ($rootScope, $scope, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation) {
 
+      
       /**
        *
        */
-
       $timeout(function () {
         $importService("accountService");
         $importService("layerGroupService");
