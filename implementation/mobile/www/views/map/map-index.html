@@ -36,11 +36,11 @@
             <input type="text" placeholder="Search">
           </label>
         </div>
-        <div ng-repeat="layer in model.layers">
+        <ion-list ng-repeat="layer in model.layers" class="layers">
           <ion-checkbox>{{layer.name}}
-            <img ng-src="{{$API_ENDPOINT}}/{{layer.icon}}">
+            <img class="item-checkbox-img" ng-src="{{$API_ENDPOINT}}/{{layer.icon}}">
           </ion-checkbox>
-        </div>
+        </ion-list>
       </div>
 
     </drawer>

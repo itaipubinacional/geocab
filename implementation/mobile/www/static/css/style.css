@@ -16,6 +16,15 @@ map {
 #pull-up .title.bar-positive{background-color: #387ef5}
 #pull-up .title.bar-positive div.h1{color: #fff}
 
+.layers .list{padding-top: 2px}
+.layers .item-checkbox{border-top:none;font-size: 12px;font-weight: bold;}
+.layers .item-checkbox-img {
+  vertical-align: middle;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  height: 25px;
+}
 
 /*LOGIN*/
 
