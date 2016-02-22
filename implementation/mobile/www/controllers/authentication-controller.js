@@ -9,6 +9,7 @@
 angular.module('application')
   .controller('AuthenticationController', function ($importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading) {
 
+
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
@@ -19,7 +20,14 @@ angular.module('application')
       form: null,
       user: {}
     };
-
+    
+    /*-------------------------------------------------------------------
+    *                POST CONSTRUCT
+    *-------------------------------------------------------------------*/
+    if(localStorage.getItem('userEmail')){
+      $scope.model.user.email  = 'userEmail';
+      $state.go('map');
+    };
     /**
      *
     */
@@ -27,7 +35,7 @@ angular.module('application')
       $importService("loginService");
     });
 
-    $scope.model.user.email = 'test_prognus@mailinator.com';
+    $scope.model.user.email = 'test_prognus@mailinator.com'; //TODO lembrar de retirar
     $scope.model.user.password = 'admin';
 
     /*-------------------------------------------------------------------
@@ -61,7 +69,7 @@ angular.module('application')
           }
         );
       }
-    }
+    };
 
     /**
      *
@@ -93,7 +101,7 @@ angular.module('application')
     */          
     $scope.googleSignIn = function() {
       $ionicLoading.show({
-        template: 'Logging in...'
+        template: 'Logging in...' //TODO translate
       });
 
       window.plugins.googleplus.login(
@@ -117,9 +125,9 @@ angular.module('application')
       loginService.findUserByEmail( $scope.model.user.email, {
         callback: function (result) {
           $scope.model.user = result;
-          if (result) {
+          if (result && result.enabled) {
             $scope.loginSuccess();
-          }else{
+          } else {
             $scope.loginFailed();  
           }
           $scope.$apply();
@@ -135,8 +143,8 @@ angular.module('application')
       *
     */
     $scope.loginSuccess = function () {
-      if(!localStorage.getItem('doneIntro')){
-        localStorage.setItem('doneIntro','true');
+      if(!localStorage.getItem('userEmail')){
+        localStorage.setItem('userEmail', $scope.model.user.email);
         $state.go('intro');
       } else {
         $state.go('map');
