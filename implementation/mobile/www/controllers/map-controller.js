@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function ($rootScope, $scope, $state, $importService, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation) {
+    .controller('MapController', function ($rootScope, $scope, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation) {
 
       /**
        *
@@ -23,6 +23,12 @@
       /*-------------------------------------------------------------------
        * 		 				 	ATTRIBUTES
        *-------------------------------------------------------------------*/
+
+      $scope.direction = '';
+      $scope.isNewMarker = false;
+      $scope.isDragStart = false;
+      $scope.isDrawerOpen = false;
+
       /**
        *
        */
@@ -85,7 +91,7 @@
           rotate: false
         },
         events: {
-          map: ['singleclick', 'click'],
+          map: ['singleclick', 'click', 'pointerdrag'],
           //markers: [ 'change', 'change:layerGroup', 'change:size', 'change:target', 'change:view', 'click', 'dblclick', 'moveend', 'pointerdrag', 'pointermove', 'postcompose', 'postrender', 'precompose', 'propertychange', 'singleclick' ]
         }
       };
@@ -172,6 +178,61 @@
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/
 
+      $scope.onDragStart = function (event) {
+        console.log('onDragStart');
+        $scope.isDragStart = true;
+        $scope.defaults.interactions.dragPan = false;
+      };
+
+      $scope.onDragEnd = function (event) {
+        //console.log(event);
+        $scope.isDrawerOpen = true;
+        $scope.isDragStart = false;
+        $scope.defaults.interactions.dragPan = true;
+      };
+
+      $scope.toggleDrawer = function () {
+        $rootScope.$broadcast('toggleDrawer');
+      };
+
+      $ionicGesture.on('drag', function (e) {
+        //e.preventDefault();
+
+        $scope.$apply(function () {
+          $scope.direction = e.gesture.direction;
+        });
+
+      }, $document);
+
+      $scope.$on('openlayers.map.pointerdrag', function (event, data) {
+
+        /*console.log($scope.isDragStart);
+         console.log(data.event.pixel);
+         console.log($scope.defaults.interactions.dragPan);
+         console.log($scope.direction);*/
+
+        if (data.event.pixel[0] < 25 || !$scope.defaults.interactions.dragPan || $scope.isDragStart) {
+
+          //console.log(data.event.pixel);
+
+          if ($scope.direction === 'right') {
+            data.event.preventDefault();
+
+            $scope.$apply(function () {
+              $scope.defaults.interactions.dragPan = false;
+            });
+
+          } else {
+
+            $scope.$apply(function () {
+              $scope.defaults.interactions.dragPan = true;
+            });
+          }
+
+        }
+
+      });
+
       /**
        *
        */
@@ -203,7 +264,7 @@
         layerGroupService.listAttributesByLayer(layer.id, {
           callback: function (result) {
 
-            $scope.currentEntity.layer = layer;
+            $scope.currentEntity.layer = {id: layer.id};
 
             angular.forEach(result, function(layerAttributes){
 
@@ -430,11 +491,12 @@
           }
 
           markerAttribute.attribute = attribute;
-          markerAttribute.marker = {layer: {id: $scope.currentEntity.layer.id}};
+          markerAttribute.marker = {layer: {id: $scope.currentEntity.layer.id}, marker: $scope.currentEntity.markerAttribute};
           $scope.currentEntity.markerAttribute[index] = markerAttribute;
 
         });
 
+        $scope.currentEntity.markerModeration = null;
         $scope.currentEntity.status = "SAVED";
 
         markerService.insertMarker( $scope.currentEntity, {

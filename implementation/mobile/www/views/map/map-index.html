@@ -1,20 +1,10 @@
 <ion-view view-title="Map">
 
   <ion-side-menus>
-    <!-- Center content -->
-    <ion-header-bar class="bar bar-header bar-stable nav-title-slide-ios7 has-tabs-top disable-user-behavior"
-                    align-title="center">
-      <div class="buttons buttons-left header-item"><span class="left-buttons">
-      <button class="button button-icon icon ion-navicon animate drawerToggle" drawer-toggle="" animate="true"
-              style="transform: translate3d(0px, 0px, 0px);">
-      </button>
-      <h1 class="title"></h1>
-      <button class="button" ng-click="getGPSPosition()">gps</button>
-   </span></div>
-      <div class="title title-center header-item"><span class="nav-bar-title">
-    Ionic App
-   </span></div>
-    </ion-header-bar>
+
+    <button class="button button-icon icon ion-navicon drawer-button" ng-click="toggleDrawer()"></button>
+
+    <button class="button button-icon icon ion-arrow-shrink gps-button" ng-click="getGPSPosition()"></button>
 
     <ion-side-menu-content>
       <ion-view title="Ionic App">
@@ -28,7 +18,7 @@
     </ion-side-menu-content>
 
     <!-- Left menu -->
-    <drawer side="left">
+    <drawer side="left" on-drag-end="onDragEnd(event)" on-drag-start="onDragStart(event)">
       <ion-nav-bar class="bar-stable nav-title-slide-ios7 has-tabs-top">
         <ion-nav-buttons side="left">
           <button class="button button-icon icon ion-navicon" ng-click="toggleDrawer()">
@@ -49,7 +39,8 @@
     </drawer>
 
     <ion-pull-up-footer id="pull-up" ng-if="currentEntity.lat" initial-state="minimized" default-behavior="expand"
-                        on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()" ng-include="'./views/map/pull-up.html'">
+                        on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()"
+                        ng-include="'./views/map/pull-up.html'">
 
     </ion-pull-up-footer>
 
