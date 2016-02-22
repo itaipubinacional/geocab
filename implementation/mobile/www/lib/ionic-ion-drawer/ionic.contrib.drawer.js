@@ -9,16 +9,34 @@
    */
   angular.module('ionic.contrib.drawer', ['ionic'])
 
-    .controller('drawerCtrl', ['$element', '$attrs', '$ionicGesture', '$document', function($element, $attr, $ionicGesture, $document) {
+    .controller('drawerCtrl', ['$scope', '$element', '$attrs', '$ionicGesture', '$document', function($scope, $element, $attr, $ionicGesture, $document) {
+
+      var vm = this;
+
+      vm.onOpen = vm.onOpen != undefined ? vm.onOpen : function (event) {
+      };
+
+      vm.onClose = vm.onClose != undefined ? vm.onClose : function (event) {
+      };
+
+      vm.onStartDrag = vm.onStartDrag != undefined ? vm.onStartDrag : function (event) {
+      };
+
+      vm.onDragEnd = vm.onDragEnd != undefined ? vm.onDragEnd : function (event) {
+      };
+
+      vm.openDrawer = vm.openDrawer != undefined ? vm.openDrawer : function (event) {
+      };
+
       var el = $element[0];
       var dragging = false;
       var startX, lastX, offsetX, newX;
       var side;
 
       // How far to drag before triggering
-      var thresholdX = 15;
+      var thresholdX = 10;
       // How far from edge before triggering
-      var edgeX = 40;
+      var edgeX = 25;
 
       var LEFT = 0;
       var RIGHT = 1;
@@ -53,7 +71,10 @@
         dragging = true;
         offsetX = lastX - startX;
         console.log('Starting drag');
-        console.log('Offset:', offsetX);
+
+        //vm.onTest({event: e});
+        //console.log('Offset:', offsetX);
+        vm.onDragStart({event: e});
       };
 
       var startTargetDrag = function(e) {
@@ -62,8 +83,11 @@
         dragging = true;
         isTargetDrag = true;
         offsetX = lastX - startX;
-        console.log('Starting target drag');
-        console.log('Offset:', offsetX);
+        //console.log('Starting target drag');
+
+        vm.onDragStart({event: e});
+
+        //console.log('Offset:', offsetX);
       };
 
       var doEndDrag = function(e) {
@@ -78,7 +102,10 @@
 
         dragging = false;
 
-        console.log('End drag');
+        //console.log('End drag');
+
+        vm.onDragEnd({event: e});
+
         enableAnimation();
 
         ionic.requestAnimationFrame(function() {
@@ -114,7 +141,7 @@
             }
           }
         } else {
-          console.log(lastX, offsetX, lastX - offsetX);
+          //console.log(lastX, offsetX, lastX - offsetX);
           newX = Math.min(0, (-width + (lastX - offsetX)));
           ionic.requestAnimationFrame(function() {
             el.style.transform = el.style.webkitTransform = 'translate3d(' + newX + 'px, 0, 0)';
@@ -128,7 +155,7 @@
       };
 
       side = $attr.side == 'left' ? LEFT : RIGHT;
-      console.log(side);
+      //console.log(side);
 
       $ionicGesture.on('drag', function(e) {
         doDrag(e);
@@ -138,7 +165,7 @@
       }, $document);
 
 
-      this.close = function() {
+      vm.close = function() {
         enableAnimation();
         ionic.requestAnimationFrame(function() {
           if(side === LEFT) {
@@ -149,7 +176,7 @@
         });
       };
 
-      this.open = function() {
+      vm.open = function() {
         enableAnimation();
         ionic.requestAnimationFrame(function() {
           if(side === LEFT) {
@@ -160,7 +187,7 @@
         });
       };
 
-      this.isOpen = function() {
+      vm.isOpen = function() {
         if(drawerState === 'close') {
           return false;
         } else {
@@ -168,15 +195,26 @@
         }
       };
 
-      this.setState = function(value) {
+      vm.setState = function(value) {
         drawerState = value;
       };
+
+
     }])
 
     .directive('drawer', ['$rootScope', '$ionicGesture', function($rootScope, $ionicGesture) {
       return {
-        restrict: 'E',
+        restrict: 'EA',
         controller: 'drawerCtrl',
+        scope: true,
+        bindToController: {
+          onOpen: '&',
+          onClose: '&',
+          onDragStart: '&',
+          onDragEnd: '&',
+          openDrawer: '&'
+        },
+        controllerAs: 'drawer',
         link: function($scope, $element, $attr, ctrl) {
           $element.addClass($attr.side);
           $scope.openDrawer = function() {
@@ -189,6 +227,7 @@
             ctrl.close();
             ctrl.setState('close');
           };
+
           $scope.toggleDrawer = function() {
             if(ctrl.isOpen()) {
               ctrl.close();
@@ -200,6 +239,10 @@
               return "open";
             }
           };
+
+          $scope.$on('toggleDrawer', function(){
+            $scope.toggleDrawer();
+          });
         }
       }
     }])
@@ -218,7 +261,8 @@
 
     .directive('drawerToggle', function() {
       return {
-        restrict: 'A',
+        restrict: 'EA',
+        scope: true,
         link: function($scope, $element, $attrs) {
           var el = $element[0];
           if($attrs.animate === "true") {
