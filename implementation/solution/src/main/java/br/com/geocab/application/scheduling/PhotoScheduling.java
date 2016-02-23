@@ -6,7 +6,6 @@ package br.com.geocab.application.scheduling;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.jcr.RepositoryException;
@@ -29,7 +28,6 @@ import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoRepository;
-import br.com.geocab.domain.service.DataSourceService;
 import br.com.geocab.infrastructure.jcr.MetaFileRepository;
 
 /**
@@ -44,7 +42,7 @@ public class PhotoScheduling
 	/**
 	 * Log
 	 */
-	private static final Logger LOG = Logger.getLogger(DataSourceService.class.getName());
+//	private static final Logger LOG = Logger.getLogger(DataSourceService.class.getName());
 	
 	/**
 	 * 
@@ -144,7 +142,6 @@ public class PhotoScheduling
 			}
 			catch (RepositoryException | RuntimeException e)
 			{
-				e.printStackTrace();
 				continue;
 			}
 		}	
@@ -187,7 +184,7 @@ public class PhotoScheduling
 		}
 		catch (IOException | RepositoryException e)
 		{
-			LOG.info(e.getMessage());
+//			LOG.info(e.getMessage());
 		}
 
 		return photo;

@@ -42,11 +42,6 @@
 
             $scope.model.user = result;
 
-            $ionicPopup.alert({
-              title: 'Serviço executado com sucesso',
-              template: ':D'
-            });
-
             $scope.$apply();
           },
           errorHandler: function (message, exception) {

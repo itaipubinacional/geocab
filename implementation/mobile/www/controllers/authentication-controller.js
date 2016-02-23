@@ -62,7 +62,8 @@ angular.module('application')
 
         $http.post($API_ENDPOINT + "/j_spring_security_check", $.param($scope.model.user), config)
           .success(function (data, status, headers, config) {
-            $scope.loginSuccess();
+            $state.go('home');
+            // $scope.loginSuccess();
           })
           .error(function (data, status, headers, config) {
             $scope.loginFailed();
@@ -83,7 +84,15 @@ angular.module('application')
             params: {fields: 'id,name,email'}
           }).then(
             function (user) {
-              $state.go('home');
+              $http.get($API_ENDPOINT + "/login/facebook/" +user.email + "/" + response.authResponse.accessToken)
+                .success(function (data, status, headers, config) {
+                  console.log(data);
+                  $state.go('home');
+                })
+                .error(function (data, status, headers, config) {
+                  console.log(data);
+                }
+              );
               // $scope.model.user.email = user.email;
               // $scope.verifyUser();
             },
