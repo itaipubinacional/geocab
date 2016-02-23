@@ -339,7 +339,7 @@
                   projection: 'EPSG:4326'
                 };
 
-                $scope.markers.push(newMarker);
+                $scope.newMarker = newMarker;
 
                 $scope.currentEntity = newMarker;
 
@@ -347,6 +347,13 @@
             });
 
           } else {
+
+            if($scope.newMarker.lat != '') {
+              $scope.$apply(function(){
+                $scope.currentEntity = {};
+                $scope.newMarker = {};
+              });
+            }
 
             var map = data.event.map;
             var pixel = data.event.pixel;

@@ -104,8 +104,8 @@
         //cordova.plugins.Keyboard.disableScroll(true);
       }
 
-      $cordovaStatusbar.overlaysWebView(true);
-      $cordovaStatusBar.style(2); //Black, transulcent
+      //$cordovaStatusbar.overlaysWebView(true);
+      //$cordovaStatusBar.style(2); //Black, transulcent
     });
 
     ngFB.init({appId: '801316929973059'});
