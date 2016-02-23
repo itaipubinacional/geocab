@@ -64,14 +64,23 @@
         </ion-slide-box>
 
 
-        <div class="button-bar intro-detail-footer">
+        <div class="row button-bar intro-detail-footer">
 
-          <i class="button icon-left ion-chevron-left button-clear button-dark" ng-click="previous()" ng-show="slideIndex > 0"></i>
+          <div class="col-33">
+            <i class="button icon-left ion-chevron-left button-clear button-dark" ng-click="previous()" ng-show="slideIndex > 0"></i>
+          </div>
 
-          <div style="z-index: -1"></div>
+          <div class="col-33 col-offset-33">
 
-          <i class="button icon-right ion-chevron-right button-clear button-dark" ng-click="next()" ng-show="slideIndex != 2"></i>
-          <i class="button icon-right ion-chevron-right button-clear button-dark" ng-click="startApp()" ng-show="slideIndex == 2"></i>
+            <i class="col-offset-50 button icon-right ion-chevron-right button-clear button-dark" ng-click="next()" ng-show="slideIndex != 2"></i>
+
+            <button ng-click="startApp()" class="button button-assertive" ng-show="slideIndex == 2">
+              OK, Entendi
+            </button>
+          </div>
+
+
+
 
         </div>
 

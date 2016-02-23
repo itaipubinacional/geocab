@@ -72,10 +72,10 @@ map {
 }
 
 .intro-detail-footer{
-  margin-top: -50px;
+  margin-top: -60px;
 }
 
-.intro-detail-footer > i {
+.intro-detail-footer > div {
   z-index: 10;
 }
 
