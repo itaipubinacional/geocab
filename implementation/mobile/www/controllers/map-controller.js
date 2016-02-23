@@ -46,6 +46,18 @@
 
       $scope.isNewMarker = false;
 
+      $scope.newMarkerStyle = {
+        image: {
+          icon: {
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            opacity: 1,
+            src: window.location.origin + '/static/images/default_red.png'
+          }
+        }
+      };
+
       var style = {
         image: {
           icon: {
@@ -219,11 +231,7 @@
 
         } else {
 
-          $timeout(function(){
-            $scope.layers[indexOf].visible = layer.visible;
-          });
-
-          //$scope.layers.splice(indexOf, 1);
+          $scope.layers.splice(indexOf, 1);
 
         }
 
@@ -259,8 +267,6 @@
 
         layerGroupService.listAttributesByLayer(layer.id, {
           callback: function (result) {
-
-            $scope.currentEntity.layer = {id: layer.id};
 
             angular.forEach(result, function(layerAttributes){
 
@@ -329,19 +335,17 @@
             $scope.$apply(function (scope) {
               if (data) {
                 var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
-                scope.mouseClickMap = p[0] + ', ' + p[1];
 
                 var newMarker = {
                   name: 'Novo ponto',
                   lat: p[1],
                   lon: p[0],
-                  style: custom_style,
                   projection: 'EPSG:4326'
                 };
 
-                $scope.newMarker = newMarker;
+                scope.newMarker = newMarker;
 
-                $scope.currentEntity = newMarker;
+                scope.currentEntity = newMarker;
 
               }
             });
@@ -423,6 +427,12 @@
         $scope.listAllInternalLayerGroups();
 
         $scope.showMarkerDetails = true;
+
+        if(!$scope.currentEntity.layer) {
+          $timeout(function(){
+            $scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
+          }, 500);
+        }
         $scope.$apply();
       };
 

@@ -11,14 +11,14 @@
         <ion-content scroll="false">
           <openlayers on-hold="onHold($event)" ol-center="center" width="100%" height="100%" ol-defaults="defaults">
 
-            <ol-group ng-repeat="layer in layers | filter:{visible:true}">
+            <ol-group ng-repeat="layer in layers">
               <ol-marker ol-marker-properties="marker" ng-repeat="marker in layer.markers"
-                         lat=marker.lat lon=marker.lon>
+                         lat="marker.lat" lon="marker.lon">
               </ol-marker>
             </ol-group>
             <!--LAYERS-->
 
-            <ol-marker ol-marker-properties="newMarker" lat=newMarker.lat lon=newMarker.lon></ol-marker>
+            <ol-marker ol-style="newMarkerStyle" ol-marker-properties="newMarker" lat="newMarker.lat" lon="newMarker.lon"></ol-marker>
 
             <!--<ol-marker ng-repeat="marker in markers" ol-marker-properties="marker" lat="marker.lat"
                        lon="marker.lon"></ol-marker>-->
