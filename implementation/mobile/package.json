@@ -22,7 +22,8 @@
     "cordova-plugin-keyboard",
     "cordova-plugin-geolocation",
     "org.apache.cordova.inappbrowser",
-    "cordova-plugin-googleplus"
+    "cordova-plugin-googleplus",
+    "org.apache.cordova.statusbar"
   ],
   "cordovaPlatforms": [
     "ios"

@@ -65,5 +65,22 @@
         "variables": {
             "REVERSED_CLIENT_ID": "856589923551-hkf4kleh4inqmevpvbul3ualklkm3tqm.apps.googleusercontent.com"
         }
+    },
+    "cordova-plugin-statusbar": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-statusbar"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "net.ekuwang.cordova.plugin.statusbar": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ekuwang/cordova-plugin-statusbar.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

@@ -33,6 +33,12 @@
         },
         "cordova-plugin-googleplus": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "net.ekuwang.cordova.plugin.statusbar": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
     "dependent_plugins": {}

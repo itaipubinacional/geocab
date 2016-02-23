@@ -7,9 +7,9 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function ($rootScope, $scope, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation) {
+    .controller('MapController', function ($rootScope, $scope, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter) {
 
-      
+
       /**
        *
        */
@@ -28,31 +28,23 @@
       $scope.isNewMarker = false;
       $scope.isDragStart = false;
       $scope.isDrawerOpen = false;
+      $scope.allInternalLayerGroups = [];
+      $scope.layers = [];
+      $scope.newMarker = {};
 
       /**
        *
        */
       $scope.model = {
         user: null,
-        layers: null,
         marker: null
       };
 
       $scope.showMarkerDetails = false;
 
-      //$scope.markerDetail = {};
-
       $scope.currentEntity = {};
 
       $scope.isNewMarker = false;
-
-      $scope.layers = {
-        name: 'OpenStreetMap',
-        active: true,
-        source: {
-          type: 'OSM'
-        }
-      };
 
       var style = {
         image: {
@@ -60,7 +52,7 @@
             anchor: [0.5, 1],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
-            opacity: 0.90,
+            opacity: 1,
             src: 'http://openlayers.org/en/v3.7.0/examples/data/icon.png'
           }
         }
@@ -72,7 +64,7 @@
             anchor: [0.5, 1],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
-            opacity: 0.90,
+            opacity: 1,
             src: 'http://tombatossals.github.io/angular-openlayers-directive/examples/images/map-marker.png'
           }
         }
@@ -87,8 +79,7 @@
           rotate: false
         },
         events: {
-          map: ['singleclick', 'click', 'pointerdrag'],
-          //markers: [ 'change', 'change:layerGroup', 'change:size', 'change:target', 'change:view', 'click', 'dblclick', 'moveend', 'pointerdrag', 'pointermove', 'postcompose', 'postrender', 'precompose', 'propertychange', 'singleclick' ]
+          map: ['singleclick', 'pointerdrag']
         }
       };
 
@@ -100,76 +91,6 @@
         minZoom: 3
       };
 
-      $scope.markers = [
-        {
-          id: 2,
-          name: 'London',
-          lat: -25.290638,
-          lon: -54.062496,
-          projection: 'EPSG:4326'
-        },
-        {
-          id: 1,
-          name: 'Bath',
-          lat: -25.181322,
-          lon: -54.271236,
-          style: style,
-          projection: 'EPSG:4326'
-          /*label: {
-           message: 'Finisterre',
-           show: false,
-           showOnMouseOver: true
-           }*/
-        },
-        {
-          id: 3,
-          name: 'Canterbury',
-          lat: -24.960028,
-          lon: -54.299608,
-          style: custom_style,
-          projection: 'EPSG:4326'
-          /*label: {
-           message: 'Santiago de Compostela',
-           show: false,
-           showOnMouseOver: true
-           }*/
-        }
-      ];
-
-      $scope.mouseclickposition = {};
-
-
-      /*-------------------------------------------------------------------
-       * 		 				  	POST CONSTRUCT
-       *-------------------------------------------------------------------*/
-      /**
-       *
-       */
-      $scope.findUserById = function () {
-
-        accountService.findUserById(1, {
-          callback: function (result) {
-
-            $scope.model.user = result;
-
-            $ionicPopup.alert({
-              title: 'Serviço executado com sucesso',
-              template: ':D'
-            });
-
-            $scope.$apply();
-          },
-          errorHandler: function (message, exception) {
-            $ionicPopup.alert({
-              title: 'Opss...',
-              template: message
-            });
-
-            $scope.$apply();
-          }
-        });
-
-      };
       /*-------------------------------------------------------------------
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/
@@ -194,8 +115,12 @@
         console.log('toggleDrawer');
 
         $rootScope.$broadcast('toggleDrawer');
+
+        if(!$scope.isDrawerOpen)
+          $scope.listAllInternalLayerGroups();
+
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
-        $scope.listAllInternalLayerGroups();
+
       };
 
       $ionicGesture.on('drag', function (e) {
@@ -234,6 +159,73 @@
 
       });
 
+      $scope.toggleLayer = function (layer) {
+
+        var targetLayer = $filter('filter')($scope.layers, {id: layer.id})[0];
+
+        if(layer.active && $filter('filter')($scope.layers, {id: layer.id}).length == 0) {
+          var addLayer = {id: layer.id, name: layer.name, active: true, markers: []};
+
+          markerService.listMarkerByLayer(layer.id, {
+            callback: function (result) {
+
+              var iconPath = '/static/images/marker.png';
+
+              if (result.length > 0) {
+                iconPath = '/' + result[0].layer.icon
+              }
+
+              var iconStyle = {
+                image: {
+                  icon: {
+                    anchor: [0.5, 1],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    src: $rootScope.$API_ENDPOINT + iconPath
+                  }
+                }
+              };
+
+              angular.forEach(result, function (marker, index) {
+
+                var latlon = marker.location.coordinateString.match(/\((.*)\s(.*)\)/);
+                var coordinates = ol.proj.transform([latlon[1], latlon[2]], 'EPSG:3857', 'EPSG:4326');
+
+                var newMarker = {
+                  layer: layer,
+                  id: layer.id,
+                  lat: coordinates[1],
+                  lon: coordinates[0],
+                  style: iconStyle,
+                  projection: 'EPSG:4326'
+                };
+
+                addLayer.markers.push(newMarker);
+
+                //console.log(newMarker);
+                //$scope.internalLayers.push({"layer": layer, "id": layer.id, "feature": iconFeature, "extent": source.getExtent()});
+
+              });
+
+              $scope.layers.push(addLayer);
+
+              $scope.$apply();
+
+            },
+            errorHandler: function (message, exception) {
+              $scope.message = {type: "error", text: message};
+              $scope.$apply();
+            }
+          });
+
+        } else {
+
+          targetLayer.active = layer.active;
+
+        }
+
+      };
+
       /**
        *
        */
@@ -241,10 +233,11 @@
         layerGroupService.listAllInternalLayerGroups({
           callback: function (result) {
 
-            if(!$scope.currentEntity.layer)
-              $scope.model.layers = result;
+            $scope.$apply(function(){
+              if(!$scope.currentEntity.layer)
+                $scope.allInternalLayerGroups = result;
+            });
 
-            $scope.$apply();
           },
           errorHandler: function (message, exception) {
             $ionicPopup.alert({
