@@ -29,8 +29,8 @@ import br.com.geocab.domain.repository.account.IUserRepository;
  * @since 13/05/2013
  * @version 1.0
  * @category
- */
 @Controller
+ */
 public class AuthenticationController
 {
 	/*-------------------------------------------------------------------
@@ -87,7 +87,7 @@ public class AuthenticationController
 	@RequestMapping(value="/login/facebook/{userName}/{token}", method = RequestMethod.GET)
 	public @ResponseBody StringBuffer loginFacebook(HttpServletRequest request, @PathVariable String userName, @PathVariable String token)
 	{
-		return new StringBuffer(new NormalAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
+		return new StringBuffer(new FacebookAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
 	}
 	
 	/**
