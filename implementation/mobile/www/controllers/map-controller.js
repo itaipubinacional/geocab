@@ -116,8 +116,7 @@
 
         $rootScope.$broadcast('toggleDrawer');
 
-        if(!$scope.isDrawerOpen)
-          $scope.listAllInternalLayerGroups();
+        $scope.listAllInternalLayerGroups();
 
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
 
@@ -161,10 +160,10 @@
 
       $scope.toggleLayer = function (layer) {
 
-        var targetLayer = $filter('filter')($scope.layers, {id: layer.id})[0];
+        var indexOf = $scope.layers.indexOf($filter('filter')($scope.layers, {id: layer.id})[0]);
 
-        if(layer.active && $filter('filter')($scope.layers, {id: layer.id}).length == 0) {
-          var addLayer = {id: layer.id, name: layer.name, active: true, markers: []};
+        if($filter('filter')($scope.layers, {id: layer.id}).length == 0) {
+          var addLayer = {id: layer.id, name: layer.name, visible: true, markers: []};
 
           markerService.listMarkerByLayer(layer.id, {
             callback: function (result) {
@@ -220,7 +219,11 @@
 
         } else {
 
-          targetLayer.active = layer.active;
+          $timeout(function(){
+            $scope.layers[indexOf].visible = layer.visible;
+          });
+
+          //$scope.layers.splice(indexOf, 1);
 
         }
 
@@ -230,24 +233,23 @@
        *
        */
       $scope.listAllInternalLayerGroups = function () {
-        layerGroupService.listAllInternalLayerGroups({
-          callback: function (result) {
 
-            $scope.$apply(function(){
-              if(!$scope.currentEntity.layer)
-                $scope.allInternalLayerGroups = result;
-            });
+        if($scope.allInternalLayerGroups.length == 0) {
+          layerGroupService.listAllInternalLayerGroups({
+            callback: function (result) {
+              $scope.allInternalLayerGroups = result;
+              $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+              $ionicPopup.alert({
+                title: 'Opss...',
+                template: message
+              });
 
-          },
-          errorHandler: function (message, exception) {
-            $ionicPopup.alert({
-              title: 'Opss...',
-              template: message
-            });
-
-            $scope.$apply();
-          }
-        });
+              $scope.$apply();
+            }
+          });
+        }
       };
 
       /**
@@ -516,7 +518,7 @@
 
       /**
       * Prepara o estado, retira o password criptografado do usuário
-      */ 
+      */
       $scope.logout = function(){
         localStorage.removeItem('userEmail');
         $state.go('authentication.login');

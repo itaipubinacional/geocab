@@ -10,11 +10,11 @@
         <ion-content scroll="false">
           <openlayers on-hold="onHold($event)" ol-center="center" width="100%" height="100%" ol-defaults="defaults">
 
-            <ol-layer ng-repeat="layer in layers | filter:{active:true}">
+            <ol-group ng-repeat="layer in layers | filter:{visible:true}">
               <ol-marker ol-marker-properties="marker" ng-repeat="marker in layer.markers"
                          lat=marker.lat lon=marker.lon>
               </ol-marker>
-            </ol-layer>
+            </ol-group>
             <!--LAYERS-->
 
             <ol-marker ol-marker-properties="newMarker" lat=newMarker.lat lon=newMarker.lon></ol-marker>
@@ -37,7 +37,7 @@
           </label>
         </div>
         <ion-list ng-repeat="layer in allInternalLayerGroups | filter:search" class="layers">
-          <ion-checkbox ng-model="layer.active" ng-click="toggleLayer(layer)">{{layer.name}}
+          <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{layer.name}}
             <img class="item-checkbox-img" ng-src="{{$API_ENDPOINT}}/{{layer.icon}}">
           </ion-checkbox>
         </ion-list>
