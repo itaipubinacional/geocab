@@ -47,6 +47,11 @@ map {
 
 }
 
+.login-button-face {
+  background: #3b5998;
+  color: white;
+}
+
 
 /*SLIDE INTRO*/
 .intro-image{
