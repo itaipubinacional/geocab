@@ -9,6 +9,7 @@
 angular.module('application')
   .controller('AuthenticationController', function ($importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading) {
 
+
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
@@ -19,7 +20,14 @@ angular.module('application')
       form: null,
       user: {}
     };
-
+    
+    /*-------------------------------------------------------------------
+    *                POST CONSTRUCT
+    *-------------------------------------------------------------------*/
+    if(localStorage.getItem('userEmail')){
+      $scope.model.user.email  = localStorage.getItem('userEmail');
+      $state.go('map');
+    };
     /**
      *
     */
@@ -27,7 +35,7 @@ angular.module('application')
       $importService("loginService");
     });
 
-    $scope.model.user.email = 'test_prognus@mailinator.com';
+    $scope.model.user.email = 'test_prognus@mailinator.com'; //TODO lembrar de retirar
     $scope.model.user.password = 'admin';
 
     /*-------------------------------------------------------------------
@@ -61,7 +69,7 @@ angular.module('application')
           }
         );
       }
-    }
+    };
 
     /**
      *
@@ -75,8 +83,9 @@ angular.module('application')
             params: {fields: 'id,name,email'}
           }).then(
             function (user) {
-              $scope.model.user.email = user.email;
-              $scope.verifyUser();
+              $state.go('home');
+              // $scope.model.user.email = user.email;
+              // $scope.verifyUser();
             },
             function (error) {
               $scope.loginFailed();
@@ -90,10 +99,10 @@ angular.module('application')
     // This method is executed when the user press the "Sign in with Google" button
     /**
        *
-    */          
+    */
     $scope.googleSignIn = function() {
       $ionicLoading.show({
-        template: 'Logging in...'
+        template: 'Logging in...' //TODO translate
       });
 
       window.plugins.googleplus.login(
@@ -117,10 +126,12 @@ angular.module('application')
       loginService.findUserByEmail( $scope.model.user.email, {
         callback: function (result) {
           $scope.model.user = result;
-          if (result) {
+          //Deleta a criptografia do password
+          delete $scope.model.user.password;
+          if (result && result.enabled) {
             $scope.loginSuccess();
-          }else{
-            $scope.loginFailed();  
+          } else {
+            $scope.loginFailed();
           }
           $scope.$apply();
         },
@@ -135,12 +146,8 @@ angular.module('application')
       *
     */
     $scope.loginSuccess = function () {
-      if(!localStorage.getItem('doneIntro')){
-        localStorage.setItem('doneIntro','true');
-        $state.go('intro');
-      } else {
-        $state.go('map');
-      }
+      localStorage.setItem('userEmail', $scope.model.user.email);
+      $state.go('intro');
     };
 
     /**

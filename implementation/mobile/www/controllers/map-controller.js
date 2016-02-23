@@ -512,7 +512,15 @@
             $scope.$apply();
           }
         });
-      }
+      };
+
+      /**
+      * Prepara o estado, retira o password criptografado do usuário
+      */ 
+      $scope.logout = function(){
+        localStorage.removeItem('userEmail');
+        $state.go('authentication.login');
+      };
 
     });
 

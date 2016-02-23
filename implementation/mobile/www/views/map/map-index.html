@@ -41,6 +41,11 @@
             <img class="item-checkbox-img" ng-src="{{$API_ENDPOINT}}/{{layer.icon}}">
           </ion-checkbox>
         </ion-list>
+        <ion-list>
+          <button class="button button-positive" ng-click="logout()">
+            Logout
+          </button>
+        </ion-list>
       </div>
     </drawer>
     <ion-pull-up-footer id="pull-up" ng-if="currentEntity.lat" initial-state="minimized" default-behavior="expand"

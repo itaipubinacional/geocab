@@ -1,98 +1,89 @@
 <!DOCTYPE html>
 <ion-view view-title="">
 
-    <ion-nav-bar class="bar-light">
-        <ion-nav-buttons side="left">
-            <button class="button button-positive button-clear no-animation"
-                    ng-click="startApp()" ng-show="!slideIndex">
-                Skip Intro
-            </button>
-            <button class="button button-positive button-clear no-animation"
-                    ng-click="previous()" ng-show="slideIndex > 0">
-                Previous Slide
-            </button>
-        </ion-nav-buttons>
-        <ion-nav-buttons side="right">
-            <button class="button button-positive button-clear no-animation"
-                    ng-click="next()" ng-show="slideIndex != 4">
-                Next
-            </button>
-            <button class="button button-positive button-clear no-animation"
-                    ng-click="startApp()" ng-show="slideIndex == 4">
-                Start using MyApp
-            </button>
-        </ion-nav-buttons>
-    </ion-nav-bar>
-
-
     <ion-content>
+
         <ion-slide-box on-slide-changed="slideChanged(index)" pager-click="navSlide(index)">
+            <!-- SLIDE 1 -->
             <ion-slide>
 
-                <!--CONTEUDO DO SLIDE 1 -->
+              <div class="intro-image">
+                <img src="/static/images/intro-1.png">
+              </div>
 
-                <h1>Thank you for choosing the GEOCAB MOBILE</h1>
-                <div id="logo">
-                    <img src="http://code.ionicframework.com/assets/img/app_icon.png">
-                </div>
+              <div class="intro-detail">
+                <p>
+                  Thank you for choosing the GEOCAB
+                </p>
+                <p>
+                    We've worked hard to make you happy
+                </p>
+                <p>
+                    But if you are angry, too bad.
+                </p>
+
+              </div>
+
+            </ion-slide>
+
+            <ion-slide>
+              <!-- SLIDE 2 -->
+              <div class="intro-image">
+                <img src="/static/images/intro-2.png">
+              </div>
+
+              <div class="intro-detail">
+
                 <p>
                     We've worked super hard to make you happy.
                 </p>
                 <p>
                     But if you are angry, too bad.
                 </p>
+              </div>
             </ion-slide>
+
             <ion-slide>
+              <!-- SLIDE 1 -->
+              <div class="intro-image">
+                <img src="/static/images/intro-3.png">
+              </div>
 
-                <!--CONTEUDO DO SLIDE 2 -->
-
-                <h3>Using Awesome</h3>
-
-                <div id="list">
-                    <h5>Just three steps:</h5>
-                    <ol>
-                        <li>Be awesome</li>
-                        <li>Stay awesome</li>
-                        <li>There is no step 3</li>
-                    </ol>
-                </div>
-            </ion-slide>
-            <ion-slide>
-
-                <!--CONTEUDO DO SLIDE 3 -->
-
-
-                <h3>Any questions?</h3>
+              <div class="intro-detail">
+                <p>Thank you for choosing the GEOCAB MOBILE</p>
                 <p>
-                    Too bad!1
+                    We've worked super hard to make you happy.
                 </p>
-
-
-            </ion-slide>
-            <ion-slide>
-
-                <!--CONTEUDO DO SLIDE 3 -->
-
-
-                <h3>Any questions?</h3>
                 <p>
-                    Too bad!ttttttttttt
+                    But if you are angry, too bad.
                 </p>
-
+              </div>
 
             </ion-slide>
-            <ion-slide>
 
-                <!--CONTEUDO DO SLIDE 3 -->
-
-
-                <h3>Any questions?</h3>
-                <p>
-                    Too bad!xxxxxxxxxx
-                </p>
-
-
-            </ion-slide>
         </ion-slide-box>
+
+
+        <div class="row button-bar intro-detail-footer">
+
+          <div class="col-33">
+            <i class="button icon-left ion-chevron-left button-clear button-dark" ng-click="previous()" ng-show="slideIndex > 0"></i>
+          </div>
+
+          <div class="col-33 col-offset-33">
+
+            <i class="col-offset-50 button icon-right ion-chevron-right button-clear button-dark" ng-click="next()" ng-show="slideIndex != 2"></i>
+
+            <button ng-click="startApp()" class="button button-assertive" ng-show="slideIndex == 2">
+              OK, Entendi
+            </button>
+          </div>
+
+
+
+
+        </div>
+
+
     </ion-content>
 </ion-view>
