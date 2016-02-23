@@ -46,6 +46,18 @@
 
       $scope.isNewMarker = false;
 
+      $scope.newMarkerStyle = {
+        image: {
+          icon: {
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            opacity: 1,
+            src: window.location.origin + '/static/images/default_red.png'
+          }
+        }
+      };
+
       var style = {
         image: {
           icon: {
@@ -329,22 +341,23 @@
             $scope.$apply(function (scope) {
               if (data) {
                 var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
-                scope.mouseClickMap = p[0] + ', ' + p[1];
 
                 var newMarker = {
                   name: 'Novo ponto',
                   lat: p[1],
                   lon: p[0],
-                  style: custom_style,
+                  style: scope.newMarkerStyle,
                   projection: 'EPSG:4326'
                 };
 
-                $scope.newMarker = newMarker;
+                scope.newMarker = newMarker;
 
-                $scope.currentEntity = newMarker;
+                scope.currentEntity = newMarker;
 
               }
             });
+
+            $scope.newMarker.style = $scope.newMarkerStyle;
 
           } else {
 
