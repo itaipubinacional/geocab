@@ -231,11 +231,7 @@
 
         } else {
 
-          $timeout(function(){
-            $scope.layers[indexOf].visible = layer.visible;
-          });
-
-          //$scope.layers.splice(indexOf, 1);
+          $scope.layers.splice(indexOf, 1);
 
         }
 
@@ -271,8 +267,6 @@
 
         layerGroupService.listAttributesByLayer(layer.id, {
           callback: function (result) {
-
-            $scope.currentEntity.layer = {id: layer.id};
 
             angular.forEach(result, function(layerAttributes){
 
@@ -346,7 +340,6 @@
                   name: 'Novo ponto',
                   lat: p[1],
                   lon: p[0],
-                  style: scope.newMarkerStyle,
                   projection: 'EPSG:4326'
                 };
 
@@ -356,8 +349,6 @@
 
               }
             });
-
-            $scope.newMarker.style = $scope.newMarkerStyle;
 
           } else {
 
@@ -436,6 +427,12 @@
         $scope.listAllInternalLayerGroups();
 
         $scope.showMarkerDetails = true;
+
+        if(!$scope.currentEntity.layer) {
+          $timeout(function(){
+            $scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
+          }, 500);
+        }
         $scope.$apply();
       };
 
