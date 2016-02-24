@@ -31,6 +31,9 @@
       $scope.allInternalLayerGroups = [];
       $scope.layers = [];
       $scope.newMarker = {};
+      $scope.dragPan = true;
+
+      $scope.pullUpHandle = angular.element(document.getElementsByTagName('ion-pull-up-handle'));
 
       $scope.pullUpHeight = 90;
 
@@ -51,7 +54,7 @@
       $scope.map = new ol.Map({
         controls: [],
         interactions: ol.interaction.defaults({
-          dragPan: true,
+          dragPan: $scope.dragPan,
           mouseWheelZoom: true
         }),
         target: 'map',
@@ -79,11 +82,18 @@
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/
 
+       $ionicGesture.on('tap', function(e){
+         $scope.$apply(function () {
+           $log.debug('tap');
+         });
+
+       }, $document);
+
       $scope.onDragStart = function (event) {
         $log.debug('onDragStart');
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
         $scope.isDragStart = true;
-        $scope.defaults.interactions.dragPan = false;
+        $scope.dragPan = false;
 
         $scope.listAllInternalLayerGroups();
       };
@@ -92,7 +102,7 @@
         $log.debug('onDragEnd');
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
         $scope.isDragStart = false;
-        $scope.defaults.interactions.dragPan = true;
+        $scope.dragPan = true;
       };
 
       $scope.toggleDrawer = function () {
@@ -101,6 +111,7 @@
         $rootScope.$broadcast('toggleDrawer');
         $scope.listAllInternalLayerGroups();
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
+        $scope.isDragStart = false;
 
       };
 
@@ -161,28 +172,26 @@
         return result;
       };
 
-      $scope.$on('openlayers.map.pointerdrag', function (event, data) {
+      $scope.map.on('pointerdrag', function (event, data) {
 
         /*$log.debug($scope.isDragStart);
          $log.debug(data.event.pixel);
          $log.debug($scope.defaults.interactions.dragPan);
          $log.debug($scope.direction);*/
 
-        if (data.event.pixel[0] < 40 || !$scope.defaults.interactions.dragPan || $scope.isDragStart) {
-
-          //$log.debug(data.event.pixel);
+        if (event.pixel[0] < 40 || $scope.isDragStart && $scope.isDragStart) {
 
           if ($scope.direction === 'right') {
-            data.event.preventDefault();
+            event.preventDefault();
 
             $scope.$apply(function () {
-              $scope.defaults.interactions.dragPan = false;
+              $scope.dragPan = false;
             });
 
           } else {
 
             $scope.$apply(function () {
-              $scope.defaults.interactions.dragPan = true;
+              $scope.dragPan = true;
             });
           }
         }
@@ -450,6 +459,7 @@
 
       $scope.footerMinimize = function () {
         $log.debug('Footer minimize');
+        $log.debug($scope.pullUpHeight);
         $scope.showMarkerDetails = false;
       };
 
@@ -461,8 +471,11 @@
 
       $scope.onHold = function (evt) {
 
-        $scope.pullUpHeight = 90;
         $scope.currentEntity = {};
+
+        angular.element(document.getElementsByTagName('ion-pull-up-handle')).height('90px');
+        angular.element(document.getElementsByTagName('ion-pull-up-handle')).css('top', '-90px');
+
         $scope.clearNewMarker();
 
         $log.debug('onHold');
