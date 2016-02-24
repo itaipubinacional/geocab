@@ -75,18 +75,21 @@ angular.module('application')
      *
      */
     $scope.fbLogin = function () {
+      //Realiza a autenticação
       ngFB.login({scope: 'email,public_profile,user_friends'})
       .then(function (response) {
         if (response.status === 'connected') {
+          //Requisita da api do facebook as informações do usuário
           ngFB.api({
             path: '/me',
             params: {fields: 'id,name,email'}
-          }).then(
-            function (user) {
+          }).then(function (user) {
+              //Valida o access token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
               $http.get($API_ENDPOINT + "/login/facebook/" +user.email + "/" + response.authResponse.accessToken)
                 .success(function (data, status, headers, config) {
                   $scope.model.user.email = user.email;
-                  $scope.verifyUser();
+                  $state.go('home');
+                  // $scope.verifyUser();
                 })
                 .error(function (data, status, headers, config) {
                   console.log(data);
