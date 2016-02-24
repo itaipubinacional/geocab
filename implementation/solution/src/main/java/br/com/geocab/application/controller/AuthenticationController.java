@@ -98,7 +98,7 @@ public class AuthenticationController
 	 */
 	@RequestMapping(value="/login/googleplus/{userName}/{token}", method = RequestMethod.GET)
 	public @ResponseBody StringBuffer loginGooglePlus(HttpServletRequest request, @PathVariable String userName, @PathVariable String token)
-	{
+	{	
 		return new StringBuffer(new GooglePlusAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
 	}
 	

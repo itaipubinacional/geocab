@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -119,6 +120,8 @@ public abstract class SocialAuthentication implements Authenticate
 	@Override
 	public String login(HttpServletRequest request)
 	{
+		Assert.isTrue(user.isEnabled(), "User is not enabled");
+		
 		validateToken();
 		
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());

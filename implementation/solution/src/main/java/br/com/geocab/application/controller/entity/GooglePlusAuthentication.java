@@ -29,7 +29,7 @@ public class GooglePlusAuthentication  extends SocialAuthentication implements A
 	@Override
 	public void validateToken()
 	{
-		// TODO REST TEMPLATE PARA O GOOGLE AQUI	
+		restTemplate.getForObject("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token="+token, String.class);
 	}
 	
 }
