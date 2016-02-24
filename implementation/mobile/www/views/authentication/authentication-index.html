@@ -13,37 +13,37 @@
             <div class="list">
 
                 <label class="item item-input item-floating-label login-label">
-                    <span class="input-label">{{ 'map.Field-required' | translate }}</span>
-                    <input type="text" placeholder="Login" ng-model="model.user.email">
+                    <span class="input-label">{{ 'authentication.Email' | translate }}</span>
+                    <input type="text" placeholder="{{ 'authentication.Email' | translate }}" ng-model="model.user.email">
                 </label>
                 <ng-messages class="padding" for="model.form.email.$touched && model.form.email.$error" role="alert">
                     <ng-message when="required">É necessário informar seu e-mail.</ng-message>
-                    <ng-message when="email">O e-mail digitado está inválido.</ng-message>
+                    <ng-message when="email">{{'admin.users.The-email-is-not-valid' | translate}}</ng-message>
                 </ng-messages>
 
 
                 <label class="item item-input item-floating-label login-label">
-                    <span class="input-label">Senha</span>
-                    <input type="password" placeholder="Senha" ng-model="model.user.password">
+                    <span class="input-label">{{'authentication.Password' | translate}}</span>
+                    <input type="password" placeholder="{{'authentication.Password' | translate}}" ng-model="model.user.password">
                 </label>
                 <ng-messages class="padding" for="model.form.password.$touched && model.form.password.$error" role="alert">
-                    <ng-message when="required">É necessário informar sua senha.</ng-message>
+                    <ng-message when="required">{{'admin.datasource.Enter-your-password' | translate}}.</ng-message>
                 </ng-messages>
 
             </div>
 
             <div>
                 <button nav-clear class="button button-block button-positive" ng-click="loginHandler()">
-                    <b>ENTRAR</b>
+                    <b>{{'authentication.Enter' | translate}}</b>
                 </button>
 
                 <div style="margin-top: 50px"></div>
 
                 <button nav-clear class="button button-block button-small button-assertive" ng-click="googleSignIn()">
-                    <b>ACESSAR COM O GOOGLE +</b>
+                  <b>{{'authentication.Login-with-Google-+' | translate}}</b>
                 </button>
                 <button nav-clear class="button button-block button-small login-button-face" ng-click="fbLogin()">
-                    <b>ACESSAR COM O FACEBOOK</b>
+                    <b>{{'authentication.Login-with-Facebook' | translate}}</b>
                 </button>
             </div>
 

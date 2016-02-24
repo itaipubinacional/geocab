@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function ($rootScope, $scope, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log) {
+    .controller('MapController', function ($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log) {
 
 
       /**

@@ -33,7 +33,7 @@
         <div>
           <label class="item item-input">
             <i class="icon ion-search placeholder-icon"></i>
-            <input type="text" placeholder="Search" ng-model="search">
+            <input type="text" placeholder="{{'Search' | translate}}" ng-model="search">
           </label>
         </div>
         <ion-list ng-repeat="layer in allInternalLayerGroups | filter:search" class="layers">
@@ -43,7 +43,7 @@
         </ion-list>
         <ion-list>
           <button class="button button-positive" ng-click="logout()">
-            Logout
+            {{'Logout' | translate}}
           </button>
         </ion-list>
       </div>
