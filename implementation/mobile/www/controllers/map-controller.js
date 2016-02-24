@@ -35,6 +35,32 @@
       $scope.pullUpHeight = 90;
 
       /**
+       * Setting the background layer - OSM
+       */
+      $scope.rasterOSM = new ol.layer.Tile({
+        source: new ol.source.OSM()
+        //source: new ol.source.MapQuest({layer: 'osm'})
+      });
+
+      $scope.view = new ol.View({
+        center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 9,
+        minZoom: 3
+      });
+
+      $scope.map = new ol.Map({
+        interactions: ol.interaction.defaults({
+          dragPan: true,
+          mouseWheelZoom: true
+        }),
+        target: 'map',
+        view: $scope.view
+      });
+
+      $scope.map.addLayer($scope.rasterOSM);
+      $scope.rasterOSM.setVisible(true);
+
+      /**
        *
        */
       $scope.model = {
@@ -182,7 +208,7 @@
           markerService.listMarkerByLayer(layer.id, {
             callback: function (result) {
 
-              var iconPath = '/static/images/marker.png';
+              /*var iconPath = '/static/images/marker.png';
 
               if (result.length > 0) {
                 iconPath = '/' + result[0].layer.icon
@@ -210,23 +236,44 @@
                 marker.projection = 'EPSG:4326';
                 marker.layer = layer;
 
-                /*var newMarker = {
-                  layer: layer,
-                  id: layer.id,
-                  lat: coordinates[1],
-                  lon: coordinates[0],
-                  style: iconStyle,
-                  projection: 'EPSG:4326'
-                };*/
-
                 addLayer.markers.push(marker);
-
-                //$log.debug(newMarker);
-                //$scope.internalLayers.push({"layer": layer, "id": layer.id, "feature": iconFeature, "extent": source.getExtent()});
 
               });
 
-              $scope.layers.push(addLayer);
+              $scope.layers.push(addLayer);*/
+
+              var iconPath = "static/images/marker.png";
+
+              if (result.length > 0) {
+                iconPath = $rootScope.$API_ENDPOINT + '/'  + result[0].layer.icon
+              }
+
+              var iconStyle = new ol.style.Style({
+                image: new ol.style.Icon(({
+                  anchor: [0.5, 1],
+                  anchorXUnits: 'fraction',
+                  anchorYUnits: 'fraction',
+                  src: iconPath
+                }))
+              });
+
+              angular.forEach(result, function (marker, index) {
+
+                var iconFeature = new ol.Feature({
+                  geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
+                  marker: marker
+                });
+
+                var source = new ol.source.Vector({features: [iconFeature]});
+
+                var layer = new ol.layer.Vector({
+                  source: new ol.source.Vector({features: [iconFeature]})
+                });
+
+                layer.setStyle(iconStyle);
+
+                $scope.map.addLayer(layer);
+              });
 
               $scope.$apply();
 
@@ -454,11 +501,14 @@
 
         $scope.showMarkerDetails = true;
 
-        if(!$scope.currentEntity.layer) {
+        $scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
+        $scope.listAttributesByLayer($scope.currentEntity.layer);
+
+        /*if(!$scope.currentEntity.layer) {
           $timeout(function(){
-            $scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
+            $scope.currentEntity.layer = $scope.currentEntity.layer;
           }, 500);
-        }
+        }*/
 
         if(angular.isDefined($scope.currentEntity.id)) {
 
@@ -528,7 +578,7 @@
       $scope.footerCollapse = function () {
         $log.debug('Footer collapsed');
         $scope.showMarkerDetails = false;
-        $scope.$apply();
+        //$scope.$apply();
       };
 
       $scope.footerMinimize = function () {
@@ -542,7 +592,7 @@
         $scope.isNewMarker = true;
 
         $scope.currentEntity = {};
-        $scope.footerMinimize();
+        $scope.footerCollapse();
 
         $log.debug('onHold');
       };
@@ -638,7 +688,7 @@
 
       $timeout(function(){
         $scope.listAllInternalLayerGroups();
-      }, 500);
+      }, 1500);
 
     });
 

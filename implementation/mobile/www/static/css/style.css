@@ -1,6 +1,5 @@
 /* Empty. Add your own CSS if you like */
-map {
-  display: block;
+#map {
   width: 100%;
   height: 100%;
 }

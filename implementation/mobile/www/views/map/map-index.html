@@ -5,25 +5,24 @@
     <button class="button button-icon icon ion-navicon drawer-button" ng-click="toggleDrawer()"></button>
     <!--<button class="button button-icon icon ion-arrow-shrink fab" ng-click="getGPSPosition()"></button>-->
 
-
     <ion-side-menu-content>
       <ion-view title="Ionic App">
         <ion-content scroll="false">
-          <openlayers on-hold="onHold($event)" ol-center="center" width="100%" height="100%" ol-defaults="defaults">
+
+          <div id="map"></div>
+
+          <!--<openlayers on-hold="onHold($event)" ol-center="center" width="100%" height="100%" ol-defaults="defaults">
 
             <ol-group ng-repeat="layer in layers">
               <ol-marker ol-marker-properties="marker" ng-repeat="marker in layer.markers"
                          lat="marker.lat" lon="marker.lon">
               </ol-marker>
             </ol-group>
-            <!--LAYERS-->
+            &lt;!&ndash;LAYERS&ndash;&gt;
 
             <ol-marker ng-if="newMarker.visible" ol-style="newMarkerStyle" ol-marker-properties="newMarker" lat="newMarker.lat" lon="newMarker.lon"></ol-marker>
 
-            <!--<ol-marker ng-repeat="marker in markers" ol-marker-properties="marker" lat="marker.lat"
-                       lon="marker.lon"></ol-marker>-->
-
-          </openlayers>
+          </openlayers>-->
         </ion-content>
       </ion-view>
     </ion-side-menu-content>
