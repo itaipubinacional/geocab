@@ -8,21 +8,7 @@
     <ion-side-menu-content>
       <ion-view title="Ionic App">
         <ion-content scroll="false">
-
           <div id="map"></div>
-
-          <!--<openlayers on-hold="onHold($event)" ol-center="center" width="100%" height="100%" ol-defaults="defaults">
-
-            <ol-group ng-repeat="layer in layers">
-              <ol-marker ol-marker-properties="marker" ng-repeat="marker in layer.markers"
-                         lat="marker.lat" lon="marker.lon">
-              </ol-marker>
-            </ol-group>
-            &lt;!&ndash;LAYERS&ndash;&gt;
-
-            <ol-marker ng-if="newMarker.visible" ol-style="newMarkerStyle" ol-marker-properties="newMarker" lat="newMarker.lat" lon="newMarker.lon"></ol-marker>
-
-          </openlayers>-->
         </ion-content>
       </ion-view>
     </ion-side-menu-content>
@@ -48,7 +34,7 @@
         </ion-list>
       </div>
     </drawer>
-    <ion-pull-up-footer id="pull-up" ng-if="currentEntity.lat" initial-state="minimized" default-behavior="expand"
+    <ion-pull-up-footer id="pull-up" ng-if="latitude || currentEntity.id" initial-state="minimized" default-behavior="expand"
                         on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()"
                         ng-include="'./views/map/pull-up.html'">
 
