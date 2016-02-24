@@ -2,7 +2,7 @@
   'use strict';
 
   //Start the AngularJS
-  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova', 'ngOpenFB' ,'eits-angular-translate']);
+  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova', 'ngOpenFB' ,'eits.translate']);
 
   /**
    *
@@ -14,11 +14,16 @@
   /**
    *
    */
-  module.config(function ($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT) {
+  module.config(function ($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT, $translateProvider) {
     //-------
     //Broker configuration
     //-------
-    $importServiceProvider.setBrokerURL($API_ENDPOINT + "/broker");
+    $importServiceProvider.setBrokerURL($API_ENDPOINT + '/broker');
+
+    //-------
+    //Translate configuration
+    //-------
+    $translateProvider.useURL($API_ENDPOINT + '/bundles');
 
     //-------
     //Strict Contextual Escaping

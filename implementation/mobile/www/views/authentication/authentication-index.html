@@ -13,7 +13,7 @@
             <div class="list">
 
                 <label class="item item-input item-floating-label login-label">
-                    <span class="input-label">Login</span>
+                    <span class="input-label">{{ 'map.Field-required' | translate }}</span>
                     <input type="text" placeholder="Login" ng-model="model.user.email">
                 </label>
                 <ng-messages class="padding" for="model.form.email.$touched && model.form.email.$error" role="alert">
