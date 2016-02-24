@@ -257,6 +257,8 @@
 
               $scope.toggleLayer($scope.allInternalLayerGroups[0]);
 
+              $scope.allInternalLayerGroups[0].visible = true;
+
               $scope.$apply();
             },
             errorHandler: function (message, exception) {
@@ -276,6 +278,8 @@
        */
       $scope.listAttributesByLayer = function (layer) {
 
+        $scope.currentEntity.markerAttribute = [];
+
         layerGroupService.listAttributesByLayer(layer.id, {
           callback: function (result) {
 
@@ -290,9 +294,11 @@
 
               layerAttributes.attribute = attribute;
 
+              $scope.currentEntity.markerAttribute.push(layerAttributes);
+
             });
 
-            $scope.currentEntity.markerAttribute = result;
+            //$scope.currentEntity.markerAttribute = result;
 
             $scope.$apply();
           },
@@ -454,12 +460,22 @@
           }, 500);
         }
 
-        if($scope.currentEntity.id) {
+        if(angular.isDefined($scope.currentEntity.id)) {
 
           markerService.listAttributeByMarker($scope.currentEntity.id, {
             callback: function (result) {
 
-              $scope.currentEntity.markerAttributes = result;
+              $scope.currentEntity.markerAttribute = result;
+
+              angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute, index) {
+
+                markerAttribute.type = markerAttribute.attribute.type;
+
+                if (markerAttribute.attribute.type == "NUMBER") {
+                  markerAttribute.value = parseInt(markerAttribute.value);
+                }
+              });
+
 
               layerGroupService.listAttributesByLayer($scope.currentEntity.layer.id, {
                 callback: function (result) {
@@ -470,7 +486,7 @@
 
                     var exist = false;
 
-                    angular.forEach($scope.currentEntity.markerAttributes, function (attributeByMarker, index) {
+                    angular.forEach($scope.currentEntity.markerAttribute, function (attributeByMarker, index) {
 
                       if (attributeByMarker.attribute.id == attribute.id) {
                         exist = true;
@@ -478,7 +494,7 @@
                     });
 
                     if (!exist) {
-                      $scope.currentEntity.markerAttributes.push({attribute: attribute, marker: $scope.currentEntity});
+                      $scope.currentEntity.markerAttribute.push({attribute: attribute, marker: $scope.currentEntity});
                       $scope.attributesByLayer.push(attribute);
                       $scope.showNewAttributes = true;
                     }
@@ -493,11 +509,7 @@
                 }
               });
 
-              angular.forEach(result, function (markerAttribute, index) {
-                if (markerAttribute.attribute.type == "NUMBER") {
-                  markerAttribute.value = parseInt(markerAttribute.value);
-                }
-              });
+
 
 
               $scope.$apply();
