@@ -2,7 +2,7 @@
   'use strict';
 
   //Start the AngularJS
-  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova', 'ngOpenFB']);
+  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'openlayers-directive', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova', 'ngOpenFB' ,'eits-angular-translate']);
 
   /**
    *
