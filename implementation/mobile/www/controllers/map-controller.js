@@ -143,7 +143,6 @@
           $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude, true);
           $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude, false);
         }
-        $scope.$apply();
       };
 
       $scope.convertDDtoDMS = function(coordinate, latitude){
@@ -200,7 +199,7 @@
           markerService.listMarkerByLayer(layer.id, {
             callback: function (result) {
 
-              var iconPath = "static/images/marker.png";
+              var iconPath = '/static/images/marker.png';
 
               if (result.length > 0) {
                 iconPath = $rootScope.$API_ENDPOINT + '/'  + result[0].layer.icon
@@ -257,9 +256,7 @@
             callback: function (result) {
               $scope.allInternalLayerGroups = result;
 
-              $scope.toggleLayer($scope.allInternalLayerGroups[0]);
-
-              $scope.allInternalLayerGroups[0].visible = true;
+              $scope.toggleLayer($scope.allInternalLayerGroups[1]);
 
               $scope.$apply();
             },
@@ -335,126 +332,7 @@
           });
       };
 
-      /**
-      * Click event to prompt the geoserver the information layer of the clicked coordinate
-      */
-      $scope.map.on('click', function (evt) {
 
-        $scope.footerMinimize();
-
-        $log.debug('openlayers.map.singleclick');
-
-        $log.debug($scope.isNewMarker);
-
-        if($scope.isDrawerOpen) {
-
-          $scope.toggleDrawer();
-
-        } else {
-
-          if ($scope.isNewMarker) {
-
-            var coord = evt.coordinate;
-            var transformed_coordinate = ol.proj.transform(coord, 'EPSG:900913', 'EPSG:4326');
-
-            $scope.longitude = transformed_coordinate[0];
-            $scope.latitude  = transformed_coordinate[1];
-
-            var iconStyle = new ol.style.Style({
-              image: new ol.style.Icon({
-                anchor: [0.5, 1],
-                anchorXUnits: 'fraction',
-                anchorYUnits: 'fraction',
-                src: $rootScope.$API_ENDPOINT + 'static/images/marker.png'
-              }),
-              zIndex: 2
-            });
-
-            var shadowStyle = $scope.setShadowMarker('marker');
-
-            var iconFeature = new ol.Feature({
-              geometry: new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]])
-            });
-
-            var layer = new ol.layer.Vector({
-              source: new ol.source.Vector({
-                features: [iconFeature]
-              })
-            });
-
-            layer.setStyle([iconStyle, shadowStyle]);
-
-            $scope.currentCreatingInternalLayer = layer;
-            $scope.map.addLayer(layer);
-            $scope.$apply();
-
-            $scope.currentEntity.latitude  = evt.coordinate[0];
-            $scope.currentEntity.longitude = evt.coordinate[1];
-
-            $scope.setMarkerCoordinatesFormat();
-
-            $scope.currentEntity.status = 'PENDING';
-
-            $scope.isNewMarker = false;
-
-            $scope.pullUpHeight = 90;
-
-            $scope.$apply(function (scope) {
-              if (data) {
-
-                scope.pullUpHeight = 90;
-
-                var p = ol.proj.transform([data.coord[0], data.coord[1]], data.projection, 'EPSG:4326');
-
-                var newMarker = {
-                  name: 'Novo ponto',
-                  lat: p[1],
-                  lon: p[0],
-                  projection: 'EPSG:4326',
-                  visible: true
-                };
-
-                scope.newMarker = newMarker;
-
-                scope.currentEntity = newMarker;
-
-              }
-            });
-
-          } else {
-
-            if(angular.isDefined($scope.currentEntity.id)) {
-              $scope.currentEntity = {};
-              $scope.footerMinimize();
-              $scope.$apply();
-            }
-
-            var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function (feature, olLayer) {
-              if (angular.isDefined(feature.getProperties().marker)) {
-                return feature;
-              } else {
-                $scope.currentEntity = {};
-              }
-            });
-
-            if (angular.isDefined(feature)) {
-              $scope.pullUpHeight = 60;
-              $scope.currentEntity = feature.getProperties().marker;
-              $log.debug($scope.currentEntity);
-              $log.debug($scope.showMarkerDetails);
-
-              $scope.$apply();
-
-            } else {
-              $scope.currentEntity = {};
-            }
-
-          }
-        }
-
-        $log.debug('pullUpHeight: ' + $scope.pullUpHeight);
-
-      });
 
       $scope.centerOnMe = function () {
         $log.debug("Centering");
@@ -575,16 +453,112 @@
         $scope.showMarkerDetails = false;
       };
 
-      $scope.onHold = function () {
+      $scope.clearNewMarker = function () {
+        $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+        $scope.currentCreatingInternalLayer = {};
+        $scope.footerMinimize();
+      };
+
+      $scope.onHold = function (evt) {
 
         $scope.pullUpHeight = 90;
-        $scope.isNewMarker = true;
-
         $scope.currentEntity = {};
-        $scope.footerCollapse();
+        $scope.clearNewMarker();
 
         $log.debug('onHold');
+
+        $scope.isNewMarker = true;
+
+        $scope.currentEntity = new Marker();
+
+        var coordinate = $scope.map.getCoordinateFromPixel([evt.gesture.center.pageX, evt.gesture.center.pageY]);
+        var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
+
+        $scope.longitude = transformed_coordinate[0];
+        $scope.latitude  = transformed_coordinate[1];
+
+        var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: $rootScope.$API_ENDPOINT + '/static/images/marker.png'
+          }),
+          zIndex: 2
+        });
+
+        var shadowStyle = $scope.setShadowMarker('marker');
+
+        var iconFeature = new ol.Feature({
+          geometry: new ol.geom.Point([coordinate[0], coordinate[1]])
+        });
+
+        var layer = new ol.layer.Vector({
+          source: new ol.source.Vector({
+            features: [iconFeature]
+          })
+        });
+
+        layer.setStyle([iconStyle, shadowStyle]);
+
+        $scope.currentCreatingInternalLayer = layer;
+        $scope.map.addLayer(layer);
+
+        $scope.currentEntity.latitude  = coordinate[0];
+        $scope.currentEntity.longitude = coordinate[1];
+
+        $scope.setMarkerCoordinatesFormat();
+
+        $scope.currentEntity.status = 'PENDING';
+
+
       };
+
+      /**
+      * Click event to prompt the geoserver the information layer of the clicked coordinate
+      */
+      $scope.map.on('click', function (evt) {
+
+        if(!$scope.isNewMarker) {
+          $scope.clearNewMarker();
+          $scope.currentEntity = {};
+          $scope.$apply();
+        }
+
+        if($scope.isNewMarker) {
+          $scope.isNewMarker = false;
+        }
+
+        $log.debug('openlayers.map.singleclick');
+
+        $log.debug($scope.isNewMarker);
+
+        if($scope.isDrawerOpen) {
+
+          $scope.toggleDrawer();
+
+        } else {
+
+          var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function (feature, olLayer) {
+            if (angular.isDefined(feature.getProperties().marker)) {
+              return feature;
+            } else {
+              $scope.currentEntity = {};
+            }
+          });
+
+          if (angular.isDefined(feature)) {
+            $scope.pullUpHeight = 60;
+            $scope.currentEntity = feature.getProperties().marker;
+            $log.debug($scope.currentEntity);
+            $log.debug($scope.showMarkerDetails);
+
+            $scope.$apply();
+
+          }
+        }
+
+      });
 
       $scope.getPhoto = function () {
         Camera.getPicture().then(function (imageURI) {
@@ -677,7 +651,7 @@
 
       $timeout(function(){
         $scope.listAllInternalLayerGroups();
-      }, 1500);
+      }, 1000);
 
     });
 

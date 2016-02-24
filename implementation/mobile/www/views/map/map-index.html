@@ -8,7 +8,7 @@
     <ion-side-menu-content>
       <ion-view title="Ionic App">
         <ion-content scroll="false">
-          <div id="map"></div>
+          <div id="map" on-hold="onHold($event, data)"></div>
         </ion-content>
       </ion-view>
     </ion-side-menu-content>
@@ -34,7 +34,7 @@
         </ion-list>
       </div>
     </drawer>
-    <ion-pull-up-footer id="pull-up" ng-if="latitude || currentEntity.id" initial-state="minimized" default-behavior="expand"
+    <ion-pull-up-footer id="pull-up" ng-if="currentEntity.latitude || currentEntity.id" initial-state="minimized" default-behavior="expand"
                         on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()"
                         ng-include="'./views/map/pull-up.html'">
 
