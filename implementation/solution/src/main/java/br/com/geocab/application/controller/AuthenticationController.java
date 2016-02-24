@@ -25,12 +25,12 @@ import br.com.geocab.domain.repository.account.IUserRepository;
 
 /**
  * 
- * @author Rodrigo P. Fraga
- * @since 13/05/2013
+ * @author Emanuel Victor
+ * @since 23/02/2016
  * @version 1.0
  * @category
-@Controller
- */
+*/
+@Controller 
 public class AuthenticationController
 {
 	/*-------------------------------------------------------------------
