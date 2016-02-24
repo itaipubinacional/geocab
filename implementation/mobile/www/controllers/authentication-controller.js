@@ -28,19 +28,29 @@ angular.module('application')
     /*-------------------------------------------------------------------
     *                POST CONSTRUCT
     *-------------------------------------------------------------------*/
-    if(localStorage.getItem('userEmail')){
-      $scope.model.user.email  = localStorage.getItem('userEmail');
-      $state.go('map');
-    };
+    
     /**
-     *
+     * token handler
     */
-    $timeout(function () {
-      $importService("loginService");
-    });
+    if(localStorage.getItem('token')){
+      $scope.model.user.email = localStorage.getItem('userEmail');
+      //Valida o access token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
+      $http.get($API_ENDPOINT + "/login/normal/" + $scope.model.user.email + "/" + localStorage.getItem('token'))
+        .success(function (data, status, headers, config) {
+          $scope.loginSuccess();
+        })
+        .error(function (data, status, headers, config) {
+          $scope.loginFailed();
+        });
+    };
+
+    if(localStorage.getItem('userEmail')){
+      $scope.model.user.email = localStorage.getItem('userEmail');
+    };
+    
 
     $scope.model.user.email = 'test_prognus@mailinator.com'; //TODO lembrar de retirar
-    $scope.model.user.password = 'admin';
+    $scope.model.user.password = 'admin';//TODO lembrar de retirar
 
     /*-------------------------------------------------------------------
      * 		 				 	  HANDLERS
@@ -51,10 +61,10 @@ angular.module('application')
     $scope.loginHandler = function () {
 
       if ($scope.model.form.$invalid) {
-        $ionicPopup.alert({
-          title: 'Opss...',
-          subTitle: 'Os campos estão inválidos.',
-          template: 'Por favor verifique e tente novamente.'
+        $ionicPopup.alert({ 
+          title: 'Opss...',//TODO translate
+          subTitle: 'Os campos estão inválidos.',//TODO translate
+          template: 'Por favor verifique e tente novamente.' //TODO utilizar as mensagens providas pelos callbacks de erros
         });
 
       } else {
@@ -62,7 +72,6 @@ angular.module('application')
         var config = {
           headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
         };
-
 
         $http.post($API_ENDPOINT + "/j_spring_security_check", $.param($scope.model.user), config)
           .success(function (data, status, headers, config) {
@@ -76,9 +85,12 @@ angular.module('application')
     };
 
     /**
-     *
+     * Facebook login
      */
     $scope.fbLogin = function () {
+      $ionicLoading.show({
+        template: 'Logging in...' //TODO translate
+      });
       //Realiza a autenticação
       ngFB.login({scope: 'email,public_profile,user_friends'})
       .then(function (response) {
@@ -92,13 +104,12 @@ angular.module('application')
               $http.get($API_ENDPOINT + "/login/facebook/" +user.email + "/" + response.authResponse.accessToken)
                 .success(function (data, status, headers, config) {
                   $scope.model.user.email = user.email;
-                  $state.go('home');
-                  // $scope.verifyUser();
+                  $scope.model.user.token = data;
+                  $scope.loginSuccess();
                 })
                 .error(function (data, status, headers, config) {
-                  console.log(data);
-                }
-              );
+                  $scope.loginFailed();
+                });
             },
             function (error) {
               $scope.loginFailed();
@@ -108,10 +119,9 @@ angular.module('application')
         }
       });
     };
-
-    // This method is executed when the user press the "Sign in with Google" button
+ 
     /**
-       *
+     * This method is executed when the user press the "Sign in with Google" button  *
     */
     $scope.googleSignIn = function() {
       $ionicLoading.show({
@@ -119,46 +129,34 @@ angular.module('application')
       });
 
       window.plugins.googleplus.login(
-        {},
-        function (user_data) {
-          $scope.model.user.email = user_data.email;
-          $ionicLoading.hide();
-          $scope.verifyUser();
+        {
+          // 'webApiKey': 'DE:D8:46:1A:1D:F9:F4:6C:68:7E:A8:45:12:E6:E4:F8:E3:8B:37:D4',
+          'offline': true, // optional, used for Android only - if set to true the plugin will also return the OAuth access token ('oauthToken' param), that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
+        },
+        function (user) {
+          //Valida o access token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
+          $http.get($API_ENDPOINT + "/login/googleplus/" +user.email + "/" + user.oauthToken)
+            .success(function (data, status, headers, config) {
+              $scope.model.user.email = user.email;
+              $scope.model.user.token = data;
+              $scope.loginSuccess();
+            })
+            .error(function (data, status, headers, config) {
+              $scope.loginFailed();
+            });
         },
         function (msg) {
-          $ionicLoading.hide();
           $scope.loginFailed();
         }
       );
     };
 
     /**
-    * Verifying user existence in database
-    */
-    $scope.verifyUser = function () {
-      loginService.findUserByEmail( $scope.model.user.email, {
-        callback: function (result) {
-          $scope.model.user = result;
-          //Deleta a criptografia do password
-          delete $scope.model.user.password;
-          if (result && result.enabled) {
-            $scope.loginSuccess();
-          } else {
-            $scope.loginFailed();
-          }
-          $scope.$apply();
-        },
-        errorHandler: function (message, exception) {
-          $scope.loginFailed();
-          $scope.$apply();
-        }
-      });
-    }
-
-    /**
       *
     */
     $scope.loginSuccess = function () {
+      $ionicLoading.hide();
+      localStorage.setItem('token', $scope.model.user.token);
       localStorage.setItem('userEmail', $scope.model.user.email);
       $state.go('intro');
     };
@@ -167,13 +165,16 @@ angular.module('application')
       *
     */
     $scope.loginFailed = function () {
+      $ionicLoading.hide();
+      localStorage.removeItem('token', $scope.model.user.token);
+      localStorage.removeItem('userEmail', $scope.model.user.email);
       $ionicPopup.alert({
-        title: 'Opss...',
+        title: 'Opss...', //TODO translate
         subTitle: 'Não foi possível autenticar.', //TODO traduzir
-        template: 'Verifique seu usuário e tente novamente' ////TODO utilizar as mensagens providas pelos callbacks de erros
+        template: 'Verifique seu usuário e tente novamente' //TODO utilizar as mensagens providas pelos callbacks de erros
       });
     };
-
+    
   });
 
 }(window.angular));

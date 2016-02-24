@@ -5,7 +5,6 @@ package br.com.geocab.application.controller.entity;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @author emanuelvictor
@@ -21,7 +20,6 @@ public class NormalAuthentication extends SocialAuthentication implements Authen
 	{
 		this.user = user;
 		this.token = token;
-		this.restTemplate = new RestTemplate();
 	}
 	
 	/* (non-Javadoc)
@@ -30,7 +28,7 @@ public class NormalAuthentication extends SocialAuthentication implements Authen
 	@Override
 	public void validateToken()
 	{
-		Assert.isTrue(generateToken(this.getUser().getUsername()) == token, "Invalid token");
+		Assert.isTrue(generateToken(this.getUser().getUsername()).equals(token), "Invalid token");
 	}
 
 }
