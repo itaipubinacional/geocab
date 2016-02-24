@@ -29,25 +29,7 @@ angular.module('application')
     *                POST CONSTRUCT
     *-------------------------------------------------------------------*/
     
-    /**
-     * token handler
-    */
-    if(localStorage.getItem('token')){
-      $scope.model.user.email = localStorage.getItem('userEmail');
-      //Valida o access token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
-      $http.get($API_ENDPOINT + "/login/normal/" + $scope.model.user.email + "/" + localStorage.getItem('token'))
-        .success(function (data, status, headers, config) {
-          $scope.loginSuccess();
-        })
-        .error(function (data, status, headers, config) {
-          $scope.loginFailed();
-        });
-    };
-
-    if(localStorage.getItem('userEmail')){
-      $scope.model.user.email = localStorage.getItem('userEmail');
-    };
-    
+   
 
     $scope.model.user.email = 'test_prognus@mailinator.com'; //TODO lembrar de retirar
     $scope.model.user.password = 'admin';//TODO lembrar de retirar
@@ -100,16 +82,7 @@ angular.module('application')
             path: '/me',
             params: {fields: 'id,name,email'}
           }).then(function (user) {
-              //Valida o access token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
-              $http.get($API_ENDPOINT + "/login/facebook/" +user.email + "/" + response.authResponse.accessToken)
-                .success(function (data, status, headers, config) {
-                  $scope.model.user.email = user.email;
-                  $scope.model.user.token = data;
-                  $scope.loginSuccess();
-                })
-                .error(function (data, status, headers, config) {
-                  $scope.loginFailed();
-                });
+              $scope.login('facebook', user.email, response.authResponse.accessToken);
             },
             function (error) {
               $scope.loginFailed();
@@ -130,26 +103,30 @@ angular.module('application')
 
       window.plugins.googleplus.login(
         {
-          // 'webApiKey': 'DE:D8:46:1A:1D:F9:F4:6C:68:7E:A8:45:12:E6:E4:F8:E3:8B:37:D4',
           'offline': true, // optional, used for Android only - if set to true the plugin will also return the OAuth access token ('oauthToken' param), that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
         },
         function (user) {
-          //Valida o access token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
-          $http.get($API_ENDPOINT + "/login/googleplus/" +user.email + "/" + user.oauthToken)
-            .success(function (data, status, headers, config) {
-              $scope.model.user.email = user.email;
-              $scope.model.user.token = data;
-              $scope.loginSuccess();
-            })
-            .error(function (data, status, headers, config) {
-              $scope.loginFailed();
-            });
+          $scope.login('google', user.email, user.oauthToken);
         },
         function (msg) {
           $scope.loginFailed();
         }
       );
     };
+
+
+    $scope.login = function(server, user, token){
+      //Valida o token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
+      $http.get($API_ENDPOINT + "/login/" + server + "?userName=" + user + "&token=" + token)
+        .success(function (data, status, headers, config) {
+          $scope.model.user.email = user;
+          $scope.model.user.token = data;
+          $scope.loginSuccess();
+        })
+        .error(function (data, status, headers, config) {
+          $scope.loginFailed();
+        });
+    }
 
     /**
       *
@@ -173,6 +150,17 @@ angular.module('application')
         subTitle: 'Não foi possível autenticar.', //TODO traduzir
         template: 'Verifique seu usuário e tente novamente' //TODO utilizar as mensagens providas pelos callbacks de erros
       });
+    };
+     /**
+     * token handler
+    */
+    if(localStorage.getItem('token')){
+      $scope.model.user.email = localStorage.getItem('userEmail');
+      $scope.login('geocab', $scope.model.user.email, localStorage.getItem('token'));
+    };
+
+    if(localStorage.getItem('userEmail')){
+      $scope.model.user.email = localStorage.getItem('userEmail');
     };
     
   });

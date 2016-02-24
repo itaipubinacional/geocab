@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.geocab.application.controller.entity.FacebookAuthentication;
@@ -58,7 +59,7 @@ public class AuthenticationController
 	 * @param userName
 	 * @param accessToken
 	 */
-	@RequestMapping(value="/login/{userName}/{password}", method = RequestMethod.GET) //TODO alterar para post
+	@RequestMapping(value="/login", method = RequestMethod.POST) //TODO alterar para post
 	public @ResponseBody String login(HttpServletRequest request, @PathVariable String userName, @PathVariable String password)
 	{	
 		UserDetails user = userDetailsService.loadUserByUsername(userName);
@@ -83,9 +84,10 @@ public class AuthenticationController
 	 * @param request
 	 * @param userName
 	 * @param token
+	 * @return
 	 */
-	@RequestMapping(value="/login/facebook/{userName}/{token}", method = RequestMethod.GET)
-	public @ResponseBody StringBuffer loginFacebook(HttpServletRequest request, @PathVariable String userName, @PathVariable String token)
+	@RequestMapping(value="/login/facebook", method = RequestMethod.GET)
+	public @ResponseBody StringBuffer facebookLogin(HttpServletRequest request, @RequestParam String userName, @RequestParam String token)
 	{
 		return new StringBuffer(new FacebookAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
 	}
@@ -95,10 +97,11 @@ public class AuthenticationController
 	 * @param request
 	 * @param userName
 	 * @param token
+	 * @return
 	 */
-	@RequestMapping(value="/login/googleplus/{userName}/{token}", method = RequestMethod.GET)
-	public @ResponseBody StringBuffer loginGooglePlus(HttpServletRequest request, @PathVariable String userName, @PathVariable String token)
-	{	
+	@RequestMapping(value="/login/google", method = RequestMethod.GET)
+	public @ResponseBody StringBuffer googleLogin(HttpServletRequest request, @RequestParam String userName, @RequestParam String token)
+	{
 		return new StringBuffer(new GooglePlusAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
 	}
 	
@@ -107,11 +110,12 @@ public class AuthenticationController
 	 * @param request
 	 * @param userName
 	 * @param token
-	 * @return
 	 */
-	@RequestMapping(value="/login/normal/{userName}/{token}", method = RequestMethod.GET)
-	public @ResponseBody StringBuffer validateToken(HttpServletRequest request, @PathVariable String userName, @PathVariable String token)
-	{
+	@RequestMapping(value="/login/geocab", method = RequestMethod.GET)
+	public @ResponseBody StringBuffer normalLogin(HttpServletRequest request, @RequestParam String userName, @RequestParam String token)
+	{		
 		return new StringBuffer(new NormalAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
 	}
+	
+
 }
