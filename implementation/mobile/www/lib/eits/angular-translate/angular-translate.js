@@ -4,10 +4,28 @@
 (function(window, angular, undefined) {
 	'use strict';
 
-	var translateModule = angular.module('eits-angular-translate', []);
+	var translateModule = angular.module('eits.translate', []);
 
 	/**
+	 * A filter to translate on a HTML. Usage:
 	 *
+	 * 	{{ 'sample.code' | translate }}
+	 *  {{ 'sample.withparameters' | translate: "['s', 'n']" }}
+	 */
+	translateModule.filter('translate', function ($translate, $parse) {
+		var translateFilter = function ( code, args ) {
+			args = eval(args);
+	  		return $translate(code, args);
+  		};
+  		translateFilter.$stateful = true;
+		return translateFilter;
+	});
+
+	/**
+	 * Declaring as a dependency in your controller, you just need to call:
+	 *
+	 * $translate('sample.code');
+	 * $translate('sample.withparameters', 's', 'n');
 	 */
 	translateModule.provider('$translate', function() {
 
@@ -19,8 +37,7 @@
 		/**
 		 *
 		 */
-		// this.url = "./bundles"; TODO
-		this.url = "http://geocab.sbox.me/bundles";
+		this.url = "./bundles";
 
 		//Methods
 		/**
@@ -48,8 +65,6 @@
 		 */
 		this.loadBundles = function() {
 
-			console.log("Loading and caching bundles from URL: ", this.url);
-
 	    	var options = {
 				dataType: "json",
 			    cache: true,
@@ -60,7 +75,6 @@
 	    	var $self = this;
 	    	$.ajax( options )
 	    		.done(function( data ) {
-	    			console.log( "Bundles loaded.");
 	    			$self.bundles = data;
 	    		})
 	    		.fail( function( jqXHR, textStatus, exception ) {
@@ -73,12 +87,10 @@
 		 * Provider get
 		 */
 	    this.$get = function( $rootScope ) {
-
-				this.loadBundles(); //TODO Verificar a chamada
-
 	    	if ( this.bundles == null ) throw new Error("Problems loading bundles. Please check the URL.");
 
 	    	var $self = this;
+
 	    	return function( code, args ) {
 	    		Array.prototype.shift.apply(arguments); //shift(), removes the first element from the arguments
 
