@@ -7,8 +7,12 @@
  * @param $state
  */
 angular.module('application')
-  .controller('AuthenticationController', function ($importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading) {
+  .controller('AuthenticationController', function ($importService, $translate, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading) {
 
+
+    $scope.teste = $translate("map.Field-required");
+    console.log($scope.teste);
+    // /TODO retirar
 
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
@@ -20,7 +24,7 @@ angular.module('application')
       form: null,
       user: {}
     };
-    
+
     /*-------------------------------------------------------------------
     *                POST CONSTRUCT
     *-------------------------------------------------------------------*/
