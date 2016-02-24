@@ -6,13 +6,13 @@
     <div class="row">
       <div class="col">Latitude</div>
       <div class="col">
-        {{ currentEntity.lat }}
+        {{ latitude }}
       </div>
     </div>
     <div class="row">
       <div class="col">Longitude</div>
       <div class="col">
-        {{ currentEntity.lon }}
+        {{ longitude }}
       </div>
     </div>
   </div>
@@ -28,29 +28,25 @@
       </div>
     </div>
   </div>
-
   <button class="button button-icon icon ion-checkmark confirm-marker-button fab" ng-if="!currentEntity.id" ng-click="footerExpand();$event.stopPropagation();"></button>
 </ion-pull-up-handle>
 <ion-pull-up-content scroll="true">
   <div class="row sub-header">
     <div class="col">Latitude</div>
     <div class="col">
-      {{ currentEntity.lat }}
+      {{ latitude }}
     </div>
   </div>
   <div class="row sub-header">
     <div class="col">Longitude</div>
     <div class="col">
-      {{ currentEntity.lon }}
+      {{ longitude }}
     </div>
   </div>
   <div class="list">
     <label class="item item-input item-select">
       <span class="input-label">Camada</span>
       <select ng-change="listAttributesByLayer(currentEntity.layer)" ng-model="currentEntity.layer" ng-options="layer.name for layer in allInternalLayerGroups"></select>
-      <!--<select ng-change="listAttributesByLayer(currentEntity.layer)" ng-model="currentEntity.layer">
-        <option ng-repeat="layer in allInternalLayerGroups">{{ layer.name }}</option>
-      </select>-->
     </label>
     <div ng-repeat="attribute in currentEntity.markerAttribute">
       <!--text or number-->
