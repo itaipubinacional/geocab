@@ -7,6 +7,8 @@
   height: 100%;
 }
 
+.platform-android .bar .title{font-size: 16px}
+
 /* BUTTONS */
 .fab{ border-radius: 50%; width: 50px; height: 50px; line-height: 30px}
 

@@ -37,7 +37,7 @@
 
       $scope.pullUpHandle = angular.element(document.getElementsByTagName('ion-pull-up-handle'));
 
-      $scope.pullUpHeight = 90;
+      $scope.pullUpHeight = 100;
 
       /**
        * Setting the background layer - OSM
@@ -433,8 +433,28 @@
 
         $scope.showMarkerDetails = true;
 
-        $scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
-        $scope.listAttributesByLayer($scope.currentEntity.layer);
+        if(!$scope.currentEntity.id) {
+
+          $scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
+          $scope.listAttributesByLayer($scope.currentEntity.layer);
+
+        } else {
+
+          markerService.lastPhotoByMarkerId($scope.currentEntity.id, {
+            callback: function (result) {
+
+              $scope.imgResult = $rootScope.$API_ENDPOINT + result.image.match(/\/broker.*/)[0];
+              $scope.$apply();
+
+            },
+            errorHandler: function (message, exception) {
+              $scope.imgResult = null;
+              $scope.message = {type: "error", text: message};
+              $scope.$apply();
+            }
+          });
+
+        }
 
         /*if(!$scope.currentEntity.layer) {
           $timeout(function(){
@@ -442,73 +462,10 @@
           }, 500);
         }*/
 
-        if (angular.isDefined($scope.currentEntity.id)) {
-
-          markerService.listAttributeByMarker($scope.currentEntity.id, {
-            callback: function(result) {
-
-              $scope.currentEntity.markerAttribute = result;
-
-              angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute, index) {
-
-                markerAttribute.type = markerAttribute.attribute.type;
-
-                if (markerAttribute.attribute.type == "NUMBER") {
-                  markerAttribute.value = parseInt(markerAttribute.value);
-                }
-              });
-
-
-              layerGroupService.listAttributesByLayer($scope.currentEntity.layer.id, {
-                callback: function(result) {
-
-                  $scope.attributesByLayer = [];
-
-                  angular.forEach(result, function(attribute, index) {
-
-                    var exist = false;
-
-                    angular.forEach($scope.currentEntity.markerAttribute, function(attributeByMarker, index) {
-
-                      if (attributeByMarker.attribute.id == attribute.id) {
-                        exist = true;
-                      }
-                    });
-
-                    if (!exist) {
-                      $scope.currentEntity.markerAttribute.push({
-                        attribute: attribute,
-                        marker: $scope.currentEntity
-                      });
-                      $scope.attributesByLayer.push(attribute);
-                      $scope.showNewAttributes = true;
-                    }
-
-                  });
-
-                  $scope.$apply();
-                },
-                errorHandler: function(message, exception) {
-                  $log.debug(message);
-                  $scope.$apply();
-                }
-              });
-
-
-
-
-              $scope.$apply();
-
-            },
-            errorHandler: function(message, exception) {
-              $scope.message = {
-                type: "error",
-                text: message
-              };
-              $scope.$apply();
-            }
-          });
-        }
+        // if (angular.isDefined($scope.currentEntity.id)) {
+        //
+        //
+        // }
 
         $scope.$apply();
       };
@@ -523,6 +480,7 @@
         $log.debug('Footer minimize');
         $log.debug($scope.pullUpHeight);
         $scope.showMarkerDetails = false;
+        $scope.imgResult = '';
       };
 
       $scope.clearNewMarker = function() {
@@ -537,9 +495,9 @@
         $scope.currentFeature = '';
         $scope.currentEntity = {};
 
-        $scope.pullUpHeight = 90;
-        angular.element(document.getElementsByTagName('ion-pull-up-handle')).height('90px');
-        angular.element(document.getElementsByTagName('ion-pull-up-handle')).css('top', '-90px');
+        $scope.pullUpHeight = 100;
+        angular.element(document.getElementsByTagName('ion-pull-up-handle')).height($scope.pullUpHeight + 'px');
+        angular.element(document.getElementsByTagName('ion-pull-up-handle')).css('top', '-' + $scope.pullUpHeight + 'px');
 
         $scope.clearNewMarker();
 
@@ -605,8 +563,6 @@
           $scope.$apply();
         }
 
-
-
         $log.debug('openlayers.map.singleclick');
 
         $log.debug($scope.isNewMarker);
@@ -647,10 +603,74 @@
             feature.setStyle([iconStyle, shadowStyle]);
 
             $scope.currentFeature = feature;
-            $scope.pullUpHeight = 60;
+            $scope.pullUpHeight = 70;
 
             $log.debug($scope.currentEntity);
             $log.debug($scope.showMarkerDetails);
+
+            markerService.listAttributeByMarker($scope.currentEntity.id, {
+              callback: function(result) {
+
+                $scope.currentEntity.markerAttribute = result;
+
+                angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute, index) {
+
+                  markerAttribute.name = markerAttribute.attribute.name;
+                  markerAttribute.type = markerAttribute.attribute.type;
+
+                  if (markerAttribute.attribute.type == "NUMBER") {
+                    markerAttribute.value = parseInt(markerAttribute.value);
+                  }
+                });
+
+                layerGroupService.listAttributesByLayer($scope.currentEntity.layer.id, {
+                  callback: function(result) {
+
+                    $scope.attributesByLayer = [];
+
+                    angular.forEach(result, function(attribute, index) {
+
+                      var exist = false;
+
+                      angular.forEach($scope.currentEntity.markerAttribute, function(attributeByMarker, index) {
+
+                        if (attributeByMarker.attribute.id == attribute.id) {
+                          exist = true;
+                        }
+                      });
+
+                      if (!exist) {
+                        $scope.currentEntity.markerAttribute.push({
+                          attribute: attribute,
+                          marker: $scope.currentEntity
+                        });
+                        $scope.attributesByLayer.push(attribute);
+                        $scope.showNewAttributes = true;
+                      }
+
+                    });
+
+                    $scope.$apply();
+                  },
+                  errorHandler: function(message, exception) {
+                    $log.debug(message);
+                    $scope.$apply();
+                  }
+                });
+
+                $scope.$apply();
+
+              },
+              errorHandler: function(message, exception) {
+                $scope.message = {
+                  type: "error",
+                  text: message
+                };
+                $scope.$apply();
+              }
+            });
+
+
 
             $scope.$apply();
 
@@ -694,59 +714,80 @@
         });
       };
 
-      $scope.save = function() {
+      $scope.saveMarker = function() {
 
-        $scope.currentEntity.wktCoordenate = "POINT(-5984271.452126796 -2761057.316881751)";
+        if($scope.currentEntity.id) {
 
+          markerService.updateMarker($scope.currentEntity, {
+            callback: function (result) {
 
-        angular.forEach($scope.currentEntity.markerAttribute, function(attr, index) {
+              $scope.isLoading = false;
+              $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully"), dismiss: true};
 
-          delete attr.attributeDefault;
-          delete attr.layer;
-          delete attr.name;
-          delete attr.type;
-          delete attr.orderAttribute;
-          delete attr.required;
-          delete attr.temporaryId;
-          delete attr.updated;
-          delete attr.visible;
-
-          var attribute = new Attribute();
-          attribute.id = attr.attribute.id;
-
-          var markerAttribute = new MarkerAttribute();
-          if (markerAttribute.value != "" && markerAttribute.value != undefined) {
-            markerAttribute.value = val.value;
-          } else {
-            markerAttribute.value = "";
-          }
-
-          markerAttribute.attribute = attribute;
-          markerAttribute.marker = {
-            layer: {
-              id: $scope.currentEntity.layer.id
+              $scope.$apply();
             },
-            marker: $scope.currentEntity.markerAttribute
-          };
-          $scope.currentEntity.markerAttribute[index] = markerAttribute;
+            errorHandler: function (message, exception) {
 
-        });
+              $scope.isLoading = false;
+              $scope.msg = {type: "danger", text: message, dismiss: true};
 
-        $scope.currentEntity.markerModeration = null;
-        $scope.currentEntity.status = "SAVED";
+              $scope.$apply();
+            }
+          });
 
-        markerService.insertMarker($scope.currentEntity, {
-          callback: function(result) {
+        } else {
 
-            $scope.isLoading = false;
-            $scope.$apply();
-          },
-          errorHandler: function(message, exception) {
+          $scope.currentEntity.wktCoordenate = "POINT(-5984271.452126796 -2761057.316881751)";
 
-            $scope.isLoading = false;
-            $scope.$apply();
-          }
-        });
+          angular.forEach($scope.currentEntity.markerAttribute, function(attr, index) {
+
+            delete attr.attributeDefault;
+            delete attr.layer;
+            delete attr.name;
+            delete attr.type;
+            delete attr.orderAttribute;
+            delete attr.required;
+            delete attr.temporaryId;
+            delete attr.updated;
+            delete attr.visible;
+
+            var attribute = new Attribute();
+            attribute.id = attr.attribute.id;
+
+            var markerAttribute = new MarkerAttribute();
+            if (markerAttribute.value != "" && markerAttribute.value != undefined) {
+              markerAttribute.value = val.value;
+            } else {
+              markerAttribute.value = "";
+            }
+
+            markerAttribute.attribute = attribute;
+            markerAttribute.marker = {
+              layer: {
+                id: $scope.currentEntity.layer.id
+              },
+              marker: $scope.currentEntity.markerAttribute
+            };
+            $scope.currentEntity.markerAttribute[index] = markerAttribute;
+
+          });
+
+          $scope.currentEntity.markerModeration = null;
+          $scope.currentEntity.status = "SAVED";
+
+          markerService.insertMarker($scope.currentEntity, {
+            callback: function(result) {
+
+              $scope.isLoading = false;
+              $scope.$apply();
+            },
+            errorHandler: function(message, exception) {
+
+              $scope.isLoading = false;
+              $scope.$apply();
+            }
+          });
+        }
       };
 
       /**
