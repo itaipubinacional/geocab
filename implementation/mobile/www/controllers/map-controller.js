@@ -317,8 +317,8 @@
             callback: function(result) {
               $scope.allInternalLayerGroups = result;
 
-              $scope.allInternalLayerGroups[0].visible = true;
-              $scope.toggleLayer($scope.allInternalLayerGroups[0]);
+              $scope.allInternalLayerGroups[1].visible = true;
+              $scope.toggleLayer($scope.allInternalLayerGroups[1]);
 
               $scope.$apply();
             },
@@ -602,6 +602,15 @@
 
             feature.setStyle([iconStyle, shadowStyle]);
 
+            var geometry = feature.getGeometry();
+            var coordinate = geometry.getCoordinates();
+
+            var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
+            $scope.latitude = transformed_coordinate[1];
+            $scope.longitude = transformed_coordinate[0];
+
+            $scope.setMarkerCoordinatesFormat();
+
             $scope.currentFeature = feature;
             $scope.pullUpHeight = 70;
 
@@ -717,6 +726,9 @@
       $scope.saveMarker = function() {
 
         if($scope.currentEntity.id) {
+
+          var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
+          $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
 
           markerService.updateMarker($scope.currentEntity, {
             callback: function (result) {
