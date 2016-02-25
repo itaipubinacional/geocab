@@ -7,7 +7,10 @@
   height: 100%;
 }
 
-.platform-android .bar .title{font-size: 16px}
+.bar.bar-positive.bar-footer{background-color: #1e88e5}
+.bar.bar-positive.bar-footer h6{color:#fff}
+
+.platform-android .bar .title{font-size: 16px; font-weight: 900}
 
 /* BUTTONS */
 .fab{ border-radius: 50%; width: 50px; height: 50px; line-height: 30px}
@@ -75,6 +78,7 @@
 }
 
 .intro-detail{
+  top: -5px;
   width: 100%;
   height: 100%;
   padding: 10px;

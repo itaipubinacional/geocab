@@ -23,7 +23,7 @@
     </div>
     <div class="row">
       <div class="row" style="padding-top:0px">
-        <h6 style="margin-top:0px">{{'PostedBy' | translate}} {{ currentEntity.user.name }} {{ 'in' | translate }} {{ currentEntity.created }}</h6>
+        <h6 style="margin-top:0px">{{'PostedBy' | translate}} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
       </div>
     </div>
   </div>
@@ -42,7 +42,7 @@
     <div ng-if="currentEntity.id">
       <div class="row sub-header">
         <div class="col">
-          <h6 style="color: #fff">{{'PostedBy' | translate}} {{ currentEntity.user.name }} {{ 'in' | translate }} {{ currentEntity.created }}</h6>
+          <h6 style="color: #fff">{{'PostedBy' | translate}} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
         </div>
       </div>
     </div>

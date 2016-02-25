@@ -27,11 +27,15 @@
             <img class="item-checkbox-img" ng-src="{{$API_ENDPOINT}}/{{layer.icon}}">
           </ion-checkbox>
         </ion-list>
-        <ion-list>
-          <button class="button button-positive" ng-click="logout()">
-            {{'Logout' | translate}}
-          </button>
-        </ion-list>
+      </div>
+      <div class="bar bar-footer bar-positive" style="height:75px;">
+        <div class="col">
+          <h6><b>{{ userMe.username }}</b></h6>
+          <h6>{{ userMe.email }}</h6>
+        </div>
+        <div class="col" style="margin-top:10px">
+          <button class="button button-icon icon ion-log-out" ng-click="logout()"></button>
+        </div>
       </div>
     </drawer>
     <ion-pull-up-footer id="pull-up" ng-if="currentEntity.latitude || currentEntity.id" initial-state="minimized" default-behavior="expand"

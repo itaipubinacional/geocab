@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function ($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log, $location) {
+    .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log, $location) {
 
 
       /**
@@ -155,7 +155,7 @@
       $scope.clearShadowFeature = function(feature) {
 
         $log.debug(feature);
-        if(feature)
+        if (feature)
           feature.setStyle(feature.getStyle()[0]);
 
       };
@@ -209,8 +209,6 @@
           result += coordinate < 0 ? 'W' : 'O';
         return result;
       };
-
-
 
       $scope.toggleLayer = function(layer) {
 
@@ -433,7 +431,7 @@
 
         $scope.showMarkerDetails = true;
 
-        if(!$scope.currentEntity.id) {
+        if (!$scope.currentEntity.id) {
 
           $scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
           $scope.listAttributesByLayer($scope.currentEntity.layer);
@@ -441,15 +439,18 @@
         } else {
 
           markerService.lastPhotoByMarkerId($scope.currentEntity.id, {
-            callback: function (result) {
+            callback: function(result) {
 
               $scope.imgResult = $rootScope.$API_ENDPOINT + result.image.match(/\/broker.*/)[0];
               $scope.$apply();
 
             },
-            errorHandler: function (message, exception) {
+            errorHandler: function(message, exception) {
               $scope.imgResult = null;
-              $scope.message = {type: "error", text: message};
+              $scope.message = {
+                type: "error",
+                text: message
+              };
               $scope.$apply();
             }
           });
@@ -725,23 +726,31 @@
 
       $scope.saveMarker = function() {
 
-        if($scope.currentEntity.id) {
+        if ($scope.currentEntity.id) {
 
           var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
           $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
 
           markerService.updateMarker($scope.currentEntity, {
-            callback: function (result) {
+            callback: function(result) {
 
               $scope.isLoading = false;
-              $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully"), dismiss: true};
+              $scope.msg = {
+                type: "success",
+                text: $translate("map.Mark-updated-succesfully"),
+                dismiss: true
+              };
 
               $scope.$apply();
             },
-            errorHandler: function (message, exception) {
+            errorHandler: function(message, exception) {
 
               $scope.isLoading = false;
-              $scope.msg = {type: "danger", text: message, dismiss: true};
+              $scope.msg = {
+                type: "danger",
+                text: message,
+                dismiss: true
+              };
 
               $scope.$apply();
             }
@@ -756,7 +765,7 @@
           var attributes = $scope.currentEntity.markerAttribute;
           $scope.currentEntity.markerAttribute = [];
 
-          angular.forEach(attributes, function (val, ind) {
+          angular.forEach(attributes, function(val, ind) {
 
             var attribute = new Attribute();
             attribute.id = val.attribute.id;
@@ -768,14 +777,14 @@
               markerAttribute.value = "";
             }
 
-            if(val.files) {
+            if (val.files) {
 
               attribute.type = "PHOTO_ALBUM";
 
               var photoAlbum = new PhotoAlbum();
               photoAlbum.photos = new Array();
 
-              angular.forEach(val.files, function(file){
+              angular.forEach(val.files, function(file) {
                 var photo = new Photo();
                 var img = file.src.split(';base64,');
                 photo.source = img[1];
@@ -803,6 +812,18 @@
             callback: function(result) {
 
               $scope.isLoading = false;
+
+              $scope.clearNewMarker();
+
+              $scope.currentEntity.layer.visible = false;
+              $scope.toggleLayer($scope.currentEntity.layer);
+              $scope.currentEntity.layer.visible = true;
+              $scope.toggleLayer($scope.currentEntity.layer);
+
+              $scope.currentEntity = {};
+              $scope.currentFeature = '';
+              $scope.footerMinimize();
+
               $scope.$apply();
             },
             errorHandler: function(message, exception) {
@@ -817,27 +838,41 @@
       /**
        * authenticated user
        * */
-       $timeout(function(){
-         accountService.getUserAuthenticated({
-           callback: function(result) {
-             $scope.userMe = result;
-             $scope.coordinatesFormat = result.coordinates;
-             $scope.$apply();
-           },
-           errorHandler: function(message, exception) {
-             $scope.message = {
-               type: "error",
-               text: message
-             };
-             $scope.$apply();
-           }
-         });
-       }, 1000);
+      $timeout(function() {
+        accountService.getUserAuthenticated({
+          callback: function(result) {
+            $scope.userMe = result;
+            $scope.coordinatesFormat = result.coordinates;
+            $scope.$apply();
+          },
+          errorHandler: function(message, exception) {
+            $scope.message = {
+              type: "error",
+              text: message
+            };
+            $scope.$apply();
+          }
+        });
+      }, 1000);
 
-      /**
-       * Prepara o estado, retira o password criptografado do usuário
-       */
+      $scope.removeAllSelectedLayers = function() {
+
+          angular.forEach($scope.allInternalLayerGroups, function(group) {
+            if (group.visible) {
+              group.visible = false;
+              $scope.toggleLayer(group);
+            }
+          });
+
+        }
+        /**
+         * Prepara o estado, retira o password criptografado do usuário
+         */
       $scope.logout = function() {
+
+        $scope.toggleDrawer();
+        $scope.removeAllSelectedLayers();
+
         localStorage.removeItem('userEmail');
         localStorage.removeItem('token');
         $location.path($rootScope.$API_ENDPOINT + "/j_spring_security_logout");
