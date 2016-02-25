@@ -43,6 +43,9 @@
     <splash src="resources/android/splash/drawable-port-xhdpi-screen.png" density="port-xhdpi"/>
     <splash src="resources/android/splash/drawable-port-xxhdpi-screen.png" density="port-xxhdpi"/>
     <splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
+    <gap:plugin name="cordova-plugin-googleplus" source="npm">
+      <param name="REVERSED_CLIENT_ID" value="856589923551-hkf4kleh4inqmevpvbul3ualklkm3tqm.apps.googleusercontent.com"/>
+    </gap:plugin>
   </platform>
   <platform name="ios">
     <!-- images are determined by width and height. The following are supported -->
@@ -56,9 +59,10 @@
     <splash src="res/screen/ios/Default-667h.png" width="750" height="1334"/>
     <splash src="res/screen/ios/Default-736h.png" width="1242" height="2208"/>
     <splash src="res/screen/ios/Default-Landscape-736h.png" width="2208" height="1242"/>
+    <gap:plugin name="cordova-plugin-googleplus" source="npm">
+      <param name="REVERSED_CLIENT_ID" value="856589923551-het9q2i64u84e33mlceoch5549u61hkj.apps.googleusercontent.com"/>
+    </gap:plugin>
   </platform>
-  <gap:plugin name="cordova-plugin-googleplus" source="npm">
-    <param name="REVERSED_CLIENT_ID" value="856589923551-hkf4kleh4inqmevpvbul3ualklkm3tqm.apps.googleusercontent.com"/>
-  </gap:plugin>
+  
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
 </widget>
