@@ -200,10 +200,33 @@
 
       $scope.toggleLayer = function (layer) {
 
-        var indexOf = $scope.layers.indexOf($filter('filter')($scope.layers, {id: layer.id})[0]);
+        angular.forEach($scope.map.getLayers(), function(group){
+            $log.debug(group.getVisible());
 
-        if($filter('filter')($scope.layers, {id: layer.id}).length == 0) {
-          var addLayer = {id: layer.id, name: layer.name, visible: true, markers: []};
+            if (group instanceof ol.layer.Group) {
+                var prop = group.getProperties();
+
+                if(prop.id == layer.id) {
+                  group.setVisible(layer.visible);
+                }
+
+                // var src = layer.getSource();
+                // src.forEachFeature(function(feature) {
+                //     var att = feature.get("mt_fid");
+                //     if (att == fid) {
+                //         var dataExtent = feature.getGeometry().getExtent();
+                //         var view = app.olmap.getView();
+                //         view.fitExtent(dataExtent, (app.olmap.getSize()));
+                //         highlight.addFeature(feature);
+                //         return;
+                //     }
+                // })
+
+            }
+
+        });
+        
+        if(layer.visible) {
 
           markerService.listMarkerByLayer(layer.id, {
             callback: function (result) {
@@ -223,6 +246,7 @@
                 }))
               });
 
+              var markers = [];
               angular.forEach(result, function (marker, index) {
 
                 var iconFeature = new ol.Feature({
@@ -230,16 +254,22 @@
                   marker: marker
                 });
 
-                var source = new ol.source.Vector({features: [iconFeature]});
+                iconFeature.setStyle(iconStyle);
 
-                var layer = new ol.layer.Vector({
-                  source: new ol.source.Vector({features: [iconFeature]})
+                var vectorSource = new ol.source.Vector({features: [iconFeature]});
+
+                var vectorLayer = new ol.layer.Vector({
+                  source: vectorSource,
+                  layer: layer.id
                 });
 
-                layer.setStyle(iconStyle);
+                markers.push(vectorLayer);
 
-                $scope.map.addLayer(layer);
               });
+
+              var group = new ol.layer.Group({layers: markers, id: layer.id});
+
+              $scope.map.addLayer(group);
 
               $scope.$apply();
 
@@ -251,7 +281,7 @@
           });
 
         } else {
-          $scope.layers.splice(indexOf, 1);
+          $scope.map.removeLayer(layer.layer);
         }
       };
 
@@ -265,6 +295,7 @@
             callback: function (result) {
               $scope.allInternalLayerGroups = result;
 
+              $scope.allInternalLayerGroups[1].visible = true;
               $scope.toggleLayer($scope.allInternalLayerGroups[1]);
 
               $scope.$apply();
@@ -473,6 +504,7 @@
 
         $scope.currentEntity = {};
 
+        $scope.pullUpHeight = 90;
         angular.element(document.getElementsByTagName('ion-pull-up-handle')).height('90px');
         angular.element(document.getElementsByTagName('ion-pull-up-handle')).css('top', '-90px');
 
