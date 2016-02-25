@@ -533,6 +533,7 @@
 
       $scope.onHold = function(evt) {
 
+        $scope.currentFeature = '';
         $scope.currentEntity = {};
 
         $scope.pullUpHeight = 90;
@@ -595,11 +596,14 @@
        */
       $scope.map.on('click', function(evt) {
 
-        $scope.clearShadowFeature($scope.currentFeature);
+        if(!angular.equals($scope.currentCreatingInternalLayer, {}))
+          $scope.clearShadowFeature($scope.currentFeature);
 
         if (!$scope.isNewMarker) {
           $scope.clearNewMarker();
           $scope.currentEntity = {};
+          $scope.clearShadowFeature($scope.currentFeature);
+          $scope.currentFeature = '';
           $scope.$apply();
         }
 
