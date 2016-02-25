@@ -30,35 +30,7 @@ angular.module('application')
     /*-------------------------------------------------------------------
      * 		 				 	  HANDLERS
      *-------------------------------------------------------------------*/
-    /**
-     *
-     */
-    $scope.loginHandlerOld = function () {
-
-      if ($scope.model.form.$invalid) {
-        $ionicPopup.alert({
-          title: 'Opss...',//TODO translate
-          subTitle: 'Os campos estão inválidos.',//TODO translate
-          template: 'Por favor verifique e tente novamente.' //TODO utilizar as mensagens providas pelos callbacks de erros
-        });
-
-      } else {
-
-        var config = {
-          headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-        };
-
-        $http.post($API_ENDPOINT + "/j_spring_security_check", $.param($scope.model.user), config)
-          .success(function (data, status, headers, config) {
-            $scope.loginSuccess();
-          })
-          .error(function (data, status, headers, config) {
-            $scope.loginFailed();
-          }
-        );
-      }
-    };
-
+   
     /**
      *
      */
