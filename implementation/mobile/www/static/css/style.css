@@ -49,7 +49,10 @@
   background-position: bottom;
   background-attachment: scroll;
   background-image : url('./../images/WAVE-CAB.svg');
+}
 
+.login-button {
+  text-transform: uppercase;
 }
 
 .login-button-face {
