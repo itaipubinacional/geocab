@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function ($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log) {
+    .controller('MapController', function ($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log, $location) {
 
 
       /**
@@ -691,7 +691,9 @@
       */
       $scope.logout = function(){
         localStorage.removeItem('userEmail');
-        $state.go('authentication.login');
+        localStorage.removeItem('token');
+        $location.path($rootScope.$API_ENDPOINT + "/j_spring_security_logout");
+        // $state.go('authentication.login');
       };
 
       $timeout(function(){

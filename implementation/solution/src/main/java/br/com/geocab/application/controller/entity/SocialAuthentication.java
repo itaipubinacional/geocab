@@ -7,13 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @author emanuelvictor
@@ -36,7 +38,16 @@ public abstract class SocialAuthentication implements Authenticate
 	/**
 	 * 
 	 */
-	protected RestTemplate restTemplate;
+	protected AuthenticationManager authenticationManager;
+	/**
+	 * 
+	 */
+	protected ShaPasswordEncoder passwordEncoder;
+	/**
+	 * 
+	 */
+	protected UserDetailsService userDetailsService;
+	
 
 	/**
 	 * 
@@ -44,24 +55,6 @@ public abstract class SocialAuthentication implements Authenticate
 	public SocialAuthentication()
 	{
 		super();
-		this.restTemplate = new RestTemplate();
-	}
-
-	/**
-	 * @return the restTemplate
-	 */
-	public RestTemplate getRestTemplate()
-	{
-		return restTemplate;
-	}
-
-	/**
-	 * @param restTemplate
-	 *            the restTemplate to set
-	 */
-	public void setRestTemplate(RestTemplate restTemplate)
-	{
-		this.restTemplate = restTemplate;
 	}
 
 	/**
@@ -120,6 +113,7 @@ public abstract class SocialAuthentication implements Authenticate
 	@Override
 	public String login(HttpServletRequest request)
 	{
+		System.out.println(user.isEnabled());
 		Assert.isTrue(user.isEnabled(), "User is not enabled");
 		
 		validateToken();
@@ -139,5 +133,14 @@ public abstract class SocialAuthentication implements Authenticate
 	    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 	    
 	    return this.generateToken(user.getUsername());
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.com.geocab.application.controller.entity.Authenticate#validateToken(java.lang.String)
+	 */
+	@Override
+	public void validateToken()
+	{
+		Assert.isTrue(generateToken(this.getUser().getUsername()).equals(token), "Invalid token");
 	}
 }

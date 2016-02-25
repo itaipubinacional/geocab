@@ -10,17 +10,16 @@ import org.springframework.web.client.RestTemplate;
  * @author emanuelvictor
  *
  */
-public class FacebookAuthentication extends SocialAuthentication 
+public class FacebookTokenAuthentication extends SocialAuthentication 
 {
 	
 	/**
 	 * @param accessToken
 	 */
-	public FacebookAuthentication(String token, UserDetails user)
+	public FacebookTokenAuthentication(String token, UserDetails user)
 	{
 		this.user = user;
 		this.token = token;
-		this.restTemplate = new RestTemplate();
 	}
 
 	/* (non-Javadoc)
@@ -29,7 +28,7 @@ public class FacebookAuthentication extends SocialAuthentication
 	@Override
 	public void validateToken()
 	{
-		restTemplate.getForObject("https://graph.facebook.com/me?access_token="+token, String.class);
+		new RestTemplate().getForObject("https://graph.facebook.com/me?access_token="+token, String.class);
 	}
 	
 }

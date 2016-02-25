@@ -42,6 +42,9 @@
 
             // Called each time the slide changes
             $scope.slideChanged = function (index) {
+                if (index == 2) {
+                   localStorage.setItem('doneIntro', true);     
+                };
                 $scope.slideIndex = index;
             };
 
