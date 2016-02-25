@@ -2,18 +2,18 @@
   <div class="sub-header" ng-if="!currentEntity.id">
     <div class="row">
       <b ng-if="currentEntity.layer.name">{{ currentEntity.layer.name }}</b>
-      <b ng-if="!currentEntity.layer.name">Novo ponto</b>
+      <b ng-if="!currentEntity.layer.name">{{'map.New-post' | translate}}</b>
     </div>
     <div class="row">
       <div class="col">Latitude</div>
       <div class="col">
-        {{ latitude }}
+        {{ formattedLatitude }}
       </div>
     </div>
     <div class="row">
       <div class="col">Longitude</div>
       <div class="col">
-        {{ longitude }}
+        {{ formattedLongitude }}
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
       <b>{{ currentEntity.layer.name ? currentEntity.layer.name : currentEntity.name }}</b>
     </div>
     <div class="row">
-      <div class="col">Postado por</div>
+      <div class="col">{{'PostedBy' | translate}}</div>
       <div class="col">
         {{ currentEntity.user.name }}
       </div>
@@ -35,13 +35,13 @@
   <div class="row sub-header">
     <div class="col">Latitude</div>
     <div class="col">
-      {{ latitude }}
+      {{ formattedLatitude }}
     </div>
   </div>
   <div class="row sub-header">
     <div class="col">Longitude</div>
     <div class="col">
-      {{ longitude }}
+      {{ formattedLongitude }}
     </div>
   </div>
   <div class="list">
@@ -71,5 +71,5 @@
   </div>
   <img ng-src="{{currentEntity.image}}"/>
   <button type="button" ng-click="getPhoto()">Camera</button>
-  <button type="button" ng-click="save()">Salvar</button>
+  <button type="button" ng-click="save()">{{'map.Save' | translate}}</button>
 </ion-pull-up-content>

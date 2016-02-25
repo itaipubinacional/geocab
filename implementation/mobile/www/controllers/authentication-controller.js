@@ -7,7 +7,7 @@
  * @param $state
  */
 angular.module('application')
-  .controller('AuthenticationController', function ($importService, $translate, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading) {
+  .controller('AuthenticationController', function ($importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate) {
 
 
     $scope.teste = $translate("map.Field-required");
@@ -27,8 +27,6 @@ angular.module('application')
         password : ''
       }
     };
-
-    
     /*-------------------------------------------------------------------
      * 		 				 	  HANDLERS
      *-------------------------------------------------------------------*/
@@ -38,7 +36,7 @@ angular.module('application')
     $scope.loginHandlerOld = function () {
 
       if ($scope.model.form.$invalid) {
-        $ionicPopup.alert({ 
+        $ionicPopup.alert({
           title: 'Opss...',//TODO translate
           subTitle: 'Os campos estão inválidos.',//TODO translate
           template: 'Por favor verifique e tente novamente.' //TODO utilizar as mensagens providas pelos callbacks de erros
@@ -126,7 +124,7 @@ angular.module('application')
           }
         });
     };
- 
+
     /**
      * This method is executed when the user press the "Sign in with Google" button  *
     */
@@ -215,7 +213,7 @@ angular.module('application')
     if(localStorage.getItem('userEmail')){ //TODO verificar necessidade
       $scope.model.user.email = localStorage.getItem('userEmail');
     };
-    
+
   });
 
 }(window.angular));
