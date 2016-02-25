@@ -9,11 +9,6 @@
 angular.module('application')
   .controller('AuthenticationController', function ($importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate) {
 
-
-    $scope.teste = $translate("map.Field-required");
-    console.log($scope.teste);
-    // /TODO retirar
-
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES
      *-------------------------------------------------------------------*/
@@ -27,6 +22,10 @@ angular.module('application')
         password : ''
       }
     };
+
+    $scope.model.user.email = 'test_prognus@mailinator.com';
+    $scope.model.user.password = 'admin';
+
     /*-------------------------------------------------------------------
      * 		 				 	  HANDLERS
      *-------------------------------------------------------------------*/
