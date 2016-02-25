@@ -317,8 +317,8 @@
             callback: function(result) {
               $scope.allInternalLayerGroups = result;
 
-              $scope.allInternalLayerGroups[1].visible = true;
-              $scope.toggleLayer($scope.allInternalLayerGroups[1]);
+              $scope.allInternalLayerGroups[0].visible = true;
+              $scope.toggleLayer($scope.allInternalLayerGroups[0]);
 
               $scope.$apply();
             },
@@ -533,6 +533,7 @@
 
       $scope.onHold = function(evt) {
 
+        $scope.clearShadowFeature($scope.currentFeature);
         $scope.currentFeature = '';
         $scope.currentEntity = {};
 
