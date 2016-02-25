@@ -25,6 +25,7 @@
        * 		 				 	ATTRIBUTES
        *-------------------------------------------------------------------*/
 
+      $scope.currentFeature = '';
       $scope.direction = '';
       $scope.isNewMarker = false;
       $scope.isDragStart = false;
@@ -150,6 +151,14 @@
         }
 
       });
+
+      $scope.clearShadowFeature = function(feature) {
+
+        $log.debug(feature);
+        if(feature)
+          feature.setStyle(feature.getStyle()[0]);
+
+      };
 
       $scope.setShadowMarker = function(type) {
 
@@ -586,7 +595,7 @@
        */
       $scope.map.on('click', function(evt) {
 
-
+        $scope.clearShadowFeature($scope.currentFeature);
 
         if (!$scope.isNewMarker) {
           $scope.clearNewMarker();
@@ -617,8 +626,29 @@
           });
 
           if (angular.isDefined(feature)) {
-            $scope.pullUpHeight = 60;
+
             $scope.currentEntity = feature.getProperties().marker;
+
+            var iconStyle = new ol.style.Style({
+              image: new ol.style.Icon(({
+                anchor: [0.5, 1],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                src: $rootScope.$API_ENDPOINT + '/' + $scope.currentEntity.layer.icon
+              }))
+            });
+
+            var shadowType = 'default';
+            if (!$scope.currentEntity.layer.icon.match(/default/))
+              shadowType = 'collection';
+
+            var shadowStyle = $scope.setShadowMarker(shadowType);
+
+            feature.setStyle([iconStyle, shadowStyle]);
+
+            $scope.currentFeature = feature;
+            $scope.pullUpHeight = 60;
+
             $log.debug($scope.currentEntity);
             $log.debug($scope.showMarkerDetails);
 
@@ -733,8 +763,8 @@
              $scope.$apply();
            }
          });
-       }, 500);
-      
+       }, 1000);
+
       /**
        * Prepara o estado, retira o password criptografado do usuário
        */
