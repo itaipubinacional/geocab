@@ -30,14 +30,14 @@ angular.module('application')
     /*-------------------------------------------------------------------
      * 		 				 	  HANDLERS
      *-------------------------------------------------------------------*/
-   
+
     /**
      *
      */
     $scope.loginHandler = function () {
 
       if ($scope.model.form.$invalid) {
-        $ionicPopup.alert({ 
+        $ionicPopup.alert({
           title: 'Opss...',//TODO translate
           subTitle: 'Os campos estão inválidos.',//TODO translate
           template: 'Por favor verifique e tente novamente.' //TODO utilizar as mensagens providas pelos callbacks de erros
@@ -48,7 +48,7 @@ angular.module('application')
         var config = {
           headers: {'Content-Type': 'application/json; charset=UTF-8'}
         };
-
+        delete $scope.model.user.token;
         $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
           .success(function (data, status, headers, config) {
             $scope.model.user.token = data;
@@ -92,7 +92,7 @@ angular.module('application')
           if(error.status == 'user_cancelled'){
             $ionicLoading.hide();
           }else {
-            $scope.loginFailed();  
+            $scope.loginFailed();
           }
         });
     };
@@ -117,7 +117,7 @@ angular.module('application')
           if(error == 'user cancelled'){
             $ionicLoading.hide();
           }else {
-            $scope.loginFailed();  
+            $scope.loginFailed();
           }
         }
       );
@@ -173,7 +173,7 @@ angular.module('application')
     /*-------------------------------------------------------------------
      *                POST CONSTRUCT
      *-------------------------------------------------------------------*/
-    
+
     /**
      * token handler
     */

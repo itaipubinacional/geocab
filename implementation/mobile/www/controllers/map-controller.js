@@ -775,7 +775,6 @@
       $scope.logout = function() {
         localStorage.removeItem('userEmail');
         localStorage.removeItem('token');
-        delete $scope.model.user.token;
         $location.path($rootScope.$API_ENDPOINT + "/j_spring_security_logout");
         // $state.go('authentication.login');
       };
