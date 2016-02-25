@@ -749,45 +749,59 @@
 
         } else {
 
-          $scope.currentEntity.wktCoordenate = "POINT(-5984271.452126796 -2761057.316881751)";
+          $scope.updatedMarker = {"id":null,"imageToDelete":null,"updated":null,"status":"SAVED","location":{"coordinateString":"POINT(-5906611.431389057 -2766255.0348051456)"},"created":"2016-02-25T21:11:58.835Z","layer":{"enabled":true,"icon":"static/icons/default_blue.png","dataSource":null,"startEnabled":true,"markers":[],"orderLayer":0,"maximumScaleMap":null,"layerGroup":{"layerGroupUpper":null,"id":null,"draft":null,"updated":null,"created":null,"orderLayerGroup":0,"name":null,"layers":[],"layersGroup":[],"published":false,"nodes":[]},"minimumScaleMap":null,"id":186,"title":"Teste","updated":null,"startVisible":true,"created":null,"legend":null,"name":"Teste","attributes":[],"published":false,"publishedLayer":null,"nodes":null},"wktCoordenate":"POINT(-5906611.431389057 -2766255.0348051456)","markerModeration":[],"user":{"id":38,"updated":"2016-02-25T13:14:30.697Z","email":"test_prognus@mailinator.com","created":"2015-12-04T16:23:13.671Z","newPassword":null,"name":"admin","role":"ADMINISTRATOR","backgroundMap":"OPEN_STREET_MAP","password":"","coordinates":"DEGREES_MINUTES_SECONDS","accountNonExpired":true,"accountNonLocked":true,"authorities":["ADMINISTRATOR"],"credentialsNonExpired":true,"enabled":true,"username":"test_prognus@mailinator.com"},"deleted":null,"markerAttribute":[{"id":13592,"updated":null,"marker":{"id":745,"imageToDelete":null,"updated":null,"status":"SAVED","location":null,"created":"2016-02-25T21:11:58.835Z","layer":{"enabled":false,"icon":null,"dataSource":null,"startEnabled":false,"markers":[],"orderLayer":0,"maximumScaleMap":null,"layerGroup":null,"minimumScaleMap":null,"id":186,"title":"Teste","updated":null,"startVisible":false,"created":null,"legend":null,"name":"Teste","attributes":[],"published":false,"publishedLayer":null,"nodes":null},"wktCoordenate":null,"markerModeration":[],"user":{"id":38,"updated":null,"email":"test_prognus@mailinator.com","created":null,"newPassword":null,"name":"admin","role":null,"backgroundMap":"OPEN_STREET_MAP","password":null,"coordinates":"DEGREES_MINUTES_SECONDS","accountNonExpired":true,"accountNonLocked":true,"authorities":null,"credentialsNonExpired":true,"enabled":true,"username":"test_prognus@mailinator.com"},"deleted":null,"markerAttribute":[]},"created":null,"value":"ççlçfghj","photoAlbum":null,"attribute":{"id":147,"visible":false,"updated":null,"created":null,"name":"Texto","temporaryId":null,"layer":null,"type":"TEXT","required":false,"attributeDefault":null,"orderAttribute":0},"$$hashKey":"01O"}],"latitude":-5906611.431389057,"longitude":-2766255.0348051456};
 
-          angular.forEach($scope.currentEntity.markerAttribute, function(attr, index) {
+          $scope.newMarker = new Marker();
 
-            delete attr.attributeDefault;
-            delete attr.layer;
-            delete attr.name;
-            delete attr.type;
-            delete attr.orderAttribute;
-            delete attr.required;
-            delete attr.temporaryId;
-            delete attr.updated;
-            delete attr.visible;
+          $log.debug($scope.newMarker);
 
-            var attribute = new Attribute();
-            attribute.id = attr.attribute.id;
+          $scope.newMarker.layer = {"enabled":null,"icon":null,"dataSource":null,"startEnabled":null,"markers":null,"orderLayer":null,"maximumScaleMap":null,"layerGroup":null,"minimumScaleMap":null,"id":186,"title":null,"updated":null,"startVisible":null,"created":null,"legend":null,"name":null,"attributes":null,"published":null,"publishedLayer":null};
 
-            var markerAttribute = new MarkerAttribute();
-            if (markerAttribute.value != "" && markerAttribute.value != undefined) {
-              markerAttribute.value = val.value;
-            } else {
-              markerAttribute.value = "";
-            }
+          $scope.newMarker.wktCoordenate = $scope.updatedMarker.wktCoordenate;
 
-            markerAttribute.attribute = attribute;
-            markerAttribute.marker = {
-              layer: {
-                id: $scope.currentEntity.layer.id
-              },
-              marker: $scope.currentEntity.markerAttribute
-            };
-            $scope.currentEntity.markerAttribute[index] = markerAttribute;
+          $scope.newMarker.markerAttribute = $scope.updatedMarker.markerAttribute;
 
-          });
+          // angular.forEach($scope.currentEntity.markerAttribute, function(attr, index) {
+          //
+          //   delete attr.attributeDefault;
+          //   delete attr.layer;
+          //   delete attr.name;
+          //   delete attr.type;
+          //   delete attr.orderAttribute;
+          //   delete attr.required;
+          //   delete attr.temporaryId;
+          //   delete attr.updated;
+          //   delete attr.visible;
+          //
+          //   var attribute = new Attribute();
+          //   attribute.id = attr.attribute.id;
+          //
+          //   var markerAttribute = new MarkerAttribute();
+          //   if (markerAttribute.value != "" && markerAttribute.value != undefined) {
+          //     markerAttribute.value = val.value;
+          //   } else {
+          //     markerAttribute.value = "";
+          //   }
+          //
+          //   markerAttribute.attribute = attribute;
+          //   markerAttribute.marker = {
+          //     layer: {
+          //       id: $scope.currentEntity.layer.id
+          //     },
+          //     marker: $scope.currentEntity.markerAttribute
+          //   };
+          //   $scope.currentEntity.markerAttribute[index] = markerAttribute;
+          //
+          // });
 
-          $scope.currentEntity.markerModeration = null;
-          $scope.currentEntity.status = "SAVED";
+          $scope.newMarker.markerModeration = null;
+          $scope.newMarker.status = "SAVED";
 
-          markerService.insertMarker($scope.currentEntity, {
+          delete $scope.newMarker.markerAttribute[0].$$hashKey;
+
+          $log.debug($scope.newMarker);
+
+          markerService.insertMarker($scope.newMarker, {
             callback: function(result) {
 
               $scope.isLoading = false;
