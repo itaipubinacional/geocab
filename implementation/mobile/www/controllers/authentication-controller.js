@@ -22,25 +22,18 @@ angular.module('application')
      */
     $scope.model = {
       form: null,
-      user: {}
+      user: {
+        email : '',
+        password : ''
+      }
     };
-
-    /*-------------------------------------------------------------------
-    *                POST CONSTRUCT
-    *-------------------------------------------------------------------*/
-
-
-
-    $scope.model.user.email = 'test_prognus@mailinator.com'; //TODO lembrar de retirar
-    $scope.model.user.password = 'admin';//TODO lembrar de retirar
-
     /*-------------------------------------------------------------------
      * 		 				 	  HANDLERS
      *-------------------------------------------------------------------*/
     /**
      *
      */
-    $scope.loginHandler = function () {
+    $scope.loginHandlerOld = function () {
 
       if ($scope.model.form.$invalid) {
         $ionicPopup.alert({
@@ -57,6 +50,38 @@ angular.module('application')
 
         $http.post($API_ENDPOINT + "/j_spring_security_check", $.param($scope.model.user), config)
           .success(function (data, status, headers, config) {
+            $scope.loginSuccess();
+          })
+          .error(function (data, status, headers, config) {
+            $scope.loginFailed();
+          }
+        );
+      }
+    };
+
+    /**
+     *
+     */
+    $scope.loginHandler = function () {
+
+      if ($scope.model.form.$invalid) {
+        $ionicPopup.alert({ 
+          title: 'Opss...',//TODO translate
+          subTitle: 'Os campos estão inválidos.',//TODO translate
+          template: 'Por favor verifique e tente novamente.' //TODO utilizar as mensagens providas pelos callbacks de erros
+        });
+
+      } else {
+
+        var config = {
+          headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        };
+
+        $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
+          .success(function (data, status, headers, config) {
+            $scope.model.user.token = data;
+            // $ionicLoading.hide();
+            // $state.go('home');
             $scope.loginSuccess();
           })
           .error(function (data, status, headers, config) {
@@ -90,7 +115,14 @@ angular.module('application')
         } else {
           $scope.loginFailed();
         }
-      });
+      },function (error) {
+          //Se o usuário clicou em voltar, ou seja, cancelou o login via facebook
+          if(error.status == 'user_cancelled'){
+            $ionicLoading.hide();
+          }else {
+            $scope.loginFailed();  
+          }
+        });
     };
 
     /**
@@ -108,17 +140,26 @@ angular.module('application')
         function (user) {
           $scope.login('google', user.email, user.oauthToken);
         },
-        function (msg) {
-          $scope.loginFailed();
+        function (error) {
+          //Se o usuário clicou em voltar, ou seja, cancelou o login via facebook
+          if(error == 'user cancelled'){
+            $ionicLoading.hide();
+          }else {
+            $scope.loginFailed();  
+          }
         }
       );
     };
 
-
+    /**
+     * Realiza o login
+    */
     $scope.login = function(server, user, token){
       //Valida o token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
       $http.get($API_ENDPOINT + "/login/" + server + "?userName=" + user + "&token=" + token)
         .success(function (data, status, headers, config) {
+        //   $ionicLoading.hide();
+        //   $state.go('home');
           $scope.model.user.email = user;
           $scope.model.user.token = data;
           $scope.loginSuccess();
@@ -128,6 +169,7 @@ angular.module('application')
         });
     }
 
+
     /**
       *
     */
@@ -135,7 +177,11 @@ angular.module('application')
       $ionicLoading.hide();
       localStorage.setItem('token', $scope.model.user.token);
       localStorage.setItem('userEmail', $scope.model.user.email);
-      $state.go('intro');
+      if (localStorage.getItem('doneIntro')) {
+        $state.go('map');
+      } else {
+        $state.go('intro');
+      }
     };
 
     /**
@@ -151,7 +197,12 @@ angular.module('application')
         template: 'Verifique seu usuário e tente novamente' //TODO utilizar as mensagens providas pelos callbacks de erros
       });
     };
-     /**
+
+    /*-------------------------------------------------------------------
+     *                POST CONSTRUCT
+     *-------------------------------------------------------------------*/
+    
+    /**
      * token handler
     */
     if(localStorage.getItem('token')){
@@ -159,7 +210,7 @@ angular.module('application')
       $scope.login('geocab', $scope.model.user.email, localStorage.getItem('token'));
     };
 
-    if(localStorage.getItem('userEmail')){
+    if(localStorage.getItem('userEmail')){ //TODO verificar necessidade
       $scope.model.user.email = localStorage.getItem('userEmail');
     };
 

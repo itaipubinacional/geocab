@@ -29,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.geocab.application.ResourceBundleMessageSource;
-import br.com.geocab.application.controller.entity.FacebookAuthentication;
+import br.com.geocab.application.controller.entity.FacebookTokenAuthentication;
 import br.com.geocab.application.controller.entity.SocialAuthentication;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.repository.account.IUserRepository;

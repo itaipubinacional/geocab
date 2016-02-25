@@ -10,17 +10,16 @@ import org.springframework.web.client.RestTemplate;
  * @author emanuelvictor
  *
  */
-public class GooglePlusAuthentication  extends SocialAuthentication implements Authenticate
+public class GooglePlusTokenAuthentication  extends SocialAuthentication implements Authenticate
 {
 
 	/**
 	 * @param accessToken
 	 */
-	public GooglePlusAuthentication(String token, UserDetails user)
+	public GooglePlusTokenAuthentication(String token, UserDetails user)
 	{
 		this.user = user;
 		this.token = token;
-		this.restTemplate = new RestTemplate();
 	}
 	
 	/* (non-Javadoc)
@@ -29,7 +28,7 @@ public class GooglePlusAuthentication  extends SocialAuthentication implements A
 	@Override
 	public void validateToken()
 	{
-		restTemplate.getForObject("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token="+token, String.class);
+		new RestTemplate().getForObject("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token="+token, String.class);
 	}
 	
 }

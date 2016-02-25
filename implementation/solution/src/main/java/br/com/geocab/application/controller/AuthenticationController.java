@@ -1,27 +1,25 @@
 package br.com.geocab.application.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.geocab.application.controller.entity.FacebookAuthentication;
-import br.com.geocab.application.controller.entity.GooglePlusAuthentication;
+import br.com.geocab.application.controller.entity.FacebookTokenAuthentication;
+import br.com.geocab.application.controller.entity.GeocabTokenAuthentication;
+import br.com.geocab.application.controller.entity.GooglePlusTokenAuthentication;
 import br.com.geocab.application.controller.entity.NormalAuthentication;
-import br.com.geocab.application.controller.entity.SocialAuthentication;
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.repository.account.IUserRepository;
+import br.com.geocab.domain.service.LoginService;
 
 
 /**
@@ -48,6 +46,11 @@ public class AuthenticationController
 	 */
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	/**
+	 * 
+	 */
+	@Autowired
+	private ShaPasswordEncoder passwordEncoder;
 	/*-------------------------------------------------------------------
 	 * 		 				 		BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -59,24 +62,11 @@ public class AuthenticationController
 	 * @param userName
 	 * @param accessToken
 	 */
-	@RequestMapping(value="/login", method = RequestMethod.POST) //TODO alterar para post
-	public @ResponseBody String login(HttpServletRequest request, @PathVariable String userName, @PathVariable String password)
+	@RequestMapping(value="/login", method = RequestMethod.POST)
+	public @ResponseBody StringBuffer login(HttpServletRequest request, @RequestBody User user)
 	{	
-		UserDetails user = userDetailsService.loadUserByUsername(userName);
-		// TODO colocar PADRÃO DE PROJETO AQUI TAMBÉM
-	    UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userName, password, user.getAuthorities());
-	    
-	    // Authenticate the user
-	    Authentication authentication =  authenticationManager.authenticate(authRequest);
-	    SecurityContext securityContext = SecurityContextHolder.getContext();
-	    
-	    securityContext.setAuthentication(authentication);
-	    
-	    // Create a new session and add the security context.
-	    HttpSession session = request.getSession(true);
-	    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-	    
-	    return SocialAuthentication.generateKey(userName);
+		verifyUser(user.getUsername());
+		return new StringBuffer(new NormalAuthentication(user, userDetailsService, authenticationManager, passwordEncoder).login(request));
 	}
 	
 	/**
@@ -89,7 +79,8 @@ public class AuthenticationController
 	@RequestMapping(value="/login/facebook", method = RequestMethod.GET)
 	public @ResponseBody StringBuffer facebookLogin(HttpServletRequest request, @RequestParam String userName, @RequestParam String token)
 	{
-		return new StringBuffer(new FacebookAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
+		verifyUser(userName);
+		return new StringBuffer(new FacebookTokenAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
 	}
 	
 	/**
@@ -101,8 +92,9 @@ public class AuthenticationController
 	 */
 	@RequestMapping(value="/login/google", method = RequestMethod.GET)
 	public @ResponseBody StringBuffer googleLogin(HttpServletRequest request, @RequestParam String userName, @RequestParam String token)
-	{
-		return new StringBuffer(new GooglePlusAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
+	{	
+		verifyUser(userName);
+		return new StringBuffer(new GooglePlusTokenAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
 	}
 	
 	/**
@@ -113,8 +105,33 @@ public class AuthenticationController
 	 */
 	@RequestMapping(value="/login/geocab", method = RequestMethod.GET)
 	public @ResponseBody StringBuffer normalLogin(HttpServletRequest request, @RequestParam String userName, @RequestParam String token)
-	{		
-		return new StringBuffer(new NormalAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
+	{
+		verifyUser(userName);
+		return new StringBuffer(new GeocabTokenAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
+	}
+	@Autowired
+	LoginService loginService;
+	/**
+	 * TODO colocar pra dentro das entidades
+	 * @param userName
+	 */
+	private void verifyUser(String userName)
+	{
+		try
+		{
+			userDetailsService.loadUserByUsername(userName);
+		}
+		catch (UsernameNotFoundException e)
+		{
+			User user = new User(userName, userName);
+			user.getBackgroundMap();
+			user.getCoordinates();
+			loginService.insertSocialUser(user);
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 	
 
