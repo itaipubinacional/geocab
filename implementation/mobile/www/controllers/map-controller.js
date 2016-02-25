@@ -89,25 +89,26 @@
 
        }, $document);
 
-      $scope.onDragStart = function (event) {
+      $scope.onDragStart = function (state) {
         $log.debug('onDragStart');
-        $scope.isDrawerOpen = !$scope.isDrawerOpen;
+        $log.debug('state: ' + state);
+
         $scope.isDragStart = true;
         $scope.dragPan = false;
 
         $scope.listAllInternalLayerGroups();
       };
 
-      $scope.onDragEnd = function (event) {
+      $scope.onDragEnd = function (state) {
         $log.debug('onDragEnd');
-        $scope.isDrawerOpen = !$scope.isDrawerOpen;
+        $log.debug('state: ' + state);
+        $scope.isDrawerOpen = state;
         $scope.isDragStart = false;
-        $scope.dragPan = true;
+        $scope.dragPan = state;
       };
 
       $scope.toggleDrawer = function () {
         $log.debug('toggleDrawer');
-
         $rootScope.$broadcast('toggleDrawer');
         $scope.listAllInternalLayerGroups();
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
@@ -121,6 +122,33 @@
         });
 
       }, $document);
+
+      $scope.map.on('pointerdrag', function (event, data) {
+
+        // $log.debug(event.pixel);
+        // $log.debug($scope.isDragStart);
+        // $log.debug($scope.isDrawerOpen);
+        // $log.debug($scope.dragPan);
+        // $log.debug($scope.direction);
+
+        if (event.pixel[0] < 40 || !$scope.isDrawerOpen && $scope.isDragStart) {
+
+          if ($scope.direction === 'right') {
+            event.preventDefault();
+
+            $scope.$apply(function () {
+              $scope.dragPan = false;
+            });
+
+          } else {
+
+            $scope.$apply(function () {
+              $scope.dragPan = true;
+            });
+          }
+        }
+
+      });
 
       $scope.setShadowMarker = function(type) {
 
@@ -172,31 +200,7 @@
         return result;
       };
 
-      $scope.map.on('pointerdrag', function (event, data) {
 
-        /*$log.debug($scope.isDragStart);
-         $log.debug(data.event.pixel);
-         $log.debug($scope.defaults.interactions.dragPan);
-         $log.debug($scope.direction);*/
-
-        if (event.pixel[0] < 40 || $scope.isDragStart && $scope.isDragStart) {
-
-          if ($scope.direction === 'right') {
-            event.preventDefault();
-
-            $scope.$apply(function () {
-              $scope.dragPan = false;
-            });
-
-          } else {
-
-            $scope.$apply(function () {
-              $scope.dragPan = true;
-            });
-          }
-        }
-
-      });
 
       $scope.toggleLayer = function (layer) {
 
@@ -225,7 +229,7 @@
             }
 
         });
-        
+
         if(layer.visible) {
 
           markerService.listMarkerByLayer(layer.id, {

@@ -74,7 +74,7 @@
 
         //vm.onTest({event: e});
         //console.log('Offset:', offsetX);
-        vm.onDragStart({event: e});
+        vm.onDragStart({state: vm.isOpen()});
       };
 
       var startTargetDrag = function(e) {
@@ -85,7 +85,7 @@
         offsetX = lastX - startX;
         //console.log('Starting target drag');
 
-        vm.onDragStart({event: e});
+        vm.onDragStart({state: vm.isOpen()});
 
         //console.log('Offset:', offsetX);
       };
@@ -102,7 +102,7 @@
 
         dragging = false;
 
-        //console.log('End drag');
+        console.log('End drag');
 
         enableAnimation();
 
@@ -114,6 +114,8 @@
             el.style.transform = el.style.webkitTransform = 'translate3d(0px, 0, 0)';
             drawerState = 'open';
           }
+          //console.log(drawerState);
+          vm.onDragEnd({state: vm.isOpen()})
         });
       };
 
@@ -210,7 +212,8 @@
           onClose: '&',
           onDragStart: '&',
           onDragEnd: '&',
-          openDrawer: '&'
+          openDrawer: '&',
+          isDrawerOpen: '&'
         },
         controllerAs: 'drawer',
         link: function($scope, $element, $attr, ctrl) {
