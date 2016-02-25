@@ -1,56 +1,60 @@
 <ion-pull-up-handle ng-if="!showMarkerDetails" ion-pull-up-trigger left="0" width="100" height="{{ pullUpHeight }}px" style="box-shadow: 0px -2px 6px rgba(0,0,0,0.3);">
-  <div class="sub-header" ng-if="!currentEntity.id">
-    <div class="row">
-      <b ng-if="currentEntity.layer.name">{{ currentEntity.layer.name }}</b>
-      <b ng-if="!currentEntity.layer.name">{{'map.New-post' | translate}}</b>
-    </div>
-    <div class="row">
-      <div class="col">Latitude</div>
-      <div class="col">
-        {{ formattedLatitude }}
+  <div class="col sub-header" ng-if="!currentEntity.id">
+    <div class="row" style="padding-bottom:0px">
+      <div class="row">
+        <b ng-if="currentEntity.layer.name">{{ currentEntity.layer.name }}</b>
+        <b ng-if="!currentEntity.layer.name">{{'map.New-post' | translate}}</b>
       </div>
     </div>
-    <div class="row">
-      <div class="col">Longitude</div>
-      <div class="col">
-        {{ formattedLongitude }}
+    <div class="col" style="font-size: 12px;padding-bottom:0px; text-align:left">
+      <div class="row">
+        <span style="width:80px">Latitude</span> {{ formattedLatitude }}
+      </div>
+      <div class="row">
+        <span style="width:80px">Longitude</span> {{ formattedLongitude }}
       </div>
     </div>
   </div>
-
-  <div ng-if="currentEntity.id">
+  <div ng-if="currentEntity.id" class="col">
     <div class="row">
-      <b>{{ currentEntity.layer.name ? currentEntity.layer.name : currentEntity.name }}</b>
+      <div class="row">
+        <b>{{ currentEntity.layer.name ? currentEntity.layer.name : currentEntity.name }}</b>
+      </div>
     </div>
     <div class="row">
-      <div class="col">{{'PostedBy' | translate}}</div>
-      <div class="col">
-        {{ currentEntity.user.name }}
+      <div class="row" style="padding-top:0px">
+        <h6 style="margin-top:0px">{{'PostedBy' | translate}} {{ currentEntity.user.name }} {{ 'in' | translate }} {{ currentEntity.created }}</h6>
       </div>
     </div>
   </div>
   <button class="button button-icon icon ion-checkmark confirm-marker-button fab" ng-if="!currentEntity.id"></button>
 </ion-pull-up-handle>
 <ion-pull-up-content scroll="true">
-  <div ng-if="showMarkerDetails">
-    <div class="row sub-header">
-      <div class="col">Latitude</div>
-      <div class="col">
-        {{ formattedLatitude }}
+  <div ng-if="showMarkerDetails" class="col sub-header">
+    <div ng-if="!currentEntity.id" style="font-size: 12px; margin-left:25px" class="col">
+      <div class="row">
+        <span style="width:80px">Latitude</span> {{ formattedLatitude }}
+      </div>
+      <div class="row">
+        <span style="width:80px">Longitude</span> {{ formattedLongitude }}
       </div>
     </div>
-    <div class="row sub-header">
-      <div class="col">Longitude</div>
-      <div class="col">
-        {{ formattedLongitude }}
+    <div ng-if="currentEntity.id">
+      <div class="row sub-header">
+        <div class="col">
+          <h6 style="color: #fff">{{'PostedBy' | translate}} {{ currentEntity.user.name }} {{ 'in' | translate }} {{ currentEntity.created }}</h6>
+        </div>
       </div>
     </div>
   </div>
   <div class="list">
-    <label class="item item-input item-select">
-      <span class="input-label">Camada</span>
+    <label class="item item-input item-select" ng-if="!currentEntity.id">
+      <span class="input-label">{{ 'Layer' | translate }}</span>
       <select ng-change="listAttributesByLayer(currentEntity.layer)" ng-model="currentEntity.layer" ng-options="layer.name for layer in allInternalLayerGroups"></select>
     </label>
+    <div class="row" ng-if="imgResult != ''">
+      <img ng-src="{{ imgResult }}" width="100%" style="max-height: 200px">
+    </div>
     <div ng-repeat="attribute in currentEntity.markerAttribute">
       <!--text or number-->
       <label class="item item-input item-floating-label" ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
@@ -70,8 +74,9 @@
   <div class="title bar-header" ng-if="showMarkerDetails" style="text-align: left" ng-class="{'bar-positive': showMarkerDetails}">
     <button ng-click="footerMinimize()" style="margin-top: 5px" class="button button-icon icon ion-chevron-left"></button>
     <div class="h1 title">{{ currentEntity.name ? currentEntity.name : currentEntity.layer.name }}</div>
+    <div class="buttons">
+      <button class="button button-icon icon ion-camera" ng-click="getPhoto()"></button>
+      <button class="button button-icon icon ion-checkmark" ng-click="saveMarker()"></button>
+    </div>
   </div>
-  <img ng-src="{{currentEntity.image}}"/>
-  <button type="button" ng-click="getPhoto()">Camera</button>
-  <button type="button" ng-click="save()">{{'map.Save' | translate}}</button>
 </ion-pull-up-content>
