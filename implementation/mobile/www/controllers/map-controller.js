@@ -596,9 +596,6 @@
        */
       $scope.map.on('click', function(evt) {
 
-        if(!angular.equals($scope.currentCreatingInternalLayer, {}))
-          $scope.clearShadowFeature($scope.currentFeature);
-
         if (!$scope.isNewMarker) {
           $scope.clearNewMarker();
           $scope.currentEntity = {};
@@ -607,9 +604,7 @@
           $scope.$apply();
         }
 
-        if ($scope.isNewMarker) {
-          $scope.isNewMarker = false;
-        }
+
 
         $log.debug('openlayers.map.singleclick');
 
@@ -629,7 +624,7 @@
             }
           });
 
-          if (angular.isDefined(feature)) {
+          if (angular.isDefined(feature) && !$scope.isNewMarker) {
 
             $scope.currentEntity = feature.getProperties().marker;
 
@@ -658,6 +653,10 @@
 
             $scope.$apply();
 
+          }
+
+          if ($scope.isNewMarker) {
+            $scope.isNewMarker = false;
           }
         }
 
