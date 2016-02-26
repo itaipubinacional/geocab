@@ -32,7 +32,7 @@
   </feature>
   <author email="contact@eits.com.br" href="http://www.eits.com.br">eits it solutions</author>
   <platform name="android">
-    <preference name="Fullscreen" value="false"/>
+    <preference name="Fullscreen" value="true"/>
     <preference name="StatusBarOverlaysWebView" value="true"/>
     <gap:plugin name="cordova-plugin-googleplus" source="npm">
       <param name="REVERSED_CLIENT_ID" value="856589923551-hkf4kleh4inqmevpvbul3ualklkm3tqm.apps.googleusercontent.com"/>

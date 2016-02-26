@@ -122,7 +122,15 @@
 
     ngFB.init({appId: '801316929973059'});
 
-    ionic.Platform.isFullScreen = false;
+    // ionic.Platform.isFullScreen = false;
+
+    if (window.StatusBar) {
+      // org.apache.cordova.statusbar required
+      StatusBar.styleLightContent();
+    }
+
+    // make it fullscreen on IOS so it has the correct header size.
+    ionic.Platform.fullScreen();
 
   });
 
