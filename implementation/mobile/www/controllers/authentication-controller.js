@@ -174,6 +174,15 @@ angular.module('application')
      *-------------------------------------------------------------------*/
 
     /**
+     * Remove a splashscreen quando a tela de login for carregada
+    */ 
+    $scope.$on('$ionicView.loaded', function() {
+      ionic.Platform.ready( function() {
+        if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
+      });
+    });
+
+    /**
      * token handler
     */
     if(localStorage.getItem('token')){
