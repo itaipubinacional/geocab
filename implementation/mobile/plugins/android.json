@@ -19,9 +19,6 @@
         "cordova-plugin-keyboard": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
@@ -41,6 +38,9 @@
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
         "cordova-plugin-camera": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },

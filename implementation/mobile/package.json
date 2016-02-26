@@ -18,15 +18,16 @@
     "cordova-plugin-whitelist",
     "cordova-plugin-datepicker",
     "cordova-plugin-crosswalk-webview",
-    "cordova-plugin-splashscreen",
     "cordova-plugin-keyboard",
     "cordova-plugin-geolocation",
     "org.apache.cordova.inappbrowser",
     "cordova-plugin-googleplus",
     "org.apache.cordova.statusbar",
-    "cordova-plugin-camera"
+    "cordova-plugin-camera",
+    "org.apache.cordova.splashscreen"
   ],
   "cordovaPlatforms": [
-    "ios"
+    "ios",
+    "android"
   ]
 }
