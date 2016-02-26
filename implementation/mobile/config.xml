@@ -22,6 +22,8 @@
   <preference name="AutoHideSplashScreen" value="false"/>
   <preference name="auto-hide-splash-screen" value="false"/>
   <preference name="ShowSplashScreenSpinner" value="false"/>
+  <preference name="Fullscreen" value="false"/>
+  <preference name="StatusBarOverlaysWebView" value="false"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
@@ -32,8 +34,6 @@
   </feature>
   <author email="contact@eits.com.br" href="http://www.eits.com.br">eits it solutions</author>
   <platform name="android">
-    <preference name="Fullscreen" value="true"/>
-    <preference name="StatusBarOverlaysWebView" value="true"/>
     <gap:plugin name="cordova-plugin-googleplus" source="npm">
       <param name="REVERSED_CLIENT_ID" value="856589923551-hkf4kleh4inqmevpvbul3ualklkm3tqm.apps.googleusercontent.com"/>
     </gap:plugin>

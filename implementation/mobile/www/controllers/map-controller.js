@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log, $location, $ionicNavBarDelegate) {
+    .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera) {
 
 
       /**
@@ -80,13 +80,17 @@
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/
 
-       $scope.goBack = function () {
-           $ionicNavBarDelegate.back();
-         };
+      $scope.goBack = function() {
+        $ionicNavBarDelegate.back();
+      };
 
-       $scope.setImagePath = function(image) {
+      $scope.setImagePath = function(image) {
+        if (image.match(/broker/)) {
           return $rootScope.$API_ENDPOINT + image.match(/\/broker.*/)[0];
-       };
+        } else {
+          return "data:image/jpeg;base64," + image;
+        }
+      };
 
       $timeout(function() {
         $scope.map = new ol.Map({
@@ -686,12 +690,10 @@
             anchor: [0.5, 1],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
-            src: $rootScope.$API_ENDPOINT + '/static/images/marker.png'
+            src: $rootScope.$API_ENDPOINT + '/static/images/new_marker.png'
           }),
           zIndex: 2
         });
-
-        var shadowStyle = $scope.setShadowMarker('marker');
 
         var iconFeature = new ol.Feature({
           geometry: new ol.geom.Point([coordinate[0], coordinate[1]])
@@ -703,7 +705,7 @@
           })
         });
 
-        layer.setStyle([iconStyle, shadowStyle]);
+        layer.setStyle(iconStyle);
 
         $scope.currentCreatingInternalLayer = layer;
         $scope.map.addLayer(layer);
@@ -907,15 +909,18 @@
       };
 
       /*
-      * GALLERY
-      */
-      $scope.getPhotosByAttribute = function (attribute, index) {
+       * GALLERY
+       */
+      $scope.getPhotosByAttribute = function(attribute) {
 
         attribute.photoAlbum = null;
-        $scope.attributeIndex = index;
+
+        var attr = $filter('filter')($scope.currentEntity.markerAttribute, {id: attribute.id})[0];
+
+        $scope.attributeIndex = $scope.currentEntity.markerAttribute.indexOf(attr);
 
         markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, null, {
-          callback: function (result) {
+          callback: function(result) {
 
             attribute.photoAlbum = result.content[0].photoAlbum;
             attribute.photoAlbum.photos = result.content;
@@ -926,8 +931,11 @@
 
             $log.debug($scope.currentEntity);
           },
-          errorHandler: function (message, exception) {
-            $scope.message = {type: "error", text: message};
+          errorHandler: function(message, exception) {
+            $scope.message = {
+              type: "error",
+              text: message
+            };
             $scope.$apply();
           }
         });
@@ -942,22 +950,90 @@
         $scope.currentEntity = angular.fromJson(localStorage.getItem('currentEntity'));
         $log.debug($scope.currentEntity);
 
-        $timeout(function(){
-            $scope.getPhotosByAttribute($scope.currentEntity.markerAttribute[1], 1);
+        $timeout(function() {
+          $scope.attributeIndex = 1;
+
+          $scope.selectedAttribute = $scope.currentEntity.markerAttribute[$scope.attributeIndex];
+
+          $scope.getPhotosByAttribute($scope.currentEntity.markerAttribute[$scope.attributeIndex], $scope.attributeIndex);
         }, 1000);
 
       }
 
-      $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+      $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
 
         switch ($state.current.name) {
           case $scope.SHOW_GALLERY:
-          {
-            $scope.getCurrentEntity();
-            break;
-          }
+            {
+              $scope.getCurrentEntity();
+              break;
+            }
         }
       });
+
+      $scope.takePhoto = function() {
+
+        var options = {
+          quality: 60,
+          destinationType: Camera.DestinationType.DATA_URL,
+          sourceType: Camera.PictureSourceType.CAMERA,
+          allowEdit: false,
+          targetWidth: 480,
+          targetHeight: 640,
+          encodingType: Camera.EncodingType.PNG,
+          popoverOptions: CameraPopoverOptions,
+          saveToPhotoAlbum: true,
+          correctOrientation: true
+        };
+
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          $ionicLoading.show({
+            template: 'getPicture',
+            duration: 2000
+          });
+
+          $scope.images.push("data:image/jpeg;base64," + imageData);
+        }, function(err) {
+          // error
+        });
+
+      };
+
+      $scope.getPhoto = function() {
+
+        var options = {
+          quality: 60,
+          destinationType: Camera.DestinationType.DATA_URL,
+          sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+          allowEdit: false,
+          targetWidth: 480,
+          targetHeight: 640,
+          encodingType: Camera.EncodingType.PNG,
+          popoverOptions: CameraPopoverOptions,
+          saveToPhotoAlbum: true,
+          correctOrientation: true
+        };
+
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          $ionicLoading.show({
+            template: 'Adicionando foto',
+            duration: 2000
+          });
+
+          var photo = new Photo();
+          photo.source = imageData;
+          photo.name = 'name';
+          photo.description = 'description';
+          photo.contentLength = 1216513;
+          photo.mimeType = 'png';
+
+          $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos.push(photo);
+
+        }, function(err) {
+          // error
+        });
+
+      };
 
 
     });
