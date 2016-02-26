@@ -772,6 +772,18 @@
             callback: function(result) {
 
               $scope.isLoading = false;
+
+              $scope.clearNewMarker();
+
+              $scope.currentEntity.layer.visible = false;
+              $scope.toggleLayer($scope.currentEntity.layer);
+              $scope.currentEntity.layer.visible = true;
+              $scope.toggleLayer($scope.currentEntity.layer);
+
+              $scope.currentEntity = {};
+              $scope.currentFeature = '';
+              $scope.footerMinimize();
+              
               $scope.msg = {
                 type: "success",
                 text: $translate("map.Mark-updated-succesfully"),
