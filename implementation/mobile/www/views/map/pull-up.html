@@ -62,7 +62,7 @@
         <input type="{{attribute.type}}" ng-model="attribute.value" placeholder="{{attribute.name}}">
       </label>
       <!--boolean-->
-      <ion-checkbox ng-if="attribute.type == 'BOOLEAN'" ng-model="attribute.value">{{attribute.name}}</ion-checkbox>
+      <ion-checkbox ng-true-value="'Yes'" ng-false-value="'No'" ng-if="attribute.type == 'BOOLEAN'" ng-model="attribute.value">{{attribute.name}}</ion-checkbox>
       <!--date-->
       <label class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
         <span class="input-label">{{attribute.name}}</span>
