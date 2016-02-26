@@ -1,59 +1,40 @@
-<!DOCTYPE html>
 <ion-view view-title="Signin">
-
-    <ion-content class="login-image-footer">
-      <div>
-        <form name="model.form" class="login-content">
-
-            <div style="width: 100%; text-align: center">
-                <img alt="Logo" src="./static/images/CAB-LOGO.svg" width="150" style="text-align:center;"/>
-            </div>
-
-
-            <div class="list">
-
-                <label class="item item-input item-floating-label login-label">
-                    <span class="input-label">{{ 'authentication.Email' | translate }}</span>
-                    <input type="text" placeholder="{{ 'authentication.Email' | translate }}" ng-model="model.user.email">
-                </label>
-                <ng-messages class="padding" for="model.form.email.$touched && model.form.email.$error" role="alert">
-                    <ng-message when="required">É necessário informar seu e-mail.</ng-message>
-                    <ng-message when="email">{{'admin.users.The-email-is-not-valid' | translate}}</ng-message>
-                </ng-messages>
-
-
-                <label class="item item-input item-floating-label login-label">
-                    <span class="input-label">{{'authentication.Password' | translate}}</span>
-                    <input type="password" placeholder="{{'authentication.Password' | translate}}" ng-model="model.user.password">
-                </label>
-                <ng-messages class="padding" for="model.form.password.$touched && model.form.password.$error" role="alert">
-                    <ng-message when="required">{{'admin.datasource.Enter-your-password' | translate}}.</ng-message>
-                </ng-messages>
-
-            </div>
-
-            <div>
-                <button nav-clear class="login-button button button-block button-positive" ng-click="loginHandler()">
-                    <b>{{'authentication.Enter' | translate}}</b>
-                </button>
-
-                <div style="margin-top: 50px"></div>
-
-                <button nav-clear class="login-button button button-block button-small button-assertive" ng-click="googleSignIn()">
-                  <b>{{'authentication.Login-with-Google-+' | translate}}</b>
-                </button>
-                <button nav-clear class="login-button button button-block button-small login-button-face" ng-click="fbLogin()">
-                    <b>{{'authentication.Login-with-Facebook' | translate}}</b>
-                </button>
-            </div>
-
-        </form>
-      </div>
-
-
-
-    </ion-content>
-
-
-
+  <ion-content class="login-image-footer">
+    <div>
+      <form name="model.form" class="login-content">
+        <div style="width: 100%; text-align: center">
+          <img alt="Logo" src="./static/images/CAB-LOGO.svg" width="150" style="text-align:center;"/>
+        </div>
+        <div class="list">
+          <label class="item item-input item-floating-label login-label">
+            <span class="input-label">{{ 'authentication.Email' | translate }}</span>
+            <input type="email" placeholder="{{ 'authentication.Email' | translate }}" ng-model="model.user.email">
+          </label>
+          <ng-messages class="padding" for="model.form.email.$touched && model.form.email.$error" role="alert">
+            <ng-message when="required">É necessário informar seu e-mail.</ng-message>
+            <ng-message when="email">{{'admin.users.The-email-is-not-valid' | translate}}</ng-message>
+          </ng-messages>
+          <label class="item item-input item-floating-label login-label">
+            <span class="input-label">{{'authentication.Password' | translate}}</span>
+            <input type="password" placeholder="{{'authentication.Password' | translate}}" ng-model="model.user.password">
+          </label>
+          <ng-messages class="padding" for="model.form.password.$touched && model.form.password.$error" role="alert">
+            <ng-message when="required">{{'admin.datasource.Enter-your-password' | translate}}.</ng-message>
+          </ng-messages>
+        </div>
+        <div>
+          <button nav-clear class="login-button button button-block button-positive" ng-click="loginHandler()">
+            <b>{{'authentication.Enter' | translate}}</b>
+          </button>
+          <div style="margin-top: 50px"></div>
+          <button nav-clear class="login-button button button-block button-small button-assertive" ng-click="googleSignIn()">
+            <b>{{'authentication.Login-with-Google-+' | translate}}</b>
+          </button>
+          <button nav-clear class="login-button button button-block button-small login-button-face" ng-click="fbLogin()">
+            <b>{{'authentication.Login-with-Facebook' | translate}}</b>
+          </button>
+        </div>
+      </form>
+    </div>
+  </ion-content>
 </ion-view>

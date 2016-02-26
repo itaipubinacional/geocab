@@ -53,7 +53,7 @@
       <select ng-change="listAttributesByLayer(currentEntity.layer)" ng-model="currentEntity.layer" ng-options="layer.name for layer in allInternalLayerGroups"></select>
     </label>
     <div class="row" ng-if="imgResult != ''">
-      <img ng-src="{{ imgResult }}" width="100%" style="max-height: 200px">
+      <img ng-src="{{ imgResult }}" width="100%" style="max-height: 200px" ng-click="$state.go(SHOW_GALLERY)">
     </div>
     <div ng-repeat="attribute in currentEntity.markerAttribute">
       <!--text or number-->
@@ -75,7 +75,7 @@
     <button ng-click="footerMinimize()" style="margin-top: 5px" class="button button-icon icon ion-chevron-left"></button>
     <div class="h1 title">{{ currentEntity.name ? currentEntity.name : currentEntity.layer.name }}</div>
     <div class="buttons">
-      <button class="button button-icon icon ion-camera" ng-click="getPhoto()"></button>
+      <button class="button button-icon icon ion-camera" ng-click="$state.go( SHOW_GALLERY )"></button>
       <button class="button button-icon icon ion-checkmark" ng-click="saveMarker()"></button>
     </div>
   </div>

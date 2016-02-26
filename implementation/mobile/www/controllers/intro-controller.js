@@ -1,56 +1,53 @@
-/**
- * Created by boz on 18/02/16.
- */
-(function (angular) {
-    'use strict';
+(function(angular) {
+  'use strict';
 
-    /**
-     *
-     * @param $scope
-     * @param $state
-     */
-    angular.module('application')
-        .controller('IntroController', function ($rootScope, $scope, $state, $ionicSlideBoxDelegate) {
+  /**
+   *
+   * @param $scope
+   * @param $state
+   */
+  angular.module('application')
+    .controller('IntroController', function($rootScope, $scope, $state, $ionicSlideBoxDelegate) {
 
 
-            /*-------------------------------------------------------------------
-             * 		 				 	ATTRIBUTES
-             *-------------------------------------------------------------------*/
+      /*-------------------------------------------------------------------
+       * 		 				 	ATTRIBUTES
+       *-------------------------------------------------------------------*/
 
 
-            /*-------------------------------------------------------------------
-             * 		 				  	POST CONSTRUCT
-             *-------------------------------------------------------------------*/
+      /*-------------------------------------------------------------------
+       * 		 				  	POST CONSTRUCT
+       *-------------------------------------------------------------------*/
 
 
-            /*-------------------------------------------------------------------
-             * 		 				 	  HANDLERS
-             *-------------------------------------------------------------------*/
+      /*-------------------------------------------------------------------
+       * 		 				 	  HANDLERS
+       *-------------------------------------------------------------------*/
 
-            // Called to navigate to the main app
-            $scope.startApp = function () {
-                $state.go('map');
-            };
+      // Called to navigate to the main app
+      $scope.startApp = function() {
+        $state.go('map.index');
+      };
 
-            $scope.next = function () {
-                $ionicSlideBoxDelegate.next();
-            };
+      $scope.next = function() {
+        $ionicSlideBoxDelegate.next();
+      };
 
-            $scope.previous = function () {
-                $ionicSlideBoxDelegate.previous();
-            };
+      $scope.previous = function() {
+        $ionicSlideBoxDelegate.previous();
+      };
 
-            // Called each time the slide changes
-            $scope.slideChanged = function (index) {
-                if (index == 2) {
-                   localStorage.setItem('doneIntro', true);     
-                };
-                $scope.slideIndex = index;
-            };
+      // Called each time the slide changes
+      $scope.slideChanged = function(index) {
+        if (index == 2) {
+          localStorage.setItem('doneIntro', true);
+        };
+        $scope.slideIndex = index;
+      };
 
-            $scope.navSlide = function (index) {
-                $ionicSlideBoxDelegate.slide(index, 500);
-            }
-        });
+      $scope.navSlide = function(index) {
+        $ionicSlideBoxDelegate.slide(index, 500);
+      }
+    });
 
 }(window.angular));

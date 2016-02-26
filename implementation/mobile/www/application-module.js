@@ -8,7 +8,7 @@
    *
    */
 
-  module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
+  module.constant('$API_ENDPOINT', 'http://192.168.20.136:8080/geocab');
 
 
   /**
@@ -54,9 +54,16 @@
 
     //MAP
     $stateProvider.state('map', {
+      abstract: true,
       url: "/map",
-      controller: 'MapController',
+      template: '<ion-nav-view></ion-nav-view>',
+      controller: 'MapController'
+    }).state('map.index', {
+      url: "/index",
       templateUrl: './views/map/map-index.html'
+    }).state('map.gallery', {
+      url: "/gallery",
+      templateUrl: './views/map/gallery.html'
     });
 
     //HOME

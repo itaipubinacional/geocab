@@ -1,0 +1,21 @@
+<div class="bar bar-header bar-positive">
+  <h1 class="title">Albúm de fotos</h1>
+  <div class="buttons">
+    <button class="button button-icon icon ion-camera" ng-click="$state.go( SHOW_GALLERY )"></button>
+  </div>
+</div>
+<div class="bar bar-subheader">
+  <ion-scroll direction="x" style="overflow: scroll; white-space: nowrap;">
+    <h4 ng-repeat="attribute in currentEntity.markerAttribute track by $index" ng-if="attribute.type == 'PHOTO_ALBUM'">
+      {{ attribute.name }}</h4>
+  </ion-scroll>
+</div>
+<ion-content class="has-header has-subheader" scroll="true">
+  <div class="row">
+    <div class="col">.col</div>
+    <div class="col">.col</div>
+    <div class="col">.col</div>
+    <div class="col">.col</div>
+    <div class="col">.col</div>
+  </div>
+</ion-content>
