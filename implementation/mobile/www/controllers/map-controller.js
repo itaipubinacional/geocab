@@ -760,6 +760,14 @@
           var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
           $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
 
+          angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index){
+            if(attribute.type == 'PHOTO_ALBUM' && attribute.photoAlbum != null) {
+              angular.forEach(attribute.photoAlbum.photos, function(photo){
+                delete photo.image;
+              });
+            }
+          });
+
           markerService.updateMarker($scope.currentEntity, {
             callback: function(result) {
 
@@ -1023,10 +1031,10 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = 'name';
+          photo.name = 'name.png';
           photo.description = 'description';
-          photo.contentLength = 1216513;
-          photo.mimeType = 'png';
+          photo.contentLength = 25059;
+          photo.mimeType = 'image/png';
 
           $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos.push(photo);
 
