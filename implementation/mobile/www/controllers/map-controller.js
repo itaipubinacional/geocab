@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera) {
+    .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading) {
 
 
       /**
@@ -1022,6 +1022,7 @@
 
           var photo = new Photo();
           photo.source = imageData;
+          photo.image = imageData;
           photo.name = 'name';
           photo.description = 'description';
           photo.contentLength = 1216513;
