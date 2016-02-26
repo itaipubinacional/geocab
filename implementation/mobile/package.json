@@ -23,7 +23,8 @@
     "cordova-plugin-geolocation",
     "org.apache.cordova.inappbrowser",
     "cordova-plugin-googleplus",
-    "org.apache.cordova.statusbar"
+    "org.apache.cordova.statusbar",
+    "cordova-plugin-camera"
   ],
   "cordovaPlatforms": [
     "ios"

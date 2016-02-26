@@ -1,21 +1,28 @@
 <ion-view view-title="Gallery">
   <div class="bar bar-header bar-positive">
-    <button ng-click="$state.go( INDEX )" class="button button-icon icon ion-chevron-left"></button>
-    <h1 class="title">Albúm de fotos</h1>
+    <button ng-click="$state.go( INDEX )" class="button button-icon icon ion-android-arrow-back"></button>
+    <h1 class="title">Álbum de fotos</h1>
     <div class="buttons">
-      <button class="button button-icon icon ion-camera" ng-click="$state.go( SHOW_GALLERY )"></button>
+      <button class="button button-icon icon ion-camera" ng-click="getPhoto()"></button>
+      <button class="button button-icon icon ion-android-done" ng-click="saveMarker()"></button>
     </div>
   </div>
-  <div class="bar bar-subheader">
-    <ion-scroll direction="x" style="overflow: scroll; white-space: nowrap;">
+  <div class="bar bar-subheader padding">
+    <label class="item item-input item-select">
+      <span class="input-label">Attributo</span>
+      <select ng-change="getPhotosByAttribute(selectedAttribute)" ng-model="selectedAttribute" ng-options="attribute.name for attribute in currentEntity.markerAttribute | filter:{type: 'PHOTO_ALBUM'}"></select>
+    </label>
+
+    <!--<ion-scroll direction="x" style="overflow: scroll; white-space: nowrap;">
       <div class="row">
-        <div style="text-align:center" class="col" ng-repeat="attribute in currentEntity.markerAttribute track by $index" ng-if="attribute.type == 'PHOTO_ALBUM'" ng-click="getPhotosByAttribute(attribute, $index)">
-          {{ attribute.name }}
+        <div style="text-align:center" class="col" ng-repeat="attribute in currentEntity.markerAttribute track by $index"
+             ng-if="attribute.type == 'PHOTO_ALBUM'" ng-click="getPhotosByAttribute(attribute, $index)">
+          <h5>{{ attribute.name }}</h5>
         </div>
       </div>
-    </ion-scroll>
+    </ion-scroll> -->
   </div>
-  <ion-content class="has-header has-subheader" scroll="true">
+  <ion-content class="has-header has-subheader" scroll="true" style="margin-top:10px">
     <div class="row" style="flex-wrap: wrap;">
       <div class="col col-50" ng-repeat="photo in currentEntity.markerAttribute[attributeIndex].photoAlbum.photos">
         <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}"/>

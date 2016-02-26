@@ -22,7 +22,6 @@
   <preference name="auto-hide-splash-screen" value="false"/>
   <preference name="ShowSplashScreenSpinner" value="false"/>
   <preference name="Fullscreen" value="false"/>
-  <preference name="fullscreen" value="false"/>
   <preference name="StatusBarOverlaysWebView" value="false"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>

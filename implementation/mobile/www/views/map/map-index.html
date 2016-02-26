@@ -3,7 +3,7 @@
   <ion-side-menus>
 
     <button class="button button-icon icon ion-navicon drawer-button" ng-click="toggleDrawer()"></button>
-    <!--<button class="button button-icon icon ion-arrow-shrink fab" ng-click="getGPSPosition()"></button>-->
+    <button class="button button-icon icon ion-android-locate gps-button fab" ng-click="getGPSPosition()"></button>
 
     <ion-side-menu-content>
       <ion-content scroll="false">
@@ -27,12 +27,14 @@
         </ion-list>
       </div>
       <div class="bar bar-footer bar-positive" style="height:75px;">
-        <div class="col">
-          <h6><b>{{ userMe.username }}</b></h6>
-          <h6>{{ userMe.email }}</h6>
+        <div class="row">
+        <div class="col-75">
+            <h6 style="word-wrap: initial"><b>{{ userMe.username }}</b></h6>
+            <h6 style="word-wrap: initial">{{ userMe.email }}</h6>
+          </div>
         </div>
-        <div class="col" style="margin-top:10px">
-          <button class="button button-icon icon ion-log-out" ng-click="logout()"></button>
+        <div class="col-15" style="margin-top:10px">
+          <button class="button button-icon icon ion-android-exit" ng-click="logout()"></button>
         </div>
       </div>
     </drawer>
