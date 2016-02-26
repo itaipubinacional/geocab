@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log, $location) {
+    .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture, $ionicPopup, $ionicSideMenuDelegate, Camera, $timeout, $cordovaDatePicker, $cordovaGeolocation, $filter, $log, $location, $ionicNavBarDelegate) {
 
 
       /**
@@ -24,6 +24,7 @@
       /**
        *
        */
+      $scope.INDEX = "map.index";
       $scope.SHOW_GALLERY = "map.gallery";
       /**
 
@@ -42,6 +43,8 @@
       $scope.newMarker = {};
       $scope.dragPan = true;
 
+      $scope.attributeIndex = '';
+
       $scope.pullUpHandle = angular.element(document.getElementsByTagName('ion-pull-up-handle'));
 
       $scope.pullUpHeight = 100;
@@ -58,8 +61,6 @@
         zoom: 9,
         minZoom: 3
       });
-
-
 
       /**
        *
@@ -78,6 +79,14 @@
       /*-------------------------------------------------------------------
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/
+
+       $scope.goBack = function () {
+           $ionicNavBarDelegate.back();
+         };
+
+       $scope.setImagePath = function(image) {
+          return $rootScope.$API_ENDPOINT + image.match(/\/broker.*/)[0];
+       };
 
       $timeout(function() {
         $scope.map = new ol.Map({
@@ -599,7 +608,7 @@
           markerService.lastPhotoByMarkerId($scope.currentEntity.id, {
             callback: function(result) {
 
-              $scope.imgResult = $rootScope.$API_ENDPOINT + result.image.match(/\/broker.*/)[0];
+              $scope.imgResult = result.image;
               $scope.$apply();
 
             },
@@ -897,6 +906,34 @@
         // $state.go('authentication.login');
       };
 
+      /*
+      * GALLERY
+      */
+      $scope.getPhotosByAttribute = function (attribute, index) {
+
+        attribute.photoAlbum = null;
+        $scope.attributeIndex = index;
+
+        markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, null, {
+          callback: function (result) {
+
+            attribute.photoAlbum = result.content[0].photoAlbum;
+            attribute.photoAlbum.photos = result.content;
+
+            $scope.photos = result.content;
+
+            $scope.$apply();
+
+            $log.debug($scope.currentEntity);
+          },
+          errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+          }
+        });
+
+      };
+
       $timeout(function() {
         $scope.listAllInternalLayerGroups();
       }, 1000);
@@ -904,6 +941,11 @@
       $scope.getCurrentEntity = function() {
         $scope.currentEntity = angular.fromJson(localStorage.getItem('currentEntity'));
         $log.debug($scope.currentEntity);
+
+        $timeout(function(){
+            $scope.getPhotosByAttribute($scope.currentEntity.markerAttribute[1], 1);
+        }, 1000);
+
       }
 
       $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
@@ -916,6 +958,7 @@
           }
         }
       });
+
 
     });
 
