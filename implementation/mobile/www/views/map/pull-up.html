@@ -54,21 +54,29 @@
     <div class="row" ng-if="imgResult != '' && imgResult != null">
       <img ng-src="{{ setImagePath(imgResult) }}" width="100%" style="max-height: 200px" ng-click="$state.go(SHOW_GALLERY)">
     </div>
-    <form>
+    <form name="markerForm" novalidate>
       <fieldset ng-disabled="isDisabled">
-        <div ng-repeat="attribute in currentEntity.markerAttribute">
+        <div ng-repeat="attribute in currentEntity.markerAttribute" ng-form="myInnerForm">
           <!--text or number-->
-          <label class="item item-input item-floating-label" ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
-            <span class="input-label">{{ attribute.name }}</span>
-            <input type="{{ attribute.type }}" ng-model="attribute.value" placeholder="{{ attribute.name }}">
+          <label ng-class="{'has-error': myInnerForm.dynamic_input.$invalid}" class="item item-input item-floating-label" ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
+            <span class="input-label">{{ attribute.name }} </span>
+            <input type="{{ attribute.type }}" name="dynamic_input" ng-model="attribute.value" placeholder="{{ attribute.name }}" ng-required="attribute.required">
           </label>
           <!--boolean-->
-          <ion-checkbox ng-true-value="'Yes'" ng-false-value="'No'" ng-if="attribute.type == 'BOOLEAN'" ng-model="attribute.value">{{ attribute.name }}</ion-checkbox>
-          <!--date-->
-          <label class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
+          <label ng-class="{'has-error': myInnerForm.dynamic_input.$invalid}" class="item item-input" ng-if="attribute.type == 'BOOLEAN'">
             <span class="input-label">{{ attribute.name }}</span>
-            <input type="text" ng-model="attribute.value" ng-click="showDatePicker(attribute)" placeholder="{{ attribute.name }}">
+            <ion-radio ng-model="attribute.value" name="dynamic_input" ng-value="'Yes'" ng-required="!attribute.value">{{ 'map.Yes' | translate }}</ion-radio>
+            <ion-radio ng-model="attribute.value" name="dynamic_input" ng-value="'No'" ng-required="!attribute.value">{{ 'map.No' | translate }}</ion-radio>
           </label>
+          <!--<ion-checkbox ng-true-value="'Yes'" ng-false-value="'No'" ng-if="attribute.type == 'BOOLEAN'" ng-model="attribute.value">{{ attribute.name }}</ion-checkbox>-->
+          <!--date-->
+          <label ng-class="{'has-error': myInnerForm.dynamic_input.$invalid}" class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
+            <span class="input-label">{{ attribute.name }}</span>
+            <input type="text" ng-model="attribute.value" name="dynamic_input" ng-click="showDatePicker(attribute)" placeholder="{{ attribute.name }}" ng-required="attribute.required">
+          </label>
+          <div ng-if="myInnerForm.dynamic_input.$invalid">
+            {{ 'map.Field-required' | translate }}
+          </div>
         </div>
       </fieldset>
     </form>
@@ -77,8 +85,8 @@
     <button ng-click="footerMinimize()" style="margin-top: 5px" class="button button-icon icon ion-android-arrow-back"></button>
     <div class="h1 title">{{ currentEntity.name ? currentEntity.name : currentEntity.layer.name }}</div>
     <div class="buttons">
-      <button class="button button-icon icon ion-images" ng-click="$state.go( SHOW_GALLERY )"></button>
-      <button class="button button-icon icon ion-android-done" ng-click="saveMarker()"></button>
+      <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="$state.go( SHOW_GALLERY )"></button>
+      <button class="button button-icon icon ion-android-done" ng-click="saveMarker(markerForm)"></button>
     </div>
   </div>
 </ion-pull-up-content>

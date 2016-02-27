@@ -10,7 +10,7 @@
   <div class="bar bar-subheader padding">
     <label class="item item-input item-select">
       <span class="input-label">Attributo</span>
-      <select ng-change="getPhotosByAttribute(selectedAttribute)" ng-model="selectedAttribute" ng-options="attribute.name for attribute in currentEntity.markerAttribute | filter:{type: 'PHOTO_ALBUM'}"></select>
+      <select ng-change="getPhotosByAttribute(selectedPhotoAlbumAttribute)" ng-model="selectedPhotoAlbumAttribute" ng-options="attribute.name for attribute in currentEntity.markerAttribute | filter:{type: 'PHOTO_ALBUM'}"></select>
     </label>
 
     <!--<ion-scroll direction="x" style="overflow: scroll; white-space: nowrap;">
