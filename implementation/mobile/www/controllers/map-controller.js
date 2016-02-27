@@ -396,7 +396,7 @@
 
           layer.visible = false;
 
-          $cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function(success) {
+          $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
             // success
           }, function (error) {
             // error
@@ -809,11 +809,11 @@
               $scope.currentFeature = '';
               $scope.footerMinimize();
 
-              $scope.msg = {
-                type: "success",
-                text: $translate("map.Mark-updated-succesfully"),
-                dismiss: true
-              };
+              $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
+                // success
+              }, function (error) {
+                // error
+              });
 
               $scope.$apply();
             },
@@ -884,6 +884,12 @@
 
           markerService.insertMarker($scope.currentEntity, {
             callback: function(result) {
+
+              $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {
+                // success
+              }, function (error) {
+                // error
+              });
 
               $scope.isLoading = false;
 
