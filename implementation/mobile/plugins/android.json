@@ -37,13 +37,13 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
         "net.ekuwang.cordova.plugin.statusbar": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
