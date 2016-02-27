@@ -7,6 +7,9 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
         "cordova-plugin-crosswalk-webview": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
@@ -16,7 +19,19 @@
         "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
+        "cordova-plugin-googleplus": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
         "cordova-plugin-keyboard": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
         "cordova-plugin-whitelist": {
@@ -25,22 +40,10 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-googleplus": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
         "net.ekuwang.cordova.plugin.statusbar": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-camera": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-splashscreen": {
+        "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
