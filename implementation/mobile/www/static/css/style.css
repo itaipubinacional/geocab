@@ -30,7 +30,7 @@
 #pull-up .sub-header, .sub-header{background-color: #1e88e5; color: #fff}
 
 .layers .list{padding-top: 2px}
-.layers .item-checkbox{border-top:none;font-size: 12px;font-weight: bold;}
+.layers .item-checkbox{border-top:none;font-size: 12px;font-weight: bold;padding-right: 40px;}
 .layers .item-checkbox-img {
   vertical-align: middle;
   position: absolute;
