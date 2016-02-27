@@ -518,43 +518,47 @@
       $scope.listAttributesByLayer = function (layer) {
 
         $scope.selectedPhotoAlbumAttribute = {};
-        $scope.currentEntity.markerAttribute = [];
 
-        layerGroupService.listAttributesByLayer(layer.id, {
-          callback: function (result) {
+        if(!$scope.currentEntity.markerAttribute || $scope.currentEntity.markerAttribute.length == 0) {
 
-            angular.forEach(result, function (layerAttribute) {
+          $scope.currentEntity.markerAttribute = [];
 
-              var attribute = new Attribute();
+          layerGroupService.listAttributesByLayer(layer.id, {
+            callback: function (result) {
 
-              attribute.id = layerAttribute.id;
+              angular.forEach(result, function (layerAttribute) {
 
-              layerAttribute.id = null;
-              layerAttribute.photoAlbum = null;
+                var attribute = new Attribute();
 
-              layerAttribute.attribute = attribute;
+                attribute.id = layerAttribute.id;
 
-              $scope.currentEntity.markerAttribute.push(layerAttribute);
+                layerAttribute.id = null;
+                layerAttribute.photoAlbum = null;
 
-              if(layerAttribute.type == 'PHOTO_ALBUM' && angular.equals($scope.selectedPhotoAlbumAttribute, {})) {
-                $scope.selectedPhotoAlbumAttribute = layerAttribute;
-              }
+                layerAttribute.attribute = attribute;
 
-            });
+                $scope.currentEntity.markerAttribute.push(layerAttribute);
 
-            //$scope.currentEntity.markerAttribute = result;
+                if (layerAttribute.type == 'PHOTO_ALBUM' && angular.equals($scope.selectedPhotoAlbumAttribute, {})) {
+                  $scope.selectedPhotoAlbumAttribute = layerAttribute;
+                }
 
-            $scope.$apply();
-          },
-          errorHandler: function (message, exception) {
-            $ionicPopup.alert({
-              title: 'Opss...',
-              template: message
-            });
+              });
 
-            $scope.$apply();
-          }
-        });
+              //$scope.currentEntity.markerAttribute = result;
+
+              $scope.$apply();
+            },
+            errorHandler: function (message, exception) {
+              $ionicPopup.alert({
+                title: 'Opss...',
+                template: message
+              });
+
+              $scope.$apply();
+            }
+          });
+        }
       };
 
       /**
@@ -639,6 +643,7 @@
         $log.debug($scope.pullUpHeight);
         $scope.showMarkerDetails = false;
         $scope.imgResult = '';
+        $scope.isDisabled = false;
       };
 
       $scope.clearNewMarker = function () {
