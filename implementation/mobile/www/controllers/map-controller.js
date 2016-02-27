@@ -438,52 +438,51 @@
             markerService.listMarkerByLayer(layer.id, {
               callback: function (result) {
 
-                var iconPath = '/static/images/marker.png';
-
                 if (result.length > 0) {
-                  iconPath = $rootScope.$API_ENDPOINT + '/' + result[0].layer.icon
+
+                  var iconPath = $rootScope.$API_ENDPOINT + '/' + result[0].layer.icon;
+
+                  var iconStyle = new ol.style.Style({
+                    image: new ol.style.Icon(({
+                      anchor: [0.5, 1],
+                      anchorXUnits: 'fraction',
+                      anchorYUnits: 'fraction',
+                      src: iconPath
+                    }))
+                  });
+
+                  var markers = [];
+                  angular.forEach(result, function (marker, index) {
+
+                    var iconFeature = new ol.Feature({
+                      geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
+                      marker: marker
+                    });
+
+                    iconFeature.setStyle(iconStyle);
+
+                    var vectorSource = new ol.source.Vector({
+                      features: [iconFeature]
+                    });
+
+                    var vectorLayer = new ol.layer.Vector({
+                      source: vectorSource,
+                      layer: layer.id
+                    });
+
+                    markers.push(vectorLayer);
+
+                  });
+
+                  var group = new ol.layer.Group({
+                    layers: markers,
+                    id: layer.id
+                  });
+
+                  $scope.map.addLayer(group);
+
+                  $scope.$apply();
                 }
-
-                var iconStyle = new ol.style.Style({
-                  image: new ol.style.Icon(({
-                    anchor: [0.5, 1],
-                    anchorXUnits: 'fraction',
-                    anchorYUnits: 'fraction',
-                    src: iconPath
-                  }))
-                });
-
-                var markers = [];
-                angular.forEach(result, function (marker, index) {
-
-                  var iconFeature = new ol.Feature({
-                    geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
-                    marker: marker
-                  });
-
-                  iconFeature.setStyle(iconStyle);
-
-                  var vectorSource = new ol.source.Vector({
-                    features: [iconFeature]
-                  });
-
-                  var vectorLayer = new ol.layer.Vector({
-                    source: vectorSource,
-                    layer: layer.id
-                  });
-
-                  markers.push(vectorLayer);
-
-                });
-
-                var group = new ol.layer.Group({
-                  layers: markers,
-                  id: layer.id
-                });
-
-                $scope.map.addLayer(group);
-
-                $scope.$apply();
 
               },
               errorHandler: function (message, exception) {
@@ -742,10 +741,7 @@
 
         $scope.currentEntity.status = 'PENDING';
 
-
       };
-
-
 
       $scope.getPhoto = function() {
         Camera.getPicture().then(function(imageURI) {
@@ -885,20 +881,64 @@
           markerService.insertMarker($scope.currentEntity, {
             callback: function(result) {
 
-              $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {
-                // success
-              }, function (error) {
-                // error
-              });
-
               $scope.isLoading = false;
-
               $scope.clearNewMarker();
 
-              $scope.currentEntity.layer.visible = false;
-              $scope.toggleLayer($scope.currentEntity.layer);
-              $scope.currentEntity.layer.visible = true;
-              $scope.toggleLayer($scope.currentEntity.layer);
+              /*$cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {
+              }, function (error) {
+              });*/
+
+              var internalLayer = $filter('filter')($scope.allInternalLayerGroups, {id: $scope.currentEntity.layer.id})[0];
+
+              var iconPath = $rootScope.$API_ENDPOINT + '/' + internalLayer.icon;
+
+              var iconStyle = new ol.style.Style({
+                image: new ol.style.Icon(({
+                  anchor: [0.5, 1],
+                  anchorXUnits: 'fraction',
+                  anchorYUnits: 'fraction',
+                  src: iconPath
+                }))
+              });
+
+              if(angular.isDefined(internalLayer.visible) && internalLayer.visible) {
+
+                angular.forEach($scope.map.getLayers(), function (group) {
+
+                  if (group instanceof ol.layer.Group) {
+                    var prop = group.getProperties();
+
+                    if (prop.id == $scope.currentEntity.layer.id) {
+
+                      var innerLayers = prop.layers.getArray();
+                      //group.setVisible(layer.visible);
+
+                      var iconFeature = new ol.Feature({
+                        geometry: new ol.format.WKT().readGeometry($scope.currentEntity.wktCoordenate),
+                        marker: $scope.currentEntity
+                      });
+
+                      iconFeature.setStyle(iconStyle);
+
+                      var vectorSource = new ol.source.Vector({
+                        features: [iconFeature]
+                      });
+
+                      var vectorLayer = new ol.layer.Vector({
+                        source: vectorSource
+                      });
+
+                      innerLayers.push(vectorLayer);
+
+                    }
+                  }
+                });
+              } else {
+
+                internalLayer.visible = true;
+                $scope.toggleLayer(internalLayer);
+
+              }
 
               $scope.currentEntity = {};
               $scope.currentFeature = '';
