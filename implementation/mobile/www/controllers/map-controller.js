@@ -92,6 +92,10 @@
         }
       };
 
+      $scope.getMarkerStatus = function (status) {
+        return $translate('map.' + status.charAt(0).toUpperCase() + status.toLowerCase().slice(1));
+      };
+
       $timeout(function () {
         $scope.map = new ol.Map({
           controls: [],
@@ -168,7 +172,14 @@
 
             if (angular.isDefined(feature) && !$scope.isNewMarker) {
 
+              $scope.isDisabled = false;
+
               $scope.currentEntity = feature.getProperties().marker;
+
+              if(($scope.currentEntity.status == 'PENDING' && $scope.currentEntity.user.id == $scope.userMe.id)
+                || ($scope.userMe.role == 'ADMINISTRATOR' && !($scope.currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED'))) {
+                $scope.isDisabled = true;
+              }
 
               var iconStyle = new ol.style.Style({
                 image: new ol.style.Icon(({
@@ -562,6 +573,28 @@
         $log.debug('clearMarkerDetail');
       };
 
+      $scope.getLastPhotoByMarkerId = function(markerId) {
+
+        markerService.lastPhotoByMarkerId(markerId, {
+          callback: function (result) {
+
+            $scope.imgResult = result.image;
+            $scope.$apply();
+
+          },
+          errorHandler: function (message, exception) {
+
+            $scope.imgResult = null;
+            $scope.message = {
+              type: "error",
+              text: message
+            };
+            $scope.$apply();
+          }
+        });
+
+      };
+
       $scope.footerExpand = function () {
 
         //$log.debug('pullUpHeight: ' + $scope.pullUpHeight);
@@ -578,22 +611,7 @@
 
         } else {
 
-          markerService.lastPhotoByMarkerId($scope.currentEntity.id, {
-            callback: function (result) {
-
-              $scope.imgResult = result.image;
-              $scope.$apply();
-
-            },
-            errorHandler: function (message, exception) {
-              $scope.imgResult = null;
-              $scope.message = {
-                type: "error",
-                text: message
-              };
-              $scope.$apply();
-            }
-          });
+          $scope.getLastPhotoByMarkerId($scope.currentEntity.id);
 
         }
 

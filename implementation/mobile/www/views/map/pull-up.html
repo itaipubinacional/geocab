@@ -23,7 +23,7 @@
     </div>
     <div class="row">
       <div class="row" style="padding-top:0px">
-        <h6 style="margin-top:0px">{{'PostedBy' | translate}} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
+        <h6 style="margin-top:0px">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
       </div>
     </div>
   </div>
@@ -40,10 +40,9 @@
       </div>
     </div>
     <div ng-if="currentEntity.id">
-      <div class="row sub-header">
-        <div class="col">
-          <h6 style="color: #fff">{{'PostedBy' | translate}} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
-        </div>
+      <div class="sub-header padding-horizontal">
+        <h6 style="color: #fff">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
+        <h6 style="color: #fff">Status <b>{{ getMarkerStatus(currentEntity.status) }}</b></h6>
       </div>
     </div>
   </div>
@@ -55,21 +54,24 @@
     <div class="row" ng-if="imgResult != '' && imgResult != null">
       <img ng-src="{{ setImagePath(imgResult) }}" width="100%" style="max-height: 200px" ng-click="$state.go(SHOW_GALLERY)">
     </div>
-    <div ng-repeat="attribute in currentEntity.markerAttribute">
-      <!--text or number-->
-      <label class="item item-input item-floating-label" ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
-        <span class="input-label">{{attribute.name}}</span>
-        <input type="{{attribute.type}}" ng-model="attribute.value" placeholder="{{attribute.name}}">
-      </label>
-      <!--boolean-->
-      <ion-checkbox ng-true-value="'Yes'" ng-false-value="'No'" ng-if="attribute.type == 'BOOLEAN'" ng-model="attribute.value">{{attribute.name}}</ion-checkbox>
-      <!--date-->
-      <label class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
-        <span class="input-label">{{attribute.name}}</span>
-        <input type="text" ng-model="attribute.value" ng-click="showDatePicker(attribute)" placeholder="{{attribute.name}}">
-      </label>
-      <!--photo_album in action bar-->
-    </div>
+    <form>
+      <fieldset ng-disabled="isDisabled">
+        <div ng-repeat="attribute in currentEntity.markerAttribute">
+          <!--text or number-->
+          <label class="item item-input item-floating-label" ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
+            <span class="input-label">{{ attribute.name }}</span>
+            <input type="{{ attribute.type }}" ng-model="attribute.value" placeholder="{{ attribute.name }}">
+          </label>
+          <!--boolean-->
+          <ion-checkbox ng-true-value="'Yes'" ng-false-value="'No'" ng-if="attribute.type == 'BOOLEAN'" ng-model="attribute.value">{{ attribute.name }}</ion-checkbox>
+          <!--date-->
+          <label class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
+            <span class="input-label">{{ attribute.name }}</span>
+            <input type="text" ng-model="attribute.value" ng-click="showDatePicker(attribute)" placeholder="{{ attribute.name }}">
+          </label>
+        </div>
+      </fieldset>
+    </form>
   </div>
   <div class="title bar-header" ng-if="showMarkerDetails" style="text-align: left" ng-class="{'bar-positive': showMarkerDetails}">
     <button ng-click="footerMinimize()" style="margin-top: 5px" class="button button-icon icon ion-android-arrow-back"></button>
