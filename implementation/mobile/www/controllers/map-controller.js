@@ -738,11 +738,17 @@
 
       $scope.saveMarker = function (form) {
 
+
+
         if (!form.$valid) {
+
+          $scope.isFormSubmit = true;
 
           $log.debug(form);
 
         } else {
+
+          $scope.isFormSubmit = false;
 
           if ($scope.currentEntity.id) {
 

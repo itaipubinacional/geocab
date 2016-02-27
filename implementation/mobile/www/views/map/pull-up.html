@@ -56,25 +56,25 @@
     </div>
     <form name="markerForm" novalidate>
       <fieldset ng-disabled="isDisabled">
-        <div ng-repeat="attribute in currentEntity.markerAttribute" ng-form="myInnerForm">
+        <div ng-repeat="attribute in currentEntity.markerAttribute" ng-form="innerForm">
           <!--text or number-->
-          <label ng-class="{'has-error': myInnerForm.dynamic_input.$invalid}" class="item item-input item-floating-label" ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
+          <label ng-class="{'has-error': (innerForm.dynamic_input.$invalid && innerForm.dynamic_input.$touched) || (isFormSubmit && attribute.required && innerForm.dynamic_input.$invalid)}" class="item item-input item-floating-label" ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
             <span class="input-label">{{ attribute.name }} </span>
             <input type="{{ attribute.type }}" name="dynamic_input" ng-model="attribute.value" placeholder="{{ attribute.name }}" ng-required="attribute.required">
           </label>
           <!--boolean-->
-          <label ng-class="{'has-error': myInnerForm.dynamic_input.$invalid}" class="item item-input" ng-if="attribute.type == 'BOOLEAN'">
+          <label ng-class="{'has-error': (innerForm.dynamic_input.$invalid && innerForm.dynamic_input.$touched) || (isFormSubmit && attribute.required && innerForm.dynamic_input.$invalid)}" class="item item-input" ng-if="attribute.type == 'BOOLEAN'">
             <span class="input-label">{{ attribute.name }}</span>
             <ion-radio ng-model="attribute.value" name="dynamic_input" ng-value="'Yes'" ng-required="!attribute.value">{{ 'map.Yes' | translate }}</ion-radio>
             <ion-radio ng-model="attribute.value" name="dynamic_input" ng-value="'No'" ng-required="!attribute.value">{{ 'map.No' | translate }}</ion-radio>
           </label>
           <!--<ion-checkbox ng-true-value="'Yes'" ng-false-value="'No'" ng-if="attribute.type == 'BOOLEAN'" ng-model="attribute.value">{{ attribute.name }}</ion-checkbox>-->
           <!--date-->
-          <label ng-class="{'has-error': myInnerForm.dynamic_input.$invalid}" class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
+          <label ng-class="{'has-error': (innerForm.dynamic_input.$invalid && innerForm.dynamic_input.$touched) || (isFormSubmit && attribute.required && innerForm.dynamic_input.$invalid)}" class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
             <span class="input-label">{{ attribute.name }}</span>
             <input type="text" ng-model="attribute.value" name="dynamic_input" ng-click="showDatePicker(attribute)" placeholder="{{ attribute.name }}" ng-required="attribute.required">
           </label>
-          <div ng-if="myInnerForm.dynamic_input.$invalid">
+          <div class="form-error" ng-if="(innerForm.dynamic_input.$invalid && innerForm.dynamic_input.$touched) || (isFormSubmit && attribute.required && innerForm.dynamic_input.$invalid)">
             {{ 'map.Field-required' | translate }}
           </div>
         </div>
