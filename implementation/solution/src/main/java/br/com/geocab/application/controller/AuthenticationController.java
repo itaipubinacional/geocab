@@ -67,7 +67,7 @@ public class AuthenticationController
 	{	
 		try
 		{
-			userDetailsService.loadUserByUsername(userName);
+			userDetailsService.loadUserByUsername(user.getUsername());
 		}
 		catch (Exception e)
 		{
