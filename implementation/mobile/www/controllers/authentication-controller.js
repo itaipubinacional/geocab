@@ -10,7 +10,7 @@ angular.module('application')
   .controller('AuthenticationController', function ($importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate) {
 
     /*-------------------------------------------------------------------
-     * 		 				 	ATTRIBUTES
+     *              ATTRIBUTES
      *-------------------------------------------------------------------*/
     /**
      *
@@ -18,16 +18,18 @@ angular.module('application')
     $scope.model = {
       form: null,
       user: {
-        email : '',
-        password : ''
-      }
-    };
-
-    $scope.model.user.email = 'test_prognus@mailinator.com';
-    $scope.model.user.password = 'admin';
+        email : 'test_prognus@mailinator.com', //TODO --------- R  E  M  O  V  E  R
+        password : 'admin' //TODO --------- R  E  M  O  V  E  R
+      },
+      errorMsg : {
+              title : $translate('Error'),
+              subTitle : $translate('authentication.Authentication'),
+              template  : $translate('authentication.Bad-credentials') + ', ' + $translate('or') + ' ' + $translate('authentication.User-is-disabled')
+            }
+      };
 
     /*-------------------------------------------------------------------
-     * 		 				 	  HANDLERS
+     *                HANDLERS
      *-------------------------------------------------------------------*/
 
     /**
@@ -35,31 +37,21 @@ angular.module('application')
      */
     $scope.loginHandler = function () {
 
-      if ($scope.model.form.$invalid) {
-        $ionicPopup.alert({
-          title: 'Opss...',//TODO translate
-          subTitle: 'Os campos estão inválidos.',//TODO translate
-          template: 'Por favor verifique e tente novamente.' //TODO utilizar as mensagens providas pelos callbacks de erros
-        });
 
-      } else {
-
-        var config = {
-          headers: {'Content-Type': 'application/json; charset=UTF-8'}
-        };
-        delete $scope.model.user.token;
-        $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
-          .success(function (data, status, headers, config) {
-            $scope.model.user.token = data;
-            // $ionicLoading.hide();
-            // $state.go('home');
-            $scope.loginSuccess();
-          })
-          .error(function (data, status, headers, config) {
-            $scope.loginFailed();
-          }
-        );
-      }
+      var config = {
+        headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      };
+      //Deleta o token antes de executar a requisição
+      delete $scope.model.user.token;
+      $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
+        .success(function (data, status, headers, config) {
+          $scope.model.user.token = data;
+          $scope.loginSuccess();
+        })
+        .error(function (data, status, headers, config) {
+          $scope.loginFailed();
+        }
+      );
     };
 
     /**
@@ -67,7 +59,7 @@ angular.module('application')
      */
     $scope.fbLogin = function () {
       $ionicLoading.show({
-        template: 'Logging in...' //TODO translate
+        template: $translate('authentication.Logging-in')
       });
       //Realiza a autenticação
       ngFB.login({scope: 'email,public_profile,user_friends'})
@@ -101,7 +93,7 @@ angular.module('application')
     */
     $scope.googleSignIn = function() {
       $ionicLoading.show({
-        template: 'Logging in...' //TODO translate
+        template: $translate('authentication.Logging-in')
       });
 
       window.plugins.googleplus.login(
@@ -162,11 +154,7 @@ angular.module('application')
       $ionicLoading.hide();
       localStorage.removeItem('token', $scope.model.user.token);
       localStorage.removeItem('userEmail', $scope.model.user.email);
-      $ionicPopup.alert({
-        title: 'Opss...', //TODO translate
-        subTitle: 'Não foi possível autenticar.', //TODO traduzir
-        template: 'Verifique seu usuário e tente novamente' //TODO utilizar as mensagens providas pelos callbacks de erros
-      });
+      $ionicPopup.alert($scope.model.errorMsg);
     };
 
     /*-------------------------------------------------------------------
@@ -190,7 +178,7 @@ angular.module('application')
       $scope.login('geocab', $scope.model.user.email, localStorage.getItem('token'));
     };
 
-    if(localStorage.getItem('userEmail')){ //TODO verificar necessidade
+    if(localStorage.getItem('userEmail')){
       $scope.model.user.email = localStorage.getItem('userEmail');
     };
 
