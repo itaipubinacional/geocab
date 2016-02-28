@@ -10,8 +10,7 @@
               * Enable inline JS: add 'unsafe-inline' to default-src
               * Enable eval(): add 'unsafe-eval' to default-src
       -->
-  <!--<meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' ws: http: https: data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *;">-->
+  <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http:">
 
 
   <title>Geocab Mobile</title>
@@ -50,8 +49,8 @@
   <script src="./lib/openfb/ngopenfb.js"></script>
 
   <!-- DWR -->
-  <script ng-src="./lib/dwr/engine.js"></script>
-  <script ng-src="./lib/dwr/util.js"></script>
+  <script ng-src="{{ setUrl('util.js')}}"></script>
+  <script ng-src="{{ setUrl('engine.js')}}"></script>
 
   <!-- Others -->
   <script src="./lib/webjars/eits-ng/1.2.2-RELEASE/eits-ng.js"></script>

@@ -103,12 +103,19 @@
   /**
    *
    */
-  module.run(function ($rootScope, $ionicPlatform, $state, $stateParams, $API_ENDPOINT, ngFB, $cordovaStatusbar) {
-
+  module.run(function ($rootScope, $log, $ionicPlatform, $state, $stateParams, $API_ENDPOINT, ngFB, $cordovaStatusbar) {
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.$API_ENDPOINT = $API_ENDPOINT;
+
+    $rootScope.setUrl = function(url){
+      if(!ionic.Platform.platform().match(/(android|ios)/ig))
+        return $API_ENDPOINT + '/broker/' + url;
+      return './lib/dwr/' + url;
+    };
+
+    $log.debug(ionic.Platform.platform());
 
     $ionicPlatform.ready(function () {
 

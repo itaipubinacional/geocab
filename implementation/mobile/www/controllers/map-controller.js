@@ -43,6 +43,7 @@
       $scope.newMarker = {};
       $scope.dragPan = true;
 
+      $scope.userMe = {};
       $scope.selectedPhotoAlbumAttribute = {};
 
       $scope.attributeIndex = '';
@@ -154,9 +155,9 @@
             $scope.$apply();
           }
 
-          $log.debug('openlayers.map.singleclick');
+          //$log.debug('openlayers.map.singleclick');
 
-          $log.debug($scope.isNewMarker);
+          //$log.debug($scope.isNewMarker);
 
           if ($scope.isDrawerOpen) {
 
@@ -174,11 +175,13 @@
 
             if (angular.isDefined(feature) && !$scope.isNewMarker) {
 
+              $scope.selectedPhotoAlbumAttribute = {};
+
               $scope.isDisabled = false;
 
               $scope.currentEntity = feature.getProperties().marker;
 
-              if(($scope.currentEntity.status == 'PENDING' && $scope.currentEntity.user.id == $scope.userMe.id)
+              if(($scope.currentEntity.status == 'PENDING' && !angular.equals($scope.userMe, {}) && $scope.currentEntity.user.id == $scope.userMe.id)
                 || ($scope.userMe.role == 'ADMINISTRATOR' && !($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED'))) {
                 $scope.isDisabled = true;
               }
@@ -212,8 +215,8 @@
               $scope.currentFeature = feature;
               $scope.pullUpHeight = 70;
 
-              $log.debug($scope.currentEntity);
-              $log.debug($scope.showMarkerDetails);
+              //$log.debug($scope.currentEntity);
+              //$log.debug($scope.showMarkerDetails);
 
               markerService.listAttributeByMarker($scope.currentEntity.id, {
 
@@ -396,7 +399,7 @@
 
           layer.visible = false;
 
-          $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function (success) {
+          $cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function (success) {
             // success
           }, function (error) {
             // error
@@ -495,8 +498,8 @@
             callback: function (result) {
               $scope.allInternalLayerGroups = result;
 
-              $scope.allInternalLayerGroups[0].visible = true;
-              $scope.toggleLayer($scope.allInternalLayerGroups[0]);
+              $scope.allInternalLayerGroups[2].visible = true;
+              $scope.toggleLayer($scope.allInternalLayerGroups[2]);
 
               $scope.$apply();
             },
@@ -584,10 +587,6 @@
           });
       };
 
-      $scope.clearMarkerDetail = function () {
-        $log.debug('clearMarkerDetail');
-      };
-
       $scope.getLastPhotoByMarkerId = function(markerId) {
 
         markerService.lastPhotoByMarkerId(markerId, {
@@ -619,9 +618,9 @@
 
         $scope.showMarkerDetails = true;
 
-        if (!$scope.currentEntity.id) {
+        if (!$scope.currentEntity.id && !$scope.currentEntity.layer) {
 
-          $scope.currentEntity.layer = $scope.allInternalLayerGroups[3];
+          $scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
           $scope.listAttributesByLayer($scope.currentEntity.layer);
 
         } else {
@@ -640,7 +639,7 @@
 
       $scope.footerMinimize = function () {
         $log.debug('Footer minimize');
-        $log.debug($scope.pullUpHeight);
+        //$log.debug($scope.pullUpHeight);
         $scope.showMarkerDetails = false;
         $scope.imgResult = '';
         $scope.isDisabled = false;
@@ -654,17 +653,18 @@
 
       $scope.onHold = function (evt) {
 
+        //$log.debug('onHold');
+
         $scope.clearShadowFeature($scope.currentFeature);
         $scope.currentFeature = '';
-        $scope.currentEntity = {};
 
+        $scope.currentEntity = {};
         $scope.pullUpHeight = 100;
         angular.element(document.getElementsByTagName('ion-pull-up-handle')).height($scope.pullUpHeight + 'px');
+
         angular.element(document.getElementsByTagName('ion-pull-up-handle')).css('top', '-' + $scope.pullUpHeight + 'px');
 
         $scope.clearNewMarker();
-
-        $log.debug('onHold');
 
         $scope.isNewMarker = true;
 
@@ -714,10 +714,10 @@
         Camera.getPicture().then(function (imageURI) {
 
           $scope.currentEntity.image = imageURI;
-          $log.debug(imageURI);
+          //$log.debug(imageURI);
 
         }, function (err) {
-          $log.debug.err(err);
+          //$log.debug.err(err);
         });
       };
 
@@ -743,13 +743,11 @@
 
       $scope.saveMarker = function (form) {
 
-
-
         if (!form.$valid) {
 
           $scope.isFormSubmit = true;
 
-          $log.debug(form);
+          //$log.debug(form);
 
         } else {
 
@@ -781,6 +779,8 @@
                 $scope.toggleLayer($scope.currentEntity.layer);
 
                 $scope.currentEntity = {};
+
+                $scope.clearShadowFeature($scope.currentFeature);
                 $scope.currentFeature = '';
                 $scope.footerMinimize();
 
@@ -855,7 +855,7 @@
             var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
             $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
 
-            $log.debug($scope.currentEntity);
+            //$log.debug($scope.currentEntity);
 
             markerService.insertMarker($scope.currentEntity, {
               callback: function (result) {
@@ -985,7 +985,11 @@
        */
       $scope.getPhotosByAttribute = function (attribute) {
 
-        attribute.photoAlbum = null;
+        if(angular.equals($scope.selectedPhotoAlbumAttribute, {})){
+          $scope.selectedPhotoAlbumAttribute = attribute;
+        }
+
+        //attribute.photoAlbum = null;
 
         var attr = $filter('filter')($scope.currentEntity.markerAttribute, {id: attribute.id})[0];
 
@@ -1001,7 +1005,7 @@
 
             $scope.$apply();
 
-            $log.debug($scope.currentEntity);
+            //$log.debug($scope.currentEntity);
           },
           errorHandler: function (message, exception) {
             $scope.message = {
@@ -1021,7 +1025,7 @@
       $scope.getCurrentEntity = function () {
 
         $scope.currentEntity = angular.fromJson(localStorage.getItem('currentEntity'));
-        $log.debug($scope.currentEntity);
+        //$log.debug($scope.currentEntity);
 
         $timeout(function () {
           $scope.attributeIndex = 1;
@@ -1065,7 +1069,13 @@
             duration: 2000
           });
 
-          $scope.images.push("data:image/jpeg;base64," + imageData);
+          if(!$scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum) {
+            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum = new PhotoAlbum();
+            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos = [];
+          }
+
+          $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos.push(photo);
+
         }, function (err) {
           // error
         });
@@ -1089,7 +1099,7 @@
 
         $cordovaCamera.getPicture(options).then(function (imageData) {
           $ionicLoading.show({
-            template: 'Adicionando foto',
+            template: 'Carregando foto',
             duration: 2000
           });
 
@@ -1098,8 +1108,13 @@
           photo.image = imageData;
           photo.name = 'name.png';
           photo.description = 'description';
-          photo.contentLength = 25059;
+          photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
+
+          if(!$scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum) {
+            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum = new PhotoAlbum();
+            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos = [];
+          }
 
           $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos.push(photo);
 

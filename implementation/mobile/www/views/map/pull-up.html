@@ -18,7 +18,7 @@
   <div ng-if="currentEntity.id" class="col">
     <div class="row">
       <div class="row">
-        <b>{{ currentEntity.layer.name ? currentEntity.layer.name : currentEntity.name }}</b>
+        <b>{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</b>
       </div>
     </div>
     <div class="row">
@@ -82,7 +82,7 @@
   </div>
   <div class="title bar-header" ng-if="showMarkerDetails" style="text-align: left" ng-class="{'bar-positive': showMarkerDetails}">
     <button ng-click="footerMinimize()" style="margin-top: 5px" class="button button-icon icon ion-android-arrow-back"></button>
-    <div class="h1 title">{{ currentEntity.name ? currentEntity.name : currentEntity.layer.name }}</div>
+    <div class="h1 title">{{ currentEntity.title ? currentEntity.title : currentEntity.layer.name }}</div>
     <div class="buttons">
       <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="$state.go( SHOW_GALLERY )"></button>
       <button class="button button-icon icon ion-android-done" ng-click="saveMarker(markerForm)" ng-if="!isDisabled"></button>

@@ -21,8 +21,8 @@
           </label>
         </div>
         <ion-list ng-repeat="layer in allInternalLayerGroups | filter:search" class="layers">
-          <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{layer.name}}
-            <img class="item-checkbox-img" ng-src="{{$API_ENDPOINT}}/{{layer.icon}}">
+          <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{ layer.title ? layer.title : layer.name }}
+            <img class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">
           </ion-checkbox>
         </ion-list>
       </div>
