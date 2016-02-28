@@ -515,11 +515,11 @@
       /**
        *
        */
-      $scope.listAttributesByLayer = function (layer) {
+      $scope.listAttributesByLayer = function (layer, reload) {
 
         $scope.selectedPhotoAlbumAttribute = {};
 
-        if(!$scope.currentEntity.markerAttribute || $scope.currentEntity.markerAttribute.length == 0) {
+        if(!$scope.currentEntity.markerAttribute || $scope.currentEntity.markerAttribute.length == 0 || reload) {
 
           $scope.currentEntity.markerAttribute = [];
 

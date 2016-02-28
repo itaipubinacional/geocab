@@ -49,7 +49,7 @@
   <div class="list">
     <label class="item item-input item-select" ng-if="!currentEntity.id">
       <span class="input-label">{{ 'Layer' | translate }}</span>
-      <select ng-change="listAttributesByLayer(currentEntity.layer)" ng-model="currentEntity.layer" ng-options="layer.name for layer in allInternalLayerGroups"></select>
+      <select ng-change="listAttributesByLayer(currentEntity.layer, true)" ng-model="currentEntity.layer" ng-options="layer.name for layer in allInternalLayerGroups"></select>
     </label>
     <div class="row" ng-if="imgResult != '' && imgResult != null">
       <img ng-src="{{ setImagePath(imgResult) }}" width="100%" style="max-height: 200px" ng-click="$state.go(SHOW_GALLERY)">
