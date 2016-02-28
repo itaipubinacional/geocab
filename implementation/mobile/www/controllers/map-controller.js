@@ -529,7 +529,7 @@
           layerGroupService.listAttributesByLayer(layer.id, {
             callback: function (result) {
 
-              angular.forEach(result, function (layerAttribute) {
+              angular.forEach(result, function (layerAttribute, index) {
 
                 var attribute = new Attribute();
 
@@ -544,6 +544,7 @@
 
                 if (layerAttribute.type == 'PHOTO_ALBUM' && angular.equals($scope.selectedPhotoAlbumAttribute, {})) {
                   $scope.selectedPhotoAlbumAttribute = layerAttribute;
+                  $scope.attributeIndex = index;
                 }
 
               });
@@ -814,38 +815,42 @@
             var attributes = $scope.currentEntity.markerAttribute;
             $scope.currentEntity.markerAttribute = [];
 
-            angular.forEach(attributes, function (val, ind) {
+            angular.forEach(attributes, function (attr, ind) {
 
               var attribute = new Attribute();
-              attribute.id = val.attribute.id;
+              attribute.id = attr.attribute.id;
 
               var markerAttribute = new MarkerAttribute();
-              if (val.value != "" && val.value != undefined) {
-                markerAttribute.value = val.value;
+              if (attr.value != "" && attr.value != undefined) {
+                markerAttribute.value = attr.value;
               } else {
                 markerAttribute.value = "";
               }
 
-              if (val.files) {
+              if (attr.type == 'PHOTO_ALBUM') {
 
-                attribute.type = "PHOTO_ALBUM";
+                attribute.type = 'PHOTO_ALBUM';
 
                 var photoAlbum = new PhotoAlbum();
                 photoAlbum.photos = new Array();
 
-                angular.forEach(val.files, function (file) {
-                  var photo = new Photo();
-                  var img = file.src.split(';base64,');
-                  photo.source = img[1];
-                  photo.name = file.name;
-                  photo.description = file.description;
-                  photo.contentLength = file.size;
-                  photo.mimeType = file.type;
-                  photoAlbum.photos.push(photo);
-                });
+                if( angular.isObject(attr.photoAlbum)) {
+                  angular.forEach(attr.photoAlbum.photos, function (file) {
+
+                    var photo = new Photo();
+                    photo.source = file.image;
+                    photo.name = file.name;
+                    photo.description = file.description;
+                    photo.contentLength = file.contentLength;
+                    photo.mimeType = file.mimeType;
+                    photoAlbum.photos.push(photo);
+
+                  });
+                }
 
                 markerAttribute.photoAlbum = photoAlbum;
               }
+
               markerAttribute.attribute = attribute;
               markerAttribute.marker = $scope.currentEntity;
               $scope.currentEntity.markerAttribute.push(markerAttribute);
