@@ -10,7 +10,7 @@ angular.module('application')
   .controller('AuthenticationController', function ($importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate) {
 
     /*-------------------------------------------------------------------
-     * 		 				 	ATTRIBUTES
+     *              ATTRIBUTES
      *-------------------------------------------------------------------*/
     /**
      *
@@ -22,14 +22,14 @@ angular.module('application')
         password : 'admin' //TODO --------- R  E  M  O  V  E  R
       },
       errorMsg : {
-        title : null,
-        subTitle : null,
-        template  : null
-      }
-    };
+              title : $translate('Error'),
+              subTitle : $translate('authentication.Authentication'),
+              template  : $translate('authentication.Bad-credentials') + ', ' + $translate('or') + ' ' + $translate('authentication.User-is-disabled')
+            }
+      };
 
     /*-------------------------------------------------------------------
-     * 		 				 	  HANDLERS
+     *                HANDLERS
      *-------------------------------------------------------------------*/
 
     /**
@@ -59,7 +59,7 @@ angular.module('application')
      */
     $scope.fbLogin = function () {
       $ionicLoading.show({
-        template: 'Logging in...' //TODO translate
+        template: $translate('authentication.Logging-in')
       });
       //Realiza a autenticação
       ngFB.login({scope: 'email,public_profile,user_friends'})
@@ -93,7 +93,7 @@ angular.module('application')
     */
     $scope.googleSignIn = function() {
       $ionicLoading.show({
-        template: 'Logging in...' //TODO translate
+        template: $translate('authentication.Logging-in')
       });
 
       window.plugins.googleplus.login(
@@ -150,15 +150,11 @@ angular.module('application')
     /**
       *
     */
-    $scope.loginFailed = function (msg) {
+    $scope.loginFailed = function () {
       $ionicLoading.hide();
       localStorage.removeItem('token', $scope.model.user.token);
       localStorage.removeItem('userEmail', $scope.model.user.email);
-      $ionicPopup.alert({
-        title: msg.title,
-        subTitle: msg.subTitle,
-        template: msg.template
-      });
+      $ionicPopup.alert($scope.model.errorMsg);
     };
 
     /*-------------------------------------------------------------------
@@ -182,7 +178,7 @@ angular.module('application')
       $scope.login('geocab', $scope.model.user.email, localStorage.getItem('token'));
     };
 
-    if(localStorage.getItem('userEmail')){ //TODO verificar necessidade
+    if(localStorage.getItem('userEmail')){
       $scope.model.user.email = localStorage.getItem('userEmail');
     };
 
