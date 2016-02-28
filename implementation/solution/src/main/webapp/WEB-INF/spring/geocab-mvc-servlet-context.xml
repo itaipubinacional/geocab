@@ -46,7 +46,7 @@
 	<dwr:controller debug="false">
 		<dwr:config-param name="scriptCompressed" value="true"/>
 		<!-- Enable CORS -->
-    	<dwr:config-param name="allowScriptTagRemoting" value="false"/>
+    	<dwr:config-param name="allowScriptTagRemoting" value="true"/>
     	<dwr:config-param name="crossDomainSessionSecurity" value="false"/>
     	<dwr:config-param name="allowGetForSafariButMakeForgeryEasier" value="true"/>
 	</dwr:controller>
