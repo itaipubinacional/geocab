@@ -18,7 +18,7 @@ angular.module('application')
     $scope.model = {
       form: null,
       user: {
-        email : 'test_prog', //TODO --------- R  E  M  O  V  E  R
+        email : 'test_prognus@mailinator.com', //TODO --------- R  E  M  O  V  E  R
         password : 'admin' //TODO --------- R  E  M  O  V  E  R
       },
       errorMsg : {
