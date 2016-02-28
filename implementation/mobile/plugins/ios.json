@@ -7,25 +7,16 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
         "cordova-plugin-crosswalk-webview": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-whitelist": {
+        "cordova-plugin-datepicker": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-keyboard": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-camera": {
+        "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
