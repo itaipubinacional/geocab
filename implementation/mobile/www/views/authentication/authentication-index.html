@@ -8,22 +8,24 @@
         <div class="list">
           <label class="item item-input item-floating-label login-label">
             <span class="input-label">{{ 'authentication.Email' | translate }}</span>
-            <input type="email" placeholder="{{ 'authentication.Email' | translate }}" ng-model="model.user.email">
+            <input type="email" name="email" required placeholder="{{ 'authentication.Email' | translate }}" ng-model="model.user.email">
           </label>
-          <ng-messages class="padding" for="model.form.email.$touched && model.form.email.$error" role="alert">
-            <ng-message when="required">É necessário informar seu e-mail.</ng-message>
+          <!-- {{model.form.$error.required}} -->
+          <ng-messages class="padding" for="model.form.$error" role="alert">
             <ng-message when="email">{{'admin.users.The-email-is-not-valid' | translate}}</ng-message>
           </ng-messages>
           <label class="item item-input item-floating-label login-label">
             <span class="input-label">{{'authentication.Password' | translate}}</span>
-            <input type="password" placeholder="{{'authentication.Password' | translate}}" ng-model="model.user.password">
+            <input type="password" name="password" required placeholder="{{'authentication.Password' | translate}}" ng-model="model.user.password">
           </label>
-          <ng-messages class="padding" for="model.form.password.$touched && model.form.password.$error" role="alert">
+          <!-- {{model.form.$error.required[0].$name}} -->
+          <ng-messages class="padding" ng-if="!model.user.password" for="model.form.$error" role="alert">
             <ng-message when="required">{{'admin.datasource.Enter-your-password' | translate}}.</ng-message>
           </ng-messages>
         </div>
         <div>
-          <button nav-clear class="login-button button button-block button-positive" ng-click="loginHandler()">
+          <button nav-clear class="login-button button button-block button-positive" 
+                  ng-disabled="model.form.$invalid" ng-click="loginHandler()">
             <b>{{'authentication.Enter' | translate}}</b>
           </button>
           <div style="margin-top: 50px"></div>

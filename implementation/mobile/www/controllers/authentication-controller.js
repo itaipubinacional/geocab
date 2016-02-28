@@ -18,13 +18,15 @@ angular.module('application')
     $scope.model = {
       form: null,
       user: {
-        email : '',
-        password : ''
+        email : 'test_prog', //TODO --------- R  E  M  O  V  E  R
+        password : 'admin' //TODO --------- R  E  M  O  V  E  R
+      },
+      errorMsg : {
+        title : null,
+        subTitle : null,
+        template  : null
       }
     };
-
-    $scope.model.user.email = 'test_prognus@mailinator.com';
-    $scope.model.user.password = 'admin';
 
     /*-------------------------------------------------------------------
      * 		 				 	  HANDLERS
@@ -35,31 +37,21 @@ angular.module('application')
      */
     $scope.loginHandler = function () {
 
-      if ($scope.model.form.$invalid) {
-        $ionicPopup.alert({
-          title: 'Opss...',//TODO translate
-          subTitle: 'Os campos estão inválidos.',//TODO translate
-          template: 'Por favor verifique e tente novamente.' //TODO utilizar as mensagens providas pelos callbacks de erros
-        });
 
-      } else {
-
-        var config = {
-          headers: {'Content-Type': 'application/json; charset=UTF-8'}
-        };
-        delete $scope.model.user.token;
-        $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
-          .success(function (data, status, headers, config) {
-            $scope.model.user.token = data;
-            // $ionicLoading.hide();
-            // $state.go('home');
-            $scope.loginSuccess();
-          })
-          .error(function (data, status, headers, config) {
-            $scope.loginFailed();
-          }
-        );
-      }
+      var config = {
+        headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      };
+      //Deleta o token antes de executar a requisição
+      delete $scope.model.user.token;
+      $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
+        .success(function (data, status, headers, config) {
+          $scope.model.user.token = data;
+          $scope.loginSuccess();
+        })
+        .error(function (data, status, headers, config) {
+          $scope.loginFailed();
+        }
+      );
     };
 
     /**
@@ -158,14 +150,14 @@ angular.module('application')
     /**
       *
     */
-    $scope.loginFailed = function () {
+    $scope.loginFailed = function (msg) {
       $ionicLoading.hide();
       localStorage.removeItem('token', $scope.model.user.token);
       localStorage.removeItem('userEmail', $scope.model.user.email);
       $ionicPopup.alert({
-        title: 'Opss...', //TODO translate
-        subTitle: 'Não foi possível autenticar.', //TODO traduzir
-        template: 'Verifique seu usuário e tente novamente' //TODO utilizar as mensagens providas pelos callbacks de erros
+        title: msg.title,
+        subTitle: msg.subTitle,
+        template: msg.template
       });
     };
 

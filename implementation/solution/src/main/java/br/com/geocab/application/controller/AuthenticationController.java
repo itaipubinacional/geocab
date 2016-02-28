@@ -65,7 +65,14 @@ public class AuthenticationController
 	@RequestMapping(value="/login", method = RequestMethod.POST)
 	public @ResponseBody StringBuffer login(HttpServletRequest request, @RequestBody User user)
 	{	
-		verifyUser(user.getUsername());
+		try
+		{
+			userDetailsService.loadUserByUsername(userName);
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e.getMessage());
+		}
 		return new StringBuffer(new NormalAuthentication(user, userDetailsService, authenticationManager, passwordEncoder).login(request));
 	}
 	
