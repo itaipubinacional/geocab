@@ -25,6 +25,7 @@
   <preference name="SplashReloadOnOrientationChange" value="true"/>
   <preference name="Fullscreen" value="false"/>
   <preference name="StatusBarOverlaysWebView" value="true"/>
+  <preference name="android-windowSoftInputMode" value="adjustPan"/> <!-- DONT FUNCTION -->
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>

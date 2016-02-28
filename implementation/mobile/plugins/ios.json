@@ -18,6 +18,21 @@
         },
         "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-keyboard": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
     "dependent_plugins": {}
