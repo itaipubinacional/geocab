@@ -164,6 +164,10 @@ angular.module('ionic-pullup', [])
                 expand();
               });
 
+              $scope.$on('minimizeFooter', function(){
+                minimize();
+              });
+
           }],
           compile: function(element, attrs) {
               attrs.defaultHeight && element.css('height', parseInt(attrs.defaultHeight, 10) + 'px');

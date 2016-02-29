@@ -62,10 +62,12 @@
       controller: 'MapController'
     }).state('map.index', {
       url: "/index",
-      templateUrl: './views/map/map-index.html'
+      templateUrl: './views/map/map-index.html',
+      controller: 'IndexController as index'
     }).state('map.gallery', {
       url: "/gallery",
-      templateUrl: './views/map/gallery.html'
+      templateUrl: './views/map/gallery.html',
+      controller: 'GalleryController as gallery'
     });
 
     //HOME
