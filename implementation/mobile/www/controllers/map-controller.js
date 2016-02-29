@@ -96,10 +96,13 @@
       };
 
       $scope.setImagePath = function(image) {
-        if (angular.isDefined(image) && image.match(/broker/)) {
-          return $rootScope.$API_ENDPOINT + image.match(/\/broker.*/)[0];
-        } else {
-          return "data:image/png;base64," + image;
+        //$log.debug(image);
+        if(image != null && image != '') {
+          if (image.match(/broker/)) {
+            return $rootScope.$API_ENDPOINT + image.match(/\/broker.*/)[0];
+          } else {
+            return "data:image/png;base64," + image;
+          }
         }
       };
 
@@ -183,11 +186,15 @@
        */
       $scope.getPhotosByAttribute = function(attribute, reload) {
 
+        if(attribute.photoAlbum != null) {
+           angular.forEach(attribute.photoAlbum.photos, function(photo){
+             if(photo.id) {
+               photo.image = null;
+             }
+           });
+        }
+
         if (angular.equals($scope.selectedPhotoAlbumAttribute, {}) || reload === true) {
-
-          if(angular.isDefined(attribute.photoAlbum))
-            attribute.photoAlbum = null;
-
           $scope.selectedPhotoAlbumAttribute = attribute;
         }
 
@@ -200,10 +207,26 @@
         markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, null, {
           callback: function(result) {
 
-            attribute.photoAlbum = result.content[0].photoAlbum;
-            attribute.photoAlbum.photos = result.content;
+            if(attribute.photoAlbum != null) {
+              angular.forEach(result.content, function(photo){
 
-            $scope.photos = result.content;
+                var photoAttr = $filter('filter')(attribute.photoAlbum.photos, {id: photo.id})[0];
+
+                if(photoAttr) {
+                  photoAttr.image = photo.image;
+                }
+
+              });
+            } else {
+              attribute.photoAlbum = result.content[0].photoAlbum;
+              attribute.photoAlbum.photos = result.content;
+            }
+            // angular.forEach(attribute.photoAlbum.photos, function(photo){
+            // });
+
+            // attribute.photoAlbum = result.content[0].photoAlbum;
+            // attribute.photoAlbum.photos = result.content;
+            // $scope.photos = result.content;
 
             $scope.$apply();
 
@@ -675,8 +698,8 @@
             callback: function(result) {
               $scope.allInternalLayerGroups = result.content;
 
-              $scope.allInternalLayerGroups[2].visible = true;
-              $scope.toggleLayer($scope.allInternalLayerGroups[2]);
+              //$scope.allInternalLayerGroups[3].visible = true;
+              //$scope.toggleLayer($scope.allInternalLayerGroups[3]);
 
               $scope.$apply();
             },
