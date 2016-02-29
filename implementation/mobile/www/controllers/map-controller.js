@@ -186,13 +186,16 @@
 
               $scope.selectedPhotoAlbumAttribute = {};
 
-              $scope.isDisabled = false;
+              $scope.isDisabled = true;
 
               $scope.currentEntity = feature.getProperties().marker;
 
-              if(($scope.currentEntity.status == 'PENDING' && !angular.equals($scope.userMe, {}) && $scope.currentEntity.user.id == $scope.userMe.id)
-                || ($scope.userMe.role == 'ADMINISTRATOR' && !($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED'))) {
-                $scope.isDisabled = true;
+              // if(($scope.userMe.role != 'ADMINISTRATOR' && $scope.currentEntity.status != 'PENDING' && $scope.currentEntity.user.id == $scope.userMe.id)
+              //   || ($scope.userMe.role == 'ADMINISTRATOR' && ($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED'))) {
+
+              if(($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED')
+                  && ($scope.currentEntity.user.id == $scope.userMe.id)) {
+                $scope.isDisabled = false;
               }
 
               var iconStyle = new ol.style.Style({
@@ -619,6 +622,14 @@
 
       };
 
+      $scope.expandFooter = function() {
+
+      };
+
+      $scope.minimizeFooter = function() {
+
+      };
+
       $scope.footerExpand = function () {
 
         //$log.debug('pullUpHeight: ' + $scope.pullUpHeight);
@@ -648,20 +659,19 @@
       };
 
       $scope.footerMinimize = function () {
-        //$log.debug('Footer minimize');
+        $log.debug('Footer minimize');
         //$log.debug($scope.pullUpHeight);
         $scope.showMarkerDetails = false;
         $scope.imgResult = '';
-        $scope.isDisabled = false;
 
-        /*if($state.current.name == 'map.gallery')
-          $scope.footerExpand();*/
+        if($state.current.name == 'map.gallery')
+          $scope.minimizeFooter();
       };
 
       $scope.clearNewMarker = function () {
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
         $scope.currentCreatingInternalLayer = {};
-        $scope.footerMinimize();
+        $scope.minimizeFooter();
       };
 
       $scope.onHold = function (evt) {
@@ -798,7 +808,7 @@
 
                 $scope.clearShadowFeature($scope.currentFeature);
                 $scope.currentFeature = '';
-                $scope.footerMinimize();
+                $scope.minimizeFooter();
 
                 $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function (success) {
                   // success
@@ -941,7 +951,7 @@
 
                 $scope.currentEntity = {};
                 $scope.currentFeature = '';
-                $scope.footerMinimize();
+                $scope.minimizeFooter();
 
                 $scope.$apply();
               },
