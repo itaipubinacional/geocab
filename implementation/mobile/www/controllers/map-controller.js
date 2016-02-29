@@ -503,9 +503,9 @@
       $scope.listAllInternalLayerGroups = function () {
 
         if ($scope.allInternalLayerGroups.length == 0) {
-          layerGroupService.listAllInternalLayerGroups({
+          layerGroupService.listLayersByFilters(null, null, {
             callback: function (result) {
-              $scope.allInternalLayerGroups = result;
+              $scope.allInternalLayerGroups = result.content;
 
               $scope.allInternalLayerGroups[2].visible = true;
               $scope.toggleLayer($scope.allInternalLayerGroups[2]);
@@ -996,7 +996,8 @@
         localStorage.removeItem('userEmail');
         localStorage.removeItem('token');
         $location.path($rootScope.$API_ENDPOINT + "/j_spring_security_logout");
-
+        
+        $scope.userMe = {};
         $rootScope.model = {
           form: null,
           user: {

@@ -22,7 +22,8 @@
         </div>
         <ion-list ng-repeat="layer in allInternalLayerGroups | filter:search" class="layers">
           <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{ layer.title ? layer.title : layer.name }}
-            <img class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">
+            <img ng-if="!layer.legend" class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}"> <!-- se a camada é interna pega o ícone -->
+            <img ng-if="layer.legend" class="item-checkbox-img" ng-src="{{ layer.legend }}"> <!-- se a camada é externa pega a legenda -->
           </ion-checkbox>
         </ion-list>
       </div>

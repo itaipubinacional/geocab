@@ -2,7 +2,7 @@
 <widget id="br.com.geocab.mobile" version="2.0.0-RELEASE" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
   <name>Geocab Mobile</name>
   <description></description>
-  <content src="index.html"/>
+  <content src="http://192.168.20.108:8100" original-src="index.html"/>
   <access origin="*"/>
   <allow-navigation href="*"/>
   <preference name="webviewbounce" value="false"/>
@@ -25,7 +25,7 @@
   <preference name="SplashReloadOnOrientationChange" value="true"/>
   <preference name="Fullscreen" value="false"/>
   <preference name="StatusBarOverlaysWebView" value="true"/>
-  <preference name="android-windowSoftInputMode" value="adjustPan"/> <!-- DONT FUNCTION -->
+  <preference name="android-windowSoftInputMode" value="adjustPan"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
@@ -37,7 +37,7 @@
   <author email="contact@eits.com.br" href="http://www.eits.com.br">eits it solutions</author>
   <platform name="android">
     <gap:plugin name="cordova-plugin-googleplus" source="npm">
-      <param name="REVERSED_CLIENT_ID" value="856589923551-hkf4kleh4inqmevpvbul3ualklkm3tqm.apps.googleusercontent.com"/>
+      <param name="REVERSED_CLIENT_ID" value="856589923551-g4kd18q9c6d1qi6gkccu7t0e537e8shm.apps.googleusercontent.com"/>
     </gap:plugin>
     <icon src="resources/android/icon/drawable-ldpi-icon.png" density="ldpi"/>
     <icon src="resources/android/icon/drawable-mdpi-icon.png" density="mdpi"/>
