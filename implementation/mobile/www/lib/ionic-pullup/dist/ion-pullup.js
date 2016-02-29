@@ -160,14 +160,6 @@ angular.module('ionic-pullup', [])
                   $ionicPlatform.on("resume", updateUI);
               });
 
-              $scope.$on('expandFooter', function(){
-                expand();
-              });
-
-              $scope.$on('minimizeFooter', function(){
-                minimize();
-              });
-
           }],
           compile: function(element, attrs) {
               attrs.defaultHeight && element.css('height', parseInt(attrs.defaultHeight, 10) + 'px');
