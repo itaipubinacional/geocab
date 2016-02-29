@@ -16,7 +16,7 @@ angular.module('ionic-pullup', [])
               onCollapse: '&',
               onMinimize: '&'
           },
-          controller: ['$scope', '$element', '$attrs', 'ionPullUpFooterState', 'ionPullUpFooterBehavior', function($scope, $element, $attrs, FooterState, FooterBehavior) {
+          controller: ['$rootScope', '$scope', '$element', '$attrs', 'ionPullUpFooterState', 'ionPullUpFooterBehavior', function($rootScope, $scope, $element, $attrs, FooterState, FooterBehavior) {
               var
                 tabs, hasBottomTabs, header, tabsHeight, headerHeight, handleHeight = 0,
                 footer = {
@@ -158,6 +158,14 @@ angular.module('ionic-pullup', [])
               $ionicPlatform.ready(function() {
                   $window.addEventListener('orientationchange', updateUI);
                   $ionicPlatform.on("resume", updateUI);
+              });
+
+              $scope.$on('expandFooter', function(){
+                expand();
+              });
+
+              $scope.$on('minimizeFooter', function(){
+                minimize();
               });
 
           }],

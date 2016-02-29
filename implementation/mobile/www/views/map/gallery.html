@@ -20,7 +20,7 @@
   <ion-content class="has-header" scroll="true" style="margin-top:10px">
     <label class="item item-input item-select" ng-if="photosSelected == 0">
       <span class="input-label">Álbum</span>
-      <select ng-change="getPhotosByAttribute(selectedPhotoAlbumAttribute)" ng-model="selectedPhotoAlbumAttribute" ng-options="attribute.name for attribute in currentEntity.markerAttribute | filter:{type: 'PHOTO_ALBUM'}"></select>
+      <select ng-change="getPhotosByAttribute(selectedPhotoAlbumAttribute, true)" ng-model="selectedPhotoAlbumAttribute" ng-options="attribute.name for attribute in currentEntity.markerAttribute | filter:{type: 'PHOTO_ALBUM'}"></select>
     </label>
 
     <label class="item item-input" ng-if="photosSelected == 1">
@@ -30,7 +30,7 @@
 
     <div class="row" style="flex-wrap: wrap;">
       <div class="col col-50" ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos | filter:deleted">
-        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}" ng-click="openModal(index)"/>
+        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}" ng-click="openModal($index)"/>
         <!--<h6>{{ photo.description ? photo.description :  photo.name }}</h6>-->
       </div>
     </div>
