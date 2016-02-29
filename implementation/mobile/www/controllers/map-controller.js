@@ -985,14 +985,32 @@
        * Prepara o estado, retira o password criptografado do usuário
        */
       $scope.logout = function () {
-
         $scope.toggleDrawer();
         $scope.removeAllSelectedLayers();
 
         localStorage.removeItem('userEmail');
         localStorage.removeItem('token');
         $location.path($rootScope.$API_ENDPOINT + "/j_spring_security_logout");
-        // $state.go('authentication.login');
+
+        $rootScope.model = {
+          form: null,
+          user: {
+            email : 'test_prognus@mailinator.com', //TODO --------- R  E  M  O  V  E  R
+            password : 'admin' //TODO --------- R  E  M  O  V  E  R
+          },
+          errorMsg : {
+            title : $translate('Error'),
+            subTitle : $translate('authentication.Authentication'),
+            template  : $translate('authentication.Bad-credentials') + ', ' + $translate('or') + ' ' + $translate('authentication.User-is-disabled')
+          }
+        };
+
+        //Realiza o logout do google plus
+        window.plugins.googleplus.disconnect(
+          function (msg) {
+            console.log(msg);
+          }
+        );
       };
 
       /*
