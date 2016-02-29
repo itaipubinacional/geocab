@@ -52,7 +52,7 @@
       <select ng-change="listAttributesByLayer(currentEntity.layer, true)" ng-model="currentEntity.layer" ng-options="layer.name for layer in allInternalLayerGroups"></select>
     </label>
     <div class="row" ng-if="imgResult != '' && imgResult != null">
-      <img ng-src="{{ setImagePath(imgResult) }}" width="100%" style="max-height: 200px" ng-click="$state.go(SHOW_GALLERY)">
+      <img ng-src="{{ setImagePath(imgResult) }}" width="100%" style="max-height: 200px" ng-click="getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(SHOW_GALLERY)">
     </div>
     <form name="markerForm" novalidate>
       <fieldset ng-disabled="isDisabled">
@@ -87,5 +87,10 @@
       <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="$state.go( SHOW_GALLERY )"></button>
       <button class="button button-icon icon ion-android-done" ng-click="saveMarker(markerForm)" ng-if="!isDisabled"></button>
     </div>
+  </div>
+  <div class="bar bar-footer bar-stable" ng-if="showMarkerDetails">
+    <button class="button button-icon icon ion-thumbsup" ng-click="approveMarker()"></button>
+    <button class="button button-icon icon ion-thumbsdown" ng-click="refuseMarker()"></button>
+    <button class="button button-icon icon ion-android-close" ng-click="cancelMarker()"></button>
   </div>
 </ion-pull-up-content>

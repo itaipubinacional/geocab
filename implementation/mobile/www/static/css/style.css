@@ -168,6 +168,9 @@ p.info {
   font-size: 28px;
   color: #ffffff;
 }
+.deleted{
+  opacity: .5;
+}
 
 /* Fix modal backdrop for smaller devices */
 @media (max-width: 679px) {

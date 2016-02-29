@@ -29,33 +29,10 @@
     </label>
 
     <div class="row" style="flex-wrap: wrap;">
-      <div class="col col-50" ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos">
-        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}" on-hold="selectPhoto(photo)" ng-click="openModal()"/>
+      <div class="col col-50" ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos | filter:deleted">
+        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}" ng-click="openModal(index)"/>
         <!--<h6>{{ photo.description ? photo.description :  photo.name }}</h6>-->
       </div>
     </div>
-
-    <script id="image-modal.html" type="text/ng-template">
-      <div class="modal image-modal transparent">
-        <div class="bar bar-header transparent">
-          <h1>{{editPhoto}}</h1>
-          <div class="buttons">
-            <button style="color:#fff" class="button button-icon icon ion-android-refresh" ng-if="selectedPhoto.deleted" ng-click="restorePhoto(selectedPhoto)"></button>
-            <button style="color:#fff" class="button button-icon icon ion-android-create" ng-if="!selectedPhoto.deleted" ng-click="editPhoto();"></button>
-            <button style="color:#fff" class="button button-icon icon ion-android-delete" ng-if="!selectedPhoto.deleted" ng-click="deletePhoto(selectedPhoto)"></button>
-          </div>
-          <label class="item item-input" ng-if="showEditableDescription">
-            <input type="text" ng-model="selectedPhoto.description" placeholder="Descrição">
-          </label>
-        </div>
-        <ion-slide-box on-slide-changed="slideChanged(index)"
-                       show-pager="true" ng-click="closeModal()">
-          <ion-slide ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos">
-            <img ng-src="{{ setImagePath(photo.image) }}" class="fullscreen-image" />
-            <p class="info">{{ photo.description ? photo.description :  photo.name }}</p>
-          </ion-slide>
-        </ion-slide-box>
-      </div>
-    </script>
   </ion-content>
 </ion-view>

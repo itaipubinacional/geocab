@@ -21,6 +21,8 @@
         $importService("layerGroupService");
         $importService("markerService");
         $importService("accountService");
+        $importService("markerModerationService");
+        $importService("motiveService");
       });
 
       //----STATES
@@ -95,10 +97,10 @@
       };
 
       $scope.setImagePath = function (image) {
-        if (image.match(/broker/)) {
+        if (angular.isDefined(image) && image.match(/broker/)) {
           return $rootScope.$API_ENDPOINT + image.match(/\/broker.*/)[0];
         } else {
-          return "data:image/jpeg;base64," + image;
+          return "data:image/png;base64," + image;
         }
       };
 
@@ -274,7 +276,7 @@
 
                       });
 
-                      localStorage.setItem('currentEntity', angular.toJson($scope.currentEntity));
+                      //localStorage.setItem('currentEntity', angular.toJson($scope.currentEntity));
 
                       $scope.$apply();
                     },
@@ -771,8 +773,11 @@
 
             angular.forEach($scope.currentEntity.markerAttribute, function (attribute, index) {
               if (attribute.type == 'PHOTO_ALBUM' && attribute.photoAlbum != null) {
-                angular.forEach(attribute.photoAlbum.photos, function (photo) {
+                angular.forEach(attribute.photoAlbum.photos, function (photo, index) {
                   delete photo.image;
+
+                  if(photo.deleted)
+                    delete attribute.photoAlbum.photos[index];
                 });
               }
             });
@@ -1000,11 +1005,11 @@
        */
       $scope.getPhotosByAttribute = function (attribute) {
 
+        attribute.photoAlbum = null;
+
         if(angular.equals($scope.selectedPhotoAlbumAttribute, {})){
           $scope.selectedPhotoAlbumAttribute = attribute;
         }
-
-        //attribute.photoAlbum = null;
 
         var attr = $filter('filter')($scope.currentEntity.markerAttribute, {id: attribute.id})[0];
 
@@ -1057,7 +1062,7 @@
         switch ($state.current.name) {
           case $scope.SHOW_GALLERY:
           {
-            $scope.getCurrentEntity();
+            //$scope.getCurrentEntity();
             break;
           }
         }
@@ -1144,22 +1149,20 @@
       $scope.selectPhoto = function(photo) {
 
         $scope.selectedPhoto = photo;
-
         photo.selected = !photo.selected;
-
         $scope.photosSelected = photo.selected ? $scope.photosSelected + 1 : $scope.photosSelected - 1;
 
       };
 
-      $ionicModal.fromTemplateUrl('image-modal.html', {
+      $ionicModal.fromTemplateUrl('views/modal/gallery-modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function(modal) {
         $scope.modal = modal;
       });
 
-      $scope.openModal = function() {
-        $ionicSlideBoxDelegate.slide(0);
+      $scope.openModal = function(index) {
+        $ionicSlideBoxDelegate.slide(index);
         $scope.modal.show();
       };
 
@@ -1212,9 +1215,159 @@
         photo.deleted = false;
       };
 
-      $scope.editPhoto = function() {
-        $scope.showEditableDescription = true;
-      }
+      $scope.editPhoto = function(state) {
+        $scope.showEditableDescription = state;
+      };
+
+      /* MARKER MODERATIONS */
+
+      /**
+       * Accept marker
+       */
+      $scope.acceptMarkerModeration = function (id) {
+
+        markerModerationService.acceptMarker(id, {
+          callback: function (result) {
+
+            $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-approved')).then(function (success) {
+              // success
+            }, function (error) {
+              // error
+            });
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $scope.message = {type: "error", text: message};
+            $scope.$apply();
+          }
+        });
+      };
+
+      /**
+       * Refuse status marker moderation
+       */
+      $scope.refuseMarkerModeration = function (id, motive, description) {
+
+        markerModerationService.refuseMarker(id, motive, description, {
+          callback: function (result) {
+
+            $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-refused')).then(function (success) {
+              // success
+            }, function (error) {
+              // error
+            });
+
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $scope.msg = {type: "danger", text: message};
+            $scope.$apply();
+          }
+        });
+      };
+
+      /**
+       * Cancel marker
+       */
+      $scope.cancelMarkerModeration = function (id) {
+        markerModerationService.cancelMarkerModeration( id, {
+          callback : function(result) {
+
+            $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-canceled')).then(function (success) {
+              // success
+            }, function (error) {
+              // error
+            });
+
+            $scope.$apply();
+          },
+          errorHandler : function(message, exception) {
+            $scope.message = {type:"error", text: message};
+            $scope.$apply();
+          }
+        });
+      };
+
+      $scope.approveMarker = function () {
+
+        var confirmPopup = $ionicPopup.confirm({
+          title: $translate('admin.marker-moderation.Confirm-approve'),
+          template: $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + '?',
+          buttons: [
+            { text: 'Cancelar' },
+            {
+              text: $translate('admin.marker-moderation.Approve'),
+              type: 'button-positive'
+            }
+          ]
+        });
+
+        confirmPopup.then(function(res) {
+          if(res) {
+            $scope.acceptMarkerModeration($scope.currentEntity.id);
+          }
+        });
+
+      };
+
+      $scope.listMotives = function () {
+
+        motiveService.listMotives( {
+          callback: function (result) {
+            $scope.motives = result;
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $scope.msg = {type: "danger", text: message, dismiss: true};
+            $scope.$apply();
+          }
+        });
+      };
+
+      $ionicModal.fromTemplateUrl('views/modal/marker-moderation-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+
+        $scope.refuseMarkerModal = modal;
+      });
+
+      $scope.refuseMarker = function() {
+        $scope.listMotives();
+        $scope.refuseMarkerModal.show();
+      };
+
+      $scope.closeRefuseMarkerModal = function() {
+        $scope.refuseMarkerModal.hide();
+      };
+
+      $scope.confirmRefuseMarkerModal = function(refuse) {
+        $scope.refuseMarkerModal.hide();
+        $scope.refuseMarkerModeration($scope.currentEntity.id, refuse.motive, refuse.description);
+      };
+
+      $scope.cancelMarker = function () {
+
+        var confirmPopup = $ionicPopup.confirm({
+          title: $translate('admin.marker-moderation.Confirm-cancel'),
+          template: $translate('admin.marker-moderation.Are-you-sure-you-want-to-cancel-this-marker') + '?',
+          buttons: [
+            { text: $translate('layer-group-popup.Close') },
+            {
+              text: $translate('admin.marker-moderation.Confirm-cancel'),
+              type: 'button-positive'
+            }
+          ]
+        });
+
+        confirmPopup.then(function(res) {
+          if(res) {
+            $scope.cancelMarkerModeration($scope.currentEntity.id);
+          }
+        });
+
+      };
 
     });
 
