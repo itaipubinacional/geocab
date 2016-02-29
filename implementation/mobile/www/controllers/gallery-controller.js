@@ -41,12 +41,12 @@
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
 
-          if (!$scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum) {
-            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum = new PhotoAlbum();
-            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos = [];
+          if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
+            $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
+            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
           }
 
-          $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos.push(photo);
+          $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
 
         }, function(err) {
           // error
@@ -83,12 +83,12 @@
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
 
-          if (!$scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum) {
-            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum = new PhotoAlbum();
-            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos = [];
+          if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
+            $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
+            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
           }
 
-          $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos.push(photo);
+          $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
 
         }, function(err) {
           // error
