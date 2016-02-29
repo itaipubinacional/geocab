@@ -110,9 +110,9 @@
     $rootScope.$API_ENDPOINT = $API_ENDPOINT;
 
     $rootScope.setUrl = function(url){
-      if(!ionic.Platform.platform().match(/(android|ios)/ig))
+      //if(!ionic.Platform.platform().match(/(android|ios)/ig))
         return $API_ENDPOINT + '/broker/' + url;
-      return './lib/dwr/' + url;
+      //return './lib/dwr/' + url;
     };
 
     $log.debug(ionic.Platform.platform());
