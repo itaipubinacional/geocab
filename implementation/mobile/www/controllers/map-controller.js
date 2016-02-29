@@ -678,6 +678,8 @@
 
         //$log.debug('onHold');
 
+        $scope.isDisabled = false;
+
         $scope.clearShadowFeature($scope.currentFeature);
         $scope.currentFeature = '';
 
@@ -1006,7 +1008,7 @@
         localStorage.removeItem('userEmail');
         localStorage.removeItem('token');
         $location.path($rootScope.$API_ENDPOINT + "/j_spring_security_logout");
-        
+
         $scope.userMe = {};
         $rootScope.model = {
           form: null,
