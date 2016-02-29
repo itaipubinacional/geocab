@@ -181,11 +181,13 @@
       /*
        * GALLERY
        */
-      $scope.getPhotosByAttribute = function(attribute) {
+      $scope.getPhotosByAttribute = function(attribute, reload) {
 
-        attribute.photoAlbum = null;
+        if (angular.equals($scope.selectedPhotoAlbumAttribute, {}) || reload === true) {
 
-        if (angular.equals($scope.selectedPhotoAlbumAttribute, {})) {
+          if(angular.isDefined(attribute.photoAlbum))
+            attribute.photoAlbum = null;
+
           $scope.selectedPhotoAlbumAttribute = attribute;
         }
 
