@@ -780,7 +780,7 @@
             $scope.$apply();
           }
         });
-      }, 2000);
+      }, 5000);
 
       $scope.removeAllSelectedLayers = function() {
 
