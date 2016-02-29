@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.application.controller.entity;
+package br.com.geocab.infrastructure.social.mobile;
 
 import javax.servlet.http.HttpServletRequest;
 

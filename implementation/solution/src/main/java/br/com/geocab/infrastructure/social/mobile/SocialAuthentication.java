@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.application.controller.entity;
+package br.com.geocab.infrastructure.social.mobile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -112,8 +112,7 @@ public abstract class SocialAuthentication implements Authenticate
 	 */
 	@Override
 	public String login(HttpServletRequest request)
-	{
-		System.out.println(user.isEnabled());
+	{//TODO traduzir
 		Assert.isTrue(user.isEnabled(), "User is not enabled");
 		
 		validateToken();
@@ -140,7 +139,7 @@ public abstract class SocialAuthentication implements Authenticate
 	 */
 	@Override
 	public void validateToken()
-	{
+	{//TODO traduzir
 		Assert.isTrue(generateToken(this.getUser().getUsername()).equals(token), "Invalid token");
 	}
 }

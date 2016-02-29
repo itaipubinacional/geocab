@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.application.controller.entity;
+package br.com.geocab.infrastructure.social.mobile;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.client.RestTemplate;
@@ -27,7 +27,7 @@ public class GooglePlusTokenAuthentication  extends SocialAuthentication impleme
 	 */
 	@Override
 	public void validateToken()
-	{
+	{//TODO colocar url em um atributo estático
 		new RestTemplate().getForObject("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token="+token, String.class);
 	}
 	

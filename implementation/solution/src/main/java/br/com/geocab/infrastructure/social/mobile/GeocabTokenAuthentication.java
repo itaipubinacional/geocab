@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.application.controller.entity;
+package br.com.geocab.infrastructure.social.mobile;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
@@ -27,7 +27,7 @@ public class GeocabTokenAuthentication extends SocialAuthentication implements A
 	 */
 	@Override
 	public void validateToken()
-	{
+	{//TODO traduzir token
 		Assert.isTrue(generateToken(this.getUser().getUsername()).equals(token), "Invalid token");
 	}
 
