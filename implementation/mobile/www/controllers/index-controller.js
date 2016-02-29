@@ -60,10 +60,10 @@
 
             angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index) {
 
-              if(attribute.required && attribute.photoAlbum == null){
+              if (attribute.required && attribute.photoAlbum == null) {
 
                 $scope.selectedPhotoAlbumAttribute = attribute;
-                $state.go( $scope.SHOW_GALLERY );
+                $state.go($scope.SHOW_GALLERY);
 
                 isValid = false;
 
@@ -82,7 +82,7 @@
               }
             });
 
-            if(isValid) {
+            if (isValid) {
 
               var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
 
@@ -131,10 +131,10 @@
 
             angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index) {
 
-              if(attribute.required && attribute.photoAlbum == null){
+              if (attribute.required && attribute.photoAlbum == null) {
 
                 $scope.selectedPhotoAlbumAttribute = attribute;
-                $state.go( $scope.SHOW_GALLERY );
+                $state.go($scope.SHOW_GALLERY);
 
                 isValid = false;
 
@@ -143,7 +143,7 @@
 
             });
 
-            if(isValid) {
+            if (isValid) {
 
               var layer = new Layer();
               layer.id = $scope.currentEntity.layer.id;
@@ -402,9 +402,29 @@
         });
       };
 
+      $scope.removeMarkerModeration = function() {
+        markerService.removeMarker($scope.currentEntity.id, {
+          callback: function(result) {
+
+            $cordovaToast.showShortBottom($translate("map.Mark-was-successfully-deleted")).then(function(success) {
+            }, function(error) {
+            });
+
+            $scope.minimizeFooter();
+            $scope.apply();
+
+          },
+          errorHandler: function(message, exception) {
+            $scope.msg = {
+              type: "error",
+              text: message
+            };
+            $scope.$apply();
+          }
+        });
+      }
+
       $scope.approveMarker = function() {
-
-
 
         var confirmPopup = $ionicPopup.confirm({
           title: $translate('admin.marker-moderation.Confirm-approve'),
@@ -421,6 +441,23 @@
         });
 
       };
+
+      $scope.removeMarker = function() {
+
+        var confirmPopup = $ionicPopup.confirm({
+          title: $translate("map.Delete-mark"),
+          template: $translate("map.Are-you-sure-you-want-to-delete-the-mark") + '?',
+          cancelText: $translate("admin.users.Cancel"),
+          okText: $translate("layer-group-popup.Delete")
+        });
+
+        confirmPopup.then(function(res) {
+          console.log(res);
+          if (res) {
+            $scope.removeMarkerModeration($scope.currentEntity.id);
+          }
+        });
+      }
 
       $scope.listMotives = function() {
 
@@ -464,7 +501,7 @@
           title: $translate('admin.marker-moderation.Confirm-cancel'),
           template: $translate('admin.marker-moderation.Are-you-sure-you-want-to-cancel-this-marker') + '?',
           cancelText: $translate('Close'),
-          okText:  $translate('admin.marker-moderation.Confirm-cancel')
+          okText: $translate('admin.marker-moderation.Confirm-cancel')
         });
 
         confirmPopup.then(function(res) {
