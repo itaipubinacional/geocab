@@ -1,4 +1,4 @@
-(function (angular) {
+(function(angular) {
   'use strict';
 
   /**
@@ -7,29 +7,118 @@
    * @param $state
    */
   angular.module('application')
-    .controller('GalleryController', function ($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
-                                           $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
-                                           $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-                                           $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
+    .controller('GalleryController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
+      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
+      $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
+      $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
+
+      $scope.takePhoto = function() {
+
+        var options = {
+          quality: 60,
+          destinationType: Camera.DestinationType.DATA_URL,
+          sourceType: Camera.PictureSourceType.CAMERA,
+          allowEdit: false,
+          targetWidth: 480,
+          targetHeight: 640,
+          encodingType: Camera.EncodingType.PNG,
+          popoverOptions: CameraPopoverOptions,
+          saveToPhotoAlbum: true,
+          correctOrientation: true
+        };
+
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          $ionicLoading.show({
+            template: 'Carregando foto',
+            duration: 2000
+          });
+
+          var photo = new Photo();
+          photo.source = imageData;
+          photo.image = imageData;
+          photo.name = 'name.png';
+          photo.description = 'description';
+          photo.contentLength = imageData.length;
+          photo.mimeType = 'image/png';
+
+          if (!$scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum) {
+            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum = new PhotoAlbum();
+            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos = [];
+          }
+
+          $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos.push(photo);
+
+        }, function(err) {
+          // error
+        });
+
+      };
+
+      $scope.getPhoto = function() {
+
+        var options = {
+          quality: 60,
+          destinationType: Camera.DestinationType.DATA_URL,
+          sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+          allowEdit: false,
+          targetWidth: 480,
+          targetHeight: 640,
+          encodingType: Camera.EncodingType.PNG,
+          popoverOptions: CameraPopoverOptions,
+          saveToPhotoAlbum: true,
+          correctOrientation: true
+        };
+
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          $ionicLoading.show({
+            template: 'Carregando foto',
+            duration: 2000
+          });
+
+          var photo = new Photo();
+          photo.source = imageData;
+          photo.image = imageData;
+          photo.name = 'name.png';
+          photo.description = 'description';
+          photo.contentLength = imageData.length;
+          photo.mimeType = 'image/png';
+
+          if (!$scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum) {
+            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum = new PhotoAlbum();
+            $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos = [];
+          }
+
+          $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum.photos.push(photo);
+
+        }, function(err) {
+          // error
+        });
+
+      };
 
       /* GALLERY */
 
-      $scope.addMedia = function () {
-        $scope.hideSheet = $ionicActionSheet.show({
-          buttons: [
-            {text: 'Tirar foto'},
-            {text: 'Galeria'}
-          ],
+      $scope.addMedia = function() {
+        $scope.actionSheet = $ionicActionSheet.show({
+          buttons: [{
+            text: 'Tirar foto'
+          }, {
+            text: 'Galeria'
+          }],
           titleText: 'Adicionar imagens',
           cancelText: 'Cancelar',
-          buttonClicked: function (index) {
+          buttonClicked: function(index) {
             $log.debug(index);
-            if(index == 1)
+            if (index == 1)
               $scope.getPhoto();
             else
               $scope.takePhoto();
           }
         });
+
+        $timeout(function() {
+           $scope.actionSheet();
+         }, 5000);
       };
 
       $scope.selectPhoto = function(photo) {
