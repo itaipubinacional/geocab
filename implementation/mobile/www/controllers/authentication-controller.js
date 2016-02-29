@@ -7,7 +7,7 @@
  * @param $state
  */
 angular.module('application')
-  .controller('AuthenticationController', function ($importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate) {
+  .controller('AuthenticationController', function ($rootScope, $importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate) {
 
     /*-------------------------------------------------------------------
      *              ATTRIBUTES
@@ -15,7 +15,7 @@ angular.module('application')
     /**
      *
      */
-    $scope.model = {
+    $rootScope.model = {
       form: null,
       user: {
         email : 'test_prognus@mailinator.com', //TODO --------- R  E  M  O  V  E  R
