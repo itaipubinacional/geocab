@@ -370,18 +370,17 @@
 
       $scope.approveMarker = function() {
 
+
+
         var confirmPopup = $ionicPopup.confirm({
           title: $translate('admin.marker-moderation.Confirm-approve'),
           template: $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + '?',
-          buttons: [{
-            text: 'Cancelar'
-          }, {
-            text: $translate('admin.marker-moderation.Approve'),
-            type: 'button-positive'
-          }]
+          cancelText: $translate('Close'),
+          okText: $translate('admin.marker-moderation.Approve')
         });
 
         confirmPopup.then(function(res) {
+          console.log(res);
           if (res) {
             $scope.acceptMarkerModeration($scope.currentEntity.id);
           }
@@ -430,12 +429,8 @@
         var confirmPopup = $ionicPopup.confirm({
           title: $translate('admin.marker-moderation.Confirm-cancel'),
           template: $translate('admin.marker-moderation.Are-you-sure-you-want-to-cancel-this-marker') + '?',
-          buttons: [{
-            text: $translate('layer-group-popup.Close')
-          }, {
-            text: $translate('admin.marker-moderation.Confirm-cancel'),
-            type: 'button-positive'
-          }]
+          cancelText: $translate('Close'),
+          okText:  $translate('admin.marker-moderation.Confirm-cancel')
         });
 
         confirmPopup.then(function(res) {
