@@ -113,7 +113,8 @@
       $scope.clearNewMarker = function() {
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
         $scope.currentCreatingInternalLayer = {};
-        $scope.minimizeFooter();
+        $scope.currentEntity = {};
+        $scope.currentFeature = '';
       };
 
       $scope.expandFooter = function() {
@@ -158,8 +159,6 @@
         $scope.showMarkerDetails = false;
         $scope.imgResult = '';
 
-        if ($state.current.name == 'map.gallery')
-          $scope.minimizeFooter();
       };
 
       $scope.getLastPhotoByMarkerId = function(markerId) {

@@ -43,6 +43,7 @@
         });
       };
 
+
       $scope.saveMarker = function(form) {
 
         if (!form.$valid) {
@@ -160,13 +161,11 @@
             var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
             $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
 
-            //$log.debug($scope.currentEntity);
-
             markerService.insertMarker($scope.currentEntity, {
               callback: function(result) {
 
                 $scope.isLoading = false;
-                $scope.clearNewMarker();
+
 
                 var internalLayer = $filter('filter')($scope.allInternalLayerGroups, {
                   id: $scope.currentEntity.layer.id
@@ -222,13 +221,11 @@
 
                 }
 
-                $scope.currentEntity = {};
-                $scope.currentFeature = '';
+                $scope.clearNewMarker();
                 $scope.minimizeFooter();
 
                 $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
 
-                $scope.$apply();
               },
               errorHandler: function(message, exception) {
                 $log.debug(message);
