@@ -349,9 +349,9 @@
         $scope.map.on('click', function(evt) {
 
           if (!$scope.isNewMarker) {
-            $scope.clearNewMarker();
             $scope.currentEntity = {};
             $scope.clearShadowFeature($scope.currentFeature);
+            $scope.clearNewMarker();
             $scope.currentFeature = '';
             $scope.$apply();
           }
