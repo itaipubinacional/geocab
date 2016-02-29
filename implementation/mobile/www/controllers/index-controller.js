@@ -168,8 +168,6 @@
                 $scope.isLoading = false;
                 $scope.clearNewMarker();
 
-                $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
-
                 var internalLayer = $filter('filter')($scope.allInternalLayerGroups, {
                   id: $scope.currentEntity.layer.id
                 })[0];
@@ -227,6 +225,8 @@
                 $scope.currentEntity = {};
                 $scope.currentFeature = '';
                 $scope.minimizeFooter();
+
+                $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
 
                 $scope.$apply();
               },
