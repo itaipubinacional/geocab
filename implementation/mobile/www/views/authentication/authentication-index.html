@@ -12,7 +12,7 @@
           </label>
           <!-- {{model.form.$error.required}} -->
           <ng-messages class="padding" for="model.form.$error" role="alert">
-            <ng-message when="email">{{'admin.users.The-email-is-not-valid' | translate}}</ng-message>
+            <ng-message class="form-error" when="email">{{'admin.users.The-email-is-not-valid' | translate}}</ng-message>
           </ng-messages>
           <label class="item item-input item-floating-label login-label">
             <span class="input-label">{{'authentication.Password' | translate}}</span>
@@ -20,11 +20,11 @@
           </label>
           <!-- {{model.form.$error.required[0].$name}} -->
           <ng-messages class="padding" ng-if="!model.user.password" for="model.form.$error" role="alert">
-            <ng-message when="required">{{'admin.datasource.Enter-your-password' | translate}}.</ng-message>
+            <ng-message class="form-error" when="required">{{'admin.datasource.Enter-your-password' | translate}}.</ng-message>
           </ng-messages>
         </div>
         <div>
-          <button nav-clear class="login-button button button-block button-positive" 
+          <button nav-clear class="login-button button button-block button-positive"
                   ng-disabled="model.form.$invalid" ng-click="loginHandler()">
             <b>{{'authentication.Enter' | translate}}</b>
           </button>
