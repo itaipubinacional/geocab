@@ -196,7 +196,7 @@
 
                         var iconFeature = new ol.Feature({
                           geometry: new ol.format.WKT().readGeometry($scope.currentEntity.wktCoordenate),
-                          marker: $scope.currentEntity
+                          marker: result
                         });
 
                         iconFeature.setStyle(iconStyle);
