@@ -88,7 +88,7 @@
       <button class="button button-icon icon ion-android-done" ng-click="saveMarker(markerForm)" ng-if="!isDisabled"></button>
     </div>
   </div>
-  <div class="bar bar-footer bar-stable" ng-if="showMarkerDetails">
+  <div class="bar bar-footer bar-stable" ng-if="showMarkerDetails && userMe.role == 'ADMINISTRATOR' && currentEntity.id">
     <button class="button button-icon icon ion-thumbsup" ng-click="approveMarker()"></button>
     <button class="button button-icon icon ion-thumbsdown" ng-click="refuseMarker()"></button>
     <button class="button button-icon icon ion-android-close" ng-click="cancelMarker()"></button>

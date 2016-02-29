@@ -10,7 +10,7 @@
     .controller('MapController', function ($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
                                            $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
                                            $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-                                           $cordovaToast, $ionicModal, $ionicSlideBoxDelegate) {
+                                           $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
 
 
       /**
@@ -654,8 +654,8 @@
         $scope.imgResult = '';
         $scope.isDisabled = false;
 
-        if($state.current.name == 'map.gallery')
-          $scope.footerExpand();
+        /*if($state.current.name == 'map.gallery')
+          $scope.footerExpand();*/
       };
 
       $scope.clearNewMarker = function () {
@@ -883,9 +883,9 @@
                 $scope.isLoading = false;
                 $scope.clearNewMarker();
 
-                /*$cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {
-                 }, function (error) {
-                 });*/
+                $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {
+                }, function (error) {
+                });
 
                 var internalLayer = $filter('filter')($scope.allInternalLayerGroups, {id: $scope.currentEntity.layer.id})[0];
 
@@ -1103,9 +1103,17 @@
 
         $cordovaCamera.getPicture(options).then(function (imageData) {
           $ionicLoading.show({
-            template: 'getPicture',
+            template: 'Carregando foto',
             duration: 2000
           });
+
+          var photo = new Photo();
+          photo.source = imageData;
+          photo.image = imageData;
+          photo.name = 'name.png';
+          photo.description = 'description';
+          photo.contentLength = imageData.length;
+          photo.mimeType = 'image/png';
 
           if(!$scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum) {
             $scope.currentEntity.markerAttribute[$scope.attributeIndex].photoAlbum = new PhotoAlbum();
@@ -1163,6 +1171,24 @@
       };
 
       /* GALLERY */
+
+      $scope.addMedia = function () {
+        $scope.hideSheet = $ionicActionSheet.show({
+          buttons: [
+            {text: 'Tirar foto'},
+            {text: 'Galeria'}
+          ],
+          titleText: 'Adicionar imagens',
+          cancelText: 'Cancelar',
+          buttonClicked: function (index) {
+            $log.debug(index);
+            if(index == 1)
+              $scope.getPhoto();
+            else
+              $scope.takePhoto();
+          }
+        });
+      };
 
       $scope.selectPhoto = function(photo) {
 
