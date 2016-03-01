@@ -13,34 +13,33 @@
 
     <!-- Left menu -->
     <drawer side="left" on-drag-end="onDragEnd(state)" on-drag-start="onDragStart(state)">
-      <div class="list">
-        <div>
-          <label class="item item-input">
-            <i class="icon ion-search placeholder-icon"></i>
-            <input type="text" placeholder="{{'Search' | translate}}" ng-model="search">
-          </label>
-        </div>
-        <ion-scroll>
-          <ion-list ng-repeat="layer in allLayers | filter:search" class="layers">
-            <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{ layer.title ? layer.title : layer.name }}
-              <img ng-if="!layer.legend" class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">
-              <!-- se a camada é interna pega o ícone -->
-              <img ng-if="layer.legend" class="item-checkbox-img" ng-src="{{ layer.legend }}">
-              <!-- se a camada é externa pega a legenda -->
-            </ion-checkbox>
-          </ion-list>
-        </ion-scroll>
-      </div>
-      <div class="bar bar-footer bar-positive" style="height:75px;">
+
+      <header class="bar bar-header bar-stable">
+        <label class="item item-input">
+          <i class="icon ion-search placeholder-icon"></i>
+          <input type="text" placeholder="{{'Search' | translate}}" ng-model="search">
+        </label>
+      </header>
+      <ion-content class="has-header has-footer" scroll="true">
+        <ion-list ng-repeat="layer in allLayers | filter:search" class="layers">
+          <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{ layer.title ? layer.title : layer.name }}
+            <img ng-if="!layer.legend" class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">
+            <!-- se a camada é interna pega o ícone -->
+            <img ng-if="layer.legend" class="item-checkbox-img" ng-src="{{ layer.legend }}">
+            <!-- se a camada é externa pega a legenda -->
+          </ion-checkbox>
+        </ion-list>
+
+      </ion-content>
+      <div class="bar bar-footer bar-positive">
         <div class="row">
           <div class="col-75">
-            <h6 style="word-wrap: initial">
+            <p style="word-wrap: initial">
               <b>{{ userMe.name }}</b>
-            </h6>
-            <h6 style="word-wrap: initial">{{ userMe.email }}</h6>
+            </p>
           </div>
         </div>
-        <div class="col-15" style="margin-top:10px">
+        <div class="col-15">
           <button class="button button-icon icon ion-android-exit" ng-click="logout()"></button>
         </div>
       </div>
