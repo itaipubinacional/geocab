@@ -60,7 +60,7 @@
 
             angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index) {
 
-              if (attribute.required && attribute.photoAlbum == null) {
+              if (attribute.type == 'PHOTO_ALBUM' && attribute.required && attribute.photoAlbum == null) {
 
                 $scope.selectedPhotoAlbumAttribute = attribute;
                 $state.go($scope.SHOW_GALLERY);
@@ -131,7 +131,7 @@
 
             angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index) {
 
-              if (attribute.required && attribute.photoAlbum == null) {
+              if (attribute.type == 'PHOTO_ALBUM' && attribute.required && attribute.photoAlbum == null) {
 
                 $scope.selectedPhotoAlbumAttribute = attribute;
                 $state.go($scope.SHOW_GALLERY);
@@ -302,9 +302,7 @@
 
       };
 
-      $timeout(function() {
-        $scope.listAllInternalLayerGroups();
-      }, 1000);
+
 
       $scope.getCurrentEntity = function() {
 

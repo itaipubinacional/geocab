@@ -359,6 +359,8 @@
          */
         $scope.map.on('click', function(evt) {
 
+          $scope.minimizeFooter();
+
           $scope.currentWMS = {};
 
           if (!$scope.isNewMarker) {
@@ -394,7 +396,7 @@
                     'INFO_FORMAT': 'application/json'
                   });
 
-                  $scope.getFeatureProperties(decodeURIComponent(url));
+                  $scope.getFeatureProperties(decodeURIComponent(url), layer.wmsLayer.getProperties().layer);
                 }
               });
             }
@@ -483,11 +485,12 @@
 
                         if (!exist) {
 
-                          $scope.currentEntity.markerAttribute.push({
-                            attribute: attribute,
-                            marker: $scope.currentEntity
-                          });
-                          $scope.attributesByLayer.push(attribute);
+                          /*attribute.attribute = attribute;
+                          attribute.marker = $scope.currentEntity;
+
+                          attribute.id = null;*/
+
+                          $scope.currentEntity.markerAttribute.push({attribute: attribute, marker: $scope.currentEntity, type: attribute.type, name: attribute.name});
 
                         }
 
@@ -536,7 +539,7 @@
       $scope.onDragStart = function(state) {
         $scope.isDragStart = true;
         $scope.dragPan = false;
-        $scope.listAllInternalLayerGroups();
+        //$scope.listAllInternalLayerGroups();
       };
 
       $scope.onDragEnd = function(state) {
@@ -547,7 +550,7 @@
 
       $scope.toggleDrawer = function() {
         $rootScope.$broadcast('toggleDrawer');
-        $scope.listAllInternalLayerGroups();
+        //$scope.listAllInternalLayerGroups();
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
         $scope.isDragStart = false;
       };
@@ -675,7 +678,7 @@
         }
       };
 
-      $scope.getFeatureProperties = function(url) {
+      $scope.getFeatureProperties = function(url, layer) {
 
         $http({
           method: 'GET',
@@ -686,8 +689,7 @@
 
           if(response.data.features.length != 0) {
 
-            $scope.currentWMS.layer = {};
-            $scope.currentWMS.layer.title = 'WMS';
+            $scope.currentWMS.layer = layer;
             $scope.currentWMS.attributes = [];
 
             angular.forEach(response.data.features[0].properties, function (attribute, key) {
@@ -722,7 +724,7 @@
 
       $scope.toggleLayer = function(layer) {
 
-        if ($filter('filter')($scope.allInternalLayerGroups, {
+        if ($filter('filter')($scope.allLayers, {
             visible: true
           }).length > 3) {
 
@@ -853,27 +855,38 @@
         }
       };
 
+      $scope.listAllLayers = function() {
+
+        layerGroupService.listLayersByFilters(null, null, {
+          callback: function(result) {
+            $scope.allLayers = result.content;
+            $scope.$apply();
+          },
+          errorHandler: function(message, exception) {
+            $log.debug(message);
+            $scope.$apply();
+          }
+        });
+
+      };
+
       /**
        *
        */
       $scope.listAllInternalLayerGroups = function() {
 
-        if ($scope.allInternalLayerGroups.length == 0) {
-          layerGroupService.listLayersByFilters(null, null, {
-            callback: function(result) {
-              $scope.allInternalLayerGroups = result.content;
+        $log.debug($scope.allInternalLayerGroups);
 
-              //$scope.allInternalLayerGroups[3].visible = true;
-              //$scope.toggleLayer($scope.allInternalLayerGroups[3]);
+        if ($scope.allInternalLayerGroups.length == 0) {
+          layerGroupService.listAllInternalLayerGroups({
+            callback: function(result) {
+              $scope.allInternalLayerGroups = result;
+              $log.debug($scope.allInternalLayerGroups);
 
               $scope.$apply();
             },
             errorHandler: function(message, exception) {
-              $ionicPopup.alert({
-                title: 'Opss...',
-                template: message
-              });
-
+              $log.debug(message);
               $scope.$apply();
             }
           });
@@ -919,11 +932,7 @@
               $scope.$apply();
             },
             errorHandler: function(message, exception) {
-              $ionicPopup.alert({
-                title: 'Opss...',
-                template: message
-              });
-
+              $log.debug(message);
               $scope.$apply();
             }
           });
@@ -990,6 +999,11 @@
           }
         );
       };
+
+      $timeout(function() {
+        $scope.listAllLayers();
+        $scope.listAllInternalLayerGroups();
+      }, 1000);
 
     });
 
