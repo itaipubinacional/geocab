@@ -20,17 +20,23 @@
             <input type="text" placeholder="{{'Search' | translate}}" ng-model="search">
           </label>
         </div>
-        <ion-list ng-repeat="layer in allLayers | filter:search" class="layers">
-          <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{ layer.title ? layer.title : layer.name }}
-            <img ng-if="!layer.legend" class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}"> <!-- se a camada é interna pega o ícone -->
-            <img ng-if="layer.legend" class="item-checkbox-img" ng-src="{{ layer.legend }}"> <!-- se a camada é externa pega a legenda -->
-          </ion-checkbox>
-        </ion-list>
+        <ion-scroll>
+          <ion-list ng-repeat="layer in allLayers | filter:search" class="layers">
+            <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{ layer.title ? layer.title : layer.name }}
+              <img ng-if="!layer.legend" class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">
+              <!-- se a camada é interna pega o ícone -->
+              <img ng-if="layer.legend" class="item-checkbox-img" ng-src="{{ layer.legend }}">
+              <!-- se a camada é externa pega a legenda -->
+            </ion-checkbox>
+          </ion-list>
+        </ion-scroll>
       </div>
       <div class="bar bar-footer bar-positive" style="height:75px;">
         <div class="row">
-        <div class="col-75">
-            <h6 style="word-wrap: initial"><b>{{ userMe.name }}</b></h6>
+          <div class="col-75">
+            <h6 style="word-wrap: initial">
+              <b>{{ userMe.name }}</b>
+            </h6>
             <h6 style="word-wrap: initial">{{ userMe.email }}</h6>
           </div>
         </div>
@@ -38,16 +44,9 @@
           <button class="button button-icon icon ion-android-exit" ng-click="logout()"></button>
         </div>
       </div>
+
     </drawer>
-    <ion-pull-up-footer id="pull-up" class="pull-up" ng-if="currentEntity.latitude || currentEntity.id" initial-state="minimized" default-behavior="expand"
-                        on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()"
-                        ng-include="'./views/map/pull-up.html'">
-
-    </ion-pull-up-footer>
-    <ion-pull-up-footer id="pull-up-wms" class="pull-up" ng-if="currentWMS.layer" initial-state="minimized" default-behavior="expand"
-                        on-expand="footerWMSExpand()" on-collapse="footerWMSCollapse()" on-minimize="footerWMSMinimize()"
-                        ng-include="'./views/map/wms.html'">
-
-    </ion-pull-up-footer>
+    <ion-pull-up-footer id="pull-up" class="pull-up" ng-if="currentEntity.latitude || currentEntity.id" initial-state="minimized" default-behavior="expand" on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()" ng-include="'./views/map/pull-up.html'"></ion-pull-up-footer>
+    <ion-pull-up-footer id="pull-up-wms" class="pull-up" ng-if="currentWMS.layer" initial-state="minimized" default-behavior="expand" on-expand="footerWMSExpand()" on-collapse="footerWMSCollapse()" on-minimize="footerWMSMinimize()" ng-include="'./views/map/wms.html'"></ion-pull-up-footer>
   </ion-side-menus>
 </ion-view>

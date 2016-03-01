@@ -15,20 +15,7 @@
    */
   module.config(function($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT, $translateProvider, $compileProvider, $httpProvider, $logProvider) {
 
-    $logProvider.debugEnabled(false);
-
-    $httpProvider.interceptors.push(function($rootScope) {
-      return {
-        request: function(config) {
-          $rootScope.$broadcast('loading:show')
-          return config
-        },
-        response: function(response) {
-          $rootScope.$broadcast('loading:hide')
-          return response
-        }
-      }
-    });
+    $logProvider.debugEnabled(true);
 
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel|data):/);
     //-------
@@ -126,7 +113,7 @@
     $rootScope.$API_ENDPOINT = $API_ENDPOINT;
 
     $rootScope.setUrl = function(url) {
-      if (!ionic.Platform.platform().match(/(android|ios)/ig))
+      if (window.location.hostname.match(/localhost/))
         return $API_ENDPOINT + '/broker/' + url;
       return './lib/dwr/' + url;
     };
