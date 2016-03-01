@@ -10,7 +10,7 @@
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
+      $cordovaToast, $http) {
 
       /**
        *
@@ -48,6 +48,14 @@
       $scope.dragPan = true;
       $scope.layers = [];
 
+      $scope.showMarkerDetails = false;
+      $scope.showWMSDetails = false;
+
+      $scope.currentEntity = {};
+      $scope.isNewMarker = false;
+
+      $scope.currentWMS = {};
+
       $scope.photosSelected = 0;
       $scope.selectedPhoto = {};
       $scope.editPhoto = false;
@@ -82,11 +90,7 @@
         marker: null
       };
 
-      $scope.showMarkerDetails = false;
 
-      $scope.currentEntity = {};
-
-      $scope.isNewMarker = false;
 
       /*-------------------------------------------------------------------
        * 		 				 	  HANDLERS
@@ -118,6 +122,10 @@
         $scope.currentFeature = '';
       };
 
+      $scope.footerWMSExpand = function() {
+        $scope.showWMSDetails = true;
+      };
+
       $scope.expandFooter = function() {
         $rootScope.$broadcast('expandFooter');
       };
@@ -127,9 +135,6 @@
       };
 
       $scope.footerExpand = function() {
-
-        //$log.debug('pullUpHeight: ' + $scope.pullUpHeight);
-        //$log.debug('Footer expanded');
 
         $scope.listAllInternalLayerGroups();
 
@@ -246,6 +251,8 @@
 
         //$log.debug('onHold');
 
+        $scope.currentWMS = {};
+
         $scope.isDisabled = false;
 
         $scope.clearShadowFeature($scope.currentFeature);
@@ -352,6 +359,8 @@
          */
         $scope.map.on('click', function(evt) {
 
+          $scope.currentWMS = {};
+
           if (!$scope.isNewMarker) {
             $scope.currentEntity = {};
             $scope.clearShadowFeature($scope.currentFeature);
@@ -370,15 +379,13 @@
 
           } else {
 
-            var listUrls = [];
-
             for (var i = 0; i < $scope.layers.length; i++) {
               var url = $scope.layers[i].getGetFeatureInfoUrl(
                 evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(), {
                   'INFO_FORMAT': 'application/json'
                 });
 
-              listUrls.push(decodeURIComponent(url));
+              $scope.getFeatureProperties(decodeURIComponent(url));
             }
 
             var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, olLayer) {
@@ -397,10 +404,8 @@
 
               $scope.currentEntity = feature.getProperties().marker;
 
-              // if(($scope.userMe.role != 'ADMINISTRATOR' && $scope.currentEntity.status != 'PENDING' && $scope.currentEntity.user.id == $scope.userMe.id)
-              //   || ($scope.userMe.role == 'ADMINISTRATOR' && ($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED'))) {
-
-              if (($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED') && ($scope.currentEntity.user.id == $scope.userMe.id)) {
+              if (($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED')
+                && ($scope.currentEntity.user.id == $scope.userMe.id)) {
                 $scope.isDisabled = false;
               }
 
@@ -626,11 +631,11 @@
           default:
             return 78271.51696402048;
         }
-      }
+      };
 
       /**
-  Converts the value scale stored in the db to open layes zoom forma
-  */
+      Converts the value scale stored in the db to open layes zoom forma
+      */
       $scope.maxEscalaToMinResolutionn = function(maxEscalaMapa) {
 
         switch (maxEscalaMapa) {
@@ -665,7 +670,36 @@
           default:
             return 0.0005831682455839253;
         }
-      }
+      };
+
+      $scope.getFeatureProperties = function(url) {
+
+        $http({
+          method: 'GET',
+          url: url
+        }).then(function successCallback(response) {
+
+          $log.debug(response);
+
+          if(response.data.features.length != 0) {
+
+            $scope.currentWMS.layer = {};
+            $scope.currentWMS.layer.title = 'WMS';
+            $scope.currentWMS.attributes = [];
+
+            angular.forEach(response.data.features[0].properties, function (attribute, key) {
+
+              $scope.currentWMS.attributes.push({name: key, value: attribute});
+
+            });
+
+            $scope.showWMSDetails = true;
+          }
+
+        }, function errorCallback(response) {
+        });
+
+      };
 
       $scope.convertDDtoDMS = function(coordinate, latitude) {
         var valCoordinate, valDeg, valMin, valSec, result;
@@ -724,6 +758,7 @@
           if (layer.visible && !layerExits) {
 
             if (layer.dataSource.url != null) {
+
               var wmsOptions = {
                 url: layer.dataSource.url.split("ows?")[0] + 'wms',
                 params: {
@@ -731,6 +766,9 @@
                 },
                 serverType: 'geoserver'
               };
+
+              if (layer.dataSource.url.match(/&authkey=(.*)/))
+                wmsOptions.url += "?" + layer.dataSource.url.match(/&authkey=(.*)/)[0];
 
               var wmsSource = new ol.source.TileWMS(wmsOptions);
 
@@ -779,7 +817,9 @@
 
                       var vectorLayer = new ol.layer.Vector({
                         source: vectorSource,
-                        layer: layer.id
+                        layer: layer.id,
+                        maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
+                        minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
                       });
 
                       markers.push(vectorLayer);

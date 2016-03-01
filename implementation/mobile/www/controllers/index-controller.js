@@ -10,7 +10,7 @@
     .controller('IndexController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
+      $cordovaToast, $ionicModal) {
 
       $scope.getPhoto = function() {
         Camera.getPicture().then(function(imageURI) {
