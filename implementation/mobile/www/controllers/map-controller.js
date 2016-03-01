@@ -94,8 +94,11 @@
         else if($scope.$state.current.name === $scope.DRAWER) {
           $scope.$state.go( $scope.INDEX );
           $scope.toggleDrawer();
-
         }
+
+        else 
+          ionic.Platform.exitApp();
+
 
         $scope.$apply();
 
