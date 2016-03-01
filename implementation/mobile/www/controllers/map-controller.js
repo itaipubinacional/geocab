@@ -10,7 +10,7 @@
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $http) {
+      $cordovaToast, $http, $ionicHistory, $ionicPlatform) {
 
       /**
        *
@@ -30,6 +30,10 @@
        */
       $scope.INDEX = "map.index";
       $scope.SHOW_GALLERY = "map.gallery";
+      $scope.VIEW = "map.index.view";
+      $scope.PREVIEW = "map.index.preview";
+
+      $scope.DRAWER = "map.index.drawer";
       /**
 
        /*-------------------------------------------------------------------
@@ -69,6 +73,39 @@
       $scope.pullUpHandle = angular.element(document.getElementsByTagName('ion-pull-up-handle'));
 
       $scope.pullUpHeight = 100;
+
+      $ionicPlatform.registerBackButtonAction(function(e){
+
+        if($scope.$state.current.name === $scope.PREVIEW) {
+
+          $scope.clearNewMarker();
+          $scope.$state.go( $scope.INDEX );
+        }
+
+        else if($scope.$state.current.name === $scope.VIEW) {
+          $scope.minimizeFooter();
+          $scope.$state.go( $scope.PREVIEW );
+        }
+
+        else if($scope.$state.current.name === $scope.SHOW_GALLERY) {
+          $scope.$state.go( $scope.VIEW );
+        }
+
+        else if($scope.$state.current.name === $scope.DRAWER) {
+          $scope.$state.go( $scope.INDEX );
+          $scope.toggleDrawer();
+
+        }
+
+        $scope.$apply();
+
+        // if ($location.path() === "/index") {
+        //   navigator.app.exitApp();
+        // }
+        // else {
+        //   $ionicHistory.goBack();
+        // }
+      }, 100);
 
       /**
        * Setting the background layer - OSM
@@ -138,6 +175,8 @@
       };
 
       $scope.footerExpand = function() {
+
+        $scope.$state.go( $scope.VIEW );
 
         $scope.listAllInternalLayerGroups();
 
@@ -251,6 +290,8 @@
       };
 
       $scope.onHold = function(evt) {
+
+        $scope.$state.go('map.index.preview');
 
         $scope.listAllLayers();
         $scope.listAllInternalLayerGroups();
@@ -559,12 +600,25 @@
         $scope.isDrawerOpen = state == undefined ? $scope.isDrawerOpen : state;
         $scope.isDragStart = false;
         $scope.dragPan = state;
+
+        if(state) {
+          $scope.$state.go( $scope.DRAWER );
+        } else {
+          $scope.$state.go( $scope.INDEX );
+        }
       };
 
       $scope.toggleDrawer = function() {
         $rootScope.$broadcast('toggleDrawer');
         //$scope.listAllInternalLayerGroups();
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
+
+        if($scope.isDrawerOpen) {
+          $scope.$state.go( $scope.DRAWER );
+        } else {
+          $scope.$state.go( $scope.INDEX );
+        }
+
         $scope.isDragStart = false;
 
         $scope.listAllLayers();

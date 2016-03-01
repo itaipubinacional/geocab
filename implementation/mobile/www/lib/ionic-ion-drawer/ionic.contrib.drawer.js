@@ -158,7 +158,7 @@
       //console.log(side);
 
       $ionicGesture.on('drag', function(e) {
-         if(e.gesture.direction === 'left'){
+         if(e.gesture.direction === 'left' && drawerState == 'open' || e.gesture.direction === 'right' && drawerState == 'close'){
            doDrag(e);
          }
       }, $document);

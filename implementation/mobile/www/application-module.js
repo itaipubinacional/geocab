@@ -65,6 +65,12 @@
       url: "/index",
       templateUrl: './views/map/map-index.html',
       controller: 'IndexController as index'
+    }).state('map.index.preview', {
+      url: "/preview",
+    }).state('map.index.view', {
+      url: "/view",
+    }).state('map.index.drawer', {
+      url: "/drawer",
     }).state('map.gallery', {
       url: "/gallery",
       templateUrl: './views/map/gallery.html',
@@ -131,6 +137,8 @@
       // $cordovaStatusbar.overlaysWebView(true);
       // $cordovaStatusBar.style(2); //Black, transulcent
     });
+
+
 
     ngFB.init({
       appId: '801316929973059'
