@@ -261,6 +261,7 @@
 
                   }
 
+                  $rootScope.$broadcast('loading:hide');
                   $scope.clearNewMarker();
                   $scope.minimizeFooter();
 
