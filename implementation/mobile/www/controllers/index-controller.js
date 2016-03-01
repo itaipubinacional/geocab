@@ -322,7 +322,7 @@
         markerModerationService.acceptMarker(id, {
           callback: function(result) {
 
-            $scope.currentEntity = result;
+            $scope.currentEntity.status = result.marker.status;
 
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-approved')).then(function(success) {
               // success
@@ -347,7 +347,7 @@
         markerModerationService.refuseMarker(id, motive, description, {
           callback: function(result) {
 
-            $scope.currentEntity = result;
+            $scope.currentEntity.status = result.marker.status;
 
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-refused')).then(function(success) {
               // success
@@ -371,7 +371,7 @@
         markerModerationService.cancelMarkerModeration(id, {
           callback: function(result) {
 
-            $scope.currentEntity = result;
+            $scope.currentEntity.status = result.marker.status;
 
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-canceled')).then(function(success) {
               // success
