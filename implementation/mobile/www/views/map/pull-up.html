@@ -80,8 +80,8 @@
       </fieldset>
     </form>
   </div>
-  <div class="title bar-header" ng-if="showMarkerDetails" style="text-align: left" ng-class="{'bar-positive': showMarkerDetails}">
-    <button ng-click="footerMinimize()" style="margin-top: 5px" class="button button-icon icon ion-android-arrow-back"></button>
+  <div class="bar bar-header" ng-if="showMarkerDetails" style="text-align: left" ng-class="{'bar-positive': showMarkerDetails}">
+    <button ng-click="minimizeFooter()" class="button button-icon icon ion-android-arrow-back"></button>
     <div class="h1 title">{{ currentEntity.title ? currentEntity.title : currentEntity.layer.name }}</div>
     <div class="buttons">
       <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="$state.go( SHOW_GALLERY )"></button>
@@ -89,11 +89,13 @@
     </div>
   </div>
   <div class="bar bar-footer bar-stable" ng-if="showMarkerDetails && currentEntity.id">
-    <div class="buttons" ng-if="userMe.role == 'ADMINISTRATOR'">
-      <button class="button button-icon icon ion-thumbsup" ng-disabled="currentEntity.status == 'ACCEPTED'" ng-click="approveMarker()"></button>
-      <button class="button button-icon icon ion-thumbsdown" ng-disabled="currentEntity.status == 'REFUSED'" ng-click="refuseMarker()"></button>
-      <button class="button button-icon icon ion-android-close" ng-disabled="currentEntity.status == 'CANCELED'" ng-click="cancelMarker()"></button>
+    <div class="button-bar">
+      <div ng-if="userMe.role == 'ADMINISTRATOR'">
+        <button class="button button-icon icon ion-thumbsup" ng-disabled="currentEntity.status == 'ACCEPTED'" ng-click="approveMarker()"></button>
+        <button class="button button-icon icon ion-thumbsdown" ng-disabled="currentEntity.status == 'REFUSED'" ng-click="refuseMarker()"></button>
+        <button class="button button-icon icon ion-android-close" ng-disabled="currentEntity.status == 'CANCELED'" ng-click="cancelMarker()"></button>
+      </div>
+      <button class="button button-icon icon ion-android-delete" ng-if="currentEntity.user.id == userMe.id" ng-click="removeMarker()"></button>
     </div>
-    <button class="button button-icon icon ion-android-delete" ng-if="currentEntity.user.id == userMe.id" ng-click="removeMarker()"></button>
   </div>
 </ion-pull-up-content>

@@ -8,7 +8,7 @@
    */
   angular.module('application')
     .controller('GalleryController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
-      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
+      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
       $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
 

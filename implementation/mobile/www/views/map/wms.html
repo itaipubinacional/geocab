@@ -1,0 +1,24 @@
+<ion-pull-up-handle width="100" height="70" toggle="ion-chevron-up ion-chevron-down" style="box-shadow: 0px -2px 6px rgba(0,0,0,0.3);">
+  <div class="col">
+    <div class="row">
+      <div class="row" style="padding-right:50px">
+        <b>{{ currentWMS.layer.title ? currentWMS.layer.title : currentWMS.layer.name }}</b>
+      </div>
+    </div>
+  </div>
+</ion-pull-up-handle>
+<ion-pull-up-content scroll="true">
+
+  <div class="bar bar-header" ng-if="showWMSDetails" style="text-align: left" ng-class="{'bar-positive': showWMSDetails}">
+    <button ng-click="minimizeFooter()" class="button button-icon icon ion-android-arrow-back"></button>
+    <div class="h1 title">{{ currentWMS.layer.title ? currentWMS.layer.title : currentWMS.layer.name }}</div>
+  </div>
+
+  <div class="list card">
+    <div class="item item-body">
+      <div ng-repeat="attribute in currentWMS.attributes">
+        <b>{{ attribute.name }}</b> - {{ attribute.value }}
+      </div>
+    </div>
+  </div>
+</ion-pull-up-content>
