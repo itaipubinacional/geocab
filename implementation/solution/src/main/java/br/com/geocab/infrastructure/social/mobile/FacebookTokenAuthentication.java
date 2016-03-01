@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.application.controller.entity;
+package br.com.geocab.infrastructure.social.mobile;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.client.RestTemplate;
@@ -27,7 +27,7 @@ public class FacebookTokenAuthentication extends SocialAuthentication
 	 */
 	@Override
 	public void validateToken()
-	{
+	{//TODO colocar url em um atributo estático
 		new RestTemplate().getForObject("https://graph.facebook.com/me?access_token="+token, String.class);
 	}
 	

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.application.controller.entity;
+package br.com.geocab.infrastructure.social.mobile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -66,7 +66,7 @@ public class NormalAuthentication extends SocialAuthentication implements Authen
 	 */
 	@Override
 	public void validateToken()
-	{
+	{//TODO traduzir
 		Assert.isTrue(userDetailsService.loadUserByUsername(user.getUsername()).getPassword().equals(passwordEncoder.encodePassword(user.getPassword(), "%$@#@!#g30cAA213#ck(398234")), "Login ou password incorreto");
 	}
 

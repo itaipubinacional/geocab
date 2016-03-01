@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.geocab.application.controller.entity.FacebookTokenAuthentication;
-import br.com.geocab.application.controller.entity.GeocabTokenAuthentication;
-import br.com.geocab.application.controller.entity.GooglePlusTokenAuthentication;
-import br.com.geocab.application.controller.entity.NormalAuthentication;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.repository.account.IUserRepository;
 import br.com.geocab.domain.service.LoginService;
+import br.com.geocab.infrastructure.social.mobile.FacebookTokenAuthentication;
+import br.com.geocab.infrastructure.social.mobile.GeocabTokenAuthentication;
+import br.com.geocab.infrastructure.social.mobile.GooglePlusTokenAuthentication;
+import br.com.geocab.infrastructure.social.mobile.NormalAuthentication;
 
 
 /**
@@ -30,7 +30,7 @@ import br.com.geocab.domain.service.LoginService;
  * @category
 */
 @Controller 
-public class AuthenticationController
+public class MobileAuthenticationController
 {
 	/*-------------------------------------------------------------------
 	 * 		 				 		ATTRIBUTES
@@ -51,6 +51,11 @@ public class AuthenticationController
 	 */
 	@Autowired
 	private ShaPasswordEncoder passwordEncoder;
+	/**
+	 * 
+	 */
+	@Autowired
+	private LoginService loginService;
 	/*-------------------------------------------------------------------
 	 * 		 				 		BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -59,14 +64,15 @@ public class AuthenticationController
 	/**
 	 * 
 	 * @param request
-	 * @param userName
-	 * @param accessToken
+	 * @param user
+	 * @return
 	 */
 	@RequestMapping(value="/login", method = RequestMethod.POST)
 	public @ResponseBody StringBuffer login(HttpServletRequest request, @RequestBody User user)
 	{	
 		try
 		{
+			//TODO colocar userDetailsService dentro do desingpattners
 			userDetailsService.loadUserByUsername(user.getUsername());
 		}
 		catch (Exception e)
@@ -109,6 +115,7 @@ public class AuthenticationController
 	 * @param request
 	 * @param userName
 	 * @param token
+	 * @return
 	 */
 	@RequestMapping(value="/login/geocab", method = RequestMethod.GET)
 	public @ResponseBody StringBuffer normalLogin(HttpServletRequest request, @RequestParam String userName, @RequestParam String token)
@@ -116,16 +123,15 @@ public class AuthenticationController
 		verifyUser(userName);
 		return new StringBuffer(new GeocabTokenAuthentication(token, userDetailsService.loadUserByUsername(userName)).login(request));
 	}
-	@Autowired
-	LoginService loginService;
+	
 	/**
-	 * TODO colocar pra dentro das entidades
+	 * 
 	 * @param userName
 	 */
 	private void verifyUser(String userName)
 	{
 		try
-		{
+		{//TODO colocar userDetailsService dentro do desingpattners
 			userDetailsService.loadUserByUsername(userName);
 		}
 		catch (UsernameNotFoundException e)
@@ -140,6 +146,4 @@ public class AuthenticationController
 			throw new RuntimeException(e.getMessage());
 		}
 	}
-	
-
 }
