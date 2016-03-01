@@ -8,7 +8,7 @@
    */
   angular.module('application')
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
-      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
+      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation, $ionicPlatform,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
       $cordovaToast, $http, $ionicHistory, $ionicPlatform) {
 
@@ -149,7 +149,10 @@
         }
       };
 
-
+      $rootScope.closePullUp = function(){
+        $scope.minimizeFooter();
+        $scope.clearNewMarker();
+      };
 
       $scope.getMarkerStatus = function(status) {
         return $translate('map.' + status.charAt(0).toUpperCase() + status.toLowerCase().slice(1));
@@ -406,7 +409,8 @@
          * Click event to prompt the geoserver the information layer of the clicked coordinate
          */
         $scope.map.on('click', function(evt) {
-
+          $state.current.name = 'map.index.newPoint';
+         
           //$scope.minimizeFooter();
 
           $scope.currentWMS = {};
