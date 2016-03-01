@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('IntroController', function($rootScope, $scope, $state, $ionicSlideBoxDelegate) {
+    .controller('IntroController', function($rootScope, $scope, $state, $ionicSlideBoxDelegate, $ionicPlatform) {
 
 
       /*-------------------------------------------------------------------
@@ -19,7 +19,9 @@
        * 		 				  	POST CONSTRUCT
        *-------------------------------------------------------------------*/
 
-
+      $ionicPlatform.registerBackButtonAction(function(e){
+        $scope.previous();
+      }, 100);
       /*-------------------------------------------------------------------
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/
@@ -34,7 +36,11 @@
       };
 
       $scope.previous = function() {
-        $ionicSlideBoxDelegate.previous();
+        if ($ionicSlideBoxDelegate.currentIndex()) {
+          $ionicSlideBoxDelegate.previous();
+        }else{
+          ionic.Platform.exitApp();
+        }
       };
 
       // Called each time the slide changes
