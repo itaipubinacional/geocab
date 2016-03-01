@@ -96,7 +96,7 @@
           $scope.toggleDrawer();
         }
 
-        else 
+        else
           ionic.Platform.exitApp();
 
 

@@ -21,7 +21,7 @@
         </label>
       </header>
       <ion-content class="has-header has-footer" scroll="true">
-        <ion-list ng-repeat="layer in allLayers | filter:search" class="layers">
+        <ion-list ng-repeat="layer in allLayers | filter:{title:search}" class="layers">
           <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{ layer.title ? layer.title : layer.name }}
             <img ng-if="!layer.legend" class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">
             <!-- se a camada é interna pega o ícone -->
