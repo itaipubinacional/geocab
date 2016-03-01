@@ -18,12 +18,12 @@
   <div ng-if="currentEntity.id" class="col">
     <div class="row">
       <div class="row" style="padding-right:50px">
-        <b>{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</b>
+        <b class="dynamic-text col-85">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</b>
       </div>
     </div>
     <div class="row">
       <div class="row" style="padding-top:0px">
-        <h6 style="margin-top:0px">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
+        <h6 class="dynamic-text col-85" style="margin-top:0px">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
       </div>
     </div>
   </div>
@@ -82,7 +82,7 @@
   </div>
   <div class="bar bar-header" ng-if="showMarkerDetails" style="text-align: left" ng-class="{'bar-positive': showMarkerDetails}">
     <button ng-click="minimizeFooter()" class="button button-icon icon ion-android-arrow-back"></button>
-    <div class="h1 title col-75 col-offset-25">{{ currentEntity.title ? currentEntity.title : currentEntity.layer.name }}</div>
+    <div class="h1 title dynamic-text col-50 col-offset-25">{{ currentEntity.title ? currentEntity.title : currentEntity.layer.name }}</div>
     <div class="buttons">
       <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="$state.go( SHOW_GALLERY )"></button>
       <button class="button button-icon icon ion-android-done" ng-click="saveMarker(markerForm)" ng-if="!isDisabled"></button>
