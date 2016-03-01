@@ -1,10 +1,11 @@
 <ion-view view-title="Gallery">
   <div class="bar bar-header bar-positive">
     <button ng-click="$state.go( INDEX )" class="button button-icon icon ion-android-arrow-back"></button>
-    <h1 class="title">Fotos</h1>
+    <h1 class="title">Fotos </h1>
     <div class="buttons">
-      <button ng-if="currentEntity.user.id == userMe.id && !isDisabled" class="button button-icon icon ion-camera" ng-click="addMedia()"></button>
+      <button ng-if="(currentEntity.user.id == userMe.id || !currentEntity.user.id) && !isDisabled" class="button button-icon icon ion-camera" ng-click="addMedia()"></button>
       <!--<button class="button button-icon icon ion-android-done" ng-click="saveMarker(markerForm)"></button>-->
+
     </div>
   </div>
   <!--<div class="bar bar-subheader padding">
