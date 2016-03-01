@@ -359,7 +359,7 @@
          */
         $scope.map.on('click', function(evt) {
 
-          $scope.minimizeFooter();
+          //$scope.minimizeFooter();
 
           $scope.currentWMS = {};
 
@@ -402,6 +402,8 @@
             }
 
             if (angular.isDefined(feature) && !$scope.isNewMarker) {
+
+              $rootScope.$broadcast('loading:show');
 
               $scope.selectedPhotoAlbumAttribute = {};
 
@@ -470,6 +472,8 @@
 
                     callback: function(result) {
 
+                      $rootScope.$broadcast('loading:hide');
+
                       $scope.attributesByLayer = [];
 
                       angular.forEach(result, function(attribute, index) {
@@ -502,6 +506,7 @@
                     },
                     errorHandler: function(message, exception) {
                       $log.debug(message);
+                      $rootScope.$broadcast('loading:hide');
                       $scope.$apply();
                     }
                   });
@@ -511,10 +516,10 @@
                 },
                 errorHandler: function(message, exception) {
                   $log.debug(message);
+                  $rootScope.$broadcast('loading:hide');
                   $scope.$apply();
                 }
               });
-
 
               $scope.$apply();
 
@@ -680,10 +685,14 @@
 
       $scope.getFeatureProperties = function(url, layer) {
 
+        $rootScope.$broadcast('loading:show');
+
         $http({
           method: 'GET',
           url: url
         }).then(function successCallback(response) {
+
+          $rootScope.$broadcast('loading:hide');
 
           $log.debug(response);
 
@@ -846,7 +855,7 @@
 
                     $scope.$apply();
                   } else {
-                    
+
                     $rootScope.$broadcast('loading:hide');
 
                     $cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function(success) {
@@ -1034,8 +1043,12 @@
 
       $scope.$on('userMe', function(event, data){
         $scope.userMe = data;
-        $scope.listAllLayers();
-        $scope.listAllInternalLayerGroups();
+
+        $timeout(function() {
+          $scope.listAllLayers();
+          $scope.listAllInternalLayerGroups();
+        }, 1000);
+
       });
 
     });

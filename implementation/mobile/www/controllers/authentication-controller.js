@@ -40,18 +40,21 @@ angular.module('application')
       * authenticated user
       * */
      $scope.getUserAuthenticated = function() {
-       accountService.getUserAuthenticated({
-         callback: function(result) {
 
-           $rootScope.$broadcast('userMe', result);
-           $rootScope.userMe = result;
-           $scope.coordinatesFormat = result.coordinates;
-           $scope.$apply();
-         },
-         errorHandler: function(message, exception) {
-           $log.debug(message);
-           $scope.$apply();
-         }
+       $timeout(function() {
+         accountService.getUserAuthenticated({
+           callback: function(result) {
+
+             $rootScope.$broadcast('userMe', result);
+             $rootScope.userMe = result;
+             $scope.coordinatesFormat = result.coordinates;
+             $scope.$apply();
+           },
+           errorHandler: function(message, exception) {
+             $log.debug(message);
+             $scope.$apply();
+           }
+         });
        });
      }
 
