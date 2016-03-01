@@ -66,11 +66,11 @@
       templateUrl: './views/map/map-index.html',
       controller: 'IndexController as index'
     }).state('map.index.preview', {
-      url: "/preview",
+      url: "/preview"
     }).state('map.index.view', {
-      url: "/view",
+      url: "/view"
     }).state('map.index.drawer', {
-      url: "/drawer",
+      url: "/drawer"
     }).state('map.gallery', {
       url: "/gallery",
       templateUrl: './views/map/gallery.html',
