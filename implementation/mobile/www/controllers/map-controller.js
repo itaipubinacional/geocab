@@ -697,33 +697,35 @@
 
       $scope.getFeatureProperties = function(url, layer) {
 
-        $rootScope.$broadcast('loading:show');
+        if(url != undefined && url != '') {
+          $rootScope.$broadcast('loading:show');
 
-        $http({
-          method: 'GET',
-          url: url
-        }).then(function successCallback(response) {
+          $http({
+            method: 'GET',
+            url: url
+          }).then(function successCallback(response) {
 
-          $rootScope.$broadcast('loading:hide');
+            $rootScope.$broadcast('loading:hide');
 
-          //$log.debug(response);
+            //$log.debug(response);
 
-          if(response.data.features.length != 0) {
+            if(response.data.features.length != 0) {
 
-            $scope.currentWMS.layer = layer;
-            $scope.currentWMS.attributes = [];
+              $scope.currentWMS.layer = layer;
+              $scope.currentWMS.attributes = [];
 
-            angular.forEach(response.data.features[0].properties, function (attribute, key) {
+              angular.forEach(response.data.features[0].properties, function (attribute, key) {
 
-              $scope.currentWMS.attributes.push({name: key, value: attribute});
+                $scope.currentWMS.attributes.push({name: key, value: attribute});
 
-            });
+              });
 
-            $scope.showWMSDetails = true;
-          }
+              $scope.showWMSDetails = true;
+            }
 
-        }, function errorCallback(response) {
-        });
+          }, function errorCallback(response) {
+          });
+        }
 
       };
 

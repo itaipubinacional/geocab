@@ -253,7 +253,7 @@
                   } else {
 
                     internalLayer.visible = true;
-                    $scope.toggleLayer(internalLayer);
+                    //$scope.toggleLayer(internalLayer);
 
                   }
 
