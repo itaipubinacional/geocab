@@ -301,6 +301,14 @@
 
       };
 
+      $scope.verifyStatus = function(){
+        if (($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED')
+          && ($scope.currentEntity.user.id == $scope.userMe.id)) {
+          $scope.isDisabled = false;
+        }
+      }
+
+
       $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
 
         switch ($state.current.name) {
@@ -344,16 +352,21 @@
        */
       $scope.refuseMarkerModeration = function(id, motive, description) {
 
+        description = angular.isDefined(description) ? description : '';
+
         markerModerationService.refuseMarker(id, motive, description, {
           callback: function(result) {
 
             $scope.currentEntity.status = result.marker.status;
+
+            $scope.verifyStatus();
 
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-refused')).then(function(success) {
               // success
             }, function(error) {
               // error
             });
+
 
             $scope.$apply();
           },
