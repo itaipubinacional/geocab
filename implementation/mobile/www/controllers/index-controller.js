@@ -253,7 +253,7 @@
                   } else {
 
                     internalLayer.visible = true;
-                    //$scope.toggleLayer(internalLayer);
+                    $scope.toggleLayer(internalLayer);
 
                   }
 
@@ -404,6 +404,16 @@
       $scope.removeMarkerModeration = function() {
         markerService.removeMarker($scope.currentEntity.id, {
           callback: function(result) {
+
+            var layer = $filter('filter')($scope.allInternalLayerGroups, {id: $scope.currentEntity.layer.id})[0];
+
+            layer.visible = false;
+            $scope.toggleLayer(layer);
+            layer.visible = true;
+            $scope.toggleLayer(layer);
+
+            $scope.minimizeFooter();
+            $scope.clearNewMarker();
 
             $cordovaToast.showShortBottom($translate("map.Mark-was-successfully-deleted")).then(function(success) {
             }, function(error) {
