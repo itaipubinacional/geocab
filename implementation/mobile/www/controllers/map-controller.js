@@ -370,7 +370,6 @@
           }
 
           //$log.debug('openlayers.map.singleclick');
-
           //$log.debug($scope.isNewMarker);
 
           if ($scope.isDrawerOpen) {
@@ -379,15 +378,6 @@
 
           } else {
 
-            for (var i = 0; i < $scope.layers.length; i++) {
-              var url = $scope.layers[i].getGetFeatureInfoUrl(
-                evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(), {
-                  'INFO_FORMAT': 'application/json'
-                });
-
-              $scope.getFeatureProperties(decodeURIComponent(url));
-            }
-
             var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function(feature, olLayer) {
               if (angular.isDefined(feature.getProperties().marker)) {
                 return feature;
@@ -395,6 +385,19 @@
                 $scope.currentEntity = {};
               }
             });
+
+            if(!angular.isDefined(feature) && !$scope.isNewMarker) {
+              angular.forEach($scope.layers, function (layer) {
+
+                if (layer.wmsLayer.getVisible()) {
+                  var url = layer.wmsSource.getGetFeatureInfoUrl(evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(), {
+                    'INFO_FORMAT': 'application/json'
+                  });
+
+                  $scope.getFeatureProperties(decodeURIComponent(url));
+                }
+              });
+            }
 
             if (angular.isDefined(feature) && !$scope.isNewMarker) {
 
@@ -764,7 +767,7 @@
                 params: {
                   'LAYERS': layer.name
                 },
-                serverType: 'geoserver'
+                serverType: 'geoserver',
               };
 
               if (layer.dataSource.url.match(/&authkey=(.*)/))
@@ -779,7 +782,7 @@
                 minResolution: $scope.maxEscalaToMinResolutionn(layer.maximumScaleMap)
               });
 
-              $scope.layers.push(wmsSource);
+              $scope.layers.push({wmsSource: wmsSource, wmsLayer: wmsLayer});
 
               $scope.map.addLayer(wmsLayer);
 
@@ -818,8 +821,8 @@
                       var vectorLayer = new ol.layer.Vector({
                         source: vectorSource,
                         layer: layer.id,
-                        maxResolution: minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
-                        minResolution: maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
+                        maxResolution: $scope.minEscalaToMaxResolutionn(marker.layer.minimumScaleMap),
+                        minResolution: $scope.maxEscalaToMinResolutionn(marker.layer.maximumScaleMap)
                       });
 
                       markers.push(vectorLayer);
