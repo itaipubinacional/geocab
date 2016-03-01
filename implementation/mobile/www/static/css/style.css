@@ -25,7 +25,16 @@ fieldset{margin: 0px; padding: 0px; border: none}
 .add-button{color: #fff;z-index: 2; background-color: #1e88e5; position: absolute; bottom:15px; right:15px; padding: 0px 12px;box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
 .confirm-marker-button{color: #fff;z-index: 10; background-color: #f44336; position: absolute; bottom:67px; right:15px; padding: 0px 12px;box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
 
-.pull-up .title{margin: 0px; height: 44px;}
+.pull-up .title{
+  margin: 0px;
+  height: 44px;
+
+  left: auto;
+  right: auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 .pull-up .title.bar-positive{background-color: #1e88e5; box-shadow: 0px 2px 6px rgba(0,0,0,0.3);}
 .pull-up .title.bar-positive div.h1{color: #fff;text-align: left; margin-left: 40px;}
 
