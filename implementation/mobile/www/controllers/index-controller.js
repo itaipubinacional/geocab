@@ -371,7 +371,7 @@
         markerModerationService.cancelMarkerModeration(id, {
           callback: function(result) {
 
-            $scope.currentEntity.status = result.marker.status;
+            $scope.currentEntity.status = result.status;
 
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-canceled')).then(function(success) {
               // success
@@ -450,6 +450,7 @@
         motiveService.listMotives({
           callback: function(result) {
             $scope.motives = result;
+            $scope.refuse = {motive : result[0]};
             $scope.$apply();
           },
           errorHandler: function(message, exception) {
