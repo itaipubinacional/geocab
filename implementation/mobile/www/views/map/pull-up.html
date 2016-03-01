@@ -41,7 +41,7 @@
     </div>
     <div ng-if="currentEntity.id">
       <div class="sub-header padding-horizontal">
-        <h6 style="color: #fff">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
+        <h6 style="color: #fff; white-space: normal">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
         <h6 style="color: #fff">Status <b>{{ getMarkerStatus(currentEntity.status) }}</b></h6>
       </div>
     </div>
