@@ -257,6 +257,7 @@
 
                   }
 
+                  $rootScope.$broadcast('loading:hide');
                   $scope.clearNewMarker();
                   $scope.minimizeFooter();
 
@@ -321,6 +322,8 @@
         markerModerationService.acceptMarker(id, {
           callback: function(result) {
 
+            $scope.currentEntity = result;
+
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-approved')).then(function(success) {
               // success
             }, function(error) {
@@ -344,6 +347,8 @@
         markerModerationService.refuseMarker(id, motive, description, {
           callback: function(result) {
 
+            $scope.currentEntity = result;
+
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-refused')).then(function(success) {
               // success
             }, function(error) {
@@ -365,6 +370,8 @@
       $scope.cancelMarkerModeration = function(id) {
         markerModerationService.cancelMarkerModeration(id, {
           callback: function(result) {
+
+            $scope.currentEntity = result;
 
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-canceled')).then(function(success) {
               // success

@@ -762,6 +762,8 @@
 
           if (layer.visible && !layerExits) {
 
+            $rootScope.$broadcast('loading:show');
+
             if (layer.dataSource.url != null) {
 
               var wmsOptions = {
@@ -787,6 +789,8 @@
               $scope.layers.push({wmsSource: wmsSource, wmsLayer: wmsLayer});
 
               $scope.map.addLayer(wmsLayer);
+
+              $rootScope.$broadcast('loading:hide');
 
             } else {
 
@@ -838,12 +842,25 @@
 
                     $scope.map.addLayer(group);
 
+                    $rootScope.$broadcast('loading:hide');
+
                     $scope.$apply();
+                  } else {
+                    
+                    $rootScope.$broadcast('loading:hide');
+
+                    $cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function(success) {
+                      // success
+                    }, function(error) {
+                      // error
+                    });
+
                   }
 
                 },
                 errorHandler: function(message, exception) {
                   $log.debug(message);
+                  $rootScope.$broadcast('loading:hide');
                   $scope.$apply();
                 }
               });
@@ -857,13 +874,17 @@
 
       $scope.listAllLayers = function() {
 
+        $rootScope.$broadcast('loading:show');
+
         layerGroupService.listLayersByFilters(null, null, {
           callback: function(result) {
             $scope.allLayers = result.content;
+
             $scope.$apply();
           },
           errorHandler: function(message, exception) {
             $log.debug(message);
+            $rootScope.$broadcast('loading:hide');
             $scope.$apply();
           }
         });
@@ -883,10 +904,13 @@
               $scope.allInternalLayerGroups = result;
               $log.debug($scope.allInternalLayerGroups);
 
+              $rootScope.$broadcast('loading:hide');
+
               $scope.$apply();
             },
             errorHandler: function(message, exception) {
               $log.debug(message);
+              $rootScope.$broadcast('loading:hide');
               $scope.$apply();
             }
           });
