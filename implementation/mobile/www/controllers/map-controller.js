@@ -10,7 +10,7 @@
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation, $ionicPlatform,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $http, $ionicHistory, $ionicPlatform) {
+      $cordovaToast, $http, $ionicHistory) {
 
       /**
        *
@@ -294,13 +294,12 @@
 
       $scope.onHold = function(evt) {
 
-        $scope.$state.go('map.index.preview');
+        $scope.$state.go ( $scope.PREVIEW );
 
         $scope.listAllLayers();
         $scope.listAllInternalLayerGroups();
         $scope.getUserAuthenticated();
 
-        //$log.debug('onHold');
 
         $scope.currentWMS = {};
 
@@ -409,8 +408,7 @@
          * Click event to prompt the geoserver the information layer of the clicked coordinate
          */
         $scope.map.on('click', function(evt) {
-          $state.current.name = 'map.index.newPoint';
-         
+
           //$scope.minimizeFooter();
 
           $scope.currentWMS = {};
@@ -608,7 +606,10 @@
         if(state) {
           $scope.$state.go( $scope.DRAWER );
         } else {
-          $scope.$state.go( $scope.INDEX );
+          if(!angular.equals($scope.currentCreatingInternalLayer, {}))
+            $scope.$state.go( $scope.PREVIEW );
+          else
+            $scope.$state.go( $scope.INDEX );
         }
       };
 
@@ -620,7 +621,10 @@
         if($scope.isDrawerOpen) {
           $scope.$state.go( $scope.DRAWER );
         } else {
-          $scope.$state.go( $scope.INDEX );
+          if(!angular.equals($scope.currentCreatingInternalLayer, {}))
+            $scope.$state.go( $scope.PREVIEW );
+          else
+            $scope.$state.go( $scope.INDEX );
         }
 
         $scope.isDragStart = false;
