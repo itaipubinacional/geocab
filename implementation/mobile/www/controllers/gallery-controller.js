@@ -38,8 +38,8 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = $scope.selectedPhotoAlbumAttribute.attribute.name;
-          photo.description = null;
+          photo.name = $scope.selectedPhotoAlbumAttribute.name;
+          photo.description = $scope.selectedPhotoAlbumAttribute.name;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
 
@@ -80,8 +80,8 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = $scope.selectedPhotoAlbumAttribute.attribute.name;
-          photo.description = null;
+          photo.name = $scope.selectedPhotoAlbumAttribute.name;
+          photo.description = $scope.selectedPhotoAlbumAttribute.name;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
 
@@ -196,7 +196,9 @@
         $scope.showEditableDescription = state;
       };
 
-      $scope.selectPhoto = function(photo) {
+      $scope.selectPhoto = function(event, photo) {
+
+        event.preventDefault();
 
         $scope.hasSelectedPhotos = false;
 
