@@ -3,8 +3,9 @@
     <button ng-click="$state.go( INDEX )" class="button button-icon icon ion-android-arrow-back"></button>
     <h1 class="title">Fotos </h1>
     <div class="buttons">
-      <button ng-if="(currentEntity.user.id == userMe.id || !currentEntity.user.id) && !isDisabled" class="button button-icon icon ion-camera" ng-click="addMedia()"></button>
+      <button ng-if="!hasSelectedPhotos && (currentEntity.user.id == userMe.id || !currentEntity.user.id) && !isDisabled" class="button button-icon icon ion-camera" ng-click="addMedia()"></button>
       <!--<button class="button button-icon icon ion-android-done" ng-click="saveMarker(markerForm)"></button>-->
+      <button class="button button-icon icon ion-android-delete" ng-if="hasSelectedPhotos" ng-click="deleteSelectedPhotos()"></button>
 
     </div>
   </div>
@@ -30,8 +31,8 @@
     </label>
 
     <div class="row" style="flex-wrap: wrap;">
-      <div class="col col-50" ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos" ng-if="!photo.deleted">
-        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}" ng-click="openModal($index)"/>
+      <div class="col col-50" ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos" ng-if="!photo.deleted" ng-class="{'selected': photo.selected}">
+        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}" on-hold="selectPhoto(photo)" ng-click="openModal($index)"/>
         <!--<h6>{{ photo.description ? photo.description :  photo.name }}</h6>-->
       </div>
     </div>

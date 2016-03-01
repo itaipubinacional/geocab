@@ -145,6 +145,9 @@ label.item.valid-lr {
 }
 
 /* GALLERY */
+.selected{
+  border: 2px solid #3b5998;
+}
 .transparent {
   background: transparent !important;
 }

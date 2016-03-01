@@ -3,18 +3,20 @@
     <div class="buttons">
       <button style="color:#fff" class="button button-icon icon ion-android-refresh" ng-if="selectedPhoto.deleted" ng-click="restorePhoto(selectedPhoto)"></button>
       <button style="color:#fff" class="button button-icon icon ion-android-create" ng-if="!selectedPhoto.deleted && !showEditableDescription" ng-click="editPhoto(true);"></button>
-      <button style="color:#fff" class="button button-icon icon ion-android-delete" ng-if="!selectedPhoto.deleted && !showEditableDescription" ng-click="deletePhoto(selectedPhoto)"></button>
+      <!--<button style="color:#fff" class="button button-icon icon ion-android-delete" ng-if="!selectedPhoto.deleted && !showEditableDescription" ng-click="deletePhoto(selectedPhoto)"></button>-->
     </div>
     <label class="item item-input" ng-if="showEditableDescription">
       <input type="text" ng-model="selectedPhoto.description" placeholder="Descrição">
     </label>
     <button style="color:#fff" class="button button-icon icon ion-android-done" ng-if="showEditableDescription" ng-click="editPhoto(false)"></button>
   </div>
-  <ion-slide-box on-slide-changed="slideChanged(index)"
-                 show-pager="true" ng-click="closeModal()">
-    <ion-slide ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos">
-      <img ng-src="{{ setImagePath(photo.image) }}" class="fullscreen-image" ng-class="{'deleted': photo.deleted}"/>
-      <p class="info">{{ photo.description ? photo.description :  photo.name }}</p>
-    </ion-slide>
-  </ion-slide-box>
+  <ion-content class="has-header padding">
+    <ion-slide-box on-slide-changed="slideChanged(index)"
+                   show-pager="true" ng-click="closeModal()" disable-scroll="false">
+      <ion-slide ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos">
+        <img ng-src="{{ setImagePath(photo.image) }}" class="fullscreen-image"/>
+        <p class="info">{{ photo.description ? photo.description :  photo.name }}</p>
+      </ion-slide>
+    </ion-slide-box>
+  </ion-content>
 </div>

@@ -306,7 +306,7 @@
           && ($scope.currentEntity.user.id == $scope.userMe.id)) {
           $scope.isDisabled = false;
         }
-      }
+      };
 
 
       $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
@@ -431,7 +431,7 @@
             $scope.$apply();
           }
         });
-      }
+      };
 
       $scope.approveMarker = function() {
 

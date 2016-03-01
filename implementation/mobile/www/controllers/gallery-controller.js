@@ -12,6 +12,8 @@
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
       $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
 
+      $scope.hasSelectedPhotos = false;
+
       $scope.takePhoto = function() {
 
         var options = {
@@ -36,8 +38,8 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = 'name.png';
-          photo.description = 'description';
+          photo.name = $scope.selectedPhotoAlbumAttribute.attribute.name;
+          photo.description = null;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
 
@@ -78,8 +80,8 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = 'name.png';
-          photo.description = 'description';
+          photo.name = $scope.selectedPhotoAlbumAttribute.attribute.name;
+          photo.description = null;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
 
@@ -192,6 +194,42 @@
 
       $scope.editPhoto = function(state) {
         $scope.showEditableDescription = state;
+      };
+
+      $scope.selectPhoto = function(photo) {
+
+        $scope.hasSelectedPhotos = false;
+
+        photo.selected = !photo.selected;
+
+        angular.forEach($scope.selectedPhotoAlbumAttribute.photoAlbum.photos, function(photo){
+          if(photo.selected) {
+            $scope.hasSelectedPhotos = true;
+          }
+        });
+
+      };
+
+      $scope.deleteSelectedPhotos = function() {
+
+        var i = $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.length;
+
+        while (i--) {
+          var photo = $scope.selectedPhotoAlbumAttribute.photoAlbum.photos[i];
+
+          if (photo.selected) {
+            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.splice(i, 1);
+          }
+        }
+
+        $scope.hasSelectedPhotos = false;
+
+        angular.forEach($scope.selectedPhotoAlbumAttribute.photoAlbum.photos, function(photo){
+          if(photo.selected) {
+            $scope.hasSelectedPhotos = true;
+          }
+        });
+
       };
 
     });
