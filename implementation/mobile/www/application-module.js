@@ -13,8 +13,9 @@
   /**
    *
    */
-  module.config(function($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT, $translateProvider, $compileProvider, $httpProvider) {
+  module.config(function($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT, $translateProvider, $compileProvider, $httpProvider, $logProvider) {
 
+    $logProvider.debugEnabled(false);
 
     $httpProvider.interceptors.push(function($rootScope) {
       return {

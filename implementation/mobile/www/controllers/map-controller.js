@@ -43,6 +43,7 @@
       $scope.isDragStart = false;
       $scope.isDrawerOpen = false;
       $scope.allInternalLayerGroups = [];
+      $scope.allLayers = [];
       $scope.layers = [];
       $scope.newMarker = {};
       $scope.dragPan = true;
@@ -60,7 +61,7 @@
       $scope.selectedPhoto = {};
       $scope.editPhoto = false;
 
-      $scope.userMe = $rootScope.userMe;
+      $scope.userMe = {};
       $scope.selectedPhotoAlbumAttribute = {};
 
       $scope.attributeIndex = '';
@@ -110,6 +111,8 @@
           }
         }
       };
+
+
 
       $scope.getMarkerStatus = function(status) {
         return $translate('map.' + status.charAt(0).toUpperCase() + status.toLowerCase().slice(1));
@@ -248,6 +251,10 @@
       };
 
       $scope.onHold = function(evt) {
+
+        $scope.listAllLayers();
+        $scope.listAllInternalLayerGroups();
+        $scope.getUserAuthenticated();
 
         //$log.debug('onHold');
 
@@ -558,6 +565,11 @@
         //$scope.listAllInternalLayerGroups();
         $scope.isDrawerOpen = !$scope.isDrawerOpen;
         $scope.isDragStart = false;
+
+        $scope.listAllLayers();
+        $scope.listAllInternalLayerGroups();
+        $scope.getUserAuthenticated();
+
       };
 
       $ionicGesture.on('drag', function(e) {
@@ -694,7 +706,7 @@
 
           $rootScope.$broadcast('loading:hide');
 
-          $log.debug(response);
+          //$log.debug(response);
 
           if(response.data.features.length != 0) {
 
@@ -883,20 +895,22 @@
 
       $scope.listAllLayers = function() {
 
-        $rootScope.$broadcast('loading:show');
+        if ($scope.allLayers.length == 0) {
 
-        layerGroupService.listLayersByFilters(null, null, {
-          callback: function(result) {
-            $scope.allLayers = result.content;
+          $rootScope.$broadcast('loading:show');
 
-            $scope.$apply();
-          },
-          errorHandler: function(message, exception) {
-            $log.debug(message);
-            $rootScope.$broadcast('loading:hide');
-            $scope.$apply();
-          }
-        });
+          layerGroupService.listLayersByFilters(null, null, {
+            callback: function(result) {
+              $scope.allLayers = result.content;
+              $scope.$apply();
+            },
+            errorHandler: function(message, exception) {
+              $log.debug(message);
+              $rootScope.$broadcast('loading:hide');
+              $scope.$apply();
+            }
+          });
+        }
 
       };
 
@@ -904,8 +918,6 @@
        *
        */
       $scope.listAllInternalLayerGroups = function() {
-
-        $log.debug($scope.allInternalLayerGroups);
 
         if ($scope.allInternalLayerGroups.length == 0) {
           layerGroupService.listAllInternalLayerGroups({
@@ -1008,34 +1020,35 @@
        * authenticated user
        * */
       $scope.getUserAuthenticated = function() {
-        accountService.getUserAuthenticated({
-          callback: function(result) {
-            $scope.userMe = result;
-            $scope.coordinatesFormat = result.coordinates;
-            $scope.$apply();
-          },
-          errorHandler: function(message, exception) {
-            $log.debug(message);
-            $scope.$apply();
-          }
-        });
-      }
+        if(angular.equals($scope.userMe, {})) {
+          accountService.getUserAuthenticated({
+            callback: function(result) {
+              $scope.userMe = result;
+              $scope.coordinatesFormat = result.coordinates;
+              $scope.$apply();
+            },
+            errorHandler: function(message, exception) {
+              $log.debug(message);
+              $scope.$apply();
+            }
+          });
+        }
+      };
 
-      $timeout(function() {
+      $scope.$on('userMe', function(event, data){
+
+        $scope.allInternalLayerGroups = [];
+        $scope.allLayers = [];
+
+        $scope.userMe = data;
+
+      });
+
+      $scope.onDragStart = function() {
         $scope.listAllLayers();
         $scope.listAllInternalLayerGroups();
         $scope.getUserAuthenticated();
-      }, 1000);
-
-      $scope.$on('userMe', function(event, data){
-        $scope.userMe = data;
-
-        $timeout(function() {
-          $scope.listAllLayers();
-          $scope.listAllInternalLayerGroups();
-        }, 1000);
-
-      });
+      }
 
     });
 

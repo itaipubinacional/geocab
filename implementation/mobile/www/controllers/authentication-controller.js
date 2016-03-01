@@ -169,7 +169,7 @@ angular.module('application')
       localStorage.setItem('userEmail', $scope.model.user.email);
       if (localStorage.getItem('doneIntro')) {
         $state.go('map.index');
-        $scope.getUserAuthenticated();
+        //$scope.getUserAuthenticated();
       } else {
         $state.go('intro');
       }
