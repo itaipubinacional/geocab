@@ -94,8 +94,11 @@
         else if($scope.$state.current.name === $scope.DRAWER) {
           $scope.$state.go( $scope.INDEX );
           $scope.toggleDrawer();
-
         }
+
+        else 
+          ionic.Platform.exitApp();
+
 
         $scope.$apply();
 
@@ -824,33 +827,35 @@
 
         } else {
 
-          var layerExits = false; // Used to verify if the layer has been requested before
+          //var layerExits = false; // Used to verify if the layer has been requested before
 
           angular.forEach($scope.map.getLayers(), function(group) {
 
             if (group instanceof ol.layer.Group) {
               var prop = group.getProperties();
 
-              if (prop.id == layer.id) {
-                layerExits = true;
-                group.setVisible(layer.visible);
+              if (prop.id == layer.id && !layer.visible) {
+                $scope.map.removeLayer(group);
+                //layerExits = true;
+                //group.setVisible(layer.visible);
               }
             }
 
             if (group instanceof ol.layer.Tile) {
 
-              if (group.getProperties().layer && group.getProperties().layer.id == layer.id) {
-                layerExits = true;
-                group.setVisible(layer.visible);
+              if (group.getProperties().layer && group.getProperties().layer.id == layer.id && !layer.visible) {
+                $scope.map.removeLayer(group);
+                //layerExits = true;
+                //group.setVisible(layer.visible);
               }
             }
           });
 
-          if (layer.visible && !layerExits) {
+          if (layer.visible) {
 
             $rootScope.$broadcast('loading:show');
 
-            if (layer.dataSource.url != null) {
+            if (layer.dataSource != null && layer.dataSource.url != null) {
 
               var wmsOptions = {
                 url: layer.dataSource.url.split("ows?")[0] + 'wms',
