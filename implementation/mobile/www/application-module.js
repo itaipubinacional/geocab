@@ -1,8 +1,8 @@
-(function (window, angular, undefined) {
+(function(window, angular, undefined) {
   'use strict';
 
   //Start the AngularJS
-  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova', 'ngOpenFB' ,'eits.translate']);
+  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova', 'ngOpenFB', 'eits.translate']);
 
   /**
    *
@@ -13,8 +13,21 @@
   /**
    *
    */
-  module.config(function ($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT, $translateProvider, $compileProvider) {
+  module.config(function($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT, $translateProvider, $compileProvider, $httpProvider) {
 
+
+    $httpProvider.interceptors.push(function($rootScope) {
+      return {
+        request: function(config) {
+          $rootScope.$broadcast('loading:show')
+          return config
+        },
+        response: function(response) {
+          $rootScope.$broadcast('loading:hide')
+          return response
+        }
+      }
+    });
 
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel|data):/);
     //-------
@@ -105,24 +118,24 @@
   /**
    *
    */
-  module.run(function ($rootScope, $log, $ionicPlatform, $state, $stateParams, $API_ENDPOINT, ngFB, $cordovaStatusbar) {
+  module.run(function($rootScope, $log, $ionicPlatform, $state, $stateParams, $API_ENDPOINT, ngFB, $cordovaStatusbar, $ionicLoading) {
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.$API_ENDPOINT = $API_ENDPOINT;
 
-    $rootScope.setUrl = function(url){
-      if(!ionic.Platform.platform().match(/(android|ios)/ig))
+    $rootScope.setUrl = function(url) {
+      if (!ionic.Platform.platform().match(/(android|ios)/ig))
         return $API_ENDPOINT + '/broker/' + url;
       return './lib/dwr/' + url;
     };
 
     $log.debug(ionic.Platform.platform());
 
-    $ionicPlatform.ready(function () {
+    $ionicPlatform.ready(function() {
 
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard for form inputs
-    	if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+      if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
 
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         cordova.plugins.Keyboard.disableScroll(true);
@@ -131,17 +144,29 @@
       // $cordovaStatusBar.style(2); //Black, transulcent
     });
 
-    ngFB.init({appId: '801316929973059'});
+    ngFB.init({
+      appId: '801316929973059'
+    });
 
-   //
+    $rootScope.$on('loading:show', function() {
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner>'
+      });
+    })
 
-   // $cordovaStatusBar.style(1) //Light
-   // $cordovaStatusBar.style(2) //Black, transulcent
-   // $cordovaStatusBar.style(3) //Black, opaque
+    $rootScope.$on('loading:hide', function() {
+      $ionicLoading.hide()
+    })
 
-   // setTimeout(function() {
-   //  $cordovaStatusbar.isVisible() ? $cordovaStatusbar.hide() : $cordovaStatusbar.show();
-        // $cordovaStatusbar.overlaysWebView(false);
+    //
+
+    // $cordovaStatusBar.style(1) //Light
+    // $cordovaStatusBar.style(2) //Black, transulcent
+    // $cordovaStatusBar.style(3) //Black, opaque
+
+    // setTimeout(function() {
+    //  $cordovaStatusbar.isVisible() ? $cordovaStatusbar.hide() : $cordovaStatusbar.show();
+    // $cordovaStatusbar.overlaysWebView(false);
     // }, 300);
 
     // make it fullscreen on IOS so it has the correct header size.
@@ -152,7 +177,7 @@
   /**
    *
    */
-  angular.element(document).ready(function () {
+  angular.element(document).ready(function() {
     angular.bootstrap(document, ['application']);
   });
 

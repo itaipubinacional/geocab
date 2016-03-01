@@ -84,6 +84,8 @@
 
             if (isValid) {
 
+              $rootScope.$broadcast('loading:show');
+
               var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
 
               $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
@@ -91,8 +93,6 @@
               markerService.updateMarker($scope.currentEntity, {
 
                 callback: function(result) {
-
-                  $scope.isLoading = false;
 
                   $scope.clearNewMarker();
 
@@ -107,6 +107,8 @@
                   $scope.currentFeature = '';
                   $scope.minimizeFooter();
 
+                  $rootScope.$broadcast('loading:hide');
+
                   $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
                     // success
                   }, function(error) {
@@ -117,7 +119,8 @@
                 },
                 errorHandler: function(message, exception) {
 
-                  $scope.isLoading = false;
+                  $rootScope.$broadcast('loading:hide');
+
                   $log.debug(message);
 
                   $scope.$apply();
@@ -144,6 +147,8 @@
             });
 
             if (isValid) {
+
+              $rootScope.$broadcast('loading:show');
 
               var layer = new Layer();
               layer.id = $scope.currentEntity.layer.id;
@@ -200,8 +205,7 @@
               markerService.insertMarker($scope.currentEntity, {
                 callback: function(result) {
 
-                  $scope.isLoading = false;
-
+                  $rootScope.$broadcast('loading:hide');
 
                   var internalLayer = $filter('filter')($scope.allInternalLayerGroups, {
                     id: $scope.currentEntity.layer.id
@@ -265,7 +269,7 @@
                 },
                 errorHandler: function(message, exception) {
                   $log.debug(message);
-                  $scope.isLoading = false;
+                  $rootScope.$broadcast('loading:hide');
                   $scope.$apply();
                 }
               });
