@@ -60,7 +60,7 @@
       $scope.selectedPhoto = {};
       $scope.editPhoto = false;
 
-      $scope.userMe = {};
+      $scope.userMe = $rootScope.userMe;
       $scope.selectedPhotoAlbumAttribute = {};
 
       $scope.attributeIndex = '';
@@ -939,22 +939,7 @@
         }
       };
 
-      /**
-       * authenticated user
-       * */
-      $timeout(function() {
-        accountService.getUserAuthenticated({
-          callback: function(result) {
-            $scope.userMe = result;
-            $scope.coordinatesFormat = result.coordinates;
-            $scope.$apply();
-          },
-          errorHandler: function(message, exception) {
-            $log.debug(message);
-            $scope.$apply();
-          }
-        });
-      }, 5000);
+
 
       $scope.removeAllSelectedLayers = function() {
 
@@ -1000,10 +985,34 @@
         );
       };
 
+      /**
+       * authenticated user
+       * */
+      $scope.getUserAuthenticated = function() {
+        accountService.getUserAuthenticated({
+          callback: function(result) {
+            $scope.userMe = result;
+            $scope.coordinatesFormat = result.coordinates;
+            $scope.$apply();
+          },
+          errorHandler: function(message, exception) {
+            $log.debug(message);
+            $scope.$apply();
+          }
+        });
+      }
+
       $timeout(function() {
         $scope.listAllLayers();
         $scope.listAllInternalLayerGroups();
+        $scope.getUserAuthenticated();
       }, 1000);
+
+      $scope.$on('userMe', function(event, data){
+        $scope.userMe = data;
+        $scope.listAllLayers();
+        $scope.listAllInternalLayerGroups();
+      });
 
     });
 

@@ -9,6 +9,10 @@
 angular.module('application')
   .controller('AuthenticationController', function ($rootScope, $importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate) {
 
+    $timeout(function() {
+      $importService("accountService");
+    });
+
     /*-------------------------------------------------------------------
      *              ATTRIBUTES
      *-------------------------------------------------------------------*/
@@ -32,11 +36,29 @@ angular.module('application')
      *                HANDLERS
      *-------------------------------------------------------------------*/
 
+     /**
+      * authenticated user
+      * */
+     $scope.getUserAuthenticated = function() {
+       accountService.getUserAuthenticated({
+         callback: function(result) {
+
+           $rootScope.$broadcast('userMe', result);
+           $rootScope.userMe = result;
+           $scope.coordinatesFormat = result.coordinates;
+           $scope.$apply();
+         },
+         errorHandler: function(message, exception) {
+           $log.debug(message);
+           $scope.$apply();
+         }
+       });
+     }
+
     /**
      *
      */
     $scope.loginHandler = function () {
-
 
       var config = {
         headers: {'Content-Type': 'application/json; charset=UTF-8'}
@@ -126,6 +148,8 @@ angular.module('application')
           $scope.model.user.email = user;
           $scope.model.user.token = data;
           $scope.loginSuccess();
+
+
         })
         .error(function (data, status, headers, config) {
           $scope.loginFailed();
@@ -142,6 +166,7 @@ angular.module('application')
       localStorage.setItem('userEmail', $scope.model.user.email);
       if (localStorage.getItem('doneIntro')) {
         $state.go('map.index');
+        $scope.getUserAuthenticated();
       } else {
         $state.go('intro');
       }
@@ -163,7 +188,7 @@ angular.module('application')
 
     /**
      * Remove a splashscreen quando a tela de login for carregada
-    */ 
+    */
     $scope.$on('$ionicView.loaded', function() {
       ionic.Platform.ready( function() {
         if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
