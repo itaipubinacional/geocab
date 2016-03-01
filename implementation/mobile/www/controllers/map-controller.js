@@ -1071,7 +1071,7 @@
        * Prepara o estado, retira o password criptografado do usuário
        */
       $scope.logout = function() {
-        $scope.toggleDrawer();
+        // $scope.toggleDrawer();
         $scope.removeAllSelectedLayers();
 
         localStorage.removeItem('userEmail');
