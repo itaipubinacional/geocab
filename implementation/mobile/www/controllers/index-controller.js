@@ -84,8 +84,6 @@
 
             if (isValid) {
 
-              $rootScope.$broadcast('loading:show');
-
               var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
 
               $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
@@ -93,6 +91,8 @@
               markerService.updateMarker($scope.currentEntity, {
 
                 callback: function(result) {
+
+                  $scope.isLoading = false;
 
                   $scope.clearNewMarker();
 
@@ -107,8 +107,6 @@
                   $scope.currentFeature = '';
                   $scope.minimizeFooter();
 
-                  $rootScope.$broadcast('loading:hide');
-
                   $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
                     // success
                   }, function(error) {
@@ -119,8 +117,7 @@
                 },
                 errorHandler: function(message, exception) {
 
-                  $rootScope.$broadcast('loading:hide');
-
+                  $scope.isLoading = false;
                   $log.debug(message);
 
                   $scope.$apply();
@@ -147,8 +144,6 @@
             });
 
             if (isValid) {
-
-              $rootScope.$broadcast('loading:show');
 
               var layer = new Layer();
               layer.id = $scope.currentEntity.layer.id;
@@ -205,7 +200,8 @@
               markerService.insertMarker($scope.currentEntity, {
                 callback: function(result) {
 
-                  $rootScope.$broadcast('loading:hide');
+                  $scope.isLoading = false;
+
 
                   var internalLayer = $filter('filter')($scope.allInternalLayerGroups, {
                     id: $scope.currentEntity.layer.id
@@ -269,7 +265,7 @@
                 },
                 errorHandler: function(message, exception) {
                   $log.debug(message);
-                  $rootScope.$broadcast('loading:hide');
+                  $scope.isLoading = false;
                   $scope.$apply();
                 }
               });
@@ -325,6 +321,8 @@
         markerModerationService.acceptMarker(id, {
           callback: function(result) {
 
+            $scope.currentEntity = result;
+
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-approved')).then(function(success) {
               // success
             }, function(error) {
@@ -348,6 +346,8 @@
         markerModerationService.refuseMarker(id, motive, description, {
           callback: function(result) {
 
+            $scope.currentEntity = result;
+
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-refused')).then(function(success) {
               // success
             }, function(error) {
@@ -369,6 +369,8 @@
       $scope.cancelMarkerModeration = function(id) {
         markerModerationService.cancelMarkerModeration(id, {
           callback: function(result) {
+
+            $scope.currentEntity = result;
 
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-canceled')).then(function(success) {
               // success
