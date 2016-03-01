@@ -158,7 +158,9 @@
       //console.log(side);
 
       $ionicGesture.on('drag', function(e) {
-        doDrag(e);
+         if(e.gesture.direction === 'left'){
+           doDrag(e);
+         }
       }, $document);
       $ionicGesture.on('dragend', function(e) {
         doEndDrag(e);

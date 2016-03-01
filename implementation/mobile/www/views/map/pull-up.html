@@ -82,7 +82,7 @@
   </div>
   <div class="bar bar-header" ng-if="showMarkerDetails" style="text-align: left" ng-class="{'bar-positive': showMarkerDetails}">
     <button ng-click="minimizeFooter()" class="button button-icon icon ion-android-arrow-back"></button>
-    <div class="h1 title">{{ currentEntity.title ? currentEntity.title : currentEntity.layer.name }}</div>
+    <div class="h1 title col-75 col-offset-25">{{ currentEntity.title ? currentEntity.title : currentEntity.layer.name }}</div>
     <div class="buttons">
       <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="$state.go( SHOW_GALLERY )"></button>
       <button class="button button-icon icon ion-android-done" ng-click="saveMarker(markerForm)" ng-if="!isDisabled"></button>

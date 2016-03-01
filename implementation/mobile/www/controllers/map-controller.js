@@ -559,7 +559,8 @@
       };
 
       $scope.onDragEnd = function(state) {
-        $scope.isDrawerOpen = state;
+
+        $scope.isDrawerOpen = state == undefined ? $scope.isDrawerOpen : state;
         $scope.isDragStart = false;
         $scope.dragPan = state;
       };
