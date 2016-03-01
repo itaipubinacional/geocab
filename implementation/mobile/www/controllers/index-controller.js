@@ -274,23 +274,6 @@
         }
       };
 
-      /**
-       * authenticated user
-       * */
-      $timeout(function() {
-        accountService.getUserAuthenticated({
-          callback: function(result) {
-            $scope.userMe = result;
-            $scope.coordinatesFormat = result.coordinates;
-            $scope.$apply();
-          },
-          errorHandler: function(message, exception) {
-            $log.debug(message);
-            $scope.$apply();
-          }
-        });
-      }, 2000);
-
       $scope.removeAllSelectedLayers = function() {
 
         angular.forEach($scope.allInternalLayerGroups, function(group) {
@@ -301,8 +284,6 @@
         });
 
       };
-
-
 
       $scope.getCurrentEntity = function() {
 
