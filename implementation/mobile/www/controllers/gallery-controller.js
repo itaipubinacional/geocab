@@ -38,7 +38,7 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = $scope.selectedPhotoAlbumAttribute.name;
+          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
           photo.description = $scope.selectedPhotoAlbumAttribute.name;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
@@ -80,7 +80,7 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = $scope.selectedPhotoAlbumAttribute.name;
+          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
           photo.description = $scope.selectedPhotoAlbumAttribute.name;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
