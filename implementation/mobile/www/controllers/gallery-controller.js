@@ -237,12 +237,14 @@
       $scope.showSavedPhotos = function() {
 
         for(var i = 0; i < $scope.currentEntity.markerAttribute.length; i++){
-          if(attribute[i].type == 'PHOTO_ALBUM' && attribute[i].photoAlbum != null && attribute[i].photoAlbum.photos.length != 0) {
+          if($scope.currentEntity.markerAttribute[i].type == 'PHOTO_ALBUM' && $scope.currentEntity.markerAttribute[i].photoAlbum != null && $scope.currentEntity.markerAttribute[i].photoAlbum.photos.length != 0) {
+
             $cordovaToast.showShortBottom('Fotos salvas').then(function(success) {
               // success
             }, function(error) {
               // error
             });
+            
             break;
           }
         }

@@ -95,7 +95,7 @@
         <button class="button button-icon icon ion-thumbsdown" ng-disabled="currentEntity.status == 'REFUSED'" ng-click="refuseMarker()"></button>
         <button class="button button-icon icon ion-android-close" ng-disabled="currentEntity.status == 'CANCELED'" ng-click="cancelMarker()"></button>
       </div>
-      <button class="button button-icon icon ion-android-delete" ng-if="currentEntity.user.id == userMe.id && currentyEntity.status != 'ACCEPTED'" ng-click="removeMarker()"></button>
+      <button class="button button-icon icon ion-android-delete" ng-if="currentEntity.user.id == userMe.id && currentEntity.status != 'ACCEPTED'" ng-click="removeMarker()"></button>
     </div>
   </div>
 </ion-pull-up-content>
