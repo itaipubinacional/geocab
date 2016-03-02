@@ -84,6 +84,8 @@
 
             if (isValid) {
 
+              $rootScope.$broadcast('loading:show');
+
               var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
 
               $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
@@ -91,8 +93,6 @@
               markerService.updateMarker($scope.currentEntity, {
 
                 callback: function(result) {
-
-                  $scope.isLoading = false;
 
                   $scope.clearNewMarker();
 
@@ -107,6 +107,8 @@
                   $scope.currentFeature = '';
                   $scope.minimizeFooter();
 
+                  $rootScope.$broadcast('loading:hide');
+
                   $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
                     // success
                   }, function(error) {
@@ -117,7 +119,7 @@
                 },
                 errorHandler: function(message, exception) {
 
-                  $scope.isLoading = false;
+                  $rootScope.$broadcast('loading:hide');
                   $log.debug(message);
 
                   $scope.$apply();
@@ -144,6 +146,8 @@
             });
 
             if (isValid) {
+
+              $rootScope.$broadcast('loading:show');
 
               var layer = new Layer();
               layer.id = $scope.currentEntity.layer.id;
@@ -200,9 +204,6 @@
               markerService.insertMarker($scope.currentEntity, {
                 callback: function(result) {
 
-                  $scope.isLoading = false;
-
-
                   var internalLayer = $filter('filter')($scope.allInternalLayerGroups, {
                     id: $scope.currentEntity.layer.id
                   })[0];
@@ -218,38 +219,13 @@
                     }))
                   });
 
-                  if (angular.isDefined(internalLayer.visible) && internalLayer.visible) {
+                  if(internalLayer.visible && internalLayer.visible != undefined) {
 
-                    angular.forEach($scope.map.getLayers(), function(group) {
+                    internalLayer.visible = false;
+                    $scope.toggleLayer(internalLayer);
+                    internalLayer.visible = true;
+                    $scope.toggleLayer(internalLayer);
 
-                      if (group instanceof ol.layer.Group) {
-                        var prop = group.getProperties();
-
-                        if (prop.id == $scope.currentEntity.layer.id) {
-
-                          var innerLayers = prop.layers.getArray();
-                          //group.setVisible(layer.visible);
-
-                          var iconFeature = new ol.Feature({
-                            geometry: new ol.format.WKT().readGeometry($scope.currentEntity.wktCoordenate),
-                            marker: result
-                          });
-
-                          iconFeature.setStyle(iconStyle);
-
-                          var vectorSource = new ol.source.Vector({
-                            features: [iconFeature]
-                          });
-
-                          var vectorLayer = new ol.layer.Vector({
-                            source: vectorSource
-                          });
-
-                          innerLayers.push(vectorLayer);
-
-                        }
-                      }
-                    });
                   } else {
 
                     internalLayer.visible = true;
@@ -266,7 +242,7 @@
                 },
                 errorHandler: function(message, exception) {
                   $log.debug(message);
-                  $scope.isLoading = false;
+                  $rootScope.$broadcast('loading:hide');
                   $scope.$apply();
                 }
               });

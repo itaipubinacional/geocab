@@ -10,7 +10,7 @@
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation, $ionicPlatform,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $http, $ionicHistory) {
+      $cordovaToast, $http) {
 
       /**
        *
@@ -826,6 +826,8 @@
       };
 
       $scope.toggleLayer = function(layer) {
+
+        $filter('filter')($scope.allLayers, {id: layer.id})[0].visible = layer.visible;
 
         if ($filter('filter')($scope.allLayers, {
             visible: true
