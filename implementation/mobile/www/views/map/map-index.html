@@ -7,7 +7,7 @@
 
     <ion-side-menu-content>
       <ion-content scroll="false">
-        <div id="map" on-hold="onHold($event, data)"></div>
+        <div id="map" class="loading" on-hold="onHold($event, data)"></div>
       </ion-content>
     </ion-side-menu-content>
 
@@ -22,7 +22,9 @@
       </header>
       <ion-content class="has-header has-footer" scroll="true">
         <ion-list ng-repeat="layer in allLayers | filter:{title:search}" class="layers">
-          <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">{{ layer.title ? layer.title : layer.name }}
+          <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">
+            <i class="ion-edit" ng-if="layer.enabled"></i>
+            {{ layer.title ? layer.title : layer.name }}
             <img ng-if="!layer.legend" class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">
             <!-- se a camada é interna pega o ícone -->
             <img ng-if="layer.legend" class="item-checkbox-img" ng-src="{{ layer.legend }}">

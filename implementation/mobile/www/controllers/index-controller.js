@@ -86,6 +86,8 @@
 
               $rootScope.$broadcast('loading:show');
 
+              $scope.currentEntity.status = 'PENDING';
+
               var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
 
               $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
@@ -94,14 +96,12 @@
 
                 callback: function(result) {
 
-                  $scope.clearNewMarker();
-
                   $scope.currentEntity.layer.visible = false;
                   $scope.toggleLayer($scope.currentEntity.layer);
                   $scope.currentEntity.layer.visible = true;
                   $scope.toggleLayer($scope.currentEntity.layer);
 
-                  $scope.currentEntity = {};
+                  $scope.clearNewMarker();
 
                   $scope.clearShadowFeature($scope.currentFeature);
                   $scope.currentFeature = '';

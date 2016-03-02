@@ -479,8 +479,7 @@
 
               $scope.currentEntity = feature.getProperties().marker;
 
-              if (($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED')
-                && ($scope.currentEntity.user.id == $scope.userMe.id)) {
+              if ($scope.currentEntity.status != 'ACCEPTED' && $scope.currentEntity.user.id == $scope.userMe.id) {
                 $scope.isDisabled = false;
               }
 
