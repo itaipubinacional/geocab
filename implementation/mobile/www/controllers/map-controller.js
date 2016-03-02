@@ -110,6 +110,7 @@
           $scope.$state.go( $scope.PREVIEW );
           goIndex = false;
         } else {
+          $scope.$state.go( $scope.INDEX );
           ionic.Platform.exitApp();
         }
 
