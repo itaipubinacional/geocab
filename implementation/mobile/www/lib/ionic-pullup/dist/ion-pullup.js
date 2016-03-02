@@ -58,11 +58,11 @@ angular.module('ionic-pullup', [])
           }
         }
 
-        function updateUI() {
+        /*function updateUI() {
           $timeout(function () {
             computeHeights();
           }, 300);
-        }
+        }*/
 
         function recomputeAllHeights() {
           computeDefaultHeights();
@@ -168,10 +168,10 @@ angular.module('ionic-pullup', [])
 
         init();
 
-        $ionicPlatform.ready(function () {
+        /*$ionicPlatform.ready(function () {
           $window.addEventListener('orientationchange', updateUI);
           $ionicPlatform.on("resume", updateUI);
-        });
+        });*/
 
         $scope.$on('expandFooter', function () {
           expand();

@@ -196,6 +196,7 @@
 
       $scope.footerExpand = function() {
 
+        $log.debug('Footer expand');
         $scope.$state.go( $scope.VIEW );
 
         $scope.listAllInternalLayerGroups();
@@ -1134,7 +1135,14 @@
         $scope.listAllLayers();
         $scope.listAllInternalLayerGroups();
         $scope.getUserAuthenticated();
-      }
+      };
+
+      $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+        $log.debug(toState);
+        $log.debug(fromState);
+
+      });
 
     });
 

@@ -132,7 +132,7 @@
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
 
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        cordova.plugins.Keyboard.disableScroll(true);
+        cordova.plugins.Keyboard.disableScroll(false);
       }
       // $cordovaStatusbar.overlaysWebView(true);
       // $cordovaStatusBar.style(2); //Black, transulcent
@@ -148,11 +148,11 @@
       $ionicLoading.show({
         template: '<ion-spinner></ion-spinner>'
       });
-    })
+    });
 
     $rootScope.$on('loading:hide', function() {
       $ionicLoading.hide()
-    })
+    });
 
     //
 
