@@ -8,9 +8,9 @@
    */
   angular.module('application')
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
-      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation, $ionicPlatform,
+      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $http) {
+      $cordovaToast, $http, $ionicModal) {
 
       /**
        *
@@ -30,10 +30,9 @@
        */
       $scope.INDEX = "map.index";
       $scope.SHOW_GALLERY = "map.gallery";
-      $scope.VIEW = "map.index.view";
-      $scope.PREVIEW = "map.index.preview";
+      $scope.VIEW = "map.view";
+      $scope.PREVIEW = "map.preview";
 
-      $scope.DRAWER = "map.index.drawer";
       /**
 
        /*-------------------------------------------------------------------
@@ -73,56 +72,6 @@
       $scope.pullUpHandle = angular.element(document.getElementsByTagName('ion-pull-up-handle'));
 
       $scope.pullUpHeight = 100;
-
-      var goIndex = false;
-
-      $ionicPlatform.registerBackButtonAction(function(e){
-
-        if($scope.$state.current.name === $scope.PREVIEW) {
-
-          $scope.clearNewMarker();
-          $scope.$state.go( $scope.INDEX );
-        }
-
-        else if($scope.$state.current.name === $scope.VIEW) {
-
-          $scope.minimizeFooter();
-          $scope.$state.go( $scope.PREVIEW );
-        }
-
-        else if($scope.$state.current.name === $scope.SHOW_GALLERY) {
-
-          goIndex = true;
-          $log.debug($scope.$state.current.name);
-
-          $scope.$state.go( $scope.INDEX );
-
-        }
-
-        else if($scope.$state.current.name === $scope.DRAWER) {
-          $scope.$state.go( $scope.INDEX );
-          $scope.toggleDrawer();
-
-        }
-
-        else if(goIndex) {
-          $scope.minimizeFooter();
-          $scope.$state.go( $scope.PREVIEW );
-          goIndex = false;
-        } else {
-          $scope.$state.go( $scope.INDEX );
-          ionic.Platform.exitApp();
-        }
-
-        $scope.$apply();
-
-        // if ($location.path() === "/index") {
-        //   navigator.app.exitApp();
-        // }
-        // else {
-        //   $ionicHistory.goBack();
-        // }
-      }, 100);
 
       /**
        * Setting the background layer - OSM
@@ -312,7 +261,7 @@
 
       $scope.onHold = function(evt) {
 
-        $scope.$state.go ( $scope.PREVIEW );
+        $state.go( $scope.VIEW );
 
         $scope.listAllLayers();
         $scope.listAllInternalLayerGroups();

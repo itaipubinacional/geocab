@@ -12,17 +12,6 @@
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
       $cordovaToast, $ionicModal) {
 
-      $scope.getPhoto = function() {
-        Camera.getPicture().then(function(imageURI) {
-
-          $scope.currentEntity.image = imageURI;
-          //$log.debug(imageURI);
-
-        }, function(err) {
-          //$log.debug.err(err);
-        });
-      };
-
       var options = {
         date: new Date(),
         mode: 'date', // or 'time'

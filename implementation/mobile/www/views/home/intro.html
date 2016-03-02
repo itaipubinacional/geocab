@@ -1,85 +1,85 @@
 <!DOCTYPE html>
-<ion-view view-title="">
+<ion-view view-title="Tutorial" hide-nav-bar="true">
 
-    <ion-content>
+  <ion-content>
 
-        <ion-slide-box on-slide-changed="slideChanged(index)" pager-click="navSlide(index)">
-            <!-- SLIDE 1 -->
-            <ion-slide>
+    <ion-slide-box on-slide-changed="slideChanged(index)" pager-click="navSlide(index)">
+      <!-- SLIDE 1 -->
+      <ion-slide>
 
-              <div class="intro-image">
-                <img src="./static/images/intro-1.png">
-              </div>
+        <div class="intro-image">
+          <img src="./static/images/intro-1.png">
+        </div>
 
-              <div class="intro-detail">
-                <p>
-                  {{'mobile.intro-slide-1-text-1' | translate}}
-                </p>
-                <p>
-                  {{'mobile.intro-slide-1-text-2' | translate}}
-                </p>
-
-              </div>
-
-            </ion-slide>
-
-            <ion-slide>
-              <!-- SLIDE 2 -->
-              <div class="intro-image">
-                <img src="./static/images/intro-2.png">
-              </div>
-
-              <div class="intro-detail">
-
-                <p>
-                  {{'mobile.intro-slide-2-text-1' | translate}}
-                </p>
-
-              </div>
-            </ion-slide>
-
-            <ion-slide>
-              <!-- SLIDE 1 -->
-              <div class="intro-image">
-                <img src="./static/images/intro-3.png">
-              </div>
-
-              <div class="intro-detail">
-                <p>
-                  {{'mobile.intro-slide-3-text-1' | translate}}
-
-                </p>
-                <p>
-                  {{'mobile.intro-slide-3-text-2' | translate}}
-                </p>
-
-              </div>
-
-            </ion-slide>
-
-        </ion-slide-box>
-
-
-        <div class="row button-bar intro-detail-footer">
-
-          <div class="col-33">
-            <i class="button icon-left ion-chevron-left button-clear button-dark" ng-click="previous()" ng-show="slideIndex > 0"></i>
-          </div>
-
-          <div class="col-33 col-offset-33">
-
-            <i class="col-offset-50 button icon-right ion-chevron-right button-clear button-dark" ng-click="next()" ng-show="slideIndex != 2"></i>
-
-            <button ng-click="startApp()" class="button button-assertive" ng-show="slideIndex == 2">
-              {{'mobile.ok' | translate}}
-            </button> <!-- TODO -->
-          </div>
-
-
-
+        <div class="intro-detail">
+          <p>
+            {{'mobile.intro-slide-1-text-1' | translate}}
+          </p>
+          <p>
+            {{'mobile.intro-slide-1-text-2' | translate}}
+          </p>
 
         </div>
 
+      </ion-slide>
 
-    </ion-content>
+      <ion-slide>
+        <!-- SLIDE 2 -->
+        <div class="intro-image">
+          <img src="./static/images/intro-2.png">
+        </div>
+
+        <div class="intro-detail">
+
+          <p>
+            {{'mobile.intro-slide-2-text-1' | translate}}
+          </p>
+
+        </div>
+      </ion-slide>
+
+      <ion-slide>
+        <!-- SLIDE 1 -->
+        <div class="intro-image">
+          <img src="./static/images/intro-3.png">
+        </div>
+
+        <div class="intro-detail">
+          <p>
+            {{'mobile.intro-slide-3-text-1' | translate}}
+
+          </p>
+          <p>
+            {{'mobile.intro-slide-3-text-2' | translate}}
+          </p>
+
+        </div>
+
+      </ion-slide>
+
+    </ion-slide-box>
+
+
+    <div class="row button-bar intro-detail-footer">
+
+      <div class="col-33">
+        <i class="button icon-left ion-chevron-left button-clear button-dark" ng-click="previous()"
+           ng-show="slideIndex > 0"></i>
+      </div>
+
+      <div class="col-33 col-offset-33">
+
+        <i class="col-offset-50 button icon-right ion-chevron-right button-clear button-dark" ng-click="next()"
+           ng-show="slideIndex != 2"></i>
+
+        <button ng-click="startApp()" class="button button-assertive" ng-show="slideIndex == 2">
+          {{'mobile.ok' | translate}}
+        </button> <!-- TODO -->
+      </div>
+
+
+    </div>
+
+
+  </ion-content>
 </ion-view>

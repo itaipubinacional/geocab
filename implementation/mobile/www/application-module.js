@@ -58,30 +58,34 @@
     //MAP
     $stateProvider.state('map', {
       abstract: true,
-      url: "/map",
-      template: '<ion-nav-view></ion-nav-view>',
+      url: '/map',
+      templateUrl: './views/templates/menu.html',
       controller: 'MapController'
     }).state('map.index', {
-      url: "/index",
-      templateUrl: './views/map/map-index.html',
-      controller: 'IndexController as index'
+      url: '/index',
+      views: {
+        'menuContent': {
+          templateUrl: './views/templates/map-index.html',
+          controller: 'IndexController'
+        }
+      }
     }).state('map.index.preview', {
-      url: "/preview"
-    }).state('map.index.view', {
-      url: "/view"
-    }).state('map.index.drawer', {
-      url: "/drawer"
+      url: '/preview'
+    }).state('map.view', {
+      url: '/view',
+      views: {
+        'menuContent': {
+          templateUrl: './views/templates/view-marker.html'
+        }
+      }
     }).state('map.gallery', {
-      url: "/gallery",
-      templateUrl: './views/map/gallery.html',
-      controller: 'GalleryController as gallery'
-    });
-
-    //HOME
-    $stateProvider.state('home', {
-      url: "/home",
-      controller: 'HomeController',
-      templateUrl: './views/home/home-index.html'
+      url: '/gallery',
+      views: {
+        'menuContent': {
+          templateUrl: './views/map/gallery.html',
+          controller: 'GalleryController'
+        }
+      }
     });
 
     //INTRO
@@ -123,8 +127,6 @@
         return $API_ENDPOINT + '/broker/' + url;
       return './lib/dwr/' + url;
     };
-
-    $log.debug(ionic.Platform.platform());
 
     $ionicPlatform.ready(function() {
 
