@@ -74,6 +74,8 @@
 
       $scope.pullUpHeight = 100;
 
+      var goIndex = false;
+
       $ionicPlatform.registerBackButtonAction(function(e){
 
         if($scope.$state.current.name === $scope.PREVIEW) {
@@ -83,22 +85,33 @@
         }
 
         else if($scope.$state.current.name === $scope.VIEW) {
+
           $scope.minimizeFooter();
           $scope.$state.go( $scope.PREVIEW );
         }
 
         else if($scope.$state.current.name === $scope.SHOW_GALLERY) {
-          $scope.$state.go( $scope.VIEW );
+
+          goIndex = true;
+          $log.debug($scope.$state.current.name);
+
+          $scope.$state.go( $scope.INDEX );
+
         }
 
         else if($scope.$state.current.name === $scope.DRAWER) {
           $scope.$state.go( $scope.INDEX );
           $scope.toggleDrawer();
+
         }
 
-        else
+        else if(goIndex) {
+          $scope.minimizeFooter();
+          $scope.$state.go( $scope.PREVIEW );
+          goIndex = false;
+        } else {
           ionic.Platform.exitApp();
-
+        }
 
         $scope.$apply();
 
