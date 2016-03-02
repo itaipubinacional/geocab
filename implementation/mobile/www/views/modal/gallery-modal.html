@@ -6,7 +6,7 @@
       <!--<button style="color:#fff" class="button button-icon icon ion-android-delete" ng-if="!selectedPhoto.deleted && !showEditableDescription" ng-click="deletePhoto(selectedPhoto)"></button>-->
     </div>
     <label class="item item-input" ng-if="showEditableDescription">
-      <input type="text" ng-model="selectedPhoto.description" placeholder="Descrição">
+      <input type="text" ng-model="selectedPhoto.description" placeholder="{{'Description' | translate}}">
     </label>
     <button style="color:#fff" class="button button-icon icon ion-android-done" ng-if="showEditableDescription" ng-click="editPhoto(false)"></button>
   </div>
