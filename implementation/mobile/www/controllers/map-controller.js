@@ -1137,13 +1137,6 @@
         $scope.getUserAuthenticated();
       };
 
-      $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-
-        $log.debug(toState);
-        $log.debug(fromState);
-
-      });
-
     });
 
 }(window.angular));
