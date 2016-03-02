@@ -828,6 +828,10 @@
 
       $scope.toggleLayer = function(layer) {
 
+        if($scope.currentEntity.id){
+          $scope.currentEntity = {};
+        }
+
         $filter('filter')($scope.allLayers, {id: layer.id})[0].visible = layer.visible;
 
         if ($filter('filter')($scope.allLayers, {
