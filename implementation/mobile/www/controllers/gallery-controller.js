@@ -140,6 +140,7 @@
 
       $scope.openModal = function(index) {
         $ionicSlideBoxDelegate.slide(index);
+        $scope.selectedPhoto = $scope.selectedPhotoAlbumAttribute.photoAlbum.photos[index];
         $scope.modal.show();
       };
 
@@ -244,7 +245,7 @@
             }, function(error) {
               // error
             });
-            
+
             break;
           }
         }
