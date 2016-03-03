@@ -1,11 +1,6 @@
 <ion-view hide-nav-bar="true">
 
-  <!--<ion-nav-buttons side="left">
-    <button class="button button-icon button-clear ion-navicon" ng-click="toggleLeftSideMenu()">
-    </button>
-  </ion-nav-buttons>-->
-
-  <ion-content scroll="false" >
+  <ion-content scroll="false">
     <button class="button button-icon icon ion-navicon drawer-button" ng-click="toggleLeftSideMenu()"></button>
     <div id="map" class="loading" on-hold="onHold($event, data)"></div>
   </ion-content>
@@ -36,7 +31,7 @@
           <button ng-disabled="currentEntity.status == 'CANCELED' || !currentEntity.id" class="button button-icon icon ion-android-close"> Cancelar</button>
         </ion-item>
         <ion-item ng-click="removeMarker()">
-          <button class="button button-icon icon ion-android-delete" 
+          <button class="button button-icon icon ion-android-delete"
                   ng-disabled="!currentEntity.id || !(currentEntity.user.id == userMe.id && currentEntity.status != 'ACCEPTED')" > Excluir</button>
         </ion-item>
        </ion-list>
