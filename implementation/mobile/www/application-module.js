@@ -74,13 +74,15 @@
       views: {
         'menuContent': {
           templateUrl: './views/templates/marker-view.html',
+          controller: 'IndexController'
         }
       }
     }).state('map.wms', {
       url: '/wms',
       views: {
         'menuContent': {
-          templateUrl: './views/templates/wms-view.html'
+          templateUrl: './views/templates/wms-view.html',
+          controller: 'IndexController'
         }
       }
     }).state('map.gallery', {

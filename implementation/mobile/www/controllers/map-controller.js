@@ -10,7 +10,7 @@
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $http, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
+      $cordovaToast, $http, $ionicHistory) {
 
       /**
        *
@@ -94,6 +94,13 @@
       $scope.model = {
         user: null,
         marker: null
+      };
+
+      $scope.goBack = function() {
+        console.log('Going back');
+        $ionicViewService.getBackView().go();
+        $scope.backView = $ionicHistory.backView();
+        $scope.backView.go();
       };
 
       $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
@@ -444,6 +451,7 @@
 
               $rootScope.$broadcast('loading:show');
 
+              $scope.imgResult = '';
               $scope.selectedPhotoAlbumAttribute = {};
 
               $scope.isDisabled = true;
