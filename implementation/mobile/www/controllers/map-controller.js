@@ -28,16 +28,17 @@
       /**
        *
        */
-      $scope.INDEX = "map.index";
-      $scope.SHOW_GALLERY = "map.gallery";
-      $scope.VIEW = "map.view";
-      $scope.PREVIEW = "map.preview";
+      $scope.INDEX        = "map.index";
+      $scope.GALLERY      = "map.gallery";
+      $scope.VIEW         = "map.marker";
+      $scope.PREVIEW      = "map.preview";
+
+      $scope.WMS = "map.wms";
 
       /**
-
-       /*-------------------------------------------------------------------
-       *              ATTRIBUTES
-       *-------------------------------------------------------------------*/
+     /*-------------------------------------------------------------------
+     *              ATTRIBUTES
+     *-------------------------------------------------------------------*/
 
       $scope.map = {};
       $scope.currentFeature = '';
@@ -107,6 +108,9 @@
         $scope.getUserAuthenticated();
       };
 
+      $scope.viewWMS = function() {
+        $state.go( $scope.WMS );
+      };
 
       $scope.setImagePath = function(image) {
         //$log.debug(image);

@@ -1,0 +1,16 @@
+<ion-view view-title="Marker">
+  <ion-nav-bar class="bar-positive">
+    <ion-header-bar>
+      <h1 class="title">{{ currentWMS.layer.title ? currentWMS.layer.title : currentWMS.layer.name }}</h1>
+    </ion-header-bar>
+  </ion-nav-bar>
+  <ion-content>
+    <div class="list card">
+      <div class="item item-body">
+        <div ng-repeat="attribute in currentWMS.attributes">
+          <b>{{ attribute.name }}</b> - {{ attribute.value }}
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

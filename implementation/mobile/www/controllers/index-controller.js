@@ -32,7 +32,6 @@
         });
       };
 
-
       $scope.saveMarker = function(form) {
 
         if (!form.$valid) {
@@ -52,7 +51,7 @@
               if (attribute.type == 'PHOTO_ALBUM' && attribute.required && attribute.photoAlbum == null) {
 
                 $scope.selectedPhotoAlbumAttribute = attribute;
-                $state.go($scope.SHOW_GALLERY);
+                $state.go($scope.GALLERY);
 
                 isValid = false;
 
@@ -125,7 +124,7 @@
               if (attribute.type == 'PHOTO_ALBUM' && attribute.required && attribute.photoAlbum == null) {
 
                 $scope.selectedPhotoAlbumAttribute = attribute;
-                $state.go($scope.SHOW_GALLERY);
+                $state.go($scope.GALLERY);
 
                 isValid = false;
 
@@ -251,39 +250,12 @@
 
       };
 
-      $scope.getCurrentEntity = function() {
-
-        $scope.currentEntity = angular.fromJson(localStorage.getItem('currentEntity'));
-        //$log.debug($scope.currentEntity);
-
-        $timeout(function() {
-          $scope.attributeIndex = 1;
-
-          $scope.selectedPhotoAlbumAttribute = $scope.currentEntity.markerAttribute[$scope.attributeIndex];
-
-          $scope.getPhotosByAttribute($scope.currentEntity.markerAttribute[$scope.attributeIndex], $scope.attributeIndex);
-        }, 1000);
-
-      };
-
       $scope.verifyStatus = function(){
         if (($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED')
           && ($scope.currentEntity.user.id == $scope.userMe.id)) {
           $scope.isDisabled = false;
         }
       };
-
-
-      $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-
-        switch ($state.current.name) {
-          case $scope.SHOW_GALLERY:
-            {
-              //$scope.getCurrentEntity();
-              break;
-            }
-        }
-      });
 
       /* MARKER MODERATIONS */
 

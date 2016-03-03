@@ -76,11 +76,18 @@
           templateUrl: './views/templates/marker-preview.html'
         }
       }
-    }).state('map.view', {
-      url: '/view',
+    }).state('map.marker', {
+      url: '/marker',
       views: {
         'menuContent': {
           templateUrl: './views/templates/marker-view.html'
+        }
+      }
+    }).state('map.wms', {
+      url: '/wms',
+      views: {
+        'menuContent': {
+          templateUrl: './views/templates/wms-view.html'
         }
       }
     }).state('map.gallery', {
