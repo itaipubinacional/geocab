@@ -1275,7 +1275,7 @@
                     }))
                   });
 
-                  if($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
+                  /*if($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
 
                     $scope.internalLayer.visible = false;
                     $scope.toggleLayer($scope.internalLayer);
@@ -1287,12 +1287,15 @@
                     $scope.internalLayer.visible = true;
                     $scope.toggleLayer($scope.internalLayer);
 
-                  }
+                  }*/
 
                   $rootScope.$broadcast('loading:hide');
-                  $scope.clearNewMarker();
+                  //$scope.clearNewMarker();
 
-                  $state.go( $scope.MAP_INDEX );
+                  //$state.go( $scope.MAP_INDEX );
+                  $ionicHistory.goBack();
+
+                  $scope.$apply();
 
                   //$cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
 
