@@ -241,7 +241,7 @@
           title: $translate('admin.marker-moderation.Confirm-cancel'),
           template: $translate('admin.marker-moderation.Are-you-sure-you-want-to-cancel-this-marker') + '?',
           cancelText: $translate('Close'),
-          okText: $translate('admin.marker-moderation.Confirm-cancel')
+          okText: $translate('map.Confirm')
         });
 
         confirmPopup.then(function(res) {

@@ -7,7 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('IntroController', function($rootScope, $scope, $state, $ionicSlideBoxDelegate, $ionicPlatform) {
+    .controller('IntroController', function($rootScope, $scope, $state, $ionicSlideBoxDelegate, $ionicPlatform, $location, $ionicHistory) {
 
 
       /*-------------------------------------------------------------------
@@ -18,10 +18,17 @@
       /*-------------------------------------------------------------------
        * 		 				  	POST CONSTRUCT
        *-------------------------------------------------------------------*/
-
+      //Quando acessa a intro sobrescreve o Handler de BACK
       $ionicPlatform.registerBackButtonAction(function(e){
-        $scope.previous();
+        if ($state.$current.name == 'authentication.intro'){
+          $scope.previous();
+        } else if ($state.$current.name == 'map.index') {
+          ionic.Platform.exitApp();
+        } else {
+          $ionicHistory.goBack();
+        }
       }, 100);
+
       /*-------------------------------------------------------------------
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/

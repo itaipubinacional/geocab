@@ -53,7 +53,18 @@
     }).state('authentication.login', {
       url: "/login",
       templateUrl: './views/authentication/authentication-index.html'
+    }).state('authentication.intro', {
+      url: "/intro",
+      controller: 'IntroController',
+      templateUrl: './views/home/intro.html'
     });
+
+    // //INTRO
+    // $stateProvider.state('intro', {
+    //   url: "/intro",
+    //   controller: 'IntroController',
+    //   templateUrl: './views/home/intro.html'
+    // });
 
     //MAP
     $stateProvider.state('map', {
@@ -95,12 +106,7 @@
       }
     });
 
-    //INTRO
-    $stateProvider.state('intro', {
-      url: "/intro",
-      controller: 'IntroController',
-      templateUrl: './views/home/intro.html'
-    });
+    
 
   }).factory('Camera', ['$q', function($q) {
 
