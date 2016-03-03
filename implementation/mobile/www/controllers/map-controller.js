@@ -10,7 +10,7 @@
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $http) {
+      $cordovaToast, $http, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
 
       /**
        *
@@ -28,12 +28,11 @@
       /**
        *
        */
-      $scope.INDEX        = "map.index";
-      $scope.GALLERY      = "map.gallery";
-      $scope.VIEW         = "map.marker";
-      $scope.PREVIEW      = "map.preview";
+      $scope.MAP_INDEX        = "map.index";
+      $scope.MAP_GALLERY      = "map.gallery";
+      $scope.MAP_MARKER       = "map.marker";
 
-      $scope.WMS = "map.wms";
+      $scope.MAP_WMS          = "map.wms";
 
 
 
@@ -97,6 +96,16 @@
         marker: null
       };
 
+      $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+        switch ($state.current.name) {
+          case $scope.MAP_INDEX:
+          {
+            $('canvas').css('display', 'block');
+            break;
+          }
+        }
+      });
 
 
       /*-------------------------------------------------------------------
@@ -111,7 +120,7 @@
       };
 
       $scope.viewWMS = function() {
-        $state.go( $scope.WMS );
+        $state.go( $scope.MAP_WMS );
       };
 
       $scope.setImagePath = function(image) {
@@ -157,7 +166,7 @@
 
         $log.debug('viewMarker');
 
-        $state.go( $scope.VIEW );
+        $state.go( $scope.MAP_MARKER );
 
         $scope.listAllInternalLayerGroups();
 
@@ -213,7 +222,7 @@
        */
       $scope.getPhotosByAttribute = function(attribute, reload) {
 
-        $state.go($scope.GALLERY);
+        $state.go($scope.MAP_GALLERY);
 
         if (attribute.photoAlbum != null) {
           angular.forEach(attribute.photoAlbum.photos, function(photo) {
@@ -339,234 +348,234 @@
 
       };
 
+      $timeout(function(){
 
-        $timeout(function(){
-          $scope.map = new ol.Map({
-            controls: [],
-            interactions: ol.interaction.defaults({
-              dragPan: $scope.dragPan,
-              mouseWheelZoom: true
-            }),
-            target: 'map',
-            view: $scope.view
-          });
+        $scope.map = new ol.Map({
+          controls: [],
+          interactions: ol.interaction.defaults({
+            dragPan: $scope.dragPan,
+            mouseWheelZoom: true
+          }),
+          target: 'map',
+          view: $scope.view
+        });
 
-          $scope.map.addLayer($scope.rasterOSM);
-          $scope.rasterOSM.setVisible(true);
+        $scope.map.addLayer($scope.rasterOSM);
+        $scope.rasterOSM.setVisible(true);
 
-          $scope.map.on('pointerdrag', function (event, data) {
+        $scope.map.on('pointerdrag', function (event, data) {
 
-            if ($scope.isDrawerOpen) {
+          if ($scope.isDrawerOpen) {
+            event.preventDefault();
+            $scope.toggleDrawer();
+            $scope.$apply(function () {
+              $scope.dragPan = false;
+            });
+          }
+
+          if (event.pixel[0] < 40 || $scope.isDragStart) {
+
+            if ($scope.direction === 'right') {
               event.preventDefault();
-              $scope.toggleDrawer();
+
               $scope.$apply(function () {
                 $scope.dragPan = false;
               });
-            }
-
-            if (event.pixel[0] < 40 || $scope.isDragStart) {
-
-              if ($scope.direction === 'right') {
-                event.preventDefault();
-
-                $scope.$apply(function () {
-                  $scope.dragPan = false;
-                });
-
-              } else {
-
-                $scope.$apply(function () {
-                  $scope.dragPan = true;
-                });
-              }
-            }
-
-          });
-
-          /**
-           * Click event to prompt the geoserver the information layer of the clicked coordinate
-           */
-          $scope.map.on('click', function (evt) {
-
-            //$scope.minimizeFooter();
-
-            if ($state.current.name != $scope.INDEX)
-              $state.go($scope.INDEX);
-
-            $scope.currentWMS = {};
-
-            if (!$scope.isNewMarker) {
-              $scope.currentEntity = {};
-              $scope.clearShadowFeature($scope.currentFeature);
-              $scope.clearNewMarker();
-              $scope.currentFeature = '';
-              $scope.$apply();
-            }
-
-            //$log.debug('openlayers.map.singleclick');
-            //$log.debug($scope.isNewMarker);
-
-            if ($scope.isDrawerOpen) {
-
-              $scope.toggleDrawer();
 
             } else {
 
-              var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function (feature, olLayer) {
-                if (angular.isDefined(feature.getProperties().marker)) {
-                  return feature;
-                } else {
-                  $scope.currentEntity = {};
+              $scope.$apply(function () {
+                $scope.dragPan = true;
+              });
+            }
+          }
+
+        });
+
+        /**
+         * Click event to prompt the geoserver the information layer of the clicked coordinate
+         */
+        $scope.map.on('click', function (evt) {
+
+          //$scope.minimizeFooter();
+
+          if ($state.current.name != $scope.MAP_INDEX)
+            $state.go($scope.MAP_INDEX);
+
+          $scope.currentWMS = {};
+
+          if (!$scope.isNewMarker) {
+            $scope.currentEntity = {};
+            $scope.clearShadowFeature($scope.currentFeature);
+            $scope.clearNewMarker();
+            $scope.currentFeature = '';
+            $scope.$apply();
+          }
+
+          //$log.debug('openlayers.map.singleclick');
+          //$log.debug($scope.isNewMarker);
+
+          if ($scope.isDrawerOpen) {
+
+            $scope.toggleDrawer();
+
+          } else {
+
+            var feature = $scope.map.forEachFeatureAtPixel(evt.pixel, function (feature, olLayer) {
+              if (angular.isDefined(feature.getProperties().marker)) {
+                return feature;
+              } else {
+                $scope.currentEntity = {};
+              }
+            });
+
+            if (!angular.isDefined(feature) && !$scope.isNewMarker) {
+              angular.forEach($scope.layers, function (layer) {
+
+                if (layer.wmsLayer.getVisible()) {
+                  var url = layer.wmsSource.getGetFeatureInfoUrl(evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(), {
+                    'INFO_FORMAT': 'application/json'
+                  });
+
+                  $scope.getFeatureProperties(decodeURIComponent(url), layer.wmsLayer.getProperties().layer);
+                }
+              });
+            }
+
+            if (angular.isDefined(feature) && !$scope.isNewMarker) {
+
+              $rootScope.$broadcast('loading:show');
+
+              $scope.selectedPhotoAlbumAttribute = {};
+
+              $scope.isDisabled = true;
+
+              $scope.currentEntity = feature.getProperties().marker;
+
+              if ($scope.currentEntity.status != 'ACCEPTED' && $scope.currentEntity.user.id == $scope.userMe.id) {
+                $scope.isDisabled = false;
+              }
+
+              var iconStyle = new ol.style.Style({
+                image: new ol.style.Icon(({
+                  anchor: [0.5, 1],
+                  anchorXUnits: 'fraction',
+                  anchorYUnits: 'fraction',
+                  src: $rootScope.$API_ENDPOINT + '/' + $scope.currentEntity.layer.icon
+                }))
+              });
+
+              var shadowType = 'default';
+              if (!$scope.currentEntity.layer.icon.match(/default/))
+                shadowType = 'collection';
+
+              var shadowStyle = $scope.setShadowMarker(shadowType);
+
+              feature.setStyle([iconStyle, shadowStyle]);
+
+              var geometry = feature.getGeometry();
+              var coordinate = geometry.getCoordinates();
+
+              var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
+              $scope.latitude = transformed_coordinate[1];
+              $scope.longitude = transformed_coordinate[0];
+
+              $scope.setMarkerCoordinatesFormat();
+
+              $scope.currentFeature = feature;
+              $scope.pullUpHeight = 70;
+
+              //$log.debug($scope.currentEntity);
+              //$log.debug($scope.showMarkerDetails);
+
+              markerService.listAttributeByMarker($scope.currentEntity.id, {
+
+                callback: function (result) {
+
+                  $scope.currentEntity.markerAttribute = result;
+
+                  angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute, index) {
+
+                    markerAttribute.name = markerAttribute.attribute.name;
+                    markerAttribute.type = markerAttribute.attribute.type;
+
+                    if (markerAttribute.attribute.type == "NUMBER") {
+                      markerAttribute.value = parseInt(markerAttribute.value);
+                    }
+
+                    if (markerAttribute.attribute.type == 'PHOTO_ALBUM')
+                      $scope.getPhotosByAttribute(markerAttribute, index);
+
+                  });
+
+                  layerGroupService.listAttributesByLayer($scope.currentEntity.layer.id, {
+
+                    callback: function (result) {
+
+                      $rootScope.$broadcast('loading:hide');
+
+                      $scope.attributesByLayer = [];
+
+                      angular.forEach(result, function (attribute, index) {
+
+                        var exist = false;
+
+                        angular.forEach($scope.currentEntity.markerAttribute, function (attributeByMarker, index) {
+
+                          if (attributeByMarker.attribute.id == attribute.id) {
+                            exist = true;
+                          }
+                        });
+
+                        if (!exist) {
+
+                          /*attribute.attribute = attribute;
+                           attribute.marker = $scope.currentEntity;
+
+                           attribute.id = null;*/
+
+                          $scope.currentEntity.markerAttribute.push({
+                            attribute: attribute,
+                            marker: $scope.currentEntity,
+                            type: attribute.type,
+                            name: attribute.name
+                          });
+
+                        }
+
+                      });
+
+                      //localStorage.setItem('currentEntity', angular.toJson($scope.currentEntity));
+
+                      $scope.$apply();
+                    },
+                    errorHandler: function (message, exception) {
+                      $log.debug(message);
+                      $rootScope.$broadcast('loading:hide');
+                      $scope.$apply();
+                    }
+                  });
+
+                  $scope.$apply();
+
+                },
+                errorHandler: function (message, exception) {
+                  $log.debug(message);
+                  $rootScope.$broadcast('loading:hide');
+                  $scope.$apply();
                 }
               });
 
-              if (!angular.isDefined(feature) && !$scope.isNewMarker) {
-                angular.forEach($scope.layers, function (layer) {
+              $scope.$apply();
 
-                  if (layer.wmsLayer.getVisible()) {
-                    var url = layer.wmsSource.getGetFeatureInfoUrl(evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(), {
-                      'INFO_FORMAT': 'application/json'
-                    });
-
-                    $scope.getFeatureProperties(decodeURIComponent(url), layer.wmsLayer.getProperties().layer);
-                  }
-                });
-              }
-
-              if (angular.isDefined(feature) && !$scope.isNewMarker) {
-
-                $rootScope.$broadcast('loading:show');
-
-                $scope.selectedPhotoAlbumAttribute = {};
-
-                $scope.isDisabled = true;
-
-                $scope.currentEntity = feature.getProperties().marker;
-
-                if ($scope.currentEntity.status != 'ACCEPTED' && $scope.currentEntity.user.id == $scope.userMe.id) {
-                  $scope.isDisabled = false;
-                }
-
-                var iconStyle = new ol.style.Style({
-                  image: new ol.style.Icon(({
-                    anchor: [0.5, 1],
-                    anchorXUnits: 'fraction',
-                    anchorYUnits: 'fraction',
-                    src: $rootScope.$API_ENDPOINT + '/' + $scope.currentEntity.layer.icon
-                  }))
-                });
-
-                var shadowType = 'default';
-                if (!$scope.currentEntity.layer.icon.match(/default/))
-                  shadowType = 'collection';
-
-                var shadowStyle = $scope.setShadowMarker(shadowType);
-
-                feature.setStyle([iconStyle, shadowStyle]);
-
-                var geometry = feature.getGeometry();
-                var coordinate = geometry.getCoordinates();
-
-                var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
-                $scope.latitude = transformed_coordinate[1];
-                $scope.longitude = transformed_coordinate[0];
-
-                $scope.setMarkerCoordinatesFormat();
-
-                $scope.currentFeature = feature;
-                $scope.pullUpHeight = 70;
-
-                //$log.debug($scope.currentEntity);
-                //$log.debug($scope.showMarkerDetails);
-
-                markerService.listAttributeByMarker($scope.currentEntity.id, {
-
-                  callback: function (result) {
-
-                    $scope.currentEntity.markerAttribute = result;
-
-                    angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute, index) {
-
-                      markerAttribute.name = markerAttribute.attribute.name;
-                      markerAttribute.type = markerAttribute.attribute.type;
-
-                      if (markerAttribute.attribute.type == "NUMBER") {
-                        markerAttribute.value = parseInt(markerAttribute.value);
-                      }
-
-                      if (markerAttribute.attribute.type == 'PHOTO_ALBUM')
-                        $scope.getPhotosByAttribute(markerAttribute, index);
-
-                    });
-
-                    layerGroupService.listAttributesByLayer($scope.currentEntity.layer.id, {
-
-                      callback: function (result) {
-
-                        $rootScope.$broadcast('loading:hide');
-
-                        $scope.attributesByLayer = [];
-
-                        angular.forEach(result, function (attribute, index) {
-
-                          var exist = false;
-
-                          angular.forEach($scope.currentEntity.markerAttribute, function (attributeByMarker, index) {
-
-                            if (attributeByMarker.attribute.id == attribute.id) {
-                              exist = true;
-                            }
-                          });
-
-                          if (!exist) {
-
-                            /*attribute.attribute = attribute;
-                             attribute.marker = $scope.currentEntity;
-
-                             attribute.id = null;*/
-
-                            $scope.currentEntity.markerAttribute.push({
-                              attribute: attribute,
-                              marker: $scope.currentEntity,
-                              type: attribute.type,
-                              name: attribute.name
-                            });
-
-                          }
-
-                        });
-
-                        //localStorage.setItem('currentEntity', angular.toJson($scope.currentEntity));
-
-                        $scope.$apply();
-                      },
-                      errorHandler: function (message, exception) {
-                        $log.debug(message);
-                        $rootScope.$broadcast('loading:hide');
-                        $scope.$apply();
-                      }
-                    });
-
-                    $scope.$apply();
-
-                  },
-                  errorHandler: function (message, exception) {
-                    $log.debug(message);
-                    $rootScope.$broadcast('loading:hide');
-                    $scope.$apply();
-                  }
-                });
-
-                $scope.$apply();
-
-              }
-
-              if ($scope.isNewMarker) {
-                $scope.isNewMarker = false;
-              }
             }
 
-          });
+            if ($scope.isNewMarker) {
+              $scope.isNewMarker = false;
+            }
+          }
+
+        });
       });
 
       $scope.toggleDrawer = function() {
@@ -1004,8 +1013,6 @@
         }
       };
 
-
-
       $scope.removeAllSelectedLayers = function() {
 
         angular.forEach($scope.allInternalLayerGroups, function(group) {
@@ -1072,27 +1079,257 @@
 
       };
 
-      /*-------------------------------------------------------------------
-       * 		 				  POST CONSTRUCT
-       *-------------------------------------------------------------------*/
-      /**
-       * Handler que escuta as mudanças de URLs pertecentes ao estado da tela.
-       * Ex.: list, add, detail, edit
-       *
-       * Toda vez que ocorre uma mudança de URL se via botão, troca de URL manual, ou ainda
-       * ao vançar e voltar do browser, este evento é chamado.
-       *
-       */
-      /*$scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+      /* INDEX */
 
-        switch ($state.current.name) {
-          case $scope.INDEX:
-          {
-            $scope.loadMap();
-            break;
+      var options = {
+        date: new Date(),
+        mode: 'date', // or 'time'
+        minDate: new Date() - 10000,
+        allowOldDates: true,
+        allowFutureDates: false,
+        doneButtonLabel: 'DONE',
+        doneButtonColor: '#F2F3F4',
+        cancelButtonLabel: 'CANCEL',
+        cancelButtonColor: '#000000'
+      };
+
+      $scope.showDatePicker = function(attribute) {
+        $cordovaDatePicker.show(options).then(function(date) {
+          var month = date.getMonth() > 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+          attribute.value = date.getDate() + '/' + month + '/' + date.getFullYear();
+          //alert(date);
+        });
+      };
+
+      $scope.saveMarker = function(form) {
+
+        if (!form.$valid) {
+
+          $scope.isFormSubmit = true;
+
+        } else {
+
+          $scope.isFormSubmit = false;
+
+          if ($scope.currentEntity.id) {
+
+            var isValid = true;
+
+            angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index) {
+
+              if (attribute.type == 'PHOTO_ALBUM' && attribute.required && attribute.photoAlbum == null) {
+
+                $scope.selectedPhotoAlbumAttribute = attribute;
+                $state.go($scope.MAP_GALLERY);
+
+                isValid = false;
+
+                $cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
+              }
+
+              if (isValid && attribute.type == 'PHOTO_ALBUM' && attribute.photoAlbum != null) {
+
+                angular.forEach(attribute.photoAlbum.photos, function(photo, index) {
+
+                  delete photo.image;
+
+                  if (photo.deleted)
+                    delete attribute.photoAlbum.photos[index];
+                });
+              }
+            });
+
+            if (isValid) {
+
+              $rootScope.$broadcast('loading:show');
+
+              $scope.currentEntity.status = 'PENDING';
+
+              var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
+
+              $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
+
+              markerService.updateMarker($scope.currentEntity, {
+
+                callback: function(result) {
+
+                  $scope.currentEntity.layer.visible = false;
+                  $scope.toggleLayer($scope.currentEntity.layer);
+                  $scope.currentEntity.layer.visible = true;
+                  $scope.toggleLayer($scope.currentEntity.layer);
+
+                  $scope.clearNewMarker();
+
+                  $scope.clearShadowFeature($scope.currentFeature);
+                  $scope.currentFeature = '';
+
+                  $state.go( $scope.MAP_INDEX );
+                  $rootScope.$broadcast('loading:hide');
+
+                  $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
+                    // success
+                  }, function(error) {
+                    // error
+                  });
+
+                  $scope.$apply();
+                },
+                errorHandler: function(message, exception) {
+
+                  $log.debug(message);
+                  $state.go( $scope.MAP_INDEX );
+                  $rootScope.$broadcast('loading:hide');
+
+                  $scope.$apply();
+                }
+              });
+            }
+
+          } else {
+
+            var isValid = true;
+
+            angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index) {
+
+              if (attribute.type == 'PHOTO_ALBUM' && attribute.required && attribute.photoAlbum == null) {
+
+                $scope.selectedPhotoAlbumAttribute = attribute;
+                $state.go($scope.MAP_GALLERY);
+
+                isValid = false;
+
+                $cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
+              }
+
+            });
+
+            if (isValid) {
+
+              $rootScope.$broadcast('loading:show');
+
+              var layer = new Layer();
+              layer.id = $scope.currentEntity.layer.id;
+              $scope.currentEntity.layer = layer;
+
+              var attributes = $scope.currentEntity.markerAttribute;
+              $scope.currentEntity.markerAttribute = [];
+
+              angular.forEach(attributes, function(attr, ind) {
+
+                var attribute = new Attribute();
+                attribute.id = attr.attribute.id;
+
+                var markerAttribute = new MarkerAttribute();
+                if (attr.value != "" && attr.value != undefined) {
+                  markerAttribute.value = attr.value;
+                } else {
+                  markerAttribute.value = "";
+                }
+
+                if (attr.type == 'PHOTO_ALBUM') {
+
+                  attribute.type = 'PHOTO_ALBUM';
+
+                  var photoAlbum = new PhotoAlbum();
+                  photoAlbum.photos = new Array();
+
+                  if (angular.isObject(attr.photoAlbum)) {
+                    angular.forEach(attr.photoAlbum.photos, function(file) {
+
+                      var photo = new Photo();
+                      photo.source = file.image;
+                      photo.name = file.name;
+                      photo.description = file.description;
+                      photo.contentLength = file.contentLength;
+                      photo.mimeType = file.mimeType;
+                      photoAlbum.photos.push(photo);
+
+                    });
+                  }
+
+                  markerAttribute.photoAlbum = photoAlbum;
+                }
+
+                markerAttribute.attribute = attribute;
+                markerAttribute.marker = $scope.currentEntity;
+                $scope.currentEntity.markerAttribute.push(markerAttribute);
+
+              });
+
+              var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
+              $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
+
+              markerService.insertMarker($scope.currentEntity, {
+                callback: function(result) {
+
+                  var internalLayer = $filter('filter')($scope.allInternalLayerGroups, {
+                    id: $scope.currentEntity.layer.id
+                  })[0];
+
+                  var iconPath = $rootScope.$API_ENDPOINT + '/' + internalLayer.icon;
+
+                  var iconStyle = new ol.style.Style({
+                    image: new ol.style.Icon(({
+                      anchor: [0.5, 1],
+                      anchorXUnits: 'fraction',
+                      anchorYUnits: 'fraction',
+                      src: iconPath
+                    }))
+                  });
+
+                  if(internalLayer.visible && internalLayer.visible != undefined) {
+
+                    internalLayer.visible = false;
+                    $scope.toggleLayer(internalLayer);
+                    internalLayer.visible = true;
+                    $scope.toggleLayer(internalLayer);
+
+                  } else {
+
+                    internalLayer.visible = true;
+                    $scope.toggleLayer(internalLayer);
+
+                  }
+
+                  $rootScope.$broadcast('loading:hide');
+                  $scope.clearNewMarker();
+
+                  $state.go( $scope.MAP_INDEX );
+
+                  $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
+
+                },
+                errorHandler: function(message, exception) {
+                  $log.debug(message);
+                  $state.go( $scope.MAP_INDEX );
+                  $rootScope.$broadcast('loading:hide');
+                  $scope.$apply();
+                }
+              });
+            }
           }
         }
-      });*/
+      };
+
+      $scope.removeAllSelectedLayers = function() {
+
+        angular.forEach($scope.allInternalLayerGroups, function(group) {
+          if (group.visible) {
+            group.visible = false;
+            $scope.toggleLayer(group);
+          }
+        });
+
+      };
+
+      $scope.verifyStatus = function(){
+        if (($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED')
+          && ($scope.currentEntity.user.id == $scope.userMe.id)) {
+          $scope.isDisabled = false;
+        }
+      };
+
+
 
 
     });

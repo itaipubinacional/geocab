@@ -51,7 +51,7 @@
               if (attribute.type == 'PHOTO_ALBUM' && attribute.required && attribute.photoAlbum == null) {
 
                 $scope.selectedPhotoAlbumAttribute = attribute;
-                $state.go($scope.GALLERY);
+                $state.go($scope.MAP_GALLERY);
 
                 isValid = false;
 
@@ -94,7 +94,7 @@
                   $scope.clearShadowFeature($scope.currentFeature);
                   $scope.currentFeature = '';
 
-                  $state.go( $scope.INDEX );
+                  $state.go( $scope.MAP_INDEX );
                   $rootScope.$broadcast('loading:hide');
 
                   $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
@@ -108,7 +108,7 @@
                 errorHandler: function(message, exception) {
 
                   $log.debug(message);
-                  $state.go( $scope.INDEX );
+                  $state.go( $scope.MAP_INDEX );
                   $rootScope.$broadcast('loading:hide');
 
                   $scope.$apply();
@@ -125,7 +125,7 @@
               if (attribute.type == 'PHOTO_ALBUM' && attribute.required && attribute.photoAlbum == null) {
 
                 $scope.selectedPhotoAlbumAttribute = attribute;
-                $state.go($scope.GALLERY);
+                $state.go($scope.MAP_GALLERY);
 
                 isValid = false;
 
@@ -225,14 +225,14 @@
                   $rootScope.$broadcast('loading:hide');
                   $scope.clearNewMarker();
 
-                  $state.go( $scope.INDEX );
+                  $state.go( $scope.MAP_INDEX );
 
                   $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
 
                 },
                 errorHandler: function(message, exception) {
                   $log.debug(message);
-                  $state.go( $scope.INDEX );
+                  $state.go( $scope.MAP_INDEX );
                   $rootScope.$broadcast('loading:hide');
                   $scope.$apply();
                 }
@@ -406,7 +406,7 @@
             $scope.removeMarkerModeration($scope.currentEntity.id);
           }
         });
-      }
+      };
 
       $scope.listMotives = function() {
 

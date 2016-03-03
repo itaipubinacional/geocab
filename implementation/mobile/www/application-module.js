@@ -2,7 +2,7 @@
   'use strict';
 
   //Start the AngularJS
-  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'ionic-pullup', 'ionic.contrib.drawer', 'ngCordova', 'ngOpenFB', 'eits.translate']);
+  var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'ngCordova', 'ngOpenFB', 'eits.translate']);
 
   /**
    *
@@ -63,7 +63,6 @@
       controller: 'MapController'
     }).state('map.index', {
       url: '/index',
-      cache: false,
       views: {
         'menuContent': {
           templateUrl: './views/templates/map-index.html',
@@ -72,25 +71,20 @@
       }
     }).state('map.marker', {
       url: '/marker',
-      cache: false,
       views: {
         'menuContent': {
           templateUrl: './views/templates/marker-view.html',
-          controller: 'IndexController'
         }
       }
     }).state('map.wms', {
       url: '/wms',
-      cache: false,
       views: {
         'menuContent': {
-          templateUrl: './views/templates/wms-view.html',
-          controller: 'IndexController'
+          templateUrl: './views/templates/wms-view.html'
         }
       }
     }).state('map.gallery', {
       url: '/gallery',
-      cache: false,
       views: {
         'menuContent': {
           templateUrl: './views/map/gallery.html',
