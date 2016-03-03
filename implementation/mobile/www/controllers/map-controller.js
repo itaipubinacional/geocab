@@ -222,8 +222,6 @@
        */
       $scope.getPhotosByAttribute = function(attribute, reload) {
 
-        $state.go($scope.MAP_GALLERY);
-
         if (attribute.photoAlbum != null) {
           angular.forEach(attribute.photoAlbum.photos, function(photo) {
             if (photo.id) {
