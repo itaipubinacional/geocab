@@ -1,10 +1,13 @@
-<ion-view view-title="Geocab">
+<ion-view hide-nav-bar="true">
 
-  <ion-nav-buttons side="left">
+  <!--<ion-nav-buttons side="left">
     <button class="button button-icon button-clear ion-navicon" ng-click="toggleLeftSideMenu()">
     </button>
-  </ion-nav-buttons>
-  <ion-content scroll="false" id="map" class="loading" data-tap-disabled="true" on-hold="onHold($event, data)">
+  </ion-nav-buttons>-->
+
+  <ion-content scroll="false" >
+    <button class="button button-icon icon ion-navicon drawer-button" ng-click="toggleLeftSideMenu()"></button>
+    <div id="map" class="loading" on-hold="onHold($event, data)"></div>
   </ion-content>
 
   <div ng-if="currentEntity.latitude && !currentEntity.id" ng-click="viewMarker()" ng-include="'./views/templates/new-marker-preview.html'">
