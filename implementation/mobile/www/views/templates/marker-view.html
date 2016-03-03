@@ -4,8 +4,9 @@
     <ion-nav-back-button>
     </ion-nav-back-button>
     <ion-nav-buttons side="right">
-      <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);"></button>
-      <button class="button button-icon icon ion-android-done" form="marker" type="submit" ng-if="!isDisabled"></button>
+      <button class="button button-icon icon ion-android-done" form="marker" type="submit" ng-if="!isDisabled">
+      </button>
+      <button class="button button-icon icon ion-images" ng-if="!(selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM')" ng-click="closePopover();getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);"> Fotos</button>
       <button class="button button-icon icon ion-android-more-vertical" ng-click="openPopover($event)" ></button>
     </ion-nav-buttons>
   </ion-nav-bar>

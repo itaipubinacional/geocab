@@ -21,6 +21,9 @@
   <ion-popover-view>
     <ion-content>
       <ion-list class="options-menu-button">
+        <ion-item >
+          <button class="button button-icon icon ion-images" ng-if="(selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM')" ng-click="closePopover();getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);"> Fotos</button>
+        </ion-item>
         <ion-item>
           <button ng-click="approveMarker()" ng-disabled="currentEntity.status == 'ACCEPTED' || !currentEntity.id" class="button button-icon icon ion-thumbsup"> Aprovar</button>
         </ion-item>
