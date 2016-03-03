@@ -67,7 +67,7 @@
       </form>
     </ion-list>
   </ion-content>
-  <ion-footer-bar class="bar-stable" align-title="left">
+  <ion-footer-bar class="bar-stable" align-title="left" ng-if="showMarkerDetails && currentEntity.id">
     <div ng-if="userMe.role == 'ADMINISTRATOR'">
       <button class="button button-icon icon ion-thumbsup" ng-disabled="currentEntity.status == 'ACCEPTED'" ng-click="approveMarker()"></button>
       <button class="button button-icon icon ion-thumbsdown" ng-disabled="currentEntity.status == 'REFUSED'" ng-click="refuseMarker()"></button>

@@ -101,7 +101,7 @@
         switch ($state.current.name) {
           case $scope.MAP_INDEX:
           {
-            $('canvas').css('display', 'block');
+            //$('canvas').css('display', 'block');
             break;
           }
         }
