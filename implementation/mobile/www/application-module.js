@@ -63,22 +63,16 @@
       controller: 'MapController'
     }).state('map.index', {
       url: '/index',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: './views/templates/map-index.html',
           controller: 'IndexController'
         }
       }
-    }).state('map.preview', {
-      url: '/preview',
-      views: {
-        'footerContent': {
-          templateUrl: './views/templates/marker-preview.html',
-          controller: 'IndexController'
-        }
-      }
     }).state('map.marker', {
       url: '/marker',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: './views/templates/marker-view.html',
@@ -87,6 +81,7 @@
       }
     }).state('map.wms', {
       url: '/wms',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: './views/templates/wms-view.html',
@@ -95,6 +90,7 @@
       }
     }).state('map.gallery', {
       url: '/gallery',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: './views/map/gallery.html',

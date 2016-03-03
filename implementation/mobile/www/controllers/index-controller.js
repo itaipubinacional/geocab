@@ -93,8 +93,8 @@
 
                   $scope.clearShadowFeature($scope.currentFeature);
                   $scope.currentFeature = '';
-                  $scope.minimizeFooter();
 
+                  $state.go( $scope.INDEX );
                   $rootScope.$broadcast('loading:hide');
 
                   $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
@@ -107,8 +107,9 @@
                 },
                 errorHandler: function(message, exception) {
 
-                  $rootScope.$broadcast('loading:hide');
                   $log.debug(message);
+                  $state.go( $scope.INDEX );
+                  $rootScope.$broadcast('loading:hide');
 
                   $scope.$apply();
                 }
@@ -223,13 +224,15 @@
 
                   $rootScope.$broadcast('loading:hide');
                   $scope.clearNewMarker();
-                  $scope.minimizeFooter();
+
+                  $state.go( $scope.INDEX );
 
                   $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
 
                 },
                 errorHandler: function(message, exception) {
                   $log.debug(message);
+                  $state.go( $scope.INDEX );
                   $rootScope.$broadcast('loading:hide');
                   $scope.$apply();
                 }

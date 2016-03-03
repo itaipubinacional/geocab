@@ -1,4 +1,6 @@
-/* Empty. Add your own CSS if you like */
+
+.bar.bar-positive{background-color: #1e88e5;}
+
 .scroll{height: 100%;}
 #map {
   width: 100%;
@@ -29,7 +31,6 @@ fieldset{margin: 0px; padding: 0px; border: none}
 .pull-up .title{
   margin: 0px;
   height: 44px;
-
   left: auto;
   right: auto;
 }

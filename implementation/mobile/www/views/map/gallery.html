@@ -1,25 +1,30 @@
-<ion-nav-bar class="bar-stable">
-  <ion-nav-buttons side="left">
-    <button ng-if="!hasSelectedPhotos && (currentEntity.user.id == userMe.id || !currentEntity.user.id) && !isDisabled" class="button button-icon icon ion-camera" ng-click="addMedia()"></button>
-    <button class="button button-icon icon ion-android-delete" ng-if="hasSelectedPhotos" ng-click="deleteSelectedPhotos()"></button>
-  </ion-nav-buttons>
-</ion-nav-bar>
-
 <ion-view view-title="Fotos">
+  <ion-nav-bar class="bar-positive">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="right">
+      <button
+        ng-if="!hasSelectedPhotos && (currentEntity.user.id == userMe.id || !currentEntity.user.id) && !isDisabled"
+        class="button button-icon icon ion-camera" ng-click="addMedia()"></button>
+      <button class="button button-icon icon ion-android-delete" ng-if="hasSelectedPhotos"
+              ng-click="deleteSelectedPhotos()"></button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
   <ion-content class="has-header" scroll="true" style="margin-top:10px">
     <label class="item item-input item-select" ng-if="photosSelected == 0">
       <span class="input-label">{{'mobile.album' | translate}}</span>
-      <select ng-change="getPhotosByAttribute(selectedPhotoAlbumAttribute, true)" ng-model="selectedPhotoAlbumAttribute" ng-options="attribute.name for attribute in currentEntity.markerAttribute | filter:{type: 'PHOTO_ALBUM'}"></select>
+      <select ng-change="getPhotosByAttribute(selectedPhotoAlbumAttribute, true)" ng-model="selectedPhotoAlbumAttribute"
+              ng-options="attribute.name for attribute in currentEntity.markerAttribute | filter:{type: 'PHOTO_ALBUM'}"></select>
     </label>
-
     <label class="item item-input" ng-if="photosSelected == 1">
       <!--<span class="input-label">Descrição</span>-->
       <input type="text" ng-model="selectedPhoto.description" placeholder="Descrição">
     </label>
-
     <div class="row" style="flex-wrap: wrap;">
-      <div class="col col-50" ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos" ng-if="!photo.deleted" ng-class="{'selected': photo.selected}">
-        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}" on-hold="selectPhoto($event, photo)" ng-click="openModal($index)"/>
+      <div class="col col-50" ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos" ng-if="!photo.deleted"
+           ng-class="{'selected': photo.selected}">
+        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}" on-hold="selectPhoto($event, photo)"
+             ng-click="openModal($index)"/>
         <!--<h6>{{ photo.description ? photo.description :  photo.name }}</h6>-->
       </div>
     </div>
