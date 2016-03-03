@@ -9,7 +9,7 @@
   angular.module('application')
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
-      $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading, 
+      $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
       $cordovaToast, $http, $ionicHistory) {
 
       /**
@@ -784,11 +784,9 @@
 
           layer.visible = false;
 
-          $cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function(success) {
-            // success
+          /*$cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function(success) {
           }, function(error) {
-            // error
-          });
+          });*/
 
         } else {
 
@@ -905,11 +903,9 @@
 
                     $rootScope.$broadcast('loading:hide');
 
-                    $cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function(success) {
-                      // success
+                    /*$cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function(success) {
                     }, function(error) {
-                      // error
-                    });
+                    });*/
 
                   }
 
@@ -1132,7 +1128,7 @@
 
                 isValid = false;
 
-                $cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
+                //$cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
               }
 
               if (isValid && attribute.type == 'PHOTO_ALBUM' && attribute.photoAlbum != null) {
@@ -1174,11 +1170,9 @@
                   $state.go( $scope.MAP_INDEX );
                   $rootScope.$broadcast('loading:hide');
 
-                  $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
-                    // success
+                  /*$cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
                   }, function(error) {
-                    // error
-                  });
+                  });*/
 
                   $scope.$apply();
                 },
@@ -1206,7 +1200,7 @@
 
                 isValid = false;
 
-                $cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
+                //$cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
               }
 
             });
@@ -1270,7 +1264,7 @@
               markerService.insertMarker($scope.currentEntity, {
                 callback: function(result) {
 
-                  var iconPath = $rootScope.$API_ENDPOINT + '/' + internalLayer.icon;
+                  var iconPath = $rootScope.$API_ENDPOINT + '/' + $scope.internalLayer.icon;
 
                   var iconStyle = new ol.style.Style({
                     image: new ol.style.Icon(({
@@ -1281,17 +1275,17 @@
                     }))
                   });
 
-                  if(internalLayer.visible && internalLayer.visible != undefined) {
+                  if($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
 
-                    internalLayer.visible = false;
-                    $scope.toggleLayer(internalLayer);
-                    internalLayer.visible = true;
-                    $scope.toggleLayer(internalLayer);
+                    $scope.internalLayer.visible = false;
+                    $scope.toggleLayer($scope.internalLayer);
+                    $scope.internalLayer.visible = true;
+                    $scope.toggleLayer($scope.internalLayer);
 
                   } else {
 
-                    internalLayer.visible = true;
-                    $scope.toggleLayer(internalLayer);
+                    $scope.internalLayer.visible = true;
+                    $scope.toggleLayer($scope.internalLayer);
 
                   }
 
@@ -1300,7 +1294,7 @@
 
                   $state.go( $scope.MAP_INDEX );
 
-                  $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
+                  //$cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
 
                 },
                 errorHandler: function(message, exception) {

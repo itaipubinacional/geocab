@@ -1,6 +1,5 @@
-
 .bar.bar-positive{background-color: #1e88e5;}
-
+.footer-shadow{box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
 .scroll{height: 100%;}
 #map {
   width: 100%;
@@ -63,7 +62,7 @@ fieldset{margin: 0px; padding: 0px; border: none}
 }
 
 .login-content{
-    padding: 50px;
+  padding: 50px;
 }
 
 .login-image-footer {
@@ -201,7 +200,6 @@ p.info {
     opacity: 0;
   }
 }
-
 
 .options-menu-button ion-item .button {
   padding: 20px 0px 0 25px;

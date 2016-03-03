@@ -1,6 +1,6 @@
-<ion-footer-bar class="bar-stable bar-subfooter" align-title="left">
-  <div class="title" style="text-align: left">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</div>
+<ion-footer-bar class="bar-stable bar-subfooter shadow" align-title="left" class="footer-shadow">
+  <h1 class="title" style="text-align: left; font-weight: 900; line-height: 60px">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</h1>
 </ion-footer-bar>
-<ion-footer-bar align-title="center" class="bar-stable">
-  <h6>{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
+<ion-footer-bar align-title="center" class="bar-stable padding-horizontal" style="padding-top: 0;">
+  <h6 style="margin-top: 0">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
 </ion-footer-bar>
