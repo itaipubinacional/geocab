@@ -19,7 +19,7 @@
   <ion-content>
     <ion-list>
       <div class="row">
-        <h6 class="stable" ng-if="currentEntity.id">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
+        <h6 style="text-align: center" ng-if="currentEntity.id">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
       </div>
       <label class="item item-input item-select" ng-if="!currentEntity.id">
         <span class="input-label">{{ 'Layer' | translate }}</span>
