@@ -1,23 +1,13 @@
 <ion-view view-title="{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}">
-
-  <ion-nav-bar class="bar-positive">
-    <ion-header-bar>
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-
-      <div class="bar bar-subheader bar-positive" >
-        <h6 class="title" ng-if="!currentEntity.id">{{ showMarkerPosition() }}</h6>
-        <p ng-if="currentEntity.id">Status <b>{{ getMarkerStatus(currentEntity.status) }}</b></p>
-      </div>
-
-      <ion-nav-buttons side="right">
-        <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);"></button>
-        <button class="button button-icon icon ion-android-done" form="marker" type="submit" ng-if="!isDisabled"></button>
-      </ion-nav-buttons>
-    </ion-header-bar>
-  </ion-nav-bar>
-
-  <ion-content class="has-subheader">
+  <ion-header-bar class="bar-subheader bar-positive">
+    <label class="title" ng-if="!currentEntity.id">{{ showMarkerPosition() }}</label>
+    <label ng-if="currentEntity.id">Status <b>{{ getMarkerStatus(currentEntity.status) }}</b></label>
+    <ion-nav-buttons side="right">
+      <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);"></button>
+      <button class="button button-icon icon ion-android-done" form="marker" type="submit" ng-if="!isDisabled"></button>
+    </ion-nav-buttons>
+  </ion-header-bar>
+  <ion-content>
     <ion-list>
       <label class="item item-input item-select" ng-if="!currentEntity.id">
         <span class="input-label">{{ 'Layer' | translate }}</span>

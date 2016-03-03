@@ -47,6 +47,7 @@
       $scope.isNewMarker = false;
       $scope.isDragStart = false;
       $scope.isDrawerOpen = false;
+      $scope.internalLayer = {};
       $scope.allInternalLayerGroups = [];
       $scope.allLayers = [];
       $scope.layers = [];
@@ -1109,6 +1110,8 @@
 
       $scope.saveMarker = function(form) {
 
+        $scope.internalLayer = $filter('filter')($scope.allLayers, {id: $scope.currentEntity.layer.id})[0];
+
         if (!form.$valid) {
 
           $scope.isFormSubmit = true;
@@ -1159,10 +1162,10 @@
 
                 callback: function(result) {
 
-                  $scope.currentEntity.layer.visible = false;
-                  $scope.toggleLayer($scope.currentEntity.layer);
-                  $scope.currentEntity.layer.visible = true;
-                  $scope.toggleLayer($scope.currentEntity.layer);
+                  $scope.internalLayer.visible = false;
+                  $scope.toggleLayer($scope.internalLayer);
+                  $scope.internalLayer.visible = true;
+                  $scope.toggleLayer($scope.internalLayer);
 
                   $scope.clearNewMarker();
 
@@ -1267,10 +1270,6 @@
 
               markerService.insertMarker($scope.currentEntity, {
                 callback: function(result) {
-
-                  var internalLayer = $filter('filter')($scope.allInternalLayerGroups, {
-                    id: $scope.currentEntity.layer.id
-                  })[0];
 
                   var iconPath = $rootScope.$API_ENDPOINT + '/' + internalLayer.icon;
 
