@@ -53,6 +53,7 @@
       $scope.newMarker = {};
       $scope.dragPan = true;
       $scope.layers = [];
+      $scope.lastPhoto = {};
 
       $scope.showMarkerDetails = false;
       $scope.showWMSDetails = false;
@@ -103,6 +104,33 @@
         $scope.backView.go();
       };
 
+      $scope.removeLastPhoto = function(){
+
+        var hasPhoto = false;
+
+        angular.forEach($scope.currentEntity.markerAttribute, function(attribute){
+
+          if(attribute.type == 'PHOTO_ALBUM' && attribute.photoAlbum != undefined) {
+
+            var hasPhoto = true;
+
+            angular.forEach(attribute.photoAlbum.photos, function(photo){
+
+              if(photo.deleted && photo.id == $scope.lastPhoto.id) {
+                $scope.imgResult = '';
+              }
+
+            });
+
+          }
+
+        });
+
+        if(!hasPhoto) {
+          $scope.imgResult = '';
+        }
+      };
+
       $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 
         switch ($state.current.name) {
@@ -111,6 +139,11 @@
             $timeout(function(){
               $scope.map.updateSize();
             });
+            break;
+          }
+          case $scope.MAP_MARKER:
+          {
+            $scope.removeLastPhoto();
             break;
           }
         }
@@ -176,6 +209,8 @@
 
         $log.debug('viewMarker');
 
+        $scope.imgResult = '';
+
         $state.go( $scope.MAP_MARKER );
 
         $scope.listAllInternalLayerGroups();
@@ -214,6 +249,7 @@
           callback: function(result) {
 
             $scope.imgResult = result.image;
+            $scope.lastPhoto = result;
             $scope.$apply();
 
           },
