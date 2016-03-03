@@ -201,3 +201,11 @@ p.info {
     opacity: 0;
   }
 }
+
+.options-menu-button ion-item .button {
+  padding: 20px 0px 0 25px;
+}
+
+.options-menu-button ion-item {
+  padding: 0;
+}

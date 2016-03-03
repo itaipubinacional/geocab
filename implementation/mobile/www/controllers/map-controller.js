@@ -9,7 +9,7 @@
   angular.module('application')
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
-      $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
+      $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading, 
       $cordovaToast, $http, $ionicHistory) {
 
       /**
@@ -34,12 +34,11 @@
 
       $scope.MAP_WMS          = "map.wms";
 
-
-
       /**
      /*-------------------------------------------------------------------
      *              ATTRIBUTES
      *-------------------------------------------------------------------*/
+
 
       $scope.map = {};
       $scope.currentFeature = '';

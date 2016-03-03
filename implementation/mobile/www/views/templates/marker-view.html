@@ -9,6 +9,7 @@
   <ion-nav-buttons side="right">
     <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);"></button>
     <button class="button button-icon icon ion-android-done" form="marker" type="submit" ng-if="!isDisabled"></button>
+    <button class="button button-icon icon ion-android-more-vertical" ng-click="openPopover($event)" ng-if="currentEntity.id"></button>
   </ion-nav-buttons>
 
   <ion-header-bar class="bar-subheader bar-positive" style="text-align: center;">
@@ -67,12 +68,4 @@
       </form>
     </ion-list>
   </ion-content>
-  <ion-footer-bar class="bar-stable" align-title="left" ng-if="showMarkerDetails && currentEntity.id">
-    <div ng-if="userMe.role == 'ADMINISTRATOR'">
-      <button class="button button-icon icon ion-thumbsup" ng-disabled="currentEntity.status == 'ACCEPTED'" ng-click="approveMarker()"></button>
-      <button class="button button-icon icon ion-thumbsdown" ng-disabled="currentEntity.status == 'REFUSED'" ng-click="refuseMarker()"></button>
-      <button class="button button-icon icon ion-android-close" ng-disabled="currentEntity.status == 'CANCELED'" ng-click="cancelMarker()"></button>
-    </div>
-    <button class="button button-icon icon ion-android-delete" ng-if="currentEntity.user.id == userMe.id && currentEntity.status != 'ACCEPTED'" ng-click="removeMarker()"></button>
-  </ion-footer-bar>
 </ion-view>

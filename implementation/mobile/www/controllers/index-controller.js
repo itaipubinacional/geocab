@@ -8,9 +8,44 @@
    */
   angular.module('application')
     .controller('IndexController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
-      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
+      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation, $ionicPopover,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
       $cordovaToast, $ionicModal) {
+ /**
+     /*-------------------------------------------------------------------
+     *              ATTRIBUTES
+     *-------------------------------------------------------------------*/
+
+      // Configura o popover
+      $ionicPopover.fromTemplateUrl('marker-view-options-menu.html', {
+          scope: $scope
+      }).then(function(popover) {
+          $scope.popover = popover;
+      });
+      
+      $scope.openPopover = function($event) {        
+        $scope.popover.show($event);
+      };
+
+      $scope.closePopover = function() {
+        $scope.popover.hide();
+      };
+
+      //Cleanup the popover when we're done with it!
+      $scope.$on('$destroy', function() {
+        $scope.popover.remove();
+      });
+
+      // Execute action on hide popover
+      $scope.$on('popover.hidden', function() {
+        // Execute action
+      });
+
+      // Execute action on remove popover
+      $scope.$on('popover.removed', function() {
+        // Execute action
+      });
+
 
       var options = {
         date: new Date(),
@@ -164,7 +199,7 @@
       };
 
       $scope.approveMarker = function() {
-
+        $scope.closePopover();
         var confirmPopup = $ionicPopup.confirm({
           title: $translate('admin.marker-moderation.Confirm-approve'),
           template: $translate('admin.marker-moderation.Are-you-sure-you-want-to-approve-this-marker') + '?',
@@ -182,7 +217,7 @@
       };
 
       $scope.removeMarker = function() {
-
+        $scope.closePopover();
         var confirmPopup = $ionicPopup.confirm({
           title: $translate("map.Delete-mark"),
           template: $translate("map.Are-you-sure-you-want-to-delete-the-mark") + '?',
@@ -222,6 +257,7 @@
       });
 
       $scope.refuseMarker = function() {
+        $scope.closePopover();
         $scope.listMotives();
         $scope.refuseMarkerModal.show();
       };
@@ -236,7 +272,7 @@
       };
 
       $scope.cancelMarker = function() {
-
+        $scope.closePopover();
         var confirmPopup = $ionicPopup.confirm({
           title: $translate('admin.marker-moderation.Confirm-cancel'),
           template: $translate('admin.marker-moderation.Are-you-sure-you-want-to-cancel-this-marker') + '?',

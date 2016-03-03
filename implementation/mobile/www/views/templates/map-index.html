@@ -19,3 +19,28 @@
   <div ng-if="currentWMS.layer" ng-click="viewWMS()" ng-include="'./views/templates/wms-preview.html'">
   </div>
 </ion-view>
+
+
+<!-- Template de opções do menu de new marker -->
+<script id="marker-view-options-menu.html" type="text/ng-template">
+  <ion-popover-view>
+    <ion-content>
+      <ion-list class="options-menu-button">
+        <ion-item>
+          <button ng-disabled="currentEntity.status == 'ACCEPTED' || !currentEntity.id" class="button button-icon icon ion-thumbsup" ng-click="approveMarker()"> Aprovar</button>
+        </ion-item>
+        <ion-item >
+          <button ng-disabled="currentEntity.status == 'REFUSED' || !currentEntity.id" class="button button-icon icon ion-thumbsdown" ng-click="refuseMarker()"> Recusar</button>
+        </ion-item>
+        <ion-item>
+          <button ng-disabled="currentEntity.status == 'CANCELED' || !currentEntity.id" class="button button-icon icon ion-android-close" ng-click="cancelMarker()"> Cancelar</button>
+        </ion-item>
+        <ion-item>
+          <button class="button button-icon icon ion-android-delete" 
+                  ng-disabled="!currentEntity.id || !(currentEntity.user.id == userMe.id && currentEntity.status != 'ACCEPTED')" 
+                  ng-click="removeMarker()"> Excluir</button>
+        </ion-item>
+       </ion-list>
+    </ion-content>
+  </ion-popover-view>
+</script>
