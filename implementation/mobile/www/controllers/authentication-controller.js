@@ -7,7 +7,7 @@
  * @param $state
  */
 angular.module('application')
-  .controller('AuthenticationController', function ($rootScope, $importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate) {
+  .controller('AuthenticationController', function ($rootScope, $importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate, $ionicPlatform, $ionicHistory) {
 
     $timeout(function() {
       $importService("accountService");
@@ -171,7 +171,7 @@ angular.module('application')
         $state.go('map.index');
         //$scope.getUserAuthenticated();
       } else {
-        $state.go('intro');
+        $state.go('authentication.intro');
       }
     };
 
@@ -209,6 +209,15 @@ angular.module('application')
     if(localStorage.getItem('userEmail')){
       $scope.model.user.email = localStorage.getItem('userEmail');
     };
+    
+    //Handler de BACK
+    $ionicPlatform.registerBackButtonAction(function(e){
+      if ($state.$current.name == 'map.index') {
+        ionic.Platform.exitApp();
+      } else {
+        $ionicHistory.goBack();
+      }
+    }, 100);
 
   });
 
