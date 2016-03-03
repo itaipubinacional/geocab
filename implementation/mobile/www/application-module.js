@@ -69,13 +69,18 @@
           controller: 'IndexController'
         }
       }
-    }).state('map.index.preview', {
-      url: '/preview'
+    }).state('map.preview', {
+      url: '/preview',
+      views: {
+        'footerContent': {
+          templateUrl: './views/templates/marker-preview.html'
+        }
+      }
     }).state('map.view', {
       url: '/view',
       views: {
         'menuContent': {
-          templateUrl: './views/templates/view-marker.html'
+          templateUrl: './views/templates/marker-view.html'
         }
       }
     }).state('map.gallery', {

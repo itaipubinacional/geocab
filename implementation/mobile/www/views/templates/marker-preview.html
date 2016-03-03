@@ -1,0 +1,41 @@
+<ion-footer-bar class="bar-positive bar-subfooter" align-title="left" ng-click="viewMarker()">
+
+  <h1 class="title" ng-if="currentEntity.layer.name">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</h1>
+  <h1 class="title" ng-if="!currentEntity.layer.name">{{'map.New-post' | translate}}</h1>
+
+</ion-footer-bar>
+<ion-footer-bar align-title="left" class="bar-positive">
+
+  <h1 class="title">Title!</h1>
+
+</ion-footer-bar>
+
+<!--<div class="col" ng-if="!currentEntity.id">
+  <div class="row" style="padding-bottom:0px">
+    <div class="row" style="padding-right:50px">
+      <b ng-if="currentEntity.layer.name">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</b>
+      <b ng-if="!currentEntity.layer.name">{{ 'map.New-post' | translate }}</b>
+    </div>
+  </div>
+  <div class="col" style="font-size: 12px;padding-bottom:0px; text-align:left">
+    <div class="row">
+      <span style="width:80px">Latitude</span> {{ formattedLatitude }}
+    </div>
+    <div class="row">
+      <span style="width:80px">Longitude</span> {{ formattedLongitude }}
+    </div>
+  </div>
+</div>
+<div ng-if="currentEntity.id" class="col">
+  <div class="row">
+    <div class="row" style="padding-right:50px">
+      <b class="dynamic-text col-85">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</b>
+    </div>
+  </div>
+  <div class="row">
+    <div class="row" style="padding-top:0px">
+      <h6 class="dynamic-text col-85" style="margin-top:0px">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
+    </div>
+  </div>
+</div>-->
+<button class="button button-icon icon ion-android-done confirm-marker-button fab" ng-if="!currentEntity.id"></button>

@@ -1,5 +1,12 @@
-<ion-view view-title="Map">
+<ion-view view-title="Geocab">
+  <ion-nav-buttons side="left">
+    <button class="button button-icon button-clear ion-navicon" ng-click="toggleLeftSideMenu()">
+    </button>
+  </ion-nav-buttons>
   <ion-content scroll="false">
     <div id="map" class="loading" on-hold="onHold($event, data)"></div>
   </ion-content>
+
+  <div ng-if="currentEntity.latitude || currentEntity.id" ng-include="'./views/templates/marker-preview.html'">
+  </div>
 </ion-view>

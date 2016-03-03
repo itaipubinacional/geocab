@@ -10,7 +10,7 @@
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $http, $ionicModal) {
+      $cordovaToast, $http) {
 
       /**
        *
@@ -100,9 +100,13 @@
        * 		 				 	  HANDLERS
        *-------------------------------------------------------------------*/
 
-      $scope.goBack = function() {
-        $ionicNavBarDelegate.back();
+      $scope.toggleLeftSideMenu = function() {
+        $ionicSideMenuDelegate.toggleLeft();
+        $scope.listAllLayers();
+        $scope.listAllInternalLayerGroups();
+        $scope.getUserAuthenticated();
       };
+
 
       $scope.setImagePath = function(image) {
         //$log.debug(image);
@@ -143,9 +147,10 @@
         $rootScope.$broadcast('minimizeFooter');
       };
 
-      $scope.footerExpand = function() {
+      $scope.viewMarker = function() {
 
-        $log.debug('Footer expand');
+        $log.debug('viewMarker');
+
         $scope.$state.go( $scope.VIEW );
 
         $scope.listAllInternalLayerGroups();
@@ -163,7 +168,6 @@
 
         }
 
-        $scope.$apply();
       };
 
       $scope.footerCollapse = function() {
@@ -261,7 +265,7 @@
 
       $scope.onHold = function(evt) {
 
-        $state.go( $scope.VIEW );
+
 
         $scope.listAllLayers();
         $scope.listAllInternalLayerGroups();
@@ -377,6 +381,8 @@
         $scope.map.on('click', function(evt) {
 
           //$scope.minimizeFooter();
+
+          $state.go( $scope.INDEX );
 
           $scope.currentWMS = {};
 
@@ -542,6 +548,7 @@
             }
 
             if ($scope.isNewMarker) {
+              $state.go( $scope.PREVIEW );
               $scope.isNewMarker = false;
             }
           }
@@ -1083,11 +1090,6 @@
 
       });
 
-      $scope.onDragStart = function() {
-        $scope.listAllLayers();
-        $scope.listAllInternalLayerGroups();
-        $scope.getUserAuthenticated();
-      };
 
     });
 
