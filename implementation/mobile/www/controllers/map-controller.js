@@ -108,7 +108,9 @@
         switch ($state.current.name) {
           case $scope.MAP_INDEX:
           {
-            //$('canvas').css('display', 'block');
+            $timeout(function(){
+              $scope.map.updateSize();
+            });
             break;
           }
         }
@@ -124,6 +126,7 @@
         $scope.listAllLayers();
         $scope.listAllInternalLayerGroups();
         $scope.getUserAuthenticated();
+
       };
 
       $scope.viewWMS = function() {
@@ -535,11 +538,6 @@
 
                         if (!exist) {
 
-                          /*attribute.attribute = attribute;
-                           attribute.marker = $scope.currentEntity;
-
-                           attribute.id = null;*/
-
                           $scope.currentEntity.markerAttribute.push({
                             attribute: attribute,
                             marker: $scope.currentEntity,
@@ -550,8 +548,6 @@
                         }
 
                       });
-
-                      //localStorage.setItem('currentEntity', angular.toJson($scope.currentEntity));
 
                       $scope.$apply();
                     },
@@ -784,9 +780,7 @@
 
           layer.visible = false;
 
-          /*$cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function(success) {
-          }, function(error) {
-          });*/
+          $cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function(success){}, function(error){});
 
         } else {
 
@@ -903,9 +897,7 @@
 
                     $rootScope.$broadcast('loading:hide');
 
-                    /*$cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function(success) {
-                    }, function(error) {
-                    });*/
+                    $cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function(success) {}, function(error) {});
 
                   }
 
@@ -1128,7 +1120,7 @@
 
                 isValid = false;
 
-                //$cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
+                $cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
               }
 
               if (isValid && attribute.type == 'PHOTO_ALBUM' && attribute.photoAlbum != null) {
@@ -1170,9 +1162,7 @@
                   $state.go( $scope.MAP_INDEX );
                   $rootScope.$broadcast('loading:hide');
 
-                  /*$cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {
-                  }, function(error) {
-                  });*/
+                  $cordovaToast.showShortBottom($translate('map.Mark-updated-succesfully')).then(function(success) {}, function(error) {});
 
                   $scope.$apply();
                 },
@@ -1200,7 +1190,7 @@
 
                 isValid = false;
 
-                //$cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
+                $cordovaToast.showShortBottom($translate('photos.Insert-Photos-in-attribute', attribute.name)).then(function(success) {}, function(error) {});
               }
 
             });
@@ -1264,18 +1254,7 @@
               markerService.insertMarker($scope.currentEntity, {
                 callback: function(result) {
 
-                  var iconPath = $rootScope.$API_ENDPOINT + '/' + $scope.internalLayer.icon;
-
-                  var iconStyle = new ol.style.Style({
-                    image: new ol.style.Icon(({
-                      anchor: [0.5, 1],
-                      anchorXUnits: 'fraction',
-                      anchorYUnits: 'fraction',
-                      src: iconPath
-                    }))
-                  });
-
-                  /*if($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
+                  if($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
 
                     $scope.internalLayer.visible = false;
                     $scope.toggleLayer($scope.internalLayer);
@@ -1287,17 +1266,15 @@
                     $scope.internalLayer.visible = true;
                     $scope.toggleLayer($scope.internalLayer);
 
-                  }*/
+                  }
 
                   $rootScope.$broadcast('loading:hide');
-                  //$scope.clearNewMarker();
+                  $scope.clearNewMarker();
 
-                  //$state.go( $scope.MAP_INDEX );
-                  $ionicHistory.goBack();
-
+                  $state.go( $scope.MAP_INDEX );
                   $scope.$apply();
 
-                  //$cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
+                  $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function(success) {}, function(error) {});
 
                 },
                 errorHandler: function(message, exception) {
