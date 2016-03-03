@@ -388,7 +388,8 @@
 
           //$scope.minimizeFooter();
 
-          $state.go( $scope.INDEX );
+          if($state.current.name != $scope.INDEX)
+            $state.go( $scope.INDEX );
 
           $scope.currentWMS = {};
 
@@ -561,36 +562,6 @@
 
         });
       });
-
-
-      $ionicGesture.on('tap', function(e) {
-        $scope.$apply(function() {
-          //$log.debug('tap');
-        });
-
-      }, $document);
-
-      $scope.onDragStart = function(state) {
-        $scope.isDragStart = true;
-        $scope.dragPan = false;
-        //$scope.listAllInternalLayerGroups();
-      };
-
-      $scope.onDragEnd = function(state) {
-
-        $scope.isDrawerOpen = state == undefined ? $scope.isDrawerOpen : state;
-        $scope.isDragStart = false;
-        $scope.dragPan = state;
-
-        if(state) {
-          $scope.$state.go( $scope.DRAWER );
-        } else {
-          if(!angular.equals($scope.currentCreatingInternalLayer, {}))
-            $scope.$state.go( $scope.PREVIEW );
-          else
-            $scope.$state.go( $scope.INDEX );
-        }
-      };
 
       $scope.toggleDrawer = function() {
         $rootScope.$broadcast('toggleDrawer');

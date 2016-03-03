@@ -6,7 +6,7 @@
       <h1 class="title">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</h1>
       <ion-nav-buttons side="right">
         <button class="button button-icon icon ion-images" ng-if="selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM'" ng-click="getPhotosByAttribute(selectedPhotoAlbumAttribute)"></button>
-        <button class="button button-icon icon ion-android-done" ng-click="saveMarker(markerForm)" ng-if="!isDisabled"></button>
+        <button class="button button-icon icon ion-android-done" form="marker" type="submit" ng-if="!isDisabled"></button>
       </ion-nav-buttons>
     </ion-header-bar>
   </ion-nav-bar>
@@ -21,7 +21,7 @@
         <img ng-src="{{ setImagePath(imgResult) }}" width="100%" style="max-height: 200px"
              ng-click="getPhotosByAttribute(selectedPhotoAlbumAttribute)">
       </div>
-      <form name="markerForm" novalidate>
+      <form id="marker" name="markerForm" novalidate ng-submit="saveMarker(markerForm)">
         <fieldset ng-disabled="isDisabled">
           <div ng-repeat="attribute in currentEntity.markerAttribute track by $index">
             <!--text or number-->
