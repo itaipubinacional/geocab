@@ -26,19 +26,18 @@
   <ion-popover-view>
     <ion-content>
       <ion-list class="options-menu-button">
-        <ion-item>
-          <button ng-disabled="currentEntity.status == 'ACCEPTED' || !currentEntity.id" class="button button-icon icon ion-thumbsup" ng-click="approveMarker()"> Aprovar</button>
+        <ion-item ng-click="approveMarker()">
+          <button ng-disabled="currentEntity.status == 'ACCEPTED' || !currentEntity.id" class="button button-icon icon ion-thumbsup"> Aprovar</button>
         </ion-item>
-        <ion-item >
-          <button ng-disabled="currentEntity.status == 'REFUSED' || !currentEntity.id" class="button button-icon icon ion-thumbsdown" ng-click="refuseMarker()"> Recusar</button>
+        <ion-item ng-click="refuseMarker()">
+          <button ng-disabled="currentEntity.status == 'REFUSED' || !currentEntity.id" class="button button-icon icon ion-thumbsdown"> Recusar</button>
         </ion-item>
-        <ion-item>
-          <button ng-disabled="currentEntity.status == 'CANCELED' || !currentEntity.id" class="button button-icon icon ion-android-close" ng-click="cancelMarker()"> Cancelar</button>
+        <ion-item ng-click="cancelMarker()">
+          <button ng-disabled="currentEntity.status == 'CANCELED' || !currentEntity.id" class="button button-icon icon ion-android-close"> Cancelar</button>
         </ion-item>
-        <ion-item>
+        <ion-item ng-click="removeMarker()">
           <button class="button button-icon icon ion-android-delete" 
-                  ng-disabled="!currentEntity.id || !(currentEntity.user.id == userMe.id && currentEntity.status != 'ACCEPTED')" 
-                  ng-click="removeMarker()"> Excluir</button>
+                  ng-disabled="!currentEntity.id || !(currentEntity.user.id == userMe.id && currentEntity.status != 'ACCEPTED')" > Excluir</button>
         </ion-item>
        </ion-list>
     </ion-content>
