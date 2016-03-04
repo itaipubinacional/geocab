@@ -311,11 +311,9 @@
         $scope.clearShadowFeature($scope.currentFeature);
         $scope.currentFeature = '';
 
-        $scope.pullUpHeight = 100;
         angular.element(document.getElementsByTagName('ion-pull-up-handle')).height($scope.pullUpHeight + 'px');
 
         angular.element(document.getElementsByTagName('ion-pull-up-handle')).css('top', '-' + $scope.pullUpHeight + 'px');
-
 
         $scope.clearNewMarker();
 
@@ -325,7 +323,7 @@
           $scope.currentEntity = new Marker();
         }
 
-        var coordinate = $scope.map.getCoordinateFromPixel([evt.gesture.center.pageX, evt.gesture.center.pageY]);
+        var coordinate = $scope.map.getCoordinateFromPixel([evt.gesture.center.pageX, evt.gesture.center.pageY - 44]);
         var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
 
         $scope.longitude = transformed_coordinate[0];
@@ -414,7 +412,7 @@
          */
         $scope.map.on('click', function (evt) {
 
-          //$scope.minimizeFooter();
+          $log.debug('openlayers.map.singleclick');
 
           if ($state.current.name != $scope.MAP_INDEX)
             $state.go($scope.MAP_INDEX);
@@ -428,9 +426,6 @@
             $scope.currentFeature = '';
             $scope.$apply();
           }
-
-          //$log.debug('openlayers.map.singleclick');
-          //$log.debug($scope.isNewMarker);
 
           if ($scope.isDrawerOpen) {
 
@@ -892,9 +887,7 @@
 
                         $scope.map.getView().setCenter(iconFeature.getGeometry().getCoordinates());
 
-
                         $scope.lastCurrentEntity = {};
-                        $scope.currentEntity = {};
 
                       }
 
@@ -914,6 +907,8 @@
                       markers.push(vectorLayer);
 
                     });
+
+                    $scope.currentEntity = {};
 
                     var group = new ol.layer.Group({
                       layers: markers,
@@ -1064,7 +1059,7 @@
         //Realiza o logout do google plus
         window.plugins.googleplus.disconnect(
           function(msg) {
-            console.log(msg);
+            $log.debug(msg);
           }
         );
       };

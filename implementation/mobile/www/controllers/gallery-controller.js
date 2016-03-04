@@ -7,10 +7,8 @@
    * @param $state
    */
   angular.module('application')
-    .controller('GalleryController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
-      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker,
-      $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
+    .controller('GalleryController', function($scope, $translate, $state, $timeout, $log, $cordovaCamera, $ionicLoading,
+                                              $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
 
       $scope.hasSelectedPhotos = false;
 
@@ -161,7 +159,7 @@
         // Execute action
       });
       $scope.$on('modal.shown', function() {
-        console.log('Modal is shown!');
+        $log.debug('Modal is shown!');
       });
 
       // Call this functions if you need to manually control the slides

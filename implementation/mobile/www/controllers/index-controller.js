@@ -7,14 +7,7 @@
    * @param $state
    */
   angular.module('application')
-    .controller('IndexController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
-      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation, $ionicPopover,
-      $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $ionicModal) {
- /**
-     /*-------------------------------------------------------------------
-     *              ATTRIBUTES
-     *-------------------------------------------------------------------*/
+    .controller('IndexController', function($scope, $translate, $state, $ionicPopup, $ionicPopover, $filter, $log, $cordovaToast, $ionicModal) {
 
       // Configura o popover
       $ionicPopover.fromTemplateUrl('marker-view-options-menu.html', {
@@ -214,7 +207,7 @@
         });
 
         confirmPopup.then(function(res) {
-          console.log(res);
+          $log.debug(res);
           if (res) {
             $scope.acceptMarkerModeration($scope.currentEntity.id);
           }
@@ -232,7 +225,7 @@
         });
 
         confirmPopup.then(function(res) {
-          console.log(res);
+          $log.debug(res);
           if (res) {
             $scope.removeMarkerModeration($scope.currentEntity.id);
           }
