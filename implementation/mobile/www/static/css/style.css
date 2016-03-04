@@ -51,7 +51,7 @@ fieldset{margin: 0px; padding: 0px; border: none}
 }
 
 .login-content{
-  padding: 50px;
+  padding: 30px 50px 50px 50px ;
 }
 
 .login-image-footer {
@@ -95,6 +95,14 @@ fieldset{margin: 0px; padding: 0px; border: none}
 }
 
 .intro-detail > p {
+  font-size: 4.0vw;
+  margin: 0;
+}
+.intro-detail > p:first-child {
+  margin-top: 10px;
+}
+
+.intro-detail  {
   font-size: 18px;
 }
 
