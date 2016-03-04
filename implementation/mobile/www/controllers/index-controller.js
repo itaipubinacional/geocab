@@ -22,8 +22,8 @@
       }).then(function(popover) {
           $scope.popover = popover;
       });
-      
-      $scope.openPopover = function($event) {        
+
+      $scope.openPopover = function($event) {
         $scope.popover.show($event);
       };
 
@@ -97,13 +97,15 @@
 
             $scope.currentEntity.status = result.marker.status;
 
+            $state.go( $scope.MAP_INDEX );
+
+            $scope.$apply();
+
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-approved')).then(function(success) {
               // success
             }, function(error) {
               // error
             });
-
-            $scope.$apply();
           },
           errorHandler: function(message, exception) {
             $log.debug(message);
@@ -126,14 +128,15 @@
 
             $scope.verifyStatus();
 
+            $state.go( $scope.MAP_INDEX );
+
+            $scope.$apply();
+
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-refused')).then(function(success) {
               // success
             }, function(error) {
               // error
             });
-
-
-            $scope.$apply();
           },
           errorHandler: function(message, exception) {
             $log.debug(message);
@@ -151,13 +154,16 @@
 
             $scope.currentEntity.status = result.status;
 
+            $state.go( $scope.MAP_INDEX );
+
+            $scope.$apply();
+
             $cordovaToast.showShortBottom($translate('admin.marker-moderation.Marker-successfully-canceled')).then(function(success) {
               // success
             }, function(error) {
               // error
             });
 
-            $scope.$apply();
           },
           errorHandler: function(message, exception) {
             $log.debug(message);
@@ -177,15 +183,15 @@
             layer.visible = true;
             $scope.toggleLayer(layer);
 
-            $scope.minimizeFooter();
             $scope.clearNewMarker();
+
+            $state.go( $scope.MAP_INDEX );
+
+            $scope.apply();
 
             $cordovaToast.showShortBottom($translate("map.Mark-was-successfully-deleted")).then(function(success) {
             }, function(error) {
             });
-
-            $scope.minimizeFooter();
-            $scope.apply();
 
           },
           errorHandler: function(message, exception) {
