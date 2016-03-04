@@ -20,21 +20,20 @@
       </label>
     </ion-header-bar>
     <ion-content class="has-header has-footer" scroll="true">
-      <div class="item item-divider">
+      <div class="item item-divider" ng-if="(allLayers | filter:{title:search} | filter:{name:search} | filter:{enabled: true} | filter:{startVisible: true}).length">
         Mapeamento compartilhado
       </div>
-      <ion-list ng-repeat="layer in allLayers | filter:{title:search} | filter:{name:search} | orderBy:title" class="layers" ng-if="layer.enabled">
+      <ion-list ng-repeat="layer in allLayers | filter:{title:search} | filter:{name:search} | filter:{startVisible: true}" class="layers" ng-if="layer.enabled">
         <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">
           <i class="ion-edit"></i>
           {{ layer.title ? layer.title : layer.name }} {{ layer.legend }}
           <img class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">
-          <!-- se a camada é externa pega a legenda -->
         </ion-checkbox>
       </ion-list>
-      <div class="item item-divider">
+      <div class="item item-divider" ng-if="(allLayers | filter:{title:search} | filter:{name:search} | filter:{enabled: false} | filter:{startVisible: true}).length">
         Visualização
       </div>
-      <ion-list ng-repeat="layer in allLayers | filter:{title:search} | filter:{name:search}" class="layers" ng-if="!layer.enabled">
+      <ion-list ng-repeat="layer in allLayers | filter:{title:search} | filter:{name:search} | filter:{startVisible: true} | orderBy:title | orderBy:name" class="layers" ng-if="!layer.enabled">
         <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">
           {{ layer.title ? layer.title : layer.name }}
           <img ng-if="layer.legend" class="item-checkbox-img" ng-src="{{ layer.legend }}">
