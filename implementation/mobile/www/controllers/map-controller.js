@@ -511,8 +511,9 @@
 
                   angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute, index) {
 
-                    markerAttribute.name = markerAttribute.attribute.name;
-                    markerAttribute.type = markerAttribute.attribute.type;
+                    markerAttribute.name     = markerAttribute.attribute.name;
+                    markerAttribute.type     = markerAttribute.attribute.type;
+                    markerAttribute.required = markerAttribute.attribute.required;
 
                     if (markerAttribute.attribute.type == "NUMBER") {
                       markerAttribute.value = parseInt(markerAttribute.value);
@@ -885,6 +886,8 @@
                         var shadowStyle = $scope.setShadowMarker(shadowType);
 
                         icons.push(shadowStyle);
+
+                        $scope.lastCurrentEntity = {};
 
                       }
 
