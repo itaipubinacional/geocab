@@ -97,13 +97,6 @@
         marker: null
       };
 
-      $scope.goBack = function() {
-        console.log('Going back');
-        $ionicViewService.getBackView().go();
-        $scope.backView = $ionicHistory.backView();
-        $scope.backView.go();
-      };
-
       $scope.removeLastPhoto = function(){
 
         var hasPhoto = false;
@@ -112,9 +105,9 @@
 
           if(attribute.type == 'PHOTO_ALBUM' && attribute.photoAlbum != undefined) {
 
-            var hasPhoto = true;
-
             angular.forEach(attribute.photoAlbum.photos, function(photo){
+
+              hasPhoto = true;
 
               if(photo.deleted && photo.id == $scope.lastPhoto.id) {
                 $scope.imgResult = '';
