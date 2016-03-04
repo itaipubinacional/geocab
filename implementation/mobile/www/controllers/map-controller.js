@@ -890,6 +890,8 @@
 
                         icons.push(shadowStyle);
 
+                        $scope.map.getView().setCenter(iconFeature.getGeometry().getCoordinates());
+
                         $scope.lastCurrentEntity = {};
 
                       }
@@ -1176,6 +1178,8 @@
               markerService.updateMarker($scope.currentEntity, {
 
                 callback: function(result) {
+
+                  $scope.lastCurrentEntity = result;
 
                   $scope.internalLayer.visible = false;
                   $scope.toggleLayer($scope.internalLayer);
