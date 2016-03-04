@@ -156,7 +156,7 @@
 
 
     ngFB.init({
-      appId: '801316929973059'
+      appId: '1563968713815015'
     });
 
     $rootScope.$on('loading:show', function() {
