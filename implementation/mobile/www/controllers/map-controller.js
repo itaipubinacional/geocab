@@ -44,8 +44,6 @@
       $scope.currentFeature = '';
       $scope.direction = '';
       $scope.isNewMarker = false;
-      $scope.isDragStart = false;
-      $scope.isDrawerOpen = false;
       $scope.internalLayer = {};
       $scope.allInternalLayerGroups = [];
       $scope.allLayers = [];
@@ -55,8 +53,7 @@
       $scope.layers = [];
       $scope.lastPhoto = {};
 
-      $scope.showMarkerDetails = false;
-      $scope.showWMSDetails = false;
+      $scope.lastCurrentEntity = {};
 
       $scope.currentEntity = {};
       $scope.isNewMarker = false;
@@ -112,11 +109,8 @@
               if(photo.deleted && photo.id == $scope.lastPhoto.id) {
                 $scope.imgResult = '';
               }
-
             });
-
           }
-
         });
 
         if(!hasPhoto) {
@@ -170,11 +164,6 @@
         }
       };
 
-      $rootScope.closePullUp = function(){
-        $scope.minimizeFooter();
-        $scope.clearNewMarker();
-      };
-
       $scope.getMarkerStatus = function(status) {
         return $translate('map.' + status.charAt(0).toUpperCase() + status.toLowerCase().slice(1));
       };
@@ -184,18 +173,6 @@
         $scope.currentCreatingInternalLayer = {};
         $scope.currentEntity = {};
         $scope.currentFeature = '';
-      };
-
-      $scope.footerWMSExpand = function() {
-        $scope.showWMSDetails = true;
-      };
-
-      $scope.expandFooter = function() {
-        $rootScope.$broadcast('expandFooter');
-      };
-
-      $scope.minimizeFooter = function() {
-        $rootScope.$broadcast('minimizeFooter');
       };
 
       $scope.viewMarker = function() {
@@ -890,12 +867,28 @@
                     var markers = [];
                     angular.forEach(result, function(marker, index) {
 
+                      var icons = [];
+
+                      icons.push(iconStyle);
+
                       var iconFeature = new ol.Feature({
                         geometry: new ol.format.WKT().readGeometry(marker.location.coordinateString),
                         marker: marker
                       });
 
-                      iconFeature.setStyle(iconStyle);
+                      if($scope.lastCurrentEntity.id == marker.id) {
+
+                        var shadowType = 'default';
+                        if (!result[0].layer.icon.match(/default/))
+                          shadowType = 'collection';
+
+                        var shadowStyle = $scope.setShadowMarker(shadowType);
+
+                        icons.push(shadowStyle);
+
+                      }
+
+                      iconFeature.setStyle(icons);
 
                       var vectorSource = new ol.source.Vector({
                         features: [iconFeature]
@@ -1282,6 +1275,8 @@
 
               markerService.insertMarker($scope.currentEntity, {
                 callback: function(result) {
+
+                  $scope.lastCurrentEntity = result;
 
                   if($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
 
