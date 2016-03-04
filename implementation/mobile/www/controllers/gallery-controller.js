@@ -29,7 +29,7 @@
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
           $ionicLoading.show({
-            template: 'Carregando foto',
+            template: 'Salvando foto',
             duration: 2000
           });
 
@@ -71,7 +71,7 @@
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
           $ionicLoading.show({
-            template: 'Carregando foto',
+            template: 'Salvando foto',
             duration: 2000
           });
 

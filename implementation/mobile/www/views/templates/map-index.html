@@ -22,19 +22,23 @@
     <ion-content>
       <ion-list class="options-menu-button">
         <ion-item >
-          <button class="button button-icon icon ion-images" ng-if="(selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM')" ng-click="closePopover();getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);"> Fotos</button>
+          <button class="button button-icon icon ion-images" ng-if="(selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM')" ng-click="closePopover();getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);"> 
+          {{'map.Photos' | translate}} </button>
         </ion-item>
         <ion-item>
-          <button ng-click="approveMarker()" ng-disabled="currentEntity.status == 'ACCEPTED' || !currentEntity.id || userMe.role != 'ADMINISTRATOR'" class="button button-icon icon ion-thumbsup"> Aprovar</button>
+          <button ng-click="approveMarker()" ng-disabled="currentEntity.status == 'ACCEPTED' || !currentEntity.id || userMe.role != 'ADMINISTRATOR'" class="button button-icon icon ion-thumbsup"> 
+          {{'map.Approve' | translate}} </button>
         </ion-item>
         <ion-item >
-          <button ng-click="refuseMarker()" ng-disabled="currentEntity.status == 'REFUSED' || !currentEntity.id || userMe.role != 'ADMINISTRATOR'" class="button button-icon icon ion-thumbsdown"> Recusar</button>
+          <button ng-click="refuseMarker()" ng-disabled="currentEntity.status == 'REFUSED' || !currentEntity.id || userMe.role != 'ADMINISTRATOR'" class="button button-icon icon ion-thumbsdown"> 
+          {{'map.Refuse' | translate}} </button>
         </ion-item>
         <ion-item>
-          <button ng-click="cancelMarker()" ng-disabled="currentEntity.status == 'CANCELED' || !currentEntity.id || userMe.role != 'ADMINISTRATOR'" class="button button-icon icon ion-android-close"> Cancelar</button>
+          <button ng-click="cancelMarker()" ng-disabled="currentEntity.status == 'CANCELED' || !currentEntity.id || userMe.role != 'ADMINISTRATOR'" class="button button-icon icon ion-android-close"> {{'map.Cancel' | translate}} </button>
         </ion-item>
         <ion-item >
-          <button ng-click="removeMarker()" ng-disabled="!currentEntity.id || !(currentEntity.user.id == userMe.id && currentEntity.status != 'ACCEPTED')" class="button button-icon icon ion-android-delete"> Excluir</button>
+          <button ng-click="removeMarker()" ng-disabled="!currentEntity.id || !(currentEntity.user.id == userMe.id && currentEntity.status != 'ACCEPTED')" class="button button-icon icon ion-android-delete"> 
+          {{'map.Exclude' | translate}} </button>
         </ion-item>
        </ion-list>
     </ion-content>
