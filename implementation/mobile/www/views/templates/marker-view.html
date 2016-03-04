@@ -16,7 +16,7 @@
     <h6 class="stable" style="margin: 0" ng-if="currentEntity.id">Status <b>{{ getMarkerStatus(currentEntity.status) }}</b></h6>
   </ion-header-bar>
 
-  <ion-content>
+  <ion-content scroll="true">
     <ion-list>
       <div class="row">
         <h6 style="text-align: center" ng-if="currentEntity.id">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>

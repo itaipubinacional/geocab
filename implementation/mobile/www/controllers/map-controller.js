@@ -171,7 +171,11 @@
       $scope.clearNewMarker = function() {
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
         $scope.currentCreatingInternalLayer = {};
-        $scope.currentEntity = {};
+
+        if(!angular.isDefined($scope.currentEntity.layer)) {
+          $scope.currentEntity = {};
+        }
+
         $scope.currentFeature = '';
       };
 
@@ -296,12 +300,9 @@
 
       $scope.onHold = function(evt) {
 
-
-
         $scope.listAllLayers();
         $scope.listAllInternalLayerGroups();
         $scope.getUserAuthenticated();
-
 
         $scope.currentWMS = {};
 
@@ -310,17 +311,19 @@
         $scope.clearShadowFeature($scope.currentFeature);
         $scope.currentFeature = '';
 
-        $scope.currentEntity = {};
         $scope.pullUpHeight = 100;
         angular.element(document.getElementsByTagName('ion-pull-up-handle')).height($scope.pullUpHeight + 'px');
 
         angular.element(document.getElementsByTagName('ion-pull-up-handle')).css('top', '-' + $scope.pullUpHeight + 'px');
 
+
         $scope.clearNewMarker();
 
         $scope.isNewMarker = true;
 
-        $scope.currentEntity = new Marker();
+        if(!angular.isDefined($scope.currentEntity.layer)) {
+          $scope.currentEntity = new Marker();
+        }
 
         var coordinate = $scope.map.getCoordinateFromPixel([evt.gesture.center.pageX, evt.gesture.center.pageY]);
         var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
