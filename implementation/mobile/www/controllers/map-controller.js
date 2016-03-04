@@ -892,7 +892,9 @@
 
                         $scope.map.getView().setCenter(iconFeature.getGeometry().getCoordinates());
 
+
                         $scope.lastCurrentEntity = {};
+                        $scope.currentEntity = {};
 
                       }
 
