@@ -800,17 +800,15 @@
 
               if (prop.id == layer.id && !layer.visible) {
                 $scope.map.removeLayer(group);
-                //layerExits = true;
                 //group.setVisible(layer.visible);
               }
             }
 
             if (group instanceof ol.layer.Tile) {
-
-              if (group.getProperties().layer && group.getProperties().layer.id == layer.id && !layer.visible) {
+              var prop = group.getProperties();
+              if (prop.layer && prop.layer.id == layer.id && !layer.visible) {
+                group.setVisible(layer.visible);
                 $scope.map.removeLayer(group);
-                //layerExits = true;
-                //group.setVisible(layer.visible);
               }
             }
           });
@@ -878,6 +876,8 @@
                       });
 
                       if($scope.lastCurrentEntity.id == marker.id) {
+
+                        $scope.currentFeature = iconFeature;
 
                         var shadowType = 'default';
                         if (!result[0].layer.icon.match(/default/))
