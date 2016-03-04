@@ -59,13 +59,6 @@
       templateUrl: './views/home/intro.html'
     });
 
-    // //INTRO
-    // $stateProvider.state('intro', {
-    //   url: "/intro",
-    //   controller: 'IntroController',
-    //   templateUrl: './views/home/intro.html'
-    // });
-
     //MAP
     $stateProvider.state('map', {
       abstract: true,
@@ -106,7 +99,7 @@
       }
     });
 
-    
+
 
   }).factory('Camera', ['$q', function($q) {
 
@@ -147,13 +140,14 @@
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
 
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        cordova.plugins.Keyboard.disableScroll(false);
+        cordova.plugins.Keyboard.disableScroll(true);
       }
-      // $cordovaStatusbar.overlaysWebView(true);
-      // $cordovaStatusBar.style(2); //Black, transulcent
+
+      if (window.StatusBar) {
+        // org.apache.cordova.statusbar required
+        StatusBar.styleDefault();
+      }
     });
-
-
 
     ngFB.init({
       appId: '1563968713815015'
@@ -168,20 +162,6 @@
     $rootScope.$on('loading:hide', function() {
       $ionicLoading.hide()
     });
-
-    //
-
-    // $cordovaStatusBar.style(1) //Light
-    // $cordovaStatusBar.style(2) //Black, transulcent
-    // $cordovaStatusBar.style(3) //Black, opaque
-
-    // setTimeout(function() {
-    //  $cordovaStatusbar.isVisible() ? $cordovaStatusbar.hide() : $cordovaStatusbar.show();
-    // $cordovaStatusbar.overlaysWebView(false);
-    // }, 300);
-
-    // make it fullscreen on IOS so it has the correct header size.
-    //ionic.Platform.fullScreen();
 
   });
 

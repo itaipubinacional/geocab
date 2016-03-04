@@ -1,6 +1,5 @@
 .bar.bar-positive{background-color: #1e88e5;}
 .footer-shadow{box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
-.scroll{height: 100%;}
 #map {
   width: 100%;
   height: 100%;
@@ -11,10 +10,6 @@
 }
 
 .item-input{padding-left: 10px}
-
-.scroll {
-  height: 100%;
-}
 
 fieldset{margin: 0px; padding: 0px; border: none}
 
@@ -28,6 +23,7 @@ fieldset{margin: 0px; padding: 0px; border: none}
 .button-icon.icon.gps-button:before{font-size: 25px}
 .add-button{color: #fff;z-index: 2; background-color: #1e88e5; position: absolute; bottom:15px; right:15px; padding: 0px 12px;box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
 .confirm-marker-button{color: #fff;z-index: 10; background-color: #f44336; position: absolute; bottom:67px; right:15px; padding: 0px 12px;box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
+.button-icon.button.active.confirm-marker-button, .button-icon.button.activated.confirm-marker-button{opacity: 1; color: #fff;z-index: 10; background-color: #f44336; box-shadow: 0px 3px 5px rgba(0,0,0,0.5);}
 
 .dynamic-text {
   text-overflow: ellipsis;
