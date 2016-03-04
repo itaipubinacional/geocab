@@ -10,6 +10,8 @@
   background: transparent url('./../images/loader-transparent.gif') no-repeat center center;
 }
 
+.item-input{padding-left: 10px}
+
 .scroll {
   height: 100%;
 }
