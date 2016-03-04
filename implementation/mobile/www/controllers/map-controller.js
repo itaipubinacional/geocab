@@ -172,7 +172,7 @@
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
         $scope.currentCreatingInternalLayer = {};
 
-        if(!angular.isDefined($scope.currentEntity.layer)) {
+        if(!angular.isDefined($scope.currentEntity.layer) || $scope.currentEntity.id) {
           $scope.currentEntity = {};
         }
 
