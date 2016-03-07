@@ -1655,6 +1655,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
+  google.maps.event.addDomListener(window, "resize", function() {
+    var center = $scope.mapGoogle.getCenter();
+    google.maps.event.trigger($scope.mapGoogle, "resize");
+    $scope.mapGoogle.setCenter(center);
+  });
+
   /**
    * Method that initializes the Open Street Map map and its settings
    */
