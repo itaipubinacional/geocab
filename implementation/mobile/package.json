@@ -24,7 +24,8 @@
     "cordova-plugin-googleplus",
     "org.apache.cordova.statusbar",
     "cordova-plugin-camera",
-    "org.apache.cordova.splashscreen"
+    "org.apache.cordova.splashscreen",
+    "cordova-plugin-network-information"
   ],
   "cordovaPlatforms": [
     "ios",
