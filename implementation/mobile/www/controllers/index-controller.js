@@ -54,7 +54,7 @@
 
       $scope.showDatePicker = function(attribute) {
 
-        cordova.plugins.Keyboard.open();
+        cordova.plugins.Keyboard.close();
 
         $cordovaDatePicker.show(options).then(function(date) {
           var day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
