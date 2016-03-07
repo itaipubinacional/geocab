@@ -212,7 +212,7 @@ angular.module('application')
 
     //Handler de BACK
     $ionicPlatform.registerBackButtonAction(function(e){
-      if ($state.$current.name == 'map.index') {
+      if ($state.$current.name == 'map.index' || $state.$current.name == 'authentication.login') {
         ionic.Platform.exitApp();
       } else {
         $ionicHistory.goBack();

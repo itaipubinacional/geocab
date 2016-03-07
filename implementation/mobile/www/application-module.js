@@ -7,7 +7,7 @@
   /**
    *
    */
-  module.constant('$API_ENDPOINT', 'http://chi554a.itaipu/geocab');
+  module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
 
 
   /**
