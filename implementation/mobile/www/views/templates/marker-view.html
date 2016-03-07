@@ -51,14 +51,21 @@
           <!--boolean-->
           <label
             ng-class="{'has-error': (markerForm.input{{$index}}.$invalid && markerForm.input{{$index}}.$touched) || (isFormSubmit && attribute.required && markerForm.input{{$index}}.$invalid)}"
-            class="item item-input" ng-if="attribute.type == 'BOOLEAN'">
+            class="item item-input item-select" ng-if="attribute.type == 'BOOLEAN'">
             <span class="input-label">{{ attribute.name }}</span>
-            <ion-radio ng-model="attribute.value" name="input{{$index}}" ng-value="'Yes'"
+
+            <select ng-model="attribute.value" name="input{{$index}}" ng-required="attribute.required" ng-init="attribute.value=setSelectValue(attribute)">
+              <option value="" ng-value="" ng-if="!attribute.required">Selecione</option>
+              <option value="Yes" ng-value="'Yes'">{{ 'map.Yes' | translate }}</option>
+              <option value="No" ng-value="'No'">{{ 'map.No' | translate }}</option>
+            </select>
+
+            <!--<ion-radio ng-model="attribute.value" name="input{{$index}}" ng-value="'Yes'"
                        ng-required="!attribute.value">{{ 'map.Yes' | translate }}
             </ion-radio>
             <ion-radio ng-model="attribute.value" name="input{{$index}}" ng-value="'No'"
                        ng-required="!attribute.value">{{ 'map.No' | translate }}
-            </ion-radio>
+            </ion-radio>-->
           </label>
           <!--date-->
           <label

@@ -1263,8 +1263,14 @@
         }
       };
 
-
-
+      $scope.setSelectValue = function(attribute) {
+        if(attribute.value != undefined)
+          return attribute.value;
+        else if(attribute.required)
+          return 'Yes';
+        else
+          return '';
+      };
 
     });
 
