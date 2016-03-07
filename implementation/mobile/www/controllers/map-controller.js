@@ -8,7 +8,7 @@
    */
   angular.module('application')
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
-      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaDatePicker, $cordovaGeolocation,
+      $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaGeolocation,
       $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
       $cordovaToast, $http) {
 
@@ -858,6 +858,10 @@
                 errorHandler: function(message, exception) {
                   $log.debug(message);
                   $rootScope.$broadcast('loading:hide');
+
+                  if(message.match(/Incomplete reply from server/ig))
+                    $rootScope.$broadcast('$cordovaNetwork:offline');
+
                   $scope.$apply();
                 }
               });
@@ -883,6 +887,10 @@
             errorHandler: function(message, exception) {
               $log.debug(message);
               $rootScope.$broadcast('loading:hide');
+
+              if(message.match(/Incomplete reply from server/ig))
+                $rootScope.$broadcast('$cordovaNetwork:offline');
+
               $scope.$apply();
             }
           });
@@ -954,6 +962,11 @@
             },
             errorHandler: function(message, exception) {
               $log.debug(message);
+
+              if(message.match(/Incomplete reply from server/ig))
+                $rootScope.$broadcast('$cordovaNetwork:offline');
+
+
               $scope.$apply();
             }
           });
@@ -1032,26 +1045,6 @@
       };
 
       /* INDEX */
-
-      var options = {
-        date: new Date(),
-        mode: 'date', // or 'time'
-        minDate: new Date() - 10000,
-        allowOldDates: true,
-        allowFutureDates: false,
-        doneButtonLabel: 'DONE',
-        doneButtonColor: '#F2F3F4',
-        cancelButtonLabel: 'CANCEL',
-        cancelButtonColor: '#000000'
-      };
-
-      $scope.showDatePicker = function(attribute) {
-        $cordovaDatePicker.show(options).then(function(date) {
-          var month = date.getMonth() > 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
-          attribute.value = date.getDate() + '/' + month + '/' + date.getFullYear();
-          //alert(date);
-        });
-      };
 
       $scope.saveMarker = function(form) {
 
