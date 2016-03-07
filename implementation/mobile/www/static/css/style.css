@@ -5,6 +5,8 @@
   height: 100%;
 }
 
+.scroll{height: 100%};
+
 #map.loading{
   background: transparent url('./../images/loader-transparent.gif') no-repeat center center;
 }
