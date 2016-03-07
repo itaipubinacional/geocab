@@ -1254,10 +1254,7 @@
       $scope.removeAllSelectedLayers = function() {
 
         angular.forEach($scope.allInternalLayerGroups, function(group) {
-          if (group.visible) {
-            group.visible = false;
-            $scope.toggleLayer(group);
-          }
+          $scope.toggleLayer(group);
         });
 
       };
