@@ -5,10 +5,17 @@
   var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'ngCordova', 'ngOpenFB', 'eits.translate']);
 
   /**
-   *
+   * Desenvolvimento
    */
   module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
-
+  /**
+   * Homologação
+   */
+  // module.constant('$API_ENDPOINT', 'http://chi554a.itaipu/geocab');
+  /**
+   * Produção
+   */
+  // module.constant('$API_ENDPOINT', 'http://geocab.itaipu.gov.br');
 
   /**
    *
