@@ -16,12 +16,13 @@ $(document).ready(function(){
         disabledZone.style.width = "100%";
         disabledZone.style.height = "100%";
         document.body.appendChild(disabledZone);
-        var messageZone = document.createElement('div');
+        var messageZone = document.createElement('img');
         messageZone.setAttribute('id', 'messageZone');
+        messageZone.setAttribute('src', './static/images/ajax-loader-transparent.gif');
         messageZone.style.position = "absolute";
-        messageZone.style.top = "0px";
-        messageZone.style.right = "0px";
-        messageZone.style.background = "red";
+        messageZone.style.top = "50%";
+        messageZone.style.right = "50%";
+//        messageZone.style.background = "red";
         messageZone.style.color = "white";
         messageZone.style.fontFamily = "Arial,Helvetica,sans-serif";
         messageZone.style.padding = "4px";

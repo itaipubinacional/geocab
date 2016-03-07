@@ -605,7 +605,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         result += coordinate < 0 ? 'S' : 'N';
 
       if(!latitude)
-        result += coordinate < 0 ? 'W' : 'O';
+        result += coordinate < 0 ? 'W' : 'E';
 
       return result;
     };
@@ -623,7 +623,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         if ($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
 
-          regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.\d+?[″|"]\s?[N|S|W|O]?$/;
+          regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.\d+?[″|"]\s?[N|S|W|E]?$/;
 
           if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
             formattedLatitude = $scope.convertDMSToDD(formattedLatitude);
@@ -631,9 +631,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           }
         }
 
-        regEx = /\d{2}[.|,]\d{6}/;
+        // regEx = /\d{2}[.|,]\d{6}/;
 
-        if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+        // if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+
 
           formattedLatitude = parseFloat(formattedLatitude);
           formattedLongitude = parseFloat(formattedLongitude);
@@ -708,7 +709,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
 
           //$scope.setMarkerCoordinatesFormat();
-        }
+        // }
       }
 
     };
@@ -1061,7 +1062,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                 $timeout(function () {
                   $scope.toggleSidebarMarkerDetailUpdate(300);
 
-                  //.panel-collapse 
+                  //.panel-collapse
                   $('.min-height-accordion').find('.panel-body').css('height',
                     parseInt($('#sidebar-marker-detail-update').height()) -
                     parseInt(( ( $scope.features.length) * 37 ) + 40) + 'px'
@@ -1363,7 +1364,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         for (var i = 0; i < $scope.allSearchs[0].children.length; i++) {
           if ($scope.allSearchs[0].children[i].name == node.name) {
-            //Remove layers selected by user 
+            //Remove layers selected by user
 
             //Is internal layer
             if ($scope.allSearchs[0].children[i].search.layer.dataSource.url == null) {
@@ -2003,7 +2004,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       dragBox.on('boxend', function (e) {
 
         $scope.selectedMarkers = [];
-        
+
         $scope.clearAllSelectedMarkers();
 
         if (!$scope.screenSelectMarkerOpenned) {
@@ -2584,7 +2585,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                   if ($scope.canRemoveMarker == true) return false;
 
                   //Se campo colocado na pesquisa realmente possuir um valor, ele deve ser processado!
-                  //If the field in the search has a value, it need to be proccesed 
+                  //If the field in the search has a value, it need to be proccesed
                   var enter = false;
 
                   angular.forEach(result.markerAttribute, function (markerAttribute, index) {
@@ -2605,7 +2606,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                   });
 
                   //Se caso o valor não for processado dentro do foreach acima, e caso esse valor campo não esteja vazio, deve-se remover o marcador do mapa.
-                  //Case the value isn't processed inside the foreach above, and case this value isn't empty, so the marker need to be removed of the map. 
+                  //Case the value isn't processed inside the foreach above, and case this value isn't empty, so the marker need to be removed of the map.
                   if (!enter && (field.value != "" && field.value != undefined)) {
                     $scope.canRemoveMarker = true;
                   }
@@ -4988,7 +4989,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       if($scope.shapeFile.form.layer.id){
         layer.id = $scope.shapeFile.form.layer.id;
       }else if ($scope.shapeFile.form.layer.layerId){
-        layer.id = $scope.shapeFile.form.layer.layerId;  
+        layer.id = $scope.shapeFile.form.layer.layerId;
       }
 
       $scope.currentEntity.layer = layer;
@@ -5113,7 +5114,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             text: $translate("admin.layer-config.The-layer-has-been-created-successfully") + "!",
             dismiss: true
           };
-          
+
           $scope.importedFromShapefileNewLayerSaved = true;
 
           $scope.shapeFile.form.layer = result;
@@ -5420,7 +5421,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.$apply();
         },
         errorHandler: function (message, exception) {
-          
+
           $scope.isLoading = false;
           $scope.clearImportMarkers();
 
@@ -5456,7 +5457,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     if (input.files) {
 
       $scope.isLoading = true;
-      
+
       var files = input.files;
 
       for (var i = 0, file; file = files[i]; i++) {
