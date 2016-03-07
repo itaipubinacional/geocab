@@ -207,11 +207,11 @@ angular.module('application')
     if(localStorage.getItem('token')){
       $scope.model.user.email = localStorage.getItem('userEmail');
       $scope.login('geocab', $scope.model.user.email, localStorage.getItem('token'));
-    };
+    }
 
     if(localStorage.getItem('userEmail')){
       $scope.model.user.email = localStorage.getItem('userEmail');
-    };
+    }
 
     //Handler de BACK
     $ionicPlatform.registerBackButtonAction(function(e){
