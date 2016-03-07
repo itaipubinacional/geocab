@@ -978,8 +978,8 @@
 
         $scope.toggleLeftSideMenu();
         $scope.userMe = {};
-        $scope.allLayers = {};
-        $scope.allInternalLayerGroups = {};
+        /*$scope.allLayers = {};
+        $scope.allInternalLayerGroups = {};*/
 
         $scope.removeAllSelectedLayers();
 
