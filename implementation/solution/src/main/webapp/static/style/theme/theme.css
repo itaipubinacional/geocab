@@ -4,6 +4,12 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
 	border-color: #e32102;
 }
 
+.dynamic-text {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+  overflow: hidden;
+}
+
 .overflow-hidden {
     overflow: hidden;
 }
@@ -875,7 +881,7 @@ input:-moz-placeholder {
 }
 .container-login .close{
 	margin-right: 32px;
-	margin-top: 6px;	
+	margin-top: 6px;
 }
 
 .cell-centered [class^="itaipu-icon-"], .cell-centered [class*="itaipu-icon-"], .tree-itaipu-icon {
@@ -2016,7 +2022,7 @@ input:-moz-placeholder {
 .dialog-delete .modal-body b{
      overflow-wrap: break-word;
  }
- 
+
 .dialog-enable .modal-header{
     background-color: #DA4F49;
     background-image: linear-gradient(to bottom, #EE5F5B, #BD362F);
@@ -2029,7 +2035,7 @@ input:-moz-placeholder {
 .dialog-enable .modal-body b{
      overflow-wrap: break-word;
  }
- 
+
 .dialog-disable .modal-header{
     background-color: #DA4F49;
     background-image: linear-gradient(to bottom, #EE5F5B, #BD362F);
@@ -2124,7 +2130,7 @@ input:-moz-placeholder {
 }
 .container-login .close{
 	margin-right: 32px;
-	margin-top: 6px;	
+	margin-top: 6px;
 }
 
 .cell-centered [class^="itaipu-icon-"], .cell-centered [class*="itaipu-icon-"], .tree-itaipu-icon {
