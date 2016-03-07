@@ -33,7 +33,7 @@
               ng-options="layer.title ? layer.title : name for layer in allInternalLayerGroups"></select>
     </label>
     <div class="row" ng-if="imgResult != '' && imgResult != null">
-      <img ng-src="{{ setImagePath(imgResult) }}" width="100%" style="max-height: 200px"
+      <img ng-src="{{ setImagePath(imgResult) }}" width="100%" style="max-height: 240px"
            ng-click="getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY)">
     </div>
     <form id="marker" name="markerForm" novalidate ng-submit="saveMarker(markerForm)">

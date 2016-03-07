@@ -814,6 +814,7 @@
 
                         $scope.map.getView().setCenter(iconFeature.getGeometry().getCoordinates());
 
+                        $scope.currentEntity = {};
                         $scope.lastCurrentEntity = {};
 
                       }
@@ -834,8 +835,6 @@
                       markers.push(vectorLayer);
 
                     });
-
-                    $scope.currentEntity = {};
 
                     var group = new ol.layer.Group({
                       layers: markers,
