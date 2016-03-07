@@ -7,7 +7,7 @@
   /**
    *
    */
-  module.constant('$API_ENDPOINT', 'http://geocab.sbox.me/geocab');
+  module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
 
 
   /**
