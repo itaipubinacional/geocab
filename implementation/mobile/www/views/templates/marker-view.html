@@ -72,7 +72,7 @@
             ng-class="{'has-error': (markerForm.input{{$index}}.$invalid && markerForm.input{{$index}}.$touched) || (isFormSubmit && attribute.required && markerForm.input{{$index}}.$invalid)}"
             class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
             <span class="input-label">{{ attribute.name }}</span>
-            <input type="text" ng-model="attribute.value" name="input{{$index}}" ng-click="showDatePicker(attribute)"
+            <input type="date" ng-model="attribute.value" name="input{{$index}}"
                    placeholder="{{ attribute.name }}" ng-required="attribute.required">
           </label>
           <div class="form-error"
