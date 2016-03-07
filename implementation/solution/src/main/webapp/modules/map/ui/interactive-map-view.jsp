@@ -509,7 +509,7 @@ uri="http://www.springframework.org/security/tags"%>
                     ng-disabled="isLoading"
                     title="<spring:message code='map.Save' />">
                   <spring:message code="map.Save" />
-                  <i ng-if="isLoading" class="loading"></i>
+                  <i ng-if="isLoading"></i>
                 </button>
               </div>
             </div>
@@ -1088,7 +1088,7 @@ uri="http://www.springframework.org/security/tags"%>
                           style="margin: 6px 0 20px 0;"
                           ng-disabled="isLoading && !isImport"
                           class="btn btn-success"><spring:message code="admin.shape-file.Export" />
-                    <i ng-if="isLoading && !isImport" class="loading"></i>
+                    <i ng-if="isLoading && !isImport" ></i>
                   </button>
                 </div>
 
@@ -1279,7 +1279,7 @@ uri="http://www.springframework.org/security/tags"%>
     </div>
 
     <!-- Google Maps -->
-    <div id="gmap" class="loading" style="width: 0; height: 0"></div>
+    <div id="gmap" style="width: 0; height: 0"></div>
 
     <!--<div id="typeMapQuest"
          ng-if="mapConf.active == 'mapQuest_osm' || mapConf.active == 'mapQuest_sat'"
@@ -1292,7 +1292,7 @@ uri="http://www.springframework.org/security/tags"%>
     </div>-->
 
     <!-- Openlayer Map -->
-    <div id="olmap" class="loading"
+    <div id="olmap"
          style="position: absolute; top: 0; bottom: 0; left: 0; right: 0">
       <div id="popup" class="ol-popup">
         <!--<a href="#" id="popup-closer" class="ol-popup-closer"></a>-->
