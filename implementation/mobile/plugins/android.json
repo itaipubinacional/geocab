@@ -45,6 +45,9 @@
         },
         "net.ekuwang.cordova.plugin.statusbar": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
     "dependent_plugins": {}

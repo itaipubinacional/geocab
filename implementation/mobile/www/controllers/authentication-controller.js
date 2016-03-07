@@ -7,7 +7,10 @@
  * @param $state
  */
 angular.module('application')
-  .controller('AuthenticationController', function ($rootScope, $importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate, $ionicPlatform, $ionicHistory) {
+  .controller('AuthenticationController', function ($rootScope, $importService, $timeout, $scope, $state, $http, $window,
+                                                    $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate, $ionicPlatform,
+                                                    $ionicHistory) {
+
 
     $timeout(function() {
       $importService("accountService");
@@ -56,7 +59,7 @@ angular.module('application')
            }
          });
        });
-     }
+     };
 
     /**
      *
@@ -157,7 +160,7 @@ angular.module('application')
         .error(function (data, status, headers, config) {
           $scope.loginFailed();
         });
-    }
+    };
 
 
     /**

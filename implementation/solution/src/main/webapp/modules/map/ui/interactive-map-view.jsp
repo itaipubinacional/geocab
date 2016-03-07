@@ -84,10 +84,14 @@ uri="http://www.springframework.org/security/tags"%>
                 <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' || feature.type == 'external' }">
 
                   <accordion-heading>
-                    <div style="cursor:pointer; padding: 10px 0;">
-                      <i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-                      <span ng-if="feature.type == 'internal'" style="overflow:auto" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
-                      <span ng-if="feature.type == 'external'" style="overflow:auto" ng-click="calculo()">{{feature.feature.layer.titulo}}</span>
+                    <div class="row" style="cursor:pointer; padding: 10px 0">
+                      <i class="pull-left col-md-1" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+                      <span title="{{feature.feature.layer.title}}" class="dynamic-text col-md-10" ng-if="feature.type == 'internal'" ng-click="calculo()" >
+                        {{feature.feature.layer.title}}
+                      </span>
+                      <span title="{{feature.feature.layer.titulo}}" class="dynamic-text col-md-10" ng-if="feature.type == 'external'" ng-click="calculo()">
+                        {{feature.feature.layer.titulo}}
+                      </span>
 
                     </div>
                   </accordion-heading>
@@ -95,9 +99,13 @@ uri="http://www.springframework.org/security/tags"%>
 
                     <span ng-if="feature.type == 'internal'">
 
-                    <div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="height: 100%; width: 100%; padding: 0;">
+                    <div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container " style="height: 100%; width: 100%; padding: 0;">
+                      <div class="col-md-12 dynamic-text" style="padding : 0">
+                        <span title="{{marker.layer.title}}" style="font-weight: bold; font-size: 18px;">
+                          {{marker.layer.title }}
+                        </span>
+                      </div>
 
-                      <span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{marker.layer.title }}</span>
                       <br style="clear: both;"> <br>
                       <span style="float: left"><spring:message code="map.Created-by"/>: <b>{{ marker.user.name}}</b></span>
                       <span style="float: right">{{ marker.created |date:'dd/MM/yyyy' }}</span>
