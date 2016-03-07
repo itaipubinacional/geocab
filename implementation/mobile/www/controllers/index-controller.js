@@ -7,7 +7,8 @@
    * @param $state
    */
   angular.module('application')
-    .controller('IndexController', function($scope, $translate, $state, $ionicPopup, $ionicPopover, $filter, $log, $cordovaToast, $ionicModal) {
+    .controller('IndexController', function($scope, $translate, $state, $ionicPopup, $ionicPopover, $filter, $log,
+                                            $cordovaToast, $ionicModal, $cordovaDatePicker) {
 
       // Configura o popover
       $ionicPopover.fromTemplateUrl('marker-view-options-menu.html', {
@@ -43,9 +44,8 @@
       var options = {
         date: new Date(),
         mode: 'date', // or 'time'
-        minDate: new Date() - 10000,
         allowOldDates: true,
-        allowFutureDates: false,
+        allowFutureDates: true,
         doneButtonLabel: 'DONE',
         doneButtonColor: '#F2F3F4',
         cancelButtonLabel: 'CANCEL',
@@ -54,8 +54,9 @@
 
       $scope.showDatePicker = function(attribute) {
         $cordovaDatePicker.show(options).then(function(date) {
-          var month = date.getMonth() > 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
-          attribute.value = date.getDate() + '/' + month + '/' + date.getFullYear();
+          var day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
+          var month = date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+          attribute.value = day + '/' + month + '/' + date.getFullYear();
           //alert(date);
         });
       };
