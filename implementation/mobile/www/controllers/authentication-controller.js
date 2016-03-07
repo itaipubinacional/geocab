@@ -22,8 +22,8 @@ angular.module('application')
     $rootScope.model = {
       form: null,
       user: {
-        email : 'test_prognus@mailinator.com', //TODO --------- R  E  M  O  V  E  R
-        password : 'admin' //TODO --------- R  E  M  O  V  E  R
+        email : '',
+        password : ''
       },
       errorMsg : {
               title : $translate('Error'),
@@ -209,7 +209,7 @@ angular.module('application')
     if(localStorage.getItem('userEmail')){
       $scope.model.user.email = localStorage.getItem('userEmail');
     };
-    
+
     //Handler de BACK
     $ionicPlatform.registerBackButtonAction(function(e){
       if ($state.$current.name == 'map.index') {
