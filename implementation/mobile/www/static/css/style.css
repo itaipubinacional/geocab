@@ -207,3 +207,6 @@ p.info {
 .options-menu-button ion-item {
   padding: 0;
 }
+
+/* LOGIN */
+body.keyboard-open ion-content{background: none}

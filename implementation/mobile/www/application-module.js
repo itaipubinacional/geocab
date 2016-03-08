@@ -198,35 +198,37 @@
 
       });
 
-      var type = navigator.connection.type;
-      $log.debug(type);
+      if(navigator.connection) {
+        var type = navigator.connection.type;
+        $log.debug(type);
 
-      var isOnline = $cordovaNetwork.isOnline();
-      $log.debug(isOnline);
+        var isOnline = $cordovaNetwork.isOnline();
+        $log.debug(isOnline);
 
-      var isOffline = $cordovaNetwork.isOffline();
-      $log.debug(isOffline);
+        var isOffline = $cordovaNetwork.isOffline();
+        $log.debug(isOffline);
 
-      if(isOffline) {
-        if(navigator && navigator.splashscreen){
-          navigator.splashscreen.hide();
-          $rootScope.$broadcast('$cordovaNetwork:offline');
+        if (isOffline) {
+          if (navigator && navigator.splashscreen) {
+            navigator.splashscreen.hide();
+            $rootScope.$broadcast('$cordovaNetwork:offline');
+          }
         }
+
+        $http({
+          method: 'GET',
+          url: $API_ENDPOINT
+        }).then(function successCallback(response) {
+
+        }, function errorCallback(response) {
+
+          if (navigator && navigator.splashscreen) {
+            navigator.splashscreen.hide();
+            $rootScope.showServerAlert();
+          }
+
+        });
       }
-
-      $http({
-        method: 'GET',
-        url: $API_ENDPOINT
-      }).then(function successCallback(response) {
-
-      }, function errorCallback(response) {
-
-        if(navigator && navigator.splashscreen){
-          navigator.splashscreen.hide();
-          $rootScope.showServerAlert();
-        }
-
-      });
 
     });
 

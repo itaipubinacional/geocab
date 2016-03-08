@@ -64,22 +64,32 @@ angular.module('application')
     /**
      *
      */
-    $scope.loginHandler = function () {
+    $scope.loginHandler = function (form) {
 
-      var config = {
-        headers: {'Content-Type': 'application/json; charset=UTF-8'}
-      };
-      //Deleta o token antes de executar a requisição
-      delete $scope.model.user.token;
-      $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
-        .success(function (data, status, headers, config) {
-          $scope.model.user.token = data;
-          $scope.loginSuccess();
-        })
-        .error(function (data, status, headers, config) {
-          $scope.loginFailed();
-        }
-      );
+      if (!form.$valid) {
+
+        $scope.isFormSubmit = true;
+
+      } else {
+
+        $scope.isFormSubmit = false;
+
+        var config = {
+          headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        };
+        //Deleta o token antes de executar a requisição
+        delete $scope.model.user.token;
+        $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
+          .success(function (data, status, headers, config) {
+            $scope.model.user.token = data;
+            $scope.loginSuccess();
+          })
+          .error(function (data, status, headers, config) {
+              $scope.loginFailed();
+            }
+          );
+      }
+
     };
 
     /**
