@@ -23,7 +23,7 @@
   module.config(function($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT,
                          $translateProvider, $compileProvider, $httpProvider, $logProvider) {
 
-    $logProvider.debugEnabled(true);
+    $logProvider.debugEnabled(true); //TODO Fixme;
 
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel|data):/);
     //-------

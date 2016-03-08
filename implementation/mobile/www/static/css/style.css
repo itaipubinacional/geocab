@@ -55,12 +55,12 @@ fieldset{margin: 0px; padding: 0px; border: none}
 }
 
 .login-image-footer {
-
   background-size: contain;
   background-repeat: no-repeat;
   background-position: bottom;
   background-attachment: scroll;
   background-image : url('./../images/WAVE-CAB.svg');
+  min-height: 402px;
 }
 
 .login-button {
@@ -207,6 +207,3 @@ p.info {
 .options-menu-button ion-item {
   padding: 0;
 }
-
-/* LOGIN */
-body.keyboard-open ion-content{background: none}
