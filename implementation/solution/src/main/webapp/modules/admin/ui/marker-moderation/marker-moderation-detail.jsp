@@ -18,9 +18,10 @@
                 </i>
             </div>
 
-            <div class="col-md-10">
-                <span style=" font-weight: bold; font-size: 18px;">
-                    {{currentEntity.layer.title }}
+            <div class="row">
+                <span class="col-md-10 dynamic-text" title="{{currentEntity.layer.title}}"
+                  style="padding: 0; font-weight: bold; font-size: 18px;">
+                    {{currentEntity.layer.title}}
                 </span>
 
                 <div>
