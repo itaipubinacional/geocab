@@ -1937,41 +1937,41 @@ ront controller of angle won't let enter an invalid URL.
             $scope.currentEntity.layer = layer;
         }
 
-        // angular.forEach($scope.attributesByMarker, function (attribute, i) {
-        //
-        //     if (attribute.value == null) {
-        //         attribute.value = "";
-        //     }
-        //
-        //     if(attribute.attribute.files) {
-        //
-        //         angular.forEach(attribute.attribute.files, function(file, index){
-        //
-        //             if(!file.id) {
-        //                 var photo = new Photo();
-        //                 var img = file.src.split(';base64,');
-        //                 photo.source = img[1];
-        //                 photo.name = file.name;
-        //                 photo.description = file.description;
-        //                 photo.contentLength = file.size ? file.size : ;
-        //                 photo.mimeType = file.type ? file.type : file.mimeType;
-        //
-        //                 attribute.attribute.files[index] = photo;
-        //             }
-        //         });
-        //
-        //         if(!attribute.photoAlbum) {
-        //             var photoAlbum = new PhotoAlbum();
-        //             photoAlbum.photos = new Array();
-        //
-        //             attribute.photoAlbum = photoAlbum;
-        //             attribute.photoAlbum.photos = attribute.attribute.files;
-        //
-        //         } else {
-        //             attribute.photoAlbum.photos = attribute.attribute.files;
-        //         }
-        //     }
-        // });
+        angular.forEach($scope.attributesByMarker, function (attribute, i) {
+
+            if (attribute.value == null) {
+                attribute.value = "";
+            }
+
+            if(attribute.attribute.files) {
+
+                angular.forEach(attribute.attribute.files, function(file, index){
+
+                    if(!file.id) {
+                        var photo = new Photo();
+                        var img = file.src.split(';base64,');
+                        photo.source = img[1];
+                        photo.name = file.name;
+                        photo.description = file.description;
+                        photo.contentLength = file.size ? file.size : file.contentLength;
+                        photo.mimeType = file.type ? file.type : file.mimeType;
+
+                        attribute.attribute.files[index] = photo;
+                    }
+                });
+
+                if(!attribute.photoAlbum) {
+                    var photoAlbum = new PhotoAlbum();
+                    photoAlbum.photos = new Array();
+
+                    attribute.photoAlbum = photoAlbum;
+                    attribute.photoAlbum.photos = attribute.attribute.files;
+
+                } else {
+                    attribute.photoAlbum.photos = attribute.attribute.files;
+                }
+            }
+        });
 
         $scope.currentEntity.markerAttribute = $scope.attributesByMarker;
 
@@ -1997,7 +1997,8 @@ ront controller of angle won't let enter an invalid URL.
 
         /* Remove image to update */
         angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
-            if(markerAttribute.photoAlbum){
+            if(markerAttribute.photoAlbum && markerAttribute.photoAlbum.photos != undefined){
+
                 angular.forEach(markerAttribute.photoAlbum.photos, function(photo){
 
                     if (markerAttribute.attribute.removePhotosIds) {
@@ -2009,6 +2010,8 @@ ront controller of angle won't let enter an invalid URL.
 
                     delete photo.image;
                 })
+            } else {
+              markerAttribute.photoAlbum = null;
             }
         });
 
