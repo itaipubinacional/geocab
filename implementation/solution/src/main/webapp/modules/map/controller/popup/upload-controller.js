@@ -87,6 +87,7 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
                   //if (attr.attribute.removePhotosIds && attr.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1) {
                   if (attr.attribute.removePhotosIds == undefined || (attr.attribute.removePhotosIds != undefined && attr.attribute.removePhotosIds.indexOf(photo.id) == -1 && index == -1)) {
+                    attr.attribute.removePhotosIds = [];
                     attributesByLayer.files.push(photo);
                   }
 
@@ -130,7 +131,7 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
   $scope.onSuccess = function (files) {
 
     $scope.attribute.files = files;
-    
+
     $("span.error").hide();
 
     $scope.isLoading = false;
@@ -147,7 +148,7 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
       type: "danger",
       text: $translate(msg)
     };
-    
+
     $("span.error").show();
 //    $scope.fadeMsg();
 
