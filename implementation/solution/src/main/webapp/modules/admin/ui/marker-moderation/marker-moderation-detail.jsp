@@ -6,7 +6,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html style="overflow:hidden" xmlns="http://www.w3.org/1999/html" xmlns:spring="http://www.w3.org/1999/XSL/Transform">
-
 <div style="width:38%;height: 100%; float:left;z-index: 1; position: relative;
             box-shadow: 8px -6px 5px -5px #999, -6px 0 5px -5px #999; ">
     <div style="height:90vh; overflow:auto;">
@@ -18,8 +17,8 @@
                 </i>
             </div>
 
-            <div class="row">
-                <span class="col-md-10 dynamic-text" title="{{currentEntity.layer.title}}"
+            <div class="row col-md-10">
+                <span class="col-md-12 dynamic-text" title="{{currentEntity.layer.title}}"
                   style="padding: 0; font-weight: bold; font-size: 18px;">
                     {{currentEntity.layer.title}}
                 </span>
