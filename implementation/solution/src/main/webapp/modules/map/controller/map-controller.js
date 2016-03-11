@@ -1586,6 +1586,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.initializeGMAP = function initializeGMAP() {
 
+
+
+
     $("#olmap").removeClass('loading');
     $("gmap").addClass('loading');
 
@@ -1630,6 +1633,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       // set the view from google maps
       $scope.view.setCenter($scope.view.getCenter());
       $scope.view.setZoom($scope.view.getZoom());
+
+      $timeout(function(){
+  
+        $scope.map.updateSize();
+
+      }, 1000);
+
 
     }
 
