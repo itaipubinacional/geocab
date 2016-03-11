@@ -537,11 +537,17 @@ uri="http://www.springframework.org/security/tags"%>
                 <accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret" heightStyle="content">
                   <accordion-group ng-repeat="selected in selectedMarkers">
                     <accordion-heading>
-                      <div style="cursor:pointer; padding: 10px 0;">
-                        <i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-                        <span>{{ selected.title }} ({{ selected.markers.length }}) </span>
+                      <div class="row" style="cursor:pointer; padding: 10px 0;">
+
+                        <i class="col-md-1 pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+
+                        <span class="dynamic-text col-md-10" title="{{ selected.title }}">
+                          {{ selected.title }} ({{ selected.markers.length }})
+                        </span>
+                        
                       </div>
                     </accordion-heading>
+
                     <div ng-repeat="marker in selected.markers">
                       <p ng-click="showMarkerDetail(marker)">{{ $index + 1 }} - {{ marker.coordinate }}</p>
                     </div>
