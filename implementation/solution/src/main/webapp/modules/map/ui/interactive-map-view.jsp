@@ -544,7 +544,7 @@ uri="http://www.springframework.org/security/tags"%>
                         <span class="dynamic-text col-md-10" title="{{ selected.title }}">
                           {{ selected.title }} ({{ selected.markers.length }})
                         </span>
-                        
+
                       </div>
                     </accordion-heading>
 
@@ -1298,13 +1298,12 @@ uri="http://www.springframework.org/security/tags"%>
     </div>-->
 
     <!-- Openlayer Map -->
-    <div id="olmap"
-         style="position: absolute; top: 0; bottom: 0; left: 0; right: 0">
+    <div id="olmap" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0">
       <div id="popup" class="ol-popup">
         <!--<a href="#" id="popup-closer" class="ol-popup-closer"></a>-->
         <div id="popup-content"></div>
       </div>
-      <div id="info"></div>
+      <div id="info" style="position: fixed"></div>
     </div>
   </section>
 
