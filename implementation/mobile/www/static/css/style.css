@@ -157,7 +157,7 @@ label.item.valid-lr {
 }
 .fullscreen-image {
   max-width: 100%;
-  max-height: 100%;
+  max-height: 70%;
   bottom: 0;
   left: 0;
   margin: auto;
@@ -178,12 +178,14 @@ p.info {
   width: 100%;
   display: block;
   text-align: center;
-  font-size: 28px;
+  font-size: 18px;
   color: #ffffff;
 }
 .deleted{
   opacity: .5;
 }
+
+.slider-pager .slider-pager-page{color:#999}
 
 /* Fix modal backdrop for smaller devices */
 @media (max-width: 679px) {

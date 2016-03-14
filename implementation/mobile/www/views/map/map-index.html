@@ -43,7 +43,7 @@
       </div>
 
     </drawer>
-    <ion-pull-up-footer id="pull-up" class="pull-up" ng-if="currentEntity.latitude || currentEntity.id" initial-state="minimized" default-behavior="expand" on-expand="footerExpand()" on-collapse="footerCollapse()" on-minimize="footerMinimize()" ng-include="'./views/map/pull-up.html'"></ion-pull-up-footer>
-    <ion-pull-up-footer id="pull-up-wms" class="pull-up" ng-if="currentWMS.layer" initial-state="minimized" default-behavior="expand" on-expand="footerWMSExpand()" on-collapse="footerWMSCollapse()" on-minimize="footerWMSMinimize()" ng-include="'./views/map/wms.html'"></ion-pull-up-footer>
+    <ion-pull-up-footer id="pull-up" class="pull-up" ng-if="currentEntity.latitude || currentEntity.id" ng-include="'./views/map/pull-up.html'"></ion-pull-up-footer>
+    <ion-pull-up-footer id="pull-up-wms" class="pull-up" ng-if="currentWMS.layer" ng-include="'./views/map/wms.html'"></ion-pull-up-footer>
   </ion-side-menus>
 </ion-view>
