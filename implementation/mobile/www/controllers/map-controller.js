@@ -1064,7 +1064,7 @@
 
             angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index) {
 
-              if (attribute.type == 'PHOTO_ALBUM' && attribute.required && attribute.photoAlbum == null) {
+              if (attribute.type == 'PHOTO_ALBUM' && attribute.required && (attribute.photoAlbum == null || attribute.photoAlbum.photos.length == 0)) {
 
                 $scope.selectedPhotoAlbumAttribute = attribute;
                 $state.go($scope.MAP_GALLERY);
