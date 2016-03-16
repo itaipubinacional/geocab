@@ -605,7 +605,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         result += coordinate < 0 ? 'S' : 'N';
 
       if(!latitude)
-        result += coordinate < 0 ? 'W' : 'O';
+        result += coordinate < 0 ? 'W' : 'E';
 
       return result;
     };
@@ -623,7 +623,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         if ($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
 
-          regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.\d+?[″|"]\s?[N|S|W|O]?$/;
+          regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.\d+?[″|"]\s?[N|S|W|E]?$/;
 
           if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
             formattedLatitude = $scope.convertDMSToDD(formattedLatitude);
@@ -631,9 +631,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           }
         }
 
-        regEx = /\d{2}[.|,]\d{6}/;
+        // regEx = /\d{2}[.|,]\d{6}/;
 
-        if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+        // if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
+
 
           formattedLatitude = parseFloat(formattedLatitude);
           formattedLongitude = parseFloat(formattedLongitude);
@@ -708,7 +709,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
 
           //$scope.setMarkerCoordinatesFormat();
-        }
+        // }
       }
 
     };
@@ -1061,7 +1062,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                 $timeout(function () {
                   $scope.toggleSidebarMarkerDetailUpdate(300);
 
-                  //.panel-collapse 
+                  //.panel-collapse
                   $('.min-height-accordion').find('.panel-body').css('height',
                     parseInt($('#sidebar-marker-detail-update').height()) -
                     parseInt(( ( $scope.features.length) * 37 ) + 40) + 'px'
@@ -1363,7 +1364,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         for (var i = 0; i < $scope.allSearchs[0].children.length; i++) {
           if ($scope.allSearchs[0].children[i].name == node.name) {
-            //Remove layers selected by user 
+            //Remove layers selected by user
 
             //Is internal layer
             if ($scope.allSearchs[0].children[i].search.layer.dataSource.url == null) {
@@ -1585,6 +1586,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.initializeGMAP = function initializeGMAP() {
 
+
+
+
     $("#olmap").removeClass('loading');
     $("gmap").addClass('loading');
 
@@ -1630,6 +1634,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.view.setCenter($scope.view.getCenter());
       $scope.view.setZoom($scope.view.getZoom());
 
+      $timeout(function(){
+  
+        $scope.map.updateSize();
+
+      }, 1000);
+
+
     }
 
     //$scope.mapGoogle.setMapTypeId('hybrid');
@@ -1653,6 +1664,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }, 3000);
 
   };
+
+  google.maps.event.addDomListener(window, "resize", function() {
+    var center = $scope.mapGoogle.getCenter();
+    google.maps.event.trigger($scope.mapGoogle, "resize");
+    $scope.mapGoogle.setCenter(center);
+  });
 
   /**
    * Method that initializes the Open Street Map map and its settings
@@ -2003,7 +2020,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       dragBox.on('boxend', function (e) {
 
         $scope.selectedMarkers = [];
-        
+
         $scope.clearAllSelectedMarkers();
 
         if (!$scope.screenSelectMarkerOpenned) {
@@ -2584,7 +2601,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                   if ($scope.canRemoveMarker == true) return false;
 
                   //Se campo colocado na pesquisa realmente possuir um valor, ele deve ser processado!
-                  //If the field in the search has a value, it need to be proccesed 
+                  //If the field in the search has a value, it need to be proccesed
                   var enter = false;
 
                   angular.forEach(result.markerAttribute, function (markerAttribute, index) {
@@ -2605,7 +2622,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                   });
 
                   //Se caso o valor não for processado dentro do foreach acima, e caso esse valor campo não esteja vazio, deve-se remover o marcador do mapa.
-                  //Case the value isn't processed inside the foreach above, and case this value isn't empty, so the marker need to be removed of the map. 
+                  //Case the value isn't processed inside the foreach above, and case this value isn't empty, so the marker need to be removed of the map.
                   if (!enter && (field.value != "" && field.value != undefined)) {
                     $scope.canRemoveMarker = true;
                   }
@@ -3321,6 +3338,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.isLoading = true;
 
+    var isValid = true;
+
     if (!$scope.form('sidebarMarkerUpdate').$valid) {
       $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
       return;
@@ -3337,118 +3356,191 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.currentEntity.layer = layer;
     }
 
-    angular.forEach($scope.attributesByMarker, function (attribute) {
+    angular.forEach($scope.attributesByMarker, function(attribute){
+        if(attribute.photoAlbum){
+            angular.forEach(attribute.photoAlbum.photos, function(photo){
 
-      if (attribute.value == null) {
-        attribute.value = "";
-      }
+                if (attribute.attribute.removePhotosIds) {
+                    var index = attribute.attribute.removePhotosIds.indexOf(photo.id);
 
-      if(attribute.attribute.files) {
+                    if (index != -1)
+                        attribute.photoAlbum.photos.splice(index, 1);
+                }
 
-        angular.forEach(attribute.attribute.files, function(file, index){
-
-          if(!file.id) {
-            var photo = new Photo();
-            var img = file.src.split(';base64,');
-            photo.source = img[1];
-            photo.name = file.name;
-            photo.description = file.description;
-            photo.contentLength = file.size;
-            photo.mimeType = file.type;
-
-            attribute.attribute.files[index] = photo;
-          }
-        });
-
-        if(!attribute.photoAlbum) {
-          var photoAlbum = new PhotoAlbum();
-          photoAlbum.photos = new Array();
-
-          attribute.photoAlbum = photoAlbum;
-          attribute.photoAlbum.photos = attribute.attribute.files;
-
-        } else {
-          attribute.photoAlbum.photos = attribute.attribute.files;
+                //delete photo.image;
+            })
         }
+    });
+
+    angular.forEach($scope.attributesByMarker, function (attribute, i) {
+
+        if (attribute.value == null) {
+            attribute.value = "";
+        }
+
+        if(attribute.attribute.files) {
+
+            angular.forEach(attribute.attribute.files, function(file, index){
+
+                if(!file.id) {
+                    var photo = new Photo();
+                    var img = file.src.split(';base64,');
+                    photo.source = img[1];
+                    photo.src = file.src;
+                    photo.name = file.name;
+                    photo.description = file.description;
+                    photo.contentLength = file.size ? file.size : file.contentLength;
+                    photo.mimeType = file.type ? file.type : file.mimeType;
+
+                    attribute.attribute.files[index] = photo;
+                }
+            });
+
+            if(!attribute.photoAlbum) {
+                var photoAlbum = new PhotoAlbum();
+                photoAlbum.photos = new Array();
+
+                attribute.photoAlbum = photoAlbum;
+                attribute.photoAlbum.photos = attribute.attribute.files;
+
+            } else {
+                attribute.photoAlbum.photos = attribute.attribute.files;
+            }
+        }
+    });
+
+    angular.forEach($scope.attributesByMarker, function(attribute, index) {
+
+      if (attribute.attribute.type == 'PHOTO_ALBUM' && attribute.attribute.required && attribute.photoAlbum != null && attribute.photoAlbum.photos.length == 0) {
+
+        var text = $translate('photos.Insert-Photos-in-attribute').replace('"{0}"', '') + attribute.attribute.name;
+        $scope.msg = {type: "danger", text: text, dismiss: true};
+        $("div.msgMap").show();
+
+        setTimeout(function () {
+          $("div.msgMap").fadeOut();
+        }, 5000);
+
+        isValid = false;
+        $scope.isLoading = false;
       }
     });
 
-    $scope.currentEntity.markerAttribute = $scope.attributesByMarker;
+    if(isValid) {
 
-    /*angular.forEach($scope.attributesByLayer, function (val, ind) {
+      angular.forEach($scope.attributesByMarker, function (attribute, i) {
 
-      var attribute = new Attribute();
-      attribute.id = val.id;
-
-      var markerAttribute = new MarkerAttribute();
-      if (val.value != "" && val.value != undefined) {
-        markerAttribute.value = val.value;
-      } else {
-        markerAttribute.value = "";
-      }
-
-      markerAttribute.attribute = attribute;
-      markerAttribute.marker = $scope.currentEntity;
-      $scope.currentEntity.markerAttribute.push(markerAttribute);
-
-    });*/
-
-    if($scope.currentEntity.latitude == null){
-      var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
-      $scope.currentEntity.latitude  = olCoordinates[0];
-      $scope.currentEntity.longitude = olCoordinates[1];
-    }
-
-    $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
-    $scope.currentEntity.location.coordinateString = $scope.currentEntity.wktCoordenate;
-
-    /* Remove image to update */
-    angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
-      if(markerAttribute.photoAlbum) {
-        angular.forEach(markerAttribute.photoAlbum.photos, function(photo) {
-
-          if (markerAttribute.attribute.removePhotosIds) {
-            var index = markerAttribute.attribute.removePhotosIds.indexOf(photo.id);
-
-            if (index != -1)
-              delete markerAttribute.photoAlbum.photos[index];
+          if (attribute.value == null) {
+              attribute.value = "";
           }
 
-          delete photo.image;
-        })
+          if(attribute.attribute.files) {
+
+              angular.forEach(attribute.attribute.files, function(file, index){
+
+                  if(!file.id) {
+                      var photo = new Photo();
+                      var img = file.src.split(';base64,');
+                      photo.source = img[1];
+                      photo.name = file.name;
+                      photo.description = file.description;
+                      photo.contentLength = file.size ? file.size : file.contentLength;
+                      photo.mimeType = file.type ? file.type : file.mimeType;
+
+                      attribute.attribute.files[index] = photo;
+                  }
+              });
+
+              if(!attribute.photoAlbum) {
+                  var photoAlbum = new PhotoAlbum();
+                  photoAlbum.photos = new Array();
+
+                  attribute.photoAlbum = photoAlbum;
+                  attribute.photoAlbum.photos = attribute.attribute.files;
+
+              } else {
+                  attribute.photoAlbum.photos = attribute.attribute.files;
+              }
+          }
+      });
+
+      $scope.currentEntity.markerAttribute = $scope.attributesByMarker;
+
+      /*angular.forEach($scope.attributesByLayer, function (val, ind) {
+
+        var attribute = new Attribute();
+        attribute.id = val.id;
+
+        var markerAttribute = new MarkerAttribute();
+        if (val.value != "" && val.value != undefined) {
+          markerAttribute.value = val.value;
+        } else {
+          markerAttribute.value = "";
+        }
+
+        markerAttribute.attribute = attribute;
+        markerAttribute.marker = $scope.currentEntity;
+        $scope.currentEntity.markerAttribute.push(markerAttribute);
+
+      });*/
+
+      if($scope.currentEntity.latitude == null){
+        var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
+        $scope.currentEntity.latitude  = olCoordinates[0];
+        $scope.currentEntity.longitude = olCoordinates[1];
       }
-    });
 
-    markerService.updateMarker($scope.currentEntity, {
-      callback: function (result) {
+      $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
+      $scope.currentEntity.location.coordinateString = $scope.currentEntity.wktCoordenate;
 
-        $scope.isLoading = false;
+      /* Remove image to update */
+      angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
+        if(markerAttribute.photoAlbum) {
+          angular.forEach(markerAttribute.photoAlbum.photos, function(photo) {
 
-        $scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
+            if (markerAttribute.attribute.removePhotosIds) {
+              var index = markerAttribute.attribute.removePhotosIds.indexOf(photo.id);
 
-        $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully"), dismiss: true};
-        $("div.msgMap").show();
+              if (index != -1)
+                delete markerAttribute.photoAlbum.photos[index];
+            }
 
-        setTimeout(function () {
-          $("div.msgMap").fadeOut();
-        }, 5000);
+            delete photo.image;
+          })
+        }
+      });
 
-        $scope.$apply();
-      },
-      errorHandler: function (message, exception) {
+      markerService.updateMarker($scope.currentEntity, {
+        callback: function (result) {
 
-        $scope.isLoading = false;
+          $scope.isLoading = false;
 
-        $scope.msg = {type: "danger", text: message, dismiss: true};
-        $("div.msgMap").show();
+          $scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
 
-        setTimeout(function () {
-          $("div.msgMap").fadeOut();
-        }, 5000);
+          $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully"), dismiss: true};
+          $("div.msgMap").show();
 
-        $scope.$apply();
-      }
-    });
+          setTimeout(function () {
+            $("div.msgMap").fadeOut();
+          }, 5000);
+
+          $scope.$apply();
+        },
+        errorHandler: function (message, exception) {
+
+          $scope.isLoading = false;
+
+          $scope.msg = {type: "danger", text: message, dismiss: true};
+          $("div.msgMap").show();
+
+          setTimeout(function () {
+            $("div.msgMap").fadeOut();
+          }, 5000);
+
+          $scope.$apply();
+        }
+      });
+    }
 
   };
 
@@ -4988,7 +5080,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       if($scope.shapeFile.form.layer.id){
         layer.id = $scope.shapeFile.form.layer.id;
       }else if ($scope.shapeFile.form.layer.layerId){
-        layer.id = $scope.shapeFile.form.layer.layerId;  
+        layer.id = $scope.shapeFile.form.layer.layerId;
       }
 
       $scope.currentEntity.layer = layer;
@@ -5113,7 +5205,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             text: $translate("admin.layer-config.The-layer-has-been-created-successfully") + "!",
             dismiss: true
           };
-          
+
           $scope.importedFromShapefileNewLayerSaved = true;
 
           $scope.shapeFile.form.layer = result;
@@ -5420,7 +5512,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.$apply();
         },
         errorHandler: function (message, exception) {
-          
+
           $scope.isLoading = false;
           $scope.clearImportMarkers();
 
@@ -5456,7 +5548,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     if (input.files) {
 
       $scope.isLoading = true;
-      
+
       var files = input.files;
 
       for (var i = 0, file; file = files[i]; i++) {

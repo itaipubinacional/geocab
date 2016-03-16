@@ -257,11 +257,11 @@ public class ShapefileService
 //    			JTS.transform(source, dest, transform) 
 	    		
 	    		final CoordinateReferenceSystem entryCRS = source.getSchema().getCoordinateReferenceSystem(); // CRS.decode(source.getSchema().getCoordinateReferenceSystem().getCoordinateSystem());
-
-	    		if (!entryCRS.getCoordinateSystem().getName().getCode().contains("WGS_1984") && !entryCRS.getCoordinateSystem().getName().getCode().contains("SIRGAS_2000"))
-				{
-	    			throw new GeodesicCoordinatesAcceptedException();
-				}
+	    		
+//	    		if (!entryCRS.getCoordinateSystem().getName().getCode().contains("WGS 1984") && !entryCRS.getCoordinateSystem().getName().getCode().contains("SIRGAS_2000"))
+//				{
+//	    			throw new GeodesicCoordinatesAcceptedException();
+//				}
 	    		
 	    		final CoordinateReferenceSystem exitCRS = CRS.decode("EPSG:3857");
     			final MathTransform transform = CRS.findMathTransform(entryCRS, exitCRS, true);

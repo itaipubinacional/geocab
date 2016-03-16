@@ -16,11 +16,11 @@
   </ion-nav-bar>
 
   <ion-header-bar class="bar-subheader bar-positive" style="text-align: center;">
-    <h6 class="stable" ng-if="!currentEntity.id">{{ showMarkerPosition() }}</h6>
-    <h4 class="stable" ng-if="currentEntity.id">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</h4>
+    <h6 class="stable">{{ showMarkerPosition() }}</h6>
   </ion-header-bar>
 
   <ion-content scroll="true" has-bouncin="true">
+    <h6 class="padding-horizontal" ng-if="currentEntity.id">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</h6>
     <div class="row padding-horizontal" ng-if="currentEntity.id">
       <h6 style="text-align: left">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
     </div>
@@ -72,7 +72,7 @@
             ng-class="{'has-error': (markerForm.input{{$index}}.$invalid && markerForm.input{{$index}}.$touched) || (isFormSubmit && attribute.required && markerForm.input{{$index}}.$invalid)}"
             class="item item-input item-floating-label" ng-if="attribute.type == 'DATE'">
             <span class="input-label">{{ attribute.name }}</span>
-            <input type="date" ng-model="attribute.value" name="input{{$index}}"
+            <input type="text" ng-model="attribute.value" name="input{{$index}}" ng-click="showDatePicker(attribute)"
                    placeholder="{{ attribute.name }}" ng-required="attribute.required">
           </label>
           <div class="form-error"

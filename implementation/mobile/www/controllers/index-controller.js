@@ -53,6 +53,9 @@
       };
 
       $scope.showDatePicker = function(attribute) {
+
+        cordova.plugins.Keyboard.close();
+
         $cordovaDatePicker.show(options).then(function(date) {
           var day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
           var month = date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);

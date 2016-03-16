@@ -1220,57 +1220,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
              * */
             var statusColor = $scope.verifyStatusColor(marker.status);
 
-            var dragBox = new ol.interaction.DragBox({
-                condition: function () {
-                    return $scope.selectMarkerTool;
-                },
-                style: new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: [0, 0, 255, 1]
-                    })
-                })
-            });
-
-            dragBox.on('boxend', function (e) {
-
-                var extent = dragBox.getGeometry().getExtent();
-                var markers = [];
-
-                angular.forEach($scope.features, function (feature, index) {
-                    var marker = feature.feature.getProperties().marker;
-                    $scope.selectMarker(marker);
-
-                    var extentMarker = feature.extent;
-                    var feature = feature.feature;
-
-                    if (ol.extent.containsExtent(extent, extentMarker)) {
-                        markers.push(marker.id);
-
-                        angular.forEach($scope.selectedFeatures, function (selected, index) {
-                            if (selected.marker.id == marker.id) {
-                                selected.feature.push(feature);
-                            }
-                        });
-
-                    }
-                });
-
-                if (markers.length) {
-                    $scope.changeToList(markers);
-                    $scope.dragMarkers = markers;
-                }
-
-
-                $scope.drag = true;
-            });
-
-
-            dragBox.on('boxstart', function (e) {
-                $scope.clearFeatures();
-            });
-
-            $scope.map.addInteraction(dragBox);
-
             var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
             var feature = new ol.Feature({
                 geometry: geometry,
@@ -1321,9 +1270,67 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.buildVectorMarker = function (markers) {
 
-        $scope.buildMarker(markers);
+        $scope.features = [];
 
-        $scope.map.getView().fitExtent($scope.extent, $scope.map.getSize());
+        $scope.drag = false;
+        var coordenates = [];
+
+        angular.forEach(markers.content, function (marker, index) {
+
+            /**
+             * Verify status
+             * */
+            var statusColor = $scope.verifyStatusColor(marker.status);
+
+            var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
+            var feature = new ol.Feature({
+                geometry: geometry,
+                marker: marker,
+            });
+
+            var fill = new ol.style.Fill({
+                color: statusColor,
+                width: 4.53
+            });
+            var stroke = new ol.style.Stroke({
+                color: '#3399CC',
+                width: 1.25
+            });
+
+            var source = new ol.source.Vector({features: [feature]});
+            var layer = new ol.layer.Vector({
+                source: source,
+                style: new ol.style.Style(
+                  {
+                      image: new ol.style.Circle({
+                          fill: fill,
+                          stroke: stroke,
+                          radius: 10,
+                      }),
+                      fill: fill,
+                      stroke: stroke
+                  }
+                ),
+                maxResolution: minScaleToMaxResolution(marker.layer.minimumScaleMap),
+                minResolution: maxScaleToMinResolution(marker.layer.maximumScaleMap)
+            });
+
+            source.addFeatures(source);
+
+            coordenates.push(geometry.getCoordinates());
+
+            $scope.features.push({'feature': feature, "extent": source.getExtent(), 'layer': layer});
+
+            $scope.map.addLayer(layer);
+
+            $scope.extent = new ol.extent.boundingExtent(coordenates);
+        });
+
+        //$scope.buildMarker(markers);
+
+        var extent = new ol.extent.boundingExtent(coordenates);
+
+        $scope.map.getView().fitExtent(extent, $scope.map.getSize());
 
     };
 
@@ -1677,6 +1684,57 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         };
 
         $scope.selectMarkerTool = $scope.menu.selectMarker;
+
+        var dragBox = new ol.interaction.DragBox({
+            condition: function () {
+                return $scope.selectMarkerTool;
+            },
+            style: new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: [0, 0, 255, 1]
+                })
+            })
+        });
+
+        dragBox.on('boxend', function (e) {
+
+            var extent = dragBox.getGeometry().getExtent();
+            var markers = [];
+
+            angular.forEach($scope.features, function (feature, index) {
+                var marker = feature.feature.getProperties().marker;
+                $scope.selectMarker(marker);
+
+                var extentMarker = feature.extent;
+                var feature = feature.feature;
+
+                if (ol.extent.containsExtent(extent, extentMarker)) {
+                    markers.push(marker.id);
+
+                    angular.forEach($scope.selectedFeatures, function (selected, index) {
+                        if (selected.marker.id == marker.id) {
+                            selected.feature.push(feature);
+                        }
+                    });
+
+                }
+            });
+
+            if (markers.length) {
+                $scope.changeToList(markers);
+                $scope.dragMarkers = markers;
+            }
+
+
+            $scope.drag = true;
+        });
+
+
+        dragBox.on('boxstart', function (e) {
+            $scope.clearFeatures();
+        });
+
+        $scope.map.addInteraction(dragBox);
 
     };
 

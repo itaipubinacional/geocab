@@ -5,17 +5,25 @@
   var module = angular.module('application', ['ngMessages', 'ionic', 'eits-ng', 'ngCordova', 'ngOpenFB', 'eits.translate']);
 
   /**
-   *
+   * Desenvolvimento
    */
   module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
-
+  /**
+   * Homologação
+   */
+  //module.constant('$API_ENDPOINT', 'http://chi554a:8080/geocab');
+  /**
+   * Produção
+   */
+  // module.constant('$API_ENDPOINT', 'http://geocab.itaipu.gov.br');
 
   /**
    *
    */
-  module.config(function($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT, $translateProvider, $compileProvider, $httpProvider, $logProvider) {
+  module.config(function($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT,
+                         $translateProvider, $compileProvider, $httpProvider, $logProvider) {
 
-    $logProvider.debugEnabled(true);
+    $logProvider.debugEnabled(true); //TODO Fixme;
 
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel|data):/);
     //-------
@@ -122,7 +130,9 @@
   /**
    *
    */
-  module.run(function($rootScope, $log, $ionicPlatform, $state, $stateParams, $API_ENDPOINT, ngFB, $cordovaStatusbar, $ionicLoading) {
+  module.run(function($rootScope, $log, $http, $ionicPopup, $ionicPlatform, $state, $stateParams, $API_ENDPOINT, ngFB,
+                      $cordovaStatusbar, $ionicLoading, $cordovaNetwork) {
+
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
@@ -147,6 +157,79 @@
         // org.apache.cordova.statusbar required
         StatusBar.styleDefault();
       }
+
+      $rootScope.showNetworkAlert = function() {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Sem conexão',
+          template: 'Por favor, verifique sua conexão com a internet e reinicie o aplicativo'
+        });
+
+        alertPopup.then(function() {
+
+          ionic.Platform.exitApp();
+
+        });
+      };
+
+      $rootScope.showServerAlert = function() {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Sem conexão',
+          template: 'Por favor, servidor não disponível. Tente novamente mais tarde'
+        });
+
+        alertPopup.then(function() {
+
+          ionic.Platform.exitApp();
+
+        });
+      };
+
+      // listen for Online event
+      $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+        $log.debug('online');
+        var onlineState = networkState;
+      });
+
+      // listen for Offline event
+      $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+        $log.debug('offline');
+
+        $rootScope.showNetworkAlert();
+
+      });
+
+      if(navigator.connection) {
+        var type = navigator.connection.type;
+        $log.debug(type);
+
+        var isOnline = $cordovaNetwork.isOnline();
+        $log.debug(isOnline);
+
+        var isOffline = $cordovaNetwork.isOffline();
+        $log.debug(isOffline);
+
+        if (isOffline) {
+          if (navigator && navigator.splashscreen) {
+            navigator.splashscreen.hide();
+            $rootScope.$broadcast('$cordovaNetwork:offline');
+          }
+        }
+
+        $http({
+          method: 'GET',
+          url: $API_ENDPOINT
+        }).then(function successCallback(response) {
+
+        }, function errorCallback(response) {
+
+          if (navigator && navigator.splashscreen) {
+            navigator.splashscreen.hide();
+            $rootScope.showServerAlert();
+          }
+
+        });
+      }
+
     });
 
     ngFB.init({
@@ -160,7 +243,7 @@
     });
 
     $rootScope.$on('loading:hide', function() {
-      $ionicLoading.hide()
+      $ionicLoading.hide();
     });
 
   });

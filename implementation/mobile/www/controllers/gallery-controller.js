@@ -11,20 +11,21 @@
                                               $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
 
       $scope.hasSelectedPhotos = false;
+      $scope.onHold = false;
 
       $scope.takePhoto = function() {
 
         var options = {
-          quality: 60,
+          quality: 100,
           destinationType: Camera.DestinationType.DATA_URL,
           sourceType: Camera.PictureSourceType.CAMERA,
-          allowEdit: true,
+          allowEdit: false,
           targetWidth: 640,
           targetHeight: 480,
           encodingType: Camera.EncodingType.PNG,
           popoverOptions: CameraPopoverOptions,
-          saveToPhotoAlbum: true,
-          correctOrientation: true
+          saveToPhotoAlbum: false,
+          correctOrientation: false
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
@@ -36,7 +37,7 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
+          photo.name = 'Foto.png';
           photo.description = $scope.selectedPhotoAlbumAttribute.name;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
@@ -49,7 +50,19 @@
           $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
 
         }, function(err) {
-          // error
+          $log.debug(err);
+
+          var alertPopup = $ionicPopup.alert({
+            title: 'Error',
+            template: err
+          });
+
+          alertPopup.then(function() {
+
+            $log.debug('ok');
+
+          });
+
         });
 
       };
@@ -60,7 +73,7 @@
           quality: 60,
           destinationType: Camera.DestinationType.DATA_URL,
           sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-          allowEdit: true,
+          allowEdit: false,
           targetWidth: 640,
           targetHeight: 480,
           encodingType: Camera.EncodingType.PNG,
@@ -78,7 +91,7 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
+          photo.name = 'Foto.png';
           photo.description = $scope.selectedPhotoAlbumAttribute.name;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
@@ -123,6 +136,7 @@
 
       $scope.selectPhoto = function(photo) {
 
+        $scope.onHold = true;
         $scope.selectedPhoto = photo;
         photo.selected = !photo.selected;
         $scope.photosSelected = photo.selected ? $scope.photosSelected + 1 : $scope.photosSelected - 1;
@@ -137,9 +151,12 @@
       });
 
       $scope.openModal = function(index) {
-        $ionicSlideBoxDelegate.slide(index);
-        $scope.selectedPhoto = $scope.selectedPhotoAlbumAttribute.photoAlbum.photos[index];
-        $scope.modal.show();
+        if(!$scope.onHold) {
+          $scope.onHold = false;
+          $ionicSlideBoxDelegate.slide(index);
+          $scope.selectedPhoto = $scope.selectedPhotoAlbumAttribute.photoAlbum.photos[index];
+          $scope.modal.show();
+        }
       };
 
       $scope.closeModal = function() {

@@ -7,7 +7,10 @@
  * @param $state
  */
 angular.module('application')
-  .controller('AuthenticationController', function ($rootScope, $importService, $timeout, $scope, $state, $http, $window, $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate, $ionicPlatform, $ionicHistory) {
+  .controller('AuthenticationController', function ($rootScope, $importService, $timeout, $scope, $state, $http, $window,
+                                                    $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate, $ionicPlatform,
+                                                    $ionicHistory) {
+
 
     $timeout(function() {
       $importService("accountService");
@@ -22,8 +25,8 @@ angular.module('application')
     $rootScope.model = {
       form: null,
       user: {
-        email : 'test_prognus@mailinator.com', //TODO --------- R  E  M  O  V  E  R
-        password : 'admin' //TODO --------- R  E  M  O  V  E  R
+        email : '',
+        password : ''
       },
       errorMsg : {
               title : $translate('Error'),
@@ -56,27 +59,37 @@ angular.module('application')
            }
          });
        });
-     }
+     };
 
     /**
      *
      */
-    $scope.loginHandler = function () {
+    $scope.loginHandler = function (form) {
 
-      var config = {
-        headers: {'Content-Type': 'application/json; charset=UTF-8'}
-      };
-      //Deleta o token antes de executar a requisição
-      delete $scope.model.user.token;
-      $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
-        .success(function (data, status, headers, config) {
-          $scope.model.user.token = data;
-          $scope.loginSuccess();
-        })
-        .error(function (data, status, headers, config) {
-          $scope.loginFailed();
-        }
-      );
+      if (!form.$valid) {
+
+        $scope.isFormSubmit = true;
+
+      } else {
+
+        $scope.isFormSubmit = false;
+
+        var config = {
+          headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        };
+        //Deleta o token antes de executar a requisição
+        delete $scope.model.user.token;
+        $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
+          .success(function (data, status, headers, config) {
+            $scope.model.user.token = data;
+            $scope.loginSuccess();
+          })
+          .error(function (data, status, headers, config) {
+              $scope.loginFailed();
+            }
+          );
+      }
+
     };
 
     /**
@@ -157,7 +170,7 @@ angular.module('application')
         .error(function (data, status, headers, config) {
           $scope.loginFailed();
         });
-    }
+    };
 
 
     /**
@@ -204,15 +217,15 @@ angular.module('application')
     if(localStorage.getItem('token')){
       $scope.model.user.email = localStorage.getItem('userEmail');
       $scope.login('geocab', $scope.model.user.email, localStorage.getItem('token'));
-    };
+    }
 
     if(localStorage.getItem('userEmail')){
       $scope.model.user.email = localStorage.getItem('userEmail');
-    };
-    
+    }
+
     //Handler de BACK
     $ionicPlatform.registerBackButtonAction(function(e){
-      if ($state.$current.name == 'map.index') {
+      if ($state.$current.name == 'map.index' || $state.$current.name == 'authentication.login') {
         ionic.Platform.exitApp();
       } else {
         $ionicHistory.goBack();

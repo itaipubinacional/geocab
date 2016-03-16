@@ -1612,14 +1612,10 @@ ront controller of angle won't let enter an invalid URL.
                             delete markerAttribute.photoAlbum.photos[index];
                     }
 
-                    delete photo.image;
+                    //delete photo.image;
                 })
             }
         });
-
-
-        //=
-
 
         myMarkersService.postMarker($scope.currentEntity, {
             callback: function (result) {
@@ -1786,6 +1782,8 @@ ront controller of angle won't let enter an invalid URL.
      */
     $scope.saveMarkerModal = function () {
 
+      var isValid = true;
+
         if (!$scope.form('sidebarMarkerUpdate').$valid) {
             $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
             $scope.fadeMsg();
@@ -1798,70 +1796,135 @@ ront controller of angle won't let enter an invalid URL.
             return false;
         }
 
-        /*if (!$scope.form('markerDetail').$valid) {
-            $scope.isLoading = false;
-            return;
-        }*/
+        angular.forEach($scope.attributesByMarker, function(attribute){
+            if(attribute.photoAlbum){
+                angular.forEach(attribute.photoAlbum.photos, function(photo){
 
-        if(!$scope.isPostMarker) {
-            if (!($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED)) {
+                    if (attribute.attribute.removePhotosIds) {
+                        var index = attribute.attribute.removePhotosIds.indexOf(photo.id);
 
-                var dialog = $modal.open({
-                    templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-                    controller: DialogController,
-                    windowClass: 'dialog-success',
-                    resolve: {
-                        title: function () {
-                            return $translate('admin.marker-moderation.Save-marker');
-                        },
-                        message: function () {
-                            return $translate('admin.marker-moderation.Are-you-sure-you-want-to-save-this-marker') + ' ?';
-                        },
-                        buttons: function () {
-                            return [
-                                {label: $translate('admin.marker-moderation.Save-marker'), css: 'btn btn-success'},
-                                {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
-                            ];
-                        }
+                        if (index != -1)
+                            attribute.photoAlbum.photos.splice(index, 1);
                     }
-                });
 
-                dialog.result.then(function () {
-
-                    $scope.updateMarker();
-
-                });
-
+                    //delete photo.image;
+                })
             }
-        } else {
+        });
 
-            var dialog = $modal.open({
-                templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-                controller: DialogController,
-                windowClass: 'dialog-success',
-                resolve: {
-                    title: function () {
-                        return $translate('layer-group-view.Post');
-                    },
-                    message: function () {
-                        return $translate('admin.marker-moderation.Are-you-sure-you-want-to-post-this-marker') + ' ?';
-                    },
-                    buttons: function () {
-                        return [
-                            {label: $translate('layer-group-view.Post'), css: 'btn btn-success'},
-                            {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
-                        ];
+        angular.forEach($scope.attributesByMarker, function (attribute, i) {
+
+            if (attribute.value == null) {
+                attribute.value = "";
+            }
+
+            if(attribute.attribute.files) {
+
+                angular.forEach(attribute.attribute.files, function(file, index){
+
+                    if(!file.id) {
+                        var photo = new Photo();
+                        var img = file.src.split(';base64,');
+                        photo.source = img[1];
+                        photo.src = file.src;
+                        photo.name = file.name;
+                        photo.description = file.description;
+                        photo.contentLength = file.size ? file.size : file.contentLength;
+                        photo.mimeType = file.type ? file.type : file.mimeType;
+
+                        attribute.attribute.files[index] = photo;
                     }
+                });
+
+                if(!attribute.photoAlbum) {
+                    var photoAlbum = new PhotoAlbum();
+                    photoAlbum.photos = new Array();
+
+                    attribute.photoAlbum = photoAlbum;
+                    attribute.photoAlbum.photos = attribute.attribute.files;
+
+                } else {
+                    attribute.photoAlbum.photos = attribute.attribute.files;
                 }
-            });
+            }
+        });
 
-            dialog.result.then(function () {
+        angular.forEach($scope.attributesByMarker, function(attribute, index) {
 
-                $scope.postMarker();
+          if (attribute.attribute.type == 'PHOTO_ALBUM' && attribute.attribute.required && attribute.photoAlbum != null && attribute.photoAlbum.photos.length == 0) {
 
-            });
+            // console.log(attribute.attribute.name);
+            // console.log(attribute.photoAlbum.photos.length);
 
-            $scope.isPostMarker = false;
+            var text = $translate('photos.Insert-Photos-in-attribute').replace('"{0}"', '') + attribute.attribute.name;
+            $scope.msg = {type: "danger", text: text, dismiss: true};
+            $scope.fadeMsg();
+
+            isValid = false;
+          }
+        });
+
+        if(isValid) {
+          if(!$scope.isPostMarker) {
+              if (!($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED)) {
+
+                  var dialog = $modal.open({
+                      templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+                      controller: DialogController,
+                      windowClass: 'dialog-success',
+                      resolve: {
+                          title: function () {
+                              return $translate('admin.marker-moderation.Save-marker');
+                          },
+                          message: function () {
+                              return $translate('admin.marker-moderation.Are-you-sure-you-want-to-save-this-marker') + ' ?';
+                          },
+                          buttons: function () {
+                              return [
+                                  {label: $translate('admin.marker-moderation.Save-marker'), css: 'btn btn-success'},
+                                  {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                              ];
+                          }
+                      }
+                  });
+
+                  dialog.result.then(function () {
+
+                      $scope.updateMarker();
+
+                  });
+
+              }
+          } else {
+
+              var dialog = $modal.open({
+                  templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
+                  controller: DialogController,
+                  windowClass: 'dialog-success',
+                  resolve: {
+                      title: function () {
+                          return $translate('layer-group-view.Post');
+                      },
+                      message: function () {
+                          return $translate('admin.marker-moderation.Are-you-sure-you-want-to-post-this-marker') + ' ?';
+                      },
+                      buttons: function () {
+                          return [
+                              {label: $translate('layer-group-view.Post'), css: 'btn btn-success'},
+                              {label: 'Cancelar', css: 'btn btn-default', dismiss: true}
+                          ];
+                      }
+                  }
+              });
+
+              dialog.result.then(function () {
+
+                  $scope.postMarker();
+
+              });
+
+              $scope.isPostMarker = false;
+          }
         }
 
     };
@@ -1890,8 +1953,8 @@ ront controller of angle won't let enter an invalid URL.
                         photo.source = img[1];
                         photo.name = file.name;
                         photo.description = file.description;
-                        photo.contentLength = file.size;
-                        photo.mimeType = file.type;
+                        photo.contentLength = file.size ? file.size : file.contentLength;
+                        photo.mimeType = file.type ? file.type : file.mimeType;
 
                         attribute.attribute.files[index] = photo;
                     }
@@ -1934,7 +1997,8 @@ ront controller of angle won't let enter an invalid URL.
 
         /* Remove image to update */
         angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
-            if(markerAttribute.photoAlbum){
+            if(markerAttribute.photoAlbum && markerAttribute.photoAlbum.photos != undefined){
+
                 angular.forEach(markerAttribute.photoAlbum.photos, function(photo){
 
                     if (markerAttribute.attribute.removePhotosIds) {
@@ -1946,6 +2010,8 @@ ront controller of angle won't let enter an invalid URL.
 
                     delete photo.image;
                 })
+            } else {
+              markerAttribute.photoAlbum = null;
             }
         });
 

@@ -84,10 +84,14 @@ uri="http://www.springframework.org/security/tags"%>
                 <accordion-group ng-repeat="feature in features track by $index" ng-init="isOpen = $index == 0" is-open="isOpen" ng-class="{'min-height-accordion': feature.type == 'internal' || feature.type == 'external' }">
 
                   <accordion-heading>
-                    <div style="cursor:pointer; padding: 10px 0;">
-                      <i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-                      <span ng-if="feature.type == 'internal'" style="overflow:auto" ng-click="calculo()" >{{feature.feature.layer.title}} </span>
-                      <span ng-if="feature.type == 'external'" style="overflow:auto" ng-click="calculo()">{{feature.feature.layer.titulo}}</span>
+                    <div class="row" style="cursor:pointer; padding: 10px 0">
+                      <i class="pull-left col-md-1" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+                      <span title="{{feature.feature.layer.title}}" class="dynamic-text col-md-10" ng-if="feature.type == 'internal'" ng-click="calculo()" >
+                        {{feature.feature.layer.title}}
+                      </span>
+                      <span title="{{feature.feature.layer.titulo}}" class="dynamic-text col-md-10" ng-if="feature.type == 'external'" ng-click="calculo()">
+                        {{feature.feature.layer.titulo}}
+                      </span>
 
                     </div>
                   </accordion-heading>
@@ -95,9 +99,13 @@ uri="http://www.springframework.org/security/tags"%>
 
                     <span ng-if="feature.type == 'internal'">
 
-                    <div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container" style="height: 100%; width: 100%; padding: 0;">
+                    <div id="tabs-2" ng-switch="LAYER_MENU_STATE" class="container " style="height: 100%; width: 100%; padding: 0;">
+                      <div class="col-md-12 dynamic-text" style="padding : 0">
+                        <span title="{{marker.layer.title}}" style="font-weight: bold; font-size: 18px;">
+                          {{marker.layer.title }}
+                        </span>
+                      </div>
 
-                      <span style="float: left; margin-top: 12px; font-weight: bold; font-size: 18px;">{{marker.layer.title }}</span>
                       <br style="clear: both;"> <br>
                       <span style="float: left"><spring:message code="map.Created-by"/>: <b>{{ marker.user.name}}</b></span>
                       <span style="float: right">{{ marker.created |date:'dd/MM/yyyy' }}</span>
@@ -501,7 +509,7 @@ uri="http://www.springframework.org/security/tags"%>
                     ng-disabled="isLoading"
                     title="<spring:message code='map.Save' />">
                   <spring:message code="map.Save" />
-                  <i ng-if="isLoading" class="loading"></i>
+                  <i ng-if="isLoading"></i>
                 </button>
               </div>
             </div>
@@ -529,11 +537,17 @@ uri="http://www.springframework.org/security/tags"%>
                 <accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret" heightStyle="content">
                   <accordion-group ng-repeat="selected in selectedMarkers">
                     <accordion-heading>
-                      <div style="cursor:pointer; padding: 10px 0;">
-                        <i class="pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-                        <span>{{ selected.title }} ({{ selected.markers.length }}) </span>
+                      <div class="row" style="cursor:pointer; padding: 10px 0;">
+
+                        <i class="col-md-1 pull-left" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+
+                        <span class="dynamic-text col-md-10" title="{{ selected.title }}">
+                          {{ selected.title }} ({{ selected.markers.length }})
+                        </span>
+
                       </div>
                     </accordion-heading>
+
                     <div ng-repeat="marker in selected.markers">
                       <p ng-click="showMarkerDetail(marker)">{{ $index + 1 }} - {{ marker.coordinate }}</p>
                     </div>
@@ -1080,7 +1094,7 @@ uri="http://www.springframework.org/security/tags"%>
                           style="margin: 6px 0 20px 0;"
                           ng-disabled="isLoading && !isImport"
                           class="btn btn-success"><spring:message code="admin.shape-file.Export" />
-                    <i ng-if="isLoading && !isImport" class="loading"></i>
+                    <i ng-if="isLoading && !isImport" ></i>
                   </button>
                 </div>
 
@@ -1271,7 +1285,7 @@ uri="http://www.springframework.org/security/tags"%>
     </div>
 
     <!-- Google Maps -->
-    <div id="gmap" class="loading" style="width: 0; height: 0"></div>
+    <div id="gmap" style="width: 0; height: 0"></div>
 
     <!--<div id="typeMapQuest"
          ng-if="mapConf.active == 'mapQuest_osm' || mapConf.active == 'mapQuest_sat'"
@@ -1284,13 +1298,12 @@ uri="http://www.springframework.org/security/tags"%>
     </div>-->
 
     <!-- Openlayer Map -->
-    <div id="olmap" class="loading"
-         style="position: absolute; top: 0; bottom: 0; left: 0; right: 0">
+    <div id="olmap" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0">
       <div id="popup" class="ol-popup">
         <!--<a href="#" id="popup-closer" class="ol-popup-closer"></a>-->
         <div id="popup-content"></div>
       </div>
-      <div id="info"></div>
+      <div id="info" style="position: fixed"></div>
     </div>
   </section>
 
