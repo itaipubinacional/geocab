@@ -8,10 +8,19 @@
    */
   angular.module('application')
     .controller('IndexController', function($scope, $translate, $state, $ionicPopup, $ionicPopover, $filter, $log,
-                                            $cordovaToast, $ionicModal, $cordovaDatePicker) {
+                                            $cordovaToast, $ionicModal, $cordovaDatePicker, $ionicPlatform) {
+
+      $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $log.debug('beforeEnter');
+        viewData.enableBack = true;
+      });
+
+      $ionicPlatform.registerBackButtonAction(function(e){
+        $state.go($scope.MAP_INDEX);
+      }, 100);
 
       // Configura o popover
-      $ionicPopover.fromTemplateUrl('marker-view-options-menu.html', {
+      $ionicPopover.fromTemplateUrl('views/popover/marker-view-popover.html', {
           scope: $scope
       }).then(function(popover) {
           $scope.popover = popover;

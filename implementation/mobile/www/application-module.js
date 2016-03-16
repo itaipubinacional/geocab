@@ -7,7 +7,8 @@
   /**
    * Desenvolvimento
    */
-  module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
+  module.constant('$API_ENDPOINT', 'http://192.168.20.136:8080/geocab');
+  //module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
   /**
    * Homologação
    */
@@ -15,7 +16,7 @@
   /**
    * Produção
    */
-  // module.constant('$API_ENDPOINT', 'http://geocab.itaipu.gov.br');
+  //module.constant('$API_ENDPOINT', 'http://geocab.itaipu.gov.br');
 
   /**
    *
@@ -83,6 +84,7 @@
       }
     }).state('map.marker', {
       url: '/marker',
+      back: 'map.index',
       views: {
         'menuContent': {
           templateUrl: './views/templates/marker-view.html',
@@ -91,6 +93,7 @@
       }
     }).state('map.wms', {
       url: '/wms',
+      back: 'map.index',
       views: {
         'menuContent': {
           templateUrl: './views/templates/wms-view.html',
@@ -99,6 +102,7 @@
       }
     }).state('map.gallery', {
       url: '/gallery',
+      back: 'map.marker',
       views: {
         'menuContent': {
           templateUrl: './views/map/gallery.html',
@@ -107,25 +111,7 @@
       }
     });
 
-
-
-  }).factory('Camera', ['$q', function($q) {
-
-    return {
-      getPicture: function(options) {
-        var q = $q.defer();
-
-        navigator.camera.getPicture(function(result) {
-          // Do any magic you need
-          q.resolve(result);
-        }, function(err) {
-          q.reject(err);
-        }, options);
-
-        return q.promise;
-      }
-    }
-  }]);
+  });
 
   /**
    *
@@ -138,11 +124,25 @@
     $rootScope.$stateParams = $stateParams;
     $rootScope.$API_ENDPOINT = $API_ENDPOINT;
 
+    $rootScope.currentEntity = {};
+
+    $rootScope.photos = localStorage.getItem('photos') ? angular.fromJson(localStorage.getItem('photos')) : [];
+
     $rootScope.setUrl = function(url) {
       if (window.location.hostname.match(/localhost/))
         return $API_ENDPOINT + '/broker/' + url;
       return './lib/dwr/' + url;
     };
+
+    $rootScope.$on('loading:show', function() {
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner>'
+      });
+    });
+
+    $rootScope.$on('loading:hide', function() {
+      $ionicLoading.hide();
+    });
 
     $ionicPlatform.ready(function() {
 
@@ -158,6 +158,8 @@
         StatusBar.styleDefault();
       }
 
+      /* CHECK THE INTERNET AND END_POINT STATUS */
+
       $rootScope.showNetworkAlert = function() {
         var alertPopup = $ionicPopup.alert({
           title: 'Sem conexão',
@@ -165,9 +167,7 @@
         });
 
         alertPopup.then(function() {
-
           ionic.Platform.exitApp();
-
         });
       };
 
@@ -178,9 +178,7 @@
         });
 
         alertPopup.then(function() {
-
           ionic.Platform.exitApp();
-
         });
       };
 
@@ -193,9 +191,7 @@
       // listen for Offline event
       $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
         $log.debug('offline');
-
         $rootScope.showNetworkAlert();
-
       });
 
       if(navigator.connection) {
@@ -230,21 +226,69 @@
         });
       }
 
+      /* DEVICE ON PAUSE AND ON RESUME */
+      document.addEventListener('deviceReady', function () {
+
+        document.addEventListener('pause', function (event) {
+
+          $log.debug('pause');
+          $log.debug($state.current.name);
+
+          localStorage.setItem('photos', angular.toJson($rootScope.photos));
+          localStorage.setItem('lastState', $state.current.name);
+
+        }, false);
+
+        document.addEventListener('resume', function (event) {
+
+          $log.debug('resume');
+
+          $log.debug(event.pendingResult);
+
+          if (event.pendingResult) {
+
+            if (event.pendingResult.pluginStatus === "OK") {
+
+              //$state.go('map.gallery');
+              $rootScope.photos.push(event.pendingResult.result);
+
+              $log.debug($rootScope.photos);
+
+              $rootScope.currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
+              $rootScope.$broadcast('currentEntity', $rootScope.currentEntity);
+
+              $rootScope.$apply();
+
+            } else {
+              $log.debug('Error');
+            }
+          }
+        }, false);
+      });
+
     });
 
     ngFB.init({
       appId: '1563968713815015'
     });
 
-    $rootScope.$on('loading:show', function() {
-      $ionicLoading.show({
-        template: '<ion-spinner></ion-spinner>'
-      });
-    });
+    /*$rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 
-    $rootScope.$on('loading:hide', function() {
-      $ionicLoading.hide();
-    });
+      if(toState.name == 'map.index') {
+        $ionicNavBarDelegate.showBackButton(false);
+      } else {
+        $ionicNavBarDelegate.showBackButton(true);
+      }
+
+      var currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
+      $rootScope.$broadcast('currentEntity', currentEntity);
+
+    });*/
+
+    /*$rootScope.$on('$ionicView.beforeEnter', function (event, viewData) {
+      $log.debug('beforeEnter');
+      viewData.enableBack = true;
+    });*/
 
   });
 

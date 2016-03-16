@@ -16,16 +16,13 @@
         "cordova-plugin-datepicker": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
         "cordova-plugin-googleplus": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-inappbrowser": {
+        "cordova-plugin-keyboard": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-keyboard": {
+        "cordova-plugin-network-information": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
         "cordova-plugin-splashscreen": {
@@ -37,16 +34,7 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-x-toast": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "net.ekuwang.cordova.plugin.statusbar": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-network-information": {
+        "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },

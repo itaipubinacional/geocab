@@ -19,7 +19,6 @@
     "cordova-plugin-datepicker",
     "cordova-plugin-crosswalk-webview",
     "cordova-plugin-keyboard",
-    "cordova-plugin-geolocation",
     "org.apache.cordova.inappbrowser",
     "cordova-plugin-googleplus",
     "org.apache.cordova.statusbar",

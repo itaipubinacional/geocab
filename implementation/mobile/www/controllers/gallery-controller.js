@@ -7,17 +7,85 @@
    * @param $state
    */
   angular.module('application')
-    .controller('GalleryController', function($scope, $translate, $state, $timeout, $log, $cordovaCamera, $ionicLoading,
-                                              $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
+    .controller('GalleryController', function($rootScope, $scope, $translate, $state, $timeout, $log, $cordovaCamera, $ionicLoading,
+                                              $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPopup,
+                                              $ionicHistory, $ionicPlatform) {
+
+      $rootScope.$on('currentEntity', function(event, data){
+
+        $scope.selectedPhotoAlbumAttribute = localStorage.selectedPhotoAlbumAttribute;
+        $scope.$apply();
+
+      });
+
+      $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $log.debug('beforeEnter');
+        viewData.enableBack = true;
+      });
+
+      $ionicPlatform.registerBackButtonAction(function(e){
+         $state.go($scope.MAP_MARKER);
+      }, 100);
 
       $scope.hasSelectedPhotos = false;
       $scope.onHold = false;
+
+      var errorHandler = function (fileName, e) {
+        var msg = '';
+
+        switch (e.code) {
+          case FileError.QUOTA_EXCEEDED_ERR:
+            msg = 'Storage quota exceeded';
+            break;
+          case FileError.NOT_FOUND_ERR:
+            msg = 'File not found';
+            break;
+          case FileError.SECURITY_ERR:
+            msg = 'Security error';
+            break;
+          case FileError.INVALID_MODIFICATION_ERR:
+            msg = 'Invalid modification';
+            break;
+          case FileError.INVALID_STATE_ERR:
+            msg = 'Invalid state';
+            break;
+          default:
+            msg = 'Unknown error';
+            break;
+        }
+
+        $log.debug('Error (' + fileName + '): ' + msg);
+      };
+
+      $scope.convertImgToBase64URL = function (fileName, onSuccess) {
+
+        var pathToFile = fileName;
+        window.resolveLocalFileSystemURL(pathToFile, function (fileEntry) {
+          fileEntry.file(function (file) {
+            var reader = new FileReader();
+
+            reader.onloadend = function (e) {
+              onSuccess(this.result);
+            };
+
+            reader.readAsDataURL(file);
+          }, errorHandler.bind(null, fileName));
+        }, errorHandler.bind(null, fileName));
+      };
+
+      $scope.convertImages = function(){
+        angular.forEach($rootScope.photos, function(photo){
+          $scope.convertImgToBase64URL(photo, function(data){
+            $log.debug(data);
+          });
+        });
+      };
 
       $scope.takePhoto = function() {
 
         var options = {
           quality: 100,
-          destinationType: Camera.DestinationType.DATA_URL,
+          destinationType: Camera.DestinationType.FILE_URI,
           sourceType: Camera.PictureSourceType.CAMERA,
           allowEdit: false,
           targetWidth: 640,
@@ -70,16 +138,15 @@
       $scope.getPhoto = function() {
 
         var options = {
-          quality: 60,
-          destinationType: Camera.DestinationType.DATA_URL,
+          quality: 100,
+          destinationType: Camera.DestinationType.FILE_URI,
           sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
           allowEdit: false,
           targetWidth: 640,
           targetHeight: 480,
-          encodingType: Camera.EncodingType.PNG,
+          encodingType: Camera.EncodingType.JPEG,
           popoverOptions: CameraPopoverOptions,
-          saveToPhotoAlbum: true,
-          correctOrientation: true
+          correctOrientation: false,
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
@@ -91,10 +158,10 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = 'Foto.png';
+          photo.name = 'Foto.jpeg';
           photo.description = $scope.selectedPhotoAlbumAttribute.name;
           photo.contentLength = imageData.length;
-          photo.mimeType = 'image/png';
+          photo.mimeType = 'image/jpeg';
 
           if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
             $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
@@ -104,7 +171,18 @@
           $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
 
         }, function(err) {
-          // error
+          $log.debug(err);
+
+          var alertPopup = $ionicPopup.alert({
+            title: 'Error',
+            template: err
+          });
+
+          alertPopup.then(function() {
+
+            $log.debug('ok');
+
+          });
         });
 
       };
@@ -112,6 +190,10 @@
       /* GALLERY */
 
       $scope.addMedia = function() {
+
+        localStorage.setItem('currentEntity', angular.toJson($scope.currentEntity));
+        localStorage.setItem('selectedPhotoAlbumAttribute', angular.toJson($scope.selectedPhotoAlbumAttribute));
+
         $scope.actionSheet = $ionicActionSheet.show({
           buttons: [{
             text: 'Tirar foto'

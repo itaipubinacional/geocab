@@ -9,7 +9,7 @@
 angular.module('application')
   .controller('AuthenticationController', function ($rootScope, $importService, $timeout, $scope, $state, $http, $window,
                                                     $ionicPopup, $API_ENDPOINT, ngFB, $ionicLoading, $translate, $ionicPlatform,
-                                                    $ionicHistory) {
+                                                    $ionicHistory, $log) {
 
 
     $timeout(function() {
@@ -25,8 +25,8 @@ angular.module('application')
     $rootScope.model = {
       form: null,
       user: {
-        email : '',
-        password : ''
+        email : 'test_prognus@mailinator.com',
+        password : 'admin'
       },
       errorMsg : {
               title : $translate('Error'),
@@ -136,7 +136,7 @@ angular.module('application')
 
       window.plugins.googleplus.login(
         {
-          'offline': true, // optional, used for Android only - if set to true the plugin will also return the OAuth access token ('oauthToken' param), that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
+          'offline': true // optional, used for Android only - if set to true the plugin will also return the OAuth access token ('oauthToken' param), that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
         },
         function (user) {
           $scope.login('google', user.email, user.oauthToken);
@@ -159,12 +159,10 @@ angular.module('application')
       //Valida o token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
       $http.get($API_ENDPOINT + "/login/" + server + "?userName=" + user + "&token=" + token)
         .success(function (data, status, headers, config) {
-        //   $ionicLoading.hide();
-        //   $state.go('home');
+
           $scope.model.user.email = user;
           $scope.model.user.token = data;
           $scope.loginSuccess();
-
 
         })
         .error(function (data, status, headers, config) {
@@ -181,8 +179,17 @@ angular.module('application')
       localStorage.setItem('token', $scope.model.user.token);
       localStorage.setItem('userEmail', $scope.model.user.email);
       if (localStorage.getItem('doneIntro')) {
-        $state.go('map.index');
-        //$scope.getUserAuthenticated();
+        //$state.go('map.index');
+        var lastState = localStorage.lastState && localStorage.lastState != 'authentication.login' ? localStorage.lastState : 'map.index';
+
+        $log.debug(lastState);
+
+        $ionicHistory.nextViewOptions({
+          disableAnimate: true,
+          historyRoot: true
+        });
+
+        $state.go(lastState);
       } else {
         $state.go('authentication.intro');
       }
@@ -219,9 +226,9 @@ angular.module('application')
       $scope.login('geocab', $scope.model.user.email, localStorage.getItem('token'));
     }
 
-    if(localStorage.getItem('userEmail')){
+    /*if(localStorage.getItem('userEmail')){
       $scope.model.user.email = localStorage.getItem('userEmail');
-    }
+    }*/
 
     //Handler de BACK
     $ionicPlatform.registerBackButtonAction(function(e){

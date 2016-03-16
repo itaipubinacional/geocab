@@ -9,8 +9,8 @@
   angular.module('application')
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaGeolocation,
-      $filter, $log, $location, $ionicNavBarDelegate, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $http) {
+      $filter, $log, $location, $cordovaCamera, $ionicLoading,
+      $cordovaToast, $http, $ionicNavBarDelegate) {
 
       /**
        *
@@ -67,6 +67,39 @@
       $scope.selectedPhotoAlbumAttribute = {};
 
       $scope.attributeIndex = '';
+
+      $rootScope.$on('currentEntity', function(event, data){
+
+        $rootScope.currentEntity = data;
+        $log.debug($scope.currentEntity);
+
+        $timeout(function (){
+          $scope.listAllInternalLayerGroups();
+          $scope.getUserAuthenticated();
+        }, 2000);
+
+        $rootScope.$apply();
+      });
+
+      $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+        $log.debug('state change');
+
+        if(toState.name == 'map.index') {
+          $ionicNavBarDelegate.showBackButton(false);
+        } else {
+          $ionicNavBarDelegate.showBackButton(true);
+
+          if(angular.equals($scope.currentEntity, {})) {
+            var currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
+            $scope.currentEntity = currentEntity;
+
+            $log.debug($scope.currentEntity);
+          }
+
+        }
+
+      });
 
       /**
        * Setting the background layer - OSM
@@ -153,6 +186,8 @@
         if (image != null && image != '') {
           if (image.match(/broker/)) {
             return $rootScope.$API_ENDPOINT + image.match(/\/broker.*/)[0];
+          } else if(image.match(/file/)) {
+            return image;
           } else {
             return "data:image/png;base64," + image;
           }
@@ -308,8 +343,8 @@
         var coordinate = $scope.map.getCoordinateFromPixel([evt.gesture.center.pageX, evt.gesture.center.pageY - 44]);
         var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
 
-        $scope.longitude = transformed_coordinate[0];
-        $scope.latitude = transformed_coordinate[1];
+        $scope.currentEntity.long = transformed_coordinate[0];
+        $scope.currentEntity.lat = transformed_coordinate[1];
 
         var iconStyle = new ol.style.Style({
           image: new ol.style.Icon({
@@ -439,8 +474,8 @@
             var coordinate = geometry.getCoordinates();
 
             var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
-            $scope.latitude = transformed_coordinate[1];
-            $scope.longitude = transformed_coordinate[0];
+            $scope.currentEntity.lat = transformed_coordinate[1];
+            $scope.currentEntity.long = transformed_coordinate[0];
 
             $scope.setMarkerCoordinatesFormat();
 
@@ -565,11 +600,11 @@
 
       $scope.setMarkerCoordinatesFormat = function() {
         if ($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
-          $scope.formattedLatitude = $scope.latitude.toFixed(6);
-          $scope.formattedLongitude = $scope.longitude.toFixed(6);
+          $scope.currentEntity.formattedLatitude = $scope.currentEntity.lat.toFixed(6);
+          $scope.currentEntity.formattedLongitude = $scope.currentEntity.long.toFixed(6);
         } else {
-          $scope.formattedLatitude = $scope.convertDDtoDMS($scope.latitude, true);
-          $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude, false);
+          $scope.currentEntity.formattedLatitude = $scope.convertDDtoDMS($scope.currentEntity.lat, true);
+          $scope.currentEntity.formattedLongitude = $scope.convertDDtoDMS($scope.currentEntity.long, false);
         }
       };
 
@@ -1039,8 +1074,8 @@
       $scope.showMarkerPosition = function() {
 
         if($scope.coordinatesFormat == 'DEGREES_DECIMAL')
-          return $scope.formattedLatitude + ', ' + $scope.formattedLongitude;
-        return $scope.formattedLatitude + ' ' + $scope.formattedLongitude;
+          return $scope.currentEntity.formattedLatitude + ', ' + $scope.currentEntity.formattedLongitude;
+        return $scope.currentEntity.formattedLatitude + ' ' + $scope.currentEntity.formattedLongitude;
 
       };
 
@@ -1092,7 +1127,7 @@
 
               $scope.currentEntity.status = 'PENDING';
 
-              var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
+              var olCoordinates = ol.proj.transform([$scope.currentEntity.long, $scope.currentEntity.lat], 'EPSG:4326', 'EPSG:900913');
 
               $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
 
@@ -1201,7 +1236,7 @@
 
               });
 
-              var olCoordinates = ol.proj.transform([$scope.longitude, $scope.latitude], 'EPSG:4326', 'EPSG:900913');
+              var olCoordinates = ol.proj.transform([$scope.currentEntity.long, $scope.currentEntity.lat], 'EPSG:4326', 'EPSG:900913');
               $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([olCoordinates[0], olCoordinates[1]]));
 
               markerService.insertMarker($scope.currentEntity, {
