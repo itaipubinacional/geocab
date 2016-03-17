@@ -27,6 +27,15 @@
 /*     background: transparent url("../../images/ajax-loader-transparent.gif") no-repeat center center; */
 }
 
+.loading-wms{
+  top: 50%;
+  height: 30px;
+  left: 50%;
+  width: 30px;
+  position: fixed;
+  background: transparent url("../../images/ajax-loader-transparent.gif") no-repeat center center;
+}
+
 /* TOOLTIP MOUSE POSITION */
 #info {
     position: absolute;

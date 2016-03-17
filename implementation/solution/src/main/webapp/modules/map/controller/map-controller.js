@@ -297,6 +297,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
 
   $scope.isLoading = false;
+
+  $scope.showLoadingWms = false;
+
+  $scope.contWmsLoad = 0;
   /*-------------------------------------------------------------------
    * 		 				 	 CONFIGURATION VARIABLES MAP
    *-------------------------------------------------------------------*/
@@ -1286,9 +1290,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           wmsOptions.url += "?" + node.dataSourceUrl.match(/&authkey=(.*)/)[0];
         }
 
-        var wmsSource = new ol.source.TileWMS(wmsOptions);
+        var wmsSource = new ol.source.ImageWMS(wmsOptions);
 
-        var wmsLayer = new ol.layer.Tile({
+        var wmsLayer = new ol.layer.Image({
           source: wmsSource,
           maxResolution: minEscalaToMaxResolutionn(node.minimumScaleMap),
           minResolution: maxEscalaToMinResolutionn(node.maximumScaleMap)
@@ -1298,6 +1302,29 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         //Adds the selected layers in the map
         $scope.map.addLayer(wmsLayer);
+
+
+        // Controla o loading de camadas WMS
+        var wmsEvent = function(newWmsLoad){
+
+          $scope.contWmsLoad += newWmsLoad ? +1 : -1;
+
+          $scope.showLoadingWms = $scope.contWmsLoad > 0 ? true : false;
+
+          $scope.$apply();
+
+        }
+
+        wmsSource.on('imageloadstart', function() {
+          wmsEvent(true);
+        });
+        wmsSource.on('imageloadend', function() {
+          wmsEvent(false);
+        });
+        wmsSource.on('imageloaderror', function() {
+          wmsEvent(false);
+        });
+
       }
       else {
         for (var i = 0; i <= $scope.layers.length; i++) {
@@ -1635,7 +1662,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.view.setZoom($scope.view.getZoom());
 
       $timeout(function(){
-  
+
         $scope.map.updateSize();
 
       }, 1000);
@@ -1843,7 +1870,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       if($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
         return coord.split(',').reverse().join(', ');
       } else {
-        return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
+        if(coord.split){
+          return ol.coordinate.toStringHDMS(coord.split(',').map(Number));
+        } else {
+          return "";
+        }
       }
 
       /*var posVirgula = coord.indexOf(",");
