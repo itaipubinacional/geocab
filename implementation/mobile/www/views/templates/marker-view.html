@@ -29,7 +29,7 @@
     </div>
     <label class="item item-input item-select" ng-if="!currentEntity.id">
       <span class="input-label">{{ 'Layer' | translate }}</span>
-      <select ng-change="listAttributesByLayer(currentEntity.layer, true)" ng-model="currentEntity.layer"
+      <select ng-change="listAttributesByLayer(currentEntity.layer, true)" ng-model="currentEntity.layer" ng-init="currentEntity.layer = currentEntity.layer"
               ng-options="layer.title ? layer.title : name for layer in allInternalLayerGroups"></select>
     </label>
     <div class="row" ng-if="imgResult != '' && imgResult != null">

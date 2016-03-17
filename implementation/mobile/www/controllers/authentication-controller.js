@@ -189,6 +189,7 @@ angular.module('application')
           historyRoot: true
         });
 
+        $scope.getUserAuthenticated();
         $state.go(lastState);
       } else {
         $state.go('authentication.intro');

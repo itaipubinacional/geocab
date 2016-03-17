@@ -7,7 +7,7 @@
   /**
    * Desenvolvimento
    */
-  module.constant('$API_ENDPOINT', 'http://192.168.20.136:8080/geocab');
+  module.constant('$API_ENDPOINT', 'http://eduardo.prognus.com.br:8080/geocab');
   //module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
   /**
    * Homologação
@@ -47,11 +47,12 @@
       $API_ENDPOINT + '/**'
     ]);
 
+    var lastRoute = localStorage.lastRoute ? localStorage.lastRoute : '/authentication/login';
 
     //-------
     //URL Router
     //-------
-    $urlRouterProvider.otherwise("/authentication/login");
+    $urlRouterProvider.otherwise(lastRoute);
 
     //AUTHENTICATION
     $stateProvider.state('authentication', {
@@ -236,6 +237,7 @@
 
           localStorage.setItem('photos', angular.toJson($rootScope.photos));
           localStorage.setItem('lastState', $state.current.name);
+          localStorage.setItem('lastRoute', location.hash.replace('#', ''));
 
         }, false);
 
@@ -254,8 +256,8 @@
 
               $log.debug($rootScope.photos);
 
-              $rootScope.currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
-              $rootScope.$broadcast('currentEntity', $rootScope.currentEntity);
+              //$rootScope.currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
+              $rootScope.$broadcast('camera:result', event.pendingResult.result);
 
               $rootScope.$apply();
 

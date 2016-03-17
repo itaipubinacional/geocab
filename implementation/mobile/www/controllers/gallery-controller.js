@@ -11,9 +11,30 @@
                                               $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPopup,
                                               $ionicHistory, $ionicPlatform) {
 
-      $rootScope.$on('currentEntity', function(event, data){
+      $scope.addPhoto = function(file) {
 
-        $scope.selectedPhotoAlbumAttribute = localStorage.selectedPhotoAlbumAttribute;
+        var photo = {};
+        photo.image = file;
+        photo.name = 'Foto.png';
+        photo.description = $scope.selectedPhotoAlbumAttribute.name;
+        photo.mimeType = 'image/png';
+
+        if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
+          $scope.selectedPhotoAlbumAttribute.photoAlbum = {};
+          $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
+        }
+
+        $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+
+      };
+
+
+      $rootScope.$on('camera:result', function(event, data){
+
+        $scope.selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
+
+        $scope.addPhoto(data);
+
         $scope.$apply();
 
       });
@@ -28,6 +49,7 @@
       }, 100);
 
       $scope.hasSelectedPhotos = false;
+
       $scope.onHold = false;
 
       var errorHandler = function (fileName, e) {
@@ -80,6 +102,7 @@
           });
         });
       };
+
 
       $scope.takePhoto = function() {
 
