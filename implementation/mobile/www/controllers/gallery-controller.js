@@ -11,29 +11,30 @@
                                               $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPopup,
                                               $ionicHistory, $ionicPlatform) {
 
-      $scope.addPhoto = function(file) {
-
-        var photo = {};
-        photo.image = file;
-        photo.name = 'Foto.png';
-        photo.description = $scope.selectedPhotoAlbumAttribute.name;
-        photo.mimeType = 'image/png';
-
-        if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
-          $scope.selectedPhotoAlbumAttribute.photoAlbum = {};
-          $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
-        }
-
-        $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
-
-      };
-
 
       $rootScope.$on('camera:result', function(event, data){
 
-        $scope.selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
+        var selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
 
-        $scope.addPhoto(data);
+        angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
+
+          if(markerAttribute.attribute.id == selectedPhotoAlbumAttribute.attribute.id) {
+
+            var photo = {};
+            photo.image       = data;
+            photo.name        = 'Foto.png';
+            photo.description = markerAttribute.name;
+            photo.mimeType    = 'image/png';
+
+            if (!markerAttribute.photoAlbum) {
+              markerAttribute.photoAlbum = {};
+              markerAttribute.photoAlbum.photos = [];
+            }
+
+            markerAttribute.photoAlbum.photos.push(photo);
+
+          }
+        });
 
         $scope.$apply();
 

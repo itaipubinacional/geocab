@@ -127,8 +127,6 @@
 
     $rootScope.currentEntity = {};
 
-    $rootScope.photos = localStorage.getItem('photos') ? angular.fromJson(localStorage.getItem('photos')) : [];
-
     $rootScope.setUrl = function(url) {
       if (window.location.hostname.match(/localhost/))
         return $API_ENDPOINT + '/broker/' + url;
@@ -251,12 +249,6 @@
 
             if (event.pendingResult.pluginStatus === "OK") {
 
-              //$state.go('map.gallery');
-              $rootScope.photos.push(event.pendingResult.result);
-
-              $log.debug($rootScope.photos);
-
-              //$rootScope.currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
               $rootScope.$broadcast('camera:result', event.pendingResult.result);
 
               $rootScope.$apply();
@@ -273,24 +265,6 @@
     ngFB.init({
       appId: '1563968713815015'
     });
-
-    /*$rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-
-      if(toState.name == 'map.index') {
-        $ionicNavBarDelegate.showBackButton(false);
-      } else {
-        $ionicNavBarDelegate.showBackButton(true);
-      }
-
-      var currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
-      $rootScope.$broadcast('currentEntity', currentEntity);
-
-    });*/
-
-    /*$rootScope.$on('$ionicView.beforeEnter', function (event, viewData) {
-      $log.debug('beforeEnter');
-      viewData.enableBack = true;
-    });*/
 
   });
 

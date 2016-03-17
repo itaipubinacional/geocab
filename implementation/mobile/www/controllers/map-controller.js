@@ -405,6 +405,8 @@
 
         $scope.currentEntity.status = 'PENDING';
 
+        $rootScope.$broadcast('loading:hide');
+
       };
 
       $scope.initializeMap = function() {
