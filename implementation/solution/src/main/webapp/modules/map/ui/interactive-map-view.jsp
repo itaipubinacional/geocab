@@ -1298,6 +1298,7 @@ uri="http://www.springframework.org/security/tags"%>
     </div>-->
 
     <!-- Openlayer Map -->
+
     <div id="olmap" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0">
       <div id="popup" class="ol-popup">
         <!--<a href="#" id="popup-closer" class="ol-popup-closer"></a>-->
@@ -1305,6 +1306,8 @@ uri="http://www.springframework.org/security/tags"%>
       </div>
       <div id="info" style="position: fixed"></div>
     </div>
+    <div ng-if="showLoadingWms" class="loading-wms" style=""></div>
+
   </section>
 
 
