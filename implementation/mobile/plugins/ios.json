@@ -33,6 +33,9 @@
         },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
     "dependent_plugins": {}

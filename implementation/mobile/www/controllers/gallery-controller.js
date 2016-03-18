@@ -22,7 +22,7 @@
 
             var photo = {};
             photo.image       = data;
-            photo.name        = 'Foto.png';
+            photo.name        = markerAttribute.name + '.png';
             photo.description = markerAttribute.name;
             photo.mimeType    = 'image/png';
 
@@ -53,56 +53,6 @@
 
       $scope.onHold = false;
 
-      var errorHandler = function (fileName, e) {
-        var msg = '';
-
-        switch (e.code) {
-          case FileError.QUOTA_EXCEEDED_ERR:
-            msg = 'Storage quota exceeded';
-            break;
-          case FileError.NOT_FOUND_ERR:
-            msg = 'File not found';
-            break;
-          case FileError.SECURITY_ERR:
-            msg = 'Security error';
-            break;
-          case FileError.INVALID_MODIFICATION_ERR:
-            msg = 'Invalid modification';
-            break;
-          case FileError.INVALID_STATE_ERR:
-            msg = 'Invalid state';
-            break;
-          default:
-            msg = 'Unknown error';
-            break;
-        }
-
-        $log.debug('Error (' + fileName + '): ' + msg);
-      };
-
-      $scope.convertImgToBase64URL = function (fileName, onSuccess) {
-
-        var pathToFile = fileName;
-        window.resolveLocalFileSystemURL(pathToFile, function (fileEntry) {
-          fileEntry.file(function (file) {
-            var reader = new FileReader();
-
-            reader.onloadend = function (e) {
-              onSuccess(this.result);
-            };
-
-            reader.readAsDataURL(file);
-          }, errorHandler.bind(null, fileName));
-        }, errorHandler.bind(null, fileName));
-      };
-
-      $scope.convertImages = function(){
-        angular.forEach($rootScope.photos, function(photo){
-          $scope.convertImgToBase64URL(photo, function(data){
-            $log.debug(data);
-          });
-        });
-      };
 
 
       $scope.takePhoto = function() {
@@ -116,8 +66,8 @@
           targetHeight: 480,
           encodingType: Camera.EncodingType.PNG,
           popoverOptions: CameraPopoverOptions,
-          saveToPhotoAlbum: false,
-          correctOrientation: false
+          saveToPhotoAlbum: true,
+          correctOrientation: true
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
@@ -129,7 +79,7 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = 'Foto.png';
+          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
           photo.description = $scope.selectedPhotoAlbumAttribute.name;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/png';
@@ -143,20 +93,7 @@
 
         }, function(err) {
           $log.debug(err);
-
-          var alertPopup = $ionicPopup.alert({
-            title: 'Error',
-            template: err
-          });
-
-          alertPopup.then(function() {
-
-            $log.debug('ok');
-
-          });
-
         });
-
       };
 
       $scope.getPhoto = function() {
@@ -170,7 +107,7 @@
           targetHeight: 480,
           encodingType: Camera.EncodingType.JPEG,
           popoverOptions: CameraPopoverOptions,
-          correctOrientation: false,
+          correctOrientation: false
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
@@ -182,7 +119,7 @@
           var photo = new Photo();
           photo.source = imageData;
           photo.image = imageData;
-          photo.name = 'Foto.jpeg';
+          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
           photo.description = $scope.selectedPhotoAlbumAttribute.name;
           photo.contentLength = imageData.length;
           photo.mimeType = 'image/jpeg';
@@ -196,19 +133,7 @@
 
         }, function(err) {
           $log.debug(err);
-
-          var alertPopup = $ionicPopup.alert({
-            title: 'Error',
-            template: err
-          });
-
-          alertPopup.then(function() {
-
-            $log.debug('ok');
-
-          });
         });
-
       };
 
       /* GALLERY */

@@ -20,7 +20,7 @@
   </ion-header-bar>
 
   <ion-content scroll="true" has-bouncin="true">
-    <h6 class="padding-horizontal" ng-if="currentEntity.id">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</h6>
+    <h4 class="padding-horizontal" ng-if="currentEntity.id">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</h4>
     <div class="row padding-horizontal" ng-if="currentEntity.id">
       <h6 style="text-align: left">{{ 'map.Created-by' | translate }} <b>{{ currentEntity.user.name }}</b> {{ 'in' | translate }} <b>{{ currentEntity.created | date:'dd/MM/yyyy' }}</b></h6>
     </div>

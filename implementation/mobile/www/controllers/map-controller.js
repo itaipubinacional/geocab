@@ -9,7 +9,7 @@
   angular.module('application')
     .controller('MapController', function($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
       $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaGeolocation, $filter, $log, $location, $cordovaCamera, $ionicLoading,
-      $cordovaToast, $http, $ionicNavBarDelegate) {
+      $cordovaToast, $http, $ionicNavBarDelegate, $interval) {
 
       /**
        *
@@ -67,18 +67,66 @@
 
       $scope.attributeIndex = '';
 
-      $rootScope.$on('camera:result', function(event, data){
+      /*$rootScope.$on('camera:result', function(event, data){
 
         $rootScope.currentEntity = data;
         $log.debug($scope.currentEntity);
 
-        $timeout(function (){
-          $scope.listAllInternalLayerGroups();
-          $scope.getUserAuthenticated();
-        }, 2000);
+        $scope.listAllInternalLayerGroups();
+        $scope.getUserAuthenticated();
 
         $rootScope.$apply();
-      });
+      });*/
+
+      var errorHandler = function (fileName, e) {
+        var msg = '';
+
+        switch (e.code) {
+          case FileError.QUOTA_EXCEEDED_ERR:
+            msg = 'Storage quota exceeded';
+            break;
+          case FileError.NOT_FOUND_ERR:
+            msg = 'File not found';
+            break;
+          case FileError.SECURITY_ERR:
+            msg = 'Security error';
+            break;
+          case FileError.INVALID_MODIFICATION_ERR:
+            msg = 'Invalid modification';
+            break;
+          case FileError.INVALID_STATE_ERR:
+            msg = 'Invalid state';
+            break;
+          default:
+            msg = 'Unknown error';
+            break;
+        }
+
+        $log.debug('Error (' + fileName + '): ' + msg);
+      };
+
+      $scope.convertImgToBase64URL = function (filePath, onSuccess) {
+
+        window.resolveLocalFileSystemURL(filePath, function (fileEntry) {
+          fileEntry.file(function (file) {
+            var reader = new FileReader();
+
+            reader.onloadend = function (e) {
+              onSuccess(this.result);
+            };
+
+            reader.readAsDataURL(file);
+          }, errorHandler.bind(null, fileName));
+        }, errorHandler.bind(null, fileName));
+      };
+
+      $scope.convertImages = function(){
+        angular.forEach($rootScope.photos, function(photo){
+          $scope.convertImgToBase64URL(photo, function(data){
+            $log.debug(data);
+          });
+        });
+      };
 
       $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 
@@ -99,24 +147,17 @@
             $scope.selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
 
             angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
-              if(markerAttribute.id == $scope.selectedPhotoAlbumAttribute.id)
+              if(markerAttribute.attribute.id == $scope.selectedPhotoAlbumAttribute.attribute.id)
                 $scope.selectedPhotoAlbumAttribute = markerAttribute;
             });
 
             $timeout(function(){
-
-              //$scope.getPhotosByAttribute($scope.selectedPhotoAlbumAttribute);
               $log.debug($scope.selectedPhotoAlbumAttribute);
-
               $scope.listAllInternalLayerGroups();
-
               $scope.getUserAuthenticated();
-            }, 2000);
-
+            });
           }
-
         }
-
       });
 
       /**
@@ -971,28 +1012,38 @@
       $scope.listAllInternalLayerGroups = function(onSuccess) {
 
         if ($scope.allInternalLayerGroups.length == 0) {
-          layerGroupService.listAllInternalLayerGroups({
-            callback: function(result) {
-              $scope.allInternalLayerGroups = result;
-              $log.debug($scope.allInternalLayerGroups);
 
-              //$scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
-              $rootScope.$broadcast('loading:hide');
+          var intervalPromise = $interval(function(){
 
-              angular.forEach(result, function(layer){
-                if(layer.id == $scope.currentEntity.layer.id) {
-                  $scope.currentEntity.layer = layer;
+            if(angular.isDefined(layerGroupService)) {
+
+              layerGroupService.listAllInternalLayerGroups({
+                callback: function (result) {
+                  $scope.allInternalLayerGroups = result;
+                  $log.debug($scope.allInternalLayerGroups);
+
+                  //$scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
+                  $rootScope.$broadcast('loading:hide');
+
+                  angular.forEach(result, function (layer) {
+                    if (layer.id == $scope.currentEntity.layer.id) {
+                      $scope.currentEntity.layer = layer;
+                    }
+                  });
+
+                  $interval.cancel(intervalPromise);
+
+                  $scope.$apply();
+                },
+                errorHandler: function (message, exception) {
+                  $log.debug(message);
+                  $rootScope.$broadcast('loading:hide');
+                  $scope.$apply();
                 }
               });
-
-              $scope.$apply();
-            },
-            errorHandler: function(message, exception) {
-              $log.debug(message);
-              $rootScope.$broadcast('loading:hide');
-              $scope.$apply();
             }
-          });
+          }, 500);
+
         }
       };
 
@@ -1086,21 +1137,30 @@
        * authenticated user
        * */
       $scope.getUserAuthenticated = function() {
+
         if(angular.equals($scope.userMe, {})) {
-          accountService.getUserAuthenticated({
-            callback: function(result) {
-              $scope.userMe = result;
-              $scope.coordinatesFormat = result.coordinates;
 
-              $scope.setMarkerCoordinatesFormat();
+          var intervalPromise = $interval(function(){
 
-              $scope.$apply();
-            },
-            errorHandler: function(message, exception) {
-              $log.debug(message);
-              $scope.$apply();
+            if(angular.isDefined(accountService)) {
+              accountService.getUserAuthenticated({
+                callback: function(result) {
+                  $scope.userMe = result;
+                  $scope.coordinatesFormat = result.coordinates;
+
+                  $scope.setMarkerCoordinatesFormat();
+
+                  $interval.cancel(intervalPromise);
+                  $scope.$apply();
+                },
+                errorHandler: function(message, exception) {
+                  $log.debug(message);
+                  $scope.$apply();
+                }
+              });
             }
-          });
+          }, 500);
+
         }
       };
 
@@ -1256,14 +1316,20 @@
                   photoAlbum.photos = new Array();
 
                   if (angular.isObject(attr.photoAlbum)) {
+
                     angular.forEach(attr.photoAlbum.photos, function(file) {
 
-                      var photo = new Photo();
-                      photo.source = file.image;
-                      photo.name = file.name;
-                      photo.description = file.description;
+                      $scope.convertImgToBase64URL(file.image, function(data){
+                        file.source = data;
+                      });
+
+                      var photo           = new Photo();
+                      photo.source        = file.source;
+                      photo.name          = file.name;
+                      photo.description   = file.description;
                       photo.contentLength = file.contentLength;
-                      photo.mimeType = file.mimeType;
+                      photo.mimeType      = file.mimeType;
+
                       photoAlbum.photos.push(photo);
 
                     });
