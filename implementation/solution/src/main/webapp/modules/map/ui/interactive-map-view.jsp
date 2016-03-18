@@ -118,11 +118,11 @@ uri="http://www.springframework.org/security/tags"%>
                       <hr>
 
                       <button
-                          ng-if="(userMe.role == 'ADMINISTRATOR' || userMe.role == 'MODERATOR') || (marker.status == 'PENDING' && userMe.id == marker.user.id)"
+                          ng-if="(marker.status != 'ACCEPTED' && userMe.id == marker.user.id)"
                           style="float: right;"
                           class="btn btn-default"
                           title="<spring:message code="map.Delete"/>"
-                      ng-click="removeMarker()">
+                          ng-click="removeMarker()">
                       <i class="itaipu-icon-delete"></i>
                       </button>
                       <button
@@ -1306,7 +1306,9 @@ uri="http://www.springframework.org/security/tags"%>
       </div>
       <div id="info" style="position: fixed"></div>
     </div>
-    <div ng-if="showLoadingWms" class="loading-wms"></div>
+
+    <%-- Não funciona na versão 3.0 --%>
+    <%-- <div ng-if="showLoadingWms" class="loading-wms"></div> --%>
 
   </section>
 

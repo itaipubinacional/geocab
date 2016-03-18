@@ -1748,35 +1748,6 @@ ront controller of angle won't let enter an invalid URL.
         });
     }
 
-    $scope.removeMarkerModal = function () {
-
-        var dialog = $modal.open({
-            templateUrl: "static/libs/eits-directives/dialog/dialog-template.html",
-            controller: DialogController,
-            windowClass: 'dialog-enable',
-            resolve: {
-                title: function () {
-                    return $translate("map.Delete-mark")
-                },
-                message: function () {
-                    return $translate("map.Are-you-sure-you-want-to-delete-the-mark") + " ?"
-                },
-                buttons: function () {
-                    return [{
-                        label: $translate("layer-group-popup.Delete"),
-                        css: 'btn btn-danger'
-                    }, {label: $translate("admin.users.Cancel"), css: 'btn btn-default', dismiss: true}];
-                }
-            }
-        });
-
-        dialog.result.then(function (result) {
-            $scope.removeMarker();
-
-        });
-
-    };
-
     /**
      * Calls the dialog to accept a marker
      */
