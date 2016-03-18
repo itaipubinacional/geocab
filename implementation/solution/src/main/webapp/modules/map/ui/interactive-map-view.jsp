@@ -1306,7 +1306,9 @@ uri="http://www.springframework.org/security/tags"%>
       </div>
       <div id="info" style="position: fixed"></div>
     </div>
-    <div ng-if="showLoadingWms" class="loading-wms"></div>
+
+    <%-- Não funciona na versão 3.0 --%>
+    <%-- <div ng-if="showLoadingWms" class="loading-wms"></div> --%>
 
   </section>
 

@@ -298,9 +298,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.isLoading = false;
 
-  $scope.showLoadingWms = false;
-
-  $scope.contWmsLoad = 0;
+  // Para controle de requisições WMS 
+  // $scope.showLoadingWms = false;
+  // $scope.contWmsLoad = 0;
   /*-------------------------------------------------------------------
    * 		 				 	 CONFIGURATION VARIABLES MAP
    *-------------------------------------------------------------------*/
@@ -1290,9 +1290,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           wmsOptions.url += "?" + node.dataSourceUrl.match(/&authkey=(.*)/)[0];
         }
 
-        var wmsSource = new ol.source.ImageWMS(wmsOptions);
+        var wmsSource = new ol.source.TileWMS(wmsOptions);
 
-        var wmsLayer = new ol.layer.Image({
+        var wmsLayer = new ol.layer.Tile({
           source: wmsSource,
           maxResolution: minEscalaToMaxResolutionn(node.minimumScaleMap),
           minResolution: maxEscalaToMinResolutionn(node.maximumScaleMap)
@@ -1305,25 +1305,26 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
 
         // Controla o loading de camadas WMS
-        var wmsEvent = function(newWmsLoad){
-
-          $scope.contWmsLoad += newWmsLoad ? +1 : -1;
-
-          $scope.showLoadingWms = $scope.contWmsLoad > 0 ? true : false;
-
-          $scope.$apply();
-
-        }
-
-        wmsSource.on('imageloadstart', function() {
-          wmsEvent(true);
-        });
-        wmsSource.on('imageloadend', function() {
-          wmsEvent(false);
-        });
-        wmsSource.on('imageloaderror', function() {
-          wmsEvent(false);
-        });
+        // Funciona a partir da versão v3.3.0 tanto 'image' quanto 'tile'
+        // var wmsEvent = function(newWmsLoad){
+        //
+        //   $scope.contWmsLoad += newWmsLoad ? +1 : -1;
+        //
+        //   $scope.showLoadingWms = $scope.contWmsLoad > 0 ? true : false;
+        //
+        //   $scope.$apply();
+        //
+        // }
+        //
+        // wmsSource.on('imageloadstart', function() {
+        //   wmsEvent(true);
+        // });
+        // wmsSource.on('imageloadend', function() {
+        //   wmsEvent(false);
+        // });
+        // wmsSource.on('imageloaderror', function() {
+        //   wmsEvent(false);
+        // });
 
       }
       else {

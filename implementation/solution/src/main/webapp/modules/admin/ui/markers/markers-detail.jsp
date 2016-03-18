@@ -9,7 +9,7 @@
 <div style="width:38%;height: 100%; float:left;z-index: 1; position: relative;
             box-shadow: 8px -6px 5px -5px #999, -6px 0 5px -5px #999; ">
     <div style="height:90vh; overflow:auto;">
-      
+
         <div class="col-md-12" style="padding: 15px; background-color: #f5f5f5">
             <div class="col-md-1" style="margin-top: 10px">
                 <i style="cursor:pointer; font-size: 25px;" ng-click="$state.go('markers'); changeToListNoVectorMarkers(currentPage);"
@@ -187,6 +187,7 @@
                     <i style="font-size: 24px" class="icon itaipu-icon-export"></i>
                 </button>
                 <button type="button" ng-click="removeMarkerModal()"
+                        ng-disabled="currentEntity.status == ACCEPTED"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Delete'/>"
                         class="btn btn-secondary col-md-4 btn-icon">
                     <i style="font-size: 24px" class="icon itaipu-icon-delete"></i>
