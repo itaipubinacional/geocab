@@ -28,6 +28,7 @@
   <preference name="StatusBarOverlaysWebView" value="true"/>
   <preference name="android-windowSoftInputMode" value="adjustPan"/>
   <preference name="loadUrlTimeoutValue" value="700000"/>
+  <preference name="AndroidPersistentFileLocation" value="Compatibility" />
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>

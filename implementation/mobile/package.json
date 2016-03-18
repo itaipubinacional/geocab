@@ -25,7 +25,8 @@
     "cordova-plugin-camera",
     "org.apache.cordova.splashscreen",
     "cordova-plugin-network-information",
-    "cordova-plugin-x-toast"
+    "cordova-plugin-x-toast",
+    "cordova-plugin-file"
   ],
   "cordovaPlatforms": [
     "ios",

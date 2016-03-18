@@ -105,9 +105,9 @@
         $log.debug('Error (' + fileName + '): ' + msg);
       };
 
-      $scope.convertImgToBase64URL = function (filePath, onSuccess) {
-
-        window.resolveLocalFileSystemURL(filePath, function (fileEntry) {
+      $scope.convertImgToBase64URL = function (fileName, onSuccess) {
+        var pathToFile = fileName;
+        window.resolveLocalFileSystemURL(pathToFile, function (fileEntry) {
           fileEntry.file(function (file) {
             var reader = new FileReader();
 
@@ -129,6 +129,8 @@
       };
 
       $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+        if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
 
         $log.debug('state change');
 
@@ -672,12 +674,14 @@
       };
 
       $scope.setMarkerCoordinatesFormat = function() {
-        if ($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
-          $scope.currentEntity.formattedLatitude = $scope.currentEntity.lat.toFixed(6);
-          $scope.currentEntity.formattedLongitude = $scope.currentEntity.long.toFixed(6);
-        } else {
-          $scope.currentEntity.formattedLatitude = $scope.convertDDtoDMS($scope.currentEntity.lat, true);
-          $scope.currentEntity.formattedLongitude = $scope.convertDDtoDMS($scope.currentEntity.long, false);
+        if(angular.isDefined($scope.currentEntity.lat)) {
+          if ($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
+            $scope.currentEntity.formattedLatitude = $scope.currentEntity.lat.toFixed(6);
+            $scope.currentEntity.formattedLongitude = $scope.currentEntity.long.toFixed(6);
+          } else {
+            $scope.currentEntity.formattedLatitude = $scope.convertDDtoDMS($scope.currentEntity.lat, true);
+            $scope.currentEntity.formattedLongitude = $scope.convertDDtoDMS($scope.currentEntity.long, false);
+          }
         }
       };
 
@@ -990,6 +994,8 @@
           layerGroupService.listLayersByFilters(null, null, {
             callback: function(result) {
               $scope.allLayers = result.content;
+
+              $rootScope.$broadcast('loading:hide');
               $scope.$apply();
             },
             errorHandler: function(message, exception) {
@@ -1009,9 +1015,11 @@
       /**
        *
        */
-      $scope.listAllInternalLayerGroups = function(onSuccess) {
+      $scope.listAllInternalLayerGroups = function() {
 
         if ($scope.allInternalLayerGroups.length == 0) {
+
+          $rootScope.$broadcast('loading:show');
 
           var intervalPromise = $interval(function(){
 
@@ -1026,7 +1034,7 @@
                   $rootScope.$broadcast('loading:hide');
 
                   angular.forEach(result, function (layer) {
-                    if (layer.id == $scope.currentEntity.layer.id) {
+                    if ($scope.currentEntity.layer && layer.id == $scope.currentEntity.layer.id) {
                       $scope.currentEntity.layer = layer;
                     }
                   });
@@ -1037,7 +1045,13 @@
                 },
                 errorHandler: function (message, exception) {
                   $log.debug(message);
+
+                  $interval.cancel(intervalPromise);
+
+                  localStorage.setItem('lastState', $scope.MAP_INDEX);
+
                   $rootScope.$broadcast('loading:hide');
+
                   $scope.$apply();
                 }
               });
@@ -1051,6 +1065,8 @@
        *
        */
       $scope.listAttributesByLayer = function(layer, reload) {
+
+        $rootScope.$broadcast('loading:show');
 
         $scope.selectedPhotoAlbumAttribute = {};
 
@@ -1080,12 +1096,14 @@
                 }
 
               });
+              $rootScope.$broadcast('loading:hide');
 
               //$scope.currentEntity.markerAttribute = result;
 
               $scope.$apply();
             },
             errorHandler: function(message, exception) {
+              $rootScope.$broadcast('loading:hide');
               $log.debug(message);
 
               if(message.match(/Incomplete reply from server/ig))
@@ -1140,6 +1158,8 @@
 
         if(angular.equals($scope.userMe, {})) {
 
+          $rootScope.$broadcast('loading:show');
+
           var intervalPromise = $interval(function(){
 
             if(angular.isDefined(accountService)) {
@@ -1150,11 +1170,25 @@
 
                   $scope.setMarkerCoordinatesFormat();
 
+                  $rootScope.$broadcast('loading:hide');
+
                   $interval.cancel(intervalPromise);
                   $scope.$apply();
                 },
                 errorHandler: function(message, exception) {
+
+                  $rootScope.$broadcast('loading:hide');
+
                   $log.debug(message);
+
+                  $interval.cancel(intervalPromise);
+
+                  localStorage.removeItem('lastRoute');
+
+                  localStorage.setItem('lastState', $scope.MAP_INDEX);
+
+                  $location.path('/authencation/login');
+
                   $scope.$apply();
                 }
               });

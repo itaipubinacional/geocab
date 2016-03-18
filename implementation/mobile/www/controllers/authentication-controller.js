@@ -44,21 +44,42 @@ angular.module('application')
       * */
      $scope.getUserAuthenticated = function() {
 
-       $timeout(function() {
-         accountService.getUserAuthenticated({
-           callback: function(result) {
+       if(angular.equals($scope.userMe, {})) {
 
-             $rootScope.$broadcast('userMe', result);
-             $rootScope.userMe = result;
-             $scope.coordinatesFormat = result.coordinates;
-             $scope.$apply();
-           },
-           errorHandler: function(message, exception) {
-             $log.debug(message);
-             $scope.$apply();
+         var intervalPromise = $interval(function(){
+
+           if(angular.isDefined(accountService)) {
+             accountService.getUserAuthenticated({
+               callback: function(result) {
+
+                 $rootScope.$broadcast('userMe', result);
+                 $scope.userMe = result;
+                 $scope.coordinatesFormat = result.coordinates;
+
+                 $scope.setMarkerCoordinatesFormat();
+
+                 $interval.cancel(intervalPromise);
+                 $scope.$apply();
+               },
+               errorHandler: function(message, exception) {
+                 $log.debug(message);
+
+                 $interval.cancel(intervalPromise);
+
+                 localStorage.removeItem('lastRoute');
+
+                 localStorage.setItem('lastState', $scope.MAP_INDEX);
+
+                 $location.path('/authencation/login');
+
+                 $scope.$apply();
+               }
+             });
            }
-         });
-       });
+         }, 500);
+
+       }
+
      };
 
     /**
@@ -170,7 +191,6 @@ angular.module('application')
         });
     };
 
-
     /**
       *
     */
@@ -191,6 +211,7 @@ angular.module('application')
 
         $scope.getUserAuthenticated();
         $state.go(lastState);
+
       } else {
         $state.go('authentication.intro');
       }

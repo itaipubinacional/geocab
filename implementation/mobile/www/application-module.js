@@ -243,6 +243,28 @@
 
           $log.debug('resume');
 
+          if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
+
+          /**
+           * token handler
+           */
+          if(localStorage.getItem('token')){
+
+            var userEmail = localStorage.getItem('userEmail');
+            var token     = localStorage.getItem('token');
+
+            $http.get($API_ENDPOINT + "/login/geocab/?userName=" + userEmail + "&token=" + token)
+              .success(function (data, status, headers, config) {
+
+                $log.debug('logged');
+
+              })
+              .error(function (data, status, headers, config) {
+                $log.debug('fail');
+              });
+
+          }
+
           $log.debug(event.pendingResult);
 
           if (event.pendingResult) {

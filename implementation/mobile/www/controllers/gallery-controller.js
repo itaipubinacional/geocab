@@ -41,6 +41,8 @@
       });
 
       $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
+
         $log.debug('beforeEnter');
         viewData.enableBack = true;
       });
@@ -52,8 +54,6 @@
       $scope.hasSelectedPhotos = false;
 
       $scope.onHold = false;
-
-
 
       $scope.takePhoto = function() {
 
