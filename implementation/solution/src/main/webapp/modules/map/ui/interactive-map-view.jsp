@@ -1299,14 +1299,14 @@ uri="http://www.springframework.org/security/tags"%>
 
     <!-- Openlayer Map -->
 
-    <div id="olmap" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0">
+    <div id="olmap" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%; height: 100%;">
       <div id="popup" class="ol-popup">
         <!--<a href="#" id="popup-closer" class="ol-popup-closer"></a>-->
         <div id="popup-content"></div>
       </div>
       <div id="info" style="position: fixed"></div>
     </div>
-    <div ng-if="showLoadingWms" class="loading-wms" style=""></div>
+    <div ng-if="showLoadingWms" class="loading-wms"></div>
 
   </section>
 
