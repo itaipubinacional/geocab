@@ -57,7 +57,7 @@
 
 		<script src="static/libs/ui-sortable/sortable.js" type="text/javascript"></script>
 
-		<!-- OpenLayers 3 v3.11.2 -->
+		<!-- OpenLayers 3 v3.0.0 -->
 		<script src="static/libs/openlayers/ol.js" type="text/javascript"></script>
 
 		<!-- Google Maps -->
