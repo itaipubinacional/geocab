@@ -52,7 +52,7 @@
     //-------
     //URL Router
     //-------
-    $urlRouterProvider.otherwise(lastRoute);
+    $urlRouterProvider.otherwise('/authentication/login');
 
     //AUTHENTICATION
     $stateProvider.state('authentication', {
@@ -245,25 +245,7 @@
 
           if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
 
-          /**
-           * token handler
-           */
-          if(localStorage.getItem('token')){
 
-            var userEmail = localStorage.getItem('userEmail');
-            var token     = localStorage.getItem('token');
-
-            $http.get($API_ENDPOINT + "/login/geocab/?userName=" + userEmail + "&token=" + token)
-              .success(function (data, status, headers, config) {
-
-                $log.debug('logged');
-
-              })
-              .error(function (data, status, headers, config) {
-                $log.debug('fail');
-              });
-
-          }
 
           $log.debug(event.pendingResult);
 
@@ -271,9 +253,42 @@
 
             if (event.pendingResult.pluginStatus === "OK") {
 
-              $rootScope.$broadcast('camera:result', event.pendingResult.result);
 
-              $rootScope.$apply();
+              /**
+               * token handler
+               */
+              if(localStorage.getItem('token')){
+
+                var userEmail = localStorage.getItem('userEmail');
+                var token     = localStorage.getItem('token');
+
+                /* var config = {
+                 headers: {'Content-Type': 'application/json; charset=UTF-8'}
+                 };
+
+                 $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
+                 .success(function (data, status, headers, config) {
+                 $log.debug('logged');
+                 })
+                 .error(function (data, status, headers, config) {
+                 $log.debug('fail');
+                 });*/
+
+                $http.get($API_ENDPOINT + "/login/geocab?userName=" + userEmail + "&token=" + token)
+                  .success(function (data, status, headers, config) {
+
+                    $log.debug('logged');
+
+                    $rootScope.$broadcast('camera:result', event.pendingResult.result);
+
+                    $rootScope.$apply();
+
+                  })
+                  .error(function (data, status, headers, config) {
+                    $log.debug('fail');
+                  });
+
+              }
 
             } else {
               $log.debug('Error');

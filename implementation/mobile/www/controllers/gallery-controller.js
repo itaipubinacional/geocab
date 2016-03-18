@@ -9,10 +9,29 @@
   angular.module('application')
     .controller('GalleryController', function($rootScope, $scope, $translate, $state, $timeout, $log, $cordovaCamera, $ionicLoading,
                                               $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPopup,
-                                              $ionicHistory, $ionicPlatform) {
+                                              $ionicHistory, $ionicPlatform, $cordovaFile) {
 
+      var makeid = function() {
+        var text = '';
+        var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+        for (var i = 0; i < 5; i++) {
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
+      };
 
       $rootScope.$on('camera:result', function(event, data){
+
+        var file = data.match(/(.*)\.png/)[0];
+
+        var filePath = file.split('/');
+        var fileName = filePath[filePath.length - 1];
+        filePath = file.replace(fileName, '').slice(0,-1);
+
+        var newFileName = makeid();
+
+        $cordovaFile.copyFile(filePath, fileName, filePath, newFileName + '.png');
 
         var selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
 
@@ -21,7 +40,7 @@
           if(markerAttribute.attribute.id == selectedPhotoAlbumAttribute.attribute.id) {
 
             var photo = {};
-            photo.image       = data;
+            photo.image       = newFileName + '/teste.png';
             photo.name        = markerAttribute.name + '.png';
             photo.description = markerAttribute.name;
             photo.mimeType    = 'image/png';
@@ -105,9 +124,9 @@
           allowEdit: false,
           targetWidth: 640,
           targetHeight: 480,
-          encodingType: Camera.EncodingType.JPEG,
+          encodingType: Camera.EncodingType.PNG,
           popoverOptions: CameraPopoverOptions,
-          correctOrientation: false
+          correctOrientation: true
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {

@@ -999,7 +999,7 @@
               $scope.$apply();
             },
             errorHandler: function(message, exception) {
-              $log.debug(message);
+              $log.debug(message);ga
               $rootScope.$broadcast('loading:hide');
 
               if(message.match(/Incomplete reply from server/ig))
@@ -1156,6 +1156,8 @@
        * */
       $scope.getUserAuthenticated = function() {
 
+        $log.debug('getUserAuthenticated');
+
         if(angular.equals($scope.userMe, {})) {
 
           $rootScope.$broadcast('loading:show');
@@ -1187,13 +1189,13 @@
 
                   localStorage.setItem('lastState', $scope.MAP_INDEX);
 
-                  $location.path('/authencation/login');
+                  $location.path('/authentication/login');
 
                   $scope.$apply();
                 }
               });
             }
-          }, 500);
+          }, 2000);
 
         }
       };
@@ -1354,17 +1356,20 @@
                     angular.forEach(attr.photoAlbum.photos, function(file) {
 
                       $scope.convertImgToBase64URL(file.image, function(data){
+
+                        $log.debug(data);
+
                         file.source = data;
+
+                        var photo           = new Photo();
+                        photo.source        = file.source;
+                        photo.name          = file.name;
+                        photo.description   = file.description;
+                        photo.contentLength = file.contentLength;
+                        photo.mimeType      = file.mimeType;
+
+                        photoAlbum.photos.push(photo);
                       });
-
-                      var photo           = new Photo();
-                      photo.source        = file.source;
-                      photo.name          = file.name;
-                      photo.description   = file.description;
-                      photo.contentLength = file.contentLength;
-                      photo.mimeType      = file.mimeType;
-
-                      photoAlbum.photos.push(photo);
 
                     });
                   }
