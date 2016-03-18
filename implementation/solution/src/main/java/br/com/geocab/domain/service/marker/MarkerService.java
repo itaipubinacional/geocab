@@ -288,8 +288,13 @@ public class MarkerService extends AbstractMarkerService
 	public void removeMarker(Long id)
 	{
 		Marker marker = this.findMarkerById(id);
-		marker.setDeleted(true);
-		this.markerRepository.save(marker);
+		
+		if( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId())
+		{
+			marker.setDeleted(true);
+			this.markerRepository.save(marker);
+		}
+		
 	}
 
 	/**
