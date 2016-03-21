@@ -11,6 +11,48 @@
                                               $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPopup,
                                               $ionicHistory, $ionicPlatform, $cordovaFile) {
 
+      var errorHandler = function (fileName, e) {
+        var msg = '';
+
+        switch (e.code) {
+          case FileError.QUOTA_EXCEEDED_ERR:
+            msg = 'Storage quota exceeded';
+            break;
+          case FileError.NOT_FOUND_ERR:
+            msg = 'File not found';
+            break;
+          case FileError.SECURITY_ERR:
+            msg = 'Security error';
+            break;
+          case FileError.INVALID_MODIFICATION_ERR:
+            msg = 'Invalid modification';
+            break;
+          case FileError.INVALID_STATE_ERR:
+            msg = 'Invalid state';
+            break;
+          default:
+            msg = 'Unknown error';
+            break;
+        }
+
+        $log.debug('Error (' + fileName + '): ' + msg);
+      };
+
+      $scope.convertImgToBase64URL = function (fileName, onSuccess) {
+        var pathToFile = fileName;
+        window.resolveLocalFileSystemURL(pathToFile, function (fileEntry) {
+          fileEntry.file(function (file) {
+            var reader = new FileReader();
+
+            reader.onloadend = function (e) {
+              onSuccess(this.result);
+            };
+
+            reader.readAsDataURL(file);
+          }, errorHandler.bind(null, fileName));
+        }, errorHandler.bind(null, fileName));
+      };
+
       var makeId = function() {
         var text = '';
         var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -57,14 +99,22 @@
               photo.description = markerAttribute.name;
               photo.mimeType    = 'image/png';
 
-              if (!markerAttribute.photoAlbum) {
-                markerAttribute.photoAlbum = {};
-                markerAttribute.photoAlbum.photos = [];
-              }
+              $scope.convertImgToBase64URL(fileName, function (data) {
 
-              markerAttribute.photoAlbum.photos.push(photo);
+                photo.source = data.split(';base64,')[1];
 
-              $rootScope.$broadcast('loading:hide');
+                if (!markerAttribute.photoAlbum) {
+                  markerAttribute.photoAlbum = {};
+                  markerAttribute.photoAlbum.photos = [];
+                }
+
+                markerAttribute.photoAlbum.photos.push(photo);
+
+                $rootScope.$broadcast('loading:hide');
+
+                $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
+
+              });
             }
 
           });
@@ -104,10 +154,13 @@
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
+
           $ionicLoading.show({
             template: 'Salvando foto',
             duration: 2000
           });
+
+          //$rootScope.$broadcast('loading:show');
 
           $scope.renameFile(imageData, function(fileName){
 
@@ -118,12 +171,22 @@
             photo.contentLength = imageData.length;
             photo.mimeType = 'image/png';
 
-            if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
-              $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
-              $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
-            }
+            $scope.convertImgToBase64URL(fileName, function (data) {
 
-            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+              photo.source = data.split(';base64,')[1];
+
+              if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
+                $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
+                $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
+              }
+
+              $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+
+              //$rootScope.$broadcast('loading:hide');
+
+              $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
+
+            });
 
           });
 
@@ -161,12 +224,22 @@
             photo.contentLength = imageData.length;
             photo.mimeType = 'image/jpeg';
 
-            if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
-              $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
-              $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
-            }
+            $scope.convertImgToBase64URL(fileName, function (data) {
 
-            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+              photo.source = data.split(';base64,')[1];
+
+              if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
+                $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
+                $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
+              }
+
+              $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+
+              //$rootScope.$broadcast('loading:hide');
+
+              $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
+
+            });
 
           });
 

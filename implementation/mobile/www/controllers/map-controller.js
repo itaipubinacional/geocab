@@ -67,67 +67,6 @@
 
       $scope.attributeIndex = '';
 
-      /*$rootScope.$on('camera:result', function(event, data){
-
-       $rootScope.currentEntity = data;
-       $log.debug($scope.currentEntity);
-
-       $scope.listAllInternalLayerGroups();
-       $scope.getUserAuthenticated();
-
-       $rootScope.$apply();
-       });*/
-
-      var errorHandler = function (fileName, e) {
-        var msg = '';
-
-        switch (e.code) {
-          case FileError.QUOTA_EXCEEDED_ERR:
-            msg = 'Storage quota exceeded';
-            break;
-          case FileError.NOT_FOUND_ERR:
-            msg = 'File not found';
-            break;
-          case FileError.SECURITY_ERR:
-            msg = 'Security error';
-            break;
-          case FileError.INVALID_MODIFICATION_ERR:
-            msg = 'Invalid modification';
-            break;
-          case FileError.INVALID_STATE_ERR:
-            msg = 'Invalid state';
-            break;
-          default:
-            msg = 'Unknown error';
-            break;
-        }
-
-        $log.debug('Error (' + fileName + '): ' + msg);
-      };
-
-      $scope.convertImgToBase64URL = function (fileName, onSuccess) {
-        var pathToFile = fileName;
-        window.resolveLocalFileSystemURL(pathToFile, function (fileEntry) {
-          fileEntry.file(function (file) {
-            var reader = new FileReader();
-
-            reader.onloadend = function (e) {
-              onSuccess(this.result);
-            };
-
-            reader.readAsDataURL(file);
-          }, errorHandler.bind(null, fileName));
-        }, errorHandler.bind(null, fileName));
-      };
-
-      $scope.convertImages = function () {
-        angular.forEach($rootScope.photos, function (photo) {
-          $scope.convertImgToBase64URL(photo, function (data) {
-            $log.debug(data);
-          });
-        });
-      };
-
       $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 
         if (navigator && navigator.splashscreen) navigator.splashscreen.hide();
@@ -1059,8 +998,7 @@
 
           }, 500);
 
-        }
-        ;
+        };
 
         /**
          *
@@ -1191,6 +1129,10 @@
 
           localStorage.removeItem('userEmail');
           localStorage.removeItem('token');
+          localStorage.removeItem('currentEntity');
+          localStorage.removeItem('lastState');
+          localStorage.removeItem('lastRoute');
+
           $location.path($rootScope.$API_ENDPOINT + "/j_spring_security_logout");
 
           //Realiza o logout do google plus
@@ -1419,21 +1361,14 @@
 
                       angular.forEach(attr.photoAlbum.photos, function (file) {
 
-                        $scope.convertImgToBase64URL(file.image, function (data) {
+                        var photo = new Photo();
+                        photo.source = file.source;
+                        photo.name = file.name;
+                        photo.description = file.description;
+                        photo.contentLength = file.contentLength ? file.contentLength : file.source.length;
+                        photo.mimeType = file.mimeType;
 
-                          $log.debug(data);
-
-                          file.source = data.split(';base64,')[1];
-
-                          var photo = new Photo();
-                          photo.source = file.source;
-                          photo.name = file.name;
-                          photo.description = file.description;
-                          photo.contentLength = file.contentLength ? file.contentLength : file.source.length;
-                          photo.mimeType = file.mimeType;
-
-                          photoAlbum.photos.push(photo);
-                        });
+                        photoAlbum.photos.push(photo);
 
                       });
                     }
