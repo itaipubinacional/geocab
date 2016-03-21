@@ -298,7 +298,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.isLoading = false;
 
-  // Para controle de requisições WMS 
+  // Para controle de requisições WMS
   // $scope.showLoadingWms = false;
   // $scope.contWmsLoad = 0;
   /*-------------------------------------------------------------------
@@ -627,7 +627,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         if ($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
 
-          regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.\d+?[″|"]\s?[N|S|W|E]?$/;
+          regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.?\d{0,}[″|"]\s?[N|S|W|E]?$/;
 
           if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
             formattedLatitude = $scope.convertDMSToDD(formattedLatitude);
