@@ -242,6 +242,18 @@
 
         $log.debug('viewMarker');
 
+        /* REMOVING RECURSIVE DATA FROM OBJECT */
+        angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index){
+          if(attribute.photoAlbum) {
+            delete attribute.photoAlbum.markerAttribute;
+            angular.forEach(attribute.photoAlbum.photos, function(photos){
+              delete photos.photoAlbum;
+            });
+          }
+        });
+
+        $log.debug($scope.currentEntity);
+
         $scope.imgResult = '';
 
         $state.go($scope.MAP_MARKER);
@@ -552,7 +564,7 @@
 
                         $scope.currentEntity.markerAttribute.push({
                           attribute: attribute,
-                          marker: $scope.currentEntity,
+                          marker: {id: $scope.currentEntity.id},
                           type: attribute.type,
                           name: attribute.name
                         });
