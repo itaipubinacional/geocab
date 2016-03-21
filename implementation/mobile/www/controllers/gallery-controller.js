@@ -11,7 +11,7 @@
                                               $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPopup,
                                               $ionicHistory, $ionicPlatform, $cordovaFile) {
 
-      var makeid = function() {
+      var makeId = function() {
         var text = '';
         var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -21,19 +21,29 @@
         return text;
       };
 
-      $rootScope.$on('camera:result', function(event, data){
+      $scope.renameFile = function(file, onSuccess) {
 
-        var file = data.match(/(.*)\.png/)[0];
+        var file = file.match(/(.*)\.png/)[0];
 
         var filePath = file.split('/');
         var fileName = filePath[filePath.length - 1];
         filePath = file.replace(fileName, '').slice(0,-1);
 
-        var newFileName = makeid();
+        var newFileName = makeId();
 
-        $cordovaFile.copyFile(filePath, fileName, filePath, newFileName + '.png').then(function(success){
-          
-          fileName = filePath + '/' + newFileName;
+        $cordovaFile.copyFile(filePath, fileName, filePath, newFileName + '.png').then(function(success) {
+
+          fileName = filePath + '/' + newFileName + '.png';
+
+          onSuccess(fileName);
+
+        });
+
+      };
+
+      $rootScope.$on('camera:result', function(event, data){
+
+        $scope.renameFile(data, function(fileName){
 
           var selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
 
@@ -42,7 +52,7 @@
             if(markerAttribute.attribute.id == selectedPhotoAlbumAttribute.attribute.id) {
 
               var photo = {};
-              photo.image       = fileName + '.png';
+              photo.image       = fileName;
               photo.name        = markerAttribute.name + '.png';
               photo.description = markerAttribute.name;
               photo.mimeType    = 'image/png';
@@ -53,12 +63,14 @@
               }
 
               markerAttribute.photoAlbum.photos.push(photo);
+
+              $rootScope.$broadcast('loading:hide');
             }
-            
+
           });
-          
+
         });
-        
+
       });
 
       $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
@@ -97,20 +109,23 @@
             duration: 2000
           });
 
-          var photo = new Photo();
-          photo.source = imageData;
-          photo.image = imageData;
-          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
-          photo.description = $scope.selectedPhotoAlbumAttribute.name;
-          photo.contentLength = imageData.length;
-          photo.mimeType = 'image/png';
+          $scope.renameFile(imageData, function(fileName){
 
-          if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
-            $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
-            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
-          }
+            var photo = new Photo();
+            photo.image = fileName;
+            photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
+            photo.description = $scope.selectedPhotoAlbumAttribute.name;
+            photo.contentLength = imageData.length;
+            photo.mimeType = 'image/png';
 
-          $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+            if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
+              $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
+              $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
+            }
+
+            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+
+          });
 
         }, function(err) {
           $log.debug(err);
@@ -137,20 +152,23 @@
             duration: 2000
           });
 
-          var photo = new Photo();
-          photo.source = imageData;
-          photo.image = imageData;
-          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
-          photo.description = $scope.selectedPhotoAlbumAttribute.name;
-          photo.contentLength = imageData.length;
-          photo.mimeType = 'image/jpeg';
+          $scope.renameFile(imageData, function(fileName){
 
-          if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
-            $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
-            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
-          }
+            var photo = new Photo();
+            photo.image = fileName;
+            photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
+            photo.description = $scope.selectedPhotoAlbumAttribute.name;
+            photo.contentLength = imageData.length;
+            photo.mimeType = 'image/jpeg';
 
-          $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+            if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
+              $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
+              $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
+            }
+
+            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+
+          });
 
         }, function(err) {
           $log.debug(err);

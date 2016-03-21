@@ -145,6 +145,8 @@
 
     $ionicPlatform.ready(function() {
 
+      if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
+
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard for form inputs
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
 
@@ -243,16 +245,15 @@
 
           $log.debug('resume');
 
+          $rootScope.$broadcast('loading:show');
+
           if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
-
-
 
           $log.debug(event.pendingResult);
 
           if (event.pendingResult) {
 
             if (event.pendingResult.pluginStatus === "OK") {
-
 
               /**
                * token handler
@@ -261,18 +262,6 @@
 
                 var userEmail = localStorage.getItem('userEmail');
                 var token     = localStorage.getItem('token');
-
-                /* var config = {
-                 headers: {'Content-Type': 'application/json; charset=UTF-8'}
-                 };
-
-                 $http.post($API_ENDPOINT + "/login", $scope.model.user, config)
-                 .success(function (data, status, headers, config) {
-                 $log.debug('logged');
-                 })
-                 .error(function (data, status, headers, config) {
-                 $log.debug('fail');
-                 });*/
 
                 $http.get($API_ENDPOINT + "/login/geocab?userName=" + userEmail + "&token=" + token)
                   .success(function (data, status, headers, config) {
@@ -285,7 +274,6 @@
                   .error(function (data, status, headers, config) {
                     $log.debug('fail');
                   });
-
               }
 
             } else {
