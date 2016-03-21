@@ -7,8 +7,8 @@
   /**
    * Desenvolvimento
    */
-  module.constant('$API_ENDPOINT', 'http://eduardo.prognus.com.br:8080/geocab');
-  //module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
+  //module.constant('$API_ENDPOINT', 'http://eduardo.prognus.com.br:8080/geocab');
+  module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
   /**
    * Homologação
    */
@@ -52,7 +52,7 @@
     //-------
     //URL Router
     //-------
-    $urlRouterProvider.otherwise('/authentication/login');
+    $urlRouterProvider.otherwise(lastRoute);
 
     //AUTHENTICATION
     $stateProvider.state('authentication', {
@@ -195,13 +195,13 @@
 
       if(navigator.connection) {
         var type = navigator.connection.type;
-        $log.debug(type);
+        $log.debug('Connection type: ' + type);
 
         var isOnline = $cordovaNetwork.isOnline();
-        $log.debug(isOnline);
+        $log.debug('isOnline: ' + isOnline);
 
         var isOffline = $cordovaNetwork.isOffline();
-        $log.debug(isOffline);
+        $log.debug('isOffline: ' + isOffline);
 
         if (isOffline) {
           if (navigator && navigator.splashscreen) {
@@ -280,8 +280,6 @@
                     $log.debug('logged');
 
                     $rootScope.$broadcast('camera:result', event.pendingResult.result);
-
-                    $rootScope.$apply();
 
                   })
                   .error(function (data, status, headers, config) {

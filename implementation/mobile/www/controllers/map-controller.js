@@ -1175,6 +1175,8 @@
                   $rootScope.$broadcast('loading:hide');
 
                   $interval.cancel(intervalPromise);
+                  
+                  $log.debug('getUserAuthenticated success');
                   $scope.$apply();
                 },
                 errorHandler: function(message, exception) {
@@ -1190,6 +1192,12 @@
                   localStorage.setItem('lastState', $scope.MAP_INDEX);
 
                   $location.path('/authentication/login');
+                  
+                  $log.debug('getUserAuthenticated fail');
+                  
+                  $ionicSideMenuDelegate.toggleLeft();
+                  
+                  $scope.clearNewMarker();
 
                   $scope.$apply();
                 }
@@ -1359,13 +1367,13 @@
 
                         $log.debug(data);
 
-                        file.source = data;
+                        file.source = data.split(';base64,')[1];
 
                         var photo           = new Photo();
                         photo.source        = file.source;
                         photo.name          = file.name;
                         photo.description   = file.description;
-                        photo.contentLength = file.contentLength;
+                        photo.contentLength = file.contentLength ? file.contentLength : file.source.length;
                         photo.mimeType      = file.mimeType;
 
                         photoAlbum.photos.push(photo);

@@ -183,6 +183,8 @@
         $http.get($API_ENDPOINT + "/login/" + server + "?userName=" + user + "&token=" + token)
           .success(function (data, status, headers, config) {
 
+            $log.debug('login success');
+            
             $scope.model.user.email = user;
             $scope.model.user.token = data;
             $scope.loginSuccess();
@@ -206,12 +208,7 @@
 
           $log.debug(lastState);
 
-          $ionicHistory.nextViewOptions({
-            disableAnimate: true,
-            historyRoot: true
-          });
-
-          $scope.getUserAuthenticated();
+          //$scope.getUserAuthenticated();
           $state.go(lastState);
 
         } else {
@@ -246,6 +243,7 @@
        * token handler
        */
       if (localStorage.getItem('token')) {
+        $log.debug('login with token');
         $scope.model.user.email = localStorage.getItem('userEmail');
         $scope.login('geocab', $scope.model.user.email, localStorage.getItem('token'));
       }

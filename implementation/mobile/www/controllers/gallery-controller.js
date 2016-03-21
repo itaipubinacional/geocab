@@ -31,32 +31,34 @@
 
         var newFileName = makeid();
 
-        $cordovaFile.copyFile(filePath, fileName, filePath, newFileName + '.png');
+        $cordovaFile.copyFile(filePath, fileName, filePath, newFileName + '.png').then(function(success){
+          
+          fileName = filePath + '/' + newFileName;
 
-        var selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
+          var selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
 
-        angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
+          angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
 
-          if(markerAttribute.attribute.id == selectedPhotoAlbumAttribute.attribute.id) {
+            if(markerAttribute.attribute.id == selectedPhotoAlbumAttribute.attribute.id) {
 
-            var photo = {};
-            photo.image       = newFileName + '/teste.png';
-            photo.name        = markerAttribute.name + '.png';
-            photo.description = markerAttribute.name;
-            photo.mimeType    = 'image/png';
+              var photo = {};
+              photo.image       = fileName + '.png';
+              photo.name        = markerAttribute.name + '.png';
+              photo.description = markerAttribute.name;
+              photo.mimeType    = 'image/png';
 
-            if (!markerAttribute.photoAlbum) {
-              markerAttribute.photoAlbum = {};
-              markerAttribute.photoAlbum.photos = [];
+              if (!markerAttribute.photoAlbum) {
+                markerAttribute.photoAlbum = {};
+                markerAttribute.photoAlbum.photos = [];
+              }
+
+              markerAttribute.photoAlbum.photos.push(photo);
             }
-
-            markerAttribute.photoAlbum.photos.push(photo);
-
-          }
+            
+          });
+          
         });
-
-        $scope.$apply();
-
+        
       });
 
       $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
