@@ -38,7 +38,6 @@
        *              ATTRIBUTES
        *-------------------------------------------------------------------*/
 
-
       $scope.map = {};
       $scope.currentFeature = '';
       $scope.isNewMarker = false;
@@ -67,57 +66,57 @@
 
       $scope.attributeIndex = '';
 
-      $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+      // $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 
-        if (navigator && navigator.splashscreen) navigator.splashscreen.hide();
+      //   if (navigator && navigator.splashscreen) navigator.splashscreen.hide();
 
-        $log.debug('state change');
+      //   $log.debug('state change');
 
-        if (toState.name == 'map.index') {
-          $ionicNavBarDelegate.showBackButton(false);
+      //   if (toState.name == 'map.index') {
+      //     $ionicNavBarDelegate.showBackButton(false);
 
-          if($scope.internalLayer.id) {
-            if ($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
+      //     if($scope.internalLayer.id) {
+      //       if ($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
 
-              $scope.internalLayer.visible = false;
-              $scope.toggleLayer($scope.internalLayer);
-              $scope.internalLayer.visible = true;
-              $scope.toggleLayer($scope.internalLayer);
+      //         $scope.internalLayer.visible = false;
+      //         $scope.toggleLayer($scope.internalLayer);
+      //         $scope.internalLayer.visible = true;
+      //         $scope.toggleLayer($scope.internalLayer);
 
-            } else {
+      //       } else {
 
-              $scope.internalLayer.visible = true;
-              $scope.toggleLayer($scope.internalLayer);
+      //         $scope.internalLayer.visible = true;
+      //         $scope.toggleLayer($scope.internalLayer);
 
-            }
-          }
+      //       }
+      //     }
 
-        } else {
-          $ionicNavBarDelegate.showBackButton(true);
+      //   } else {
+      //     $ionicNavBarDelegate.showBackButton(true);
 
-          if (angular.equals($scope.currentEntity, {})) {
+      //     if (angular.equals($scope.currentEntity, {})) {
 
-            var currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
-            $scope.currentEntity = currentEntity;
+      //       var currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
+      //       $scope.currentEntity = currentEntity;
 
-            $log.debug($scope.currentEntity);
+      //       $log.debug($scope.currentEntity);
 
-            $scope.selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
+      //       $scope.selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
 
-            angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute) {
-              if (markerAttribute.attribute.id == $scope.selectedPhotoAlbumAttribute.attribute.id)
-                $scope.selectedPhotoAlbumAttribute = markerAttribute;
-            });
+      //       angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute) {
+      //         if (markerAttribute.attribute.id == $scope.selectedPhotoAlbumAttribute.attribute.id)
+      //           $scope.selectedPhotoAlbumAttribute = markerAttribute;
+      //       });
 
-            //$timeout(function () {
-              $log.debug($scope.selectedPhotoAlbumAttribute);
-              $scope.listAllLayers();
-              $scope.listAllInternalLayerGroups();
-              $scope.getUserAuthenticated();
-            //});
-          }
-        }
-      });
+      //       $timeout(function () {
+      //         $log.debug($scope.selectedPhotoAlbumAttribute);
+      //         $scope.listAllLayers();
+      //         $scope.listAllInternalLayerGroups();
+      //         $scope.getUserAuthenticated();
+      //       });
+      //     }
+      //   }
+      // });
 
       /**
        * Setting the background layer - OSM
@@ -166,9 +165,30 @@
 
       $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 
+        if (navigator && navigator.splashscreen) navigator.splashscreen.hide();
+
         switch ($state.current.name) {
           case $scope.MAP_INDEX:
           {
+
+            $ionicNavBarDelegate.showBackButton(false);
+
+            if($scope.internalLayer.id) {
+              if ($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
+
+                $scope.internalLayer.visible = false;
+                $scope.toggleLayer($scope.internalLayer);
+                $scope.internalLayer.visible = true;
+                $scope.toggleLayer($scope.internalLayer);
+
+              } else {
+
+                $scope.internalLayer.visible = true;
+                $scope.toggleLayer($scope.internalLayer);
+
+              }
+            }
+
             $timeout(function () {
 
               $log.debug($('canvas').length);
@@ -185,11 +205,42 @@
             });
             break;
           }
+          case $scope.MAP_GALLERY:
+          {
+            $ionicNavBarDelegate.showBackButton(true);
+
+            if (angular.equals($scope.currentEntity, {})) {
+
+              var currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
+              $scope.currentEntity = currentEntity;
+
+              $log.debug($scope.currentEntity);
+
+              $scope.selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
+
+              angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute) {
+                if (markerAttribute.attribute.id == $scope.selectedPhotoAlbumAttribute.attribute.id)
+                  $scope.selectedPhotoAlbumAttribute = markerAttribute;
+              });
+
+              $log.debug($scope.selectedPhotoAlbumAttribute);
+
+              $scope.getPhotosByAttribute($scope.selectedPhotoAlbumAttribute);
+
+              $scope.listAllLayers();
+              $scope.listAllInternalLayerGroups();
+              $scope.getUserAuthenticated();
+            }
+          }
           case $scope.MAP_MARKER:
           {
             $scope.removeLastPhoto();
+
+            $scope.getLastPhotoByMarkerId($scope.currentEntity.id);
+
             break;
           }
+
         }
       });
 
@@ -277,21 +328,29 @@
 
       $scope.getLastPhotoByMarkerId = function (markerId) {
 
-        markerService.lastPhotoByMarkerId(markerId, {
-          callback: function (result) {
+        var intervalPromise = $interval(function () {
 
-            $scope.imgResult = result.image;
-            $scope.lastPhoto = result;
-            $scope.$apply();
+          if (angular.isDefined(markerService)) {
 
-          },
-          errorHandler: function (message, exception) {
+            $interval.cancel(intervalPromise);
 
-            $scope.imgResult = null;
-            $log.debug(message);
-            $scope.$apply();
+            markerService.lastPhotoByMarkerId(markerId, {
+              callback: function (result) {
+
+                $scope.imgResult = result.image;
+                $scope.lastPhoto = result;
+                $scope.$apply();
+
+              },
+              errorHandler: function (message, exception) {
+
+                $scope.imgResult = null;
+                $log.debug(message);
+                $scope.$apply();
+              }
+            });
           }
-        });
+        }, 500);
 
       };
 
@@ -318,34 +377,42 @@
 
         $scope.attributeIndex = $scope.currentEntity.markerAttribute.indexOf(attr);
 
-        markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, null, {
-          callback: function (result) {
+        var intervalPromise = $interval(function () {
 
-            if (attribute.photoAlbum != null) {
-              angular.forEach(result.content, function (photo) {
+          if (angular.isDefined(markerService)) {
 
-                var photoAttr = $filter('filter')(attribute.photoAlbum.photos, {
-                  id: photo.id
-                })[0];
+            $interval.cancel(intervalPromise);
 
-                if (photoAttr) {
-                  photoAttr.image = photo.image;
+            markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, null, {
+              callback: function (result) {
+
+                if (attribute.photoAlbum != null) {
+                  angular.forEach(result.content, function (photo) {
+
+                    var photoAttr = $filter('filter')(attribute.photoAlbum.photos, {
+                      id: photo.id
+                    })[0];
+
+                    if (photoAttr) {
+                      photoAttr.image = photo.image;
+                    }
+
+                  });
+                } else {
+                  attribute.photoAlbum = result.content[0].photoAlbum;
+                  attribute.photoAlbum.photos = result.content;
                 }
 
-              });
-            } else {
-              attribute.photoAlbum = result.content[0].photoAlbum;
-              attribute.photoAlbum.photos = result.content;
-            }
+                $scope.$apply();
 
-            $scope.$apply();
-
-          },
-          errorHandler: function (message, exception) {
-            $log.debug(message);
-            $scope.$apply();
+              },
+              errorHandler: function (message, exception) {
+                $log.debug(message);
+                $scope.$apply();
+              }
+            });
           }
-        });
+        }, 500);
 
       };
 
