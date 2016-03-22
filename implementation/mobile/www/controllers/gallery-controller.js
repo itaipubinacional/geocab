@@ -155,10 +155,10 @@
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
 
-          $ionicLoading.show({
+          /*$ionicLoading.show({
             template: 'Salvando foto',
             duration: 2000
-          });
+          });*/
 
           //$rootScope.$broadcast('loading:show');
 
@@ -182,7 +182,7 @@
 
               $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
 
-              //$rootScope.$broadcast('loading:hide');
+              $rootScope.$broadcast('loading:hide');
 
               $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
 
@@ -192,6 +192,7 @@
 
         }, function(err) {
           $log.debug(err);
+          $rootScope.$broadcast('loading:hide');
         });
       };
 
@@ -210,10 +211,11 @@
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
-          $ionicLoading.show({
+
+          /*$ionicLoading.show({
             template: 'Salvando foto',
             duration: 2000
-          });
+          });*/
 
           $scope.renameFile(imageData, function(fileName){
 
@@ -235,7 +237,7 @@
 
               $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
 
-              //$rootScope.$broadcast('loading:hide');
+              $rootScope.$broadcast('loading:hide');
 
               $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
 
@@ -245,6 +247,7 @@
 
         }, function(err) {
           $log.debug(err);
+          $rootScope.$broadcast('loading:hide');
         });
       };
 

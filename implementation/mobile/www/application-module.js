@@ -245,9 +245,9 @@
 
           $log.debug('resume');
 
-          $rootScope.$broadcast('loading:show');
-
           if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
+
+          $rootScope.$broadcast('loading:show');
 
           $log.debug(event.pendingResult);
 
