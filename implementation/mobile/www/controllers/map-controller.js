@@ -163,6 +163,19 @@
         }
       };
 
+      var parseDate = function(key, value){
+
+        /*$log.debug(key);
+        $log.debug(value);*/
+
+        if(key.match(/(created|updated)/) && !!value){
+         return new Date(value);
+        }
+
+        return value;
+
+      };
+
       $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 
         if (navigator && navigator.splashscreen) navigator.splashscreen.hide();
@@ -211,7 +224,7 @@
 
             if (angular.equals($scope.currentEntity, {})) {
 
-              var currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
+              var currentEntity = localStorage.getItem('currentEntity') ? JSON.parse(localStorage.getItem('currentEntity'), parseDate) : {};
               $scope.currentEntity = currentEntity;
 
               $log.debug($scope.currentEntity);
@@ -296,9 +309,14 @@
         /* REMOVING RECURSIVE DATA FROM OBJECT */
         angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index){
           if(attribute.photoAlbum) {
-            delete attribute.photoAlbum.markerAttribute;
+            attribute.photoAlbum.markerAttribute = {attribute: {id: attribute.attribute.id}, id: attribute.photoAlbum.markerAttribute.id};
             angular.forEach(attribute.photoAlbum.photos, function(photos){
-              delete photos.photoAlbum;
+              angular.forEach(photos.photoAlbum.photos, function(albumPhotos){
+                albumPhotos.photoAlbum = {
+                  id: albumPhotos.photoAlbum.id,
+                  markerAttribute: {id: albumPhotos.photoAlbum.markerAttribute.id, attribute: {id: albumPhotos.photoAlbum.markerAttribute.attribute.id}}
+                };
+              });
             });
           }
         });
@@ -389,12 +407,14 @@
                 if (attribute.photoAlbum != null) {
                   angular.forEach(result.content, function (photo) {
 
-                    var photoAttr = $filter('filter')(attribute.photoAlbum.photos, {
-                      id: photo.id
-                    })[0];
+                    if(angular.isDefined(attribute.photoAlbum.photos)) {
+                      var photoAttr = $filter('filter')(attribute.photoAlbum.photos, {
+                        id: photo.id
+                      })[0];
 
-                    if (photoAttr) {
-                      photoAttr.image = photo.image;
+                      if (photoAttr) {
+                        photoAttr.image = photo.image;
+                      }
                     }
 
                   });
@@ -1199,7 +1219,8 @@
          */
         $scope.logout = function () {
 
-          $scope.toggleLeftSideMenu();
+          $ionicSideMenuDelegate.toggleLeft();
+
           $scope.userMe = {};
           /*$scope.allLayers = {};
            $scope.allInternalLayerGroups = {};*/

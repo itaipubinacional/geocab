@@ -98,10 +98,11 @@
               photo.name        = markerAttribute.name + '.png';
               photo.description = markerAttribute.name;
               photo.mimeType    = 'image/png';
-
+              
               $scope.convertImgToBase64URL(fileName, function (data) {
 
                 photo.source = data.split(';base64,')[1];
+                photo.contentLength = photo.source.length;
 
                 if (!markerAttribute.photoAlbum) {
                   markerAttribute.photoAlbum = {};
