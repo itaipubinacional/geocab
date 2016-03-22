@@ -253,6 +253,9 @@
 
             if (event.pendingResult.pluginStatus === "OK" && event.pendingResult.pluginServiceName === 'Camera') {
 
+              localStorage.removeItem('lastState');
+              localStorage.removeItem('lastRoute');
+
               $rootScope.$broadcast('loading:show');
 
               /**
