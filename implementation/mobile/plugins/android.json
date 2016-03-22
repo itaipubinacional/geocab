@@ -16,7 +16,13 @@
         "cordova-plugin-datepicker": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
         "cordova-plugin-googleplus": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
         "cordova-plugin-keyboard": {
@@ -34,13 +40,7 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
         "cordova-plugin-x-toast": {
-            "PACKAGE_NAME": "br.com.geocab.mobile"
-        },
-        "cordova-plugin-file": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
