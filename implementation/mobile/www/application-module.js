@@ -247,13 +247,13 @@
 
           if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
 
-          $rootScope.$broadcast('loading:show');
-
           $log.debug(event.pendingResult);
 
           if (event.pendingResult) {
 
-            if (event.pendingResult.pluginStatus === "OK") {
+            if (event.pendingResult.pluginStatus === "OK" && event.pendingResult.pluginServiceName === 'Camera') {
+
+              $rootScope.$broadcast('loading:show');
 
               /**
                * token handler
