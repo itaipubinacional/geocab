@@ -1222,6 +1222,7 @@
           $ionicSideMenuDelegate.toggleLeft();
 
           $scope.userMe = {};
+
           /*$scope.allLayers = {};
            $scope.allInternalLayerGroups = {};*/
 
@@ -1233,7 +1234,18 @@
           localStorage.removeItem('lastState');
           localStorage.removeItem('lastRoute');
 
-          $location.path($rootScope.$API_ENDPOINT + "/j_spring_security_logout");
+          $http({
+            method: 'GET',
+            url: $rootScope.$API_ENDPOINT + '/j_spring_security_logout'
+          }).then(function successCallback(response) {
+
+            $state.go('authentication.login');
+
+          }, function errorCallback(response) {
+
+            $log.debug(response);
+
+          });
 
           //Realiza o logout do google plus
           window.plugins.googleplus.disconnect(
