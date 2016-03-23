@@ -261,14 +261,16 @@
             });
 
             $scope.getPhotosByAttribute($scope.selectedPhotoAlbumAttribute);
-
-            $scope.listAllLayers();
-            $scope.listAllInternalLayerGroups();
-
+            //$scope.listAllLayers();
+            //
+            break;
           }
           case $scope.MAP_MARKER:
           {
             $scope.removeLastPhoto();
+
+            $scope.listAllLayers();
+            $scope.listAllInternalLayerGroups();
 
             $scope.getLastPhotoByMarkerId($scope.currentEntity.id);
 
@@ -403,8 +405,6 @@
        * GALLERY
        */
       $scope.getPhotosByAttribute = function (attribute, reload) {
-
-
 
         if (angular.isDefined(attribute) && attribute != null) {
           if (attribute.photoAlbum != null) {
@@ -575,6 +575,8 @@
            $state.go($scope.MAP_INDEX);*/
 
           $scope.currentWMS = {};
+
+          localStorage.removeItem('currentEntity');
 
           if (!$scope.isNewMarker) {
             $scope.currentEntity = {};
@@ -1105,6 +1107,8 @@
 
       $scope.listAllLayers = function () {
 
+        $log.debug('listAllLayers');
+
         if ($scope.allLayers.length == 0) {
 
           $rootScope.$broadcast('loading:show');
@@ -1142,11 +1146,10 @@
 
           }, 500);
 
-        }
-        ;
+        };
 
         /**
-         *
+         * LIST ALL INTERNAL LAYERS GROUPS
          */
         $scope.listAllInternalLayerGroups = function () {
 
