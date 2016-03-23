@@ -162,6 +162,14 @@
 
       };
 
+      $scope.showMarkerPosition = function () {
+
+        if ($scope.coordinatesFormat == 'DEGREES_DECIMAL')
+          return $scope.currentEntity.formattedLatitude + ', ' + $scope.currentEntity.formattedLongitude;
+        return $scope.currentEntity.formattedLatitude + ' ' + $scope.currentEntity.formattedLongitude;
+
+      };
+
       $scope.removeLastPhoto = function () {
 
         var hasPhoto = false;
@@ -183,6 +191,55 @@
 
         if (!hasPhoto) {
           $scope.imgResult = '';
+        }
+      };
+
+      /**
+       * LIST ALL INTERNAL LAYERS GROUPS
+       */
+      $scope.listAllInternalLayerGroups = function () {
+
+        if ($scope.allInternalLayerGroups.length == 0) {
+
+          $rootScope.$broadcast('loading:show');
+
+          var intervalPromise = $interval(function () {
+
+            if (angular.isDefined(layerGroupService)) {
+
+              layerGroupService.listAllInternalLayerGroups({
+                callback: function (result) {
+                  $scope.allInternalLayerGroups = result;
+                  $log.debug($scope.allInternalLayerGroups);
+
+                  //$scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
+                  $rootScope.$broadcast('loading:hide');
+
+                  angular.forEach(result, function (layer) {
+                    if ($scope.currentEntity.layer && layer.id == $scope.currentEntity.layer.id) {
+                      $scope.currentEntity.layer = layer;
+                    }
+                  });
+
+                  $interval.cancel(intervalPromise);
+
+                  $scope.$apply();
+                },
+                errorHandler: function (message, exception) {
+                  $log.debug(message);
+
+                  $interval.cancel(intervalPromise);
+
+                  localStorage.setItem('lastState', $scope.MAP_INDEX);
+
+                  $rootScope.$broadcast('loading:hide');
+
+                  $scope.$apply();
+                }
+              });
+            }
+          }, 500);
+
         }
       };
 
@@ -217,21 +274,6 @@
 
             $ionicNavBarDelegate.showBackButton(false);
 
-            if ($scope.internalLayer.id) {
-              if ($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
-
-                $scope.internalLayer.visible = false;
-                $scope.toggleLayer($scope.internalLayer);
-                $scope.internalLayer.visible = true;
-                $scope.toggleLayer($scope.internalLayer);
-
-              } else {
-
-                $scope.internalLayer.visible = true;
-                $scope.toggleLayer($scope.internalLayer);
-
-              }
-            }
 
             $timeout(function () {
 
@@ -246,6 +288,23 @@
               } else {
 
                 $scope.map.updateSize();
+
+                if ($scope.internalLayer.id) {
+                  if ($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
+
+                    $scope.internalLayer.visible = false;
+                    $scope.toggleLayer($scope.internalLayer);
+                    $scope.internalLayer.visible = true;
+                    $scope.toggleLayer($scope.internalLayer);
+
+                  } else {
+
+                    $scope.internalLayer.visible = true;
+                    $scope.toggleLayer($scope.internalLayer);
+
+                  }
+                }
+
               }
 
             });
@@ -267,11 +326,11 @@
           }
           case $scope.MAP_MARKER:
           {
+            $ionicNavBarDelegate.showBackButton(true);
+
             $scope.removeLastPhoto();
-
-            $scope.listAllLayers();
+            //$scope.listAllLayers();
             $scope.listAllInternalLayerGroups();
-
             $scope.getLastPhotoByMarkerId($scope.currentEntity.id);
 
             break;
@@ -905,8 +964,8 @@
       $scope.toggleLayer = function (layer) {
 
         /*if ($scope.currentEntity.id) {
-          $scope.currentEntity = {};
-        }*/
+         $scope.currentEntity = {};
+         }*/
 
         $filter('filter')($scope.allLayers, {id: layer.id})[0].visible = layer.visible;
 
@@ -920,18 +979,18 @@
 
         } else {
 
-          var intervalPromise = $interval(function () {
+          /*var intervalPromise = $interval(function () {
 
             if (!angular.equals($scope.map, {})) {
 
-              $interval.cancel(intervalPromise);
+              $interval.cancel(intervalPromise);*/
 
               angular.forEach($scope.map.getLayers(), function (group) {
 
                 if (group instanceof ol.layer.Group) {
                   var prop = group.getProperties();
 
-                  if (prop.id == layer.id && !layer.visible) {
+                  if (prop.id == layer.id) {
                     $scope.map.removeLayer(group);
                     //group.setVisible(layer.visible);
                   }
@@ -939,7 +998,7 @@
 
                 if (group instanceof ol.layer.Tile) {
                   var prop = group.getProperties();
-                  if (prop.layer && prop.layer.id == layer.id && !layer.visible) {
+                  if (prop.layer && prop.layer.id == layer.id) {
                     group.setVisible(layer.visible);
                     $scope.map.removeLayer(group);
                   }
@@ -1101,8 +1160,8 @@
                 //$scope.map.removeLayer(layer.layer);
               }
             }
-          }, 500);
-        }
+          /*}, 500);
+        }*/
       };
 
       $scope.listAllLayers = function () {
@@ -1148,54 +1207,7 @@
 
         };
 
-        /**
-         * LIST ALL INTERNAL LAYERS GROUPS
-         */
-        $scope.listAllInternalLayerGroups = function () {
 
-          if ($scope.allInternalLayerGroups.length == 0) {
-
-            $rootScope.$broadcast('loading:show');
-
-            var intervalPromise = $interval(function () {
-
-              if (angular.isDefined(layerGroupService)) {
-
-                layerGroupService.listAllInternalLayerGroups({
-                  callback: function (result) {
-                    $scope.allInternalLayerGroups = result;
-                    $log.debug($scope.allInternalLayerGroups);
-
-                    //$scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
-                    $rootScope.$broadcast('loading:hide');
-
-                    angular.forEach(result, function (layer) {
-                      if ($scope.currentEntity.layer && layer.id == $scope.currentEntity.layer.id) {
-                        $scope.currentEntity.layer = layer;
-                      }
-                    });
-
-                    $interval.cancel(intervalPromise);
-
-                    $scope.$apply();
-                  },
-                  errorHandler: function (message, exception) {
-                    $log.debug(message);
-
-                    $interval.cancel(intervalPromise);
-
-                    localStorage.setItem('lastState', $scope.MAP_INDEX);
-
-                    $rootScope.$broadcast('loading:hide');
-
-                    $scope.$apply();
-                  }
-                });
-              }
-            }, 500);
-
-          }
-        };
 
         /**
          *
@@ -1286,6 +1298,8 @@
           localStorage.removeItem('lastCenterPosition');
           localStorage.removeItem('selectedPhotoAlbumAttribute');
 
+          $scope.internalLayer = {};
+
           $http({
             method: 'GET',
             url: $rootScope.$API_ENDPOINT + '/j_spring_security_logout'
@@ -1317,13 +1331,7 @@
 
         });
 
-        $scope.showMarkerPosition = function () {
 
-          if ($scope.coordinatesFormat == 'DEGREES_DECIMAL')
-            return $scope.currentEntity.formattedLatitude + ', ' + $scope.currentEntity.formattedLongitude;
-          return $scope.currentEntity.formattedLatitude + ' ' + $scope.currentEntity.formattedLongitude;
-
-        };
 
         /* INDEX */
 
@@ -1537,13 +1545,13 @@
           }
         };
 
-        $scope.removeAllSelectedLayers = function () {
+        /*$scope.removeAllSelectedLayers = function () {
 
           angular.forEach($scope.allInternalLayerGroups, function (group) {
             $scope.toggleLayer(group);
           });
 
-        };
+        };*/
 
         $scope.verifyStatus = function () {
           if (($scope.currentEntity.status == 'SAVED' || $scope.currentEntity.status == 'REFUSED' || $scope.currentEntity.status == 'CANCELED')
