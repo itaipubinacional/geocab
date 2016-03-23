@@ -227,6 +227,15 @@
         });
       }
 
+      $rootScope.parseDate = function (key, value) {
+
+        if (key.match(/(created|updated)/) && !!value) {
+          return new Date(value);
+        }
+        return value;
+
+      };
+
       /* DEVICE ON PAUSE AND ON RESUME */
       document.addEventListener('deviceReady', function () {
 
@@ -269,13 +278,13 @@
                 $http.get($API_ENDPOINT + "/login/geocab?userName=" + userEmail + "&token=" + token)
                   .success(function (data, status, headers, config) {
 
-                    $log.debug('logged');
+                    $log.debug('user logged');
 
                     $rootScope.$broadcast('camera:result', event.pendingResult.result);
 
                   })
                   .error(function (data, status, headers, config) {
-                    $log.debug('fail');
+                    $log.debug('user login fail');
                   });
               }
 

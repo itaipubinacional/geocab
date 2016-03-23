@@ -50,7 +50,6 @@
         // Execute action
       });
 
-
       var options = {
         date: new Date(),
         mode: 'date', // or 'time'

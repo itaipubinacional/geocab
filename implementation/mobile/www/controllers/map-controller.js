@@ -52,7 +52,7 @@
 
       $scope.lastCurrentEntity = {};
 
-      $scope.currentEntity = {};
+      $scope.currentEntity = localStorage.getItem('currentEntity') ? JSON.parse(localStorage.getItem('currentEntity'), $scope.parseDate) : {};
       $scope.isNewMarker = false;
 
       $scope.currentWMS = {};
@@ -62,7 +62,7 @@
       $scope.editPhoto = false;
 
       $scope.userMe = {};
-      $scope.selectedPhotoAlbumAttribute = {};
+      $scope.selectedPhotoAlbumAttribute = localStorage.getItem('selectedPhotoAlbumAttribute') ? angular.fromJson(localStorage.getItem('selectedPhotoAlbumAttribute')) : {};
 
       $scope.attributeIndex = '';
 
@@ -91,9 +91,70 @@
         marker: null
       };
 
-      $scope.loadSelectedLayers = function() {
+      /**
+       * authenticated user
+       * */
+      $scope.getUserAuthenticated = function () {
 
-        angular.forEach($scope.selectedLayers, function(layer){
+        $log.debug('getUserAuthenticated');
+
+        if (angular.equals($scope.userMe, {})) {
+
+          $rootScope.$broadcast('loading:show');
+
+          var intervalPromise = $interval(function () {
+
+            if (angular.isDefined(accountService)) {
+              accountService.getUserAuthenticated({
+                callback: function (result) {
+                  $scope.userMe = result;
+                  $scope.coordinatesFormat = result.coordinates;
+
+                  $scope.setMarkerCoordinatesFormat();
+
+                  $rootScope.$broadcast('loading:hide');
+
+                  $interval.cancel(intervalPromise);
+
+                  $log.debug('getUserAuthenticated success');
+                  $scope.$apply();
+                },
+                errorHandler: function (message, exception) {
+
+                  $rootScope.$broadcast('loading:hide');
+
+                  $log.debug(message);
+
+                  $interval.cancel(intervalPromise);
+
+                  localStorage.removeItem('lastRoute');
+                  localStorage.removeItem('lastState');
+
+                  $state.go('authentication.login');
+
+                  $log.debug('getUserAuthenticated fail');
+
+                  $ionicSideMenuDelegate.toggleLeft();
+
+                  $scope.clearNewMarker();
+
+                  $scope.$apply();
+                }
+              });
+            }
+          }, 500);
+
+        }
+      };
+
+      $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $log.debug('beforeEnter');
+        viewData.enableBack = false;
+      });
+
+      $scope.loadSelectedLayers = function () {
+
+        angular.forEach($scope.selectedLayers, function (layer) {
 
           $scope.toggleLayer(layer);
 
@@ -125,16 +186,26 @@
         }
       };
 
-      var parseDate = function(key, value){
-
-        if(key.match(/(created|updated)/) && !!value){
-         return new Date(value);
-        }
-        return value;
-
-      };
-
       $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+        $log.debug('$stateChangeSuccess');
+
+        var userEmail = localStorage.getItem('userEmail');
+        var token = localStorage.getItem('token');
+
+        if (!!userEmail) {
+          $http.get($scope.$API_ENDPOINT + "/login/geocab?userName=" + userEmail + "&token=" + token)
+            .success(function (data, status, headers, config) {
+
+              $log.debug('user logged');
+
+              $scope.getUserAuthenticated();
+
+            })
+            .error(function (data, status, headers, config) {
+              $log.debug('user login fail');
+            });
+        }
 
         if (navigator && navigator.splashscreen) navigator.splashscreen.hide();
 
@@ -146,7 +217,7 @@
 
             $ionicNavBarDelegate.showBackButton(false);
 
-            if($scope.internalLayer.id) {
+            if ($scope.internalLayer.id) {
               if ($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
 
                 $scope.internalLayer.visible = false;
@@ -166,7 +237,7 @@
 
               $log.debug($('canvas').length);
 
-              if (!$('canvas').length) {
+              if (!$('canvas').length || angular.equals($scope.map, {})) {
 
                 $scope.initializeMap();
 
@@ -184,28 +255,16 @@
           {
             $ionicNavBarDelegate.showBackButton(true);
 
-            if (angular.equals($scope.currentEntity, {})) {
+            angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute) {
+              if (markerAttribute.attribute.id == $scope.selectedPhotoAlbumAttribute.attribute.id)
+                $scope.selectedPhotoAlbumAttribute = markerAttribute;
+            });
 
-              var currentEntity = localStorage.getItem('currentEntity') ? JSON.parse(localStorage.getItem('currentEntity'), parseDate) : {};
-              $scope.currentEntity = currentEntity;
+            $scope.getPhotosByAttribute($scope.selectedPhotoAlbumAttribute);
 
-              $log.debug($scope.currentEntity);
+            $scope.listAllLayers();
+            $scope.listAllInternalLayerGroups();
 
-              $scope.selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
-
-              angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute) {
-                if (markerAttribute.attribute.id == $scope.selectedPhotoAlbumAttribute.attribute.id)
-                  $scope.selectedPhotoAlbumAttribute = markerAttribute;
-              });
-
-              $log.debug($scope.selectedPhotoAlbumAttribute);
-
-              $scope.getPhotosByAttribute($scope.selectedPhotoAlbumAttribute);
-
-              $scope.listAllLayers();
-              $scope.listAllInternalLayerGroups();
-              $scope.getUserAuthenticated();
-            }
           }
           case $scope.MAP_MARKER:
           {
@@ -269,14 +328,20 @@
         $log.debug('viewMarker');
 
         /* REMOVING RECURSIVE DATA FROM OBJECT */
-        angular.forEach($scope.currentEntity.markerAttribute, function(attribute, index){
-          if(attribute.photoAlbum) {
-            attribute.photoAlbum.markerAttribute = {attribute: {id: attribute.attribute.id}, id: attribute.photoAlbum.markerAttribute.id};
-            angular.forEach(attribute.photoAlbum.photos, function(photos){
-              angular.forEach(photos.photoAlbum.photos, function(albumPhotos){
+        angular.forEach($scope.currentEntity.markerAttribute, function (attribute, index) {
+          if (attribute.photoAlbum) {
+            attribute.photoAlbum.markerAttribute = {
+              attribute: {id: attribute.attribute.id},
+              id: attribute.photoAlbum.markerAttribute.id
+            };
+            angular.forEach(attribute.photoAlbum.photos, function (photos) {
+              angular.forEach(photos.photoAlbum.photos, function (albumPhotos) {
                 albumPhotos.photoAlbum = {
                   id: albumPhotos.photoAlbum.id,
-                  markerAttribute: {id: albumPhotos.photoAlbum.markerAttribute.id, attribute: {id: albumPhotos.photoAlbum.markerAttribute.attribute.id}}
+                  markerAttribute: {
+                    id: albumPhotos.photoAlbum.markerAttribute.id,
+                    attribute: {id: albumPhotos.photoAlbum.markerAttribute.attribute.id}
+                  }
                 };
               });
             });
@@ -339,63 +404,66 @@
        */
       $scope.getPhotosByAttribute = function (attribute, reload) {
 
-        if (attribute.photoAlbum != null) {
-          angular.forEach(attribute.photoAlbum.photos, function (photo) {
-            if (photo.id) {
-              photo.image = null;
-            }
-          });
-        }
 
-        if (angular.equals($scope.selectedPhotoAlbumAttribute, {}) || reload === true) {
-          $scope.selectedPhotoAlbumAttribute = attribute;
-        }
 
-        var attr = $filter('filter')($scope.currentEntity.markerAttribute, {
-          id: attribute.id
-        })[0];
-
-        $scope.attributeIndex = $scope.currentEntity.markerAttribute.indexOf(attr);
-
-        var intervalPromise = $interval(function () {
-
-          if (angular.isDefined(markerService)) {
-
-            $interval.cancel(intervalPromise);
-
-            markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, null, {
-              callback: function (result) {
-
-                if (attribute.photoAlbum != null) {
-                  angular.forEach(result.content, function (photo) {
-
-                    if(angular.isDefined(attribute.photoAlbum.photos)) {
-                      var photoAttr = $filter('filter')(attribute.photoAlbum.photos, {
-                        id: photo.id
-                      })[0];
-
-                      if (photoAttr) {
-                        photoAttr.image = photo.image;
-                      }
-                    }
-
-                  });
-                } else {
-                  attribute.photoAlbum = result.content[0].photoAlbum;
-                  attribute.photoAlbum.photos = result.content;
-                }
-
-                $scope.$apply();
-
-              },
-              errorHandler: function (message, exception) {
-                $log.debug(message);
-                $scope.$apply();
+        if (angular.isDefined(attribute) && attribute != null) {
+          if (attribute.photoAlbum != null) {
+            angular.forEach(attribute.photoAlbum.photos, function (photo) {
+              if (photo.id) {
+                photo.image = null;
               }
             });
           }
-        }, 500);
 
+          if (angular.equals($scope.selectedPhotoAlbumAttribute, {}) || reload === true) {
+            $scope.selectedPhotoAlbumAttribute = attribute;
+          }
+
+          var attr = $filter('filter')($scope.currentEntity.markerAttribute, {
+            id: attribute.id
+          })[0];
+
+          $scope.attributeIndex = $scope.currentEntity.markerAttribute.indexOf(attr);
+
+          var intervalPromise = $interval(function () {
+
+            if (angular.isDefined(markerService)) {
+
+              $interval.cancel(intervalPromise);
+
+              markerService.findPhotoAlbumByAttributeMarkerId(attribute.id, null, {
+                callback: function (result) {
+
+                  if (attribute.photoAlbum != null) {
+                    angular.forEach(result.content, function (photo) {
+
+                      if (angular.isDefined(attribute.photoAlbum.photos)) {
+                        var photoAttr = $filter('filter')(attribute.photoAlbum.photos, {
+                          id: photo.id
+                        })[0];
+
+                        if (photoAttr) {
+                          photoAttr.image = photo.image;
+                        }
+                      }
+
+                    });
+                  } else {
+                    attribute.photoAlbum = result.content[0].photoAlbum;
+                    attribute.photoAlbum.photos = result.content;
+                  }
+
+                  $scope.$apply();
+
+                },
+                errorHandler: function (message, exception) {
+                  $log.debug(message);
+                  $scope.$apply();
+                }
+              });
+            }
+          }, 500);
+        }
       };
 
       $scope.showNewMarker = function () {
@@ -488,7 +556,7 @@
         /**
          * Map event on Move end to save last center position
          */
-        $scope.map.on('moveend', function(evt){
+        $scope.map.on('moveend', function (evt) {
 
           var center = ol.proj.transform($scope.view.getCenter(), 'EPSG:3857', 'EPSG:4326');
           //$scope.mapGoogle.setCenter(new google.maps.LatLng(center[1], center[0]));
@@ -834,9 +902,9 @@
 
       $scope.toggleLayer = function (layer) {
 
-        if ($scope.currentEntity.id) {
+        /*if ($scope.currentEntity.id) {
           $scope.currentEntity = {};
-        }
+        }*/
 
         $filter('filter')($scope.allLayers, {id: layer.id})[0].visible = layer.visible;
 
@@ -844,7 +912,9 @@
 
           layer.visible = false;
 
-          $cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function(success){}, function(error){});
+          $cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function (success) {
+          }, function (error) {
+          });
 
         } else {
 
@@ -913,7 +983,7 @@
 
                       var hasSelectedLayer = $filter('filter')($scope.selectedLayers, {id: layer.id})[0];
 
-                      if(!angular.isDefined(hasSelectedLayer)) {
+                      if (!angular.isDefined(hasSelectedLayer)) {
                         $scope.selectedLayers.push({id: layer.id, visible: true});
                         localStorage.setItem('selectedLayers', angular.toJson($scope.selectedLayers));
                       }
@@ -1000,7 +1070,9 @@
 
                         $rootScope.$broadcast('loading:hide');
 
-                        $cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function(success){}, function(error){});
+                        $cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function (success) {
+                        }, function (error) {
+                        });
 
                       }
 
@@ -1070,7 +1142,8 @@
 
           }, 500);
 
-        };
+        }
+        ;
 
         /**
          *
@@ -1206,6 +1279,9 @@
           localStorage.removeItem('currentEntity');
           localStorage.removeItem('lastState');
           localStorage.removeItem('lastRoute');
+          localStorage.removeItem('selectedLayers');
+          localStorage.removeItem('lastCenterPosition');
+          localStorage.removeItem('selectedPhotoAlbumAttribute');
 
           $http({
             method: 'GET',
@@ -1228,61 +1304,6 @@
           );
         };
 
-        /**
-         * authenticated user
-         * */
-        $scope.getUserAuthenticated = function () {
-
-          $log.debug('getUserAuthenticated');
-
-          if (angular.equals($scope.userMe, {})) {
-
-            $rootScope.$broadcast('loading:show');
-
-            var intervalPromise = $interval(function () {
-
-              if (angular.isDefined(accountService)) {
-                accountService.getUserAuthenticated({
-                  callback: function (result) {
-                    $scope.userMe = result;
-                    $scope.coordinatesFormat = result.coordinates;
-
-                    $scope.setMarkerCoordinatesFormat();
-
-                    $rootScope.$broadcast('loading:hide');
-
-                    $interval.cancel(intervalPromise);
-
-                    $log.debug('getUserAuthenticated success');
-                    $scope.$apply();
-                  },
-                  errorHandler: function (message, exception) {
-
-                    $rootScope.$broadcast('loading:hide');
-
-                    $log.debug(message);
-
-                    $interval.cancel(intervalPromise);
-
-                    localStorage.removeItem('lastRoute');
-                    localStorage.removeItem('lastState');
-
-                    $state.go('authentication.login');
-
-                    $log.debug('getUserAuthenticated fail');
-
-                    $ionicSideMenuDelegate.toggleLeft();
-
-                    $scope.clearNewMarker();
-
-                    $scope.$apply();
-                  }
-                });
-              }
-            }, 500);
-
-          }
-        };
 
         $scope.$on('userMe', function (event, data) {
 
@@ -1484,17 +1505,17 @@
 
                     /*if ($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
 
-                      $scope.internalLayer.visible = false;
-                      $scope.toggleLayer($scope.internalLayer);
-                      $scope.internalLayer.visible = true;
-                      $scope.toggleLayer($scope.internalLayer);
+                     $scope.internalLayer.visible = false;
+                     $scope.toggleLayer($scope.internalLayer);
+                     $scope.internalLayer.visible = true;
+                     $scope.toggleLayer($scope.internalLayer);
 
-                    } else {
+                     } else {
 
-                      $scope.internalLayer.visible = true;
-                      $scope.toggleLayer($scope.internalLayer);
+                     $scope.internalLayer.visible = true;
+                     $scope.toggleLayer($scope.internalLayer);
 
-                    }*/
+                     }*/
 
                     $cordovaToast.showShortBottom($translate('map.Mark-inserted-succesfully')).then(function (success) {
                     }, function (error) {
