@@ -66,57 +66,9 @@
 
       $scope.attributeIndex = '';
 
-      // $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+      $scope.selectedLayers = localStorage.getItem('selectedLayers') ? angular.fromJson(localStorage.getItem('selectedLayers')) : [];
 
-      //   if (navigator && navigator.splashscreen) navigator.splashscreen.hide();
-
-      //   $log.debug('state change');
-
-      //   if (toState.name == 'map.index') {
-      //     $ionicNavBarDelegate.showBackButton(false);
-
-      //     if($scope.internalLayer.id) {
-      //       if ($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
-
-      //         $scope.internalLayer.visible = false;
-      //         $scope.toggleLayer($scope.internalLayer);
-      //         $scope.internalLayer.visible = true;
-      //         $scope.toggleLayer($scope.internalLayer);
-
-      //       } else {
-
-      //         $scope.internalLayer.visible = true;
-      //         $scope.toggleLayer($scope.internalLayer);
-
-      //       }
-      //     }
-
-      //   } else {
-      //     $ionicNavBarDelegate.showBackButton(true);
-
-      //     if (angular.equals($scope.currentEntity, {})) {
-
-      //       var currentEntity = localStorage.getItem('currentEntity') ? angular.fromJson(localStorage.getItem('currentEntity')) : {};
-      //       $scope.currentEntity = currentEntity;
-
-      //       $log.debug($scope.currentEntity);
-
-      //       $scope.selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
-
-      //       angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute) {
-      //         if (markerAttribute.attribute.id == $scope.selectedPhotoAlbumAttribute.attribute.id)
-      //           $scope.selectedPhotoAlbumAttribute = markerAttribute;
-      //       });
-
-      //       $timeout(function () {
-      //         $log.debug($scope.selectedPhotoAlbumAttribute);
-      //         $scope.listAllLayers();
-      //         $scope.listAllInternalLayerGroups();
-      //         $scope.getUserAuthenticated();
-      //       });
-      //     }
-      //   }
-      // });
+      $scope.lastCenterPosition = localStorage.getItem('lastCenterPosition') ? angular.fromJson(localStorage.getItem('lastCenterPosition')) : [-54.1394, -24.7568];
 
       /**
        * Setting the background layer - OSM
@@ -126,7 +78,7 @@
       });
 
       $scope.view = new ol.View({
-        center: ol.proj.transform([-54.1394, -24.7568], 'EPSG:4326', 'EPSG:3857'),
+        center: ol.proj.transform($scope.lastCenterPosition, 'EPSG:4326', 'EPSG:3857'),
         zoom: 9,
         minZoom: 3
       });
@@ -137,6 +89,16 @@
       $scope.model = {
         user: null,
         marker: null
+      };
+
+      $scope.loadSelectedLayers = function() {
+
+        angular.forEach($scope.selectedLayers, function(layer){
+
+          $scope.toggleLayer(layer);
+
+        });
+
       };
 
       $scope.removeLastPhoto = function () {
@@ -165,13 +127,9 @@
 
       var parseDate = function(key, value){
 
-        /*$log.debug(key);
-        $log.debug(value);*/
-
         if(key.match(/(created|updated)/) && !!value){
          return new Date(value);
         }
-
         return value;
 
       };
@@ -183,6 +141,8 @@
         switch ($state.current.name) {
           case $scope.MAP_INDEX:
           {
+
+            $scope.listAllLayers();
 
             $ionicNavBarDelegate.showBackButton(false);
 
@@ -207,9 +167,11 @@
               $log.debug($('canvas').length);
 
               if (!$('canvas').length) {
+
                 $scope.initializeMap();
 
                 $scope.showNewMarker();
+
               } else {
 
                 $scope.map.updateSize();
@@ -264,7 +226,7 @@
 
       $scope.toggleLeftSideMenu = function () {
         $ionicSideMenuDelegate.toggleLeft();
-        $scope.listAllLayers();
+
         $scope.listAllInternalLayerGroups();
         $scope.getUserAuthenticated();
 
@@ -524,6 +486,17 @@
         $scope.rasterOSM.setVisible(true);
 
         /**
+         * Map event on Move end to save last center position
+         */
+        $scope.map.on('moveend', function(evt){
+
+          var center = ol.proj.transform($scope.view.getCenter(), 'EPSG:3857', 'EPSG:4326');
+          //$scope.mapGoogle.setCenter(new google.maps.LatLng(center[1], center[0]));
+          localStorage.setItem('lastCenterPosition', angular.toJson([center[0], center[1]]));
+
+        });
+
+        /**
          * Click event to prompt the geoserver the information layer of the clicked coordinate
          */
         $scope.map.on('click', function (evt) {
@@ -690,13 +663,6 @@
         });
 
       };
-
-      /*$timeout(function(){
-
-       $scope.initializeMap();
-
-       });*/
-
 
       $scope.clearShadowFeature = function (feature) {
 
@@ -874,19 +840,13 @@
 
         $filter('filter')($scope.allLayers, {id: layer.id})[0].visible = layer.visible;
 
-        if ($filter('filter')($scope.allLayers, {
-            visible: true
-          }).length > 3) {
+        if ($filter('filter')($scope.allLayers, {visible: true}).length > 3) {
 
           layer.visible = false;
 
-          $cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function (success) {
-          }, function (error) {
-          });
+          $cordovaToast.showShortBottom($translate('mobile.map.Maximum-selections')).then(function(success){}, function(error){});
 
         } else {
-
-          //var layerExits = false; // Used to verify if the layer has been requested before
 
           var intervalPromise = $interval(function () {
 
@@ -950,6 +910,13 @@
 
                   markerService.listMarkerByLayer(layer.id, {
                     callback: function (result) {
+
+                      var hasSelectedLayer = $filter('filter')($scope.selectedLayers, {id: layer.id})[0];
+
+                      if(!angular.isDefined(hasSelectedLayer)) {
+                        $scope.selectedLayers.push({id: layer.id, visible: true});
+                        localStorage.setItem('selectedLayers', angular.toJson($scope.selectedLayers));
+                      }
 
                       if (result.length > 0) {
 
@@ -1033,9 +1000,7 @@
 
                         $rootScope.$broadcast('loading:hide');
 
-                        $cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function (success) {
-                        }, function (error) {
-                        });
+                        $cordovaToast.showShortBottom('Nenhum ponto encontrado').then(function(success){}, function(error){});
 
                       }
 
@@ -1053,7 +1018,13 @@
                 }
 
               } else {
-                $scope.map.removeLayer(layer.layer);
+
+                var selectedLayer = $filter('filter')($scope.selectedLayers, {id: layer.id})[0];
+
+                $scope.selectedLayers.splice($scope.selectedLayers.indexOf(selectedLayer), 1);
+                localStorage.setItem('selectedLayers', angular.toJson($scope.selectedLayers));
+
+                //$scope.map.removeLayer(layer.layer);
               }
             }
           }, 500);
@@ -1076,7 +1047,9 @@
 
                   $rootScope.$broadcast('loading:hide');
 
-                  $interval.cancel(intervalPromise);
+                  $interval.cancel(intervalPromise)
+
+                  $scope.loadSelectedLayers();
 
                   $scope.$apply();
                 },
@@ -1292,10 +1265,9 @@
                     $interval.cancel(intervalPromise);
 
                     localStorage.removeItem('lastRoute');
+                    localStorage.removeItem('lastState');
 
-                    localStorage.setItem('lastState', $scope.MAP_INDEX);
-
-                    $location.path('/authentication/login');
+                    $state.go('authentication.login');
 
                     $log.debug('getUserAuthenticated fail');
 
