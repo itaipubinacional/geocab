@@ -98,7 +98,7 @@
               photo.name        = markerAttribute.name + '.png';
               photo.description = markerAttribute.name;
               photo.mimeType    = 'image/png';
-              
+
               $scope.convertImgToBase64URL(fileName, function (data) {
 
                 photo.source = data.split(';base64,')[1];
@@ -136,8 +136,6 @@
       }, 100);
 
       $scope.hasSelectedPhotos = false;
-
-      $scope.onHold = false;
 
       $scope.takePhoto = function() {
 
@@ -281,15 +279,6 @@
          }, 5000);
       };
 
-      $scope.selectPhoto = function(photo) {
-
-        $scope.onHold = true;
-        $scope.selectedPhoto = photo;
-        photo.selected = !photo.selected;
-        $scope.photosSelected = photo.selected ? $scope.photosSelected + 1 : $scope.photosSelected - 1;
-
-      };
-
       $ionicModal.fromTemplateUrl('views/modal/gallery-modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -298,12 +287,9 @@
       });
 
       $scope.openModal = function(index) {
-        if(!$scope.onHold) {
-          $scope.onHold = false;
-          $ionicSlideBoxDelegate.slide(index);
-          $scope.selectedPhoto = $scope.selectedPhotoAlbumAttribute.photoAlbum.photos[index];
-          $scope.modal.show();
-        }
+        $ionicSlideBoxDelegate.slide(index);
+        $scope.selectedPhoto = $scope.selectedPhotoAlbumAttribute.photoAlbum.photos[index];
+        $scope.modal.show();
       };
 
       $scope.closeModal = function() {
@@ -361,7 +347,7 @@
 
       $scope.selectPhoto = function(event, photo) {
 
-        event.preventDefault();
+        event.stopPropagation();
 
         $scope.hasSelectedPhotos = false;
 
