@@ -42,6 +42,9 @@
         },
         "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
     "dependent_plugins": {}

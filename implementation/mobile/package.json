@@ -26,7 +26,8 @@
     "org.apache.cordova.splashscreen",
     "cordova-plugin-network-information",
     "cordova-plugin-x-toast",
-    "cordova-plugin-file"
+    "cordova-plugin-file",
+    "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [
     "ios",

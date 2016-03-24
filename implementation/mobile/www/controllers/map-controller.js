@@ -387,10 +387,12 @@
         /* REMOVING RECURSIVE DATA FROM OBJECT */
         angular.forEach($scope.currentEntity.markerAttribute, function (attribute, index) {
           if (attribute.photoAlbum != null) {
-            attribute.photoAlbum.markerAttribute = {
-              attribute: {id: attribute.attribute.id},
-              id: attribute.photoAlbum.markerAttribute.id
-            };
+            if(attribute.photoAlbum.markerAttribute != null) {
+              attribute.photoAlbum.markerAttribute = {
+                attribute: {id: attribute.attribute.id},
+                id: attribute.photoAlbum.markerAttribute.id
+              };
+            }
             angular.forEach(attribute.photoAlbum.photos, function (photos) {
               angular.forEach(photos.photoAlbum.photos, function (albumPhotos) {
                 albumPhotos.photoAlbum = {
@@ -1565,25 +1567,16 @@
       $scope.nextInput = function(event) {
         $log.debug(event);
         var nextInput = angular.element(event.target).parent().parent().next().find('input');
-        if(event.keyCode === 13 && nextInput.length) {
-          nextInput.focus();
-          event.preventDefault();
-          event.stopPropagation();
+        if(nextInput.length) {
+          if(event.keyCode === 13) {
+            nextInput.focus();
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        } else {
+          cordova.plugins.Keyboard.close();
         }
       };
-
-      /*$scope.sendForm = function () {
-        $log.debug('sendForm');
-
-        if (!markerForm.$valid) {
-
-          $log.debug('ok');
-
-        } else {
-          $log.debug('ok 2');
-        }
-
-      }*/
     });
 
 }(window.angular));
