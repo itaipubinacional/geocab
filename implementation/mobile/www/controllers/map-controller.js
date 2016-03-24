@@ -1562,6 +1562,16 @@
           return '';
       };
 
+      $scope.nextInput = function(event) {
+        $log.debug(event);
+        var nextInput = angular.element(event.target).parent().parent().next().find('input');
+        if(event.keyCode === 13 && nextInput.length) {
+          nextInput.focus();
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      };
+
       /*$scope.sendForm = function () {
         $log.debug('sendForm');
 

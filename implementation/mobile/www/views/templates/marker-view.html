@@ -43,7 +43,8 @@
           <label
             ng-class="{'has-error': (markerForm.input{{$index}}.$invalid && markerForm.input{{$index}}.$touched) || (isFormSubmit && attribute.required && markerForm.input{{$index}}.$invalid)}"
             class="item item-input item-floating-label"
-            ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'">
+            ng-if="attribute.type == 'TEXT' || attribute.type == 'NUMBER'"
+            ng-keydown="nextInput($event)">
             <span class="input-label">{{ attribute.name }} </span>
             <input type="{{ attribute.type }}" name="input{{$index}}" ng-model="attribute.value"
                    placeholder="{{ attribute.name }}" ng-required="attribute.required">
@@ -60,12 +61,6 @@
               <option value="No" ng-value="'No'">{{ 'map.No' | translate }}</option>
             </select>
 
-            <!--<ion-radio ng-model="attribute.value" name="input{{$index}}" ng-value="'Yes'"
-                       ng-required="!attribute.value">{{ 'map.Yes' | translate }}
-            </ion-radio>
-            <ion-radio ng-model="attribute.value" name="input{{$index}}" ng-value="'No'"
-                       ng-required="!attribute.value">{{ 'map.No' | translate }}
-            </ion-radio>-->
           </label>
           <!--date-->
           <label
