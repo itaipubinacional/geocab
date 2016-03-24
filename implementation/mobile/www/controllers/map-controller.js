@@ -9,7 +9,7 @@
   angular.module('application')
     .controller('MapController', function ($rootScope, $scope, $translate, $state, $document, $importService, $ionicGesture,
                                            $ionicPopup, $ionicSideMenuDelegate, $timeout, $cordovaGeolocation, $filter, $log, $location, $cordovaCamera, $ionicLoading,
-                                           $cordovaToast, $http, $ionicNavBarDelegate, $interval) {
+                                           $cordovaToast, $http, $ionicNavBarDelegate, $interval, $ionicPlatform) {
 
       /**
        *
@@ -310,6 +310,12 @@
           {
             $ionicNavBarDelegate.showBackButton(true);
 
+            $ionicPlatform.ready(function() {
+              $ionicPlatform.registerBackButtonAction(function (e) {
+                $state.go($scope.MAP_MARKER);
+              }, 100);
+            });
+
             angular.forEach($scope.currentEntity.markerAttribute, function (markerAttribute) {
               if (markerAttribute.attribute.id == $scope.selectedPhotoAlbumAttribute.attribute.id)
                 $scope.selectedPhotoAlbumAttribute = markerAttribute;
@@ -323,6 +329,12 @@
           case $scope.MAP_MARKER:
           {
             $ionicNavBarDelegate.showBackButton(true);
+
+            $ionicPlatform.ready(function() {
+              $ionicPlatform.registerBackButtonAction(function (e) {
+                $state.go($scope.MAP_INDEX);
+              }, 100);
+            });
 
             $scope.removeLastPhoto();
             //$scope.listAllLayers();
@@ -352,15 +364,20 @@
         $state.go($scope.MAP_WMS);
       };
 
-      $scope.setImagePath = function (image) {
+      $scope.setImagePath = function (photo) {
         //$log.debug(image);
-        if (image != null && image != '') {
-          if (image.match(/broker/)) {
-            return $rootScope.$API_ENDPOINT + image.match(/\/broker.*/)[0];
-          } else if (image.match(/file/)) {
-            return image;
+        if (photo != null && photo != '') {
+          if(typeof photo === 'string' && photo.match(/broker/)) {
+            return $rootScope.$API_ENDPOINT + photo.match(/\/broker.*/)[0];
           } else {
-            return "data:image/png;base64," + image;
+
+            if(photo.image != null || photo.source != null) {
+              if (photo.image != undefined && photo.image.match(/broker/)) {
+                return $rootScope.$API_ENDPOINT + photo.image.match(/\/broker.*/)[0];
+              } else {
+                return "data:image/png;base64," + photo.source;
+              }
+            }
           }
         }
       };

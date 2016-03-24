@@ -8,122 +8,34 @@
    */
   angular.module('application')
     .controller('GalleryController', function($rootScope, $scope, $translate, $state, $timeout, $log, $cordovaCamera, $ionicLoading,
-                                              $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPopup,
-                                              $ionicHistory, $ionicPlatform, $cordovaFile) {
+                                              $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
 
+      $rootScope.$on('camera:result', function(event, imageData){
 
+        var selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
 
-      var errorHandler = function (fileName, e) {
-        var msg = '';
+        angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
 
-        switch (e.code) {
-          case FileError.QUOTA_EXCEEDED_ERR:
-            msg = 'Storage quota exceeded';
-            break;
-          case FileError.NOT_FOUND_ERR:
-            msg = 'File not found';
-            break;
-          case FileError.SECURITY_ERR:
-            msg = 'Security error';
-            break;
-          case FileError.INVALID_MODIFICATION_ERR:
-            msg = 'Invalid modification';
-            break;
-          case FileError.INVALID_STATE_ERR:
-            msg = 'Invalid state';
-            break;
-          default:
-            msg = 'Unknown error';
-            break;
-        }
+          if(markerAttribute.attribute.id == selectedPhotoAlbumAttribute.attribute.id) {
 
-        $log.debug('Error (' + fileName + '): ' + msg);
-      };
+            var photo = {};
+            photo.name        = markerAttribute.name + '.png';
+            photo.description = markerAttribute.name;
+            photo.mimeType    = 'image/png';
 
-      $scope.convertImgToBase64URL = function (fileName, onSuccess) {
-        var pathToFile = fileName;
-        window.resolveLocalFileSystemURL(pathToFile, function (fileEntry) {
-          fileEntry.file(function (file) {
-            var reader = new FileReader();
+            photo.source = imageData;
+            photo.contentLength = photo.source.length;
 
-            reader.onloadend = function (e) {
-              onSuccess(this.result);
-            };
-
-            reader.readAsDataURL(file);
-          }, errorHandler.bind(null, fileName));
-        }, errorHandler.bind(null, fileName));
-      };
-
-      var makeId = function() {
-        var text = '';
-        var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-        for (var i = 0; i < 5; i++) {
-          text += possible.charAt(Math.floor(Math.random() * possible.length));
-        }
-        return text;
-      };
-
-      $scope.renameFile = function(file, onSuccess) {
-
-        var file = file.match(/(.*)\.png/)[0];
-
-        var filePath = file.split('/');
-        var fileName = filePath[filePath.length - 1];
-        filePath = file.replace(fileName, '').slice(0,-1);
-
-        var newFileName = makeId();
-
-        $cordovaFile.copyFile(filePath, fileName, filePath, newFileName + '.png').then(function(success) {
-
-          fileName = filePath + '/' + newFileName + '.png';
-
-          onSuccess(fileName);
-
-        });
-
-      };
-
-      $rootScope.$on('camera:result', function(event, data){
-
-        $scope.renameFile(data, function(fileName){
-
-          var selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
-
-          angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
-
-            if(markerAttribute.attribute.id == selectedPhotoAlbumAttribute.attribute.id) {
-
-              var photo = {};
-              photo.image       = fileName;
-              photo.name        = markerAttribute.name + '.png';
-              photo.description = markerAttribute.name;
-              photo.mimeType    = 'image/png';
-
-              $scope.convertImgToBase64URL(fileName, function (data) {
-
-                photo.source = data.split(';base64,')[1];
-                photo.contentLength = photo.source.length;
-
-                if (!markerAttribute.photoAlbum) {
-                  markerAttribute.photoAlbum = {};
-                  markerAttribute.photoAlbum.photos = [];
-                }
-
-                markerAttribute.photoAlbum.photos.push(photo);
-
-                $rootScope.$broadcast('loading:hide');
-
-                $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
-
-              });
+            if (!markerAttribute.photoAlbum) {
+              markerAttribute.photoAlbum = {};
+              markerAttribute.photoAlbum.photos = [];
             }
 
-          });
-
+            markerAttribute.photoAlbum.photos.push(photo);
+            $rootScope.$broadcast('loading:hide');
+            $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
+          }
         });
-
       });
 
       $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
@@ -133,17 +45,13 @@
         viewData.enableBack = true;
       });
 
-      $ionicPlatform.registerBackButtonAction(function(e){
-         $state.go($scope.MAP_MARKER);
-      }, 100);
-
       $scope.hasSelectedPhotos = false;
 
       $scope.takePhoto = function() {
 
         var options = {
           quality: 100,
-          destinationType: Camera.DestinationType.FILE_URI,
+          destinationType: Camera.DestinationType.DATA_URL,
           sourceType: Camera.PictureSourceType.CAMERA,
           allowEdit: false,
           targetWidth: 640,
@@ -157,40 +65,22 @@
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
 
-          /*$ionicLoading.show({
-            template: 'Salvando foto',
-            duration: 2000
-          });*/
+          var photo = new Photo();
+          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
+          photo.description = $scope.selectedPhotoAlbumAttribute.name;
+          photo.contentLength = imageData.length;
+          photo.mimeType = 'image/png';
 
-          //$rootScope.$broadcast('loading:show');
+          photo.source = imageData;
 
-          $scope.renameFile(imageData, function(fileName){
+          if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
+            $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
+            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
+          }
 
-            var photo = new Photo();
-            photo.image = fileName;
-            photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
-            photo.description = $scope.selectedPhotoAlbumAttribute.name;
-            photo.contentLength = imageData.length;
-            photo.mimeType = 'image/png';
-
-            $scope.convertImgToBase64URL(fileName, function (data) {
-
-              photo.source = data.split(';base64,')[1];
-
-              if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
-                $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
-                $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
-              }
-
-              $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
-
-              $rootScope.$broadcast('loading:hide');
-
-              $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
-
-            });
-
-          });
+          $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+          $rootScope.$broadcast('loading:hide');
+          $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
 
         }, function(err) {
           $log.debug(err);
@@ -202,7 +92,7 @@
 
         var options = {
           quality: 100,
-          destinationType: Camera.DestinationType.FILE_URI,
+          destinationType: Camera.DestinationType.DATA_URL,
           sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
           allowEdit: false,
           targetWidth: 640,
@@ -215,38 +105,22 @@
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
 
-          /*$ionicLoading.show({
-            template: 'Salvando foto',
-            duration: 2000
-          });*/
+          var photo = new Photo();
+          photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
+          photo.description = $scope.selectedPhotoAlbumAttribute.name;
+          photo.contentLength = imageData.length;
+          photo.mimeType = 'image/jpeg';
 
-          $scope.renameFile(imageData, function(fileName){
+          photo.source = imageData;
 
-            var photo = new Photo();
-            photo.image = fileName;
-            photo.name = $scope.selectedPhotoAlbumAttribute.name + '.png';
-            photo.description = $scope.selectedPhotoAlbumAttribute.name;
-            photo.contentLength = imageData.length;
-            photo.mimeType = 'image/jpeg';
+          if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
+            $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
+            $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
+          }
 
-            $scope.convertImgToBase64URL(fileName, function (data) {
-
-              photo.source = data.split(';base64,')[1];
-
-              if (!$scope.selectedPhotoAlbumAttribute.photoAlbum) {
-                $scope.selectedPhotoAlbumAttribute.photoAlbum = new PhotoAlbum();
-                $scope.selectedPhotoAlbumAttribute.photoAlbum.photos = [];
-              }
-
-              $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
-
-              $rootScope.$broadcast('loading:hide');
-
-              $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
-
-            });
-
-          });
+          $scope.selectedPhotoAlbumAttribute.photoAlbum.photos.push(photo);
+          $rootScope.$broadcast('loading:hide');
+          $cordovaToast.showShortBottom('Foto salva').then(function (success) {}, function (error) {});
 
         }, function(err) {
           $log.debug(err);

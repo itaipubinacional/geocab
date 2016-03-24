@@ -16,9 +16,7 @@
         viewData.enableBack = true;
       });
 
-      $ionicPlatform.registerBackButtonAction(function(e){
-        $state.go($scope.MAP_INDEX);
-      }, 100);
+
 
       // Configura o popover
       $ionicPopover.fromTemplateUrl('views/popover/marker-view-popover.html', {

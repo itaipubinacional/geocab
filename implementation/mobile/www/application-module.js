@@ -47,8 +47,9 @@
       $API_ENDPOINT + '/**'
     ]);
 
-    var lastRoute = localStorage.lastRoute && localStorage.currentEntity ? localStorage.lastRoute : '/authentication/login';
+    var lastRoute = localStorage.lastRoute != undefined && localStorage.currentEntity != undefined ? localStorage.lastRoute : '/authentication/login';
 
+    console.log(lastRoute);
     //-------
     //URL Router
     //-------
@@ -234,7 +235,13 @@
 
           localStorage.setItem('photos', angular.toJson($rootScope.photos));
           localStorage.setItem('lastState', $state.current.name);
-          localStorage.setItem('lastRoute', location.hash.replace('#', ''));
+
+          if(localStorage.currentEntity) {
+            localStorage.setItem('lastRoute', location.hash.replace('#', ''));
+          } else {
+            localStorage.removeItem('lastState');
+            localStorage.removeItem('lastRoute');
+          }
 
         }, false);
 
