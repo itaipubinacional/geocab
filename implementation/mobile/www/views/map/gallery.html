@@ -23,8 +23,9 @@
     <div class="row" style="flex-wrap: wrap;">
       <div class="col col-50" ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos" ng-if="!photo.deleted"
            ng-class="{'selected': photo.selected}">
-        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}" on-hold="selectPhoto($event, photo)"
-             ng-click="openModal($index)"/>
+        <img style="width:100%" ng-src="{{ setImagePath(photo.image) }}"
+            on-hold="selectPhoto($event, photo)"
+            ng-click="openModal($index, photo)"/>
         <!--<h6>{{ photo.description ? photo.description :  photo.name }}</h6>-->
       </div>
       <h6 style="text-align: center; width: 100%" ng-if="!selectedPhotoAlbumAttribute.photoAlbum.photos.length">Nenhuma foto encontrada</h6>

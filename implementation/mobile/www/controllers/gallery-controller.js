@@ -11,6 +11,8 @@
                                               $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet, $ionicPopup,
                                               $ionicHistory, $ionicPlatform, $cordovaFile) {
 
+
+
       var errorHandler = function (fileName, e) {
         var msg = '';
 
@@ -286,10 +288,29 @@
         $scope.modal = modal;
       });
 
-      $scope.openModal = function(index) {
-        $ionicSlideBoxDelegate.slide(index);
-        $scope.selectedPhoto = $scope.selectedPhotoAlbumAttribute.photoAlbum.photos[index];
-        $scope.modal.show();
+      $scope.openModal = function(index, photo) {
+
+        $log.debug($scope.hasSelectedPhotos);
+
+        if ($scope.hasSelectedPhotos){
+
+          photo.selected = !photo.selected;
+
+          $scope.hasSelectedPhotos = false;
+
+          angular.forEach($scope.selectedPhotoAlbumAttribute.photoAlbum.photos, function(photo){
+            if(photo.selected) {
+              $scope.hasSelectedPhotos = true;
+            }
+
+          });
+
+        } else {
+          $log.debug("openModal");
+          $ionicSlideBoxDelegate.slide(index);
+          $scope.selectedPhoto = $scope.selectedPhotoAlbumAttribute.photoAlbum.photos[index];
+          $scope.modal.show();
+        }
       };
 
       $scope.closeModal = function() {
@@ -345,19 +366,21 @@
         $scope.showEditableDescription = state;
       };
 
+
       $scope.selectPhoto = function(event, photo) {
 
-        event.stopPropagation();
+        // event.stopPropagation();
+        //
 
-        $scope.hasSelectedPhotos = false;
+        $scope.hasSelectedPhotos = true;
 
         photo.selected = !photo.selected;
-
-        angular.forEach($scope.selectedPhotoAlbumAttribute.photoAlbum.photos, function(photo){
-          if(photo.selected) {
-            $scope.hasSelectedPhotos = true;
-          }
-        });
+      
+        // angular.forEach($scope.selectedPhotoAlbumAttribute.photoAlbum.photos, function(photo){
+        //   if(photo.selected) {
+        //     $scope.hasSelectedPhotos = true;
+        //   }
+        // });
 
       };
 
