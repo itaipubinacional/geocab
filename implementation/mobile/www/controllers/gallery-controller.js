@@ -148,10 +148,11 @@
           allowEdit: false,
           targetWidth: 640,
           targetHeight: 480,
-          encodingType: Camera.EncodingType.PNG,
+          encodingType: 1,
           popoverOptions: CameraPopoverOptions,
           saveToPhotoAlbum: true,
-          correctOrientation: true
+          correctOrientation: false,
+          mediaType: 0
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
@@ -206,9 +207,10 @@
           allowEdit: false,
           targetWidth: 640,
           targetHeight: 480,
-          encodingType: Camera.EncodingType.PNG,
+          encodingType: 1,
           popoverOptions: CameraPopoverOptions,
-          correctOrientation: true
+          correctOrientation: false,
+          mediaType: 0
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
@@ -375,7 +377,7 @@
         $scope.hasSelectedPhotos = true;
 
         photo.selected = !photo.selected;
-      
+
         // angular.forEach($scope.selectedPhotoAlbumAttribute.photoAlbum.photos, function(photo){
         //   if(photo.selected) {
         //     $scope.hasSelectedPhotos = true;

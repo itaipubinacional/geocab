@@ -47,7 +47,7 @@
       $API_ENDPOINT + '/**'
     ]);
 
-    var lastRoute = localStorage.lastRoute ? localStorage.lastRoute : '/authentication/login';
+    var lastRoute = localStorage.lastRoute && localStorage.currentEntity ? localStorage.lastRoute : '/authentication/login';
 
     //-------
     //URL Router
@@ -223,8 +223,6 @@
 
         });
       }
-
-
 
       /* DEVICE ON PAUSE AND ON RESUME */
       document.addEventListener('deviceReady', function () {
