@@ -24,7 +24,7 @@
         Mapeamento compartilhado
       </div>
       <ion-list ng-repeat="layer in allLayers | filter:{title:search} | filter:{name:search} | filter:{startVisible: true}" class="layers" ng-if="layer.enabled">
-        <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">
+        <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer, true)">
           <i class="ion-edit"></i>
           {{ layer.title ? layer.title : layer.name }} {{ layer.legend }}
           <img class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">
@@ -34,7 +34,7 @@
         Visualização
       </div>
       <ion-list ng-repeat="layer in allLayers | filter:{title:search} | filter:{name:search} | filter:{startVisible: true} | orderBy:title | orderBy:name" class="layers" ng-if="!layer.enabled">
-        <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer)">
+        <ion-checkbox ng-model="layer.visible" ng-click="toggleLayer(layer, true)">
           {{ layer.title ? layer.title : layer.name }}
           <img ng-if="layer.legend" class="item-checkbox-img" ng-src="{{ layer.legend }}">
           <img ng-if="!layer.legend" class="item-checkbox-img" ng-src="{{ $API_ENDPOINT }}/{{ layer.icon }}">

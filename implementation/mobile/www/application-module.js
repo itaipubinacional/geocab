@@ -85,7 +85,6 @@
       }
     }).state('map.marker', {
       url: '/marker',
-      back: 'map.index',
       views: {
         'menuContent': {
           templateUrl: './views/templates/marker-view.html',
@@ -94,7 +93,6 @@
       }
     }).state('map.wms', {
       url: '/wms',
-      back: 'map.index',
       views: {
         'menuContent': {
           templateUrl: './views/templates/wms-view.html',
@@ -103,7 +101,6 @@
       }
     }).state('map.gallery', {
       url: '/gallery',
-      back: 'map.marker',
       views: {
         'menuContent': {
           templateUrl: './views/map/gallery.html',
@@ -227,14 +224,7 @@
         });
       }
 
-      $rootScope.parseDate = function (key, value) {
 
-        if (key.match(/(created|updated)/) && !!value) {
-          return new Date(value);
-        }
-        return value;
-
-      };
 
       /* DEVICE ON PAUSE AND ON RESUME */
       document.addEventListener('deviceReady', function () {
