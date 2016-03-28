@@ -285,21 +285,7 @@
 
                 $scope.map.updateSize();
 
-                if ($scope.internalLayer.id) {
-                  if ($scope.internalLayer.visible && $scope.internalLayer.visible != undefined) {
-
-                    $scope.internalLayer.visible = false;
-                    $scope.toggleLayer($scope.internalLayer);
-                    $scope.internalLayer.visible = true;
-                    $scope.toggleLayer($scope.internalLayer);
-
-                  } else {
-
-                    $scope.internalLayer.visible = true;
-                    $scope.toggleLayer($scope.internalLayer);
-
-                  }
-                }
+                $scope.toggleLastLayer();
 
               }
 
@@ -632,7 +618,8 @@
           controls: [],
           interactions: ol.interaction.defaults({
             dragPan: $scope.dragPan,
-            mouseWheelZoom: true
+            mouseWheelZoom: true,
+            pinchRotate: false
           }),
           target: 'map',
           view: $scope.view
@@ -820,6 +807,11 @@
 
         });
 
+        $timeout(function(){
+          if(angular.equals($scope.allLayers, {}))
+            $scope.toggleLastLayer();
+        });
+
       };
 
       $scope.clearShadowFeature = function (feature) {
@@ -990,9 +982,10 @@
         return result;
       };
 
+
       $scope.toggleLayer = function (layer, removeCurrentEntity) {
 
-        if (removeCurrentEntity) {
+        if (removeCurrentEntity && $scope.currentEntity.id) {
           $scope.currentEntity = {};
         }
 
@@ -1185,6 +1178,31 @@
         }
       };
 
+      $scope.toggleLastLayer = function() {
+
+        if (angular.isDefined($scope.lastCurrentEntity) && angular.isDefined($scope.lastCurrentEntity.layer.id)) {
+          $scope.internalLayer = $filter('filter')($scope.allLayers, {id: $scope.lastCurrentEntity.layer.id})[0];
+
+          if (angular.isDefined($scope.internalLayer.visible)) {
+
+            $scope.internalLayer.visible = false;
+            $scope.toggleLayer($scope.internalLayer);
+            $scope.internalLayer.visible = true;
+            $scope.toggleLayer($scope.internalLayer);
+
+          } else {
+
+            $scope.internalLayer.visible = true;
+            $scope.toggleLayer($scope.internalLayer);
+
+          }
+
+          $scope.internalLayer = {};
+
+        }
+
+      };
+
       $scope.listAllLayers = function () {
 
         $log.debug('listAllLayers');
@@ -1203,7 +1221,9 @@
 
                   $rootScope.$broadcast('loading:hide');
 
-                  $interval.cancel(intervalPromise)
+                  $scope.toggleLastLayer();
+
+                  $interval.cancel(intervalPromise);
 
                   $scope.loadSelectedLayers();
 
@@ -1528,6 +1548,8 @@
                 callback: function (result) {
 
                   $scope.lastCurrentEntity = result;
+
+
 
                   $rootScope.$broadcast('loading:hide');
 
