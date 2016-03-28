@@ -990,7 +990,7 @@
       $scope.toggleLayer = function (layer, removeCurrentEntity) {
 
         if(angular.isDefined(layer.id)) {
-          if (removeCurrentEntity && !angular.equals($scope.currentEntity, {})) {
+          if (removeCurrentEntity && !angular.equals($scope.currentEntity, {}) && $scope.currentEntity.id) {
             $scope.currentEntity = {};
           }
 
