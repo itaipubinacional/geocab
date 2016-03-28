@@ -375,7 +375,7 @@
       };
 
       $scope.clearNewMarker = function () {
-        if(angular.equals($scope.currentEntity, {})) {
+        if(!angular.equals($scope.currentEntity, {})) {
           $scope.map.removeLayer($scope.currentCreatingInternalLayer);
           $scope.currentCreatingInternalLayer = {};
 
