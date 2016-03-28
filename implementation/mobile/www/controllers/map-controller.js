@@ -277,7 +277,7 @@
 
               $log.debug($('canvas').length);
 
-              if (!$('canvas').length || angular.equals($scope.map, {})) {
+              if ($('canvas').length == 0 || angular.equals($scope.map, {})) {
 
                 $scope.initializeMap();
 
@@ -401,15 +401,17 @@
               };
             }
             angular.forEach(attribute.photoAlbum.photos, function (photos) {
-              angular.forEach(photos.photoAlbum.photos, function (albumPhotos) {
-                albumPhotos.photoAlbum = {
-                  id: albumPhotos.photoAlbum.id,
-                  markerAttribute: {
-                    id: albumPhotos.photoAlbum.markerAttribute.id,
-                    attribute: {id: albumPhotos.photoAlbum.markerAttribute.attribute.id}
-                  }
-                };
-              });
+              if(angular.isDefined(photos.photoAlbum) && angular.isDefined(photos.photoAlbum.photos)) {
+                angular.forEach(photos.photoAlbum.photos, function (albumPhotos) {
+                  albumPhotos.photoAlbum = {
+                    id: albumPhotos.photoAlbum.id,
+                    markerAttribute: {
+                      id: albumPhotos.photoAlbum.markerAttribute.id,
+                      attribute: {id: albumPhotos.photoAlbum.markerAttribute.attribute.id}
+                    }
+                  };
+                });
+              }
             });
           }
         });
@@ -812,8 +814,11 @@
         });
 
         $timeout(function(){
-          if(angular.equals($scope.allLayers, {}))
+          if(!angular.equals($scope.allLayers, {}))
             $scope.toggleLastLayer();
+
+          $scope.loadSelectedLayers();
+
         });
 
       };
@@ -994,7 +999,8 @@
             $scope.currentEntity = {};
           }
 
-          $filter('filter')($scope.allLayers, {id: layer.id})[0].visible = layer.visible;
+          if(angular.isDefined($filter('filter')($scope.allLayers, {id: layer.id})[0]))
+            $filter('filter')($scope.allLayers, {id: layer.id})[0].visible = layer.visible;
 
           if ($filter('filter')($scope.allLayers, {visible: true}).length > 3) {
 
