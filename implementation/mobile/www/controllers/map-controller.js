@@ -1645,12 +1645,15 @@
             event.stopPropagation();
           }
         } else {
+          if (event.keyCode === 13 || event.keyCode === 9) {
+            $timeout(function () {
 
-          $timeout(function(){
-            angular.element('#sendForm').triggerHandler('click');
-            cordova.plugins.Keyboard.close();
-          }, 100);
+              angular.element('#sendForm').trigger('click');
+              
+              angular.element('#search').blur();
 
+            }, 100);
+          }
         }
       };
     });
