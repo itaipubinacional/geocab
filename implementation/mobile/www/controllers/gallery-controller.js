@@ -137,9 +137,9 @@
 
         $scope.actionSheet = $ionicActionSheet.show({
           buttons: [{
-            text: 'Tirar foto'
+            text: '<i class="icon ion-plus"></i> Tirar foto'
           }, {
-            text: 'Galeria'
+            text: '<i class="icon ion-images"></i> Galeria'
           }],
           titleText: 'Adicionar imagens',
           cancelText: 'Cancelar',
@@ -152,9 +152,6 @@
           }
         });
 
-        $timeout(function() {
-           $scope.actionSheet();
-         }, 5000);
       };
 
       $ionicModal.fromTemplateUrl('views/modal/gallery-modal.html', {

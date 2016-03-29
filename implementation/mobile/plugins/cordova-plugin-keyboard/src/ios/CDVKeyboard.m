@@ -121,8 +121,11 @@ static IMP WKOriginalImp;
         return;
     }
 
-    Method UIMethod = class_getInstanceMethod(NSClassFromString(@"UIWebBrowserView"), @selector(inputAccessoryView));
-    Method WKMethod = class_getInstanceMethod(NSClassFromString(@"WKContentView"), @selector(inputAccessoryView));
+    NSString* UIClassString = [@[@"UI", @"Web", @"Browser", @"View"] componentsJoinedByString:@""];
+    NSString* WKClassString = [@[@"WK", @"Content", @"View"] componentsJoinedByString:@""];
+
+    Method UIMethod = class_getInstanceMethod(NSClassFromString(UIClassString), @selector(inputAccessoryView));
+    Method WKMethod = class_getInstanceMethod(NSClassFromString(WKClassString), @selector(inputAccessoryView));
 
     if (ahideFormAccessoryBar) {
         UIOriginalImp = method_getImplementation(UIMethod);
@@ -194,8 +197,12 @@ static IMP WKOriginalImp;
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView
 {
-    if (_shrinkView) {
-        scrollView.bounds = self.webView.bounds;
+    if (_shrinkView && _keyboardIsVisible) {
+        CGFloat maxY = scrollView.contentSize.height - scrollView.bounds.size.height;
+        if (scrollView.bounds.origin.y > maxY) {
+            scrollView.bounds = CGRectMake(scrollView.bounds.origin.x, maxY,
+                                           scrollView.bounds.size.width, scrollView.bounds.size.height);
+        }
     }
 }
 

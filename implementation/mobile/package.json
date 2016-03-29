@@ -17,7 +17,6 @@
   "cordovaPlugins": [
     "cordova-plugin-whitelist",
     "cordova-plugin-datepicker",
-    "cordova-plugin-crosswalk-webview",
     "cordova-plugin-keyboard",
     "org.apache.cordova.inappbrowser",
     "cordova-plugin-googleplus",
