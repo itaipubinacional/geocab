@@ -1202,6 +1202,9 @@ ront controller of angle won't let enter an invalid URL.
      * Load map
      */
     $scope.loadMap = function () {
+
+        $('#messageZone').css('right', 'calc(50% - 365px)');
+
         /**
          * Openlayers map configuration
          */
