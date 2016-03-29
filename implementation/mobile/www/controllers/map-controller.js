@@ -1645,7 +1645,12 @@
             event.stopPropagation();
           }
         } else {
-          cordova.plugins.Keyboard.close();
+
+          $timeout(function(){
+            angular.element('#sendForm').triggerHandler('click');
+            cordova.plugins.Keyboard.close();
+          }, 100);
+
         }
       };
     });
