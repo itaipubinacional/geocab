@@ -264,7 +264,6 @@
               $rootScope.$broadcast('loading:hide');
 
               $log.debug('getUserAuthenticated success');
-              $scope.$apply();
 
             })
             .error(function (data, status, headers, config) {
@@ -282,8 +281,6 @@
               $ionicSideMenuDelegate.toggleLeft();
 
               $scope.clearNewMarker();
-
-              $scope.$apply();
             });
         }
 
