@@ -7,7 +7,7 @@
   /**
    * Desenvolvimento
    */
-  //module.constant('$API_ENDPOINT', 'http://192.168.20.53:8080/geocab');
+    // module.constant('$API_ENDPOINT', 'http://192.168.20.108:8080/geocab');
   module.constant('$API_ENDPOINT', 'http://geocab.sbox.me');
   /**
    * Homologação

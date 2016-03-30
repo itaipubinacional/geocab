@@ -20,6 +20,7 @@ import javax.persistence.TemporalType;
  * @category Entity
  */
 @MappedSuperclass
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class AbstractEntity implements IEntity<Long>
 {
 	/**

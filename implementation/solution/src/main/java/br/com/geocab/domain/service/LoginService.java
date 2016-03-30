@@ -70,7 +70,6 @@ public class LoginService
 	 */
 	@Autowired
 	private IAccessGroupRepository accessGroupRepository;
-	
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -134,7 +133,7 @@ public class LoginService
 	@Transactional(readOnly = true)
 	public User findUserByEmail( String userName )
 	{
-		return this.userRepository.findByEmail( userName );
+		return this.userRepository.asdfasdfasdfa( userName );
 	}
 	
 	public User authenticatedUser()
@@ -201,6 +200,23 @@ public class LoginService
 		{
 			throw new SecurityException("Email and/or password is invalid.");
 		}
+	}
+
+	/**
+	 * @param username
+	 */
+	public User loadOrSaveNewUserByUsername(String username)
+	{
+		User user = this.userRepository.findByEmail( username );
+		if (user == null)
+		{
+			//Inserting configurations default
+			user = new User(username, username);
+			user.getBackgroundMap();
+			user.getCoordinates();
+			return this.insertSocialUser(user);
+		}
+		return user;
 	}
 	
 }

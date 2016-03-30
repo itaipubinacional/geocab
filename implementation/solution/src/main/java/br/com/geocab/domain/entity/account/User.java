@@ -20,6 +20,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.account.preferences.BackgroundMap;
 import br.com.geocab.domain.entity.account.preferences.Coordinates;
@@ -31,6 +33,7 @@ import br.com.geocab.domain.entity.account.preferences.Coordinates;
 @Entity
 @Audited
 @DataTransferObject(javascript = "User")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends AbstractEntity implements Serializable, UserDetails
 {
 	/**
@@ -41,10 +44,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	// ----
 	// Default user
 	// ----
-	public static final User ADMINISTRATOR = new User(1L, "Administrator",
-			"admin@geocab.com.br", true, UserRole.ADMINISTRATOR, "admin");
-	public static final User ANONYMOUS = new User(0L, "Anonymous", null, true,
-			UserRole.ANONYMOUS, "anonymous");
+	public static final User ADMINISTRATOR = new User(1L, "Administrator", "admin@geocab.com.br", true, UserRole.ADMINISTRATOR, "admin");
+	public static final User ANONYMOUS = new User(0L, "Anonymous", null, true, UserRole.ANONYMOUS, "anonymous");
 
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
@@ -105,6 +106,12 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	@Column(nullable = false)
 	@Enumerated(EnumType.ORDINAL)
 	private Coordinates coordinates;
+	
+	/**
+	 * 
+	 */
+	@Transient
+	private String token;
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -140,6 +147,9 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	/**
 	 * 
 	 * @param id
+	 * @param name
+	 * @param email
+	 * @param enabled
 	 */
 	public User(Long id, String name, String email, boolean enabled)
 	{
@@ -148,6 +158,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		this.name = name;
 		this.enabled = enabled;
 	}
+	
 
 	/**
 	 * 
@@ -167,8 +178,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 * 
 	 * @param id
 	 */
-	public User(Long id, String name, String email, boolean enabled,
-			UserRole role, String password)
+	public User(Long id, String name, String email, boolean enabled, UserRole role, String password)
 	{
 		super(id);
 		this.email = email;
@@ -201,6 +211,33 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		this.role = role;
 		this.backgroundMap = backgroundMap;
 		this.coordinates = coordinates;
+	}
+	
+	/**
+	 * @param name
+	 * @param email
+	 * @param enabled
+	 * @param password
+	 * @param newPassword
+	 * @param role
+	 * @param backgroundMap
+	 * @param coordinates
+	 * @param token
+	 */
+	public User(String name, String email, Boolean enabled, String password,
+			String newPassword, UserRole role, BackgroundMap backgroundMap,
+			Coordinates coordinates, String token)
+	{
+		super();
+		this.name = name;
+		this.email = email;
+		this.enabled = enabled;
+		this.password = password;
+		this.newPassword = newPassword;
+		this.role = role;
+		this.backgroundMap = backgroundMap;
+		this.coordinates = coordinates;
+		this.token = token;
 	}
 
 	/*-------------------------------------------------------------------
@@ -249,12 +286,57 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 
 		return authorities;
 	}
-	/*-------------------------------------------------------------------
-	 *						GETTERS AND SETTERS
-	 *-------------------------------------------------------------------*/
-
 	
+	/**
+	 * @return the backgroundMap
+	 */
+	public BackgroundMap getBackgroundMap()
+	{
+		if (backgroundMap == null)
+		{
+			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
+		}
+		return backgroundMap;
+	}
 
+	/**
+	 * @param backgroundMap
+	 *            the backgroundMap to set
+	 */
+	public void setBackgroundMap(BackgroundMap backgroundMap)
+	{
+		if (backgroundMap == null)
+		{
+			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
+		}
+		this.backgroundMap = backgroundMap;
+	}
+
+	/**
+	 * @return the coordinates
+	 */
+	public Coordinates getCoordinates()
+	{
+		if (coordinates == null)
+		{
+			coordinates = Coordinates.DEGREES_MINUTES_SECONDS;
+		}
+		return coordinates;
+	}
+
+	/**
+	 * @param coordinates
+	 *            the coordinates to set
+	 */
+	public void setCoordinates(Coordinates coordinates)
+	{
+		if (coordinates == null)
+		{
+			coordinates = Coordinates.DEGREES_MINUTES_SECONDS;
+		}
+		this.coordinates = coordinates;
+	}
+	
 	/**
 	 * 
 	 */
@@ -318,7 +400,21 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	{
 		return this.email;
 	}
+	
+	/*-------------------------------------------------------------------
+	 *						GETTERS AND SETTERS
+	 *-------------------------------------------------------------------*/
 
+	/**
+	 * 
+	 * @param authorities
+	 * @return
+	 */
+	public Set<UserRole> setAuthorities(Set<UserRole> authorities)
+	{
+		return null;
+	}
+	
 	/**
 	 * @return the name
 	 */
@@ -405,54 +501,21 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		this.newPassword = newPassword;
 	}
 
+	
+
 	/**
-	 * @return the backgroundMap
+	 * @return the token
 	 */
-	public BackgroundMap getBackgroundMap()
+	public String getToken()
 	{
-		if (backgroundMap == null)
-		{
-			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
-		}
-		return backgroundMap;
+		return token;
 	}
 
 	/**
-	 * @param backgroundMap
-	 *            the backgroundMap to set
+	 * @param token the token to set
 	 */
-	public void setBackgroundMap(BackgroundMap backgroundMap)
+	public void setToken(String token)
 	{
-		if (backgroundMap == null)
-		{
-			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
-		}
-		this.backgroundMap = backgroundMap;
+		this.token = token;
 	}
-
-	/**
-	 * @return the coordinates
-	 */
-	public Coordinates getCoordinates()
-	{
-		if (coordinates == null)
-		{
-			coordinates = Coordinates.DEGREES_MINUTES_SECONDS;
-		}
-		return coordinates;
-	}
-
-	/**
-	 * @param coordinates
-	 *            the coordinates to set
-	 */
-	public void setCoordinates(Coordinates coordinates)
-	{
-		if (coordinates == null)
-		{
-			coordinates = Coordinates.DEGREES_MINUTES_SECONDS;
-		}
-		this.coordinates = coordinates;
-	}
-
 }

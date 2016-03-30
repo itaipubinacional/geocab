@@ -7,15 +7,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
+
+import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.service.LoginService;
+import br.com.geocab.infrastructure.social.mobile.provider.CustomAuthenticationProvider;
 
 /**
  * @author emanuelvictor
@@ -24,79 +27,25 @@ import org.springframework.util.Assert;
 public abstract class SocialAuthentication implements Authenticate
 {
 	/**
-	 * Salto para geração de token
+	 * Sabor para geração de token
 	 */
-	private static final String SALT = "320bbf6f702da59b1af3ee7b3a5359f1";
+	protected static final String SALT = "%$@#@!#g30cAA213#ck(398234";
+
 	/**
 	 * 
 	 */
-	protected UserDetails user;
-	/**
-	 * 
-	 */
-	protected String token;
-	/**
-	 * 
-	 */
+	@Autowired
 	protected AuthenticationManager authenticationManager;
 	/**
 	 * 
 	 */
+	@Autowired
 	protected ShaPasswordEncoder passwordEncoder;
 	/**
-	 * 
+	 * TODO devia ser a implementação do user service details ;'(
 	 */
-	protected UserDetailsService userDetailsService;
-	
-
-	/**
-	 * 
-	 */
-	public SocialAuthentication()
-	{
-		super();
-	}
-
-	/**
-	 * @return the token
-	 */
-	public String getToken()
-	{
-		return token;
-	}
-
-	/**
-	 * @param token the token to set
-	 */
-	public void setToken(String token)
-	{
-		this.token = token;
-	}
-
-	/**
-	 * @return the user
-	 */
-	public UserDetails getUser()
-	{
-		return user;
-	}
-
-	/**
-	 * @param user the user to set
-	 */
-	public void setUser(UserDetails user)
-	{
-		this.user = user;
-	}
-	
-	/* (non-Javadoc)
-	 * @see br.com.geocab.application.controller.entity.Authenticate#generateToken(java.lang.String)
-	 */
-	@Override
-	public String generateToken(String userName)
-	{
-		return generateKey(userName);
-	}
+	@Autowired
+	protected LoginService loginService;
 	
 	/**
 	 * 
@@ -111,11 +60,13 @@ public abstract class SocialAuthentication implements Authenticate
 	 * @see br.com.geocab.application.controller.entity.Authenticate#login(javax.servlet.http.HttpSession, java.lang.String)
 	 */
 	@Override
-	public String login(HttpServletRequest request)
-	{//TODO traduzir
-		Assert.isTrue(user.isEnabled(), "User is not enabled");
+	public User login( User user, HttpServletRequest request )
+	{	
+		user = validateToken(user);
 		
-		validateToken();
+		user = validateUsername(user);
+		
+		Assert.isTrue(user.isEnabled(), "User is not enabled");
 		
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
 
@@ -131,15 +82,28 @@ public abstract class SocialAuthentication implements Authenticate
 	    HttpSession session = request.getSession(true);
 	    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 	    
-	    return this.generateToken(user.getUsername());
+	    user.setPassword(null);
+	    user.setToken(SocialAuthentication.generateKey(user.getUsername()));
+	    return user;
 	}
 	
 	/* (non-Javadoc)
 	 * @see br.com.geocab.application.controller.entity.Authenticate#validateToken(java.lang.String)
 	 */
 	@Override
-	public void validateToken()
+	public User validateToken(User user)
 	{//TODO traduzir
-		Assert.isTrue(generateToken(this.getUser().getUsername()).equals(token), "Invalid token");
+		Assert.isTrue(SocialAuthentication.generateKey(user.getUsername()).equals(user.getToken()), "Invalid token");
+		return user;
 	}
+
+	/* (non-Javadoc)
+	 * @see br.com.geocab.infrastructure.social.mobile.Authenticate#validateUsername()
+	 */
+	@Override
+	public User validateUsername(User user)
+	{		
+		return loginService.loadOrSaveNewUserByUsername(user.getUsername());
+	}
+	
 }
