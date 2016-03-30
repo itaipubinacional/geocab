@@ -152,14 +152,7 @@
       $scope.loadSelectedLayers = function () {
 
         angular.forEach($scope.selectedLayers, function (layer) {
-
-          var layerList = $filter('filter')($scope.allLayers, {id: layer.id})[0];
-
-          if(angular.isDefined(layerList)) {
-            layerList.visible = true;
-            $scope.toggleLayer(layerList);
-          }
-
+           $scope.toggleLayer(layer);
         });
 
       };
@@ -1081,6 +1074,8 @@
                 $scope.selectedLayers.push({id: layer.id, visible: true});
                 localStorage.setItem('selectedLayers', angular.toJson($scope.selectedLayers));
               }
+
+              layer = $filter('filter')($scope.allLayers, {id: layer.id})[0];
 
               if (layer.dataSource != null && layer.dataSource.url != null) {
 
