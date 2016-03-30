@@ -153,7 +153,9 @@
 
         angular.forEach($scope.selectedLayers, function (layer) {
 
-          $scope.toggleLayer(layer);
+          var layerList = $filter('filter')($scope.allLayers, {id: layer.id})[0];
+          layerList.visible = true;
+          $scope.toggleLayer(layerList);
 
         });
 
@@ -842,8 +844,6 @@
             if(!angular.equals($scope.allLayers, {}))
               $scope.toggleLastLayer();
 
-            $scope.loadSelectedLayers();
-
           });
         });
 
@@ -1062,6 +1062,13 @@
 
               $rootScope.$broadcast('loading:show');
 
+              var hasSelectedLayer = $filter('filter')($scope.selectedLayers, {id: layer.id})[0];
+
+              if (!angular.isDefined(hasSelectedLayer)) {
+                $scope.selectedLayers.push({id: layer.id, visible: true});
+                localStorage.setItem('selectedLayers', angular.toJson($scope.selectedLayers));
+              }
+
               if (layer.dataSource != null && layer.dataSource.url != null) {
 
                 var wmsOptions = {
@@ -1094,13 +1101,6 @@
 
                 markerService.listMarkerByLayer(layer.id, {
                   callback: function (result) {
-
-                    var hasSelectedLayer = $filter('filter')($scope.selectedLayers, {id: layer.id})[0];
-
-                    if (!angular.isDefined(hasSelectedLayer)) {
-                      $scope.selectedLayers.push({id: layer.id, visible: true});
-                      localStorage.setItem('selectedLayers', angular.toJson($scope.selectedLayers));
-                    }
 
                     if (result.length > 0) {
 
