@@ -250,16 +250,40 @@
         var token = localStorage.getItem('token');
 
         if (!!userEmail) {
-          $http.get($scope.$API_ENDPOINT + "/login/geocab?userName=" + userEmail + "&token=" + token)
+
+          $http.post($scope.$API_ENDPOINT + '/login/geocab', {'email' : userEmail, 'token' : token})
             .success(function (data, status, headers, config) {
 
               $log.debug('user logged');
 
-              $scope.getUserAuthenticated();
+              $scope.userMe = data;
+              $scope.coordinatesFormat = data.coordinates;
+
+              $scope.setMarkerCoordinatesFormat();
+
+              $rootScope.$broadcast('loading:hide');
+
+              $log.debug('getUserAuthenticated success');
+              $scope.$apply();
 
             })
             .error(function (data, status, headers, config) {
-              $log.debug('user login fail');
+              $rootScope.$broadcast('loading:hide');
+
+              $log.debug(data);
+
+              localStorage.removeItem('lastRoute');
+              localStorage.removeItem('lastState');
+
+              $state.go('authentication.login');
+
+              $log.debug('getUserAuthenticated fail');
+
+              $ionicSideMenuDelegate.toggleLeft();
+
+              $scope.clearNewMarker();
+
+              $scope.$apply();
             });
         }
 
