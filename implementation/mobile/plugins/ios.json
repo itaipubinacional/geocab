@@ -39,6 +39,9 @@
         },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "br.com.geocab.mobile"
+        },
+        "cordova-plugin-crosswalk-webview": {
+            "PACKAGE_NAME": "br.com.geocab.mobile"
         }
     },
     "dependent_plugins": {}
