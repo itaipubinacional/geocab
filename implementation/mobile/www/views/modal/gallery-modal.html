@@ -14,7 +14,7 @@
     <ion-slide-box on-slide-changed="slideChanged(index)"
                    show-pager="true" ng-click="closeModal()" disable-scroll="false">
       <ion-slide ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos">
-        <img ng-src="{{ setImagePath(photo.image) }}" class="fullscreen-image"/>
+        <img ng-src="{{ setImagePath(photo) }}" class="fullscreen-image"/>
         <p class="info">{{ photo.description ? photo.description :  photo.name }}</p>
       </ion-slide>
     </ion-slide-box>
