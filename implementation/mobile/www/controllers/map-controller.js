@@ -1669,7 +1669,15 @@
             event.stopPropagation();
           }
         } else {
-          cordova.plugins.Keyboard.close();
+          if (event.keyCode === 13 || event.keyCode === 9) {
+            $timeout(function () {
+
+              angular.element('#sendForm').trigger('click');
+              
+              angular.element('#search').blur();
+
+            }, 100);
+          }
         }
       };
     });

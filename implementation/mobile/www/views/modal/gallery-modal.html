@@ -1,6 +1,6 @@
 <div class="modal image-modal transparent">
   <div class="bar bar-header transparent">
-    <div class="buttons">
+    <div class="buttons" ng-if="!isDisabled">
       <button style="color:#fff" class="button button-icon icon ion-android-refresh" ng-if="selectedPhoto.deleted" ng-click="restorePhoto(selectedPhoto)"></button>
       <button style="color:#fff" class="button button-icon icon ion-android-create" ng-if="!selectedPhoto.deleted && !showEditableDescription" ng-click="editPhoto(true);"></button>
       <!--<button style="color:#fff" class="button button-icon icon ion-android-delete" ng-if="!selectedPhoto.deleted && !showEditableDescription" ng-click="deletePhoto(selectedPhoto)"></button>-->

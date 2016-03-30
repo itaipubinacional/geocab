@@ -24,7 +24,8 @@
 }
 
 #gmap.loading, #olmap.loading{
-/*     background: transparent url("../../images/ajax-loader-transparent.gif") no-repeat center center; */
+    background: transparent url("../../images/ajax-loader-transparent.gif") no-repeat;
+    background-position: calc(50% - 20px) calc(50% - 38px);
 }
 
 .loading-wms{

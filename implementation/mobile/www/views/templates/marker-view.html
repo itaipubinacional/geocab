@@ -9,7 +9,7 @@
     </ion-nav-back-button>
 
     <ion-nav-buttons side="right">
-      <button class="button button-icon icon ion-android-done" form="marker" type="submit" ng-show="!isDisabled">
+      <button class="button button-icon icon ion-android-done" form="marker" id="sendForm" type="submit" ng-show="!isDisabled">
       </button>
       <button class="button button-icon icon ion-android-more-vertical" ng-click="openPopover($event)" ></button>
     </ion-nav-buttons>
@@ -38,7 +38,7 @@
     </div>
     <form id="marker" name="markerForm" novalidate ng-submit="saveMarker(markerForm)">
       <fieldset ng-disabled="isDisabled">
-        <div ng-repeat="attribute in currentEntity.markerAttribute track by $index">
+        <div ng-repeat="attribute in currentEntity.markerAttribute track by $index" ng-if="attribute.type != 'PHOTO_ALBUM'">
           <!--text or number-->
           <label
             ng-class="{'has-error': (markerForm.input{{$index}}.$invalid && markerForm.input{{$index}}.$touched) || (isFormSubmit && attribute.required && markerForm.input{{$index}}.$invalid)}"
