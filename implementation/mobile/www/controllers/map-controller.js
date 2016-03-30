@@ -154,8 +154,11 @@
         angular.forEach($scope.selectedLayers, function (layer) {
 
           var layerList = $filter('filter')($scope.allLayers, {id: layer.id})[0];
-          layerList.visible = true;
-          $scope.toggleLayer(layerList);
+
+          if(angular.isDefined(layerList)) {
+            layerList.visible = true;
+            $scope.toggleLayer(layerList);
+          }
 
         });
 
@@ -416,24 +419,19 @@
         //}
       };
 
-      $scope.viewMarker = function () {
-
-        $log.debug('viewMarker');
-
-        /* REMOVING RECURSIVE DATA FROM OBJECT */
-        var markerAttribute = angular.copy($scope.currentEntity.markerAttribute);
+      $scope.removeRecursiveAttributes = function(markerAttribute) {
 
         angular.forEach(markerAttribute, function (attribute, index) {
-          if (attribute.photoAlbum != null) {
-            if(attribute.photoAlbum.markerAttribute != null) {
-              attribute.photoAlbum.markerAttribute = {
+          if (markerAttribute[index].photoAlbum != null) {
+            if(markerAttribute[index].photoAlbum.markerAttribute != null) {
+              markerAttribute[index].photoAlbum.markerAttribute = {
                 attribute: {id: attribute.attribute.id},
-                id: attribute.photoAlbum.markerAttribute.id
+                id: markerAttribute[index].photoAlbum.markerAttribute.id
               };
             }
-            angular.forEach(attribute.photoAlbum.photos, function (photos) {
-              if(angular.isDefined(photos.photoAlbum) && angular.isDefined(photos.photoAlbum.photos)) {
-                angular.forEach(photos.photoAlbum.photos, function (albumPhotos) {
+            angular.forEach(markerAttribute[index].photoAlbum.photos, function (photos, idx) {
+              if(angular.isDefined(markerAttribute[index].photoAlbum.photos[idx].photoAlbum) && angular.isDefined(markerAttribute[index].photoAlbum.photos[idx].photoAlbum.photos)) {
+                angular.forEach(markerAttribute[index].photoAlbum.photos[idx].photoAlbum.photos, function (albumPhotos) {
                   albumPhotos.photoAlbum = {
                     id: albumPhotos.photoAlbum.id,
                     markerAttribute: {
@@ -446,10 +444,12 @@
             });
           }
         });
+        return markerAttribute;
+      };
 
-        $scope.currentEntity.markerAttribute = markerAttribute;
+      $scope.viewMarker = function () {
 
-        $log.debug($scope.currentEntity);
+        $log.debug('viewMarker');
 
         $scope.imgResult = '';
 
@@ -590,7 +590,9 @@
           layer.setStyle(iconStyle);
 
           $scope.currentCreatingInternalLayer = layer;
-          $scope.map.addLayer(layer);
+
+          if(!$scope.currentEntity.id)
+            $scope.map.addLayer(layer);
 
           //$scope.$apply();
         }
@@ -853,6 +855,8 @@
           $timeout(function(){
             if(!angular.equals($scope.allLayers, {}))
               $scope.toggleLastLayer();
+
+            //$scope.loadSelectedLayers();
           });
         });
 

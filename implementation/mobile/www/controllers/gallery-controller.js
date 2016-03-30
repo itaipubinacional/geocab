@@ -132,6 +132,9 @@
 
       $scope.addMedia = function() {
 
+        /* REMOVING RECURSIVE DATA FROM OBJECT */
+        $scope.currentEntity.markerAttribute = $scope.removeRecursiveAttributes($scope.currentEntity.markerAttribute);
+
         localStorage.setItem('currentEntity', angular.toJson($scope.currentEntity));
         localStorage.setItem('selectedPhotoAlbumAttribute', angular.toJson($scope.selectedPhotoAlbumAttribute));
 
