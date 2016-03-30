@@ -292,6 +292,12 @@
           case $scope.MAP_INDEX:
           {
 
+            $ionicPlatform.ready(function() {
+              $ionicPlatform.registerBackButtonAction(function (e) {
+                ionic.Platform.exitApp();
+              }, 100);
+            });
+
             $scope.listAllLayers();
 
             $ionicNavBarDelegate.showBackButton(false);
