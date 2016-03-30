@@ -281,8 +281,6 @@
               $ionicSideMenuDelegate.toggleLeft();
 
               $scope.clearNewMarker();
-
-              $scope.$apply();
             });
         }
 

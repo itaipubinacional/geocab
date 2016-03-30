@@ -33,7 +33,7 @@ import br.com.geocab.domain.entity.account.preferences.Coordinates;
 @Entity
 @Audited
 @DataTransferObject(javascript = "User")
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties({"authorities"})
 public class User extends AbstractEntity implements Serializable, UserDetails
 {
 	/**
@@ -405,16 +405,26 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
 
-	/**
-	 * 
-	 * @param authorities
-	 * @return
-	 */
-	public Set<UserRole> setAuthorities(Set<UserRole> authorities)
-	{
-		return null;
-	}
+//	/**
+//	 * 
+//	 * @param authorities
+//	 * @return
+//	 */
+//	public Set<UserRole> setAuthorities(Set<UserRole> authorities)
+//	{
+//		return null;
+//	}
 	
+	
+//	/**
+//	 * 
+//	 * @param authorities
+//	 * @return
+//	 */
+//	public Set<GrantedAuthority> setAuthorities(Set<GrantedAuthority> authorities)
+//	{
+//		return null;
+//	}
 	/**
 	 * @return the name
 	 */
