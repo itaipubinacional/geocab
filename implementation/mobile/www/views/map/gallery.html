@@ -5,7 +5,7 @@
     <ion-nav-buttons side="right">
       <button
         ng-if="!hasSelectedPhotos && (currentEntity.user.id == userMe.id || !currentEntity.user.id) && !isDisabled"
-        class="button button-icon icon ion-camera" ng-click="addMedia()"></button>
+        class="button button-icon icon ion-camera" on-tap="addMedia()"></button>
       <button class="button button-icon icon ion-android-delete" ng-if="hasSelectedPhotos"
               ng-click="deleteSelectedPhotos()"></button>
     </ion-nav-buttons>

@@ -270,7 +270,7 @@
                 var userEmail = localStorage.getItem('userEmail');
                 var token     = localStorage.getItem('token');
 
-                $http.get($API_ENDPOINT + "/login/geocab?userName=" + userEmail + "&token=" + token)
+                $http.post($API_ENDPOINT + '/login/geocab', {'email' : userEmail, 'token' : token})
                   .success(function (data, status, headers, config) {
 
                     $log.debug('user logged');

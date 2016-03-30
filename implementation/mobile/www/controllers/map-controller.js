@@ -415,7 +415,9 @@
         $log.debug('viewMarker');
 
         /* REMOVING RECURSIVE DATA FROM OBJECT */
-        angular.forEach($scope.currentEntity.markerAttribute, function (attribute, index) {
+        var markerAttribute = angular.copy($scope.currentEntity.markerAttribute);
+
+        angular.forEach(markerAttribute, function (attribute, index) {
           if (attribute.photoAlbum != null) {
             if(attribute.photoAlbum.markerAttribute != null) {
               attribute.photoAlbum.markerAttribute = {
@@ -438,6 +440,8 @@
             });
           }
         });
+
+        $scope.currentEntity.markerAttribute = markerAttribute;
 
         $log.debug($scope.currentEntity);
 
@@ -843,7 +847,6 @@
           $timeout(function(){
             if(!angular.equals($scope.allLayers, {}))
               $scope.toggleLastLayer();
-
           });
         });
 
