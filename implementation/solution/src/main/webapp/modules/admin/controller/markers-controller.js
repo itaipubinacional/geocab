@@ -1615,7 +1615,8 @@ ront controller of angle won't let enter an invalid URL.
                             delete markerAttribute.photoAlbum.photos[index];
                     }
 
-                    //delete photo.image;
+                    if(photo.id)
+                        delete photo.image;
                 })
             }
         });
@@ -1982,7 +1983,8 @@ ront controller of angle won't let enter an invalid URL.
                             delete markerAttribute.photoAlbum.photos[index];
                     }
 
-                    delete photo.image;
+                    if(photo.id)
+                        delete photo.image;
                 })
             } else {
               markerAttribute.photoAlbum = null;
