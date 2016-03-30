@@ -50,10 +50,10 @@
       $scope.takePhoto = function() {
 
         var options = {
-          quality: 100,
+          quality: 60,
           destinationType: Camera.DestinationType.DATA_URL,
           sourceType: Camera.PictureSourceType.CAMERA,
-          allowEdit: false,
+          allowEdit: true,
           targetWidth: 640,
           targetHeight: 480,
           encodingType: 1,
@@ -91,10 +91,10 @@
       $scope.getPhoto = function() {
 
         var options = {
-          quality: 100,
+          quality: 60,
           destinationType: Camera.DestinationType.DATA_URL,
           sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-          allowEdit: false,
+          allowEdit: true,
           targetWidth: 640,
           targetHeight: 480,
           encodingType: 1,
@@ -149,6 +149,7 @@
               $scope.getPhoto();
             else
               $scope.takePhoto();
+            return true;
           }
         });
 

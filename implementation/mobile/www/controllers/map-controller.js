@@ -264,7 +264,6 @@
               $rootScope.$broadcast('loading:hide');
 
               $log.debug('getUserAuthenticated success');
-              $scope.$apply();
 
             })
             .error(function (data, status, headers, config) {
@@ -1673,7 +1672,7 @@
             $timeout(function () {
 
               angular.element('#sendForm').trigger('click');
-              
+
               angular.element('#search').blur();
 
             }, 100);
