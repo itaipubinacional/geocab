@@ -1560,8 +1560,8 @@ ront controller of angle won't let enter an invalid URL.
                         photo.source = img[1];
                         photo.name = file.name;
                         photo.description = file.description;
-                        photo.contentLength = file.size;
-                        photo.mimeType = file.type;
+                        photo.contentLength = file.size ? file.size : file.contentLength;
+                        photo.mimeType = file.type ? file.type : file.mimeType;
 
                         attribute.attribute.files[index] = photo;
                     }
