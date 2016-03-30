@@ -133,7 +133,7 @@ public class LoginService
 	@Transactional(readOnly = true)
 	public User findUserByEmail( String userName )
 	{
-		return this.userRepository.asdfasdfasdfa( userName );
+		return this.userRepository.findUser( userName );
 	}
 	
 	public User authenticatedUser()
@@ -144,7 +144,7 @@ public class LoginService
 	
 	public void recoverPassword(User user) throws Exception
 	{
-		User userValid = this.findUserByEmail(user.getEmail());
+		User userValid = this.userRepository.findByEmail(user.getEmail());
 		
 		if(userValid == null){
 			throw new Exception();
@@ -159,7 +159,8 @@ public class LoginService
 		userValid.setPassword( encodedPassword );
 		
 		this.userRepository.save(userValid);
-		
+		userValid.getBackgroundMap();
+		userValid.getCoordinates();
 		this.accountMailRepository.sendRecoveryPassword( userValid );
 	}
 	
