@@ -35,16 +35,17 @@ import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
-import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.shapefile.files.ShpFileType;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -263,8 +264,8 @@ public class ShapefileService
 //	    			throw new GeodesicCoordinatesAcceptedException();
 //				}
 	    		
-	    		final CoordinateReferenceSystem exitCRS = CRS.decode("EPSG:3857");
-    			final MathTransform transform = CRS.findMathTransform(entryCRS, exitCRS, true);
+	    		final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
+    			final MathTransform transform = CRS.findMathTransform(entryCRS, EPSG3857, true);
 	    		
     			final Geometry targetGeometry = JTS.transform( wktToGeometry(  feature.getDefaultGeometryProperty().getValue().toString()).getEnvelope(), transform);
 	    		
@@ -398,6 +399,15 @@ public class ShapefileService
 				for (int i = 0; i < layer.getMarkers().size(); i++)
 	            {	
 					final Marker marker = markerRepository.findOne(layer.getMarkers().get(i).getId());
+					
+					
+					final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
+	    			final MathTransform transform = CRS.findMathTransform(EPSG3857, DefaultGeographicCRS.WGS84,   true);
+		    		
+//	    			final Geometry targetGeometry = JTS.transform( wktToGeometry( marker.getLocation() feature.getDefaultGeometryProperty().getValue().toString()).getEnvelope(), transform);
+	    			final Geometry targetGeometry = JTS.transform( wktToGeometry( marker.getLocation().getCoordinateString()).getEnvelope(), transform);
+	    			
+	    			marker.setLocation((Point) targetGeometry);
 	            	
 					marker.formattedNameAttributes();
 					
@@ -426,17 +436,21 @@ public class ShapefileService
 		        final Map<String, Serializable> create = new HashMap<String, Serializable>();
 		        create.put("url", newFile.toURI().toURL());
 		        create.put("create spatial index", Boolean.TRUE);
-	
-		        final ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactorySpi.createNewDataStore(create);
-		        newDataStore.createSchema(TYPE);
+		        DataStore dataStore = dataStoreFactorySpi.createNewDataStore(create);
+		        SimpleFeatureType featureType = SimpleFeatureTypeBuilder.retype( TYPE, /*CRS.parseWKT(this.wktToGeometry()) */DefaultGeographicCRS.WGS84 );
+		        dataStore.createSchema(featureType);
 		        
-		        CoordinateReferenceSystem crs = CRS.decode("EPSG:3857");
-		        newDataStore.forceSchemaCRS( crs );
+		        
+//		        final ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactorySpi.createNewDataStore(create);
+//		        newDataStore.createSchema(TYPE);
+//		        
+//		        CoordinateReferenceSystem crs = CRS.decode("EPSG:3857");
+//		        newDataStore.forceSchemaCRS( crs );
 		        
 		        final Transaction transaction = new DefaultTransaction("create");
-		        final String typeName = newDataStore.getTypeNames()[0];
+		        final String typeName = dataStore.getTypeNames()[0];
 		        
-				final FeatureStore<SimpleFeatureType, SimpleFeature> featureStore = (FeatureStore<SimpleFeatureType, SimpleFeature>) newDataStore.getFeatureSource(typeName);
+				final FeatureStore<SimpleFeatureType, SimpleFeature> featureStore = (FeatureStore<SimpleFeatureType, SimpleFeature>) dataStore.getFeatureSource(typeName);
 	
 		        featureStore.setTransaction(transaction);
 		        try 
