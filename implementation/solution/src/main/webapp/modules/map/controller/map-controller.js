@@ -655,7 +655,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             }))
           });
 
-          if($scope.currentCreatingInternalLaye) {
+          if($scope.currentCreatingInternalLayer) {
             $scope.currentCreatingInternalLayer.setStyle(iconStyle);
             $scope.map.removeLayer($scope.currentCreatingInternalLayer);
           }
@@ -692,7 +692,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.currentEntity.longitude = olCoordinates[1];
 
           var iconFeature = new ol.Feature({
-            geometry: new ol.geom.Point([olCoordinates[0], olCoordinates[1]])
+            geometry: new ol.geom.Point([olCoordinates[0], olCoordinates[1]]),
+            marker: $scope.currentEntity ? $scope.currentEntity : undefined
           });
 
           var layer = new ol.layer.Vector({
