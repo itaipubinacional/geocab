@@ -3374,11 +3374,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     var isValid = true;
 
     if (!$scope.form('sidebarMarkerUpdate').$valid) {
+      $scope.isLoading = false;
       $scope.msg = {type: "danger", text: $translate("admin.users.The-highlighted-fields-are-required"), dismiss: true};
       return;
     }
 
     if (!$scope.isBooleanValid()) {
+      $scope.isLoading = false;
       $scope.isPostMarker = false;
       return false;
     }
