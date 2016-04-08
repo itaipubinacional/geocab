@@ -55,7 +55,7 @@
 
 		<script src="static/libs/angular-treeview/ivh-treeview.extend.js" type="text/javascript"></script>
 
-		<script src="static/libs/ui-sortable/sortable.js" type="text/javascript"></script>
+		<script src="static/libs/angular-sortable-view/src/angular-sortable-view.js" type="text/javascript"></script>
 
 		<!-- OpenLayers 3 v3.0.0 -->
 		<script src="static/libs/openlayers/ol.js" type="text/javascript"></script>
