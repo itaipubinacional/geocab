@@ -38,13 +38,14 @@
 											<td sv-handle class="reorder"></td>
 	                    <td>{{ attribute.name }} ({{ attribute.type }}) <b ng-if="attribute.required">*</b></td>
 	                    <td>
-	                        <select data-placeholder="Selecione" name="attribute"
+	                        <select data-placeholder="" name="attribute"
 	                                ng-model="attribute.option" class="form-control"
 	                                ng-class="{ngInvalid: attribute.required && attribute.option == ''}"
 	                                ng-change="setMarkerAttribute($index, attribute)"
 	                                ng-required="attribute.required">
-	                            <option ng-selected="markerAttribute.attribute.name + ' (' + markerAttribute.attribute.type + ')' == attribute.name + ' (' + attribute.type + ')'"
-																ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
+	                            <option ng-selected="markerAttribute.option == attribute.option" ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.option }}" ng-value="markerAttribute.option">
+                                    {{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})
+                                </option>
 	                        </select>
 	                    </td>
 	                </tr>

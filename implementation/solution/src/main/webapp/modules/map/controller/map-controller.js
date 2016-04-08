@@ -4926,6 +4926,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         layer: function () {
           return $scope.shapeFile.form.layer;
         },
+        layerAttributes: function () {
+          return $scope.attributesByLayer;
+        },
         markerAttributes: function () {
           return $scope.importMarkers[0].markerAttribute;
         }
@@ -5186,7 +5189,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.fadeMsg();
         $scope.$apply();
 
-
+        $scope.markerAttributes = [];
+        $scope.attributesByLayer = [];
+        $scope.shapeFile = {};
+        $scope.shapeFile.form = {};
+        $scope.isImport = false;
 
       }, errorHandler: function (message, exception) {
     	$scope.isLoading = false;
@@ -5314,7 +5321,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       angular.forEach($scope.attributesByLayer, function(attribute){
 
-        if(attribute.required && attribute.option == '')
+        if(attribute.required && (attribute.option == '' || !angular.isDefined(attribute.option)))
           isValid = false;
 
       });
@@ -5477,7 +5484,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.setImportLayer = function() {
 
-    /* TEST */
     $scope.attributesByLayer = [];
 
     $scope.markerAttributes = $scope.importMarkers[0].markerAttribute;
@@ -5491,10 +5497,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
             angular.forEach($scope.markerAttributes, function(attr) {
 
-              if(attribute.name + ' (' + attribute.type + ')' == attr.attribute.name + ' (' + attr.attribute.type + ')')
+              attr.option = attr.attribute.name + ' (' + attr.attribute.type + ')';
+
+              if(attribute.name + ' (' + attribute.type + ')' == attr.attribute.name + ' (' + attr.attribute.type + ')' && !angular.isDefined(attribute.option)) {
                 attribute.option = attribute.name + ' (' + attribute.type + ')';
-              else
-                attribute.option = '';
+              }
             });
 
             $scope.attributesByLayer.push(attribute);

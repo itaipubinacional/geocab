@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function AssociateAttributeImportPopUpController($scope, $injector,$modalInstance, $state, layer, markerAttributes, $importService) {
+function AssociateAttributeImportPopUpController($scope, $log, $timeout, $injector, $modalInstance, $state, layer, layerAttributes, markerAttributes, $importService) {
 
 	$importService("layerGroupService");
 
@@ -19,9 +19,9 @@ function AssociateAttributeImportPopUpController($scope, $injector,$modalInstanc
 	$scope.layer = layer;
 	$scope.markerAttributes = markerAttributes;
 
-	$scope.attributesByLayer = [];
+	$scope.attributesByLayer = layerAttributes;
 
-	layerGroupService.listAttributesByLayer($scope.layer.layerId, {
+	/*layerGroupService.listAttributesByLayer($scope.layer.layerId, {
 		callback: function (result) {
 
 			//console.log(result);
@@ -45,11 +45,26 @@ function AssociateAttributeImportPopUpController($scope, $injector,$modalInstanc
 			$scope.message = {type: "error", text: message};
 			$scope.$apply();
 		}
-	});
+	});*/
+
+	/*$scope.setOption = function(index, attribute){
+
+		var option = attribute.option;
+
+		$timeout(function(){
+
+			$scope.attributesByLayer[index].option = option;
+
+			$scope.$apply();
+
+		}, 100);
+
+		$log.debug(attribute);
+	};*/
 
 	$scope.setMarkerAttribute = function(index, markerAttribute) {
 
-		if($scope.attributesByLayer[index].type != markerAttribute.match(/\((.*)\)/)[1]) {
+		if(markerAttribute.option != null && $scope.attributesByLayer[index].type != markerAttribute.option.match(/\((.*)\)/)[1]) {
 			$scope.attributesByLayer[index].option = '';
 		}
 
