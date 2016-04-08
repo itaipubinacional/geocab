@@ -281,11 +281,11 @@ public class Marker extends AbstractEntity implements Serializable
 			{
 				if (formattedAttributes.length() > 0)
 				{
-					formattedAttributes += "," + markerAttribute.getAttribute().getName().replaceAll(" ", "_") + ":" + markerAttribute.getAttribute().formmattedTypeAttributes().replaceAll(" ", "_");
+					formattedAttributes += "," + markerAttribute.getAttribute().getName() + ":" + markerAttribute.getAttribute().formmattedTypeAttributes();
 				}
 				else
 				{
-					formattedAttributes += markerAttribute.getAttribute().getName().replaceAll(" ", "_") + ":" + markerAttribute.getAttribute().formmattedTypeAttributes().replaceAll(" ", "_");
+					formattedAttributes += markerAttribute.getAttribute().getName() + ":" + markerAttribute.getAttribute().formmattedTypeAttributes();
 				}
 				// O 
 				markerAttribute.getAttribute().formmatNameAttribute();
