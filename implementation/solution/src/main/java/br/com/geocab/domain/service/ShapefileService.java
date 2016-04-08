@@ -251,27 +251,15 @@ public class ShapefileService
 	    	while (features.hasNext()) 
 	        {
 	    		final SimpleFeature feature = features.next();
-
-//	    		double coordinates[] = MercatorTransform.forward(getX(feature.getDefaultGeometryProperty().getValue().toString()), getY(feature.getDefaultGeometryProperty().getValue().toString()));
 	    		
-//    			final Coordinate coordinate = new Coordinate(-getX(feature.getDefaultGeometryProperty().getValue().toString()), -getY(feature.getDefaultGeometryProperty().getValue().toString()));
-//    			JTS.transform(source, dest, transform) 
-	    		
-	    		final CoordinateReferenceSystem entryCRS = source.getSchema().getCoordinateReferenceSystem(); // CRS.decode(source.getSchema().getCoordinateReferenceSystem().getCoordinateSystem());
-	    		
-//	    		if (!entryCRS.getCoordinateSystem().getName().getCode().contains("WGS 1984") && !entryCRS.getCoordinateSystem().getName().getCode().contains("SIRGAS_2000"))
-//				{
-//	    			throw new GeodesicCoordinatesAcceptedException();
-//				}
+	    		final CoordinateReferenceSystem entryCRS = source.getSchema().getCoordinateReferenceSystem();
 	    		
 	    		final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
     			final MathTransform transform = CRS.findMathTransform(entryCRS, EPSG3857, true);
 	    		
     			final Geometry targetGeometry = JTS.transform( wktToGeometry(  feature.getDefaultGeometryProperty().getValue().toString()).getEnvelope(), transform);
 	    		
-    			final Marker marker = new Marker(new Point(/*coordinate*/));
-//    			CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326", true);
-//    			Geometry targetGeometry = JTS.toGeographic(wktToGeometry(feature.getDefaultGeometryProperty().getValue().toString()), entryCRS /*DefaultGeographicCRS.WGS84*/);
+    			final Marker marker = new Marker(new Point());
     			marker.setLocation((Point) targetGeometry);
     			
 	            final List<MarkerAttribute> markersAttributes = new ArrayList<>();
@@ -288,7 +276,6 @@ public class ShapefileService
 							final MarkerAttribute markerAttribute = extractAttributes(feature, attribute, property, marker);
 							
 							//Valida o atributo
-//							validateMarkerAttribute(markerAttribute);
 							markersAttributes.add(markerAttribute);
 							
 							marker.setMarkerAttribute(markersAttributes);
@@ -390,8 +377,6 @@ public class ShapefileService
 			{				
 				layer.setAttributes(this.attributeRepository.listAttributeByLayer(layer.getId()));
 				
-				layer.setName(layer.getName().replaceAll(" ", "_"));
-				
 				SimpleFeatureType TYPE = null; 
 	
 				final DefaultFeatureCollection collection = new DefaultFeatureCollection();
@@ -404,7 +389,6 @@ public class ShapefileService
 					final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
 	    			final MathTransform transform = CRS.findMathTransform(EPSG3857, DefaultGeographicCRS.WGS84,   true);
 		    		
-//	    			final Geometry targetGeometry = JTS.transform( wktToGeometry( marker.getLocation() feature.getDefaultGeometryProperty().getValue().toString()).getEnvelope(), transform);
 	    			final Geometry targetGeometry = JTS.transform( wktToGeometry( marker.getLocation().getCoordinateString()).getEnvelope(), transform);
 	    			
 	    			marker.setLocation((Point) targetGeometry);
@@ -439,13 +423,6 @@ public class ShapefileService
 		        DataStore dataStore = dataStoreFactorySpi.createNewDataStore(create);
 		        SimpleFeatureType featureType = SimpleFeatureTypeBuilder.retype( TYPE, /*CRS.parseWKT(this.wktToGeometry()) */DefaultGeographicCRS.WGS84 );
 		        dataStore.createSchema(featureType);
-		        
-		        
-//		        final ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactorySpi.createNewDataStore(create);
-//		        newDataStore.createSchema(TYPE);
-//		        
-//		        CoordinateReferenceSystem crs = CRS.decode("EPSG:3857");
-//		        newDataStore.forceSchemaCRS( crs );
 		        
 		        final Transaction transaction = new DefaultTransaction("create");
 		        final String typeName = dataStore.getTypeNames()[0];
@@ -561,7 +538,7 @@ public class ShapefileService
 	 */
 	private static final SimpleFeature extractFeatures(final SimpleFeature feature, final MarkerAttribute markerAttribute)
 	{		
-		final String attribute = markerAttribute.getAttribute().getName().replaceAll(" ", "_");
+		final String attribute = markerAttribute.getAttribute().getName();
 		
 		if (markerAttribute.getValue().toLowerCase().trim().equals("yes") || markerAttribute.getValue().toLowerCase().trim().equals("sim") && markerAttribute.getAttribute().getType() == AttributeType.BOOLEAN)
 		{
@@ -684,35 +661,5 @@ public class ShapefileService
 			file.delete();
 		}
 	}
-	
-//	/**
-//	 * Pega a string com as coordenadas e retorna a coordenada 'X'
-//	 * @param coordinateString
-//	 * @return
-//	 */
-//	private static final double getX(String coordinateString)
-//	{
-//		coordinateString = coordinateString.replace("POINT (", "");
-//		coordinateString = coordinateString.replace(")", "");
-//		coordinateString = coordinateString.substring(0, coordinateString.indexOf(" "));
-//		double doubleCoordinate = Double.parseDouble(coordinateString);
-//		return doubleCoordinate;
-//	}
-//	
-//	/**
-//	 * Pega a string com as coordenadas e retorna a coordenada 'Y'
-//	 * @param coordinateString
-//	 * @return
-//	 */
-//	private static final double getY(String coordinateString)
-//	{
-//		coordinateString = coordinateString.replace("POINT (", "");
-//		coordinateString = coordinateString.replace(")", "");
-//		coordinateString = coordinateString.substring(coordinateString.indexOf(" "), coordinateString.length());
-//		double doubleCoordinate = Double.parseDouble(coordinateString);
-//		return doubleCoordinate;
-//	}
-	
-	
 	
 }
