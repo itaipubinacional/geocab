@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 /**
- * 
+ *
  * @param $scope
  * @param $log
  * @param $location
@@ -62,7 +62,7 @@ function AssociateAttributeImportPopUpController($scope, $injector,$modalInstanc
 	/**
 	 *
 	 */
-	$scope.close = function() 
+	$scope.close = function()
 	{
 		$scope.msg = null;
 		$modalInstance.close({attributesByLayer: $scope.attributesByLayer});

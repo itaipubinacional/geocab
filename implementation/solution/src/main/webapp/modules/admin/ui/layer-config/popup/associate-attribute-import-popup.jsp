@@ -39,10 +39,10 @@
 	                    <td>
 	                        <select data-placeholder="Selecione" name="attribute"
 	                                ng-model="attribute.option" class="form-control"
-	                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+	                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required}"
 	                                ng-change="setMarkerAttribute($index, attribute.option)"
-	                                required>
-	                            <option ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
+	                                ng-required="attribute.required">
+	                            <option ng-selected="markerAttribute.attribute.name + ' (' + markerAttribute.attribute.type + ')' == attribute.option" ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
 	                        </select>
 	                    </td>
 	                </tr>
