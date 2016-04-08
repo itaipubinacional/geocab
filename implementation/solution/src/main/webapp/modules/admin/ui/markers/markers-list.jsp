@@ -119,15 +119,16 @@
 			<!--</div>-->
 			<div class="col-md-7">
 
-				<button type="button" class="btn btn-default pull-right" name="btnSave" ng-click="removeMarkersModal()">
-          <i class="itaipu-icon-delete"></i>
-          <spring:message code="admin.marker-moderation.Delete"/>
+				<button type="button" class="btn btn-default pull-right" name="btnSave"
+							ng-click="removeMarkersModal()" ng-disabled="disableButtonDelete" >
+					  <i class="itaipu-icon-delete"></i>
+					  <spring:message code="admin.marker-moderation.Delete"/>
 				</button>
 
-				<button type="button" class="btn btn-primary pull-right" name="btnSave" title="<spring:message code='admin.marker-moderation.Post'/>"
-								ng-click="postMarkersModal()" ng-disabled="!disableButtonPost" style="margin-right: 7px;">
-          <i class="itaipu-icon-export"></i>
-          <spring:message code='admin.marker-moderation.Post'/>
+				<button type="button" class="btn btn-primary pull-right" name="btnSave"
+							ng-click="postMarkersModal()" ng-disabled="disableButtonPost" style="margin-right: 7px;">
+					  <i class="itaipu-icon-export"></i>
+					  <spring:message code='admin.marker-moderation.Post'/>
 				</button>
 			</div>
 		</div>
