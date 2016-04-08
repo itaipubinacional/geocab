@@ -389,11 +389,17 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
                         $scope.itensMarcados.splice(i, 1);
                 }
             }
-            $scope.disableButtonPost = true;
+            $scope.disableButtonPost = false;
+            $scope.disableButtonDelete = false;
+
 
             for (var i = 0; i < $scope.itensMarcados.length; i++) {
                 if (!( $scope.itensMarcados[i].status == $scope.REFUSED || $scope.itensMarcados[i].status == $scope.SAVED )) {
-                    $scope.disableButtonPost = false;
+                    $scope.disableButtonPost = true;
+                }
+
+                if ( $scope.itensMarcados[i].status == $scope.ACCEPTED ) {
+                    $scope.disableButtonDelete = true;
                 }
             }
 
