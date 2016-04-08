@@ -202,6 +202,15 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         selectMarker: false
     };
 
+    $scope.fadeMsg = function(){
+        $("div.msg").show();
+
+        setTimeout(function(){
+            $("div.msg").fadeOut();
+        }, 5000);
+    };
+
+
     accountService.getUserAuthenticated({
         callback : function(result) {
             $scope.userMe = result;
@@ -1027,10 +1036,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                     text: $translate('admin.marker-moderation.Marker-successfully-approved'),
                     dismiss: true
                 };
+                $scope.fadeMsg();
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
                 $scope.message = {type: "error", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -1050,10 +1061,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                     text: $translate('admin.marker-moderation.Marker-successfully-canceled'),
                     dismiss: true
                 };
+                $scope.fadeMsg();
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {
                 $scope.message = {type:"error", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -1074,10 +1087,12 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                     text: $translate('admin.marker-moderation.Marker-successfully-refused'),
                     dismiss: true
                 };
+                $scope.fadeMsg();
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -1506,7 +1521,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
             dialog.result.then(function () {
 
-                //$scope.acceptMarkerModeration($scope.currentEntity.id);
+
                 $scope.cancelMarkerModeration($scope.currentEntity.id);
 
             });
