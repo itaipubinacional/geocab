@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
@@ -53,6 +54,9 @@ public class MyMarkersService extends AbstractMarkerService
 	 */
 	public Marker updateMarker(Marker marker) throws IOException, RepositoryException
 	{
+		
+		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId(), messages.getMessage("Access-is-denied", null, null));
+		
 		marker.setLocation(this.markerRepository.findOne(marker.getId()).getLocation());
 		
 		validateAttribute(marker.getMarkerAttribute());
@@ -121,6 +125,9 @@ public class MyMarkersService extends AbstractMarkerService
 			for (Long markerId : markersId)
 			{
 				Marker marker = this.markerRepository.findOne(markerId);
+				
+				Assert.isTrue( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId(), messages.getMessage("Access-is-denied", null, null));
+			
 				marker.setStatus(MarkerStatus.PENDING);
 				this.markerRepository.save(marker);
 			}
@@ -140,11 +147,11 @@ public class MyMarkersService extends AbstractMarkerService
 	{
 		Marker marker = this.findMarkerById(id);
 
-		if( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId())
-		{
-			marker.setDeleted(true);
-			this.markerRepository.save(marker);
-		}
+		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId(), messages.getMessage("Access-is-denied", null, null));
+		
+		marker.setDeleted(true);
+		this.markerRepository.save(marker);
+	
 	}
 
 	/**

@@ -30,6 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -119,6 +120,8 @@ public class MarkerService extends AbstractMarkerService
 	 */
 	public Marker updateMarker(Marker marker)
 	{
+		
+		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId(), messages.getMessage("Access-is-denied", null, null));
 			
 		if(marker.getLocation() == null)
 		{
@@ -289,11 +292,11 @@ public class MarkerService extends AbstractMarkerService
 	{
 		Marker marker = this.findMarkerById(id);
 		
-		if( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId())
-		{
-			marker.setDeleted(true);
-			this.markerRepository.save(marker);
-		}
+		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId(), messages.getMessage("Access-is-denied", null, null));
+		
+		marker.setDeleted(true);
+		this.markerRepository.save(marker);
+		 
 		
 	}
 
