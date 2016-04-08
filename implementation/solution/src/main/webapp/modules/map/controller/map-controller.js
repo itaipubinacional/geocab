@@ -5149,9 +5149,25 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     });
 
+    $scope.clearImportMarkers();
+
     // Utiliza sobrecarga de métodos no Java
     markerService.insertMarker( importMarkers, {
       callback: function (result) {
+
+        angular.forEach($scope.allLayers, function(layer){
+
+          var node = $filter('filter')(layer.children, {value: result[0].layer.id})[0];
+
+          if(angular.isDefined(node)) {
+            if(node.selected) {
+              $('#layer_' + result[0].layer.id).trigger('click');
+              $('#layer_' + result[0].layer.id).trigger('click');
+            } else {
+              $('#layer_' + result[0].layer.id).trigger('click');
+            }
+          }
+        });
 
         $scope.isLoading = false;
         $scope.importedFromShapefileNewLayerSaved = $scope.importedFromShapefileNewLayerSaved ? "map.Markers-inserted-succesfully-from-shapefile-and-new-layer" : "map.Markers-inserted-succesfully";
@@ -5162,6 +5178,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         };
         $scope.fadeMsg();
         $scope.$apply();
+
+
 
       }, errorHandler: function (message, exception) {
     	$scope.isLoading = false;
