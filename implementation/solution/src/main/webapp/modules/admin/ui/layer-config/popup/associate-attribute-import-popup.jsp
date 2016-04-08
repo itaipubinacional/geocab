@@ -24,7 +24,7 @@
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
 
         <div>
-            <table class="ng-grid">
+            <table class="ng-grid table">
                 <thead>
 	                <tr>
 	                    <th></th>
@@ -34,9 +34,7 @@
                 </thead>
                 <tbody sv-root sv-part="attributesByLayer">
 	                <tr sv-element ng-repeat="attribute in attributesByLayer">
-											<td sv-handle class="reorder">
-												#
-								      </td>
+											<td sv-handle class="reorder"></td>
 	                    <td>{{ attribute.name }} ({{ attribute.type }}) <b ng-if="attribute.required">*</b></td>
 	                    <td>
 	                        <select data-placeholder="Selecione" name="attribute"

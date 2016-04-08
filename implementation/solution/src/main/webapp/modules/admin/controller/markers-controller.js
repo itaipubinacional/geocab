@@ -1745,8 +1745,12 @@ ront controller of angle won't let enter an invalid URL.
 
                 $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
 
+<<<<<<< HEAD
+                $scope.$apply();
+=======
                 $scope.fadeMsg();
                 $scope.apply();
+>>>>>>> fb08befa6ae57c416c1f527e3247eae0fa4b18d5
 
             },
             errorHandler: function (message, exception) {
