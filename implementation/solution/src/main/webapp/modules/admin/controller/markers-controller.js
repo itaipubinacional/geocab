@@ -1662,7 +1662,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
                 $scope.fadeMsg();
                 $scope.$apply();
 
@@ -1735,22 +1735,25 @@ ront controller of angle won't let enter an invalid URL.
         markerService.removeMarker($scope.currentEntity.id, {
             callback: function (result) {
 
-                //$scope.removeInternalLayer($scope.marker.layer.id, function (layerId) {
-                //    $scope.addInternalLayer(layerId);
-                //});
                 $scope.changeToList();
 
                 $scope.msg = {type: "success", text: $translate("map.Mark-was-successfully-deleted"), dismiss: true};
 
+<<<<<<< HEAD
                 $scope.$apply();
+=======
+                $scope.fadeMsg();
+                $scope.apply();
+>>>>>>> fb08befa6ae57c416c1f527e3247eae0fa4b18d5
 
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "error", text: message};
+                $scope.msg = {type: "danger", text: message};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
-    }
+    };
 
     /**
      * Calls the dialog to accept a marker

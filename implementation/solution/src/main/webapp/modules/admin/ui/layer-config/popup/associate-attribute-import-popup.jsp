@@ -11,9 +11,9 @@
 
 	input.ng-invalid.ng-dirty{
 	border:1px solid red;
-	
+
 }
-	
+
 </style>
 
 <div class="modal-content">
@@ -24,26 +24,28 @@
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
 
         <div>
-            <table class="ng-grid">
+            <table class="ng-grid table">
                 <thead>
-                <tr>
-                    <th>Atributos</th>
-                    <th>Atributo Importado</th>
-                </tr>
+	                <tr>
+	                    <th></th>
+	                    <th>Atributo da camada</th>
+	                    <th>Atributo importado</th>
+	                </tr>
                 </thead>
-                <tbody ui-sortable ng-model="attributes">
-                <tr ng-repeat="attribute in attributesByLayer">
-                    <td>{{ attribute.name }} ({{ attribute.type }}) <b ng-if="attribute.required">*</b></td>
-                    <td>
-                        <select data-placeholder="Selecione" name="attribute"
-                                ng-model="attribute.option" class="form-control"
-                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
-                                ng-change="setMarkerAttribute($index, attribute.option)"
-                                required>
-                            <option ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
-                        </select>
-                    </td>
-                </tr>
+                <tbody sv-root sv-part="attributesByLayer">
+	                <tr sv-element ng-repeat="attribute in attributesByLayer">
+											<td sv-handle class="reorder"></td>
+	                    <td>{{ attribute.name }} ({{ attribute.type }}) <b ng-if="attribute.required">*</b></td>
+	                    <td>
+	                        <select data-placeholder="Selecione" name="attribute"
+	                                ng-model="attribute.option" class="form-control"
+	                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+	                                ng-change="setMarkerAttribute($index, attribute.option)"
+	                                required>
+	                            <option ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
+	                        </select>
+	                    </td>
+	                </tr>
                 </tbody>
             </table>
         </div>
