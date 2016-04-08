@@ -625,6 +625,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         var regEx = '';
 
+
+
         if ($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
 
           regEx = /^\d\d{0,1}°\s?\d\d{0,1}[′|']\s?\d\d{0,1}\.?\d{0,}[″|"]\s?[N|S|W|E]?$/;
@@ -744,14 +746,19 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     };
 
     $scope.setMarkerCoordinatesFormat = function() {
-      if ($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
-        $scope.formattedLatitude  = $scope.latitude.toFixed(6);
-        $scope.formattedLongitude = $scope.longitude.toFixed(6);
-      } else {
-        $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude, true);
-        $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude, false);
+
+      if( ($scope.latitude != undefined) && ($scope.longitude != undefined)){
+
+        if ($scope.coordinatesFormat == 'DEGREES_DECIMAL') {
+          $scope.formattedLatitude  = $scope.latitude.toFixed(6);
+          $scope.formattedLongitude = $scope.longitude.toFixed(6);
+        } else {
+          $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude, true);
+          $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude, false);
+        }
+        $scope.$apply();
+
       }
-      $scope.$apply();
     };
 
     /**
