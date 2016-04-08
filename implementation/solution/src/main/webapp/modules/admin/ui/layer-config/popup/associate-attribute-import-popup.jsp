@@ -24,6 +24,7 @@
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
 
         <div>
+
             <table class="ng-grid table">
                 <thead>
 	                <tr>
@@ -39,10 +40,11 @@
 	                    <td>
 	                        <select data-placeholder="Selecione" name="attribute"
 	                                ng-model="attribute.option" class="form-control"
-	                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required}"
-	                                ng-change="setMarkerAttribute($index, attribute.option)"
+	                                ng-class="{ngInvalid: attribute.required && attribute.option == ''}"
+	                                ng-change="setMarkerAttribute($index, attribute)"
 	                                ng-required="attribute.required">
-	                            <option ng-selected="markerAttribute.attribute.name + ' (' + markerAttribute.attribute.type + ')' == attribute.option" ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
+	                            <option ng-selected="markerAttribute.attribute.name + ' (' + markerAttribute.attribute.type + ')' == attribute.name + ' (' + attribute.type + ')'"
+																ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
 	                        </select>
 	                    </td>
 	                </tr>

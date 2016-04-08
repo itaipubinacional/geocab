@@ -5278,7 +5278,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
               angular.forEach(result, function(attribute){
 
                 if(attribute.type != 'PHOTO_ALBUM') {
-                  attribute.option = attribute.name + ' (' + attribute.type + ')';
+                  //attribute.option = attribute.name + ' (' + attribute.type + ')';
                   $scope.attributesByLayer.push(attribute);
                 }
 
@@ -5296,25 +5296,35 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           $scope.$apply();
           $scope.saveGroups();
+
+          setTimeout(function () {
+            $("div.msgMap").fadeOut();
+          }, 5000);
         },
         errorHandler: function (message, exception) {
+
           $scope.msg = {type: "danger", text: message, dismiss: true};
+          $scope.fadeMsg();
           $scope.$apply();
         }
       });
     } else {
 
+      var isValid = true;
+
       angular.forEach($scope.attributesByLayer, function(attribute){
 
-        if(attribute.required && attribute.option == '') {
-          $scope.msg = {type: "danger", text: $translate("admin.layer-config.Assign-the-required-fields"), dissmiss: true};
-          $scope.fadeMsg();
-          return;
-        }
+        if(attribute.required && attribute.option == '')
+          isValid = false;
 
       });
 
-      $scope.insertMarkers();
+      if(isValid) {
+        $scope.insertMarkers();
+      } else {
+        $scope.msg = {type: "danger", text: $translate("admin.layer-config.Assign-the-required-fields"), dissmiss: true};
+        $scope.fadeMsg();
+      }
     }
 
   };
@@ -5363,9 +5373,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.fadeMsg = function(){
     $("div.msg").show();
+    $("div.msgMap").show();
 
     setTimeout(function(){
       $("div.msg").fadeOut();
+      $("div.msgMap").fadeOut();
     }, 5000);
   };
 
@@ -5457,6 +5469,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     if($scope.attributesByLayer[index].type != markerAttribute.match(/\((.*)\)/)[1]) {
       $scope.attributesByLayer[index].option = '';
+    } else {
+      $scope.attributesByLayer[index].option = markerAttribute.name + ' (' + markerAttribute.type + ')';
     }
 
   };
@@ -5474,7 +5488,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         angular.forEach(result, function(attribute){
 
           if(attribute.type != 'PHOTO_ALBUM') {
-            attribute.option = attribute.name + ' (' + attribute.type + ')';
+
+            angular.forEach($scope.markerAttributes, function(attr) {
+
+              if(attribute.name + ' (' + attribute.type + ')' == attr.attribute.name + ' (' + attr.attribute.type + ')')
+                attribute.option = attribute.name + ' (' + attribute.type + ')';
+              else
+                attribute.option = '';
+            });
+
             $scope.attributesByLayer.push(attribute);
           }
 
