@@ -541,3 +541,5 @@ div.gallery-thumbnails{}
 .ol-popup1-closer:after {
     content: "✖";
 }
+
+tr.sv-helper{left:0px}
