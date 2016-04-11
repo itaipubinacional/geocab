@@ -5140,9 +5140,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var markerAttribute = new MarkerAttribute();
 
         angular.forEach(markerAttributes, function(attr){
-          if(attr.attribute.name + ' (' + attr.attribute.type + ')' == val.option) {
+
+          if(attr.attribute.name + ' (' + attr.attribute.type + ')' == val.option && $scope.shapeFile.layerType != 'new') {
             markerAttribute.value = attr.value;
           }
+
+          if(attr.attribute.name + ' (' + attr.attribute.type + ')' == val.name + ' (' + val.type + ')' && $scope.shapeFile.layerType == 'new') {
+            markerAttribute.value = attr.value;
+          }
+
         });
 
         markerAttribute.attribute = attribute;
@@ -5191,9 +5197,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.markerAttributes = [];
         $scope.attributesByLayer = [];
-        $scope.shapeFile = {};
         $scope.shapeFile.form = {};
-        $scope.isImport = false;
+
+        $('#upload').val('');
 
       }, errorHandler: function (message, exception) {
     	$scope.isLoading = false;
@@ -5463,6 +5469,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.importMarkers = [];
     $scope.testFiles = [];
     $('#upload')[0].val = '';
+    $('#upload').val('');
     data = [];
 
     angular.forEach($scope.importLayers, function (layer, index) {
@@ -5622,6 +5629,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.setAction('import');
 
+    $scope.shapeFile.form.layer = {};
+
     if (input.files) {
 
       $scope.isLoading = true;
@@ -5639,7 +5648,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.fadeMsg();
         $scope.isLoading = false;
         $scope.$apply();
-        $('#upload').val('');
+        $('#upload')[0].val = '';
         return false;
       }
 
@@ -5657,7 +5666,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
             $scope.isLoading = false;
             $scope.$apply();
-            $('#upload').val('');
+            $('#upload')[0].val = '';
             return false;
           }
 
