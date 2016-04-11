@@ -535,7 +535,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <p>{{ markers.length }} registros selecionados</p>
 
                 <accordion close-others="true" id="accordion-markers" class="accordion-popup accordion-caret" heightStyle="content">
-                  <accordion-group ng-repeat="selected in selectedMarkers">
+                  <accordion-group ng-repeat="selected in selectedMarkers" ng-init="isOpen = $index == 0" is-open="isOpen" >
                     <accordion-heading>
                       <div class="row" style="cursor:pointer; padding: 10px 0;">
 
