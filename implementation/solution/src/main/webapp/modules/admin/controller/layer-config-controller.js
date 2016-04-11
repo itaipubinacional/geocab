@@ -674,6 +674,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
                 $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
+                $scope.fadeMsg();
                 $scope.$apply();
                 $scope.saveGroups();
             },

@@ -5622,43 +5622,74 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.setAction('import');
 
-    if (!(/\.(shp|dbf|shx|prj)$/i).test(input.value)){
-
-      $scope.msg = {
-        type: "danger",
-        text: $translate("map.Invalid-format") + ' .shp, .dbf' + $translate("and") + '.shx',
-        dismiss: true
-      };
-      $scope.fadeMsg();
-
-      return false;
-    }
-
     if (input.files) {
 
       $scope.isLoading = true;
 
-      var files = input.files;
+      var isValid = true;
 
-      for (var i = 0, file; file = files[i]; i++) {
+      if (input.files.length < 4) {
 
-        var reader = new FileReader();
+        isValid = false;
+        $scope.msg = {
+          type: "danger",
+          text: $translate("map.Select-four-files") + ' .shp, .dbf, .shx ' + $translate("and") + ' .prj',
+          dismiss: true
+        };
+        $scope.fadeMsg();
+        $scope.isLoading = false;
+        $scope.$apply();
+        $('#upload').val('');
+        return false;
+      }
 
-        reader.onloadend = (function (readFile) {
-          return function (e) {
+      if(isValid) {
+        angular.forEach(input.files, function (file) {
 
-            var base64 = e.target.result.split('base64,');
-            //var base64 = e.target.result;
-            var type = readFile.name.substr(readFile.name.length - 3);
+          if (!(/\.(shp|dbf|shx|prj)$/i).test(file.name)) {
 
-            $scope.testFiles.push(readFile.name);
+            $scope.msg = {
+              type: "danger",
+              text: $translate("map.Invalid-format") + ' .shp, .dbf' + $translate("and") + '.shx',
+              dismiss: true
+            };
+            $scope.fadeMsg();
 
-            data.push({type: type.toUpperCase(), source: base64[1], contentLength: readFile.size, name: readFile.name});
+            $scope.isLoading = false;
             $scope.$apply();
+            $('#upload').val('');
+            return false;
           }
-        })(file);
 
-        reader.readAsDataURL(file);
+        });
+
+        var files = input.files;
+
+        for (var i = 0, file; file = files[i]; i++) {
+
+          var reader = new FileReader();
+
+          reader.onloadend = (function (readFile) {
+            return function (e) {
+
+              var base64 = e.target.result.split('base64,');
+              //var base64 = e.target.result;
+              var type = readFile.name.substr(readFile.name.length - 3);
+
+              $scope.testFiles.push(readFile.name);
+
+              data.push({
+                type: type.toUpperCase(),
+                source: base64[1],
+                contentLength: readFile.size,
+                name: readFile.name
+              });
+              $scope.$apply();
+            }
+          })(file);
+
+          reader.readAsDataURL(file);
+        }
       }
     }
   };
