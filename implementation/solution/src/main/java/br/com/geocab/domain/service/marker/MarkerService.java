@@ -121,7 +121,7 @@ public class MarkerService extends AbstractMarkerService
 	public Marker updateMarker(Marker marker)
 	{
 		
-		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId(), messages.getMessage("Access-is-denied", null, null));
+		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId().equals(marker.getUser().getId()), messages.getMessage("Access-is-denied", null, null));
 			
 		if(marker.getLocation() == null)
 		{
@@ -292,7 +292,7 @@ public class MarkerService extends AbstractMarkerService
 	{
 		Marker marker = this.findMarkerById(id);
 		
-		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId()  ==  marker.getUser().getId(), messages.getMessage("Access-is-denied", null, null));
+		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId().equals(marker.getUser().getId()), messages.getMessage("Access-is-denied", null, null));
 		
 		marker.setDeleted(true);
 		this.markerRepository.save(marker);
