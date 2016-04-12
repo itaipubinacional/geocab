@@ -1103,7 +1103,7 @@ uri="http://www.springframework.org/security/tags"%>
 
               <div style="text-align: left;float:left; width: 100%" ng-if="isImport">
 
-                <form novalidate novalidate name="form" default-button="{{ (currentState == INSERT_STATE) && 'buttonInsert' || 'buttonUpdate' }}">
+                <form novalidate name="form" default-button="shapeFileButtonInsert">
                   <div class="form-item-horizontal radio">
                     <input type="radio" id="layer" data-ng-model="shapeFile.layerType"
                            value="layer" ng-change="setLayerType()"> <label
@@ -1135,7 +1135,7 @@ uri="http://www.springframework.org/security/tags"%>
                             </button>
                         </span>
                     </div>
-                    <span ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
+                    <span style="top:2px" ng-show="form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)" class="tooltip-validation"><spring:message code="admin.datasource.Data-Source"/> <spring:message code="required"/></span>
                   </div>
 
                   <div ng-if="shapeFile.layerType != 'new'" class="form-item position-relative" style="float:left;width:100%;margin-top:10px;">
@@ -1143,15 +1143,16 @@ uri="http://www.springframework.org/security/tags"%>
                     <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer' />" name="camada"
                             ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                             ng-model="shapeFile.form.layer" chosen class="form-control"
-                            ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
+                            ng-class="{ngInvalid: !shapeFile.form.layer.layerId && (form.$submitted || form.camada.$dirty)}"
                             ng-change="setImportLayer()"
                             required>
                       <option value=""></option>
                     </select>
+                    <span style="top:2px" ng-show="!shapeFile.form.layer.layerId && (form.$submitted || form.camada.$dirty)" class="tooltip-validation"><spring:message code="admin.layer-config.Layer"/> <spring:message code="required"/></span>
                   </div>
 
-                  <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative" style="width:100%;margin-bottom: 10px; padding-right: 10px">
-                    <label required>
+                  <div ng-if="shapeFile.layerType == 'new'" class="form-item position-relative" style="width:100%;margin-bottom: 10px;">
+                    <label required class="detail-label">
                       <spring:message code="Title"/>
                     </label>
                     <input name="title" type="text" class="form-control"
@@ -1162,11 +1163,11 @@ uri="http://www.springframework.org/security/tags"%>
                            required
                            ng-class="{ngInvalid:form.title.$error.required && (form.$submitted || form.title.$dirty) }"/>
                       <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty) "
-                            class="tooltip-validation"><spring:message code="admin.layer-config.Title-required"/></span>
+                            class="tooltip-validation" style="top:5px"><spring:message code="admin.layer-config.Title-required"/></span>
                   </div>
 
                   <div ng-if="shapeFile.layerType != 'new' && shapeFile.form.layer" style="margin-bottom: 10px">
-                    <button ng-click="associateAttribute()" title="<spring:message code='admin.layer-config.Associate-attributes' />"
+                    <button ng-disabled="!shapeFile.form.layer.layerId" ng-click="associateAttribute()" title="<spring:message code='admin.layer-config.Associate-attributes' />"
                             class="btn btn-primary" style="margin-bottom: 5px">
                       <spring:message code="admin.layer-config.Associate-attributes"/>
                     </button>
@@ -1207,7 +1208,7 @@ uri="http://www.springframework.org/security/tags"%>
                             </button>
                           </span>
                       </div>
-                      <span ng-show="form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation"><spring:message code="admin.layer-config.Layer-group"/>  <spring:message code="required"/> </span>
+                      <span style="top:2px" ng-show="form.layerGroup.$error.required && (form.$submitted || form.layerGroup.$dirty)" class="tooltip-validation"><spring:message code="admin.layer-config.Layer-group"/>  <spring:message code="required"/> </span>
                     </div>
 
                     <div style="float: left; width: 100%;padding: 0 20px 0 5px;">
@@ -1238,7 +1239,7 @@ uri="http://www.springframework.org/security/tags"%>
                     </div>
                   </div>
                   <div>
-                    <button ng-click="importShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="layer-group-popup.Save"/></button>
+                    <button if="shapeFileButtonInsert" ng-click="importShapeFile(form)" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="layer-group-popup.Save"/></button>
                   </div>
 
                 </form>

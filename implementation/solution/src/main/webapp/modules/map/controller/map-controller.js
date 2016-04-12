@@ -5217,12 +5217,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * Performs the insertion of a new record
    * and in the success, modifies the State of the screen for the detail.
    */
-  $scope.importShapeFile = function () {
+  $scope.importShapeFile = function (form) {
+
+    form.$submitted = true;
 
     if($scope.shapeFile.layerType == 'new') {
-
-      $scope.shapeFile.form.minimumScaleMap = 'UM' + $scope.layers.values[0].substring(2);
-      $scope.shapeFile.form.maximumScaleMap = 'UM' + $scope.layers.values[1].substring(2);
 
       if (!$scope.form().$valid) {
         $scope.msg = {
@@ -5233,6 +5232,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.fadeMsg();
         return;
       }
+
+      $scope.shapeFile.form.minimumScaleMap = 'UM' + $scope.layers.values[0].substring(2);
+      $scope.shapeFile.form.maximumScaleMap = 'UM' + $scope.layers.values[1].substring(2);
+
 
       $scope.shapeFile.form.name = $scope.shapeFile.form.title;
 
@@ -5323,6 +5326,22 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
       });
     } else {
+
+      if (!$scope.shapeFile.form.layer.layerId) {
+        $scope.msg = {
+          type: "danger",
+          text: $translate("admin.layer-config.The-highlighted-fields-are-required"),
+          dismiss: true
+        };
+        $scope.fadeMsg();
+        return;
+      }
+
+      $scope.isImport = false;
+      $scope.isExport = false;
+
+      form.$submitted = false;
+      form.camada.$dirty = false;
 
       var isValid = true;
 
@@ -5627,8 +5646,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   }, true);
 
   $scope.onFileChange = function(input){
-
-
 
     $scope.shapeFile.form.layer = {};
 
