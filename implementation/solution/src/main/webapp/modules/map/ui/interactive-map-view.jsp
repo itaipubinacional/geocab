@@ -884,7 +884,7 @@ uri="http://www.springframework.org/security/tags"%>
 
               </div>
             </div>
-            <div id="tabs-1" ng-switch="LAYER_MENU_STATE" style="position: absolute; top:0; right:0; left:0; bottom:0">
+            <div id="tabs-1" ng-switch="LAYER_MENU_STATE" style="position: absolute; top:0; right:0; left:0; bottom:0;overflow-y: auto">
               <div ng-switch-when="list">
 
                 <div>
