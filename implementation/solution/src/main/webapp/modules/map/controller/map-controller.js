@@ -5628,7 +5628,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.onFileChange = function(input){
 
-    $scope.setAction('import');
+
 
     $scope.shapeFile.form.layer = {};
 
@@ -5654,13 +5654,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
 
       if(isValid) {
+
         angular.forEach(input.files, function (file) {
 
           if (!(/\.(shp|dbf|shx|prj)$/i).test(file.name)) {
 
+            isValid = false;
             $scope.msg = {
               type: "danger",
-              text: $translate("map.Invalid-format") + ' .shp, .dbf' + $translate("and") + '.shx',
+              text: $translate("map.Invalid-format") + ' .shp, .dbf, .shx ' + $translate("and") + ' .prj',
               dismiss: true
             };
             $scope.fadeMsg();
@@ -5673,32 +5675,37 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         });
 
-        var files = input.files;
+        if(isValid) {
 
-        for (var i = 0, file; file = files[i]; i++) {
+          $scope.setAction('import');
 
-          var reader = new FileReader();
+          var files = input.files;
 
-          reader.onloadend = (function (readFile) {
-            return function (e) {
+          for (var i = 0, file; file = files[i]; i++) {
 
-              var base64 = e.target.result.split('base64,');
-              //var base64 = e.target.result;
-              var type = readFile.name.substr(readFile.name.length - 3);
+            var reader = new FileReader();
 
-              $scope.testFiles.push(readFile.name);
+            reader.onloadend = (function (readFile) {
+              return function (e) {
 
-              data.push({
-                type: type.toUpperCase(),
-                source: base64[1],
-                contentLength: readFile.size,
-                name: readFile.name
-              });
-              $scope.$apply();
-            }
-          })(file);
+                var base64 = e.target.result.split('base64,');
+                //var base64 = e.target.result;
+                var type = readFile.name.substr(readFile.name.length - 3);
 
-          reader.readAsDataURL(file);
+                $scope.testFiles.push(readFile.name);
+
+                data.push({
+                  type: type.toUpperCase(),
+                  source: base64[1],
+                  contentLength: readFile.size,
+                  name: readFile.name
+                });
+                $scope.$apply();
+              }
+            })(file);
+
+            reader.readAsDataURL(file);
+          }
         }
       }
     }

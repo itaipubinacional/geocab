@@ -1103,7 +1103,7 @@ uri="http://www.springframework.org/security/tags"%>
 
               <div style="text-align: left;float:left; width: 100%" ng-if="isImport">
 
-                <form novalidate name="form">
+                <form novalidate novalidate name="form" default-button="{{ (currentState == INSERT_STATE) && 'buttonInsert' || 'buttonUpdate' }}">
                   <div class="form-item-horizontal radio">
                     <input type="radio" id="layer" data-ng-model="shapeFile.layerType"
                            value="layer" ng-change="setLayerType()"> <label
@@ -1237,37 +1237,6 @@ uri="http://www.springframework.org/security/tags"%>
                       <button ng-click="selectAccessGroups()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-primary"><spring:message code="admin.layer-config.Associate-access-group"/></button>
                     </div>
                   </div>
-
-                  <!--<table>
-                    <thead>
-                    <tr>
-                      <th>Atributos</th>
-                      <th>Atributo Importado</th>
-                    </tr>
-                    </thead>
-                    <tbody ui-sortable ng-model="attributes">
-                    <tr ng-repeat="attribute in attributesByLayer">
-                      <td>{{ attribute.name }} ({{ attribute.type }}) {{ attribute.option }}</td>
-                      <td>
-                        <select data-placeholder="Selecione" name="attribute"
-                                ng-model="attribute.option" class="form-control"
-                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
-                                ng-change="setMarkerAttribute()"
-                                ng-options="markerAttribute.id as markerAttribute.name for markerAttribute in markerAttributes"
-                                required>
-                        </select>
-                        <select data-placeholder="Selecione" name="attribute"
-                                ng-model="attribute.option" class="form-control"
-                                ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
-                                ng-change="setMarkerAttribute($index, attribute.option)"
-                                required>
-                          <option ng-repeat="markerAttribute in markerAttributes" value="{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})">{{ markerAttribute.attribute.name }} ({{markerAttribute.attribute.type}})</option>
-                        </select>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>-->
-
                   <div>
                     <button ng-click="importShapeFile()" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="layer-group-popup.Save"/></button>
                   </div>
@@ -1275,7 +1244,6 @@ uri="http://www.springframework.org/security/tags"%>
                 </form>
               </div>
               <!-- #import-shape-file -->
-
             </div>
           </div>
           <div class='rui-resizable-handle' style="background: #0077bf; width: 3px"></div>

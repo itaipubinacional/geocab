@@ -24,9 +24,10 @@
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
 
         <div>
-            <table class="ng-grid">
+            <table class="ng-grid table">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>Nome</th>
                     <th>Tipo</th>
                     <th>Obrigatório</th>
@@ -34,8 +35,9 @@
                     <th>Ações</th>
                 </tr>
                 </thead>
-                <tbody ui-sortable ng-model="markerAttributes">
-                    <tr ng-repeat="attribute in markerAttributes">
+                <tbody sv-root sv-part="markerAttributes">
+                    <tr sv-element ng-repeat="attribute in markerAttributes">
+                        <td sv-handle class="reorder"></td>
                         <td><input type="text" class="form-control" ng-model="attribute.attribute.name"></td>
                         <td>
                             <select name="select" class="form-control" ng-model="attribute.attribute.type"

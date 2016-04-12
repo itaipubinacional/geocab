@@ -25,17 +25,15 @@
 
         <div>
 
-            <table class="ng-grid table">
+            <table class="ng-grid">
                 <thead>
 	                <tr>
-	                    <th></th>
 	                    <th>Atributo da camada</th>
 	                    <th>Atributo importado</th>
 	                </tr>
                 </thead>
-                <tbody sv-root sv-part="attributesByLayer">
-	                <tr sv-element ng-repeat="attribute in attributesByLayer">
-											<td sv-handle class="reorder"></td>
+                <tbody>
+	                <tr ng-repeat="attribute in attributesByLayer">
 	                    <td>{{ attribute.name }} ({{ attribute.type }}) <b ng-if="attribute.required">*</b></td>
 	                    <td>
 	                        <select data-placeholder="" name="attribute"
