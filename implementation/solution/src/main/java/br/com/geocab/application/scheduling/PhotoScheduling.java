@@ -85,6 +85,7 @@ public class PhotoScheduling
 	@PostConstruct
 	public void postConstruct()
 	{
+		System.out.println("---------- INICIANDO SCRIPT DE MIGRAÇÃO DE FOTOS ----------");
 		for (Marker marker : markerRepository.listAll())
 		{
 			try

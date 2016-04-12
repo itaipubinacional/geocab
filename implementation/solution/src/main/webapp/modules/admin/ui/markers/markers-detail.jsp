@@ -173,7 +173,7 @@
             <div class="btn-group col-md-12" role="group" aria-label="group buttons">
 
 
-                <button ng-disabled="currentEntity.status == PENDING ||currentEntity.status == ACCEPTED"
+                <button ng-disabled="currentEntity.status == PENDING ||currentEntity.status == ACCEPTED ||currentEntity.status == CANCELED"
                         ng-click="saveMarkerModal()" type="button"
                         tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Save'/>"
                         class="btn btn-secondary col-md-4 btn-icon"
