@@ -5199,6 +5199,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.attributesByLayer = [];
         $scope.shapeFile.form = {};
 
+        $scope.shapeFile.layerType = 'layer';
         $('#upload').val('');
 
       }, errorHandler: function (message, exception) {
