@@ -1130,7 +1130,7 @@ uri="http://www.springframework.org/security/tags"%>
                              ng-class="{ngInvalid:form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)}">
                         <span class="input-group-btn">
                             <button style="height: 34px" ng-click="selectDataSource()" title="<spring:message code='admin.layer-config.Enter-the-data-source' />" class="btn btn-default"
-                                    type="button" ng-disabled="currentEntity.id != null">
+                                    type="button">
                               <i class="icon-plus-sign icon-large"></i>
                             </button>
                         </span>
@@ -1239,7 +1239,7 @@ uri="http://www.springframework.org/security/tags"%>
                     </div>
                   </div>
                   <div>
-                    <button if="shapeFileButtonInsert" ng-click="importShapeFile(form)" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="layer-group-popup.Save"/></button>
+                    <button id="shapeFileButtonInsert" ng-click="importShapeFile(form)" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="layer-group-popup.Save"/></button>
                   </div>
 
                 </form>
