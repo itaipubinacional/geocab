@@ -5311,6 +5311,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
                 });
 
+                $scope.isImport = false;
+                $scope.isExport = false;
+
                 $scope.insertMarkers();
 
                 $scope.$apply();
@@ -5355,12 +5358,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         return;
       }
 
-      $scope.isImport = false;
-      $scope.isExport = false;
-
-      form.$submitted = false;
-      form.camada.$dirty = false;
-
       var isValid = true;
 
       angular.forEach($scope.attributesByLayer, function(attribute){
@@ -5371,6 +5368,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
 
       if(isValid) {
+        $scope.isImport = false;
+        $scope.isExport = false;
+
+        form.$submitted = false;
+        form.camada.$dirty = false;
         $scope.insertMarkers();
       } else {
         $scope.msg = {type: "danger", text: $translate("admin.layer-config.Assign-the-required-fields"), dissmiss: true};
