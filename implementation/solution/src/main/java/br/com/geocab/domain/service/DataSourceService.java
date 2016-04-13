@@ -188,6 +188,18 @@ public class DataSourceService
 	}
 	
 	/**
+	 * 
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public Page<DataSource> listInternalDataSourceByFilters( String filter, PageRequest pageable )
+	{
+		return this.dataSourceRepository.listInternalDatasourceByFilters(filter, pageable);
+	}
+	
+	/**
 	 * Method to test Data source connection
 	 * 
 	 * @param url 

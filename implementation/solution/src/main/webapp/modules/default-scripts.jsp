@@ -32,7 +32,7 @@
 <script type="text/javascript" src="<c:url value="/static/js/eits/angular-translate/angular-translate.js"/>"></script>
 
 <!-- ui date -->
-<script src="<c:url value="/static/libs/eits-directives/ui-date/ui-date.js"/>"></script> 
+<script type="text/javascript" src="<c:url value="/static/libs/eits-directives/ui-date/ui-date.js"/>"></script> 
 
 <!-- chosen -->
 <script type="text/javascript" src="<c:url value="/static/libs/angular-chosen/chosen.js"/>"></script>
@@ -61,7 +61,7 @@
 
 <script type="text/javascript" src="<c:url value="/static/libs/ng-grid/ng-grid-2.0.11.debug.js"/>"></script>
 
-<script type="text/javascript" src="broker/interface/loginService.js"></script>
+<script type="text/javascript" src="<c:url value="/broker/interface/loginService.js"/>"></script>
 
 
 	

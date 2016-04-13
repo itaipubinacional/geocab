@@ -23,47 +23,46 @@
 		<script src="<c:url value="/static/libs/right/right-resizable.js"/>"></script>
 
 		<!-- OpenLayers 3  -->
-	    <link rel="stylesheet" href="static/libs/openlayers/ol.css" type="text/css">
+	    <link rel="stylesheet" href="<c:url value="/static/libs/openlayers/ol.css"/>" type="text/css">
 
 	    <!-- Treeview -->
-	    <link rel="stylesheet" href="static/libs/angular-treeview/ivh-treeview.min.css" type="text/css">
+	    <link rel="stylesheet" href="<c:url value="/static/libs/angular-treeview/ivh-treeview.min.css"/>" type="text/css">
 
 	    <!-- CSS do mapa -->
-	    <link href="static/style/map/style.css" type="text/css" rel="stylesheet">
+	    <link href="<c:url value="/static/style/map/style.css"/>" type="text/css" rel="stylesheet">
 
 		<!-- Controllers -->
 		<!-- Main -->
-		<script type="text/javascript" src="modules/map/map-main.js"></script>
-   	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
-		<script type="text/javascript" src="modules/map/controller/map-controller.js"></script>
-		<script type="text/javascript" src="modules/map/controller/contact-controller.js"></script>
-		<script type="text/javascript" src="modules/map/controller/popup/map-info-controller.js"></script>
-		<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
-		<script type="text/javascript" src="modules/map/controller/popup/upload-controller.js"></script>
-		<script type="text/javascript" src="modules/admin/controller/popup/refuse-marker-controller.js"></script>
-		<script type="text/javascript" src="modules/admin/controller/popup/more-icons-popup-controller.js"></script>
-		<script type="text/javascript" src="modules/admin/controller/popup/select-data-source-popup-controller.js"></script>
-		<script type="text/javascript" src="modules/admin/controller/popup/select-access-group-popup-controller.js"></script>
-		<script type="text/javascript" src="modules/admin/controller/popup/select-layer-config-popup-controller.js"></script>
-		<script type="text/javascript" src="modules/admin/controller/popup/select-layer-group-popup-controller.js"></script>
-		<script type="text/javascript" src="modules/admin/controller/popup/add-attribute-import-popup-controller.js"></script>
-		<script type="text/javascript" src="modules/admin/controller/popup/associate-attribute-import-popup-controller.js"></script>
+		<script type="text/javascript" src="<c:url value="/modules/map/map-main.js"/>"></script>
+   		<script type="text/javascript" src="<c:url value="/modules/abstract-crud-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/map/controller/map-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/map/controller/contact-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/map/controller/popup/map-info-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/map/controller/popup/img-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/map/controller/popup/upload-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/refuse-marker-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/more-icons-popup-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/select-data-source-popup-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/select-access-group-popup-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/select-layer-config-popup-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/select-layer-group-popup-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/add-attribute-import-popup-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/associate-attribute-import-popup-controller.js"/>"></script>
 
    		<!-- Treeview -->
-		<script type="text/javascript"
-		        src="static/libs/angular-treeview/ivh-treeview.min.js"></script>
+		<script type="text/javascript" src="<c:url value="/static/libs/angular-treeview/ivh-treeview.min.js"/>"></script>
 
-		<script src="static/libs/angular-treeview/ivh-treeview.extend.js" type="text/javascript"></script>
+		<script src="<c:url value="/static/libs/angular-treeview/ivh-treeview.extend.js"/>" type="text/javascript"></script>
 
-		<script src="static/libs/angular-sortable-view/src/angular-sortable-view.js" type="text/javascript"></script>
+		<script src="<c:url value="/static/libs/angular-sortable-view/src/angular-sortable-view.js"/>" type="text/javascript"></script>
 
 		<!-- OpenLayers 3 v3.0.0 -->
-		<script src="static/libs/openlayers/ol.js" type="text/javascript"></script>
+		<script src="<c:url value="/static/libs/openlayers/ol.js"/>" type="text/javascript"></script>
 
 		<!-- Google Maps -->
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?client=gme-itaipubinacional&sensor=false&channel=geocab"></script>
 
-		<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
+		<script type="text/javascript" src="<c:url value="/static/libs/eits-directives/default-button/default-button.js"/>"></script>
 
 	 	<style>
 	        .popup{

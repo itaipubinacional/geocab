@@ -29,7 +29,7 @@
     //------
     $stateProvider.state('map', {
       url: "/",
-      templateUrl: "modules/map/ui/interactive-map-view.jsp",
+      templateUrl: "./modules/map/ui/interactive-map-view.jsp",
       controller: MapController,
       menu: 'map'
     });
