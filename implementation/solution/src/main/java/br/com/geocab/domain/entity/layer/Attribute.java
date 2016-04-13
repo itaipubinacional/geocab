@@ -208,7 +208,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public void validate()
 	{
-		Assert.isNull(this.getType(), "admin.layer-config.The-all-fields-type-in-attributes-must-be-set");
+		Assert.notNull(this.getType(), "admin.layer-config.The-all-fields-type-in-attributes-must-be-set");
 	}
 	
 	/**
@@ -248,7 +248,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		if (this.getName().length() >= 10)
 		{
-			this.setName(this.getName().substring(0, 7) + "...");
+			this.setName(this.getName().substring(0, 5) + "...");
 		}
 	}
 	

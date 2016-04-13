@@ -393,7 +393,9 @@ public class ShapefileService
 	    			
 	    			marker.setLocation((Point) targetGeometry);
 	            	
-					marker.formattedNameAttributes();
+	    			marker.formattedNameAttributes();
+	    			
+					marker.handlerDuplicateAttributes();
 					
 	            	if ((i != 0 && marker.getLayer().getId() != layer.getMarkers().get(i - 1).getId()) || TYPE == null)
 	            		TYPE = DataUtilities.createType(layer.getName(), "the_geom:Point,"+marker.formattedAttributes());
