@@ -100,10 +100,18 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" style="text-align:center;">
-                    <img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult" class="marker-image"
-                         ng-src="{{ imgResult }}"
-                         style="width: 100%;margin-top: 12px;cursor: pointer;max-width:360px"> <br>
+                <div class="col-md-12 col-md-offset-2" style="text-align:center;">
+
+                    <div ng-click="openImgModal(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-style="{'background-image':'url(' + imgResult + ')'}">
+                        <div class="overlay">
+                            <i style="font-size: 34px; color : white" class="icon itaipu-icon-zoom"></i>
+                            <h3 style="color: white">Ver mais</h3>
+                        </div>
+                    </div>
+
+                    <%--<img ng-click="openImgModal(attributesByMarker)" ng-show="imgResult" class="marker-image"--%>
+                         <%--ng-src="{{ imgResult }}"--%>
+                         <%--style="width: 100%;margin-top: 12px;cursor: pointer;max-width:360px"> <br>--%>
                 </div>
 
                 <div class="col-md-12" style="margin-bottom: 120px"></div>
