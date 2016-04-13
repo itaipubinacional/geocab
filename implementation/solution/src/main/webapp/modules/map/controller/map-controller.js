@@ -4832,10 +4832,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   /**
    *
    */
-  $scope.selectDataSource = function () {
+  $scope.selectInternalDataSource = function () {
     var dialog = $modal.open({
       templateUrl: "modules/admin/ui/layer-config/popup/data-source-popup.jsp",
-      controller: SelectDataSourcePopUpController,
+      controller: SelectInternalDataSourcePopUpController,
       resolve: {
         dataSourceSelected: function () {
           return $scope.shapeFile.form.dataSource;

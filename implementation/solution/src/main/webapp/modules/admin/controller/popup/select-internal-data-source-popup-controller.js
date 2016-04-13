@@ -6,7 +6,7 @@
  * @param $modalInstance
  * @constructor
  */
-function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSelected, $injector, $importService ) {
+function SelectInternalDataSourcePopUpController( $scope, $modalInstance, dataSourceSelected, $injector, $importService ) {
 
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 
@@ -39,7 +39,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
             $scope.itensMarcados = $scope.gridOptions.selectedItems.slice(0);
             $scope.gridOptions.selectedItems.length = 0;
 
-            $scope.listDataSourceByFilters( $scope.data.filter, $scope.currentPage.pageable );
+            $scope.listInternalDataSourceByFilters( $scope.data.filter, $scope.currentPage.pageable );
         }
     });
 
@@ -140,7 +140,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
         $scope.pageRequest.sort = new Sort();
         $scope.pageRequest.sort.orders = [ order ];
 
-        $scope.listDataSourceByFilters( null, $scope.pageRequest );
+        $scope.listInternalDataSourceByFilters( null, $scope.pageRequest );
     };
 
     /**
@@ -152,7 +152,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
      */
     $scope.changeToPage = function( filter, pageNumber ) {
         $scope.currentPage.pageable.page = pageNumber-1;
-        $scope.listDataSourceByFilters( filter, $scope.currentPage.pageable );
+        $scope.listInternalDataSourceByFilters( filter, $scope.currentPage.pageable );
         $scope.showLoading = false;
     };
 
@@ -177,11 +177,11 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
 	 * @see data.filter
 	 * @see currentPage
 	 */
-	$scope.listDataSourceByFilters = function( filter, pageRequest ) {
+	$scope.listInternalDataSourceByFilters = function( filter, pageRequest ) {
 
 		$scope.showLoading = true;
 
-		dataSourceService.listDataSourceByFilters( filter, pageRequest, {
+		dataSourceService.listInternalDataSourceByFilters( filter, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination

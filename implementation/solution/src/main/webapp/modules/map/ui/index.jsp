@@ -42,7 +42,7 @@
 		<script type="text/javascript" src="<c:url value="/modules/map/controller/popup/upload-controller.js"/>"></script>
 		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/refuse-marker-controller.js"/>"></script>
 		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/more-icons-popup-controller.js"/>"></script>
-		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/select-data-source-popup-controller.js"/>"></script>
+		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/select-internal-data-source-popup-controller.js"/>"></script>
 		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/select-access-group-popup-controller.js"/>"></script>
 		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/select-layer-config-popup-controller.js"/>"></script>
 		<script type="text/javascript" src="<c:url value="/modules/admin/controller/popup/select-layer-group-popup-controller.js"/>"></script>

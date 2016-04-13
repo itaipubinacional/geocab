@@ -1139,7 +1139,7 @@ uri="http://www.springframework.org/security/tags"%>
                              required
                              ng-class="{ngInvalid:form.dataSource.$error.required && (form.$submitted || form.dataSource.$dirty)}">
                         <span class="input-group-btn">
-                            <button style="height: 34px" ng-click="selectDataSource()" title="<spring:message code='admin.layer-config.Enter-the-data-source' />" class="btn btn-default"
+                            <button style="height: 34px" ng-click="selectInternalDataSource()" title="<spring:message code='admin.layer-config.Enter-the-data-source' />" class="btn btn-default"
                                     type="button">
                               <i class="icon-plus-sign icon-large"></i>
                             </button>
