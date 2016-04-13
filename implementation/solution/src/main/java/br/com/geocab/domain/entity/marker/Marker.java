@@ -315,13 +315,13 @@ public class Marker extends AbstractEntity implements Serializable
 	 */
 	public void handlerDuplicateAttributes()
 	{
-		for (MarkerAttribute markerAttribute : this.getMarkerAttribute())
-		{		
-			for (MarkerAttribute innerMarkerAttribute : this.getMarkerAttribute())
-			{		
-				if (markerAttribute.getAttribute().getName() == innerMarkerAttribute.getAttribute().getName())
+		for (int i = 0; i < this.getMarkerAttribute().size(); i++)
+		{
+			for (int j = 0; j < this.getMarkerAttribute().size(); j++)
+			{
+				if (this.getMarkerAttribute().get(i).getAttribute().getName().equals(this.getMarkerAttribute().get(j).getAttribute().getName()) && i!=j)
 				{
-					innerMarkerAttribute.getAttribute().setName(innerMarkerAttribute.getAttribute().getName() + 1);
+					this.getMarkerAttribute().get(i).getAttribute().setName(this.getMarkerAttribute().get(j).getAttribute().getName() + j);
 				}
 			}
 		}
