@@ -5257,10 +5257,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         return;
       }
 
+      var isValid = true;
+
       if ($scope.shapeFile.form.legend == null) {
 
         var attributes = [];
+
+        $scope.attributesByLayer = !$scope.attributesByLayer ? $scope.attributesByLayer : $scope.importMarkers[0].markerAttribute;
+
         angular.forEach($scope.attributesByLayer, function (value, index) {
+
+          if(!value.attribute.type)
+            isValid = false;
 
           value.attribute.layer = $scope.shapeFile.form;
 
@@ -5274,57 +5282,67 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.shapeFile.form.attributes = attributes;
       }
 
-      layerGroupService.insertLayer($scope.shapeFile.form, {
-        callback: function (result) {
+      if(isValid) {
 
-          $scope.msg = {
-            type: "success",
-            text: $translate("admin.layer-config.The-layer-has-been-created-successfully") + "!",
-            dismiss: true
-          };
+        layerGroupService.insertLayer($scope.shapeFile.form, {
+          callback: function (result) {
 
-          $scope.importedFromShapefileNewLayerSaved = true;
+            $scope.msg = {
+              type: "success",
+              text: $translate("admin.layer-config.The-layer-has-been-created-successfully") + "!",
+              dismiss: true
+            };
 
-          $scope.shapeFile.form.layer = result;
+            $scope.importedFromShapefileNewLayerSaved = true;
 
-          $scope.attributesByLayer = [];
+            $scope.shapeFile.form.layer = result;
 
-          layerGroupService.listAttributesByLayer(result.id, {
-            callback: function (result) {
+            $scope.attributesByLayer = [];
 
-              angular.forEach(result, function(attribute){
+            layerGroupService.listAttributesByLayer(result.id, {
+              callback: function (result) {
 
-                if(attribute.type != 'PHOTO_ALBUM') {
-                  //attribute.option = attribute.name + ' (' + attribute.type + ')';
-                  $scope.attributesByLayer.push(attribute);
-                }
+                angular.forEach(result, function(attribute){
 
-              });
+                  if(attribute.type != 'PHOTO_ALBUM') {
+                    //attribute.option = attribute.name + ' (' + attribute.type + ')';
+                    $scope.attributesByLayer.push(attribute);
+                  }
 
-              $scope.insertMarkers();
+                });
 
-              $scope.$apply();
-            },
-            errorHandler: function (message, exception) {
-              $scope.message = {type: "error", text: message};
-              $scope.$apply();
-            }
-          });
+                $scope.insertMarkers();
 
-          $scope.$apply();
-          $scope.saveGroups();
+                $scope.$apply();
+              },
+              errorHandler: function (message, exception) {
+                $scope.message = {type: "error", text: message};
+                $scope.$apply();
+              }
+            });
 
-          setTimeout(function () {
-            $("div.msgMap").fadeOut();
-          }, 5000);
-        },
-        errorHandler: function (message, exception) {
+            $scope.$apply();
+            $scope.saveGroups();
 
-          $scope.msg = {type: "danger", text: message, dismiss: true};
-          $scope.fadeMsg();
-          $scope.$apply();
-        }
-      });
+            setTimeout(function () {
+              $("div.msgMap").fadeOut();
+            }, 5000);
+          },
+          errorHandler: function (message, exception) {
+
+            $scope.msg = {type: "danger", text: $translate(message), dismiss: true};
+            $scope.fadeMsg();
+            $scope.$apply();
+          }
+        });
+
+      } else {
+
+        $scope.msg = {type: "danger", text: $translate("admin.layer-config.The-all-fields-type-in-attributes-must-be-set"), dismiss: true};
+        $scope.fadeMsg();
+      }
+
+
     } else {
 
       if (!$scope.shapeFile.form.layer.layerId) {
@@ -5667,7 +5685,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.isLoading = false;
         $scope.$apply();
         $('#upload')[0].val = '';
-        return false;
+        return;
       }
 
       if(isValid) {
@@ -5687,7 +5705,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $scope.isLoading = false;
             $scope.$apply();
             $('#upload')[0].val = '';
-            return false;
+            return;
           }
 
         });

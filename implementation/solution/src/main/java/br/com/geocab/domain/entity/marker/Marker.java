@@ -309,6 +309,26 @@ public class Marker extends AbstractEntity implements Serializable
 		}
 	}
 	
+	/**
+	 * Remove atributos com nomes duplicados
+	 * Geotools não permite atributos com nomes duplicados
+	 */
+	public void handlerDuplicateAttributes()
+	{
+		for (int i = 0; i < this.getMarkerAttribute().size(); i++)
+		{
+			for (int j = 0; j < this.getMarkerAttribute().size(); j++)
+			{
+				if (this.getMarkerAttribute().get(i).getAttribute().getName().equals(this.getMarkerAttribute().get(j).getAttribute().getName()) && i!=j)
+				{
+					this.getMarkerAttribute().get(i).getAttribute().setName(this.getMarkerAttribute().get(j).getAttribute().getName() + j);
+				}
+			}
+		}
+	}
+	
+	
+	
 	/*-------------------------------------------------------------------
 	 *						   SETTERS AND GETTERS
 	 *-------------------------------------------------------------------*/

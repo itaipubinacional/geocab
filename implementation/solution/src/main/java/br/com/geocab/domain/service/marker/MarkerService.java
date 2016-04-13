@@ -90,24 +90,29 @@ public class MarkerService extends AbstractMarkerService
 	 */
 	public Marker insertMarker(Marker marker) 
 	{
-		
-		User user = ContextHolder.getAuthenticatedUser();
-
-		marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
-
-		marker.setUser(user);
-		
-		validateAttribute(marker.getMarkerAttribute());
-		
-		marker = this.markerRepository.save(marker);	
-
-		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
-		
-		MarkerModeration markerModeration = new MarkerModeration();
-		markerModeration.setMarker(marker);
-		markerModeration.setStatus(marker.getStatus());
-		this.markerModerationRepository.save(markerModeration);
-		
+		try
+        {
+			User user = ContextHolder.getAuthenticatedUser();
+	
+			marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
+	
+			marker.setUser(user);
+			
+			validateAttribute(marker.getMarkerAttribute());
+			
+			marker = this.markerRepository.save(marker);	
+	
+			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
+			
+			MarkerModeration markerModeration = new MarkerModeration();
+			markerModeration.setMarker(marker);
+			markerModeration.setStatus(marker.getStatus());
+			this.markerModerationRepository.save(markerModeration);
+        }
+        catch (DataIntegrityViolationException e)
+        {
+            LOG.info(e.getMessage());
+        }
 		return marker;
 	}
 	
@@ -120,33 +125,38 @@ public class MarkerService extends AbstractMarkerService
 	 */
 	public Marker updateMarker(Marker marker)
 	{
-		
-		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId().equals(marker.getUser().getId()), messages.getMessage("Access-is-denied", null, null));
+		try
+	    {
+			Assert.isTrue( ContextHolder.getAuthenticatedUser().getId().equals(marker.getUser().getId()), messages.getMessage("Access-is-denied", null, null));
+				
+			if(marker.getLocation() == null)
+			{
+				marker.setLocation(this.markerRepository.findOne(marker.getId()).getLocation());
+			}
+			else
+			{
+				marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
+			}
+	
+			validateAttribute(marker.getMarkerAttribute());
 			
-		if(marker.getLocation() == null)
-		{
-			marker.setLocation(this.markerRepository.findOne(marker.getId()).getLocation());
-		}
-		else
-		{
-			marker.setLocation((Point) this.wktToGeometry(marker.getWktCoordenate()));
-		}
-
-		validateAttribute(marker.getMarkerAttribute());
-		
-		// Não deixa repetir os atributos, previne erros do cascade
-		List<MarkerAttribute> markersAttributes = marker.getMarkerAttribute();
-		marker.setMarkerAttribute(null);
-		this.markerRepository.save(marker);
-		marker.setMarkerAttribute(markersAttributes);
-		
-		marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
-		
-		MarkerModeration markerModeration = new MarkerModeration();
-		markerModeration.setMarker(marker);
-		markerModeration.setStatus(marker.getStatus());
-		this.markerModerationRepository.save(markerModeration);
-		
+			// Não deixa repetir os atributos, previne erros do cascade
+			List<MarkerAttribute> markersAttributes = marker.getMarkerAttribute();
+			marker.setMarkerAttribute(null);
+			this.markerRepository.save(marker);
+			marker.setMarkerAttribute(markersAttributes);
+			
+			marker.setMarkerAttribute(this.insertMarkersAttributes(marker.getMarkerAttribute()));
+			
+			MarkerModeration markerModeration = new MarkerModeration();
+			markerModeration.setMarker(marker);
+			markerModeration.setStatus(marker.getStatus());
+			this.markerModerationRepository.save(markerModeration);
+	    }
+        catch (DataIntegrityViolationException e)
+        {
+            LOG.info(e.getMessage());
+        }
 		return marker;
 	}
 	
@@ -290,13 +300,19 @@ public class MarkerService extends AbstractMarkerService
 	// UserRole.MODERATOR_VALUE + "')")
 	public void removeMarker(Long id)
 	{
-		Marker marker = this.findMarkerById(id);
-		
-		Assert.isTrue( ContextHolder.getAuthenticatedUser().getId().equals(marker.getUser().getId()), messages.getMessage("Access-is-denied", null, null));
-		
-		marker.setDeleted(true);
-		this.markerRepository.save(marker);
-		 
+		try
+        {
+			Marker marker = this.findMarkerById(id);
+			
+			Assert.isTrue( ContextHolder.getAuthenticatedUser().getId().equals(marker.getUser().getId()), messages.getMessage("Access-is-denied", null, null));
+			
+			marker.setDeleted(true);
+			this.markerRepository.save(marker);
+        }
+        catch (DataIntegrityViolationException e)
+        {
+            LOG.info(e.getMessage());
+        }
 		
 	}
 

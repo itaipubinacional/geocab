@@ -99,7 +99,27 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 		this.setMarker(marker);
 		this.setAttribute(attribute);
 	}
-	
+	/**
+	 * 
+	 * @param id
+	 * @param value
+	 * @param markerId
+	 * @param markerStatus
+	 * @param markerCreated
+	 * @param markerLayerId
+	 * @param markerLayerName
+	 * @param markerLayerTitle
+	 * @param markerUserId
+	 * @param markerUserName
+	 * @param markerUserEmail
+	 * @param markerUserStatus
+	 * @param attributeId
+	 * @param attributeName
+	 * @param attributeType
+	 * @param attributeRequired
+	 * @param attributeVisible
+	 * @param attributeOrder
+	 */
 	public MarkerAttribute(Long id, String value, 
 			Long markerId, /*Geometry location,*/ MarkerStatus markerStatus, Calendar markerCreated,
 			Long markerLayerId, String markerLayerName, String markerLayerTitle,  

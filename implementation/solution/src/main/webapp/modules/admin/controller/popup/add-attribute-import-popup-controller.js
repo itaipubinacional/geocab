@@ -6,10 +6,12 @@
  * @param $log
  * @param $location
  */
-function AddAttributeImportPopUpController($scope, $injector, $modalInstance, $state, markerAttributes ) {
+function AddAttributeImportPopUpController($scope, $injector, $modalInstance, $state, $importService, markerAttributes ) {
 
 
 	$scope.msg = null;
+
+	$importService("layerGroupService");
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	ATTRIBUTES
@@ -63,7 +65,9 @@ function AddAttributeImportPopUpController($scope, $injector, $modalInstance, $s
 
 	$scope.addAttribute = function () {
 
-		$scope.markerAttributes.push({name: ''});
+		var markerAttribute = new MarkerAttribute();
+		markerAttribute.attribute = new Attribute();
+		$scope.markerAttributes.push(markerAttribute);
 
 	};
 
@@ -82,9 +86,31 @@ function AddAttributeImportPopUpController($scope, $injector, $modalInstance, $s
 	/**
 	 *
 	 */
-	$scope.close = function()
+	$scope.close = function(form_add_attribute)
 	{
+		console.log(form_add_attribute);
+
+		if( !$scope.form('form_add_attribute').$valid ){
+
+			return;
+		}
+
 		$scope.msg = null;
 		$modalInstance.close({attributesByLayer: $scope.markerAttributes});
 	};
+
+	/**
+	 *
+	 */
+	$scope.form = function( formName )
+	{
+
+		if ( !formName )
+		{
+			formName = "form";
+		}
+
+		return $("form[name="+formName+"]").scope()[formName];
+	};
+
 };

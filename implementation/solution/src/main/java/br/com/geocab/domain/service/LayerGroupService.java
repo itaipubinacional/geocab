@@ -973,6 +973,8 @@ public class LayerGroupService
 		layer.setLayerGroup(this.findLayerGroupById(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
+		//Valida se os atributos são válidos
+		layer.validate();
 		return this.layerRepository.save( layer );
 	}
 	/**

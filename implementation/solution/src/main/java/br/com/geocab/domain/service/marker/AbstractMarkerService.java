@@ -21,6 +21,7 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.datasource.DataSource;
@@ -104,45 +105,51 @@ public abstract class AbstractMarkerService
 	public List<MarkerAttribute> insertMarkersAttributes(List<MarkerAttribute> markersAttributes)
 	{
 
-		for (MarkerAttribute markerAttribute : markersAttributes)
-		{
-			if (markerAttribute.getValue() != null)
-			{				
+		try
+        {
+			for (MarkerAttribute markerAttribute : markersAttributes)
+			{
+				if (markerAttribute.getValue() != null)
+				{				
+					if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM && markerAttribute.getPhotoAlbum() != null)
+					{
+						List<Photo> photos = markerAttribute.getPhotoAlbum().getPhotos();
+						markerAttribute = this.markerAttributeRepository.save(markerAttribute);
+						
+						markerAttribute.getPhotoAlbum().setPhotos(photos);
+						markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
+						
+						markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
+					} 
+					else 
+					{
+						markerAttribute = this.markerAttributeRepository.save(markerAttribute);
+					}
+				}
+			}
+			
+			for (MarkerAttribute markerAttribute : markersAttributes)
+			{
 				if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM && markerAttribute.getPhotoAlbum() != null)
 				{
-					List<Photo> photos = markerAttribute.getPhotoAlbum().getPhotos();
-					markerAttribute = this.markerAttributeRepository.save(markerAttribute);
-					
-					markerAttribute.getPhotoAlbum().setPhotos(photos);
-					markerAttribute.getPhotoAlbum().setMarkerAttribute(markerAttribute);
-					
-					markerAttribute.setPhotoAlbum(this.insertPhotoAlbum(markerAttribute.getPhotoAlbum()));
-				} 
-				else 
-				{
-					markerAttribute = this.markerAttributeRepository.save(markerAttribute);
+					PhotoAlbum photoAlbum = markerAttribute.getPhotoAlbum();
+					if (photoAlbum.getPhotos().size() == 0)
+					{
+						markerAttribute = markerAttributeRepository.findOne(photoAlbum.getMarkerAttribute().getId());
+						markerAttribute.setPhotoAlbum(null);
+						markerAttributeRepository.save(markerAttribute);
+						
+						photoAlbumRepository.delete(photoAlbum.getId());
+						
+						markerAttributeRepository.delete(markerAttribute.getId());
+					}
 				}
 			}
-		}
-		
-		for (MarkerAttribute markerAttribute : markersAttributes)
-		{
-			if (markerAttribute.getAttribute().getType() == AttributeType.PHOTO_ALBUM && markerAttribute.getPhotoAlbum() != null)
-			{
-				PhotoAlbum photoAlbum = markerAttribute.getPhotoAlbum();
-				if (photoAlbum.getPhotos().size() == 0)
-				{
-					markerAttribute = markerAttributeRepository.findOne(photoAlbum.getMarkerAttribute().getId());
-					markerAttribute.setPhotoAlbum(null);
-					markerAttributeRepository.save(markerAttribute);
-					
-					photoAlbumRepository.delete(photoAlbum.getId());
-					
-					markerAttributeRepository.delete(markerAttribute.getId());
-				}
-			}
-		}
-		
+        }
+        catch (DataIntegrityViolationException e)
+        {
+            LOG.info(e.getMessage());
+        }
 		return markersAttributes;
 	}
 	
@@ -157,23 +164,30 @@ public abstract class AbstractMarkerService
 	 */
 	public PhotoAlbum insertPhotoAlbum(PhotoAlbum photoAlbum)
 	{
-		// Caso não haja o foto_album dentro da foto, seta lá então.
-		// Caso seja uma inserção de um album de fotos ou uma atualização de um
-		// album de fotos
-		if (photoAlbum.getPhotos() != null)
-		{
-			List<Photo> photos = photoAlbum.getPhotos();
-			
-			photoAlbum = photoAlbumRepository.save(photoAlbum);	
-			
-			photoAlbum.setPhotos(photos);
-			
-			for (Photo photo : photoAlbum.getPhotos())
+		try
+        {
+			// Caso não haja o foto_album dentro da foto, seta lá então.
+			// Caso seja uma inserção de um album de fotos ou uma atualização de um
+			// album de fotos
+			if (photoAlbum.getPhotos() != null)
 			{
-				photo.setPhotoAlbum(photoAlbum);
+				List<Photo> photos = photoAlbum.getPhotos();
+				
+				photoAlbum = photoAlbumRepository.save(photoAlbum);	
+				
+				photoAlbum.setPhotos(photos);
+				
+				for (Photo photo : photoAlbum.getPhotos())
+				{
+					photo.setPhotoAlbum(photoAlbum);
+				}
+				photoAlbum.setPhotos(this.uploadPhoto(photoAlbum));
 			}
-			photoAlbum.setPhotos(this.uploadPhoto(photoAlbum));
-		}
+        }
+		catch (DataIntegrityViolationException e)
+        {
+            LOG.info(e.getMessage());
+        }
 		return photoAlbum;
 		
 	}
@@ -185,57 +199,64 @@ public abstract class AbstractMarkerService
 	 */
 	public List<Photo> uploadPhoto(PhotoAlbum photoAlbum)
 	{
-		
-	    List<Photo> photos = photoAlbum.getPhotos();
-	    
-    	List<Photo> photosDatabase = this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
-    	//Handler para deletar fotos
-		for (Photo photoDatabase : photosDatabase)
-		{
-			boolean photoToExclude = true;
-			for (Photo photo : photos)
+	
+		try
+        {
+		    List<Photo> photos = photoAlbum.getPhotos();
+		    
+	    	List<Photo> photosDatabase = this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
+	    	//Handler para deletar fotos
+			for (Photo photoDatabase : photosDatabase)
 			{
-				if (photoDatabase.getId().equals(photo.getId()) )
+				boolean photoToExclude = true;
+				for (Photo photo : photos)
 				{
-					photoToExclude = false;
+					if (photoDatabase.getId().equals(photo.getId()) )
+					{
+						photoToExclude = false;
+					}
+				}
+				if (photoToExclude)
+				{
+					MetaFile metaFile = null;	
+					try
+					{
+						metaFile = this.metaFileRepository.findByPath( photoDatabase.getIdentifier(), true);
+						this.removeImg(metaFile.getId());
+					}
+					catch (RepositoryException e)
+					{
+						e.printStackTrace();
+						LOG.info(e.getMessage());
+					}
+					this.photoRepository.delete(photoDatabase.getId());
+					
 				}
 			}
-			if (photoToExclude)
+			
+			// Album de fotos já existente
+			if (photos.size() > 0)
 			{
-				MetaFile metaFile = null;	
-				try
+				for (Photo photo : photos)
 				{
-					metaFile = this.metaFileRepository.findByPath( photoDatabase.getIdentifier(), true);
-					this.removeImg(metaFile.getId());
-				}
-				catch (RepositoryException e)
-				{
-					e.printStackTrace();
-					LOG.info(e.getMessage());
-				}
-				this.photoRepository.delete(photoDatabase.getId());
-				
-			}
-		}
-		
-		// Album de fotos já existente
-		if (photos.size() > 0)
-		{
-			for (Photo photo : photos)
-			{
-				if (photo.getId() != null)
-				{
-					// Se não é uma foto nova só atualiza a foto no banco de dados
-					photo = this.photoRepository.save(photo);
-				}
-				else
-				{
-					// Se é uma foto nova, salva a foto no banco de dados e no sistema de arquivos
-					photo = this.photoRepository.save(photo);
-					photo = this.uploadImg(photo);
+					if (photo.getId() != null)
+					{
+						// Se não é uma foto nova só atualiza a foto no banco de dados
+						photo = this.photoRepository.save(photo);
+					}
+					else
+					{
+						// Se é uma foto nova, salva a foto no banco de dados e no sistema de arquivos
+						photo = this.photoRepository.save(photo);
+						photo = this.uploadImg(photo);
+					}
 				}
 			}
-		}
+        }
+        catch (DataIntegrityViolationException e)
+        {
+            LOG.info(e.getMessage());
+        }
 		
 		//Se o photoALbum não tem fotos deleta o mesmo
 		return this.photoRepository.findByIdentifierContaining(photoAlbum.getIdentifier(), null).getContent();
