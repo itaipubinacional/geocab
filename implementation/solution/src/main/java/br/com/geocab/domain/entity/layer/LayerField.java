@@ -42,13 +42,13 @@ public class LayerField extends AbstractEntity implements Serializable
 	/**
 	 * name of {@link LayerField}
 	 */
-	@NotEmpty
+	@NotEmpty(message = "admin.layer-config.The-field-name-must-be-set")
 	@Column(nullable=false, length=144)
 	private String name;
 	/**
 	 * type of  {@link LayerField}
 	 */
-	@NotNull
+	@NotNull(message = "admin.layer-config.The-field-type-must-be-set")
 	@Enumerated(EnumType.ORDINAL)
 	private LayerFieldType type;
 	/**

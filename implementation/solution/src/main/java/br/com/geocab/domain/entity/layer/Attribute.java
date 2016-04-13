@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
+import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -52,13 +53,13 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * Name {@link Attribute}
 	 */
-	@NotNull
+	@NotNull(message = "admin.layer-config.The-field-name-must-be-set")
 	private String name;
 
 	/**
 	 * Type {@link Attribute}
 	 */
-	@NotNull
+	@NotNull(message = "admin.layer-config.The-field-type-must-be-set")
 	private AttributeType type;
 
 	/**
@@ -83,20 +84,19 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	@Column
 	private Integer orderAttribute;
+	
 	/**
 	 * Layer {@link Layer}
 	 */
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade =
-	{ CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade = { CascadeType.ALL })
 	private Layer layer;
 
 	/**
 	 * 
 	 */
 	@JsonIgnore
-	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade =
-	{ CascadeType.REMOVE })
+	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
 
 	/*-------------------------------------------------------------------
@@ -146,7 +146,6 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public Attribute(String name)
 	{
-		// this.setTemporaryId(id);
 		this.setName(name);
 	}
 
@@ -203,6 +202,15 @@ public class Attribute extends AbstractEntity implements Serializable
 	/*-------------------------------------------------------------------
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	/**
+	 * Formata os atributos para importação
+	 * @return
+	 */
+	public void validate()
+	{
+		Assert.isNull(this.getType(), "admin.layer-config.The-all-fields-type-must-be-set");
+	}
+	
 	/**
 	 * Formata os atributos para importação
 	 * @return
@@ -271,7 +279,55 @@ public class Attribute extends AbstractEntity implements Serializable
 		return attributeType;
 	}
 	
+	/**
+	 * @return the required
+	 */
+	public Boolean getRequired()
+	{
+		if (required == null)
+		{
+			required = false;
+		}
+		return required;
+	}
+
+	/**
+	 * @param required
+	 *            the required to set
+	 */
+	public void setRequired(Boolean required)
+	{
+		if (required == null)
+		{
+			required = false;
+		}
+		this.required = required;
+	}
 	
+	/**
+	 * @return the visible
+	 */
+	public Boolean getVisible()
+	{
+		if (visible == null)
+		{
+			visible = false;
+		}
+		return visible;
+	}
+
+	/**
+	 * @param visible
+	 *            the visible to set
+	 */
+	public void setVisible(Boolean visible)
+	{
+		if (visible == null)
+		{
+			visible = false;
+		}
+		this.visible = visible;
+	}
 
 	/*-------------------------------------------------------------------
 	 *								SETTERS/GETTERS
@@ -330,23 +386,6 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @return the required
-	 */
-	public Boolean getRequired()
-	{
-		return required;
-	}
-
-	/**
-	 * @param required
-	 *            the required to set
-	 */
-	public void setRequired(Boolean required)
-	{
-		this.required = required;
-	}
-
-	/**
 	 * @return the attributeDefault
 	 */
 	public Boolean getAttributeDefault()
@@ -396,22 +435,4 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		this.orderAttribute = orderAttribute;
 	}
-
-	/**
-	 * @return the visible
-	 */
-	public Boolean getVisible()
-	{
-		return visible;
-	}
-
-	/**
-	 * @param visible
-	 *            the visible to set
-	 */
-	public void setVisible(Boolean visible)
-	{
-		this.visible = visible;
-	}
-
 }

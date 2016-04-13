@@ -396,8 +396,17 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
-
-	
+	/**
+	 * Valida os atributos da camada
+	 * Verifica se não existem atributos nulos
+	 */
+	public void validate()
+	{
+		for (Attribute attribute : attributes)
+		{
+			attribute.validate();
+		}
+	}
 
 	/**
 	 * 
