@@ -132,12 +132,15 @@ public class ExceptionHandlerAspect
 				}
 				default:
 				{
-					throw new DataIntegrityViolationException("Não foi possível realizar a operação pois ocorreu um problema de integridade (Código " + cause.getSQLState() + "). Verifique e tente novamente."); //FIXME Localize
+					throw new RuntimeException("Do-not-possible-execute-request");
+					//throw new DataIntegrityViolationException("Não foi possível realizar a operação pois ocorreu um problema de integridade (Código " + cause.getSQLState() + "). Verifique e tente novamente."); //FIXME Localize
 				}
 			}
 		}
-
-		throw new DataIntegrityViolationException( messageSource.getMessage("dao.dataIntegrityViolation", null, LocaleContextHolder.getLocale()) );
+		
+		throw new RuntimeException("Do-not-possible-execute-request");
+		
+//		throw new DataIntegrityViolationException( messageSource.getMessage("dao.dataIntegrityViolation", null, LocaleContextHolder.getLocale()) );
 	}
 	
 	//---------

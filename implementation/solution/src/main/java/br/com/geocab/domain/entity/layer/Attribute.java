@@ -53,13 +53,13 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * Name {@link Attribute}
 	 */
-	@NotNull(message = "admin.layer-config.The-field-name-must-be-set")
+	@NotNull(message = "admin.layer-config.The-all-fields-name-in-attributes-must-be-set")
 	private String name;
 
 	/**
 	 * Type {@link Attribute}
 	 */
-	@NotNull(message = "admin.layer-config.The-field-type-must-be-set")
+	@NotNull(message = "admin.layer-config.The-all-fields-type-in-attributes-must-be-set")
 	private AttributeType type;
 
 	/**
@@ -208,7 +208,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public void validate()
 	{
-		Assert.isNull(this.getType(), "admin.layer-config.The-all-fields-type-must-be-set");
+		Assert.isNull(this.getType(), "admin.layer-config.The-all-fields-type-in-attributes-must-be-set");
 	}
 	
 	/**

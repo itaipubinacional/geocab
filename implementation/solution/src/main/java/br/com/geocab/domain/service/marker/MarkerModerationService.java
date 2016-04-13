@@ -160,15 +160,22 @@ public class MarkerModerationService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void associateMotive( List<Motive> motives, Long markerModerationId )
 	{
-		MarkerModeration markerModeration = new MarkerModeration(markerModerationId);
-		
-		for (Motive motive : motives)
+		try
 		{
-			MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
-			motiveMarkerModeration.setMarkerModeration(markerModeration);
-			motiveMarkerModeration.setMotive(motive);
+			MarkerModeration markerModeration = new MarkerModeration(markerModerationId);
 			
-			this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
+			for (Motive motive : motives)
+			{
+				MotiveMarkerModeration motiveMarkerModeration = new MotiveMarkerModeration();
+				motiveMarkerModeration.setMarkerModeration(markerModeration);
+				motiveMarkerModeration.setMotive(motive);
+				
+				this.motiveMarkerModerationRepository.save(motiveMarkerModeration);
+			}
+		}
+		catch ( DataIntegrityViolationException e )
+		{
+			LOG.info( e.getMessage() );
 		}
 	}
 	
@@ -182,8 +189,7 @@ public class MarkerModerationService
      * @throws IOException
      */
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
-    public Marker cancelMarkerModeration (Long id) throws IOException,
-            RepositoryException
+    public Marker cancelMarkerModeration (Long id) throws IOException, RepositoryException
     {
     	try
 		{
