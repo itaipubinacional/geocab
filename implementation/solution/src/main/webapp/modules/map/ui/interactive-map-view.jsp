@@ -150,11 +150,20 @@ uri="http://www.springframework.org/security/tags"%>
                       <i class="glyphicon glyphicon-ok"></i>
                       </button>
                       <br>
-                      <div style="text-align:center">
-                        <img ng-click="showGallery(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"
-                             style="margin-top: 12px;cursor: pointer;max-width:355px"> <br>
+                      <div style="text-align:center; position: relative">
+
+                        <div ng-click="showGallery(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-style="{'background-image':'url(' + imgResult + ')'}">
+                            <div class="overlay">
+                                <i style="font-size: 34px; color : white" class="icon itaipu-icon-zoom"></i>
+                                <h3 style="color: white">Ver mais</h3>
+                            </div>
+                        </div>
+
+                        <%--<img ng-click="showGallery(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-src="{{ imgResult }}"--%>
+                             <%--style="margin-top: 12px;cursor: pointer;max-width:355px"> <br>--%>
+
                       </div>
-                      <br>
+
 
                       <div style="width:100%;">
                         <label required>Latitude</label>
@@ -719,6 +728,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <!-- <label>Descrição</label> <textarea ng-model="currentEntity.description" class="form-control" style="height: 100px"></textarea> -->
 
                 <img class="marker-image" ng-if="imgResult" style="width: 100%; height: 200px; margin-top: 12px;"> <br>
+
                 <hr>
 
                 <div ng-if="currentEntity.layer">
