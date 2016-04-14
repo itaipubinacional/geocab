@@ -469,7 +469,7 @@ public class MarkerService extends AbstractMarkerService
 		}
 		catch (ParseException e)
 		{
-			throw new RuntimeException("Not a WKT string:" + wktPoint);
+			throw new RuntimeException("admin.marker.invalid-coordinates");
 		}
 		return geom;
 	}
