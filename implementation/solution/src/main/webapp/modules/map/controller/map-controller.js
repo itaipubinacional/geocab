@@ -3301,7 +3301,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }, time);
 
       $timeout(function(){
-        if($('#sidebar-marker-create').css('display') == 'none' && $('.menu-sidebar-container').css('right') == '389px'){
+
+        var displayed = false;
+
+        $('.sidebar-style').each(function(index){
+          if($(this).css('display') == 'block')
+            displayed = true
+        });
+
+        if(!displayed && $('.menu-sidebar-container').css('right') == '389px'){
+          alert('Teste');
           $('.menu-sidebar-container').css('right', '3px');
         }
       }, 400);
