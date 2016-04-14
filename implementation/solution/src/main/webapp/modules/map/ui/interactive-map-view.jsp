@@ -908,7 +908,6 @@ uri="http://www.springframework.org/security/tags"%>
                            placeholder="<spring:message code="map.Group-or-layer"/>"
                     class="sidebar-content-search form-control" />
                   </div>
-
                   <div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
                        ivh-treeview-label-attribute="'label'"
                        ivh-treeview-legend-attribute="'legenda'"
