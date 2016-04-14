@@ -1040,7 +1040,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.message = {type: "danger", text: $translate(message)};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -1065,7 +1065,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
+                $scope.message = {type:"danger", text: $translate(message)};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -1091,7 +1091,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message};
+                $scope.msg = {type: "danger", text: $translate(message)};
                 $scope.fadeMsg();
                 $scope.$apply();
             }

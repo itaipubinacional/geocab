@@ -421,7 +421,7 @@
 		$log.info("changeToDetail", id);
 
 		if ( id == null || id == "" || id == 0 ) {
-			$scope.msg = {type:"error", text: $scope.INVALID_ID_MESSAGE, dismiss:true};
+			$scope.msg = {type:"danger", text: $scope.INVALID_ID_MESSAGE, dismiss:true};
 			$scope.currentState = $scope.LIST_STATE;
 			$state.go($scope.LIST_STATE);
 			return;
@@ -553,7 +553,7 @@
 				$scope.saveGroups();
 			},
 			errorHandler : function(message, exception) {
-				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.msg = {type:"danger", text: $translate(message), dismiss:true};
 				$scope.$apply();
 			}
 		});
