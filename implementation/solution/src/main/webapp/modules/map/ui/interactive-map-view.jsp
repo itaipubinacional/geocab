@@ -24,7 +24,7 @@ uri="http://www.springframework.org/security/tags"%>
 
     <div class="menu-sidebar-container" ng-mouseover="hideMousePosition()">
 
-      <div>
+
         <ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
           <li ng-click="aumentarZoom()" title="<spring:message code="map.Zoom-in" />"><a href="#tabs-2">
           <div class="icon itaipu-icon-zoom-in sidebar-icon"></div>
@@ -65,7 +65,7 @@ uri="http://www.springframework.org/security/tags"%>
               <div class="icon itaipu-icon-kml sidebar-icon"></div>
           </a></li>-->
         </ul>
-      </div>
+
 
       <div id="sidebar-marker-detail-update" class="sidebar-style rui-resizable-left resizable-test-block" style="min-width: 384px" >
 

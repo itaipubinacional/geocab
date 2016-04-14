@@ -1702,9 +1702,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   google.maps.event.addDomListener(window, "resize", function() {
-    var center = $scope.mapGoogle.getCenter();
-    google.maps.event.trigger($scope.mapGoogle, "resize");
-    $scope.mapGoogle.setCenter(center);
+    if(!angular.equals($scope.mapGoogle, {})) {
+      var center = $scope.mapGoogle.getCenter();
+      google.maps.event.trigger($scope.mapGoogle, "resize");
+      $scope.mapGoogle.setCenter(center);
+    }
   });
 
   /**
@@ -2244,10 +2246,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     } else {
 
+      var timeOut = 0;
+
       $('li.menu-item').each(function(index){
 
         if($(this).hasClass('ui-state-active') && !$(this).hasClass('bg-inactive')){
           $scope.toggleSidebarMenu(300, '#' + $(this).attr('id'));
+          timeOut = 400;
         }
 
       });
@@ -2259,6 +2264,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.map.removeLayer(vector);
       $('#popup').css("display", "none");
       sketch = null;
+
+      $timeout(function(){
+        $scope.toggleSidebar(300, '', '#sidebar-marker-create');
+      }, timeOut);
 
       layerGroupService.listAllInternalLayerGroups({
         callback: function (result) {
@@ -2285,9 +2294,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
       });
 
-      $timeout(function(){
+      /*$timeout(function(){
         $scope.toggleSidebar(300, '', '#sidebar-marker-create');
-      }, 400);
+      }, 400);*/
 
       $scope.currentEntity = new Marker();
 
@@ -3269,7 +3278,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.toggleSidebar = function (time, element, slide) {
 
-    time = 300;
+    time = !time || time != 300 ? 300 : time;
 
     //Checks whether the animation is to open or close the sidebar by her current position.
     var closed = $('.menu-sidebar-container').css('right') == '3px';
@@ -3286,9 +3295,17 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       //Performs the animation
 
       $(slide).toggle('slide', {direction: 'right'}, time);
+
       $('.menu-sidebar-container').animate({
         'right': closed ? $(slide).width() : '3px'
       }, time);
+
+      $timeout(function(){
+        if($('#sidebar-marker-create').css('display') == 'none' && $('.menu-sidebar-container').css('right') == '389px'){
+          $('.menu-sidebar-container').css('right', '3px');
+        }
+      }, 400);
+
     } else {
       if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
     }

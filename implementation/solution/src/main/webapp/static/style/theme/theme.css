@@ -1054,7 +1054,7 @@ input:-moz-placeholder {
 .ui-widget-content {
     margin-bottom: 19px;
     top: 7px;
-    height: 5px;
+    /*height: 5px;*/
     background: #c9c9c9;
 }
 
