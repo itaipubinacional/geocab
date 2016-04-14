@@ -107,6 +107,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
     $scope.allLayers = null;
 
+
+
+
     /**
     *
     */
@@ -465,6 +468,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.$apply();
 
                 $scope.loadAccessGroups(result.id);
+
+                $scope.currentEntity.startVisible = $scope.currentEntity.startEnabled || $scope.currentEntity.enabled || $scope.currentEntity.startVisible;
+
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -487,7 +493,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $log.info("changeToDetail", id);
 
         if (id == null || id == "" || id == 0) {
-            $scope.msg = {type: "error", text: $scope.INVALID_ID_MESSAGE, dismiss: true};
+            $scope.msg = {type: "danger", text: $scope.INVALID_ID_MESSAGE, dismiss: true};
             $scope.currentState = $scope.LIST_STATE;
             $state.go($scope.LIST_STATE);
             return;
@@ -505,9 +511,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.$apply();
 
                 $scope.loadAccessGroups(result.id);
+
+                $scope.currentEntity.startVisible = $scope.currentEntity.startEnabled || $scope.currentEntity.enabled || $scope.currentEntity.startVisible;
+
+
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "danger", text: $translate(message), dismiss: true};
                 $scope.$apply();
             }
         });
@@ -565,7 +575,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 	if (exception.message.indexOf("ConstraintViolationException") > -1){
                 		message = $translate('admin.layer-config.Is-not-possible-to-remove-the-layer-because-the-layer-is-present-at-a-custom-search');
                 	}
-                    $scope.msg = {type: "danger", text: message, dismiss: true};
+                    $scope.msg = {type: "danger", text:$translate(message), dismiss: true};
                     $scope.fadeMsg();
 
                     $scope.$apply();
@@ -679,7 +689,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.saveGroups();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "danger", text:$translate(message), dismiss: true};
                 $scope.$apply();
             }
         });
@@ -717,7 +727,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "danger", text:$translate(message), dismiss: true};
                 $scope.$apply();
             }
         });

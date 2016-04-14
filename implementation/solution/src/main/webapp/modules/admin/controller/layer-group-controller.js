@@ -141,7 +141,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             },
             errorHandler : function(message, exception) {
                 console.error( message, exception );
-                $scope.message = {type:"error", text: message};
+                $scope.message = {type:"danger", text: $translate(message)};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -160,7 +160,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             },
             errorHandler : function(message, exception) {
                 console.error( message, exception );
-                $scope.message = {type:"error", text: message};
+                $scope.message = {type:"danger", text: $translate(message)};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -221,7 +221,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                     },
                     errorHandler : function(message, exception) {
                         console.error( message, exception );
-                        $scope.message = {type:"error", text: message};
+                        $scope.message = {type:"danger", text: $translate(message)};
                         $scope.$apply();
                     }
                 });
@@ -279,7 +279,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                         },
                         errorHandler : function(message, exception) {
                             console.error( message, exception );
-                            $scope.message = {type:"error", text: message};
+                            $scope.message = {type:"danger", text: $translate(message)};
                             $scope.$apply();
                         }
                     });
@@ -288,7 +288,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                 },
                 errorHandler : function(message, exception) {
                     console.error( message, exception );
-                    $scope.message = {type:"error", text: message};
+                    $scope.message = {type:"danger", text: $translate(message)};
                     $scope.$apply();
                 }
             });
@@ -334,7 +334,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                         },
                         errorHandler : function(message, exception) {
                             console.error( message, exception );
-                            $scope.message = {type:"error", text: message};
+                            $scope.message = {type:"danger", text: $translate(message)};
                             $scope.$apply();
                         }
                     });
@@ -343,7 +343,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                 },
                 errorHandler : function(message, exception) {
                     console.error( message, exception );
-                    $scope.message = {type:"error", text: message};
+                    $scope.message = {type:"danger", text: $translate(message)};
                     $scope.$apply();
                 }
             });

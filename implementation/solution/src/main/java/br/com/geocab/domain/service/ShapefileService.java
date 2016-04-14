@@ -40,6 +40,7 @@ import org.geotools.data.shapefile.files.ShpFileType;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
@@ -148,7 +149,6 @@ public class ShapefileService
 	}
 	
 	/**
-	 * TODO alterar shapefile para shapefile
 	 * 
 	 * Serviço de importação de shapefile
 	 * 
@@ -377,7 +377,7 @@ public class ShapefileService
 			{				
 				layer.setAttributes(this.attributeRepository.listAttributeByLayer(layer.getId()));
 				
-				SimpleFeatureType TYPE = null; 
+				final SimpleFeatureType type = createType(layer); 
 	
 				final DefaultFeatureCollection collection = new DefaultFeatureCollection();
 				
@@ -387,7 +387,7 @@ public class ShapefileService
 					
 					
 					final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
-	    			final MathTransform transform = CRS.findMathTransform(EPSG3857, DefaultGeographicCRS.WGS84,   true);
+	    			final MathTransform transform = CRS.findMathTransform(EPSG3857, DefaultGeographicCRS.WGS84, true);
 		    		
 	    			final Geometry targetGeometry = JTS.transform( wktToGeometry( marker.getLocation().getCoordinateString()).getEnvelope(), transform);
 	    			
@@ -397,9 +397,6 @@ public class ShapefileService
 	    			
 					marker.handlerDuplicateAttributes();
 					
-	            	if ((i != 0 && marker.getLayer().getId() != layer.getMarkers().get(i - 1).getId()) || TYPE == null)
-	            		TYPE = DataUtilities.createType(layer.getName(), "the_geom:Point,"+marker.formattedAttributes());
-					
 	            	final GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(null);
 	            	
 	            	final double longitude = marker.getLocation().getX();
@@ -408,7 +405,7 @@ public class ShapefileService
 	                final Point point = factory.createPoint(new Coordinate(longitude, latitude));
 	                
 	                // O ponto também é um atributo "new Object[]{point}"
-	                SimpleFeature feature = SimpleFeatureBuilder.build(TYPE, new Object[]{point}, null);
+	                SimpleFeature feature = SimpleFeatureBuilder.build( type, new Object[]{point}, null);
 	                
 	                // Extrai os atributos da feature 
 	                feature = extractFeatures(feature, marker);
@@ -423,7 +420,7 @@ public class ShapefileService
 		        create.put("url", newFile.toURI().toURL());
 		        create.put("create spatial index", Boolean.TRUE);
 		        DataStore dataStore = dataStoreFactorySpi.createNewDataStore(create);
-		        SimpleFeatureType featureType = SimpleFeatureTypeBuilder.retype( TYPE, /*CRS.parseWKT(this.wktToGeometry()) */DefaultGeographicCRS.WGS84 );
+		        SimpleFeatureType featureType = SimpleFeatureTypeBuilder.retype( type, /*CRS.parseWKT(this.wktToGeometry()) */DefaultGeographicCRS.WGS84 );
 		        dataStore.createSchema(featureType);
 		        
 		        final Transaction transaction = new DefaultTransaction("create");
@@ -462,6 +459,37 @@ public class ShapefileService
 		delete(new File(pathShapefilesExport));
 
 		return fileTransfer;
+	}
+	/**
+	 * Cria o TYPE da feature conforme a postagem com mais campos
+	 * @param markers
+	 * @return
+	 * @throws SchemaException 
+	 */
+	private final SimpleFeatureType createType(Layer layer) throws SchemaException
+	{
+		//Verifica qual marker tem mais atributos
+		int sum = 0;
+		Long markerIndex = 0L;
+		
+		Marker markerTest = null;
+		for (int i = 0; i < layer.getMarkers().size(); i++)
+		{
+			markerTest = markerRepository.findOne(layer.getMarkers().get(i).getId());
+			if (markerTest.getMarkerAttribute().size()>sum)
+			{
+				markerIndex = markerTest.getId();
+				sum = markerTest.getMarkerAttribute().size();
+			}
+		}
+		
+		markerTest = markerRepository.findOne(markerIndex);
+		
+		markerTest.formattedNameAttributes();
+		
+		markerTest.handlerDuplicateAttributes();
+		
+		return DataUtilities.createType(layer.getName(), "the_geom:Point,"+markerRepository.findOne(markerIndex).formattedAttributes());
 	}
 	
 	/**
