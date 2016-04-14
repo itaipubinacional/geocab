@@ -3176,7 +3176,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           });
 
           angular.forEach(result, function (markerAttribute, index) {
-            if (markerAttribute.attribute.type == "NUMBER") {
+            if (markerAttribute.attribute.type == "NUMBER" && markerAttribute.value) {
               markerAttribute.value = parseInt(markerAttribute.value);
             }
           });
@@ -3213,7 +3213,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $scope.attributesByMarker = result;
 
             angular.forEach(result, function (markerAttribute, index) {
-              if (markerAttribute.attribute.type == "NUMBER") {
+              if (markerAttribute.attribute.type == "NUMBER" && markerAttribute.value) {
                 markerAttribute.value = parseInt(markerAttribute.value);
               }
             })
@@ -4354,7 +4354,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           });
 
           angular.forEach(result, function (markerAttribute, index) {
-            if (markerAttribute.attribute.type == "NUMBER") {
+            if (markerAttribute.attribute.type == "NUMBER" && markerAttribute.value) {
               markerAttribute.value = parseInt(markerAttribute.value);
             }
 
