@@ -261,7 +261,7 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.message = {type: "danger", text: message};
                 $scope.showLoading = false;
                 $scope.$apply();
             }

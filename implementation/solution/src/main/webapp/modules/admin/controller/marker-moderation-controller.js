@@ -218,7 +218,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $scope.$apply();
         },
         errorHandler : function(message, exception) {
-            $scope.message = {type:"error", text: message};
+            $scope.message = {type:"danger", text: message};
             $scope.$apply();
         }
     });
@@ -240,7 +240,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $scope.$apply();
         },
         errorHandler: function (message, exception) {
-            $scope.message = {type: "error", text: message};
+            $scope.message = {type: "danger", text: message};
             $scope.$apply();
         }
     });
@@ -708,7 +708,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
         var page = layerGroupService.listLayersByFilters(filter, pageRequest, {
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.message = {type: "danger", text: message};
                 $scope.$apply();
             },
             async: false //USE ONLY IN AUTOCOMPLETE
@@ -738,7 +738,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.message = {type: "danger", text: message};
                 $scope.$apply();
             }
         });
@@ -767,7 +767,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.message = {type: "danger", text: message};
                 $scope.$apply();
             }
         });
@@ -997,7 +997,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.message = {type: "danger", text: message};
                 $scope.$apply();
             }
         })
@@ -1576,7 +1576,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                         $scope.$apply();
                     },
                     errorHandler: function (message, exception) {
-                        $scope.message = {type: "error", text: message};
+                        $scope.message = {type: "danger", text: message};
                         $scope.$apply();
                     }
                 });
@@ -1592,7 +1592,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
             },
             errorHandler: function (message, exception) {
-                $scope.message = {type: "error", text: message};
+                $scope.message = {type: "danger", text: message};
                 $scope.$apply();
             }
         });

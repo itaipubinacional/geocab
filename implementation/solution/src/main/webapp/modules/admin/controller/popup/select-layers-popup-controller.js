@@ -96,7 +96,7 @@ function SelectLayersPopUpController($scope, $modalInstance ,currentEntity, $log
 
             },
             errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
+                $scope.message = {type:"danger", text: message};
                 $scope.showLoading = false;
                 $scope.$apply();
             }
