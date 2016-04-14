@@ -121,7 +121,7 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
 
             },
             errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
+                $scope.message = {type:"danger", text: message};
                 $scope.showLoading = false;
                 $scope.$apply();
             }

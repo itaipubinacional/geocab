@@ -113,7 +113,7 @@ function SelectToolsPopUpController( $scope, $modalInstance, selectedTools, $log
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
+                $scope.message = {type:"danger", text: message};
                 $scope.showLoading = false;
                 $scope.$apply();
             }
