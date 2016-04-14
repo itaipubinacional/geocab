@@ -2265,9 +2265,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $('#popup').css("display", "none");
       sketch = null;
 
-      $timeout(function(){
+      /*$timeout(function(){
         $scope.toggleSidebar(300, '', '#sidebar-marker-create');
-      }, timeOut);
+      }, timeOut);*/
 
       layerGroupService.listAllInternalLayerGroups({
         callback: function (result) {
@@ -2294,9 +2294,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
       });
 
-      /*$timeout(function(){
+      $timeout(function(){
         $scope.toggleSidebar(300, '', '#sidebar-marker-create');
-      }, 400);*/
+      }, 400);
 
       $scope.currentEntity = new Marker();
 
@@ -3310,7 +3310,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         });
 
         if(!displayed && $('.menu-sidebar-container').css('right') == '389px'){
-          alert('Teste');
+          //alert('Teste');
           $('.menu-sidebar-container').css('right', '3px');
         }
       }, 400);
