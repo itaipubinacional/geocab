@@ -153,8 +153,8 @@
 
                             <div ng-click="openImgModal(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-style="{'background-image':'url(' + imgResult + ')'}">
                                 <div class="overlay">
-                                    <i style="font-size: 34px; color : white" class="icon itaipu-icon-zoom"></i>
-                                    <h3 style="color: white">Ver mais</h3>
+                                    <i class="icon itaipu-icon-zoom"></i>
+                                    <h3><spring:message code="View-more"/></h3>
                                 </div>
                             </div>
 

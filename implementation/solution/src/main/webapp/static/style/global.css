@@ -123,6 +123,7 @@ i.loading{background-image: url(../images/ajax-loader-transparent.gif);
     top: 1px;}
 
 .marker-image{
+
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border: 1px solid #ccc;
 
@@ -134,16 +135,22 @@ i.loading{background-image: url(../images/ajax-loader-transparent.gif);
     background-size: cover;
 }
 
-.box {
-
-}
 .overlay {
     background:rgba(0, 0, 0, .75);
     text-align:center;
     opacity:0;
-    padding-top: 50px;
+    padding-top: 80px;
     width:100%;
     height:100%;
+}
+
+.overlay > i {
+    font-size: 34px;
+    color : white;
+}
+
+.overlay > h3 {
+    color : white;
 }
 .marker-image:hover {
     border:1px solid #555;
