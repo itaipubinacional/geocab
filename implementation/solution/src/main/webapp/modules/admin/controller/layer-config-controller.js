@@ -107,6 +107,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
     $scope.allLayers = null;
 
+
+
+
     /**
     *
     */
@@ -465,6 +468,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.$apply();
 
                 $scope.loadAccessGroups(result.id);
+
+                $scope.currentEntity.startVisible = $scope.currentEntity.startEnabled || $scope.currentEntity.enabled || $scope.currentEntity.startVisible;
+
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -505,6 +511,10 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.$apply();
 
                 $scope.loadAccessGroups(result.id);
+
+                $scope.currentEntity.startVisible = $scope.currentEntity.startEnabled || $scope.currentEntity.enabled || $scope.currentEntity.startVisible;
+
+
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};

@@ -208,7 +208,7 @@
                  ng-if="currentState">
                 <label>
                     <input type="checkbox" id="grupo" style="width: 20px;"
-                           ng-change="currentEntity.startVisible = currentEntity.startEnabled || currentEntity.enabled"
+                           ng-change="currentEntity.startVisible = currentEntity.startEnabled || currentEntity.enabled || currentEntity.startVisible"
                            ng-model="currentEntity.startEnabled"> <spring:message code="admin.layer-config.Start-allowed-in-map"/>
                 </label>
 
@@ -234,7 +234,7 @@
                 <label>
                     <input type="checkbox" style="width: 20px;"
                        ng-model="currentEntity.enabled"
-                       ng-change="currentEntity.startVisible = currentEntity.startEnabled || currentEntity.enabled"
+                       ng-change="currentEntity.startVisible = currentEntity.startEnabled || currentEntity.enabled || currentEntity.startVisible"
                        ng-disabled="currentState == DETAIL_STATE">
                     <spring:message code="admin.layer-config.Available-to-receive-posts"/>
                 </label>
