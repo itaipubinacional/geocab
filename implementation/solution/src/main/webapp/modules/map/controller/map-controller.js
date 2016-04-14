@@ -3682,14 +3682,21 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $("div.msgMap").fadeOut();
         }, 5000);
 
-        //Select layer on treeview
-        for( var k= 0; k < $scope.allLayers[0].children.length; k++){
 
-          if ( result.layer.id == $scope.allLayers[0].children[k].value ){
-            $scope.allLayers[0].children[k].selected = true;
-            break;
+        //Select layer on treeview
+        angular.forEach($scope.allLayers, function(layer){
+
+          var node = $filter('filter')(layer.children, {value: result.layer.id})[0];
+
+          if(angular.isDefined(node)) {
+            if(node.selected) {
+              $('#layer_' + result.layer.id).trigger('click');
+              $('#layer_' + result.layer.id).trigger('click');
+            } else {
+              $('#layer_' + result.layer.id).trigger('click');
+            }
           }
-        }
+        });
 
         $scope.$apply();
       },
