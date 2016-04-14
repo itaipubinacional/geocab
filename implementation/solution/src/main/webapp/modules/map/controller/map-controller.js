@@ -3730,7 +3730,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.isLoading = false;
 
-        $scope.msg = {type: "danger", text: message};
+        $scope.msg = {type: "danger", text: $translate(message), dismiss: true};
 
         $scope.currentEntity.layer = oldLayer;
 
