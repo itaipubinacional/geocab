@@ -321,7 +321,7 @@ public class Marker extends AbstractEntity implements Serializable
 			{
 				if (this.getMarkerAttribute().get(i).getAttribute().getName().equals(this.getMarkerAttribute().get(j).getAttribute().getName()) && i!=j)
 				{
-					this.getMarkerAttribute().get(i).getAttribute().setName(this.getMarkerAttribute().get(j).getAttribute().getName() + j);
+					this.getMarkerAttribute().get(i).getAttribute().setName(this.getMarkerAttribute().get(j).getAttribute().getName() + (i-1));
 				}
 			}
 		}
