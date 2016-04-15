@@ -33,7 +33,7 @@
             <form name="sidebarMarkerUpdate" default-button="buttonUpdate" method="post" novalidate>
 
                 <fieldset
-                        ng-disabled="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED' || currentEntity.status == 'CANCELED')">
+                        ng-disabled="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED')">
 
 
                     <span style="font-weight: bold; font-size: 18px;padding-left: 15px; margin: 20px 0 20px 0; float: left;">
