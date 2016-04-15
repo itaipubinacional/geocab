@@ -573,7 +573,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 },
                 errorHandler: function (message, exception) {
                 	if (exception.message.indexOf("ConstraintViolationException") > -1){
-                		message = $translate('admin.layer-config.Is-not-possible-to-remove-the-layer-because-the-layer-is-present-at-a-custom-search');
+                		message = $translate('admin.layer-config.You-can-not-remove-the-layer-check-that-it-is-referenced-in-a-post-or-custom-search');
                 	}
                     $scope.msg = {type: "danger", text:message, dismiss: true};
                     $scope.fadeMsg();
