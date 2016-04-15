@@ -756,6 +756,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.formattedLatitude  = $scope.convertDDtoDMS($scope.latitude, true);
           $scope.formattedLongitude = $scope.convertDDtoDMS($scope.longitude, false);
         }
+
         $scope.$apply();
 
       }
@@ -1943,6 +1944,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.closeSelectMarker();
 
+    $scope.latitude = marker.latitude;
+    $scope.longitude = marker.longitude;
+
+    $timeout(function() {
+      $scope.setMarkerCoordinatesFormat();
+    });
+
     $timeout(function(){
       $scope.toggleSidebarMarkerDetailUpdate(300);
     }, 400);
@@ -2078,14 +2086,18 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           var geometry = feature.feature.getGeometry();
           var coordinate = geometry.getCoordinates();
 
+          var marker = feature.feature.getProperties().marker;
+
           var transformed_coordinate = ol.proj.transform(coordinate, 'EPSG:900913', 'EPSG:4326');
+
+          marker.latitude = transformed_coordinate[1];
+          marker.longitude = transformed_coordinate[0];
 
           $scope.latitude = transformed_coordinate[1];
           $scope.longitude = transformed_coordinate[0];
 
           $scope.setMarkerCoordinatesFormat();
 
-          var marker = feature.feature.getProperties().marker;
           var extentMarker = feature.extent;
 
           var feature = feature.feature;
