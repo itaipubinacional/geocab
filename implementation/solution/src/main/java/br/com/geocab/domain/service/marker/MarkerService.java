@@ -469,8 +469,10 @@ public class MarkerService extends AbstractMarkerService
 		}
 		catch (ParseException e)
 		{
-			throw new RuntimeException("admin.marker.Invalid-coordinates");
+			throw new RuntimeException(messages.getMessage("admin.marker.Invalid-coordinates", null, null));
 		}
+		
+		Assert.isTrue(geom.isValid(), messages.getMessage("admin.marker.Invalid-coordinates", null, null));
 		return geom;
 	}
 

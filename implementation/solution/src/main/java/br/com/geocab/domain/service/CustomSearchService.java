@@ -4,14 +4,11 @@
 package br.com.geocab.domain.service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
-
-import javax.validation.ConstraintViolationException;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +21,7 @@ import br.com.geocab.domain.entity.accessgroup.AccessGroupCustomSearch;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.layer.CustomSearch;
 import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.layer.LayerField;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupCustomSearchRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.customsearch.ICustomSearchRepository;
@@ -51,7 +49,7 @@ public class CustomSearchService
 	/**
 	 * 
 	 */
-	private static final Logger LOG = Logger.getLogger( DataSourceService.class.getName() );
+//	private static final Logger LOG = Logger.getLogger( DataSourceService.class.getName() );
 	/**
 	 * Repository of an {@link CustomRepository}
 	 */
@@ -74,6 +72,24 @@ public class CustomSearchService
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	/**
+	 * Remove os atributos do tipo foto da pesquisa personalizada, para que a mesma possa ser salva com sucesso
+	 * @param customSearch
+	 * @return
+	 */
+	private static CustomSearch removeAttributesPhotoAlbum(CustomSearch customSearch )
+	{
+		for (Iterator<LayerField> layerFields = customSearch.getLayerFields().iterator(); layerFields.hasNext(); ) 
+		{
+			LayerField l = layerFields.next();
+			if (l.getType() == null)
+			{
+				layerFields.remove();
+			}
+	    }
+		return customSearch;
+	}
+	
+	/**
 	 * Method to insert an {@link CustomSearch}
 	 * 
 	 * @param MarkerModeration
@@ -81,15 +97,7 @@ public class CustomSearchService
 	 */
 	public Long insertCustomSearch( CustomSearch customSearch )
 	{
-		//Assert.notNull(customSearch.getLayer(), Messages.getException( "pesquisapersonalizada.camada" ));
-		try{
-			customSearch = this.customSearchRepository.save( customSearch );	
-		}
-		catch ( DataIntegrityViolationException e )
-		{
-			LOG.info( e.getMessage() );
-			//throw new IllegalArgumentException( Messages.getException( "pesquisapersonalizada.nome_existe" ) );
-		}
+		customSearch = this.customSearchRepository.save( removeAttributesPhotoAlbum(customSearch) );	
 		for (AccessGroupCustomSearch accessGroupCustomSearch : customSearch.getAccessGroupCustomSearch())
 		{
 			accessGroupCustomSearch.setCustomSearch(customSearch);
@@ -107,30 +115,10 @@ public class CustomSearchService
 	 */
 	public CustomSearch updateCustomSearch( CustomSearch customSearch )
 	{
-		//Assert.notNull(customSearch.getLayer(), Messages.getException( "pesquisapersonalizada.camada" ));
-		try{
-			/* 
-			 * On update isn't allow to modify an layer
-			 * The original layer stay. 
-			 * 
-			 * */
-//			CustomSearch customSearchDatabase = this.findCustomSearchById(customSearch.getId());
-			customSearch.setLayer(this.customSearchRepository.getFindLayerById(customSearch.getLayer().getId()));
-			
-			customSearch.setAccessGroupCustomSearch(null);
-//			customSearch.setLayerFields(null);
-			customSearch = this.customSearchRepository.save( customSearch );
-		}
-		catch ( DataIntegrityViolationException e )
-		{
-			LOG.info( e.getMessage() );
-			//throw new IllegalArgumentException( Messages.getException( "pesquisapersonalizada.nome_existe" ) );
-		}
-		catch ( ConstraintViolationException e ){
-			LOG.info( e.getMessage() );
-			//throw new IllegalArgumentException( Messages.getException( "pesquisapersonalizada.nome_existe" ) );
-		}
-		
+		customSearch.setLayer(this.customSearchRepository.getFindLayerById(customSearch.getLayer().getId()));
+		customSearch.setAccessGroupCustomSearch(null);
+		customSearch = this.customSearchRepository.save( removeAttributesPhotoAlbum(customSearch) );
+
 		return customSearch;
 	}
 	
@@ -248,8 +236,6 @@ public class CustomSearchService
 				}
 			}
 		}
-		
-		
 		return customsSearchUser;
 	}
 	
