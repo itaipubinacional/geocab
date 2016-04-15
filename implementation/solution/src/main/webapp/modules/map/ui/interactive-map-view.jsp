@@ -1232,17 +1232,20 @@ uri="http://www.springframework.org/security/tags"%>
 
                     <div class="form-item position-relative" style="width: 300px;">
                       <label><input type="checkbox" id="grupo" style="width: 20px;"
+                             ng-change="shapeFile.form.startVisible = shapeFile.form.startEnabled  || shapeFile.form.enabled || shapeFile.form.startVisible"
                              ng-model="shapeFile.form.startEnabled"> <spring:message code="admin.layer-config.Start-allowed-in-map"/></label>
                     </div>
 
                     <div class="form-item position-relative" style="width: 300px;">
                       <label><input type="checkbox" style="width: 20px;"
+                             ng-disabled="shapeFile.form.startEnabled || shapeFile.form.enabled"
                              ng-model="shapeFile.form.startVisible"> <spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
                     </div>
 
                     <div class="form-item position-relative" style="width: 300px;">
                       <label><input type="checkbox" style="width: 20px;"
-                             ng-model="shapeFile.form.enabled"> <spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
+                            ng-change="shapeFile.form.startVisible = shapeFile.form.startEnabled  || shapeFile.form.enabled || shapeFile.form.startVisible"
+                            ng-model="shapeFile.form.enabled"> <spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
                     </div>
 
                     <div>
