@@ -6,7 +6,7 @@
  * @param $log
  * @param $location
  */
-function UploadPopUpController($scope, $modalInstance, $filter, $importService, $translate, layer, attribute, attributes) {
+function UploadPopUpController($scope, $modalInstance, $filter, $importService, $translate, $timeout, layer, attribute, attributes) {
 
 
   $importService("markerService");
@@ -153,8 +153,8 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 //    $scope.fadeMsg();
 
     $scope.isLoading = false;
-
     $scope.$apply();
+
   };
 
   $scope.removeChecked = function () {
