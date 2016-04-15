@@ -638,9 +638,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
 
         // regEx = /\d{2}[.|,]\d{6}/;
+        regEx = /\d+/;
 
-        // if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
-
+        if (regEx.test(formattedLatitude) && regEx.test(formattedLongitude)) {
 
           formattedLatitude = parseFloat(formattedLatitude);
           formattedLongitude = parseFloat(formattedLongitude);
@@ -716,7 +716,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
 
           //$scope.setMarkerCoordinatesFormat();
-        // }
+        }
       }
 
     };
@@ -3686,7 +3686,25 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     });
 
-    $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
+    if(!$scope.currentEntity.latitude && !$scope.currentEntity.longitude) {
+
+      $scope.msg = {type: "danger", text: $translate('admin.marker.Invalid-coordinates'), dismiss: true};
+
+      $scope.currentEntity.layer = oldLayer;
+
+      $("div.msgMap").show();
+
+      setTimeout(function () {
+        $("div.msgMap").fadeOut();
+      }, 5000);
+
+      $scope.isLoading = false;
+
+      return;
+
+    } else {
+      $scope.currentEntity.wktCoordenate = new ol.format.WKT().writeGeometry(new ol.geom.Point([$scope.currentEntity.latitude, $scope.currentEntity.longitude]));
+    }
 
     markerService.insertMarker( $scope.currentEntity, {
       callback: function (result) {
@@ -3725,8 +3743,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         setTimeout(function () {
           $("div.msgMap").fadeOut();
         }, 5000);
-
-
 
 
         $scope.$apply();
