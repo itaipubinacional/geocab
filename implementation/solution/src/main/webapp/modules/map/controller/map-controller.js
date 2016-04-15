@@ -3696,7 +3696,25 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
 
         $scope.removeInternalLayer($scope.currentEntity.layer.id, function (layerId) {
-          $scope.addInternalLayer(layerId);
+          //$scope.addInternalLayer(layerId);
+
+
+          //Select layer on treeview
+          angular.forEach($scope.allLayers, function(layer){
+
+            var node = $filter('filter')(layer.children, {value: result.layer.id})[0];
+
+            if(angular.isDefined(node)) {
+              if(node.selected) {
+                $('#layer_' + result.layer.id).trigger('click');
+                $('#layer_' + result.layer.id).trigger('click');
+              } else {
+                $('#layer_' + result.layer.id).trigger('click');
+              }
+            }
+          });
+
+
         });
 
         $scope.clearFcMarker(true);
@@ -3709,20 +3727,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }, 5000);
 
 
-        //Select layer on treeview
-        angular.forEach($scope.allLayers, function(layer){
 
-          var node = $filter('filter')(layer.children, {value: result.layer.id})[0];
-
-          if(angular.isDefined(node)) {
-            if(node.selected) {
-              $('#layer_' + result.layer.id).trigger('click');
-              $('#layer_' + result.layer.id).trigger('click');
-            } else {
-              $('#layer_' + result.layer.id).trigger('click');
-            }
-          }
-        });
 
         $scope.$apply();
       },
