@@ -457,7 +457,7 @@ div#dropbox{float: left;height: auto;min-height: 520px; width: 100%;border: 2px 
 div#dropbox.over {background-color: #e8f0fe; border: 2px solid #4285f4 }
 div#dropbox > .dropbox {text-align: center; margin-top: 130px}
 div#dropbox > .dropbox p{margin-top: 15px}
-div#dropbox > div#dropbox-over-msg {text-align: center; left: 235px;background-color: #428bca;color: #fff; padding: 15px;position:absolute; bottom:15px; width: 250px}
+div#dropbox > div#dropbox-over-msg {pointer-events: none;text-align: center; left: 235px;background-color: #428bca;color: #fff; padding: 15px;position:absolute; bottom:15px; width: 250px}
 
 /* GALLERY */
 div#gallery > div.modal-body > div.col-md-10{min-height: 800px}
