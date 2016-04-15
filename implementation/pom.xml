@@ -82,7 +82,7 @@
 
 				<!-- Hibernate -->
 				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
-				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
+				<mvn.hibernate.showSql>false</mvn.hibernate.showSql>
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
@@ -138,7 +138,7 @@
 
 				<!-- Hibernate -->
 				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
-				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
+				<mvn.hibernate.showSql>false</mvn.hibernate.showSql>
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
@@ -194,7 +194,7 @@
 
 				<!-- Hibernate -->
 				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
-				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
+				<mvn.hibernate.showSql>false</mvn.hibernate.showSql>
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
