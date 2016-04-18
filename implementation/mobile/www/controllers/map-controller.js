@@ -508,6 +508,7 @@
               if (photo.id) {
                 photo.image = null;
               }
+              photo.selected = false;
             });
           }
 
