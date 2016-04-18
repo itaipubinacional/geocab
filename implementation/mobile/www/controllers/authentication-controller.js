@@ -132,7 +132,12 @@ angular.module('application')
           //Se o usuário clicou em voltar, ou seja, cancelou o login via facebook
           if(error == 'user cancelled'){
             $ionicLoading.hide();
-          }else {
+          } else if(error == 'no valid token') {
+            //TODO traduzir
+            $ionicLoading.hide();
+            $scope.model.errorMsg.template = 'Verifique sua autenticação no google plus';
+            $ionicPopup.alert($scope.model.errorMsg);
+          } else {
             $scope.loginFailed();
           }
         }
@@ -144,7 +149,7 @@ angular.module('application')
     */
     $scope.login = function(url, user){
       //Valida o token provido pelo facebook no back-end, o back-end devolve a sessão do usuário
-      $http.post($API_ENDPOINT + url, user)
+      $http.post($API_ENDPOINT + url, {'email':user.email, 'password': user.password, 'token': user.token})
         .success(function (data, status, headers, config) {
           $scope.model.user = data;
           $scope.loginSuccess();
@@ -153,7 +158,7 @@ angular.module('application')
       });
     };
 
-
+    
     /**
       *
     */
