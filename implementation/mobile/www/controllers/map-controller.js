@@ -210,7 +210,7 @@
                   //$scope.currentEntity.layer = $scope.allInternalLayerGroups[0];
                   $rootScope.$broadcast('loading:hide');
 
-                  if(angular.equals($scope.currentEntity, {}) && angular.equals($scope.currentEntity.layer, {})) {
+                  if(!angular.equals($scope.currentEntity, {}) && !angular.equals($scope.currentEntity.layer, {})) {
                     angular.forEach(result, function (layer) {
                       if ($scope.currentEntity.layer && layer.id == $scope.currentEntity.layer.id) {
                         $scope.currentEntity.layer = layer;
@@ -306,7 +306,7 @@
 
                 $scope.initializeMap();
 
-                $scope.showNewMarker();
+
 
               } else {
 
@@ -851,6 +851,7 @@
             if(!angular.equals($scope.allLayers, {}))
               $scope.toggleLastLayer();
 
+            $scope.showNewMarker();
             //$scope.loadSelectedLayers();
           });
         });
