@@ -814,6 +814,12 @@
                             name: attribute.name
                           });
 
+                          if (attribute.type == 'PHOTO_ALBUM'){
+
+                            $scope.getPhotosByAttribute(attribute, index);
+
+                          }
+
                         }
 
                       });
