@@ -341,6 +341,8 @@
           }
           case $scope.MAP_MARKER:
           {
+            $scope.imgResult = '';
+
             $ionicNavBarDelegate.showBackButton(true);
 
             $ionicPlatform.ready(function() {
