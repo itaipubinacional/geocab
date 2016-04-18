@@ -427,7 +427,7 @@
               };
             }
             angular.forEach(markerAttribute[index].photoAlbum.photos, function (photos, idx) {
-              if(angular.isDefined(markerAttribute[index].photoAlbum.photos[idx].photoAlbum) && angular.isDefined(markerAttribute[index].photoAlbum.photos[idx].photoAlbum.photos)) {
+              if(angular.isDefined(markerAttribute[index].photoAlbum.photos[idx].photoAlbum) && markerAttribute[index].photoAlbum.photos[idx].photoAlbum != null && angular.isDefined(markerAttribute[index].photoAlbum.photos[idx].photoAlbum.photos)) {
                 angular.forEach(markerAttribute[index].photoAlbum.photos[idx].photoAlbum.photos, function (albumPhotos) {
                   albumPhotos.photoAlbum = {
                     id: albumPhotos.photoAlbum.id,
@@ -818,7 +818,7 @@
 
                           if (attribute.type == 'PHOTO_ALBUM'){
 
-                            $scope.getPhotosByAttribute(attribute, index);
+                            $scope.getPhotosByAttribute($scope.currentEntity.markerAttribute[$scope.currentEntity.markerAttribute.length - 1], index);
 
                           }
 
