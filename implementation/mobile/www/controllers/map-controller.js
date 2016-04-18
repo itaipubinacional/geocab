@@ -151,6 +151,8 @@
 
       $scope.loadSelectedLayers = function () {
 
+        $log.debug('loadSelectedLayers');
+
         angular.forEach($scope.selectedLayers, function (layer) {
            $scope.toggleLayer(layer);
         });
@@ -848,11 +850,13 @@
           });
 
           $timeout(function(){
-            if(!angular.equals($scope.allLayers, {}))
+            if(!angular.equals($scope.allLayers, []))
               $scope.toggleLastLayer();
 
             $scope.showNewMarker();
-            //$scope.loadSelectedLayers();
+
+            if(!angular.equals($scope.allLayers, []))
+              $scope.loadSelectedLayers();
           });
         });
 
@@ -1028,6 +1032,8 @@
 
 
       $scope.toggleLayer = function (layer, removeCurrentEntity) {
+
+        $log.debug('toggleLayer');
 
         if(angular.isDefined(layer.id)) {
           if (removeCurrentEntity && !angular.equals($scope.currentEntity, {}) && $scope.currentEntity.id) {
@@ -1228,6 +1234,8 @@
       };
 
       $scope.toggleLastLayer = function() {
+
+        $log.debug('toggleLastLayer');
 
         if (angular.isDefined($scope.lastCurrentEntity) && angular.isDefined($scope.lastCurrentEntity.layer)) {
           $scope.internalLayer = $filter('filter')($scope.allLayers, {id: $scope.lastCurrentEntity.layer.id})[0];
