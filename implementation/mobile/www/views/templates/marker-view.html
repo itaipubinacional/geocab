@@ -9,6 +9,9 @@
     </ion-nav-back-button>
 
     <ion-nav-buttons side="right">
+      <button class="button button-icon icon ion-images" ng-if="(selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM')" 
+              ng-click="closePopover();getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);">
+      </button>
       <button class="button button-icon icon ion-android-done" form="marker" id="sendForm" type="submit" ng-show="!isDisabled">
       </button>
       <button class="button button-icon icon ion-android-more-vertical" ng-click="openPopover($event)" ></button>
