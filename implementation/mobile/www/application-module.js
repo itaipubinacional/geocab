@@ -22,7 +22,9 @@
    *
    */
   module.config(function($stateProvider, $urlRouterProvider, $importServiceProvider, $sceDelegateProvider, $API_ENDPOINT,
-                         $translateProvider, $compileProvider, $httpProvider, $logProvider) {
+                         $translateProvider, $compileProvider, $httpProvider, $logProvider, $ionicConfigProvider) {
+
+    $ionicConfigProvider.views.swipeBackEnabled(false);
 
     $logProvider.debugEnabled(true); //TODO Fixme;
 
@@ -117,7 +119,6 @@
    */
   module.run(function($rootScope, $log, $http, $ionicPopup, $ionicPlatform, $state, $stateParams, $API_ENDPOINT, ngFB,
                       $cordovaStatusbar, $ionicLoading, $cordovaNetwork) {
-
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
