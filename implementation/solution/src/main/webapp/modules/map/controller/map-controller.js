@@ -3189,7 +3189,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           angular.forEach(result, function (markerAttribute, index) {
             if (markerAttribute.attribute.type == "NUMBER" && markerAttribute.value) {
-              markerAttribute.value = parseInt(markerAttribute.value);
+              markerAttribute.value = parseFloat(markerAttribute.value);
             }
           });
 
@@ -3226,7 +3226,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
             angular.forEach(result, function (markerAttribute, index) {
               if (markerAttribute.attribute.type == "NUMBER" && markerAttribute.value) {
-                markerAttribute.value = parseInt(markerAttribute.value);
+                markerAttribute.value = parseFloat(markerAttribute.value);
               }
             })
 
@@ -4388,7 +4388,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           angular.forEach(result, function (markerAttribute, index) {
             if (markerAttribute.attribute.type == "NUMBER" && markerAttribute.value) {
-              markerAttribute.value = parseInt(markerAttribute.value);
+              markerAttribute.value = parseFloat(markerAttribute.value);
             }
 
             if(markerAttribute.attribute.type == 'PHOTO_ALBUM')
