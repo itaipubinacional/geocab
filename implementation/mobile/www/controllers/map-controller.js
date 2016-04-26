@@ -79,7 +79,6 @@
 
       $scope.lastCenterPosition = localStorage.getItem('lastCenterPosition') ? angular.fromJson(localStorage.getItem('lastCenterPosition')) : [-54.1394, -24.7568];
 
-
       /**
        *
        */
@@ -510,6 +509,8 @@
               }
               photo.selected = false;
             });
+
+            $rootScope.$broadcast('photos:has-selected', false);
           }
 
           if (angular.equals($scope.selectedPhotoAlbumAttribute, {}) || reload === true) {

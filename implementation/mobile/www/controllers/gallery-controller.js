@@ -10,6 +10,8 @@
     .controller('GalleryController', function($rootScope, $scope, $translate, $state, $timeout, $log, $cordovaCamera, $ionicLoading,
                                               $cordovaToast, $ionicModal, $ionicSlideBoxDelegate, $ionicActionSheet) {
 
+      $scope.hasSelectedPhotos = false;
+
       $rootScope.$on('camera:result', function(event, imageData){
 
         var selectedPhotoAlbumAttribute = angular.fromJson(localStorage.selectedPhotoAlbumAttribute);
@@ -38,14 +40,16 @@
         });
       });
 
+      $rootScope.$on('photos:has-selected', function(event, status){
+        $scope.hasSelectedPhotos = status;
+      });
+
       $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
         if(navigator && navigator.splashscreen) navigator.splashscreen.hide();
 
         $log.debug('beforeEnter');
         viewData.enableBack = true;
       });
-
-      $scope.hasSelectedPhotos = false;
 
       $scope.takePhoto = function() {
 

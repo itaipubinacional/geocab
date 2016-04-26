@@ -1,10 +1,10 @@
 <ion-popover-view>
   <ion-content>
     <ion-list class="options-menu-button">
-      <ion-item >
+      <!-- <ion-item >
         <button class="button button-icon icon ion-images" ng-if="(selectedPhotoAlbumAttribute.type == 'PHOTO_ALBUM')" ng-click="closePopover();getPhotosByAttribute(selectedPhotoAlbumAttribute);$state.go(MAP_GALLERY);">
           {{'map.Photos' | translate}} </button>
-      </ion-item>
+      </ion-item> -->
       <ion-item>
         <button ng-click="approveMarker()" ng-disabled="currentEntity.status == 'ACCEPTED' || !currentEntity.id || userMe.role != 'ADMINISTRATOR'" class="button button-icon icon ion-thumbsup">
           {{'map.Approve' | translate}} </button>
