@@ -150,12 +150,12 @@ uri="http://www.springframework.org/security/tags"%>
                       <i class="glyphicon glyphicon-ok"></i>
                       </button>
                       <br>
-                      <div style="text-align:center; position: relative">
 
+                      <div style="text-align:center; position: relative">
                         <div ng-click="showGallery(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-style="{'background-image':'url(' + imgResult + ')'}">
                             <div class="overlay">
                                 <i class="icon itaipu-icon-zoom"></i>
-                                <h3><spring:message code="View-more"/></h3>
+                                <h3 ng-if="countPhotos > 1"> + {{countPhotos}} </h3>
                             </div>
                         </div>
 

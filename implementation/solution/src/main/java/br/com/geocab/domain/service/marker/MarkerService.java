@@ -27,6 +27,9 @@ import org.directwebremoting.io.FileTransfer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,25 +166,39 @@ public class MarkerService extends AbstractMarkerService
 	
 	
 	/**
-	 * Pega a ultima foto salva 
+	 * Pega a ultima foto que foi adicionada na marker
+	 * 
 	 * @param markerId
 	 * @return
 	 */
-	public Photo lastPhotoByMarkerId(Long markerId)
+	public Page<Photo> lastPhotoByMarkerId(Long markerId)
 	{
-		Photo photo = this.photoRepository.listByMarkerId(markerId).get(0);
-		try
+	        
+		Order order = new Order(Sort.Direction.DESC, "id");
+	    Sort sort = new Sort(order);
+		Pageable pageRequest = new PageRequest( 0, 1 , sort);
+		
+		
+		Page<Photo> photos = this.photoRepository.findPhotoByMarkerId(markerId, pageRequest);
+		
+		for (Photo photo : photos.getContent())
 		{
-			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
-			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
-			photo.setImage(fileTransfer);
+			try
+			{
+				MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
+				FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
+				photo.setImage(fileTransfer);
+			}
+			catch (RepositoryException e)
+			{
+				e.printStackTrace();
+			}
 		}
-		catch (RepositoryException e)
-		{
-			e.printStackTrace();
-		}
-		return photo;
+		
+		return photos;
+		
 	}
+	
 	
 	/**
 	 * Remove todas as fotos no sistema de arquivos

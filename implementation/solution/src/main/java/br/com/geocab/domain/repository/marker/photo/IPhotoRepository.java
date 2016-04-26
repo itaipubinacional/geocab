@@ -45,5 +45,14 @@ public interface IPhotoRepository extends IDataRepository<Photo, Long>
 			 " FROM Photo photo WHERE (photo.photoAlbum.markerAttribute.marker.id = :markerId)"+ 
 			 " ORDER BY photo.created DESC")
 	List<Photo> listByMarkerId(@Param("markerId") Long markerId);
+	
+	
+	@Query(value="SELECT photo "
+			+ " FROM Photo photo"
+			+ " WHERE (photo.photoAlbum.markerAttribute.marker.id = :markerId) ")
+	Page<Photo> findPhotoByMarkerId(@Param("markerId") Long markerId, Pageable pageable);
+	
+	
 
+	
 }

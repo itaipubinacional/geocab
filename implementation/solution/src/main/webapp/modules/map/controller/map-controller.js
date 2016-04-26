@@ -3138,12 +3138,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       markerService.lastPhotoByMarkerId($scope.marker.id, {
         callback: function (result) {
 
-          $scope.imgResult = result.image;
+          $scope.imgResult = result.content[0].image;
+          $scope.countPhotos = result.total;
+
           $scope.$apply();
 
         },
         errorHandler: function (message, exception) {
           $scope.imgResult = null;
+          $scope.countPhotos = 0;
           $scope.message = {type: "error", text: message};
           $scope.$apply();
         }
@@ -4332,17 +4335,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
 
     if (typeof $scope.marker != "undefined") {
+
       markerService.lastPhotoByMarkerId($scope.marker.id, {
         callback: function (result) {
 
-          $scope.imgResult = result.image;
+          $scope.imgResult = result.content[0].image;
+          $scope.countPhotos = result.total;
+
         },
         errorHandler: function (message, exception) {
           $scope.imgResult = null;
+          $scope.countPhotos = 0;
+
           $scope.message = {type: "error", text: message};
           $scope.$apply();
         }
       });
+
 
       $scope.attributesByLayer = [];
       $scope.showNewAttributes = false;

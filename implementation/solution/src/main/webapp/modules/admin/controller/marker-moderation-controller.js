@@ -992,11 +992,16 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         markerService.lastPhotoByMarkerId(id, {
             callback: function (result) {
 
-                $scope.imgResult = result.image;
+                $scope.imgResult = result.content[0].image;
+                $scope.countPhotos = result.total;
 
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
+
+                $scope.imgResult = null;
+                $scope.countPhotos = 0;
+
                 $scope.message = {type: "danger", text: message};
                 $scope.$apply();
             }
