@@ -179,23 +179,22 @@ public class MarkerService extends AbstractMarkerService
 		Pageable pageRequest = new PageRequest( 0, 1 , sort);
 		
 		
-		Page<Photo> photos = this.photoRepository.findPhotoByMarkerId(markerId, pageRequest);
-		
-		for (Photo photo : photos.getContent())
+		Page<Photo> photo = this.photoRepository.findPhotoByMarkerId(markerId, pageRequest);
+
+		try
 		{
-			try
-			{
-				MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
-				FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
-				photo.setImage(fileTransfer);
-			}
-			catch (RepositoryException e)
-			{
-				e.printStackTrace();
-			}
+			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getContent().get(0).getIdentifier(), true);
+			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
+			photo.getContent().get(0).setImage(fileTransfer);
+		}
+		catch (RepositoryException e)
+		{
+			e.printStackTrace();
 		}
 		
-		return photos;
+		Assert.isTrue( photo.getNumberOfElements() > 0 );
+		
+		return photo;
 		
 	}
 	
