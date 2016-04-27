@@ -1264,7 +1264,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   }
 
-
   /**
    * Treat the selection and deselection of each of the tree
    * @param node
@@ -1574,9 +1573,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             callback: function (result) {
 
               $scope.attributesByMarkerOnHover = result;
-              $scope.$apply();
 
               angular.forEach($scope.attributesByMarkerOnHover, function(attribute){
+                  if(attribute.attribute.type === 'NUMBER') attribute.value = attribute.value.toString().replace('.', ',');
                   if(attribute.attribute.visible)
                     $('#popup1').css('z-index', 0);
               });
@@ -1589,6 +1588,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
               $('#popup1').css('bottom', 'initial');
 
               $('.ol-popup1:after').css('left', $('#popup1').outerWidth() / 2);
+
+              $scope.$apply();
 
             },
             errorHandler: function (message, exception) {
