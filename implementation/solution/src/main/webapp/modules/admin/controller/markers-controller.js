@@ -2034,7 +2034,7 @@ ront controller of angle won't let enter an invalid URL.
         markerService.lastPhotoByMarkerId(id, {
             callback: function (result) {
                 $scope.imgResult = result.content[0].image;
-                $scope.countPhotos = result.total;
+                $scope.countPhotos = result.total - 1;
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {

@@ -3141,7 +3141,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         callback: function (result) {
 
           $scope.imgResult = result.content[0].image;
-          $scope.countPhotos = result.total;
+          $scope.countPhotos = result.total -1;
 
           $scope.$apply();
 
@@ -4342,7 +4342,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         callback: function (result) {
 
           $scope.imgResult = result.content[0].image;
-          $scope.countPhotos = result.total;
+          $scope.countPhotos = result.total - 1;
 
         },
         errorHandler: function (message, exception) {
