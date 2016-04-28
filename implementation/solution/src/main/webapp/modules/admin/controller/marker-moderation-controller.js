@@ -993,7 +993,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             callback: function (result) {
 
                 $scope.imgResult = result.content[0].image;
-                $scope.countPhotos = result.total;
+                $scope.countPhotos = result.total - 1;
 
                 $scope.$apply();
             },

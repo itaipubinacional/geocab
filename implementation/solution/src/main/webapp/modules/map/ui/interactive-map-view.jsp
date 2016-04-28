@@ -155,7 +155,7 @@ uri="http://www.springframework.org/security/tags"%>
                         <div ng-click="showGallery(attributesByMarker)" ng-show="imgResult" class="marker-image" ng-style="{'background-image':'url(' + imgResult + ')'}">
                             <div class="overlay">
                                 <i class="icon itaipu-icon-zoom"></i>
-                                <h3 ng-if="countPhotos > 1"> + {{countPhotos}} </h3>
+                                <h3 ng-if="countPhotos >= 1"> + {{countPhotos}} </h3>
                             </div>
                         </div>
 
