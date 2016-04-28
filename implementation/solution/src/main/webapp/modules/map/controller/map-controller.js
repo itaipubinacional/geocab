@@ -1573,6 +1573,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             callback: function (result) {
 
               $scope.attributesByMarkerOnHover = result;
+              $scope.$apply();
 
               angular.forEach($scope.attributesByMarkerOnHover, function(attribute){
                   if(attribute.attribute.type === 'NUMBER') attribute.value = attribute.value.toString().replace('.', ',');
