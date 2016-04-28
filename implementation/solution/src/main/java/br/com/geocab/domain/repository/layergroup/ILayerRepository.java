@@ -7,7 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.layer.MapScale;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**
@@ -22,12 +24,23 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/	
+//	Long id, String name, String title, String icon,	Boolean startEnabled, Boolean startVisible, Integer orderLayer,
+//	MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, 	Boolean published, 	DataSource dataSource, String layerGroupName
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible," +
+			" layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, dataSource,  layerGroup.name,  layerGroup.id)  " +
+			"FROM Layer layer " +
+			"LEFT OUTER JOIN layer.layerGroup layerGroup " +
+			"LEFT OUTER JOIN layer.dataSource dataSource " + 
+			"WHERE ( layer.id = :layerId ) " )
+	public Layer findById( @Param("layerId") Long layerId);
+	
+	
 	/**
 	 * @param filter
 	 * @param pageable
 	 * @return
 	 */
-	@Query(value="SELECT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup ) " +
+	@Query(value="SELECT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource.name, layerGroup.name ) " +
 				"FROM Layer layer " +
 				"LEFT OUTER JOIN layer.dataSource dataSource " + 
 				"LEFT OUTER JOIN layer.layerGroup layerGroup " +

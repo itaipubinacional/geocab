@@ -1043,7 +1043,10 @@ public class LayerGroupService
 	@Transactional(readOnly = true)
 	public Layer findLayerById( Long id )
 	{
-		final Layer layer = this.layerRepository.findOne(id);
+//		final Layer layer = this.layerRepository.findOne(id);
+		
+		final Layer layer = this.layerRepository.findById(id);
+		
 		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));
 		
 		// traz a legenda da camada do GeoServer
