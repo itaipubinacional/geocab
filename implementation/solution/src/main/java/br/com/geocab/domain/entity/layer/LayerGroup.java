@@ -12,6 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -19,8 +22,11 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.directwebremoting.annotations.DataTransferObject;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 
@@ -35,6 +41,17 @@ import br.com.geocab.domain.entity.AbstractEntity;
 @Audited
 @DataTransferObject(javascript="LayerGroup")
 @Table(uniqueConstraints= @UniqueConstraint(columnNames={"name", "layer_group_upper_id"}))
+@NamedQueries(
+{
+	@NamedQuery(name="LayerGroup.testGraph", query="select layerGroup from LayerGroup layerGroup WHERE ( layerGroup.layerGroupUpper = NULL AND layerGroup.draft = null AND layerGroup.published = false ) ORDER BY orderLayerGroup")
+//	@NamedQuery(name="LayerGroup.testGraph", query="select layerGroup from LayerGroup layerGroup WHERE ( layerGroup.layerGroupUpper = NULL AND layerGroup.draft = null AND layerGroup.published = false ) ORDER BY orderLayerGroup")
+})
+@NamedEntityGraph( 
+		name = "LayerGroup.graph ",
+
+	    attributeNodes = @NamedAttributeNode(value = "name"),
+	    subgraphs = @NamedSubgraph(name="test", attributeNodes=@NamedAttributeNode(value = "name"))	   	
+	)
 public class LayerGroup extends AbstractEntity implements Serializable, ITreeNode
 {
 
@@ -166,10 +183,34 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 		this.setLayerGroupUpper(new LayerGroup(layerGroupUpperId));
 		this.published = published;
 	}
+	
+	
+	/**
+	 * LIstagem de Grupo de camadas
+	 */
+	public LayerGroup(Long id,String name,Integer orderLayerGroup, List<Layer> layers )
+	{
+//	LayerGroup layersGroupUpper,	
+		
+		this.id = id;
+		this.name = name;
+		this.orderLayerGroup = orderLayerGroup;	
+//		LayerGroup layerGroup = new LayerGroup(layerGroupLayerGroupUpperId);
+//		this.setLayerGroupUpper(layerGroup);
+		
+		this.setLayers(layers);
+
+//		this.setLayersGroup(layersGroup);
+		
+//		this.setLayerGroupUpper(layersGroupUpper);
+		
+
+	}
 
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	
 	
 	/**
 	 * @return the published
