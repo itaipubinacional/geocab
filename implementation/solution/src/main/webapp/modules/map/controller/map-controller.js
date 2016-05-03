@@ -1576,7 +1576,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
               $scope.$apply();
 
               angular.forEach($scope.attributesByMarkerOnHover, function(attribute){
-                  if(attribute.attribute.type === 'NUMBER') attribute.value = attribute.value.toString().replace('.', ',');
+                  if(attribute.attribute.type === 'NUMBER') attribute.value = $filter('number')(attribute.value);
                   if(attribute.attribute.visible)
                     $('#popup1').css('z-index', 0);
               });
