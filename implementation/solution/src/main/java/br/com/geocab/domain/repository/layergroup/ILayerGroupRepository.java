@@ -2,12 +2,8 @@ package br.com.geocab.domain.repository.layergroup;
 
 import java.util.List;
 
-import javax.persistence.NamedEntityGraph;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -32,29 +28,20 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	public LayerGroup findByDraftId( Long draftId );
 	
 	/**
-	 * Listagem de GRUPOD DE CAMADAS
 	 * 
 	 * @return
 	 */
-
-	@Query(value="FROM LayerGroup layerGroup "
+	@Query(value="FROM LayerGroup layerGroup " 
 			+ "WHERE ( layerGroup.layerGroupUpper = NULL "
 			+	"AND layerGroup.draft = null "
 			+	"AND layerGroup.published = false ) "
-			+ "ORDER BY orderLayerGroup" 
-			)
+			+ "ORDER BY orderLayerGroup" )
 	public List<LayerGroup> listLayersGroupUpper();
-	
-
-//	@EntityGraph(value = "LayerGroup.graph", type = EntityGraphType.LOAD)
-	public List<LayerGroup> testGraph();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	
-
 	@Query(value="FROM LayerGroup layerGroup " 
 			+ "WHERE ( layerGroup.layerGroupUpper = NULL "
 			+	"AND layerGroup.published = true ) "
@@ -66,13 +53,13 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 //	 * 
 //	 * @return
 //	 */
-	@Query(value="FROM LayerGroup layerGroup " 
-			+ "WHERE ( layerGroup.published = true ) "
-			+ "ORDER BY orderLayerGroup" )
-//	@Query(value="SELECT new LayerGroup( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id )  " +
-//			"FROM LayerGroup layerGroup " +
-//			"WHERE ( layerGroup.published = true ) " +
-//			"ORDER BY orderLayerGroup")
+//	@Query(value="FROM LayerGroup layerGroup " 
+//			+ "WHERE ( layerGroup.published = true ) "
+//			+ "ORDER BY orderLayerGroup" )
+	@Query(value="SELECT new LayerGroup( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id )  " +
+			"FROM LayerGroup layerGroup " +
+			"WHERE ( layerGroup.published = true ) " +
+			"ORDER BY orderLayerGroup")
 	public List<LayerGroup> listAllLayersGroupPublished();
 	
 	/**

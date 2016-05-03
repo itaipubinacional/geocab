@@ -478,11 +478,6 @@ public class LayerGroupService
 	public List<LayerGroup> listLayersGroupUpper()
 	{
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupUpper();
-//		TODO alterar a consulta aki ~^^
-		
-//		List<LayerGroup> layersGroup = this.layerGroupRepository.testGraph();
-		
-		
 		
 		setLegendsLayers(layersGroup);
 		
