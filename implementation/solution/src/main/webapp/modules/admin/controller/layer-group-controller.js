@@ -78,8 +78,9 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     	
     	$scope.currentState = $scope.LIST_STATE;
         $state.go( $scope.LIST_STATE );
-        
-        $scope.changeToList();
+
+        if(toState.name == 'layer-group.list')
+            $scope.changeToList();
 
     };
 
@@ -481,6 +482,10 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     {
         return angular.element(document.getElementById("tree-root")).scope();
     };
+
+    $timeout(function(){
+        $scope.$broadcast('angular-ui-tree:collapse-all');
+    }, 1000);
 
     $scope.fadeMsg = function(){
 		$("div.msg").show();

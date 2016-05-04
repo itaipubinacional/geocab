@@ -35,7 +35,7 @@ import br.com.geocab.domain.entity.AbstractEntity;
 @Audited
 @DataTransferObject(javascript="LayerGroup")
 @Table(uniqueConstraints= @UniqueConstraint(columnNames={"name", "layer_group_upper_id"}))
-public class LayerGroup extends AbstractEntity implements Serializable, ITreeNode
+public class LayerGroup extends AbstractEntity implements Serializable
 {
 
 	/**
@@ -146,9 +146,6 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 		this.setName(name);
 	}
 	
-	
-	
-	
 	/**
 	 * @param name
 	 * @param orderLayerGroup
@@ -158,13 +155,20 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	 * @param draft
 	 * @param published
 	 */
-	public LayerGroup(Long id, String name, Integer orderLayerGroup, Boolean published, Long layerGroupUpperId)
+	public LayerGroup(Long id, String name, Integer orderLayerGroup)
 	{
 		this.setId(id);
 		this.name = name;
 		this.orderLayerGroup = orderLayerGroup;
+	}
+	
+	public LayerGroup(Long id, String name, Integer orderLayerGroup, Boolean published, Long layerGroupUpperId)
+	{
+		this.setId(id);
+		this.setName(name);
+		this.setOrderLayerGroup(orderLayerGroup);
+		this.setPublished(published);
 		this.setLayerGroupUpper(new LayerGroup(layerGroupUpperId));
-		this.published = published;
 	}
 
 	/*-------------------------------------------------------------------
@@ -193,22 +197,6 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 			published = false;
 		}
 		this.published = published;
-	}
-	
-	/**
-	 * 
-	 */
-	@Override
-	public List<? extends ITreeNode> getNodes()
-	{
-		if ( layersGroup != null && !layersGroup.isEmpty() )
-		{
-			return this.layersGroup;
-		}
-		else
-		{
-			return this.layers;
-		}
 	}
 	
 	

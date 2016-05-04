@@ -479,7 +479,7 @@ public class LayerGroupService
 	{
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupUpper();
 		
-		setLegendsLayers(layersGroup);
+		//setLegendsLayers(layersGroup);
 		
 		return layersGroup;
 		
