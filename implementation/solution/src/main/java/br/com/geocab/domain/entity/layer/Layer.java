@@ -332,6 +332,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	}
 
 	/**
+	 * listByFilters
 	 * 
 	 * @param id
 	 * @param name
@@ -346,10 +347,11 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
+
 	public Layer(Long id, String name, String title, String icon,
 			Boolean startEnabled, Boolean startVisible, Integer orderLayer,
 			MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled,
-			DataSource dataSource, LayerGroup layerGroup)
+			String dataSourceName, String layerGroupName)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -360,10 +362,48 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setMinimumScaleMap(minimumMapScale);
 		this.setMaximumScaleMap(maximumMapScale);
 		this.setEnabled(enabled);
+		
+		DataSource dataSource = new DataSource();
+		dataSource.setName(dataSourceName);
 		this.setDataSource(dataSource);
+		
+		LayerGroup layerGroup = new LayerGroup();
+		layerGroup.setName(layerGroupName);
 		this.setLayerGroup(layerGroup);
+		
 		this.setIcon(icon);
 	}
+	
+
+	public Layer(Long id, String name, String title, String icon,
+			Boolean startEnabled, Boolean startVisible, Integer orderLayer,
+			MapScale minimumScaleMap, MapScale maximumScaleMap, Boolean enabled, 
+			Boolean published, 
+			DataSource dataSource, String layerGroupName, Long layerGroupId)
+	{
+		this.setId(id);
+		this.setName(name);
+		this.setTitle(title);
+		this.setIcon(icon);
+		this.setStartEnabled(startEnabled);
+		this.setStartVisible(startVisible);
+		this.setOrderLayer(orderLayer);
+		this.setMinimumScaleMap(minimumScaleMap);
+		this.setMaximumScaleMap(maximumScaleMap);
+		this.setEnabled(enabled);
+		this.setPublished(published);
+		this.setDataSource(dataSource);
+		
+		LayerGroup layerGroup = new LayerGroup(); 
+		layerGroup.setName(layerGroupName);
+		layerGroup.setId(layerGroupId);
+		this.setLayerGroup(layerGroup);
+		
+//		this.setPublishedLayer(publishedLayer);
+		
+		
+	}
+	
 
 	/**
 	 * 
