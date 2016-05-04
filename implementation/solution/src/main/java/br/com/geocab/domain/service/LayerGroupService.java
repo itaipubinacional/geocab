@@ -482,6 +482,32 @@ public class LayerGroupService
 		setLegendsLayers(layersGroup);
 		
 		return layersGroup;
+	}
+	
+	@Transactional(readOnly=true)
+	public LayerGroup listLayersGroupByLayerGroupId(Long id)
+	{
+		
+		LayerGroup layerGroup = new LayerGroup();
+		
+		layerGroup = this.layerGroupRepository.findLayerGroupById( id );			
+	
+		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupByLayerGroupId( id );
+		
+		if( layersGroup.isEmpty() )
+		{
+			List<Layer> layers = this.layerGroupRepository.listLayersByLayerGroupId( id );
+			
+			layerGroup.setLayers(layers);
+		} 
+		else
+		{
+			layerGroup.setLayersGroup(layersGroup);
+		}
+		
+//		setLegendsLayers(layersGroup);
+		
+		return layerGroup;	
 		
 	}
 	

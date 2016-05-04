@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
@@ -27,6 +28,14 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 */
 	public LayerGroup findByDraftId( Long draftId );
 	
+	
+	
+	
+	@Query(value="SELECT new LayerGroup(layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id)"
+			+ "FROM LayerGroup layerGroup " +
+			"WHERE ( layerGroup.id = :id ) " )
+	public LayerGroup findLayerGroupById( @Param("id") Long id );
+	
 	/**
 	 * 
 	 * @return
@@ -37,6 +46,28 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 			+	"AND layerGroup.published = false ) "
 			+ "ORDER BY orderLayerGroup" )
 	public List<LayerGroup> listLayersGroupUpper();
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Query(value="SELECT New LayerGroup ( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id)"
+			+ "FROM LayerGroup layerGroup "
+			+ "LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " 
+			+ "WHERE ( layerGroupUpper.id = :id "
+			+	"AND layerGroup.draft = null "
+			+	"AND layerGroup.published = false ) "
+			+ "ORDER BY layerGroup.orderLayerGroup" )
+	public List<LayerGroup> listLayersGroupByLayerGroupId( @Param("id") Long id );
+	
+	@Query(value="SELECT New Layer (layer.id,layer.name, layer.orderLayer)"
+			+ " FROM Layer layer "
+			+ " WHERE ( layer.layerGroup.id = :id "
+	        + " AND layerGroup.published = false ) "
+	        + " ORDER BY layer.orderLayer" )
+	public List<Layer> listLayersByLayerGroupId( @Param("id") Long id );
+
 	
 	/**
 	 * 
