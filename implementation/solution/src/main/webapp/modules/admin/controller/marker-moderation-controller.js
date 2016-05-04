@@ -1588,7 +1588,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
                 angular.forEach(result, function (markerAttribute, index) {
                     if (markerAttribute.attribute.type == "NUMBER") {
-                        markerAttribute.value = parseInt(markerAttribute.value);
+                        markerAttribute.value = parseFloat(markerAttribute.value);
                     }
                 });
 
