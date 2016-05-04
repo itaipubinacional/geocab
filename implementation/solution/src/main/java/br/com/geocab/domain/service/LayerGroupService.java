@@ -505,7 +505,7 @@ public class LayerGroupService
 			layerGroup.setLayersGroup(layersGroup);
 		}
 		
-//		setLegendsLayers(layersGroup);
+		setLegendsLayers(layersGroup);
 		
 		return layerGroup;	
 		

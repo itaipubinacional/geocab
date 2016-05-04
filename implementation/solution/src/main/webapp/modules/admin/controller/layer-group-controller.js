@@ -115,8 +115,8 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         layerGroupService.listLayersGroupUpper( {
             callback : function(result) {
                 $scope.currentPage = result;
-                $scope.currentState = $scope.LIST_STATE;
-                $state.go( $scope.LIST_STATE );
+                //$scope.currentState = $scope.LIST_STATE;
+                //$state.go( $scope.LIST_STATE );
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {
@@ -124,6 +124,32 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                 $scope.$apply();
             }
         });
+    };
+
+    $scope.listLayersGroupByLayerGroupId = function(element, node, index) {
+
+        layerGroupService.listLayersGroupByLayerGroupId(node.id, {
+            callback : function(result) {
+
+                if(!angular.isDefined(node.nodes) || angular.equals(node.nodes, [])) {
+
+                    node.nodes = !angular.equals(result.layersGroup, []) ? result.layersGroup : result.layers;
+
+                    console.log($scope.currentPage);
+
+                    $timeout(function () {
+                        $scope.$broadcast('angular-ui-tree:collapse-all');
+                    }, 1000);
+                }
+
+                $scope.$apply();
+            },
+            errorHandler : function(message, exception) {
+                $scope.message = {type:"danger", text: message};
+                $scope.$apply();
+            }
+        });
+
     };
 
     /**
