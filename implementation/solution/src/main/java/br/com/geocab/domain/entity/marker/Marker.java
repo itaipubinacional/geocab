@@ -231,6 +231,7 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
+	 * TODO Verifica se é utilizada no sistema
 	 * 
 	 * @param id
 	 * @param latitudeGeometry
@@ -251,6 +252,31 @@ public class Marker extends AbstractEntity implements Serializable
 		this.setUser(user);
 		layer.setMarkers(null);
 		this.setLayer(layer);
+		this.setLocation((Point) location);
+		this.setCreated(created);
+	}
+	
+	/**
+	 * Listagem de Markers 
+	 * 
+	 * @param id
+	 * @param status
+	 * @param created
+	 * @param location
+	 * @param layerId
+	 * @param layerName
+	 * @param user
+	 */
+	public Marker(Long id, MarkerStatus status, Calendar created, Geometry location, Long layerId, String layerName, User user)
+	{
+		this.setId(id);
+		this.setStatus(status);
+		user.setPassword("");
+		this.setUser(user);
+		
+		Layer layer = new Layer(layerId, layerName);
+		this.setLayer(layer);
+		
 		this.setLocation((Point) location);
 		this.setCreated(created);
 	}
