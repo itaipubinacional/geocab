@@ -178,11 +178,13 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param name
 	 * @param orderLayer
 	 */
-	public Layer(Long id, String name, Integer orderLayer)
+	public Layer(Long id, String name, Integer orderLayer, String icon)
 	{
+		
 		this.setId(id);
 		this.setName(name);
 		this.setOrderLayer(orderLayer);
+		this.setIcon(icon);
 	}
 
 	/**
