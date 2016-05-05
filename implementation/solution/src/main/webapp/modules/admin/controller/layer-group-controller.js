@@ -47,7 +47,9 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     /**
      * Stores the current entity for editing or detail.
      */
-    $scope.currentEntity;
+    $scope.currentEntity = {};
+
+    $scope.groupsUpper = [];
 
     /**
      * Controls if it's required to save the sorting before creating or editing group
@@ -112,13 +114,24 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.listLayerGroup = function() {
 
+
         layerGroupService.listLayersGroupUpper( {
             callback : function(result) {
-                $scope.currentPage = result;
-                //$scope.currentState = $scope.LIST_STATE;
-                //$state.go( $scope.LIST_STATE );
+
+                angular.forEach(result, function(group, index){
+                    result[index].nodes = [];
+                    result[index].collapsed = false;
+                });
+
+                $scope.groupsUpper = result;
+
+                /*$timeout(function () {
+                    $scope.$broadcast('angular-ui-tree:collapse-all');
+                }, 100);*/
+
                 $scope.$apply();
             },
+
             errorHandler : function(message, exception) {
                 $scope.message = {type:"danger", text: message};
                 $scope.$apply();
@@ -128,27 +141,35 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
     $scope.listLayersGroupByLayerGroupId = function(element, node, index) {
 
-        layerGroupService.listLayersGroupByLayerGroupId(node.id, {
-            callback : function(result) {
+        node.collapsed = !node.collapsed;
 
-                if(!angular.isDefined(node.nodes) || angular.equals(node.nodes, [])) {
+        if(!angular.isDefined(node.nodes) || angular.equals(node.nodes, [])) {
+
+            node.nodes = [];
+
+            layerGroupService.listLayersGroupByLayerGroupId(node.id, {
+                callback : function(result) {
+
+                    if(result.length == 0)
+                        node.collapsed = false;
 
                     node.nodes = !angular.equals(result.layersGroup, []) ? result.layersGroup : result.layers;
 
-                    console.log($scope.currentPage);
-
                     $timeout(function () {
-                        $scope.$broadcast('angular-ui-tree:collapse-all');
-                    }, 1000);
-                }
 
-                $scope.$apply();
-            },
-            errorHandler : function(message, exception) {
-                $scope.message = {type:"danger", text: message};
-                $scope.$apply();
-            }
-        });
+                        $scope.$broadcast('angular-ui-tree:expand-all');
+                    }, 100);
+
+                    $scope.$apply();
+                },
+                errorHandler : function(message, exception) {
+                    $scope.message = {type:"danger", text: message};
+                    $scope.$apply();
+                }
+            });
+        } else {
+            //delete node.nodes;
+        }
 
     };
 
@@ -508,10 +529,6 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     {
         return angular.element(document.getElementById("tree-root")).scope();
     };
-
-    $timeout(function(){
-        $scope.$broadcast('angular-ui-tree:collapse-all');
-    }, 1000);
 
     $scope.fadeMsg = function(){
 		$("div.msg").show();
