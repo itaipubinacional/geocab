@@ -912,14 +912,19 @@ uri="http://www.springframework.org/security/tags"%>
                     <div ivh-treeview="allLayers"
                          ivh-treeview-on-toggle="listLayersGroupByLayerGroupId(ivhNode, ivhIsExpanded, ivhTree)">
                         <script type="text/ng-template">
-                            <span ivh-treeview-toggle>
-                                <span ivh-treeview-twistie></span>
-                            </span>
-                            <tree-view-box></tree-view-box>
-                            <span class="ivh-treeview-node-label" ivh-treeview-toggle>
-                                {{trvw.label(node)}}
-                            </span>
-                            <div ivh-treeview-children></div>
+                            <div class="ivh-treeview-node">
+                                <span ivh-treeview-toggle>
+                                    <span ivh-treeview-twistie></span>
+                                </span>
+                                <img ng-click="showLegendDetail(itm)" ng-hide="itm.legenda == '' || itm.legenda == undefined" class="label-image ng-hide" src="">
+                                <tree-view-box class="tree-view"></tree-view-box>
+                                <label class="ivh-treeview-node-label dynamic-text">
+                                    <span class="ivh-treeview-node-label" ivh-treeview-toggle>
+                                        {{trvw.label(node)}}
+                                    </span>
+                                </label>
+                            </div>
+                            <div style="padding-left: 15px" ivh-treeview-children></div>
                         </script>
                     </div>
 

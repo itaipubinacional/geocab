@@ -1166,8 +1166,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.listLayersGroupByLayerGroupId = function(ivhNode, ivhIsExpanded, ivhTree){
 
-    console.log('awesomeCallback');
-
     var emptyChildren = {label: 'Nenhum registro'};
 
     ivhNode.children = [];

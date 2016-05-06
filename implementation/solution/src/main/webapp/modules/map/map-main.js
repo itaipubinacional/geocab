@@ -4,7 +4,17 @@
   //Start the AngularJS
   var projectModule = angular.module("map", ["ui.bootstrap", "angular-sortable-view", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", "ivh.treeview", "ivh.treeview-extend", 'eits-default-button', 'localytics.directives', 'ui-scaleSlider', 'angularBootstrapNavTree', 'eits-upload-file']);
 
-  projectModule.config(function ($stateProvider, $urlRouterProvider, $importServiceProvider, $translateProvider) {
+  projectModule.config(function ($stateProvider, $urlRouterProvider, $importServiceProvider, $translateProvider, ivhTreeviewOptionsProvider) {
+
+    ivhTreeviewOptionsProvider.set({
+      defaultSelectedState: false,
+      validate: true,
+      // Twisties can be images, custom html, or plain text
+      twistieCollapsedTpl: '<span class="ivh-treeview-toggle ivh-treeview-toggle-right icon itaipu-icon-arrow-right"></span>',
+      twistieExpandedTpl: '<span class="ivh-treeview-toggle ivh-treeview-toggle-down icon itaipu-icon-arrow-down" style="color: #0077bf"></span>',
+      twistieLeafTpl: '&#9679;'
+    });
+
     //-------
     //Broker configuration
     //-------
@@ -48,15 +58,15 @@
   });
 
   projectModule.directive('treeViewBox', function(ivhTreeviewMgr) {
+    
     return {
       restrict: 'AE',
       require: '^ivhTreeview',
       template: [
-        '<span class="tree-view-box">[',
-        '<span ng-show="node.selected" class="x">x</span>',
-        '<span ng-show="node.__ivhTreeviewIndeterminate" class="y">~</span>',
-        '<span ng-hide="node.selected || node.__ivhTreeviewIndeterminate"> </span>',
-        ']</span>',
+          '<span ng-show="node.selected" class="x">x</span>',
+          '<span ng-show="node.__ivhTreeviewIndeterminate" class="y">~</span>',
+          '<span ng-hide="node.selected || node.__ivhTreeviewIndeterminate"> </span>',
+          '<input ivh-treeview-checkbox="itm" ivh-treeview-indeterminate-attribute="indeterminate" class="ivh-treeview-checkbox css-checkbox" type="checkbox" ng-model="node.selected">'
       ].join(''),
       link: function(scope, element, attrs, ctrl) {
         element.on('click', function() {

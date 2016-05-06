@@ -277,7 +277,7 @@ input[type=checkbox].css-checkbox {
     display: none;
 }
 
-input[type=checkbox].css-checkbox + label {
+.tree-view + label, input[type=checkbox].css-checkbox + label {
     margin-left: 37px;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -285,7 +285,7 @@ input[type=checkbox].css-checkbox + label {
     user-select:none;
 }
 
-input[type=checkbox].css-checkbox + label:before {
+.tree-view + label:before, input[type=checkbox].css-checkbox + label:before {
     content: "";
     display: inline-block;
     width: 20px;
@@ -297,7 +297,7 @@ input[type=checkbox].css-checkbox + label:before {
     padding-top: 2px;
 }
 
-input[type=checkbox].css-checkbox:checked + label:before {
+.tree-view + label:before, input[type=checkbox].css-checkbox:checked + label:before {
     content: "\2713";
     font-size: 11px;
     color: #f3f3f3;
@@ -306,7 +306,7 @@ input[type=checkbox].css-checkbox:checked + label:before {
     background-color: #0077C1;
 }
 
-input[type=checkbox].css-checkbox:indeterminate + label:before {
+.tree-view + label:before, input[type=checkbox].css-checkbox:indeterminate + label:before {
     content: "\2796";
     font-size: 11px;
     color: #f3f3f3;
@@ -335,7 +335,7 @@ input[type=checkbox].css-checkbox:indeterminate + label:before {
 .ivh-treeview-node {
     position: relative;
     margin: 10px 0;
-    display : flex;
+    /*display : flex;*/
 }
 
 .ivh-treeview-node-label span::after {
@@ -343,7 +343,9 @@ input[type=checkbox].css-checkbox:indeterminate + label:before {
     width   : 20px;
     display : inline-block;
 }
-
+ul.ivh-treeview{
+    list-style-type: none;
+}
 ul.ivh-treeview li .ivh-treeview-toggle {
     font-size: 13px;
     -moz-user-select: none;
