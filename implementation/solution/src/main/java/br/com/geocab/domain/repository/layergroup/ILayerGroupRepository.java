@@ -64,10 +64,10 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 			+ "ORDER BY layerGroup.orderLayerGroup" )
 	public List<LayerGroup> listLayersGroupByLayerGroupId( @Param("id") Long id );
 	
-	@Query(value="SELECT New Layer (layer.id,layer.name, layer.orderLayer, layer.icon)"
+	@Query(value="SELECT New Layer (layer.id,layer.name, layer.orderLayer, layer.icon, layer.dataSource)"
 			+ " FROM Layer layer "
 			+ " WHERE ( layer.layerGroup.id = :id "
-	        + " AND layerGroup.published = false ) "
+	        + " AND layer.layerGroup.published = false ) "
 	        + " ORDER BY layer.orderLayer" )
 	public List<Layer> listLayersByLayerGroupId( @Param("id") Long id );
 

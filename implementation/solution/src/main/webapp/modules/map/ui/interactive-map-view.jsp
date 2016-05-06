@@ -909,13 +909,28 @@ uri="http://www.springframework.org/security/tags"%>
                     class="sidebar-content-search form-control" />
                   </div>
 
-                  <div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
+                    <div ivh-treeview="allLayers"
+                         ivh-treeview-on-toggle="listLayersGroupByLayerGroupId(ivhNode, ivhIsExpanded, ivhTree)">
+                        <script type="text/ng-template">
+                            <span ivh-treeview-toggle>
+                                <span ivh-treeview-twistie></span>
+                            </span>
+                            <tree-view-box></tree-view-box>
+                            <span class="ivh-treeview-node-label" ivh-treeview-toggle>
+                                {{trvw.label(node)}}
+                            </span>
+                            <div ivh-treeview-children></div>
+                        </script>
+                    </div>
+
+                  <!--<div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
                        ivh-treeview-label-attribute="'label'"
                        ivh-treeview-legend-attribute="'legenda'"
                        ivh-treeview-children-attribute="'children'"
                        ivh-treeview-id-attribute="'id'"
-                       ivh-treeview-filter="filter:bagSearch">
-                  </div>
+                       ivh-treeview-on-toggle="awesomeCallback(ivhNode, ivhIsExpanded, ivhTree)"
+                       ivh-treeview-filter="bagSearch">
+                  </div>-->
 
                   <div class="sidebar-content-header" ng-if="allSearchs.length > 0" style="margin: 30px 0px;"><spring:message code="map.Searchs"/></div>
                   <br style="clear: both;">

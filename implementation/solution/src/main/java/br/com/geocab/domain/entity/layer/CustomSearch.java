@@ -112,8 +112,9 @@ public class CustomSearch extends AbstractEntity implements Serializable
 		this.setId(id);
 		this.setName(name);
 		
-		Layer layer = new Layer(layerId, layerName);
+		Layer layer = new Layer(layerId);
 		layer.setTitle(layerTitle);
+		layer.setName(layerName);
 		layer.setIcon(layerIcon);
 		layer.setDataSource(dataSource);
 		
