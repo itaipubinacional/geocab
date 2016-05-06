@@ -542,46 +542,51 @@ public class LayerGroupService
 		
 		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
 		
-			
-			List<AccessGroup> accessGroupsUser =  new ArrayList<AccessGroup>();
-			final User user = ContextHolder.getAuthenticatedUser();
-			
-			if (!user.equals(User.ANONYMOUS))
+		return this.layersGroupUpperByRole(layersGroupUpperPublished);
+		
+	}
+	
+	
+	public List<Layer> listLayerPublished()
+	{
+		
+		LayerGroup layerGroup = new LayerGroup();
+		
+		List<LayerGroup> layerGroups = new ArrayList<LayerGroup>();
+		
+		layerGroup.setLayers( this.layerRepository.listLayersPublished() );
+		
+		layerGroups.add( layerGroup );
+		
+		layerGroups = layersGroupUpperByRole(layerGroups);
+		
+		return layerGroups.get(0).getLayers();
+		
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param layersGroupUpperPublished
+	 * @return
+	 */
+	private List<LayerGroup> layersGroupUpperByRole( List<LayerGroup> layersGroupUpperPublished )
+	{
+		
+		List<AccessGroup> accessGroupsUser =  new ArrayList<AccessGroup>();
+		final User user = ContextHolder.getAuthenticatedUser();
+		
+		if (!user.equals(User.ANONYMOUS))
+		{
+			if( user.getRole() != UserRole.ADMINISTRATOR ) 
 			{
-				if( user.getRole() != UserRole.ADMINISTRATOR ) 
-				{
-					accessGroupsUser = this.accessGroupRepository.listByUser(user.getEmail());
-					
-					for (AccessGroup accessGroup : accessGroupsUser)
-					{
-						accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
-					}
-					
-					if ( !layersGroupUpperPublished.isEmpty() )
-					{
-						verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
-					}
-					
-					List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
-					
-					for ( LayerGroup layerGroup : layersGroupUpperPublished )
-					{
-						this.removeLayerGroupEmptyPublished(layerGroup);
-						
-						if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
-						{
-							layerGroupToDelete.add(layerGroup);
-						}
-					}
-					layersGroupUpperPublished.removeAll(layerGroupToDelete);
-				}
-			}
-			else 
-			{
-				AccessGroup accessGroup = this.accessGroupRepository.findById(AccessGroup.PUBLIC_GROUP_ID);
-				accessGroupsUser.add(accessGroup);
+				accessGroupsUser = this.accessGroupRepository.listByUser(user.getEmail());
 				
-				accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
+				for (AccessGroup accessGroup : accessGroupsUser)
+				{
+					accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
+				}
 				
 				if ( !layersGroupUpperPublished.isEmpty() )
 				{
@@ -601,6 +606,32 @@ public class LayerGroupService
 				}
 				layersGroupUpperPublished.removeAll(layerGroupToDelete);
 			}
+		}
+		else 
+		{
+			AccessGroup accessGroup = this.accessGroupRepository.findById(AccessGroup.PUBLIC_GROUP_ID);
+			accessGroupsUser.add(accessGroup);
+			
+			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
+			
+			if ( !layersGroupUpperPublished.isEmpty() )
+			{
+				verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
+			}
+			
+			List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
+			
+			for ( LayerGroup layerGroup : layersGroupUpperPublished )
+			{
+				this.removeLayerGroupEmptyPublished(layerGroup);
+				
+				if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
+				{
+					layerGroupToDelete.add(layerGroup);
+				}
+			}
+			layersGroupUpperPublished.removeAll(layerGroupToDelete);
+		}
 		
 		return layersGroupUpperPublished;
 		
