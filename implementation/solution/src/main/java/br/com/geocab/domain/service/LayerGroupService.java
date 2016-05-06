@@ -494,18 +494,27 @@ public class LayerGroupService
 	
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupByLayerGroupId( id );
 		
+		//Se o grupo de camadas está vazio (se não tem outros grupos de camadas internamente) pega as camadas desse grupo de camadas
 		if( layersGroup.isEmpty() )
 		{
 			List<Layer> layers = this.layerGroupRepository.listLayersByLayerGroupId( id );
 			
 			layerGroup.setLayers(layers);
-		} 
+			
+//			layersGroup.add(layerGroup);
+//			layerGroup.setLayersGroup(layersGroup);
+			List<LayerGroup> listGroups = new ArrayList<>();
+			listGroups.add(layerGroup);
+			setLegendsLayers(listGroups);
+		}
+		//Se o grupo de camadas tem outros grupos de camadas internamente, seta o grupo de camadas
 		else
 		{
 			layerGroup.setLayersGroup(layersGroup);
+			setLegendsLayers(layersGroup);
 		}
 		
-		setLegendsLayers(layersGroup);
+		
 		
 		return layerGroup;	
 		
@@ -722,6 +731,7 @@ public class LayerGroupService
 							// traz a legenda da camada do GeoServer
 							if( layerGroup.getLayers().get(j).getDataSource().getUrl() != null ) {
 								layerGroup.getLayers().get(j).setLegend((getLegendLayerFromGeoServer(layerGroup.getLayers().get(j))));	
+								layerGroup.getLayers().get(j).setIcon((layerGroup.getLayers().get(j).getLegend()));
 							}
 							
 						}
