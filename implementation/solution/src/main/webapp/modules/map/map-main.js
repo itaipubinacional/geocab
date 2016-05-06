@@ -47,6 +47,26 @@
     $rootScope.$stateParams = $stateParams;
   });
 
+  projectModule.directive('treeViewBox', function(ivhTreeviewMgr) {
+    return {
+      restrict: 'AE',
+      require: '^ivhTreeview',
+      template: [
+        '<span class="tree-view-box">[',
+        '<span ng-show="node.selected" class="x">x</span>',
+        '<span ng-show="node.__ivhTreeviewIndeterminate" class="y">~</span>',
+        '<span ng-hide="node.selected || node.__ivhTreeviewIndeterminate"> </span>',
+        ']</span>',
+      ].join(''),
+      link: function(scope, element, attrs, ctrl) {
+        element.on('click', function() {
+          ivhTreeviewMgr.select(ctrl.root(), scope.node, !scope.node.selected);
+          scope.$apply();
+        });
+      }
+    };
+  });
+
   /**
    *
    */

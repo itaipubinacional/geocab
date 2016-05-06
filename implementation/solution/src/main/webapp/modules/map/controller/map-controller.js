@@ -1162,18 +1162,85 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     });
 
-  }
+  };
 
+  $scope.listLayersGroupByLayerGroupId = function(ivhNode, ivhIsExpanded, ivhTree){
+
+    console.log('awesomeCallback');
+
+    var emptyChildren = {label: 'Nenhum registro'};
+
+    ivhNode.children = [];
+
+    layerGroupService.listLayersGroupByLayerGroupId(41, {
+      callback : function(result) {
+
+        var children = !angular.equals(result.layersGroup, []) ? result.layersGroup : result.layers;
+
+        angular.forEach(children, function(group) {
+
+          var item = {};
+
+          item.id = 'grupo' + '_' + group.id.toString();
+          item.label = group.name ? group.name : group.title;
+          item.name = group.name ? 'teste' : group.name;
+          item.legenda = group.legend ? null : group.legend;
+          item.selected = false;
+          item.dataSourceUrl = !group.dataSource ? null : group.dataSource.url;
+          item.value = group.id;
+          item.type = 'grupo';
+          item.maximumScaleMap = group.maximumScaleMap ? '' : group.maximumScaleMap;
+          item.minimumScaleMap = group.minimumScaleMap ? '' : group.minimumScaleMap;
+          item.children = [emptyChildren];
+
+          ivhNode.children.push(item);
+
+        });
+
+        $scope.$apply();
+      },
+      errorHandler : function(message, exception) {
+        $scope.message = {type:"danger", text: message};
+        $scope.$apply();
+      }
+    });
+  };
   /**
    *
    */
   $scope.listPublishedLayersGroup = function () {
 
+    var emptyChildren = {label: 'Nenhum registro'};
+
+    var test = '[{"id":"grupo_30","label":"marp.cd","name":"","legenda":"","selected":"","dataSourceUrl":"","value":30,"type":"grupo","maximumScaleMap":"","minimumScaleMap":""}]';
+
     //Lists the groups of layers and layers published according to user access profile
     layerGroupService.listLayerGroupUpperPublished({
       callback: function (result) {
 
-        var parseNode = function (node) {
+        angular.forEach(result, function(group){
+
+          var item = {};
+
+          item.id = 'grupo' + '_' + group.id.toString();
+          item.label = group.name ? group.name : group.title;
+          item.name = group.name ? 'teste' : group.name;
+          item.legenda = group.legend ? null : group.legend;
+          item.selected = false;
+          item.dataSourceUrl = !group.dataSource ? null : group.dataSource.url;
+          item.value = group.id;
+          item.type = 'grupo';
+          item.maximumScaleMap = group.maximumScaleMap ? '' : group.maximumScaleMap;
+          item.minimumScaleMap = group.minimumScaleMap ? '' : group.minimumScaleMap;
+          item.children = [emptyChildren];
+
+          $scope.allLayers.push(item);
+
+          console.log($scope.allLayers);
+
+        });
+
+        /*var parseNode = function (node) {
           var item = {};
 
           item.id = (!!node.nodes ? 'grupo' : 'layer') + '_' + node.id.toString();
@@ -1197,9 +1264,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           if (!!node.nodes) {
             for (var i = 0; i < node.nodes.length; ++i) {
               item.children.push(parseNode(node.nodes[i]));
-//                            if( true === node.nodes[i].startVisible ) {
-//                                item.children.push(parseNode(node.nodes[i]));
-//                            }
+                           // if( true === node.nodes[i].startVisible ) {
+                           //     item.children.push(parseNode(node.nodes[i]));
+                           // }
             }
           }
           return item;
@@ -1224,7 +1291,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
               $scope.allLayers[0].selected = true;
             }
           }
-        }
+        }*/
 
 
         $scope.$apply();
