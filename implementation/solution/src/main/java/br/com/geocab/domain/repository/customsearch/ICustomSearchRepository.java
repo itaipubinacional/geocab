@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.CustomSearch;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
@@ -42,7 +41,18 @@ public interface ICustomSearchRepository extends IDataRepository<CustomSearch, L
 				"OR ( LOWER(dataSource.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) )" )
 	public Page<CustomSearch> listByFilters( @Param("filter") String filter, Pageable pageable );
 	
+	
+	
 
+	/**
+	 * @param id
+	 * @return
+	 */
+	@Query(value="SELECT new CustomSearch( customSearch.id, customSearch.name, customSearch.layer.id, customSearch.layer.name, customSearch.layer.title, customSearch.layer.icon , customSearch.layer.dataSource ) " +
+			"FROM CustomSearch customSearch " +
+			"WHERE  ( customSearch.id = :id )" )
+	public CustomSearch findById( @Param("id") Long id);
+	
 	/**
 	 * @param id
 	 * @return

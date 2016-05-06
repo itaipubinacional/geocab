@@ -201,8 +201,7 @@ public class CustomSearch extends AbstractEntity implements Serializable
 	/**
 	 * @param accessGroupCustomSearch the accessGroupCustomSearch to set
 	 */
-	public void setAccessGroupCustomSearch(
-			Set<AccessGroupCustomSearch> accessGroupCustomSearch)
+	public void setAccessGroupCustomSearch(Set<AccessGroupCustomSearch> accessGroupCustomSearch)
 	{
 		AccessGroupCustomSearch = accessGroupCustomSearch;
 	}

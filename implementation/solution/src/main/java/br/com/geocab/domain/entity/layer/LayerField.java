@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -74,6 +75,13 @@ public class LayerField extends AbstractEntity implements Serializable
 	private Long attributeId;
 	
 	
+	/**
+	 * 
+	 */
+	@NotAudited
+	@Column(nullable=false, name="pesquisa_id")
+	private Long customSearchId;
+	
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -98,12 +106,13 @@ public class LayerField extends AbstractEntity implements Serializable
 	 * @param label
 	 * @param order
 	 */
-	public LayerField( Long id, String name, String label, int order )
+	public LayerField( Long id, String name, String label, int order, LayerFieldType type )
 	{
 		this.setId(id);
 		this.setName(name);
 		this.setLabel(label);
 		this.setOrderLayer(order);
+		this.setType(type);
 	}
 	
 	/*-------------------------------------------------------------------
@@ -160,6 +169,8 @@ public class LayerField extends AbstractEntity implements Serializable
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
 	
+	
+	
 	/**
 	 * @param descricaoTipo the descricaoTipo to set
 	 */
@@ -171,6 +182,20 @@ public class LayerField extends AbstractEntity implements Serializable
 			this.type = parseTipoGeoserver(descricaoTipo);
 	}
 	
+	/**
+	 * @return the customSearchId
+	 */
+	public Long getCustomSearchId()
+	{
+		return customSearchId;
+	}
+	/**
+	 * @param customSearchId the customSearchId to set
+	 */
+	public void setCustomSearchId(Long customSearchId)
+	{
+		this.customSearchId = customSearchId;
+	}
 	/**
 	 * @param descricaoTipo the descricaoTipo to set
 	 */
