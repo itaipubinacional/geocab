@@ -4,6 +4,7 @@
 package br.com.geocab.domain.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.layer.CustomSearch;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerField;
+import br.com.geocab.domain.repository.ILayerFieldRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupCustomSearchRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.customsearch.ICustomSearchRepository;
@@ -55,6 +57,12 @@ public class CustomSearchService
 	 */
 	@Autowired
 	private ICustomSearchRepository customSearchRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private ILayerFieldRepository layerFieldRepository;
 	
 	/**
 	 * 
@@ -124,7 +132,7 @@ public class CustomSearchService
 	
 	/**
 	 * Method to remove an {@link customSearch}
-	 * 
+	 * TODO
 	 * @param id
 	 */
 	public void removeCustomSearch( Long id )
@@ -147,7 +155,12 @@ public class CustomSearchService
 	@Transactional(readOnly = true)
 	public CustomSearch findCustomSearchById( Long id )
 	{
-		CustomSearch customSearch = this.customSearchRepository.findOne( id );
+		CustomSearch customSearch = this.customSearchRepository.findById( id );
+		
+		
+		customSearch.setLayerFields(new HashSet<>(layerFieldRepository.findByCustomSearchId(id)));	
+		customSearch.setAccessGroupCustomSearch(new HashSet<>(accessGroupCustomSearchRepository.listByCustomSearchId(id)));
+		
 		
 		// Get the legend of GeoServer's layer
 		if (customSearch.getLayer().getDataSource().getUrl() != null){

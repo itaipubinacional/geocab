@@ -24,12 +24,22 @@ public interface IAccessGroupCustomSearchRepository extends IDataRepository<Acce
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	
+//	/**
+//	 * 
+//	 * @param searchId
+//	 * @return
+//	 */
+//	@Query(value="SELECT new AccessGroupCustomSearch( accessGroupCustomSearch.id, accessGroupCustomSearch.accessGroup, accessGroupCustomSearch.customSearch ) " +
+//				"FROM AccessGroupCustomSearch accessGroupCustomSearch " +
+//				"WHERE  accessGroupCustomSearch.customSearch.id = :searchId " )
+//	public List<AccessGroupCustomSearch> listByCustomSearchId( @Param("searchId") Long searchId );
+	
 	/**
 	 * 
 	 * @param searchId
 	 * @return
 	 */
-	@Query(value="SELECT new AccessGroupCustomSearch( accessGroupCustomSearch.id, accessGroupCustomSearch.accessGroup, accessGroupCustomSearch.customSearch ) " +
+	@Query(value="SELECT new AccessGroupCustomSearch( accessGroupCustomSearch.id, accessGroupCustomSearch.accessGroup.id, accessGroupCustomSearch.accessGroup.name, accessGroupCustomSearch.accessGroup.description, accessGroupCustomSearch.customSearch.id ) " +
 				"FROM AccessGroupCustomSearch accessGroupCustomSearch " +
 				"WHERE  accessGroupCustomSearch.customSearch.id = :searchId " )
 	public List<AccessGroupCustomSearch> listByCustomSearchId( @Param("searchId") Long searchId );
