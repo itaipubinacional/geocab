@@ -23,6 +23,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.accessgroup.AccessGroupCustomSearch;
+import br.com.geocab.domain.entity.datasource.DataSource;
 
 /**
  * 
@@ -92,6 +93,7 @@ public class CustomSearch extends AbstractEntity implements Serializable
 		this.setId(id);
 	}
 	/**
+	 * TODO Verificar se utilizado em algum outro lugar
 	 * 
 	 * @param id
 	 * @param name
@@ -103,6 +105,25 @@ public class CustomSearch extends AbstractEntity implements Serializable
 		this.setName(name);
 		this.setLayer(layer);
 	}
+	
+	
+	public CustomSearch( Long id, String name, Long layerId, String layerName, String layerTitle, String layerIcon ,DataSource dataSource)
+	{
+		this.setId(id);
+		this.setName(name);
+		
+		Layer layer = new Layer(layerId);
+		layer.setTitle(layerTitle);
+		layer.setName(layerName);
+		layer.setIcon(layerIcon);
+		layer.setDataSource(dataSource);
+		
+		layer.setLegend(layer.getLegend());
+		
+		this.setLayer(layer);
+		
+	}
+	
 	
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS

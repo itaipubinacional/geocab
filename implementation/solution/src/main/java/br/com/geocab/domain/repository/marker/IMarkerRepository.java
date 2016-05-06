@@ -103,8 +103,8 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
      * @param filter
      * @param pageable
      * @return
-     */
-    @Query(value="SELECT new Marker( marker.id, marker.status, marker.created, marker.location, layer, user) " +
+     */						
+    @Query(value="SELECT new Marker( marker.id, marker.status, marker.created, marker.location, layer.id, layer.name, user) " +
                 "FROM Marker marker " +
                 "LEFT OUTER JOIN marker.layer layer " +
                 "LEFT OUTER JOIN marker.user user " +
