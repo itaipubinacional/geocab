@@ -26,7 +26,7 @@ public interface ILayerFieldRepository extends IDataRepository<LayerField, Long>
 	 * @param searchId
 	 * @return
 	 */
-	@Query(value="SELECT new LayerField( layerField.id, layerField.name, layerField.label, layerField.orderLayer, layerField.type ) " +
+	@Query(value="SELECT new LayerField( layerField.id, layerField.name, layerField.label, layerField.orderLayer, layerField.type, layerField.attributeId ) " +
 				"FROM LayerField layerField " + 
 				"WHERE  layerField.customSearchId = :customSearchId " )
 	public List<LayerField> findByCustomSearchId( @Param("customSearchId") Long customSearchId );

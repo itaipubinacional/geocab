@@ -106,13 +106,14 @@ public class LayerField extends AbstractEntity implements Serializable
 	 * @param label
 	 * @param order
 	 */
-	public LayerField( Long id, String name, String label, int order, LayerFieldType type )
+	public LayerField( Long id, String name, String label, Integer orderLayer, LayerFieldType type, Long attributeId )
 	{
 		this.setId(id);
 		this.setName(name);
 		this.setLabel(label);
-		this.setOrderLayer(order);
+		this.setOrderLayer(orderLayer);
 		this.setType(type);
+		this.setAttributeId(attributeId);
 	}
 	
 	/*-------------------------------------------------------------------
@@ -134,8 +135,8 @@ public class LayerField extends AbstractEntity implements Serializable
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
-	}
-	/* (non-Javadoc)
+		}
+		/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

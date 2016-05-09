@@ -7,9 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Layer;
-import br.com.geocab.domain.entity.layer.MapScale;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**

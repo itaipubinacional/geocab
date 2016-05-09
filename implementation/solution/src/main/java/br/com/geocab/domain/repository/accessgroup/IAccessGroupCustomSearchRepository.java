@@ -5,6 +5,7 @@ package br.com.geocab.domain.repository.accessgroup;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -53,6 +54,16 @@ public interface IAccessGroupCustomSearchRepository extends IDataRepository<Acce
 			"FROM AccessGroupCustomSearch accessGroupCustomSearch " +
 			"WHERE  accessGroupCustomSearch.accessGroup.id = :groupId " )
 	public List<AccessGroupCustomSearch> listByAccessGroupId( @Param("groupId") Long groupId );
+	
+	/**
+	 * 
+	 * @param groupId
+	 * @return
+	 */
+	@Query(value="SELECT new AccessGroupCustomSearch( accessGroupCustomSearch.id, accessGroupCustomSearch.id, accessGroupCustomSearch.customSearch.id ) " +
+			"FROM AccessGroupCustomSearch accessGroupCustomSearch " +
+			"WHERE  accessGroupCustomSearch.accessGroup.id = :groupId " )
+	public List<AccessGroupCustomSearch> listByAccessGroupId( @Param("groupId") Long groupId, Pageable pageable );
 	
 	/**
 	 * 
