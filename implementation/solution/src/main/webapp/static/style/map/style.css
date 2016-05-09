@@ -277,7 +277,7 @@ input[type=checkbox].css-checkbox {
     display: none;
 }
 
-.tree-view + label, input[type=checkbox].css-checkbox + label {
+.tree-view, input[type=checkbox].css-checkbox + label {
     margin-left: 37px;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -285,7 +285,7 @@ input[type=checkbox].css-checkbox {
     user-select:none;
 }
 
-.tree-view + label:before, input[type=checkbox].css-checkbox + label:before {
+.tree-view:before, input[type=checkbox].css-checkbox + label:before {
     content: "";
     display: inline-block;
     width: 20px;
@@ -297,7 +297,7 @@ input[type=checkbox].css-checkbox {
     padding-top: 2px;
 }
 
-.tree-view + label:before, input[type=checkbox].css-checkbox:checked + label:before {
+.tree-view.checked:before, input[type=checkbox].css-checkbox:checked + label:before {
     content: "\2713";
     font-size: 11px;
     color: #f3f3f3;
@@ -306,7 +306,7 @@ input[type=checkbox].css-checkbox {
     background-color: #0077C1;
 }
 
-.tree-view + label:before, input[type=checkbox].css-checkbox:indeterminate + label:before {
+.tree-view.indeterminate:before, input[type=checkbox].css-checkbox:indeterminate + label:before {
     content: "\2796";
     font-size: 11px;
     color: #f3f3f3;

@@ -1166,6 +1166,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.listLayersGroupByLayerGroupId = function(ivhNode, ivhIsExpanded, ivhTree){
 
+    console.log('listLayersGroupByLayerGroupId');
+
+    console.log(ivhNode);
+
     var emptyChildren = {label: 'Nenhum registro'};
 
     ivhNode.children = [];
@@ -1194,6 +1198,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           ivhNode.children.push(item);
 
         });
+
+        ivhNode.children.push(emptyChildren);
 
         $scope.$apply();
       },

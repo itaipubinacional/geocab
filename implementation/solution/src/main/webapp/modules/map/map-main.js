@@ -12,7 +12,7 @@
       // Twisties can be images, custom html, or plain text
       twistieCollapsedTpl: '<span class="ivh-treeview-toggle ivh-treeview-toggle-right icon itaipu-icon-arrow-right"></span>',
       twistieExpandedTpl: '<span class="ivh-treeview-toggle ivh-treeview-toggle-down icon itaipu-icon-arrow-down" style="color: #0077bf"></span>',
-      twistieLeafTpl: '&#9679;'
+      twistieLeafTpl: ''
     });
 
     //-------
@@ -63,10 +63,8 @@
       restrict: 'AE',
       require: '^ivhTreeview',
       template: [
-          '<span ng-show="node.selected" class="x">x</span>',
-          '<span ng-show="node.__ivhTreeviewIndeterminate" class="y">~</span>',
-          '<span ng-hide="node.selected || node.__ivhTreeviewIndeterminate"> </span>',
-          '<input ivh-treeview-checkbox="itm" ivh-treeview-indeterminate-attribute="indeterminate" class="ivh-treeview-checkbox css-checkbox" type="checkbox" ng-model="node.selected">'
+          '<span class="tree-view" ng-class="{checked: node.selected, indeterminate: node.__ivhTreeviewIndeterminate}">',
+          '</span>'
       ].join(''),
       link: function(scope, element, attrs, ctrl) {
         element.on('click', function() {
