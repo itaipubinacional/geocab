@@ -484,20 +484,55 @@ public class LayerGroupService
 		return layersGroup;
 	}
 	
+	/**
+	 * Lista os Grupos de camadas publicados
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public LayerGroup listLayersGroupPublishedByLayerGroupId(Long id)
+	{
+
+		return this.listLayersGroupByLayerGroupId(id , true);
+		
+	}
+	
+	/**
+	 * Lista os Grupos de camadas não publicados
+	 * 
+	 * @param id
+	 * @return
+	 */
 	@Transactional(readOnly=true)
 	public LayerGroup listLayersGroupByLayerGroupId(Long id)
+	{
+		
+		return this.listLayersGroupByLayerGroupId(id , false);
+		
+	}
+	
+	/**
+	 * Lista os Grupos de camadas
+	 * 
+	 * @param id
+	 * @param published
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public LayerGroup listLayersGroupByLayerGroupId(Long id, Boolean published)
 	{
 		
 		LayerGroup layerGroup = new LayerGroup();
 		
 		layerGroup = this.layerGroupRepository.findLayerGroupById( id );			
 	
-		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupByLayerGroupId( id );
+		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupByLayerGroupId( id, published);
 		
 		//Se o grupo de camadas está vazio (se não tem outros grupos de camadas internamente) pega as camadas desse grupo de camadas
 		if( layersGroup.isEmpty() )
 		{
-			List<Layer> layers = this.layerGroupRepository.listLayersByLayerGroupId( id );
+			List<Layer> layers = this.layerGroupRepository.listLayersByLayerGroupId( id, published );
 			
 			layerGroup.setLayers(layers);
 			
@@ -513,7 +548,6 @@ public class LayerGroupService
 			layerGroup.setLayersGroup(layersGroup);
 			setLegendsLayers(layersGroup);
 		}
-		
 		
 		
 		return layerGroup;	
