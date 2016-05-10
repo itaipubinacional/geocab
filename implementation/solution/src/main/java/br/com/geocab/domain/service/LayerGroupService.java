@@ -532,6 +532,8 @@ public class LayerGroupService
 		//Se o grupo de camadas está vazio (se não tem outros grupos de camadas internamente) pega as camadas desse grupo de camadas
 		if( layersGroup.isEmpty() )
 		{
+			
+			
 			List<Layer> layers = this.layerGroupRepository.listLayersByLayerGroupId( id, published );
 			
 			layerGroup.setLayers(layers);

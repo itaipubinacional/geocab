@@ -1164,17 +1164,19 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
-  $scope.listLayersGroupByLayerGroupId = function(ivhNode, ivhIsExpanded, ivhTree){
+  $scope.listLayersGroupPublishedByLayerGroupId = function(ivhNode, ivhIsExpanded, ivhTree){
 
-    console.log('listLayersGroupByLayerGroupId');
+    console.log('listLayersGroupPublishedByLayerGroupId');
 
     console.log(ivhNode);
+
+    console.log(ivhNode.value);
 
     var emptyChildren = {label: 'Nenhum registro'};
 
     ivhNode.children = [];
 
-    layerGroupService.listLayersGroupByLayerGroupId(41, {
+    layerGroupService.listLayersGroupPublishedByLayerGroupId(ivhNode.value, {
       callback : function(result) {
 
         var children = !angular.equals(result.layersGroup, []) ? result.layersGroup : result.layers;

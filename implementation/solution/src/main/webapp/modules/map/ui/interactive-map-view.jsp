@@ -910,7 +910,7 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                     <div ivh-treeview="allLayers"
-                         ivh-treeview-on-toggle="listLayersGroupByLayerGroupId(ivhNode, ivhIsExpanded, ivhTree)">
+                         ivh-treeview-on-toggle="listLayersGroupPublishedByLayerGroupId(ivhNode, ivhIsExpanded, ivhTree)">
                         <script type="text/ng-template">
                             <div class="ivh-treeview-node">
                                 <span ivh-treeview-toggle>
