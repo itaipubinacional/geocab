@@ -533,16 +533,16 @@ public class LayerGroupService
 		if( layersGroup.isEmpty() )
 		{
 			
-			
 			List<Layer> layers = this.layerGroupRepository.listLayersByLayerGroupId( id, published );
 			
 			layerGroup.setLayers(layers);
 			
 //			layersGroup.add(layerGroup);
 //			layerGroup.setLayersGroup(layersGroup);
-			List<LayerGroup> listGroups = new ArrayList<>();
-			listGroups.add(layerGroup);
-			setLegendsLayers(listGroups);
+			
+//			List<LayerGroup> listGroups = new ArrayList<>();
+//			listGroups.add(layerGroup);
+//			setLegendsLayers(listGroups);
 		}
 		//Se o grupo de camadas tem outros grupos de camadas internamente, seta o grupo de camadas
 		else
