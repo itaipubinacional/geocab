@@ -1183,13 +1183,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
+
   $scope.listLayersGroupPublishedByLayerGroupId = function(ivhNode, ivhIsExpanded, ivhTree){
 
     console.log('listLayersGroupPublishedByLayerGroupId');
-
-    console.log(ivhNode);
-
-    console.log(ivhNode.value);
 
     var emptyChildren = {label: 'Nenhum registro'};
 
@@ -1209,17 +1206,13 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           var item = {};
 
           item.id = child.id;
-          // item.id = 'child' + '_' + child.id.toString();
           item.label = child.name ? child.name : child.title;
-          // item.name = child.name ? 'teste' : child.name;
-          item.legenda = child.legend ? null : child.legend;
-          item.icon = child.icon;
+          item.icon = child.icon ? child.icon : child.legend ? child.legend : null;
           item.selected = false;
           item.dataSourceUrl = !child.dataSource ? null : child.dataSource.url;
-          item.value = child.id;
-          item.type = 'child';
-          item.maximumScaleMap = child.maximumScaleMap ? '' : child.maximumScaleMap;
-          item.minimumScaleMap = child.minimumScaleMap ? '' : child.minimumScaleMap;
+
+          // item.maximumScaleMap = child.maximumScaleMap ? '' : child.maximumScaleMap;
+          // item.minimumScaleMap = child.minimumScaleMap ? '' : child.minimumScaleMap;
 
           item.children =  !angular.equals(result.layersGroup, []) ? [emptyChildren] : null ;
 

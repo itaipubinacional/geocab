@@ -12,7 +12,7 @@
       // Twisties can be images, custom html, or plain text
       twistieCollapsedTpl: '<span class="ivh-treeview-toggle ivh-treeview-toggle-right icon itaipu-icon-arrow-right"></span>',
       twistieExpandedTpl: '<span class="ivh-treeview-toggle ivh-treeview-toggle-down icon itaipu-icon-arrow-down" style="color: #0077bf"></span>',
-      twistieLeafTpl: ''
+      twistieLeafTpl: '<span style="margin-left: 18px"></span>'
     });
 
     //-------
