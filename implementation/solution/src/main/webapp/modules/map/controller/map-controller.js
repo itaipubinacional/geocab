@@ -1183,42 +1183,53 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
-  $scope.listLayersGroupByLayerGroupId = function(ivhNode, ivhIsExpanded, ivhTree){
+  $scope.listLayersGroupPublishedByLayerGroupId = function(ivhNode, ivhIsExpanded, ivhTree){
 
-    console.log('listLayersGroupByLayerGroupId');
+    console.log('listLayersGroupPublishedByLayerGroupId');
 
     console.log(ivhNode);
+
+    console.log(ivhNode.value);
 
     var emptyChildren = {label: 'Nenhum registro'};
 
     ivhNode.children = [];
 
-    layerGroupService.listLayersGroupByLayerGroupId(41, {
+    layerGroupService.listLayersGroupPublishedByLayerGroupId(ivhNode.id, {
       callback : function(result) {
 
         var children = !angular.equals(result.layersGroup, []) ? result.layersGroup : result.layers;
 
-        angular.forEach(children, function(group) {
+        if(children.length){
+          ivhNode.children = [];
+        }
+
+        angular.forEach(children, function(child) {
 
           var item = {};
 
-          item.id = 'grupo' + '_' + group.id.toString();
-          item.label = group.name ? group.name : group.title;
-          item.name = group.name ? 'teste' : group.name;
-          item.legenda = group.legend ? null : group.legend;
+          item.id = child.id;
+          // item.id = 'child' + '_' + child.id.toString();
+          item.label = child.name ? child.name : child.title;
+          // item.name = child.name ? 'teste' : child.name;
+          item.legenda = child.legend ? null : child.legend;
+          item.icon = child.icon;
           item.selected = false;
-          item.dataSourceUrl = !group.dataSource ? null : group.dataSource.url;
-          item.value = group.id;
-          item.type = 'grupo';
-          item.maximumScaleMap = group.maximumScaleMap ? '' : group.maximumScaleMap;
-          item.minimumScaleMap = group.minimumScaleMap ? '' : group.minimumScaleMap;
-          item.children = [emptyChildren];
+          item.dataSourceUrl = !child.dataSource ? null : child.dataSource.url;
+          item.value = child.id;
+          item.type = 'child';
+          item.maximumScaleMap = child.maximumScaleMap ? '' : child.maximumScaleMap;
+          item.minimumScaleMap = child.minimumScaleMap ? '' : child.minimumScaleMap;
+
+          item.children =  !angular.equals(result.layersGroup, []) ? [emptyChildren] : null ;
 
           ivhNode.children.push(item);
 
         });
 
-        ivhNode.children.push(emptyChildren);
+        if(!children.length){
+          ivhNode.children.push(emptyChildren);
+        }
 
         $scope.$apply();
       },
@@ -1245,16 +1256,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           var item = {};
 
-          item.id = 'grupo' + '_' + group.id.toString();
+          item.id = group.id;
           item.label = group.name ? group.name : group.title;
-          item.name = group.name ? 'teste' : group.name;
-          item.legenda = group.legend ? null : group.legend;
-          item.selected = false;
-          item.dataSourceUrl = !group.dataSource ? null : group.dataSource.url;
-          item.value = group.id;
-          item.type = 'grupo';
-          item.maximumScaleMap = group.maximumScaleMap ? '' : group.maximumScaleMap;
-          item.minimumScaleMap = group.minimumScaleMap ? '' : group.minimumScaleMap;
           item.children = [emptyChildren];
 
           $scope.allLayers.push(item);
