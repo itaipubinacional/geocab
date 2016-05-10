@@ -63,7 +63,7 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 			+ "ORDER BY layerGroup.orderLayerGroup" )
 	public List<LayerGroup> listLayersGroupByLayerGroupId( @Param("id") Long id, @Param("published") Boolean published );
 	
-	@Query(value="SELECT New Layer (layer.id,layer.name, layer.orderLayer, layer.icon, dataSource)"
+	@Query(value="SELECT New Layer (layer.id, layer.name, layer.orderLayer, layer.icon, dataSource)"
 			+ " FROM Layer layer "
 			+ " LEFT OUTER JOIN layer.dataSource dataSource " 
 			+ " WHERE ( layer.layerGroup.id = :id "
