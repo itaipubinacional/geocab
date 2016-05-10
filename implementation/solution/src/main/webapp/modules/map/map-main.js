@@ -69,6 +69,7 @@
       link: function(scope, element, attrs, ctrl) {
         element.on('click', function() {
           ivhTreeviewMgr.select(ctrl.root(), scope.node, !scope.node.selected);
+          ctrl.onCbChange(scope.node);
           scope.$apply();
         });
       }

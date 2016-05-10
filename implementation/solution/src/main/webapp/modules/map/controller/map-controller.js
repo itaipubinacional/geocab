@@ -1353,6 +1353,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     return {'name': layerName, 'url': formattedUrl};
 
   }
+  
+  $scope.onChange = function(node){
+    console.log(node);
+  };
 
   $scope.showLayer = function (layer) {
 
