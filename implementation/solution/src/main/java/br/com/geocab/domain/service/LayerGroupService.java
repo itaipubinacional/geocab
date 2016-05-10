@@ -523,9 +523,7 @@ public class LayerGroupService
 	public LayerGroup listLayersGroupByLayerGroupId(Long id, Boolean published)
 	{
 		
-		LayerGroup layerGroup = new LayerGroup();
-		
-		layerGroup = this.layerGroupRepository.findLayerGroupById( id );			
+		LayerGroup layerGroup = this.layerGroupRepository.findLayerGroupById( id );			
 	
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupByLayerGroupId( id, published);
 		

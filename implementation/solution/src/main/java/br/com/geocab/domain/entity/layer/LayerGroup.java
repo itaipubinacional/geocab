@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.directwebremoting.annotations.DataTransferObject;
@@ -90,6 +91,12 @@ public class LayerGroup extends AbstractEntity implements Serializable
 	@Column
 	private Boolean published;
 	
+	
+	/**
+	 * Informa se a camada tem filhos ou não (sejam outros grupos de camadas ou outras camadas)
+	 */
+	@Transient
+	private Boolean hasChildren;
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -161,7 +168,14 @@ public class LayerGroup extends AbstractEntity implements Serializable
 		this.name = name;
 		this.orderLayerGroup = orderLayerGroup;
 	}
-	
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param orderLayerGroup
+	 * @param published
+	 * @param layerGroupUpperId
+	 */
 	public LayerGroup(Long id, String name, Integer orderLayerGroup, Boolean published, Long layerGroupUpperId)
 	{
 		this.setId(id);
@@ -224,11 +238,35 @@ public class LayerGroup extends AbstractEntity implements Serializable
 		this.orderLayerGroup = orderLayerGroup;
 	}
 	
-	
+	/**
+	 * @return the hasChildren
+	 */
+	public Boolean getHasChildren()
+	{
+		if (hasChildren == null)
+		{
+			hasChildren = (this.getLayers() != null && this.getLayers().size() >0)||(this.getLayersGroup() != null && this.getLayersGroup().size()>0);
+		}
+		return hasChildren;
+	}
+
+	/**
+	 * @param hasChildren the hasChildren to set
+	 */
+	public void setHasChildren(Boolean hasChildren)
+	{
+		if (hasChildren == null)
+		{
+			hasChildren = (this.getLayers() != null && this.getLayers().size() >0)||(this.getLayersGroup() != null && this.getLayersGroup().size()>0);
+		}
+		this.hasChildren = hasChildren;
+	}
 	/*-------------------------------------------------------------------
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
 	
+	
+
 	/**
 	 * @return the name
 	 */
@@ -308,4 +346,6 @@ public class LayerGroup extends AbstractEntity implements Serializable
 	{
 		this.draft = draft;
 	}
+	
+	
 }
