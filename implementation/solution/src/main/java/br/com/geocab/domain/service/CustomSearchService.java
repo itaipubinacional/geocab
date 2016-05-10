@@ -218,6 +218,8 @@ public class CustomSearchService
 		return accessGroups;
 	}
 	
+	@Autowired
+	IAccessGroupCustomSearchRepository accessGroupCustomSearch;
 	/**
 	 * Method that return an list of custom searchs according the access group of user
 	 */
@@ -239,18 +241,20 @@ public class CustomSearchService
 		
 		for (AccessGroup accessGroup : accessGroupUser)
 		{
-			accessGroup = this.accessGroupRepository.findOne( accessGroup.getId() );
+			accessGroup = this.accessGroupRepository.findById( accessGroup.getId() );	
 			
-			for (AccessGroupCustomSearch accessGroupCustomSearch : accessGroup.getAccessGroupCustomSearch())
+			for (AccessGroupCustomSearch accessGroupCustomSearch : this.accessGroupCustomSearch.listByAccessGroupId(accessGroup.getId(), null))
 			{	
-				if( !customsSearchUser.contains(accessGroupCustomSearch.getCustomSearch()) )
-				{
-					customsSearchUser.add(accessGroupCustomSearch.getCustomSearch());
-				}
+				accessGroupCustomSearch.setCustomSearch(customSearchRepository.findById(accessGroupCustomSearch.getCustomSearch().getId()));
+				
+				
+				accessGroupCustomSearch.getCustomSearch().setLayerFields(new HashSet<>(layerFieldRepository.findByCustomSearchId(accessGroupCustomSearch.getCustomSearch().getId())));
+				customsSearchUser.add(accessGroupCustomSearch.getCustomSearch());
 			}
 		}
 		return customsSearchUser;
 	}
+	
 	
 	/**
 	 * 

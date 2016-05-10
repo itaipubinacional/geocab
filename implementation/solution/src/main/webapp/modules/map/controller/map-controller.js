@@ -1116,8 +1116,27 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.$apply();
       }
     });
-  }
+  };
 
+  $scope.loadStartEnabledLayers = function() {
+
+    layerGroupService.listLayerPublished({
+      callback: function (result) {
+
+        angular.forEach(result, function(layer){
+          $scope.showLayer(layer);
+        });
+
+      },
+      errorHandler: function (message, exception) {
+        $scope.msg = {type: "danger", text: message, dismiss: true};
+        $scope.$apply();
+      }
+    });
+
+  };
+
+  $scope.loadStartEnabledLayers();
 
   /**
    *
@@ -1326,6 +1345,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress) + layerType + '/wms';
     }
     else {
+
+      if(!angular.isDefined(node.dataSourceUrl))
+        node.dataSourceUrl = node.dataSource.url;
+
       var index = node.name.indexOf(":");
       var dataSourceAddress = node.dataSourceUrl.lastIndexOf("ows?");
       var layerType = node.name.substring(0, index);
@@ -1336,6 +1359,42 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     return {'name': layerName, 'url': formattedUrl};
 
   }
+
+  $scope.showLayer = function (layer) {
+
+    /* Check if it is an internal layer */
+    if (angular.isDefined(layer.dataSource) && layer.dataSource.url == null) {
+        $scope.addInternalLayer(layer.id);
+      return;
+    }
+
+    var item = $scope.formatUrl(layer, false);
+
+    var wmsOptions = {
+      url: item.url,
+      params: {
+        'LAYERS': item.name
+      }
+    };
+
+    if (layer.dataSourceUrl.match(/&authkey=(.*)/)) {
+      wmsOptions.url += "?" + layer.dataSourceUrl.match(/&authkey=(.*)/)[0];
+    }
+
+    var wmsSource = new ol.source.TileWMS(wmsOptions);
+
+    var wmsLayer = new ol.layer.Tile({
+      source: wmsSource,
+      maxResolution: minEscalaToMaxResolutionn(layer.minimumScaleMap),
+      minResolution: maxEscalaToMinResolutionn(layer.maximumScaleMap)
+    });
+
+    $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name": layer.name, "titulo": layer.label});
+
+    //Adds the selected layers in the map
+    $scope.map.addLayer(wmsLayer);
+
+  };
 
   /**
    * Treat the selection and deselection of each of the tree
