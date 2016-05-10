@@ -253,39 +253,7 @@ public class CustomSearchService
 			}
 		}
 		return customsSearchUser;
-	}	
-	
-	
-//	@PreAuthorize("true")
-//	public List<CustomSearch> listCustomSearchsByUser()
-//	{
-//		List<CustomSearch> customsSearchUser = new ArrayList<CustomSearch>();
-//		
-//		List<AccessGroup> accessGroupUser = null;
-//		//List of all access groups of user
-//		if(ContextHolder.getAuthenticatedUser() != null) 
-//		{
-//			accessGroupUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
-//		} 
-//		else 
-//		{
-//			accessGroupUser = this.accessGroupRepository.listPublicGroups();
-//		}
-//		
-//		for (AccessGroup accessGroup : accessGroupUser)
-//		{
-//			accessGroup = this.accessGroupRepository.findOne( accessGroup.getId() );
-//			
-//			for (AccessGroupCustomSearch accessGroupCustomSearch : accessGroup.getAccessGroupCustomSearch())
-//			{	
-//				if( !customsSearchUser.contains(accessGroupCustomSearch.getCustomSearch()) )
-//				{
-//					customsSearchUser.add(accessGroupCustomSearch.getCustomSearch());
-//				}
-//			}
-//		}
-//		return customsSearchUser;
-//	}
+	}
 	
 	
 	/**
