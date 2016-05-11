@@ -1592,30 +1592,24 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.getSelectedKMLNode = function (node) {
 
-
-    if (node && node.type == 'kml' && $scope.allLayersKML[0]) {
-
-      if (node.selected) {
-
-        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
-          if ($scope.allLayersKML[0].children[i].name == node.name) {
-            $scope.map.removeLayer(node.layer);
-            $scope.map.addLayer($scope.allLayersKML[0].children[i].layer);
-          }
-        }
+    if(angular.isDefined(node.children)) {
+      if(node.selected) {
+        angular.forEach(node.children, function (children) {
+          $scope.map.addLayer(children.layer);
+        });
+      } else {
+        angular.forEach(node.children, function (children) {
+          $scope.map.removeLayer(children.layer);
+        });
       }
-      else {
-        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
-          if ($scope.allLayersKML[0].children[i].name == node.name) {
-            //Remove as camadas desselecionadas pelo usuário
-            $scope.map.removeLayer($scope.allLayersKML[0].children[i].layer);
-
-          }
-        }
+    } else {
+      if(node.selected) {
+        $scope.map.addLayer(node.layer);
+      } else {
+        $scope.map.removeLayer(node.layer);
       }
     }
-
-  }
+  };
 
 
   /**
@@ -2812,7 +2806,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
         }
 
-        markerService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, {
+        markerService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, $scope.currentCustomSearch.layerFields, {
           callback: function (results) {
 
             $scope.markersByLayer = results;
@@ -3168,6 +3162,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       item.id = 'kmlLayers'
       item.label = 'Camadas KML';
       item.type = 'kml';
+      item.selected = true;
 
       item.children = [];
 

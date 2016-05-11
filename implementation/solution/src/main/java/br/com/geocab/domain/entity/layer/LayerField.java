@@ -74,7 +74,11 @@ public class LayerField extends AbstractEntity implements Serializable
 	@Column(nullable=true)
 	private Long attributeId;
 	
-	
+	/**
+	 * Utilizado somente para execução de pesquisas a partir do mapa principal
+	 */
+	@Transient
+	private String value;
 	/**
 	 * 
 	 */
@@ -342,5 +346,21 @@ public class LayerField extends AbstractEntity implements Serializable
 	{
 		this.attributeId = attributeId;
 	}
+	/**
+	 * @return the value
+	 */
+	public String getValue()
+	{
+		return value;
+	}
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value)
+	{
+		this.value = value;
+	}
+	
+	
 	
 }

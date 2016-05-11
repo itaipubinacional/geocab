@@ -18,12 +18,15 @@ import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.vividsolutions.jts.geom.Geometry;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.Layer;
+import br.com.geocab.domain.entity.layer.MapScale;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 
 /**
@@ -98,6 +101,23 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 		this.setValue(value);
 		this.setMarker(marker);
 		this.setAttribute(attribute);
+	}
+	/**
+	 * 
+	 * @param id
+	 * @param value
+	 * @param marker
+	 * @param attribute
+	 */
+	public MarkerAttribute(Long id, String value, Long attributeId, Long markerId, Geometry location, MarkerStatus markerStatus, Boolean markerDeleted, User user, 
+			Long layerId, String layerName, String layerTitle, String layerIcon, Boolean startEnabled, Boolean startVisible, Integer orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, DataSource dataSource)
+	{
+		
+		this.setId(id);
+		this.setValue(value);
+		this.setMarker(new Marker(markerId, location, markerStatus, markerDeleted, user));
+		this.getMarker().setLayer(new Layer(layerId, layerName, layerTitle, layerIcon, startEnabled, startVisible, orderLayer, minimumMapScale, maximumMapScale, enabled, dataSource));
+		this.setAttribute(new Attribute(attributeId));
 	}
 	/**
 	 * 

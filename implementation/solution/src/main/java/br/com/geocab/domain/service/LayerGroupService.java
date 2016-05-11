@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -534,22 +535,16 @@ public class LayerGroupService
 			
 			List<Layer> layers = this.layerGroupRepository.listLayersByLayerGroupId( id, published );
 			
+			this.setIcon(layers);
+			
 			layerGroup.setLayers(layers);
 			
-//			layersGroup.add(layerGroup);
-//			layerGroup.setLayersGroup(layersGroup);
-			
-//			List<LayerGroup> listGroups = new ArrayList<>();
-//			listGroups.add(layerGroup);
-//			setLegendsLayers(listGroups);
 		}
 		//Se o grupo de camadas tem outros grupos de camadas internamente, seta o grupo de camadas
 		else
 		{
 			layerGroup.setLayersGroup(layersGroup);
-			setLegendsLayers(layersGroup);
-		}
-		
+		} 
 		
 		return layerGroup;	
 		
@@ -618,7 +613,7 @@ public class LayerGroupService
 			}
 		}
 		
-		setLegendsLayers(layersGroupUpperPublished);
+		setIcon(layersGroupUpperPublished);
 		
 		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
 		
@@ -813,11 +808,10 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * 
-	 * @param gruposCamadas
-	 * @param grupoCamadasSuperior
+	 * OBS:. Método recursivo
+	 * @param layersGroup
 	 */
-	private void setLegendsLayers( List<LayerGroup> layersGroup )
+	private void setIcon( List<LayerGroup> layersGroup )
 	{
 		if ( layersGroup != null )
 		{
@@ -828,21 +822,43 @@ public class LayerGroupService
 				{					
 					if( layerGroup.getLayers().size() > 0 )
 					{
-						for(int j = 0; j < layerGroup.getLayers().size(); j++)
-						{
-							// traz a legenda da camada do GeoServer
-							if( layerGroup.getLayers().get(j).getDataSource().getUrl() != null ) {
-								layerGroup.getLayers().get(j).setLegend((getLegendLayerFromGeoServer(layerGroup.getLayers().get(j))));	
-								layerGroup.getLayers().get(j).setIcon((layerGroup.getLayers().get(j).getLegend()));
-							}
-							
-						}
+						
+						this.setIcon(layerGroup.getLayers());
 					}
 				}
 				
-				setLegendsLayers(layerGroup.getLayersGroup());
+				setIcon(layerGroup.getLayersGroup());
 			}
 		}
+	}
+	
+	/**
+	 * Traz a legenda da camada do GeoServer
+	 * @param layers
+	 * @return
+	 */
+	private Collection<Layer> setIcon(Collection<Layer> layers)
+	{
+		for (Layer layer : layers)
+		{
+			layer = this.setIcon(layer);
+		}
+		return layers;
+	}
+	
+	/**
+	 * Traz a legenda da camada do GeoServer
+	 * @param layer
+	 * @return
+	 */
+	private Layer setIcon(Layer layer)
+	{
+		if( layer.getDataSource() != null && layer.getDataSource().getUrl() != null )
+		{
+			layer.setLegend((getLegendLayerFromGeoServer(layer)));	
+			layer.setIcon((layer.getLegend()));
+		}
+		return layer;
 	}
 	
 	
@@ -927,7 +943,7 @@ public class LayerGroupService
     {    	
     	List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layer, dataSource);
          
-        this.setLegendsLayers(layersGroup);
+        this.setIcon(layersGroup);
          
         return layersGroup;
          
