@@ -1039,13 +1039,33 @@ uri="http://www.springframework.org/security/tags"%>
                 <spring:message code="map.None-KML-file-enabled"/>
               </div>
               <div style="overflow: auto;top: 110px;bottom: 0px;left: 20px;right: 0px;">
+
                 <div id="tree-kml"
+                     ivh-treeview="allLayersKML"
+                     ivh-treeview-on-cb-change="getSelectedKMLNode(ivhNode)">
+                    <script type="text/ng-template">
+                    <div class="ivh-treeview-node">
+                        <span ivh-treeview-toggle>
+                            <span ivh-treeview-twistie></span>
+                        </span>
+                        <tree-view-box></tree-view-box>
+                        <label class="ivh-treeview-node-label dynamic-text" style="margin: 0">
+                            <span class="ivh-treeview-node-label" ivh-treeview-toggle>
+                            {{trvw.label(node)}}
+                            </span>
+                        </label>
+                    </div>
+                        <div style="padding-left: 15px" ivh-treeview-children></div>
+                    </script>
+                </div>
+
+                <!--<div id="tree-kml"
                      ivh-treeview="allLayersKML"
                      ivh-fn="getSelectedKMLNode"
                      ivh-treeview-label-attribute="'label'"
                      ivh-treeview-children-attribute="'children'"
                     >
-                </div>
+                </div>-->
               </div>
             </div>
 
