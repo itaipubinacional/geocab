@@ -19,14 +19,20 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
 import br.com.geocab.domain.entity.accessgroup.AccessGroupCustomSearch;
+import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
 import br.com.geocab.domain.entity.layer.CustomSearch;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerField;
+import br.com.geocab.domain.entity.marker.Marker;
+import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.repository.ILayerFieldRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupCustomSearchRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
+import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.customsearch.ICustomSearchRepository;
+import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
+import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
 
 /**
@@ -75,6 +81,24 @@ public class CustomSearchService
 	 */
 	@Autowired
 	private IAccessGroupRepository accessGroupRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IMarkerAttributeRepository markerAttributeRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IMarkerRepository markerRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAttributeRepository attributeRepository; 
 	
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
@@ -132,7 +156,6 @@ public class CustomSearchService
 	
 	/**
 	 * Method to remove an {@link customSearch}
-	 * TODO
 	 * @param id
 	 */
 	public void removeCustomSearch( Long id )
@@ -289,5 +312,96 @@ public class CustomSearchService
 				this.accessGroupCustomSearchRepository.delete(accessGroupCustomSearch);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Método utiliza para execução da pesquisa personalizada 
+	 * @param layerId
+	 * @param layerFields
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<Marker> listMarkerByLayerFilters(Long layerId, List<LayerField> layerFields)
+	{
+		
+		final User user = ContextHolder.getAuthenticatedUser();
+
+		List<Marker> listMarker = null;
+
+		if (!user.equals(User.ANONYMOUS))
+		{
+			
+			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE))
+			{
+				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
+			}
+			else
+			{
+				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
+			}
+			
+		}
+		else
+		{
+			listMarker = this.markerRepository.listMarkerByLayerPublic(layerId);
+		}
+		// Pega os markerAttributes do banco (Isso foi feito para não deixar a requisição pesada)
+		List<MarkerAttribute> markersAttribute = new ArrayList<>();
+		//Variável auxiliar para verificar se há algum valor nas pesquisas
+		boolean hasSearch = false; 
+		//Verifica se há algum valor na pesquisa
+		for (LayerField layerField : layerFields)
+		{		
+			if (layerField.getValue() != null && layerField.getValue().length() >0 )
+			{
+				hasSearch = true;
+				break;
+			}
+		}
+		
+		if (hasSearch)
+		{
+			for (LayerField layerField : layerFields)
+			{		
+				if (layerField.getValue() != null && layerField.getValue().length() >0 ) 
+				{
+					markersAttribute.addAll(
+							this.markerAttributeRepository.listMarkerAttributeByAttributeIdAndFilters(
+									layerField.getAttributeId(), layerField.getName(), layerField.getValue() , 
+									this.attributeRepository.findById(
+											layerField.getAttributeId()).getType()));
+				}
+			}
+		}else{
+			return listMarker;
+		}
+		
+		
+		for (MarkerAttribute markerAttribute : markersAttribute)
+		{
+			for (Marker marker : listMarker)
+			{
+				if (markerAttribute.getMarker().getId() == marker.getId())
+				{
+					markerAttribute.setMarker(marker);
+				}
+			}
+		}
+		
+		// Popula a lista de markers com os markers attributos (Isso foi feito para não deixar a requisição pesada)
+		List<Marker> markersReturn = new ArrayList<>(); 
+		for (MarkerAttribute markerAttribute : markersAttribute)
+		{
+			Marker marker = markerAttribute.getMarker();
+			// Instancia lista de markerAttributes dentro do marker
+			marker.setMarkerAttribute(new ArrayList<MarkerAttribute>());
+			// Adiciona o markerAttribute
+			marker.getMarkerAttribute().add(markerAttribute);
+			// Adiciona o o marker na lista de retorno
+			markersReturn.add(marker);
+		}
+
+		return markersReturn;
 	}
 }
