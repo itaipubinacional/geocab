@@ -73,6 +73,15 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 
 	
 	/**
+	 * Filtro de camadas e grupo de camadas
+	 * 
+	 * @param bagSearch
+	 * @return
+	 */
+	public LayerGroup searchLayersByFilter( @Param("bagSearch") String bagSearch );
+	
+	
+	/**
 	 * 
 	 * @return
 	 */

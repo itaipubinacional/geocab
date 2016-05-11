@@ -18,6 +18,7 @@ import javax.servlet.ServletContext;
 import javax.validation.ConstraintViolationException;
 import javax.xml.bind.JAXBException;
 
+import org.apache.poi.util.SystemOutLogger;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.json.parse.JsonParseException;
 import org.json.JSONArray;
@@ -553,6 +554,42 @@ public class LayerGroupService
 		return layerGroup;	
 		
 	}
+	
+	public LayerGroup searchLayersByFilter(String bagSearch){
+		
+		return this.layerGroupRepository.searchLayersByFilter( bagSearch );			
+		
+	}
+	
+	/**
+	 * Método que retorna todos os filhos de um nó
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public LayerGroup listAllChildrenByLayerGroupId (Long id){
+		
+		LayerGroup layerGroup = this.listLayersGroupPublishedByLayerGroupId(id);
+	
+		if( !layerGroup.getLayersGroup().isEmpty() ){
+			System.out.println( id +  " tem filhos  => " + layerGroup.getLayersGroup().size() +  " filhos");
+			for (LayerGroup layerGroupPublished : layerGroup.getLayersGroup())
+			{
+				System.out.println( " Entro no FOR " + layerGroupPublished.getId());
+				
+				return ( this.listAllChildrenByLayerGroupId(layerGroupPublished.getId()));
+				
+				
+			}
+			
+		} 
+		
+		System.out.println("Passou aki iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+		
+		return layerGroup;
+
+	}
+	
 	
 	/**
 	 * Mï¿½todo que retorna a estrutura completa dos grupos de camadas publicados

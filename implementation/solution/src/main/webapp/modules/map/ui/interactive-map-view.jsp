@@ -904,13 +904,13 @@ uri="http://www.springframework.org/security/tags"%>
                   <br style="clear: both;">
 
                   <div ng-show="allLayers.length > 0">
-                    <input maxlength="144" type="text" ng-model="bagSearch"
+                    <input maxlength="144" type="text" ng-model="bagSearch" ng-change="searchLayers(bagSearch)"
                            placeholder="<spring:message code="map.Group-or-layer"/>"
                     class="sidebar-content-search form-control" />
                   </div>
 
                     <div ivh-treeview="allLayers"
-                         ivh-treeview-filter="bagSearch"
+                         <%--ivh-treeview-filter="bagSearch"--%>
                          ivh-treeview-on-toggle="listLayersGroupPublishedByLayerGroupId(ivhNode, ivhIsExpanded, ivhTree)"
                          ivh-treeview-on-cb-change="onChange(ivhNode)">
                         <script type="text/ng-template">
