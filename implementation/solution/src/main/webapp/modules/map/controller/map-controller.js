@@ -1352,10 +1352,51 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     return {'name': layerName, 'url': formattedUrl};
 
-  }
-  
+  };
+
+
+  $scope.searchLayers = function (bagSearch) {
+
+    if(!$scope.oldLayers){
+      $scope.oldLayers = $scope.allLayers;
+    }
+
+    if(bagSearch){
+
+      layerGroupService.searchLayersByFilter( bagSearch, {
+        callback: function (result) {
+          console.log(result);
+          $scope.allLayers = result;
+        },
+        errorHandler: function (message, exception) {
+          console.log(message);
+          console.log(exception);
+        }
+      });
+
+    } else {
+      $scope.allLayers = $scope.oldLayers;
+      $scope.oldLayers = [];
+    }
+
+  };
+
   $scope.onChange = function(node){
+
     console.log(node);
+    console.log('assssssssssssssss');
+
+
+    layerGroupService.listAllChildrenByLayerGroupId( node.id , {
+      callback: function (result) {
+        console.log(result);
+      },
+      errorHandler: function (message, exception) {
+        console.log(message);
+        console.log(exception);
+      }
+    });
+
   };
 
   $scope.showLayer = function (layer) {
