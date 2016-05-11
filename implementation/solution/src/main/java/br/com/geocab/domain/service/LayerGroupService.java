@@ -19,7 +19,6 @@ import javax.servlet.ServletContext;
 import javax.validation.ConstraintViolationException;
 import javax.xml.bind.JAXBException;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.json.parse.JsonParseException;
 import org.json.JSONArray;
@@ -160,7 +159,7 @@ public class LayerGroupService
 	public LayerGroup insertLayerGroup( LayerGroup layerGroup )
 	{
 		layerGroup.setPublished(false);
-		return this.layerGroupRepository.save( layerGroup );
+		return hasChildren(this.layerGroupRepository.save( layerGroup ));
 		
 	}
 	
@@ -173,7 +172,7 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public LayerGroup updateLayerGroup( LayerGroup layerGroup )
 	{
-		return this.layerGroupRepository.save( layerGroup );
+		return hasChildren(this.layerGroupRepository.save( layerGroup ));
 		
 	}
 	
@@ -200,7 +199,7 @@ public class LayerGroupService
 	@Transactional(readOnly = true)
 	public LayerGroup findLayerGroupById( Long id )
 	{
-		return this.layerGroupRepository.findOne( id );
+		return hasChildren(this.layerGroupRepository.findOne( id ));
 	}
 	
 	/**
@@ -481,9 +480,9 @@ public class LayerGroupService
 	{
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupUpper();
 		
-		//setLegendsLayers(layersGroup);
+		setIcon(layersGroup);
 		
-		return layersGroup;
+		return hasChildren(layersGroup);
 	}
 	
 	/**
@@ -496,7 +495,7 @@ public class LayerGroupService
 	public LayerGroup listLayersGroupPublishedByLayerGroupId(Long id)
 	{
 
-		return this.listLayersGroupByLayerGroupId(id , true);
+		return hasChildren(this.listLayersGroupByLayerGroupId(id , true));
 		
 	}
 	
@@ -510,7 +509,7 @@ public class LayerGroupService
 	public LayerGroup listLayersGroupByLayerGroupId(Long id)
 	{
 		
-		return this.listLayersGroupByLayerGroupId(id , false);
+		return hasChildren(this.listLayersGroupByLayerGroupId(id , false));
 		
 	}
 	
@@ -546,15 +545,19 @@ public class LayerGroupService
 			layerGroup.setLayersGroup(layersGroup);
 		} 
 		
-		return layerGroup;	
+		return hasChildren(layerGroup);	
 		
 	}
-	
-	public LayerGroup searchLayersByFilter(String bagSearch){
-		
-		return this.layerGroupRepository.searchLayersByFilter( bagSearch );			
-		
-	}
+//	/**
+//	 * 
+//	 * @param bagSearch
+//	 * @return
+//	 */
+//	public LayerGroup searchLayersByFilter(String bagSearch){
+//		
+//		return hasChildren(this.layerGroupRepository.searchLayersByFilter( bagSearch ));			
+//		
+//	}
 	
 	/**
 	 * Método que retorna todos os filhos de um nó
@@ -571,7 +574,7 @@ public class LayerGroupService
 			for (LayerGroup layerGroupPublished : layerGroup.getLayersGroup())
 			{
 				System.out.println( " Entro no FOR " + layerGroupPublished.getId());
-				
+				//TODO
 				return ( this.listAllChildrenByLayerGroupId(layerGroupPublished.getId()));
 				
 				
@@ -581,7 +584,7 @@ public class LayerGroupService
 		
 		System.out.println("Passou aki iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 		
-		return layerGroup;
+		return hasChildren(layerGroup);
 
 	}
 	
@@ -617,7 +620,7 @@ public class LayerGroupService
 		
 		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
 		
-		return this.layersGroupUpperByRole(layersGroupUpperPublished);
+		return hasChildren(this.layersGroupUpperByRole(layersGroupUpperPublished));
 		
 	}
 	
@@ -708,7 +711,7 @@ public class LayerGroupService
 			layersGroupUpperPublished.removeAll(layerGroupToDelete);
 		}
 		
-		return layersGroupUpperPublished;
+		return hasChildren(layersGroupUpperPublished);
 		
 	}
 	
@@ -874,7 +877,6 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * 
 	 * @param filter
 	 * @param pageable
 	 * @return
@@ -882,18 +884,20 @@ public class LayerGroupService
 	@Transactional(readOnly=true)
 	public Page<LayerGroup> listLayerGroups(String filter, PageRequest pageable)
 	{
-		return this.layerGroupRepository.listByFilter(filter, pageable);
+		return this.hasChildren(this.layerGroupRepository.listByFilter(filter, pageable));
 	}
 	
+	
+
 	/**
-	 * 
+	 * Não é necessária a sincronização com hasChildren 
 	 * @param filter
 	 * @param pageable
 	 * @return
 	 */
 	@Transactional(readOnly=true)
 	public List<LayerGroup> listAllLayerGroups()
-	{
+	{		
 		return this.layerGroupRepository.findAll();
 	}
 	
@@ -945,7 +949,7 @@ public class LayerGroupService
          
         this.setIcon(layersGroup);
          
-        return layersGroup;
+        return hasChildren(layersGroup);
          
     }
 	
@@ -1306,6 +1310,8 @@ public class LayerGroupService
 		return grupos;
 	}
 	
+	
+	
 	/**
 	 * 
 	 * @param url
@@ -1360,7 +1366,11 @@ public class LayerGroupService
 		}
 		
 	}
-	
+	/**
+	 * 
+	 * @param layerId
+	 * @return
+	 */
 	public List<Attribute> listAttributesByLayer(Long layerId){
 		
 		return this.attributeRepository.listAttributeByLayer(layerId);
@@ -1410,4 +1420,55 @@ public class LayerGroupService
 		
 		return toolsUser ;
 	}
+	
+	/**
+	 * Verifica se os grupos de acesso de uma página de grupos de acessos tem filhos
+	 * @param listByFilter
+	 * @return
+	 */
+	private Page<LayerGroup> hasChildren(Page<LayerGroup> layersGroups)
+	{
+		for (LayerGroup layerGroup : layersGroups)
+		{
+			layerGroup = this.hasChildren(layerGroup);
+		}
+		return layersGroups;
+	}
+	
+	/**
+	 * Verifica se os grupos de acesso de uma lista de grupos de acessos tem filhos
+	 * @param accessGroups
+	 * @param published
+	 * @return
+	 */
+	private List<LayerGroup> hasChildren(List<LayerGroup> layersGroups)
+	{
+		for (LayerGroup layerGroup : layersGroups)
+		{
+			layerGroup = this.hasChildren(layerGroup);
+		}
+		return layersGroups;
+	}
+	
+	/**
+	 * Verifica se o grupo de acesso tem filhos
+	 * @param accessGroups
+	 * @return
+	 */
+	private LayerGroup hasChildren(LayerGroup layerGroup)
+	{		
+		List<LayerGroup> listLayerGroups = this.layerGroupRepository.listLayersGroupByLayerGroupId(layerGroup.getId());
+		List<Layer> listLayers = this.layerGroupRepository.listLayersByLayerGroupId(layerGroup.getId());
+		layerGroup.setLayers(listLayers);
+		// Verifica se tem filhos, sejam layersGroups ou layers
+		layerGroup.setHasChildren((listLayerGroups != null && listLayerGroups.size() >0 || listLayers != null && listLayers.size() >0) 
+				|| ((listLayerGroups != null && listLayerGroups.size() >0 && listLayers != null && listLayers.size() >0)));
+		
+		if (layerGroup.getHasChildren())
+		{
+			layerGroup.setLayersGroup(hasChildren(listLayerGroups));
+		}
+		return layerGroup;
+	}
+	
 }
