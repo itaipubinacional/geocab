@@ -11,7 +11,7 @@
 	</appender>
 
 	<logger name="org.springframework.transaction">
-		<level value="WARN" />
+		<level value="DEBUG" />
 	</logger>
 	<logger name="org.springframework.aop">
 		<level value="WARN" />
@@ -28,7 +28,7 @@
 	</logger>
 	
 	<logger name="org.hibernate">
-		<level value="WARN" />
+		<level value="DEBUG" />
 	</logger>
 
 	<!-- Root Logger -->

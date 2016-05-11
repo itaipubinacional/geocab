@@ -930,22 +930,40 @@ uri="http://www.springframework.org/security/tags"%>
                         </script>
                     </div>
 
-                  <!--<div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
-                       ivh-treeview-label-attribute="'label'"
-                       ivh-treeview-legend-attribute="'legenda'"
-                       ivh-treeview-children-attribute="'children'"
-                       ivh-treeview-id-attribute="'id'"
-                       ivh-treeview-on-toggle="awesomeCallback(ivhNode, ivhIsExpanded, ivhTree)"
-                       ivh-treeview-filter="bagSearch">
-                  </div>-->
 
-                  <div class="sidebar-content-header" ng-if="allSearchs.length > 0" style="margin: 30px 0px;"><spring:message code="map.Searchs"/></div>
+                    <!--<div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
+                    ivh-treeview-label-attribute="'label'"
+                    ivh-treeview-legend-attribute="'legenda'"
+                    ivh-treeview-children-attribute="'children'"
+                    ivh-treeview-id-attribute="'id'"
+                    ivh-treeview-on-toggle="awesomeCallback(ivhNode, ivhIsExpanded, ivhTree)"
+                    ivh-treeview-filter="bagSearch">
+                    </div>-->
+
+                <div class="sidebar-content-header" ng-if="allSearchs.length > 0" style="margin: 30px 0px;"><spring:message code="map.Searchs"/></div>
                   <br style="clear: both;">
                   <div id="tree-pesquisas"
                        ivh-treeview="allSearchs"
                        ivh-fn="getSelectedSearchNode"
                        ivh-treeview-label-attribute="'label'"
                        ivh-treeview-children-attribute="'children'">
+
+                        <script type="text/ng-template">
+                            <div class="ivh-treeview-node" >
+                               <span ivh-treeview-toggle >
+                                   <span ivh-treeview-twistie></span>
+                                </span>
+                                <tree-view-box></tree-view-box>
+                                <label class="ivh-treeview-node-label dynamic-text" style="margin: 0">
+                                    <span class="ivh-treeview-node-label" ivh-treeview-toggle>
+                                        {{trvw.label(node)}}
+                                    </span>
+                               </label>
+                            </div>
+                            <div style="padding-left: 15px" ivh-treeview-children></div>
+                        </script>
+
+
                   </div>
                   <br />
                 </div>
