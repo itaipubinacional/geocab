@@ -552,8 +552,8 @@ public class LayerGroupService
 	
 	public LayerGroup searchLayersByFilter(String bagSearch){
 		
-		return this.layerGroupRepository.searchLayersByFilter( bagSearch );			
-		
+//		return this.layerGroupRepository.searchLayersByFilter( bagSearch );			
+		return null;
 	}
 	
 	/**

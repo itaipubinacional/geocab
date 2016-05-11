@@ -72,13 +72,13 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	public List<Layer> listLayersByLayerGroupId( @Param("id") Long id, @Param("published") Boolean published);
 
 	
-	/**
-	 * Filtro de camadas e grupo de camadas
-	 * 
-	 * @param bagSearch
-	 * @return
-	 */
-	public LayerGroup searchLayersByFilter( @Param("bagSearch") String bagSearch );
+//	/**
+//	 * Filtro de camadas e grupo de camadas
+//	 * 
+//	 * @param bagSearch
+//	 * @return
+//	 */
+//	public LayerGroup searchLayersByFilter( @Param("bagSearch") String bagSearch );
 	
 	
 	/**
