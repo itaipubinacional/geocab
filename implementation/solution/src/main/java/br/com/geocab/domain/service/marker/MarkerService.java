@@ -24,6 +24,7 @@ import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,12 +45,14 @@ import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
+import br.com.geocab.domain.entity.layer.LayerField;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.marker.photo.Photo;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
+import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -396,6 +399,8 @@ public class MarkerService extends AbstractMarkerService
 		return ContextHolder.getAuthenticatedUser();
 	}
 
+	@Autowired
+	IMarkerAttributeRepository markerAttributeRepository;
 	/**
 	 * Method to find an {@link Marker} by layer
 	 * 
@@ -404,8 +409,9 @@ public class MarkerService extends AbstractMarkerService
 	 * @throws JAXBException
 	 */
 	@Transactional(readOnly = true)
-	public List<Marker> listMarkerByLayerFilters(Long layerId)
+	public List<Marker> listMarkerByLayerFilters(Long layerId, List<LayerField> layerFields)
 	{
+		
 		final User user = ContextHolder.getAuthenticatedUser();
 
 		List<Marker> listMarker = null;
@@ -427,13 +433,69 @@ public class MarkerService extends AbstractMarkerService
 		{
 			listMarker = this.markerRepository.listMarkerByLayerPublic(layerId);
 		}
-
-		for (Marker marker : listMarker)
+		// Pega os markerAttributes do banco (Isso foi feito para não deixar a requisição pesada)
+		List<MarkerAttribute> markersAttribute = new ArrayList<>();
+		//Variável auxiliar para verificar se há algum valor nas pesquisas
+		boolean hasSearch = false; 
+		//Verifica se há algum valor na pesquisa
+		for (LayerField layerField : layerFields) //TODO
+		{		
+			if (layerField.getValue() != null && layerField.getValue().length() >0 ) //TODO
+			{
+				hasSearch = true;
+				break;
+			}
+		}
+		
+		if (hasSearch)
 		{
-			marker.setMarkerAttribute(listAttributeByMarker(marker.getId()));
+			for (LayerField layerField : layerFields) //TODO
+			{		
+				if (layerField.getValue() != null && layerField.getValue().length() >0 ) //TODO
+				{
+					markersAttribute.addAll(
+							this.markerAttributeRepository.listMarkerAttributeByAttributeIdAndFilters(
+									layerField.getAttributeId(), layerField.getName(), layerField.getValue() , 
+									this.attributeRepository.findById(
+											layerField.getAttributeId()).getType()));
+				}
+			}
+		}else{
+			return listMarkerByLayer(layerId);
+		}
+		
+		
+		for (MarkerAttribute markerAttribute : markersAttribute)
+		{
+			for (Marker marker : listMarker)
+			{
+				if (markerAttribute.getMarker().getId() == marker.getId())
+				{
+					markerAttribute.setMarker(marker);
+				}
+			}
+		}
+		
+		// Popula a lista de markers com os markers attributos (Isso foi feito para não deixar a requisição pesada)
+		List<Marker> markersReturn = new ArrayList<>(); 
+//		for (Marker marker : listMarker)	
+		{
+			for (MarkerAttribute markerAttribute : markersAttribute)
+			{
+//				if (marker.getId() == markerAttribute.getMarker().getId())
+				{
+					Marker marker = markerAttribute.getMarker();
+					// Instancia lista de markerAttributes dentro do marker
+					marker.setMarkerAttribute(new ArrayList<MarkerAttribute>());
+					// Adiciona o markerAttribute
+					marker.getMarkerAttribute().add(markerAttribute);
+					// Adiciona o o marker na lista de retorno
+					markersReturn.add(marker);
+				}
+			}
 		}
 
-		return listMarker;
+		return markersReturn;
 	}
 
 	/**

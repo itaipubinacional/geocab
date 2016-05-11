@@ -133,12 +133,18 @@ public class Marker extends AbstractEntity implements Serializable
 	{
 		this.setId(id);
 	}
-
+	
+	public Marker(Long id, Geometry location, MarkerStatus markerStatus, Boolean markerDeleted, User user)
+	{
+		this.setId(id);
+		this.setLocation((Point) location);
+		this.setStatus(markerStatus);
+		this.setDeleted(markerDeleted);
+		this.setUser(user);
+	}
 	/**
 	 * 
 	 * @param id
-	 * @param latitude
-	 * @param longitude
 	 * @param status
 	 */
 	public Marker(Long id, MarkerStatus status)

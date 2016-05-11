@@ -324,6 +324,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param id
 	 * @param name
 	 * @param title
+	 * @param icon
 	 * @param startEnabled
 	 * @param startVisible
 	 * @param orderLayer
@@ -333,10 +334,10 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param dataSource
 	 * @param layerGroup
 	 */
-	public Layer(Long id, String name, String title, Boolean startEnabled,
-			Boolean startVisible, Integer orderLayer, MapScale minimumMapScale,
-			MapScale maximumMapScale, Boolean enabled, DataSource dataSource,
-			LayerGroup layerGroup)
+	public Layer(Long id, String name, String title, 
+			Boolean startEnabled, Boolean startVisible, Integer orderLayer, 
+			MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, 
+			DataSource dataSource,	LayerGroup layerGroup)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -349,6 +350,39 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setEnabled(enabled);
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param title
+	 * @param icon
+	 * @param startEnabled
+	 * @param startVisible
+	 * @param orderLayer
+	 * @param minimumMapScale
+	 * @param maximumMapScale
+	 * @param enabled
+	 * @param dataSource
+	 * @param layerGroup
+	 */
+	public Layer(Long id, String name, String title, String icon, 
+			Boolean startEnabled, Boolean startVisible, Integer orderLayer, 
+			MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, 
+			DataSource dataSource)
+	{
+		this.setId(id);
+		this.setName(name);
+		this.setTitle(title);
+		this.setIcon(icon);
+		this.setStartEnabled(startEnabled);
+		this.setStartVisible(startVisible);
+		this.setOrderLayer(orderLayer);
+		this.setMinimumScaleMap(minimumMapScale);
+		this.setMaximumScaleMap(maximumMapScale);
+		this.setEnabled(enabled);
+		this.setDataSource(dataSource);
 	}
 
 	/**

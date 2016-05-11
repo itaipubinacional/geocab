@@ -42,5 +42,15 @@ public interface IAttributeRepository extends IDataRepository<Attribute, Long>
 				"WHERE ( layer.id = :layerId ) "+ 
 				"ORDER BY attribute.orderAttribute ASC")
 	public List<Attribute> listAttributeByLayerMarker( @Param("layerId") Long layerId );
+	
+	/**
+	 * @param layerId
+	 * @return
+	 */
+	@Query(value="SELECT new Attribute( attribute.id, attribute.name, attribute.type, attribute.required, attribute.orderAttribute, attribute.visible ) " +
+				"FROM Attribute attribute " +
+				"WHERE ( attribute.id = :id ) "+ 
+				"ORDER BY attribute.orderAttribute ASC")
+	public Attribute findById( @Param("id") Long id );
 
 }

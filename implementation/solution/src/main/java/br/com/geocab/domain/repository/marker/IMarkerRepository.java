@@ -173,5 +173,13 @@ public interface IMarkerRepository  extends IDataRepository<Marker, Long>
                 "LEFT OUTER JOIN marker.user user "+
                 "WHERE (layer.id = :layerId AND marker.status = 1 AND ( marker.deleted = NULL OR marker.deleted = FALSE ) ) ")
     public List<Marker> listMarkerByLayerPublic(@Param("layerId") Long layerId);
+    
+    /**
+     * 
+     * @return
+     */
+    @Query(value="SELECT new Marker( marker.id, marker.status, marker.location, marker.created, layer.id, layer.name, layer.title, layer.icon, layer.published, layer.startEnabled, layer.startVisible, layer.enabled, user) " +
+                "FROM Marker marker WHERE (marker.id = :id) ")
+    public Marker findById(@Param("id") Long id);
      
 }

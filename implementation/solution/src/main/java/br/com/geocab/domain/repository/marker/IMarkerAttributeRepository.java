@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
@@ -48,4 +49,28 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 				 " WHERE (attribute.id = :attributeId)")
 	public List<MarkerAttribute> listMarkerAttributeByAttribute( @Param("attributeId") Long attributeId );
 		
+	
+	/**
+	 * 
+	 * @param attributeId
+	 * @param value
+	 * @param type
+	 * @return
+	 */
+	@Query(value="SELECT new MarkerAttribute(  markerAttribute.id, markerAttribute.value, "
+			+ "attribute.id, "
+			+ "marker.id, marker.location, marker.status, marker.deleted, marker.user, "
+			+ "layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.dataSource ) " +
+				 " FROM MarkerAttribute markerAttribute "+  
+				 " LEFT OUTER JOIN markerAttribute.marker marker " +
+				 " LEFT OUTER JOIN markerAttribute.marker.layer layer " + 
+				 " LEFT OUTER JOIN markerAttribute.attribute attribute " + 
+				 " WHERE ((attribute.id = :attributeId) "
+				 + "AND ( LOWER(markerAttribute.value) LIKE '%' || LOWER(CAST(:value AS string))  || '%' OR :value IS NULL )  "
+				 + "AND ( LOWER(markerAttribute.attribute.name) LIKE '%' || LOWER(CAST(:name AS string))  || '%' OR :name IS NULL )  "
+				 + "AND ((markerAttribute.attribute.type = :type) OR :type IS NULL))")
+	public List<MarkerAttribute> listMarkerAttributeByAttributeIdAndFilters( @Param("attributeId") Long attributeId,
+																			@Param("name") String name, 
+																			@Param("value") String value, 
+																			@Param("type") AttributeType type);
 }
