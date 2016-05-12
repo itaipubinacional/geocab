@@ -404,12 +404,20 @@ public class LayerGroupService
 	{
 		if ( layerGroups != null )
 		{
-			
 			for (int i = 0; i < layerGroups.size(); i++)
 			{
 				layerGroups.get(i).setOrderLayerGroup(i);
 				layerGroups.get(i).setLayerGroupUpper(layerGroupUpper);
-				this.layerGroupRepository.save( layerGroups.get(i) );
+				try
+				{
+					this.layerGroupRepository.save( layerGroups.get(i) );	
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					// TODO: handle exception
+				}
+				
 				
 				prioritizeLayersGroup(layerGroups.get(i).getLayersGroup(), layerGroups.get(i));
 			}
@@ -435,7 +443,16 @@ public class LayerGroupService
 						{
 							layerGroup.getLayers().get(j).setOrderLayer(j);
 							layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
-							this.layerRepository.save( layerGroup.getLayers().get(j) );
+							try
+							{
+								this.layerRepository.save( layerGroup.getLayers().get(j) );
+							}
+							catch (Exception e)
+							{
+								e.printStackTrace();
+								// TODO: handle exception
+							}
+							
 						}
 					}
 				}
@@ -479,9 +496,7 @@ public class LayerGroupService
 	public List<LayerGroup> listLayersGroupUpper()
 	{
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupUpper();
-		
-		setIcon(layersGroup);
-		
+				
 		return hasChildren(layersGroup);
 	}
 	
@@ -532,9 +547,7 @@ public class LayerGroupService
 		if( layersGroup.isEmpty() )
 		{
 			
-			List<Layer> layers = this.layerGroupRepository.listLayersByLayerGroupId( id, published );
-			
-			this.setIcon(layers);
+			List<Layer> layers = this.layerRepository.listLayersByLayerGroupId( id, published );
 			
 			layerGroup.setLayers(layers);
 			
@@ -544,20 +557,10 @@ public class LayerGroupService
 		{
 			layerGroup.setLayersGroup(layersGroup);
 		} 
-		
 		return hasChildren(layerGroup);	
-		
 	}
-//	/**
-//	 * 
-//	 * @param bagSearch
-//	 * @return
-//	 */
-//	public LayerGroup searchLayersByFilter(String bagSearch){
-//		
-//		return hasChildren(this.layerGroupRepository.searchLayersByFilter( bagSearch ));			
-//		
-//	}
+	
+
 	
 	/**
 	 * Método que retorna todos os filhos de um nó
@@ -1162,6 +1165,12 @@ public class LayerGroupService
 		layer.setName(layerDatabase.getName());
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		
+		for (Attribute attribute : layer.getAttributes())
+		{
+			this.attributeRepository.save(attribute);
+		}
+		
+		
 		return this.layerRepository.save( layer );
 	}
 	
@@ -1181,8 +1190,7 @@ public class LayerGroupService
 		
 		try
 		{
-			this.layerRepository.delete( id );
-			
+			this.layerRepository.delete( id );			
 		}
 		catch (ConstraintViolationException e)
 		{
@@ -1200,9 +1208,7 @@ public class LayerGroupService
 	 */
 	@Transactional(readOnly = true)
 	public Layer findLayerById( Long id )
-	{
-//		final Layer layer = this.layerRepository.findOne(id);
-		
+	{		
 		final Layer layer = this.layerRepository.findById(id);
 		
 		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));
@@ -1457,12 +1463,16 @@ public class LayerGroupService
 	 */
 	private LayerGroup hasChildren(LayerGroup layerGroup)
 	{		
+		
+		//CENTRALIZAR O SETICONS AQUI 		
 		List<LayerGroup> listLayerGroups = this.layerGroupRepository.listLayersGroupByLayerGroupId(layerGroup.getId());
-		List<Layer> listLayers = this.layerGroupRepository.listLayersByLayerGroupId(layerGroup.getId());
-		layerGroup.setLayers(listLayers);
+		List<Layer> layers = this.layerRepository.listLayersByLayerGroupId(layerGroup.getId());
+		this.setIcon(layers);
+		
+		layerGroup.setLayers(layers);
 		// Verifica se tem filhos, sejam layersGroups ou layers
-		layerGroup.setHasChildren((listLayerGroups != null && listLayerGroups.size() >0 || listLayers != null && listLayers.size() >0) 
-				|| ((listLayerGroups != null && listLayerGroups.size() >0 && listLayers != null && listLayers.size() >0)));
+		layerGroup.setHasChildren((listLayerGroups != null && listLayerGroups.size() >0 || layers != null && layers.size() >0) 
+				|| ((listLayerGroups != null && listLayerGroups.size() >0 && layers != null && layers.size() >0)));
 		
 		if (layerGroup.getHasChildren())
 		{

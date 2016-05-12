@@ -7,12 +7,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -89,14 +87,15 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * Layer {@link Layer}
 	 */
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	private Layer layer;
 
 	/**
 	 * 
 	 */
 	@JsonIgnore
-	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
+//	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
+	@Transient
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
 
 	/*-------------------------------------------------------------------

@@ -61,16 +61,30 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 			"ORDER BY layer.publishedLayer.orderLayer")
 	public List<Layer> listLayersByLayerGroupPublished( @Param("idLayer") Long idLayer);
 	
-//	/**layer.layerGroup.id, layer.layerGroup.name, layer.layerGroup.orderLayerGroup, 
-//	 * 
-//	 * @param idLayer
-//	 * @return
-//	 */
-//	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.dataSource) " +
-//			"FROM Layer layer " +
-//			"WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " +
-//			"ORDER BY layer.publishedLayer.orderLayer")
-//	public List<Layer> listLayersByLayerGroupPublished( @Param("idLayer") Long idLayer);
+	/**
+	 * 
+	 * @param id
+	 * @param published
+	 * @return
+	 */
+	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, layer.dataSource, layer.layerGroup.name, layer.layerGroup.id)"
+			+ " FROM Layer layer "
+			+ " WHERE ( layer.layerGroup.id = :id "
+	        + " AND layer.layerGroup.published = :published ) "
+	        + " ORDER BY layer.orderLayer" )
+	public List<Layer> listLayersByLayerGroupId( @Param("id") Long id, @Param("published") Boolean published);
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, layer.dataSource, layer.layerGroup.name, layer.layerGroup.id)"
+			+ " FROM Layer layer "
+			+ " WHERE ( layer.layerGroup.id = :id ) "
+	        + " ORDER BY layer.orderLayer" )
+	public List<Layer> listLayersByLayerGroupId( @Param("id") Long id);
+
 	
 	
 	/**

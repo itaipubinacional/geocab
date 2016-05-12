@@ -142,13 +142,15 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	private Layer publishedLayer;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade =
-	{ CascadeType.REMOVE })
+//	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade =
+//	{ CascadeType.REMOVE })
+	@Transient
 	private List<Marker> markers = new ArrayList<Marker>();
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade =
-	{ CascadeType.ALL })
+//	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade =
+//	{ CascadeType.ALL })
+	@Transient
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 
 	/*-------------------------------------------------------------------

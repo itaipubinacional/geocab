@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
@@ -75,41 +74,6 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 			+ "ORDER BY layerGroup.orderLayerGroup" )
 	public List<LayerGroup> listLayersGroupByLayerGroupId( @Param("id") Long id );
 	
-	/**
-	 * 
-	 * @param id
-	 * @param published
-	 * @return
-	 */
-	@Query(value="SELECT New Layer (layer.id, layer.name, layer.orderLayer, layer.icon, dataSource)"
-			+ " FROM Layer layer "
-			+ " LEFT OUTER JOIN layer.dataSource dataSource " 
-			+ " WHERE ( layer.layerGroup.id = :id "
-	        + " AND layer.layerGroup.published = :published ) "
-	        + " ORDER BY layer.orderLayer" )
-	public List<Layer> listLayersByLayerGroupId( @Param("id") Long id, @Param("published") Boolean published);
-
-	/**
-	 * 
-	 * @param id
-	 * @param published
-	 * @return
-	 */
-	@Query(value="SELECT New Layer (layer.id, layer.name, layer.orderLayer, layer.icon, dataSource)"
-			+ " FROM Layer layer "
-			+ " LEFT OUTER JOIN layer.dataSource dataSource " 
-			+ " WHERE ( layer.layerGroup.id = :id ) "
-	        + " ORDER BY layer.orderLayer" )
-	public List<Layer> listLayersByLayerGroupId( @Param("id") Long id);
-	
-//	/**
-//	 * Filtro de camadas e grupo de camadas
-//	 * 
-//	 * @param bagSearch
-//	 * @return
-//	 */
-//	public LayerGroup searchLayersByFilter( @Param("bagSearch") String bagSearch );
-
 	
 	/**
 	 * 
