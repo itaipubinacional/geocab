@@ -176,19 +176,7 @@ public class LayerGroupService
 		
 	}
 	
-	/**
-	 * Method to save a list of {@link LayerGroup}
-	 * 
-	 * @param List<layerGroup>
-	 * @return
-	 */
-	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
-	public void saveAllLayersGroup( List<LayerGroup> layerGroup )
-	{
-		this.prioritizeLayersGroup( layerGroup, null );
-		
-		this.prioritizeLayers( layerGroup);
-	}
+	
 	
 	/**
 	 * Find {@link LayerGroup} by id
@@ -219,45 +207,6 @@ public class LayerGroupService
 	}
 	
 	
-	/**
-	 * 
-	 * @param List<layerGroup>
-	 */
-	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
-	public void publishLayerGroup(List<LayerGroup> layersGroup)
-	{
-		this.saveAllLayersGroup(layersGroup); // save layersGroup
-		
-		final List<LayerGroup> layerGroupOriginals = this.listLayersGroupUpper();//list parent groups
-		
-		for ( LayerGroup layerGroupOriginal : layerGroupOriginals )
-		{
-			this.recursive(layerGroupOriginal, null);//recursion to insert or update a layers group published	
-		}
-
-		//exclude published groups
-		//set children groups in correct parent group
-		this.populateChildrenInLayerGroupPublished();
-		
-		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listLayersGroupUpperPublished();
-		
-		
-		if ( layersGroupPublished != null )
-		{
-			for ( LayerGroup layerGroupPublished : layersGroupPublished )
-			{
-				this.removeLayerGroupPublished(layerGroupPublished);
-				
-				// remove o grupo de camada publicado superior
-				// remove quando o rascunho for null e o publicado is true
-				if (layerGroupPublished.getPublished() && layerGroupPublished.getDraft() == null)
-				{
-					this.layerGroupRepository.delete(layerGroupPublished);
-				}
-			}
-		}
-		
-	}
 	
 	/**
 	 * Mï¿½todo que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
@@ -393,7 +342,61 @@ public class LayerGroupService
 			}
 		}					
 	}
+	
+	/**
+	 * 
+	 * @param List<layerGroup>
+	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
+	public void publishLayerGroup(List<LayerGroup> layersGroup)
+	{
+		this.saveAllLayersGroup(layersGroup); // save layersGroup
+		
+		final List<LayerGroup> layerGroupOriginals = this.listLayersGroupUpper();//list parent groups
+		
+		for ( LayerGroup layerGroupOriginal : layerGroupOriginals )
+		{
+			this.recursive(layerGroupOriginal, null);//recursion to insert or update a layers group published	
+		}
 
+		//exclude published groups
+		//set children groups in correct parent group
+		this.populateChildrenInLayerGroupPublished();
+		
+		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listLayersGroupUpperPublished();
+		
+		
+		if ( layersGroupPublished != null )
+		{
+			for ( LayerGroup layerGroupPublished : layersGroupPublished )
+			{
+				this.removeLayerGroupPublished(layerGroupPublished);
+				
+				// remove o grupo de camada publicado superior
+				// remove quando o rascunho for null e o publicado is true
+				if (layerGroupPublished.getPublished() && layerGroupPublished.getDraft() == null)
+				{
+					this.layerGroupRepository.delete(layerGroupPublished);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Method to save a list of {@link LayerGroup}
+	 * 
+	 * @param List<layerGroup>
+	 * @return
+	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
+	public void saveAllLayersGroup( List<LayerGroup> layerGroup )
+	{		
+		this.prioritizeLayersGroup( layerGroup, null );	
+	
+		this.prioritizeLayers( layerGroup);	
+		
+	}
+	
 	/**
 	 * 
 	 * @param layerGroups
@@ -408,18 +411,9 @@ public class LayerGroupService
 			{
 				layerGroups.get(i).setOrderLayerGroup(i);
 				layerGroups.get(i).setLayerGroupUpper(layerGroupUpper);
-				try
-				{
-					this.layerGroupRepository.save( layerGroups.get(i) );	
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					// TODO: handle exception
-				}
-				
-				
-				prioritizeLayersGroup(layerGroups.get(i).getLayersGroup(), layerGroups.get(i));
+			
+				this.layerGroupRepository.save( layerGroups.get(i) );	
+				prioritizeLayersGroup(layerGroups.get(i).getLayersGroup(), layerGroups.get(i));		
 			}
 		}
 	}
@@ -430,36 +424,17 @@ public class LayerGroupService
 	 */
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void prioritizeLayers( List<LayerGroup> layerGroups )
-	{
-		if ( layerGroups != null )
+	{		
+		for (LayerGroup layerGroup : layerGroups)
 		{
-			for (LayerGroup layerGroup : layerGroups)
+			for(int j = 0; j < layerGroup.getLayers().size(); j++)
 			{
-				if( layerGroup.getLayers() != null )
-				{					
-					if( layerGroup.getLayers().size() > 0 )
-					{
-						for(int j = 0; j < layerGroup.getLayers().size(); j++)
-						{
-							layerGroup.getLayers().get(j).setOrderLayer(j);
-							layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
-							try
-							{
-								this.layerRepository.save( layerGroup.getLayers().get(j) );
-							}
-							catch (Exception e)
-							{
-								e.printStackTrace();
-								// TODO: handle exception
-							}
-							
-						}
-					}
-				}
-				
-				prioritizeLayers(layerGroup.getLayersGroup());
+				layerGroup.getLayers().get(j).setOrderLayer(j);
+//				layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
+				this.layerRepository.save( layerGroup.getLayers().get(j) );
 			}
-		}
+			if (layerGroup.getLayersGroup() != null) prioritizeLayers(layerGroup.getLayersGroup());
+		}	
 	}
 	
 	/**
@@ -509,9 +484,7 @@ public class LayerGroupService
 	@Transactional(readOnly=true)
 	public LayerGroup listLayersGroupPublishedByLayerGroupId(Long id)
 	{
-
 		return hasChildren(this.listLayersGroupByLayerGroupId(id , true));
-		
 	}
 	
 	/**
@@ -1131,12 +1104,17 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer insertLayer( Layer layer )
 	{
-		layer.setLayerGroup(this.findLayerGroupById(layer.getLayerGroup().getId()));
+		layer.setLayerGroup(this.layerGroupRepository.findOne(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		//Valida se os atributos são válidos
 		layer.validate();
-		return this.layerRepository.save( layer );
+		
+		this.layerRepository.save( layer );
+		
+		List<Attribute> attributies = layer.getAttributes();
+		layer.setAttributes(this.attributeRepository.save(attributies));
+		return layer;
 	}
 	/**
 	 * mï¿½todo para atualizar uma {@link Camada}
@@ -1170,8 +1148,10 @@ public class LayerGroupService
 			this.attributeRepository.save(attribute);
 		}
 		
+		layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));
 		
-		return this.layerRepository.save( layer );
+		return this.layerRepository.save( layer );	
+		
 	}
 	
 	/**

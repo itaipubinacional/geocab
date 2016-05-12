@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -137,8 +135,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * Draft {@link Layer} that originated the published {@link Layer}
 	 */
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.EAGER, optional = true, cascade =
-	{ CascadeType.ALL })
+	@OneToOne(fetch = FetchType.EAGER, optional = true)
 	private Layer publishedLayer;
 
 	@JsonIgnore
@@ -179,14 +176,17 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param id
 	 * @param name
 	 * @param orderLayer
+	 * @param icon
+	 * @param publishedLayerId
 	 */
-	public Layer(Long id, String name, Integer orderLayer, String icon)
+	public Layer(Long id, String name, Integer orderLayer, String icon, Long publishedLayerId)
 	{
 		
 		this.setId(id);
 		this.setName(name);
 		this.setOrderLayer(orderLayer);
 		this.setIcon(icon);
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 	
 	/**
@@ -196,26 +196,29 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param orderLayer
 	 * @param icon
 	 * @param dataSource
+	 * @param publishedLayerId
 	 */
-	public Layer(Long id, String name, Integer orderLayer, String icon, DataSource dataSource)
-	{
-		
+	public Layer(Long id, String name, Integer orderLayer, String icon, DataSource dataSource, Long publishedLayerId)
+	{		
 		this.setId(id);
 		this.setName(name);
 		this.setOrderLayer(orderLayer);
 		this.setIcon(icon);
 		this.setDataSource(dataSource);
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 
 	/**
 	 * 
 	 * @param id
 	 * @param title
+	 * @param publishedLayerId
 	 */
-	public Layer(Long id, String title)
+	public Layer(Long id, String title, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setTitle(title);
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 
 	/**
@@ -229,10 +232,11 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param enabled
 	 * @param published
 	 * @param dataSource
+	 * @param publishedLayerId
 	 */
 	public Layer(Long id, String name, String title, String icon,
 			Boolean startEnabled, Boolean startVisible, Boolean enabled,
-			Boolean published, DataSource dataSource)
+			Boolean published, DataSource dataSource, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -243,6 +247,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setEnabled(enabled);
 		this.setPublished(published);
 		this.setDataSource(dataSource);
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 
 	/**
@@ -258,11 +263,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param layerGroupId
 	 * @param layerGroupName
 	 * @param orderLayerGroup
+	 * @param publishedLayerId
 	 */
 	public Layer(Long id, String name, String title, String icon,
 			Boolean startEnabled, Boolean startVisible, Boolean enabled,
 			Boolean published, Long layerGroupId, String layerGroupName,
-			Integer orderLayerGroup)
+			Integer orderLayerGroup, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -279,6 +285,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		layerGroup.setOrderLayerGroup(orderLayerGroup);
 
 		this.setLayerGroup(layerGroup);
+		
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 
 	/**
@@ -295,11 +303,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param layerGroupName
 	 * @param orderLayerGroup
 	 * @param dataSource
+	 * @param publishedLayerId
 	 */
 	public Layer(Long id, String name, String title, String icon,
 			Boolean startEnabled, Boolean startVisible, Boolean enabled,
 			Boolean published, Long layerGroupId, String layerGroupName,
-			Integer orderLayerGroup, DataSource dataSource)
+			Integer orderLayerGroup, DataSource dataSource, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -318,7 +327,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setDataSource(dataSource);
 
 		this.setLayerGroup(layerGroup);
-
+		
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 
 	/**
@@ -326,7 +336,6 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param id
 	 * @param name
 	 * @param title
-	 * @param icon
 	 * @param startEnabled
 	 * @param startVisible
 	 * @param orderLayer
@@ -335,11 +344,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param enabled
 	 * @param dataSource
 	 * @param layerGroup
+	 * @param publishedLayerId
 	 */
 	public Layer(Long id, String name, String title, 
 			Boolean startEnabled, Boolean startVisible, Integer orderLayer, 
 			MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, 
-			DataSource dataSource,	LayerGroup layerGroup)
+			DataSource dataSource,	LayerGroup layerGroup, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -352,6 +362,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setEnabled(enabled);
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
+		
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 	
 	/**
@@ -367,12 +379,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param maximumMapScale
 	 * @param enabled
 	 * @param dataSource
-	 * @param layerGroup
+	 * @param publishedLayerId
 	 */
 	public Layer(Long id, String name, String title, String icon, 
 			Boolean startEnabled, Boolean startVisible, Integer orderLayer, 
 			MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, 
-			DataSource dataSource)
+			DataSource dataSource, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -385,10 +397,11 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setMaximumScaleMap(maximumMapScale);
 		this.setEnabled(enabled);
 		this.setDataSource(dataSource);
+		
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 
 	/**
-	 * listByFilters
 	 * 
 	 * @param id
 	 * @param name
@@ -401,13 +414,13 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param maximumMapScale
 	 * @param enabled
 	 * @param dataSource
-	 * @param layerGroup
+	 * @param layerGroupName
+	 * @param publishedLayerId
 	 */
-
 	public Layer(Long id, String name, String title, String icon,
 			Boolean startEnabled, Boolean startVisible, Integer orderLayer,
 			MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled,
-			DataSource dataSource, String layerGroupName)
+			DataSource dataSource, String layerGroupName, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -426,14 +439,33 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setLayerGroup(layerGroup);
 		
 		this.setIcon(icon);
+		
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 	
-
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param title
+	 * @param icon
+	 * @param startEnabled
+	 * @param startVisible
+	 * @param orderLayer
+	 * @param minimumScaleMap
+	 * @param maximumScaleMap
+	 * @param enabled
+	 * @param published
+	 * @param dataSource
+	 * @param layerGroupName
+	 * @param layerGroupId
+	 * @param publishedLayerId
+	 */
 	public Layer(Long id, String name, String title, String icon,
 			Boolean startEnabled, Boolean startVisible, Integer orderLayer,
 			MapScale minimumScaleMap, MapScale maximumScaleMap, Boolean enabled, 
 			Boolean published, 
-			DataSource dataSource, String layerGroupName, Long layerGroupId)
+			DataSource dataSource, String layerGroupName, Long layerGroupId, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -453,9 +485,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		layerGroup.setId(layerGroupId);
 		this.setLayerGroup(layerGroup);
 		
-//		this.setPublishedLayer(publishedLayer);
-		
-		
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 	
 
@@ -470,11 +500,12 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	 * @param maximumMapScale
 	 * @param dataSource
 	 * @param layerGroup
+	 * @param publishedLayerId
 	 */
 	public Layer(Long id, String name, Boolean startEnabled,
 			Boolean startVisible, Integer orderLayer, MapScale minimumMapScale,
 			MapScale maximumMapScale, DataSource dataSource,
-			LayerGroup layerGroup)
+			LayerGroup layerGroup, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -485,6 +516,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setMaximumScaleMap(maximumMapScale);
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
+		
+		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 
 	/*-------------------------------------------------------------------

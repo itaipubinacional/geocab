@@ -273,14 +273,14 @@ public class Marker extends AbstractEntity implements Serializable
 	 * @param layerName
 	 * @param user
 	 */
-	public Marker(Long id, MarkerStatus status, Calendar created, Geometry location, Long layerId, String layerName, User user)
+	public Marker(Long id, MarkerStatus status, Calendar created, Geometry location, Long layerId, String layerName, User user, Long publishedLayerId)
 	{
 		this.setId(id);
 		this.setStatus(status);
 		user.setPassword("");
 		this.setUser(user);
 		
-		Layer layer = new Layer(layerId, layerName);
+		Layer layer = new Layer(layerId, layerName, publishedLayerId);
 		this.setLayer(layer);
 		
 		this.setLocation((Point) location);

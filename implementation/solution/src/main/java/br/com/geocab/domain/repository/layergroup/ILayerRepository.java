@@ -22,10 +22,13 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/	
-//	Long id, String name, String title, String icon,	Boolean startEnabled, Boolean startVisible, Integer orderLayer,
-//	MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, 	Boolean published, 	DataSource dataSource, String layerGroupName
+	/**
+	 * 
+	 * @param layerId
+	 * @return
+	 */
 	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible," +
-			" layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, dataSource,  layerGroup.name,  layerGroup.id)  " +
+			" layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, dataSource, layerGroup.name, layerGroup.id, layer.publishedLayer.id)  " +
 			"FROM Layer layer " +
 			"LEFT OUTER JOIN layer.layerGroup layerGroup " +
 			"LEFT OUTER JOIN layer.dataSource dataSource " + 
@@ -34,11 +37,13 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	
 	
 	/**
+	 * 
 	 * @param filter
+	 * @param dataSourceId
 	 * @param pageable
 	 * @return
 	 */
-	@Query(value="SELECT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup.name ) " +
+	@Query(value="SELECT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup.name, layer.publishedLayer.id ) " +
 				"FROM Layer layer " +
 				"LEFT OUTER JOIN layer.dataSource dataSource " + 
 				"LEFT OUTER JOIN layer.layerGroup layerGroup " +
@@ -55,7 +60,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param idLayer
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource )  " +
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, layer.publishedLayer.id )  " +
 			"FROM Layer layer " +
 			"WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " +
 			"ORDER BY layer.publishedLayer.orderLayer")
@@ -67,7 +72,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param published
 	 * @return
 	 */
-	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, layer.dataSource, layer.layerGroup.name, layer.layerGroup.id)"
+	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, layer.dataSource, layer.layerGroup.name, layer.layerGroup.id, layer.publishedLayer.id)"
 			+ " FROM Layer layer "
 			+ " WHERE ( layer.layerGroup.id = :id "
 	        + " AND layer.layerGroup.published = :published ) "
@@ -79,19 +84,17 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param id
 	 * @return
 	 */
-	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, layer.dataSource, layer.layerGroup.name, layer.layerGroup.id)"
+	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, layer.dataSource, layer.layerGroup.name, layer.layerGroup.id, layer.publishedLayer.id)"
 			+ " FROM Layer layer "
 			+ " WHERE ( layer.layerGroup.id = :id ) "
 	        + " ORDER BY layer.orderLayer" )
 	public List<Layer> listLayersByLayerGroupId( @Param("id") Long id);
-
-	
-	
+		
 	/**
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource) " +
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, layer.publishedLayer.id) " +
 			"FROM Layer layer " +
 			"WHERE ( layer.publishedLayer != NULL "
 			+ "AND layer.published = false ) ")
@@ -101,7 +104,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.layerGroup.id, layer.layerGroup.name, layer.layerGroup.orderLayerGroup)  " 
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.layerGroup.id, layer.layerGroup.name, layer.layerGroup.orderLayerGroup, layer.publishedLayer.id) " 
 			+ "FROM Layer layer "
 			+ "WHERE ( layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE ) " )
 	public List<Layer> listAllInternalLayerGroups();
@@ -110,7 +113,7 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.title) "
+	@Query(value="SELECT new Layer(layer.id, layer.title, layer.publishedLayer.id) "
 			+ "FROM Layer layer " 
 			+ "WHERE ( layer.dataSource.url = NULL ) " )
 	public List<Layer> listAllInternalLayers();
