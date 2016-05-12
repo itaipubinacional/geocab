@@ -427,13 +427,16 @@ public class LayerGroupService
 	{		
 		for (LayerGroup layerGroup : layerGroups)
 		{
-			for(int j = 0; j < layerGroup.getLayers().size(); j++)
+			if (layerGroup.getLayers() != null)
 			{
-				layerGroup.getLayers().get(j).setOrderLayer(j);
-//				layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
-				this.layerRepository.save( layerGroup.getLayers().get(j) );
-			}
-			if (layerGroup.getLayersGroup() != null) prioritizeLayers(layerGroup.getLayersGroup());
+				for(int j = 0; j < layerGroup.getLayers().size(); j++)
+				{
+					layerGroup.getLayers().get(j).setOrderLayer(j);
+					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
+					this.layerRepository.save( layerGroup.getLayers().get(j) );
+				}
+				if (layerGroup.getLayersGroup() != null) prioritizeLayers(layerGroup.getLayersGroup());
+			}			
 		}	
 	}
 	
