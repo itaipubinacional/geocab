@@ -910,8 +910,8 @@ uri="http://www.springframework.org/security/tags"%>
                   </div>
 
                     <div ivh-treeview="allLayers"
-                         <%--ivh-treeview-filter="bagSearch"--%>
-                         ivh-treeview-on-toggle="listLayersGroupPublishedByLayerGroupId(ivhNode, ivhIsExpanded, ivhTree)"
+                         ivh-treeview-filter="bagSearch"
+                         <%--ivh-treeview-on-toggle="listLayersGroupPublishedByLayerGroupId(ivhNode, ivhIsExpanded, ivhTree)"--%>
                          ivh-treeview-on-cb-change="onChange(ivhNode)">
                         <script type="text/ng-template">
                             <div class="ivh-treeview-node" >

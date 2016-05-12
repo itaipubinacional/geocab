@@ -1124,7 +1124,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       callback: function (result) {
 
         angular.forEach(result, function(layer){
-          $scope.showLayer(layer);
+           // $scope.showLayer(layer);
         });
 
       },
@@ -1237,27 +1237,46 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.listPublishedLayersGroup = function () {
 
-    var emptyChildren = {label: 'Nenhum registro'};
-
-    var test = '[{"id":"grupo_30","label":"marp.cd","name":"","legenda":"","selected":"","dataSourceUrl":"","value":30,"type":"grupo","maximumScaleMap":"","minimumScaleMap":""}]';
 
     //Lists the groups of layers and layers published according to user access profile
     layerGroupService.listLayerGroupUpperPublished({
       callback: function (result) {
+         
+        function populateChildren(itemResult) {
+          angular.forEach(itemResult, function(group){
 
-        angular.forEach(result, function(group){
+            group.label = group.name ? group.name : group.title;
 
-          var item = {};
 
-          item.id = group.id;
-          item.label = group.name ? group.name : group.title;
-          item.children = [emptyChildren];
+            if(group.layersGroup && group.layersGroup.length){
+              angular.forEach(group.layersGroup, function(layerGroup){
+                group.children.push(layerGroup);
+                popularChildren(layerGroup);
+              });
 
-          $scope.allLayers.push(item);
 
-          console.log($scope.allLayers);
+            } else if (group.layers && group.layers.length){
 
-        });
+              angular.forEach(group.layers, function(child){
+
+                child.id = child.id;
+                child.label = child.name ? child.name : child.title;
+                child.icon = child.icon ? child.icon : child.legend ? child.legend : null;
+                child.selected = false;
+                child.dataSourceUrl = !child.dataSource ? null : child.dataSource.url;
+
+              });
+
+              group.children = group.layers;
+
+            }
+          });
+        }
+
+        populateChildren(result);
+
+        $scope.allLayers = result;
+
 
         /*var parseNode = function (node) {
           var item = {};
@@ -1353,49 +1372,41 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     return {'name': layerName, 'url': formattedUrl};
 
   };
-
-
-  $scope.searchLayers = function (bagSearch) {
-
-    if(!$scope.oldLayers){
-      $scope.oldLayers = $scope.allLayers;
-    }
-
-    if(bagSearch){
-
-      layerGroupService.searchLayersByFilter( bagSearch, {
-        callback: function (result) {
-          console.log(result);
-          $scope.allLayers = result;
-        },
-        errorHandler: function (message, exception) {
-          console.log(message);
-          console.log(exception);
-        }
-      });
-
-    } else {
-      $scope.allLayers = $scope.oldLayers;
-      $scope.oldLayers = [];
-    }
-
-  };
+  
 
   $scope.onChange = function(node){
 
-    console.log(node);
-    console.log('assssssssssssssss');
+      if(node.layersGroup && node.layersGroup.length){
+        $scope.onChange(node.layersGroup);
+      } else if (node.layers && node.layers.length) {
+        $scope.onChange(node.layers);
+      } else if ( node.length ){
+        angular.forEach( node, function ( layer ) {
+          $scope.onChange( layer );
+        });
+      } else {
 
+        if( node.selected ){
 
-    layerGroupService.listAllChildrenByLayerGroupId( node.id , {
-      callback: function (result) {
-        console.log(result);
-      },
-      errorHandler: function (message, exception) {
-        console.log(message);
-        console.log(exception);
+          if ( !$filter('filter')($scope.internalLayers , {id: node.id})[0] && !$filter('filter')($scope.layers , {id: node.id})[0] ){
+            $scope.showLayer(node);
+          }
+
+        } else {
+          $scope.getSelectedNode(node);
+        }
       }
-    });
+
+
+    // layerGroupService.listAllChildrenByLayerGroupId( node.id , {
+    //   callback: function (result) {
+    //     console.log(result);
+    //   },
+    //   errorHandler: function (message, exception) {
+    //     console.log(message);
+    //     console.log(exception);
+    //   }
+    // });
 
   };
 
@@ -1403,8 +1414,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     /* Check if it is an internal layer */
     if (angular.isDefined(layer.dataSource) && layer.dataSource.url == null) {
+
         $scope.addInternalLayer(layer.id);
-      return;
+
+        return;
     }
 
     var item = $scope.formatUrl(layer, false);
@@ -1428,7 +1441,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       minResolution: maxEscalaToMinResolutionn(layer.maximumScaleMap)
     });
 
-    $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name": layer.name, "titulo": layer.label});
+    $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name": layer.name, "titulo": layer.label, "id": layer.id});
 
     //Adds the selected layers in the map
     $scope.map.addLayer(wmsLayer);
@@ -1446,14 +1459,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     /* Check if it is an internal layer */
     if (typeof node.dataSourceUrl != 'undefined' && node.dataSourceUrl == null) {
       if (node.selected) {
-        $scope.addInternalLayer(node.value);
+        $scope.addInternalLayer(node.id);
       } else {
-        $scope.removeInternalLayer(node.value);
+        $scope.removeInternalLayer(node.id);
       }
       return;
     }
 
-    if (node && node.type == 'layer' && !node.search) {
+    if (node && !node.search) {
       if (node.selected) {
 
         var item = $scope.formatUrl(node, false);
