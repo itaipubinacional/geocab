@@ -1254,7 +1254,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                   group.children = [];
                 }
                 group.children.push(layerGroup);
-                populateChildren(layerGroup);
+                populateChildren(group.children);
               });
 
 
