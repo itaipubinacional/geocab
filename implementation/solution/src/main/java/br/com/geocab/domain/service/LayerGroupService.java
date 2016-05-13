@@ -537,37 +537,6 @@ public class LayerGroupService
 		return hasChildren(layerGroup);	
 	}
 	
-
-	
-	/**
-	 * Método que retorna todos os filhos de um nó
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public LayerGroup listAllChildrenByLayerGroupId (Long id){
-		
-		LayerGroup layerGroup = this.listLayersGroupPublishedByLayerGroupId(id);
-	
-		if( !layerGroup.getLayersGroup().isEmpty() ){
-			System.out.println( id +  " tem filhos  => " + layerGroup.getLayersGroup().size() +  " filhos");
-			for (LayerGroup layerGroupPublished : layerGroup.getLayersGroup())
-			{
-				System.out.println( " Entro no FOR " + layerGroupPublished.getId());
-				//TODO
-				return ( this.listAllChildrenByLayerGroupId(layerGroupPublished.getId()));
-				
-				
-			}
-			
-		} 
-		
-		System.out.println("Passou aki iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-		
-		return hasChildren(layerGroup);
-
-	}
-	
 	
 	/**
 	 * Mï¿½todo que retorna a estrutura completa dos grupos de camadas publicados
@@ -591,15 +560,11 @@ public class LayerGroupService
 				if (layerGroupPublished.getLayerGroupUpper() == null || layerGroupPublished.getLayerGroupUpper().getId() == null)
 				{
 					layersGroupUpperPublished.add(layerGroupPublished);
-				}
-				
+				}				
 			}
 		}
 		
-		setIcon(layersGroupUpperPublished);
-		
 		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
-		
 		return hasChildren(this.layersGroupUpperByRole(layersGroupUpperPublished));
 		
 	}
