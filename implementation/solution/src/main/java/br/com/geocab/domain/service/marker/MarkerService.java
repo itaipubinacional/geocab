@@ -384,7 +384,16 @@ public class MarkerService extends AbstractMarkerService
 	@Transactional(readOnly = true)
 	public Marker findMarkerById(Long id)
 	{
-		return this.markerRepository.findOne(id);
+		
+		Marker marker = this.markerRepository.findOne(id);	
+		
+		marker.setMarkerAttribute(this.markerAttributeRepository.listAttributeByMarker(marker.getId()));
+		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
+		{
+			markerAttribute.setPhotoAlbum(this.photoAlbumRepository.findByMarkerAttributeId(markerAttribute.getId()));
+		}
+		
+		return marker;
 	}
 	
 	/**
@@ -422,7 +431,6 @@ public class MarkerService extends AbstractMarkerService
 			{
 				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
 			}
-
 		}
 		else
 		{
