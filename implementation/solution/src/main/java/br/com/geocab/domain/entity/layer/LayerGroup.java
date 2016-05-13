@@ -163,8 +163,8 @@ public class LayerGroup extends AbstractEntity implements Serializable
 	public LayerGroup(Long id, String name, Integer orderLayerGroup)
 	{
 		this.setId(id);
-		this.name = name;
-		this.orderLayerGroup = orderLayerGroup;
+		this.setName(name);
+		this.setOrderLayerGroup(orderLayerGroup);
 	}
 	/**
 	 * 
@@ -180,7 +180,7 @@ public class LayerGroup extends AbstractEntity implements Serializable
 		this.setName(name);
 		this.setOrderLayerGroup(orderLayerGroup);
 		this.setPublished(published);
-		this.setLayerGroupUpper(new LayerGroup(layerGroupUpperId));
+		this.setLayerGroupUpper(layerGroupUpperId != null ? new LayerGroup(layerGroupUpperId) : null);
 	}
 
 	/*-------------------------------------------------------------------

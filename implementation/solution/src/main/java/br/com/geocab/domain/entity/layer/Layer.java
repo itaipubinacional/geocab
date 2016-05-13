@@ -185,7 +185,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setName(name);
 		this.setOrderLayer(orderLayer);
 		this.setIcon(icon);
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
 	}
 	
 	/**
@@ -204,7 +205,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setOrderLayer(orderLayer);
 		this.setIcon(icon);
 		this.setDataSource(dataSource);
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
 	}
 
 	/**
@@ -217,7 +219,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	{
 		this.setId(id);
 		this.setTitle(title);
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
 	}
 
 	/**
@@ -246,7 +249,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setEnabled(enabled);
 		this.setPublished(published);
 		this.setDataSource(dataSource);
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
 	}
 
 	/**
@@ -285,7 +289,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 
 		this.setLayerGroup(layerGroup);
 		
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
 	}
 
 	/**
@@ -327,7 +332,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 
 		this.setLayerGroup(layerGroup);
 		
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
 	}
 
 	/**
@@ -362,7 +368,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
 		
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
 	}
 	
 	/**
@@ -397,7 +404,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setEnabled(enabled);
 		this.setDataSource(dataSource);
 		
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
 	}
 
 	/**
@@ -439,7 +447,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		
 		this.setIcon(icon);
 		
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
 	}
 	
 	/**
@@ -484,7 +493,7 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		layerGroup.setId(layerGroupId);
 		this.setLayerGroup(layerGroup);
 		
-		this.setPublishedLayer(new Layer(publishedLayerId));
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
 	}
 	
 
@@ -515,8 +524,9 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setMaximumScaleMap(maximumMapScale);
 		this.setDataSource(dataSource);
 		this.setLayerGroup(layerGroup);
+				
+		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
 		
-		this.setPublishedLayer(new Layer(publishedLayerId));
 	}
 
 	/*-------------------------------------------------------------------
