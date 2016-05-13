@@ -493,7 +493,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.listToolsByUser();
 
-    $scope.listPublishedLayersGroup();
+    // $scope.listPublishedLayersGroup();
 
     // Initializes map
     if ($scope.mapConf.type == $scope.MAP_TYPE_OSM) {
@@ -1124,7 +1124,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       callback: function (result) {
 
         angular.forEach(result, function(layer){
-           // $scope.showLayer(layer);
+           $scope.showLayer(layer);
         });
 
       },
@@ -1245,13 +1245,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         function populateChildren(itemResult) {
           angular.forEach(itemResult, function(group){
 
-            group.label = group.name ? group.name : group.title;
+            group.label = group.name ? group.name : group.title ? group.title : "";
 
 
             if(group.layersGroup && group.layersGroup.length){
               angular.forEach(group.layersGroup, function(layerGroup){
+                if(!group.children){
+                  group.children = [];
+                }
                 group.children.push(layerGroup);
-                popularChildren(layerGroup);
+                populateChildren(layerGroup);
               });
 
 
@@ -1259,7 +1262,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
               angular.forEach(group.layers, function(child){
 
-                child.id = child.id;
                 child.label = child.name ? child.name : child.title;
                 child.icon = child.icon ? child.icon : child.legend ? child.legend : null;
                 child.selected = false;
