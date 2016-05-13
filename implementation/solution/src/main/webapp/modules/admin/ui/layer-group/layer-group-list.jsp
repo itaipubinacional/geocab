@@ -69,7 +69,7 @@
 
     </div>
 
-    {{ groupsUpper | json }}
+    <%--{{ groupsUpper | json }}--%>
 
 </body>
 
