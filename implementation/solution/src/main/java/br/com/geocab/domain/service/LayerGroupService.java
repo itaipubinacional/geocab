@@ -433,11 +433,7 @@ public class LayerGroupService
 					layerGroup.getLayers().get(j).setOrderLayer(j);
 					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
 					
-//					if (layerGroup.getLayers().get(j).getPublishedLayer() != null && layerGroup.getLayers().get(j).getPublishedLayer().getId() == null)
-//					{
-//						layerGroup.getLayers().get(j).setPublishedLayer(null);
-//					}
-//					
+
 					this.layerRepository.save( layerGroup.getLayers().get(j) );
 				}
 				if (layerGroup.getLayersGroup() != null) prioritizeLayers(layerGroup.getLayersGroup());
@@ -607,8 +603,7 @@ public class LayerGroupService
 		return hasChildren(this.layersGroupUpperByRole(layersGroupUpperPublished));
 		
 	}
-	
-	
+	//TODO organizar método
 	public List<Layer> listLayerPublished()
 	{
 		
@@ -620,7 +615,7 @@ public class LayerGroupService
 		
 		layerGroups.add( layerGroup );
 		
-		layerGroups = layersGroupUpperByRole(layerGroups);
+		layerGroups = /*hasChildren*/(layersGroupUpperByRole(layerGroups));
 		
 		return layerGroups.get(0).getLayers();
 		
@@ -695,7 +690,7 @@ public class LayerGroupService
 			layersGroupUpperPublished.removeAll(layerGroupToDelete);
 		}
 		
-		return hasChildren(layersGroupUpperPublished);
+		return layersGroupUpperPublished;
 		
 	}
 	
@@ -1451,8 +1446,7 @@ public class LayerGroupService
 	 */
 	private LayerGroup hasChildren(LayerGroup layerGroup)
 	{		
-		
-		//CENTRALIZAR O SETICONS AQUI 		
+			
 		List<LayerGroup> listLayerGroups = this.layerGroupRepository.listLayersGroupByLayerGroupId(layerGroup.getId());
 		List<Layer> layers = this.layerRepository.listLayersByLayerGroupId(layerGroup.getId());
 		this.setIcon(layers);
