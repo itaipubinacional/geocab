@@ -39,7 +39,7 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new LayerGroup(layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id)"
+	@Query(value="SELECT new LayerGroup(layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroupUpper.id)"
 			 + "FROM LayerGroup layerGroup "
 			 + "LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " 
 			 + "WHERE ( layerGroupUpper.id = null "
@@ -53,7 +53,7 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT New LayerGroup ( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id)"
+	@Query(value="SELECT New LayerGroup ( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroupUpper.id)"
 			+ "FROM LayerGroup layerGroup "
 			+ "LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " 
 			+ "WHERE ( layerGroupUpper.id = :id "
@@ -66,7 +66,7 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 * @param id
 	 * @return
 	 */
-	@Query(value="SELECT New LayerGroup ( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id)"
+	@Query(value="SELECT New LayerGroup ( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroupUpper.id)"
 			+ "FROM LayerGroup layerGroup "
 			+ "LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " 
 			+ "WHERE ( layerGroupUpper.id = :id ) "

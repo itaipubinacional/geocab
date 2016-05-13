@@ -431,7 +431,7 @@ public class LayerGroupService
 				for(int j = 0; j < layerGroup.getLayers().size(); j++)
 				{
 					layerGroup.getLayers().get(j).setOrderLayer(j);
-					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
+//					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
 					
 
 					this.layerRepository.save( layerGroup.getLayers().get(j) );
@@ -890,9 +890,7 @@ public class LayerGroupService
     public List<LayerGroup> listSupervisorsFilter(String layer, Long dataSource)
     {    	
     	List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layer, dataSource);
-         
-        this.setIcon(layersGroup);
-         
+                 
         return hasChildren(layersGroup);
          
     }
@@ -1411,7 +1409,7 @@ public class LayerGroupService
 	 */
 	private LayerGroup hasChildren(LayerGroup layerGroup)
 	{		
-			
+		
 		List<LayerGroup> listLayerGroups = this.layerGroupRepository.listLayersGroupByLayerGroupId(layerGroup.getId());
 		List<Layer> layers = this.layerRepository.listLayersByLayerGroupId(layerGroup.getId());
 		this.setIcon(layers);

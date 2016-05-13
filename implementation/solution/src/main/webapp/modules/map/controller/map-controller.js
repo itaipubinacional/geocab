@@ -493,7 +493,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.listToolsByUser();
 
-    // $scope.listPublishedLayersGroup();
+    $scope.listPublishedLayersGroup();
 
     // Initializes map
     if ($scope.mapConf.type == $scope.MAP_TYPE_OSM) {

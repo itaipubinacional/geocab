@@ -72,8 +72,11 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param published
 	 * @return
 	 */
-	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, layer.dataSource, layer.layerGroup.name, layer.layerGroup.id, layer.publishedLayer.id)"
+	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, dataSource, layerGroup.name, layerGroup.id, publishedLayer.id)"
 			+ " FROM Layer layer "
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup "
+			+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "
 			+ " WHERE ( layer.layerGroup.id = :id "
 	        + " AND layer.layerGroup.published = :published ) "
 	        + " ORDER BY layer.orderLayer" )
@@ -84,11 +87,14 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param id
 	 * @return
 	 */
-	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, layer.dataSource, layer.layerGroup.name, layer.layerGroup.id, layer.publishedLayer.id)"
+	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, dataSource, layerGroup.name, layerGroup.id, publishedLayer.id)"
 			+ " FROM Layer layer "
-			+ " WHERE ( layer.layerGroup.id = :id ) "
-	        + " ORDER BY layer.orderLayer" )
-	public List<Layer> listLayersByLayerGroupId( @Param("id") Long id);
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup "
+			+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "  
+			+ " WHERE ( layerGroup.id = :layerGroupId ) "
+			+ " ORDER BY layer.orderLayer")
+	public List<Layer> listLayersByLayerGroupId( @Param("layerGroupId") Long layerGroupId);
 		
 	/**
 	 * 
