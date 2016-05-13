@@ -38,9 +38,8 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	/**
 	 * 
 	 * @return
-	 */	
-	
-	 @Query(value="SELECT New LayerGroup ( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup)"
+	 */
+	@Query(value="SELECT new LayerGroup(layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id)"
 			 + "FROM LayerGroup layerGroup "
 			 + "LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " 
 			 + "WHERE ( layerGroupUpper.id = null "

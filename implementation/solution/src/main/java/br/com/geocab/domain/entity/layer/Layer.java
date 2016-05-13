@@ -12,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -123,19 +122,19 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	/**
 	 * {@link DataSource} of {@link Layer}
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	private DataSource dataSource;
 	/**
 	 * {@link LayerGroup} of {@link Layer}
 	 */
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+	@ManyToOne
 	private LayerGroup layerGroup;
 	/**
 	 * Draft {@link Layer} that originated the published {@link Layer}
 	 */
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.EAGER, optional = true)
+	@OneToOne
 	private Layer publishedLayer;
 
 	@JsonIgnore

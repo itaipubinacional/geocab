@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -61,13 +60,13 @@ public class LayerGroup extends AbstractEntity implements Serializable
 	/**
 	 * {@link LayerGroup} upper than the current {@link LayerGroup}
 	 */
-	@ManyToOne(fetch=FetchType.EAGER, optional=true)
+	@ManyToOne
 	private LayerGroup layerGroupUpper;
 	/**
 	 * {@link LayerGroup} of {@link Layer}
 	 */
 	@OrderBy( value = "orderLayer" ) 
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(referencedColumnName="id", name="layer_group_id")
 	private List<Layer> layers = new LinkedList<Layer>();
 	
@@ -75,22 +74,21 @@ public class LayerGroup extends AbstractEntity implements Serializable
 	 * {@link LayerGroup} of {@link LayerGroup}
 	 */
 	@OrderBy( value = "orderLayerGroup" ) 
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(referencedColumnName="id", name="layer_group_upper_id")
 	private List<LayerGroup> layersGroup = new LinkedList<LayerGroup>();
 	
 	/**
 	 * Draft {@link LayerGroup} that originated the published {@link LayerGroup}
 	 */
-	@OneToOne(fetch=FetchType.EAGER, optional=true)
+	@OneToOne
 	private LayerGroup draft;
 	
 	/**
 	 * Field that informs if the {@link LayerGroup} is published
 	 */
 	@Column
-	private Boolean published;
-	
+	private Boolean published;	
 	
 	/**
 	 * Informa se a camada tem filhos ou não (sejam outros grupos de camadas ou outras camadas)

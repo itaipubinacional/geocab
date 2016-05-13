@@ -392,9 +392,8 @@ public class LayerGroupService
 	public void saveAllLayersGroup( List<LayerGroup> layerGroup )
 	{		
 		this.prioritizeLayersGroup( layerGroup, null );	
-	
-		this.prioritizeLayers( layerGroup);	
 		
+		this.prioritizeLayers( layerGroup);		
 	}
 	
 	/**
@@ -433,6 +432,12 @@ public class LayerGroupService
 				{
 					layerGroup.getLayers().get(j).setOrderLayer(j);
 					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
+					
+					if (layerGroup.getLayers().get(j).getPublishedLayer() != null && layerGroup.getLayers().get(j).getPublishedLayer().getId() == null)
+					{
+						layerGroup.getLayers().get(j).setPublishedLayer(null);
+					}
+					
 					this.layerRepository.save( layerGroup.getLayers().get(j) );
 				}
 				if (layerGroup.getLayersGroup() != null) prioritizeLayers(layerGroup.getLayersGroup());
@@ -441,7 +446,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * mï¿½todo para remover um {@link GrupoCamadas}
+	 * Método para remover um {@link GrupoCamadas}
 	 * 
 	 * @param id
 	 */
