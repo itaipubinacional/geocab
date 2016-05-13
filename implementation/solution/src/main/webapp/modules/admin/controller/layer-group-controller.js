@@ -118,16 +118,56 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         layerGroupService.listLayersGroupUpper( {
             callback : function(result) {
 
-                angular.forEach(result, function(group, index){
-                    result[index].nodes = [];
-                    result[index].collapsed = false;
-                });
+                function populateChildren(itemResult) {
+
+                    angular.forEach(itemResult, function(node){
+
+                        if(node.layersGroup && node.layersGroup.length){
+
+
+                            angular.forEach(node.layersGroup, function(layerGroup){
+
+                                if(!node.nodes){
+                                    node.nodes = [];
+                                }
+                                node.nodes.push(layerGroup);
+
+                                populateChildren(node.nodes);
+                            });
+
+
+                        } else if (node.layers && node.layers.length){
+
+                            angular.forEach(node.layers, function( layer ){
+
+
+                                layer.name = layer.title ? layer.title : layer.name;
+
+
+                            });
+
+
+                            node.nodes = node.layers;
+
+                        }
+                    });
+                }
+
+
+                // angular.forEach(result, function(group, index){
+                //     result[index].nodes = [];
+                //     result[index].collapsed = false;
+                // });
+
+                populateChildren(result);
 
                 $scope.groupsUpper = result;
 
-                /*$timeout(function () {
-                    $scope.$broadcast('angular-ui-tree:collapse-all');
-                }, 100);*/
+                $timeout(function () {
+
+                    $scope.$broadcast('angular-ui-tree:expand-all');
+                    // $scope.$broadcast('angular-ui-tree:collapse-all');
+                }, 100);
 
                 $scope.$apply();
             },
@@ -143,34 +183,32 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
         node.collapsed = !node.collapsed;
 
-        if(!angular.isDefined(node.nodes) || angular.equals(node.nodes, [])) {
-
-            node.nodes = [];
-
-            layerGroupService.listLayersGroupByLayerGroupId(node.id, {
-                callback : function(result) {
-
-                    if(result.length == 0)
-                        node.collapsed = false;
-
-                    node.nodes = !angular.equals(result.layersGroup, []) ? result.layersGroup : result.layers;
-
-                    $timeout(function () {
-
-                        $scope.$broadcast('angular-ui-tree:expand-all');
-                    }, 100);
-
-                    $scope.$apply();
-                },
-                errorHandler : function(message, exception) {
-                    $scope.message = {type:"danger", text: message};
-                    $scope.$apply();
-                }
-            });
-        } else {
-            //delete node.nodes;
-        }
-
+        // if(!angular.isDefined(node.nodes) || angular.equals(node.nodes, [])) {
+        //
+        //     node.nodes = [];
+        //
+        //     layerGroupService.listLayersGroupByLayerGroupId(node.id, {
+        //         callback : function(result) {
+        //
+        //             if(result.length == 0)
+        //                 node.collapsed = false;
+        //
+        //             node.nodes = !angular.equals(result.layersGroup, []) ? result.layersGroup : result.layers;
+        //
+        //             $timeout(function () {
+        //                 $scope.$broadcast('angular-ui-tree:expand-all');
+        //             }, 100);
+        //
+        //             $scope.$apply();
+        //         },
+        //         errorHandler : function(message, exception) {
+        //             $scope.message = {type:"danger", text: message};
+        //             $scope.$apply();
+        //         }
+        //     });
+        // } else {
+        //     //delete node.nodes;
+        // }
     };
 
     /**
