@@ -586,11 +586,11 @@ public class LayerGroupService
 		
 		List<LayerGroup> layerGroups = new ArrayList<LayerGroup>();
 		
-		layerGroup.setLayers( this.layerRepository.listLayersPublished() );
+		layerGroup.setLayers( this.layerRepository.listLayersStartEnable() );
 		
 		layerGroups.add( layerGroup );
 		
-		layerGroups = /*hasChildren*/(layersGroupUpperByRole(layerGroups));
+		layerGroups = layersGroupUpperByRole(layerGroups);
 		
 		return layerGroups.get(0).getLayers();
 		

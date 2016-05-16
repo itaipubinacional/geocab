@@ -106,6 +106,14 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 			+ "AND layer.published = false ) ")
 	public List<Layer> listLayersPublished();
 	
+	
+	
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, layer.publishedLayer.id) " +
+			"FROM Layer layer " +
+			"WHERE ( layer.publishedLayer != NULL "
+			+ "AND layer.startEnabled = true ) ")
+	public List<Layer> listLayersStartEnable();
+	
 	/**
 	 * 
 	 * @return

@@ -1123,6 +1123,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     layerGroupService.listLayerPublished({
       callback: function (result) {
 
+        $scope.startEnabledLayers = angular.copy(result);
+
         angular.forEach(result, function(layer){
            $scope.showLayer(layer);
         });
@@ -1184,54 +1186,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
 
-  $scope.listLayersGroupPublishedByLayerGroupId = function(ivhNode, ivhIsExpanded, ivhTree){
-
-    console.log('listLayersGroupPublishedByLayerGroupId');
-
-    var emptyChildren = {label: 'Nenhum registro'};
-
-    ivhNode.children = [];
-
-    layerGroupService.listLayersGroupPublishedByLayerGroupId(ivhNode.id, {
-      callback : function(result) {
-
-        var children = !angular.equals(result.layersGroup, []) ? result.layersGroup : result.layers;
-
-        if(children.length){
-          ivhNode.children = [];
-        }
-
-        angular.forEach(children, function(child) {
-
-          var item = {};
-
-          item.id = child.id;
-          item.label = child.name ? child.name : child.title;
-          item.icon = child.icon ? child.icon : child.legend ? child.legend : null;
-          item.selected = false;
-          item.dataSourceUrl = !child.dataSource ? null : child.dataSource.url;
-
-          // item.maximumScaleMap = child.maximumScaleMap ? '' : child.maximumScaleMap;
-          // item.minimumScaleMap = child.minimumScaleMap ? '' : child.minimumScaleMap;
-
-          item.children =  !angular.equals(result.layersGroup, []) ? [emptyChildren] : null ;
-
-          ivhNode.children.push(item);
-
-        });
-
-        if(!children.length){
-          ivhNode.children.push(emptyChildren);
-        }
-
-        $scope.$apply();
-      },
-      errorHandler : function(message, exception) {
-        $scope.message = {type:"danger", text: message};
-        $scope.$apply();
-      }
-    });
-  };
   /**
    *
    */
@@ -1264,8 +1218,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
                 child.label = child.name ? child.name : child.title;
                 child.icon = child.icon ? child.icon : child.legend ? child.legend : null;
-                child.selected = false;
-                child.dataSourceUrl = !child.dataSource ? null : child.dataSource.url;
+
+                //Verifica se a layer está no array de startEnabled e da o set de selected
+                child.selected = $filter('filter')($scope.startEnabledLayers , { publishedLayer : { id: child.id } } ).length ? true : false;
+
+                child.dataSourceUrl = child.dataSource ? child.dataSource.url : null ;
+                child.dataSource = child.dataSource ? child.dataSource : undefined ;
 
               });
 
@@ -1417,7 +1375,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     /* Check if it is an internal layer */
     if (angular.isDefined(layer.dataSource) && layer.dataSource.url == null) {
 
-        $scope.addInternalLayer(layer.id);
+      $scope.addInternalLayer(layer.id);
 
         return;
     }
@@ -3318,7 +3276,22 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
 
     if (typeof $scope.marker != "undefined") {
-      markerService.lastPhotoByMarkerId($scope.marker.id, {
+
+      var pageRequest = {
+        "page":0,
+        "size":1,
+        "sort":{
+          "orders":[
+            {
+              "direction":"DESC",
+              "nullHandling":null,
+              "property":"id"
+            }
+          ]
+        }
+      };
+      
+      markerService.lastPhotoByMarkerId($scope.marker.id, pageRequest, {
         callback: function (result) {
 
           $scope.imgResult = result.content[0].image;
@@ -4519,7 +4492,21 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     if (typeof $scope.marker != "undefined") {
 
-      markerService.lastPhotoByMarkerId($scope.marker.id, {
+      var pageRequest = {
+        "page":0,
+        "size":1,
+        "sort":{
+          "orders":[
+            {
+              "direction":"DESC",
+              "nullHandling":null,
+              "property":"id"
+            }
+          ]
+        }
+      };
+      
+      markerService.lastPhotoByMarkerId($scope.marker.id, pageRequest, {
         callback: function (result) {
 
           $scope.imgResult = result.content[0].image;
