@@ -118,48 +118,48 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         layerGroupService.listLayersGroupUpper( {
             callback : function(result) {
 
-                function populateChildren(itemResult) {
-
-                    angular.forEach(itemResult, function(node){
-
-                        if(node.layersGroup && node.layersGroup.length){
-
-
-                            angular.forEach(node.layersGroup, function(layerGroup){
-
-                                if(!node.nodes){
-                                    node.nodes = [];
-                                }
-                                node.nodes.push(layerGroup);
-
-                                populateChildren(node.nodes);
-                            });
-
-
-                        } else if (node.layers && node.layers.length){
-
-                            angular.forEach(node.layers, function( layer ){
-
-
-                                layer.name = layer.title ? layer.title : layer.name;
-
-
-                            });
-
-
-                            node.nodes = node.layers;
-
-                        }
-                    });
-                }
-
-
-                // angular.forEach(result, function(group, index){
-                //     result[index].nodes = [];
-                //     result[index].collapsed = false;
-                // });
-
-                populateChildren(result);
+//                function populateChildren(itemResult) {
+//
+//                    angular.forEach(itemResult, function(node){
+//
+//                        if(node.layersGroup && node.layersGroup.length){
+//
+//
+//                            angular.forEach(node.layersGroup, function(layerGroup){
+//
+//                                if(!node.nodes){
+//                                    node.nodes = [];
+//                                }
+//                                node.nodes.push(layerGroup);
+//
+//                                populateChildren(node.nodes);
+//                            });
+//
+//
+//                        } else if (node.layers && node.layers.length){
+//
+//                            angular.forEach(node.layers, function( layer ){
+//
+//
+//                                layer.name = layer.title ? layer.title : layer.name;
+//
+//
+//                            });
+//
+//
+//                            node.nodes = node.layers;
+//
+//                        }
+//                    });
+//                }
+//
+//
+//                // angular.forEach(result, function(group, index){
+//                //     result[index].nodes = [];
+//                //     result[index].collapsed = false;
+//                // });
+//
+//                populateChildren(result);
 
                 $scope.groupsUpper = result;
 
