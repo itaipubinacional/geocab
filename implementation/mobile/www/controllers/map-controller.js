@@ -1402,9 +1402,6 @@
 
         $scope.userMe = {};
 
-        /*$scope.allLayers = {};
-         $scope.allInternalLayerGroups = {};*/
-
         $scope.removeAllLayers();
 
         localStorage.removeItem('userEmail');
@@ -1419,6 +1416,9 @@
         $('#map').html('');
 
         $scope.internalLayer = {};
+
+        $scope.allLayers = [];
+        $scope.allInternalLayerGroups = [];
 
         $http({
           method: 'GET',
