@@ -132,6 +132,10 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	/**
+	 * 
+	 * @return
+	 */
 	public List<String> listLayersIcons()
 	{
 		final String path = this.servletContext.getRealPath("/static/icons");
@@ -159,8 +163,7 @@ public class LayerGroupService
 	public LayerGroup insertLayerGroup( LayerGroup layerGroup )
 	{
 		layerGroup.setPublished(false);
-		return hasChildren(this.layerGroupRepository.save( layerGroup ));
-		
+		return hasChildren(this.layerGroupRepository.save( layerGroup ));		
 	}
 	
 	/**
@@ -172,8 +175,7 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public LayerGroup updateLayerGroup( LayerGroup layerGroup )
 	{
-		return hasChildren(this.layerGroupRepository.save( layerGroup ));
-		
+		return hasChildren(this.layerGroupRepository.save( layerGroup ));		
 	}
 	
 	
@@ -276,7 +278,7 @@ public class LayerGroupService
 		layerGroupPublished.setLayersGroup(new ArrayList<LayerGroup>());
 		layerGroupPublished.setLayers(new ArrayList<Layer>());
 		
-		// se jï¿½s possui o grupo criado apenas altera o existente senï¿½o cria o grupo publicado
+		// se já possui o grupo criado apenas altera o existente senï¿½o cria o grupo publicado
 		if (layerGroupPublishedExistent != null)
 		{
 			layerGroupPublished.setId(layerGroupPublishedExistent.getId());
@@ -288,14 +290,14 @@ public class LayerGroupService
 			layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
 		}
 		
-		// criaï¿½ï¿½o/atualizaï¿½ï¿½o de camadas para camadas publicadas
+		// criação atualização de camadas para camadas publicadas
 		if ( layerGroupOriginal.getLayers() != null )
 		{
 			for ( Layer layerOriginal : layerGroupOriginal.getLayers() )
 			{
 				//final Camada camadaPublicadaExistente = this.camadaRepository.findByRascunhoId(camadaOriginal.getId());
 				
-				// criaï¿½ï¿½o da camada publicada que irï¿½ conter a ordem publicada e os grupos
+				// criação da camada publicada que iria conter a ordem publicada e os grupos
 				Layer layerPublished = new Layer();
 //				BeanUtils.copyProperties(camadaOriginal, camadaPublicada);
 				
@@ -303,6 +305,8 @@ public class LayerGroupService
 				// criaï¿½ï¿½o/update na camada publicada
 				layerPublished.setName(layerOriginal.getName());
 				layerPublished.setTitle(layerOriginal.getTitle());
+				layerPublished.setIcon(layerOriginal.getIcon());
+				layerPublished.setDataSource(new DataSource(layerOriginal.getDataSource().getId()));
 				layerPublished.setMinimumScaleMap(layerOriginal.getMinimumScaleMap());
 				layerPublished.setMaximumScaleMap(layerOriginal.getMaximumScaleMap());
 				layerPublished.setOrderLayer(layerOriginal.getOrderLayer());
@@ -393,7 +397,14 @@ public class LayerGroupService
 	{		
 		this.prioritizeLayersGroup( layerGroup, null );	
 		
-		this.prioritizeLayers( layerGroup);		
+		this.prioritizeLayers( layerGroup);
+		
+		//Organiza camadas rascunho TODO
+//		List<Layer> layers = this.layerRepository.listLayersPublished();
+//		for (Layer layer : layers)
+//		{
+//			
+//		}
 	}
 	
 	/**
@@ -431,9 +442,8 @@ public class LayerGroupService
 				for(int j = 0; j < layerGroup.getLayers().size(); j++)
 				{
 					layerGroup.getLayers().get(j).setOrderLayer(j);
-//					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
+					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
 					
-
 					this.layerRepository.save( layerGroup.getLayers().get(j) );
 				}
 				if (layerGroup.getLayersGroup() != null) prioritizeLayers(layerGroup.getLayersGroup());
@@ -809,8 +819,12 @@ public class LayerGroupService
 	}
 	
 	
-	//Camadas
-	
+	/**
+	 * 
+	 * @param layer
+	 * @param sUrl
+	 * @return
+	 */
 	private String getUrl(Layer layer, String sUrl)
 	{
 		if(layer.getDataSource().getToken()!= null)
@@ -1035,7 +1049,12 @@ public class LayerGroupService
 		
 		return layers;
 	}
-	
+	/**
+	 * 
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
 	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, PageRequest pageable )
 	{
