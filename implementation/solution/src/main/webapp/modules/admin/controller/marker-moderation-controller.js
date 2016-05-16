@@ -988,8 +988,21 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     $scope.getPhotoByMarkerId = function(id){
 
-
-        markerService.lastPhotoByMarkerId(id, {
+        var pageRequest = {
+            "page":0,
+            "size":1,
+            "sort":{
+                "orders":[
+                    {
+                        "direction":"DESC",
+                        "nullHandling":null,
+                        "property":"id"
+                    }
+                ]
+            }
+        };
+        
+        markerService.lastPhotoByMarkerId(id, pageRequest{
             callback: function (result) {
 
                 $scope.imgResult = result.content[0].image;

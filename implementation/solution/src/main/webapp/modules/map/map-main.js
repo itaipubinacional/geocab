@@ -55,6 +55,7 @@
   projectModule.run(function ($rootScope, $state, $stateParams) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+    
   });
 
   projectModule.directive('treeViewBox', function(ivhTreeviewMgr) {

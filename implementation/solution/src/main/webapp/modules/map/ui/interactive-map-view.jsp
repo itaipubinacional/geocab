@@ -944,7 +944,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <br style="clear: both;">
                   <div id="tree-pesquisas"
                        ivh-treeview="allSearchs"
-                       ivh-fn="getSelectedSearchNode"
+                        ivh-treeview-on-cb-change="getSelectedSearchNode(ivhNode)"
                        ivh-treeview-label-attribute="'label'"
                        ivh-treeview-children-attribute="'children'">
 

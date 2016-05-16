@@ -171,31 +171,51 @@ public class MarkerService extends AbstractMarkerService
 	 * @param markerId
 	 * @return
 	 */
-	public Page<Photo> lastPhotoByMarkerId(Long markerId)
+	public Page<Photo> lastPhotoByMarkerId(Long markerId, PageRequest pageRequest)
+	{
+		
+		Page<Photo> photo = this.photoRepository.findPhotoByMarkerId(markerId, pageRequest);
+	
+		photo.getContent().set( 0, this.getPhotoFileTransfer( photo.getContent().get(0) ));
+		
+		Assert.isTrue( photo.getNumberOfElements() > 0 );
+		
+		return photo;
+		
+	}
+	
+	public Photo lastPhotoByMarkerId(Long markerId)
 	{
 	        
 		Order order = new Order(Sort.Direction.DESC, "id");
 	    Sort sort = new Sort(order);
 		Pageable pageRequest = new PageRequest( 0, 1 , sort);
 		
-		
 		Page<Photo> photo = this.photoRepository.findPhotoByMarkerId(markerId, pageRequest);
+		
+		return this.getPhotoFileTransfer( photo.getContent().get(0));
+		
+	}
+	
+	/**
+	 * 
+	 * @param photo
+	 * @return
+	 */
+	private Photo getPhotoFileTransfer(Photo photo){
 
 		try
 		{
-			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getContent().get(0).getIdentifier(), true);
+			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
 			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
-			photo.getContent().get(0).setImage(fileTransfer);
+			photo.setImage(fileTransfer);
 		}
 		catch (RepositoryException e)
 		{
 			e.printStackTrace();
 		}
 		
-		Assert.isTrue( photo.getNumberOfElements() > 0 );
-		
 		return photo;
-		
 	}
 	
 	
@@ -270,18 +290,8 @@ public class MarkerService extends AbstractMarkerService
 	{
 		Photo photo = this.photoRepository.findByIdentifier(identifier);
 		
-		try
-		{
-			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
-			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(), metaFile.getContentType(), metaFile.getInputStream());
-			photo.setImage(fileTransfer);
-		}
-		catch (RepositoryException e)
-		{
-			e.printStackTrace();
-		}
+		return this.getPhotoFileTransfer(photo);
 		
-		return photo;
 	}
 	
 	/**
@@ -293,18 +303,7 @@ public class MarkerService extends AbstractMarkerService
 	{
 		Photo photo = this.photoRepository.findOne(photoId);
 		
-		try
-		{
-			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getIdentifier(), true);
-			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(), metaFile.getContentType(), metaFile.getInputStream());
-			photo.setImage(fileTransfer);
-		}
-		catch (RepositoryException e)
-		{
-			e.printStackTrace();
-		}
-		
-		return photo;
+		return this.getPhotoFileTransfer(photo);
 	}
 
 	/**
