@@ -175,12 +175,25 @@ public class MarkerService extends AbstractMarkerService
 	{
 		
 		Page<Photo> photo = this.photoRepository.findPhotoByMarkerId(markerId, pageRequest);
-	
-		photo.getContent().set( 0, this.getPhotoFileTransfer( photo.getContent().get(0) ));
+		
+//		photo.getContent().add ( this.getPhotoFileTransfer( photo.getContent().get(0)) );
+		
+		try
+		{
+			MetaFile metaFile = this.metaFileRepository.findByPath( photo.getContent().get(0).getIdentifier(), true);
+			FileTransfer fileTransfer = new FileTransfer(metaFile.getName(),metaFile.getContentType(), metaFile.getInputStream());
+			photo.getContent().get(0).setImage(fileTransfer);
+		}
+		catch (RepositoryException e)
+		{
+			e.printStackTrace();
+		}
 		
 		Assert.isTrue( photo.getNumberOfElements() > 0 );
 		
+		
 		return photo;
+		
 		
 	}
 	
