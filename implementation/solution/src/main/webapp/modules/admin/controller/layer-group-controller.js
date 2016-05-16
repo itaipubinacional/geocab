@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿ 'use strict';
 
 /**
  *
@@ -12,7 +12,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      * @see AbstractCRUDController
      */
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
-    
+
     $importService("layerGroupService");
 
     /*-------------------------------------------------------------------
@@ -25,31 +25,29 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      *-------------------------------------------------------------------*/
     //STATES
     /**
-     * Static variable that represents 
+     * Static variable that represents
      * The listing of state records.
      */
     $scope.LIST_STATE = "layer-group.list";
 
     /**
-     * 
+     *
      */
     $scope.currentState;
 
     //FORM
     /**
-     * Variable to store attributes of the form 
-     * That do not fit into one entity. Ex.:
+     * Variable to store attributes of the form
+          * That do not fit into one entity. Ex.:
      * @filter - Query filter
      */
     $scope.data = { filter:null };
-    
-    
+
+
     /**
      * Stores the current entity for editing or detail.
      */
-    $scope.currentEntity = {};
-
-    $scope.groupsUpper = [];
+    $scope.currentEntity;
 
     /**
      * Controls if it's required to save the sorting before creating or editing group
@@ -59,41 +57,40 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     /*-------------------------------------------------------------------
      * 		 				 	  NAVIGATIONS
      *-------------------------------------------------------------------*/
-    
+
     /**
      * Main method that makes the role of front-controller screen.
-	 * It is invoked whenever there is a change of URL (@see $stateChangeSuccess),
-	 * Ex.: /list -> changeToList()
-	 *      /create -> changeToInsert()
-	 *      
-	 * If the state is not found, it directs you to the list
+     * It is invoked whenever there is a change of URL (@see $stateChangeSuccess),
+     * Ex.: /list -> changeToList()
+     *      /create -> changeToInsert()
+     *
+     * If the state is not found, it directs you to the list
      */
     $scope.initialize = function( toState, toParams, fromState, fromParams ) {
-    	
-    	var state = $state.current.name;
+
+        var state = $state.current.name;
 
         $log.info("Starting the front controller.");
-        
+
         /* At startup of the layers menu is not necessary to validate
          * If the ordering was saved because the fields were not ordered */
-    	isNeedSave = false;
-    	
-    	$scope.currentState = $scope.LIST_STATE;
+        isNeedSave = false;
+
+        $scope.currentState = $scope.LIST_STATE;
         $state.go( $scope.LIST_STATE );
 
-        if(toState.name == 'layer-group.list')
-            $scope.changeToList();
+        $scope.changeToList();
 
     };
 
     /**
-     * 
+     *
      * Boot the state users.list
-	 * @see LIST_STATE
-	 * @see $stateChangeSuccess
-	 * 
-	 * To switch to this state, you must first load the data from the query.
-     * 
+     * @see LIST_STATE
+     * @see $stateChangeSuccess
+     *
+     * To switch to this state, you must first load the data from the query.
+     *
      */
     $scope.changeToList = function() {
         $log.info("changeToList");
@@ -106,109 +103,26 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      *-------------------------------------------------------------------*/
 
     /**
-  	 * Performs the query logs, considering filter, paging and sorting. 
-  	 * When ok, change the state of the screen to list.
+     * Performs the query logs, considering filter, paging and sorting.
+     * When ok, change the state of the screen to list.
      *
      * @see data.filter
      * @see currentPage
      */
     $scope.listLayerGroup = function() {
 
-
         layerGroupService.listLayersGroupUpper( {
             callback : function(result) {
-
-//                function populateChildren(itemResult) {
-//
-//                    angular.forEach(itemResult, function(node){
-//
-//                        if(node.layersGroup && node.layersGroup.length){
-//
-//
-//                            angular.forEach(node.layersGroup, function(layerGroup){
-//
-//                                if(!node.nodes){
-//                                    node.nodes = [];
-//                                }
-//                                node.nodes.push(layerGroup);
-//
-//                                populateChildren(node.nodes);
-//                            });
-//
-//
-//                        } else if (node.layers && node.layers.length){
-//
-//                            angular.forEach(node.layers, function( layer ){
-//
-//
-//                                layer.name = layer.title ? layer.title : layer.name;
-//
-//
-//                            });
-//
-//
-//                            node.nodes = node.layers;
-//
-//                        }
-//                    });
-//                }
-//
-//
-//                // angular.forEach(result, function(group, index){
-//                //     result[index].nodes = [];
-//                //     result[index].collapsed = false;
-//                // });
-//
-//                populateChildren(result);
-
-                $scope.groupsUpper = result;
-
-                $timeout(function () {
-
-                    $scope.$broadcast('angular-ui-tree:expand-all');
-                    // $scope.$broadcast('angular-ui-tree:collapse-all');
-                }, 100);
-
+                $scope.currentPage = result;
+                $scope.currentState = $scope.LIST_STATE;
+                $state.go( $scope.LIST_STATE );
                 $scope.$apply();
             },
-
             errorHandler : function(message, exception) {
                 $scope.message = {type:"danger", text: message};
                 $scope.$apply();
             }
         });
-    };
-
-    $scope.listLayersGroupByLayerGroupId = function(element, node, index) {
-
-        node.collapsed = !node.collapsed;
-
-        // if(!angular.isDefined(node.nodes) || angular.equals(node.nodes, [])) {
-        //
-        //     node.nodes = [];
-        //
-        //     layerGroupService.listLayersGroupByLayerGroupId(node.id, {
-        //         callback : function(result) {
-        //
-        //             if(result.length == 0)
-        //                 node.collapsed = false;
-        //
-        //             node.nodes = !angular.equals(result.layersGroup, []) ? result.layersGroup : result.layers;
-        //
-        //             $timeout(function () {
-        //                 $scope.$broadcast('angular-ui-tree:expand-all');
-        //             }, 100);
-        //
-        //             $scope.$apply();
-        //         },
-        //         errorHandler : function(message, exception) {
-        //             $scope.message = {type:"danger", text: message};
-        //             $scope.$apply();
-        //         }
-        //     });
-        // } else {
-        //     //delete node.nodes;
-        // }
     };
 
     /**
@@ -217,7 +131,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.saveLayerGroup = function( ) {
 
-    	layerGroupService.saveAllLayersGroup( getRootNodesScope().$nodesScope.$modelValue, {
+        layerGroupService.saveAllLayersGroup( getRootNodesScope().$nodesScope.$modelValue, {
             callback : function() {
                 $scope.listLayerGroup();
                 isNeedSave = false;
@@ -234,9 +148,9 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
         });
     };
 
-    $scope.publishLayerGroup = function() 
+    $scope.publishLayerGroup = function()
     {
-    	layerGroupService.publishLayerGroup( getRootNodesScope().$nodesScope.$modelValue, {
+        layerGroupService.publishLayerGroup( getRootNodesScope().$nodesScope.$modelValue, {
             callback : function() {
                 $scope.listLayerGroup();
                 isNeedSave = false;
@@ -252,7 +166,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             }
         });
 
-	};
+    };
 
     /**
      *
@@ -260,8 +174,8 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      *
      */
 
-	
-	
+
+
     /**
      * Remove an item from the tree
      *
@@ -269,12 +183,12 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.removeItem = function(scope)
     {
-    	
-    	
+
+
         if( scope.$modelValue.nodes && scope.$modelValue.nodes.length > 0 && scope.$modelValue.layers && scope.$modelValue.layers.length > 0)
         {
             $scope.msg = {type:"danger", text: $translate("layer-group-view.Is-not-possible-to-remove-layers-groups-that-have-layers"), dismiss:true};
-            
+
             $scope.fadeMsg();
             return;
         } else
@@ -300,7 +214,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
 
             dialog.result.then( function(result) {
 
-            	layerGroupService.removeLayerGroup( scope.$modelValue.id, {
+                layerGroupService.removeLayerGroup( scope.$modelValue.id, {
                     callback : function(result) {
                         scope.remove();
                         $scope.$apply();
@@ -341,24 +255,24 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             controller: LayerGroupPopUpController,
             scope: $scope,
             resolve: {
-            	layerGroups: function(){return getRootNodesScope().$nodesScope.$modelValue;},
+                layerGroups: function(){return getRootNodesScope().$nodesScope.$modelValue;},
                 item: function(){return null;}
             }
         });
 
-        dialog.result.then( function(result) 
+        dialog.result.then( function(result)
         {
             if( result == null )
             {
                 return;
             }
-            
+
             layerGroupService.insertLayerGroup( result, {
                 callback : function(result) {
                     result.nodes = [];
-                    
+
                     getRootNodesScope().$nodesScope.$modelValue.unshift(result);
-                    
+
                     layerGroupService.saveAllParentLayerGroup( getRootNodesScope().$nodesScope.$modelValue, {
                         callback : function() {
                             $scope.$apply();
@@ -369,7 +283,7 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
                             $scope.$apply();
                         }
                     });
-                    
+
                     $scope.$apply();
                 },
                 errorHandler : function(message, exception) {
@@ -393,14 +307,14 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             controller: LayerGroupPopUpController,
             scope: $scope,
             resolve: {
-            	layerGroups: function(){return scope.$parentNodesScope.$modelValue;},
+                layerGroups: function(){return scope.$parentNodesScope.$modelValue;},
                 item: function(){return scope.$modelValue;},
                 isNeedSave: function(){return isNeedSave;}
             }
 
         });
 
-        dialog.result.then( function(result) 
+        dialog.result.then( function(result)
         {
 
             if( result == null )
@@ -452,17 +366,17 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     };
 
     /**
-     * Function to control the actions of the tree, 
-     * as the action to accept the drop, 
-  	 * function to control the time before the drop and the time that is done drop the item
-     * 
+     * Function to control the actions of the tree,
+     * as the action to accept the drop,
+       	 * function to control the time before the drop and the time that is done drop the item
+     *
      * @type {{accept: accept, beforeDrop: beforeDrop, dropped: dropped}}
      */
     $scope.treeOptions = {
 
         accept: function(sourceNode, destNodes, destIndex) {
 
-        	for (var i = 0; i < destNodes.$modelValue.length; i++)
+            for (var i = 0; i < destNodes.$modelValue.length; i++)
             {
                 if( ( destNodes.$modelValue[i].nodes != null && sourceNode.$modelValue.nodes == null ) || ( sourceNode.$modelValue.nodes != null && destNodes.$modelValue[0].nodes == null ))
                 {
@@ -473,10 +387,10 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
             return true;
         },
         beforeDrop: function(event) {
-        	
-        	//If we have a message popping up, it will be removed.
-        	$scope.msg = null;
-        	
+
+            //If we have a message popping up, it will be removed.
+            $scope.msg = null;
+
             var sourceNode = event.source.nodeScope;
             var destNodes = event.dest.nodesScope;
 
@@ -563,20 +477,19 @@ function LayerGroupController( $scope, $injector, $log, $state, $timeout, $modal
     /**
      * Returns the complete list of tree
      */
-    var getRootNodesScope = function() 
+    var getRootNodesScope = function()
     {
         return angular.element(document.getElementById("tree-root")).scope();
     };
 
     $scope.fadeMsg = function(){
-		$("div.msg").show();
+        $("div.msg").show();
 
-	  	setTimeout(function(){
-	  		$("div.msg").fadeOut();
-	  	}, 3000);
-	}
+        setTimeout(function(){
+            $("div.msg").fadeOut();
+        }, 3000);
+    }
 
 
 
 };
-
