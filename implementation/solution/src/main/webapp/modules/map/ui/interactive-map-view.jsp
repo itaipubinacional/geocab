@@ -918,7 +918,7 @@ uri="http://www.springframework.org/security/tags"%>
                                 <span ivh-treeview-toggle >
                                     <span ivh-treeview-twistie></span>
                                 </span>
-                                <img ng-click="showLegendDetail(itm)" ng-hide="itm.icon == null" class="label-image ng-hide" ng-src="{{itm.icon}}">
+                                <img ng-click="showLegendDetail(itm)" ng-hide="!node.icon" class="label-image" src="{{node.icon}}">
                                 <tree-view-box></tree-view-box>
                                 <label class="ivh-treeview-node-label dynamic-text" style="margin: 0">
                                     <span class="ivh-treeview-node-label" ivh-treeview-toggle>
