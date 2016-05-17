@@ -18,4 +18,6 @@ public interface ITreeNode
 	 * @return
 	 */
 	public List<? extends ITreeNode> getNodes();
+	
+	public String getTitle();
 }
