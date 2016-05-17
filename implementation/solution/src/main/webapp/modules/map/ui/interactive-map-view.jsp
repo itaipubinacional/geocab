@@ -784,7 +784,7 @@ uri="http://www.springframework.org/security/tags"%>
           </li>
 
           <li id="menu-item-1"
-              title="<spring:message code='map.Layer-menu' />" ng-click="toggleSidebarMenu(300, '#menu-item-1');" class="menu-item">
+              title="<spring:message code='map.Layer-menu' />" ng-click="listPublishedLayersGroup();" class="menu-item">
           <a href="#tabs-1">
             <div class="icon itaipu-icon-layers sidebar-icon"></div>
           </a>
@@ -920,7 +920,7 @@ uri="http://www.springframework.org/security/tags"%>
                                 </span>
                                 <img ng-click="showLegendDetail(itm)" ng-hide="!node.icon" class="label-image" src="{{node.icon}}">
                                 <tree-view-box></tree-view-box>
-                                <label class="ivh-treeview-node-label dynamic-text" style="margin: 0">
+                                <label class="ivh-treeview-node-label dynamic-text text-tvw" style="margin: 0">
                                     <span class="ivh-treeview-node-label" ivh-treeview-toggle>
                                         {{trvw.label(node)}}
                                     </span>
@@ -954,7 +954,7 @@ uri="http://www.springframework.org/security/tags"%>
                                    <span ivh-treeview-twistie></span>
                                 </span>
                                 <tree-view-box></tree-view-box>
-                                <label class="ivh-treeview-node-label dynamic-text" style="margin: 0">
+                                <label class="ivh-treeview-node-label dynamic-text text-tvw" style="margin: 0">
                                     <span class="ivh-treeview-node-label" ivh-treeview-toggle>
                                         {{trvw.label(node)}}
                                     </span>
@@ -1067,7 +1067,7 @@ uri="http://www.springframework.org/security/tags"%>
                             <span ivh-treeview-twistie></span>
                         </span>
                         <tree-view-box></tree-view-box>
-                        <label class="ivh-treeview-node-label dynamic-text" style="margin: 0">
+                        <label class="ivh-treeview-node-label dynamic-text " style="margin: 0">
                             <span class="ivh-treeview-node-label" ivh-treeview-toggle>
                             {{trvw.label(node)}}
                             </span>

@@ -335,6 +335,7 @@ input[type=checkbox].css-checkbox {
 .ivh-treeview-node {
     position: relative;
     margin: 10px 0;
+    line-height: 16px;
     /*display : flex;*/
 }
 
