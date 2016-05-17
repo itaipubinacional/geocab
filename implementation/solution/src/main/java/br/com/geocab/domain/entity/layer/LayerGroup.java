@@ -291,6 +291,15 @@ public class LayerGroup extends AbstractEntity
 			return this.layers;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see br.com.geocab.domain.entity.layer.ITreeNode#getTitle()
+	 */
+	@Override
+	public String getTitle()
+	{
+		return this.getName();
+	}
 	/*-------------------------------------------------------------------
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
@@ -379,6 +388,8 @@ public class LayerGroup extends AbstractEntity
 	{
 		this.draft = draft;
 	}
+
+	
 
 	
 }

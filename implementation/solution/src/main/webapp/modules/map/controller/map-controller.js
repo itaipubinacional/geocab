@@ -493,7 +493,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.listToolsByUser();
 
-    $scope.listPublishedLayersGroup();
+    // $scope.listPublishedLayersGroup();
 
     // Initializes map
     if ($scope.mapConf.type == $scope.MAP_TYPE_OSM) {
@@ -1189,108 +1189,19 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   /**
    *
    */
+
+
+
   $scope.listPublishedLayersGroup = function () {
 
 
     //Lists the groups of layers and layers published according to user access profile
     layerGroupService.listLayerGroupUpperPublished({
       callback: function (result) {
-         
-        function populateChildren(itemResult) {
-          angular.forEach(itemResult, function(group){
-
-            group.label = group.name ? group.name : group.title ? group.title : "";
-
-
-            if(group.layersGroup && group.layersGroup.length){
-              angular.forEach(group.layersGroup, function(layerGroup){
-                if(!group.children){
-                  group.children = [];
-                }
-                group.children.push(layerGroup);
-                populateChildren(group.children);
-              });
-
-
-            } else if (group.layers && group.layers.length){
-
-              angular.forEach(group.layers, function(child){
-
-                child.label = child.name ? child.name : child.title;
-                child.icon = child.icon ? child.icon : child.legend ? child.legend : null;
-
-                //Verifica se a layer está no array de startEnabled e da o set de selected
-                child.selected = $filter('filter')($scope.startEnabledLayers , { publishedLayer : { id: child.id } } ).length ? true : false;
-
-                child.dataSourceUrl = child.dataSource ? child.dataSource.url : null ;
-                child.dataSource = child.dataSource ? child.dataSource : undefined ;
-
-              });
-
-              group.children = group.layers;
-
-            }
-          });
-        }
-
-        populateChildren(result);
 
         $scope.allLayers = result;
 
-
-        /*var parseNode = function (node) {
-          var item = {};
-
-          item.id = (!!node.nodes ? 'grupo' : 'layer') + '_' + node.id.toString();
-          item.label = !!node.nodes ? node.name : node.title;
-          item.name = !!node.nodes ? '' : node.name;
-          item.legenda = !!node.nodes ? '' : node.legend;
-          item.selected = !!node.nodes ? '' : node.startEnabled;
-          item.dataSourceUrl = !!node.nodes ? '' : node.dataSource.url;
-          item.value = node.id;
-          item.type = !!node.nodes ? 'grupo' : 'layer';
-
-          item.maximumScaleMap = !!node.nodes ? '' : node.maximumScaleMap;
-          item.minimumScaleMap = !!node.nodes ? '' : node.minimumScaleMap;
-
-          if (item.selected) {
-            $scope.getSelectedNode(item);
-          }
-
-          item.children = [];
-
-          if (!!node.nodes) {
-            for (var i = 0; i < node.nodes.length; ++i) {
-              item.children.push(parseNode(node.nodes[i]));
-                           // if( true === node.nodes[i].startVisible ) {
-                           //     item.children.push(parseNode(node.nodes[i]));
-                           // }
-            }
-          }
-          return item;
-        }
-
-        $scope.allLayers = [];
-
-        for (var i = 0; i < result.length; ++i) {
-          $scope.allLayers.push(parseNode(result[i]))
-        }
-
-        if ($scope.allLayers[0]) {
-          for (var i in $scope.allLayers[0].children) {
-            if ($scope.allLayers[0].children.length == 1 && $scope.allLayers[0].children[i].selected) {
-              $scope.allLayers[0].selected = true;
-              $scope.allLayers[0].children[i].selected = true;
-            }
-            else if (!$scope.allLayers[0].children[i].selected) {
-              $scope.allLayers[0].selected = false;
-            }
-            else {
-              $scope.allLayers[0].selected = true;
-            }
-          }
-        }*/
-
+        $scope.toggleSidebarMenu(300, '#menu-item-1');
 
         $scope.$apply();
       },
@@ -1300,7 +1211,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     });
 
-  }
+  };
+
+  $scope.openMenuPublishedLayersGroup = function () {
+
+    if ( !$scope.allLayers.length ){
+      $scope.listPublishedLayersGroup();
+    } else {
+      $scope.toggleSidebarMenu(300, '#menu-item-1');
+    }
+
+
+  };
+
+
 
   /**
    * Formats the url with the name of the layer for each data source
