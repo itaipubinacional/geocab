@@ -211,7 +211,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Mï¿½todo que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
+	 * Método que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
 	 */
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void populateChildrenInLayerGroupPublished()
@@ -231,7 +231,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Mï¿½todo recursivo que remove os grupos de camadas publicados filhos
+	 * Método recursivo que remove os grupos de camadas publicados filhos
 	 * @param gruposCamadasPublicados
 	 * @param grupoCamadaPublicadosSuperior
 	 */
@@ -264,10 +264,10 @@ public class LayerGroupService
 	{
 		final Long layerGroupOriginalId = layerGroupOriginal.getId();
 		
-		// verifica se jï¿½ possui o grupo publicado
+		// verifica se foi possui o grupo publicado
 		final LayerGroup layerGroupPublishedExistent = this.layerGroupRepository.findByDraftId(layerGroupOriginalId);
 		
-		// efetua a cï¿½pia do grupo de camadas original
+		// efetua a cópia do grupo de camadas original
 		LayerGroup layerGroupPublished = new LayerGroup();
 		BeanUtils.copyProperties(layerGroupOriginal, layerGroupPublished);
 		
@@ -278,7 +278,7 @@ public class LayerGroupService
 		layerGroupPublished.setLayersGroup(new ArrayList<LayerGroup>());
 		layerGroupPublished.setLayers(new ArrayList<Layer>());
 		
-		// se já possui o grupo criado apenas altera o existente senï¿½o cria o grupo publicado
+		// se já possui o grupo criado apenas altera o existente sentido cria o grupo publicado
 		if (layerGroupPublishedExistent != null)
 		{
 			layerGroupPublished.setId(layerGroupPublishedExistent.getId());
@@ -302,7 +302,7 @@ public class LayerGroupService
 //				BeanUtils.copyProperties(camadaOriginal, camadaPublicada);
 				
 				
-				// criaï¿½ï¿½o/update na camada publicada
+				// criação/update na camada publicada
 				layerPublished.setName(layerOriginal.getName());
 				layerPublished.setTitle(layerOriginal.getTitle());
 				layerPublished.setIcon(layerOriginal.getIcon());
@@ -313,7 +313,7 @@ public class LayerGroupService
 				layerPublished.setLayerGroup(layerGroupPublished);
 				layerPublished.setPublished(true);
 				
-				// se jï¿½ possui a camada publicada apenas altera a existente senï¿½o cria a camada publicada
+				// se já possui a camada publicada apenas altera a existente sentido cria a camada publicada
 				if (layerOriginal.getPublishedLayer() != null)
 				{
 					layerPublished.setId(layerOriginal.getPublishedLayer().getId());
@@ -334,7 +334,7 @@ public class LayerGroupService
 			}
 		}
 		
-		// faz a recursï¿½o para atualizar todos os filhos
+		// faz a recursivo para atualizar todos os filhos
 		if ( layerGroupPublished.getLayersGroup() != null)
 		{
 			if ( layerGroupOriginal.getLayersGroup() != null )
@@ -398,13 +398,6 @@ public class LayerGroupService
 		this.prioritizeLayersGroup( layerGroup, null );	
 		
 		this.prioritizeLayers( layerGroup);
-		
-		//Organiza camadas rascunho TODO
-//		List<Layer> layers = this.layerRepository.listLayersPublished();
-//		for (Layer layer : layers)
-//		{
-//			
-//		}
 	}
 	
 	/**
@@ -509,10 +502,8 @@ public class LayerGroupService
 	 */
 	@Transactional(readOnly=true)
 	public LayerGroup listLayersGroupByLayerGroupId(Long id)
-	{
-		
+	{		
 		return hasChildren(this.listLayersGroupByLayerGroupId(id , false));
-		
 	}
 	
 	/**
@@ -549,7 +540,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Mï¿½todo que retorna a estrutura completa dos grupos de camadas publicados
+	 * Método que retorna a estrutura completa dos grupos de camadas publicados
 	 * @param filter
 	 * @param idExcluso
 	 * @param pageable
@@ -595,8 +586,6 @@ public class LayerGroupService
 		return layerGroups.get(0).getLayers();
 		
 	}
-	
-	
 	
 	/**
 	 * 
@@ -764,59 +753,59 @@ public class LayerGroupService
 		
 	}
 	
-	/**
-	 * OBS:. Método recursivo
-	 * @param layersGroup
-	 */
-	private void setIcon( List<LayerGroup> layersGroup )
-	{
-		if ( layersGroup != null )
-		{
-			
-			for (LayerGroup layerGroup : layersGroup)
-			{
-				if( layerGroup.getLayers() != null )
-				{					
-					if( layerGroup.getLayers().size() > 0 )
-					{
-						
-						this.setIcon(layerGroup.getLayers());
-					}
-				}
-				
-				setIcon(layerGroup.getLayersGroup());
-			}
-		}
-	}
+//	/**
+//	 * OBS:. Método recursivo
+//	 * @param layersGroup
+//	 */
+//	private void setIcon( List<LayerGroup> layersGroup )
+//	{
+//		if ( layersGroup != null )
+//		{
+//			
+//			for (LayerGroup layerGroup : layersGroup)
+//			{
+//				if( layerGroup.getLayers() != null )
+//				{					
+//					if( layerGroup.getLayers().size() > 0 )
+//					{
+//						
+//						this.setIcon(layerGroup.getLayers());
+//					}
+//				}
+//				
+//				setIcon(layerGroup.getLayersGroup());
+//			}
+//		}
+//	}
 	
-	/**
-	 * Traz a legenda da camada do GeoServer
-	 * @param layers
-	 * @return
-	 */
-	private Collection<Layer> setIcon(Collection<Layer> layers)
-	{
-		for (Layer layer : layers)
-		{
-			layer = this.setIcon(layer);
-		}
-		return layers;
-	}
+//	/**
+//	 * Traz a legenda da camada do GeoServer
+//	 * @param layers
+//	 * @return
+//	 */
+//	private Collection<Layer> setIcon(Collection<Layer> layers)
+//	{
+//		for (Layer layer : layers)
+//		{
+//			layer = this.setIcon(layer);
+//		}
+//		return layers;
+//	}
 	
-	/**
-	 * Traz a legenda da camada do GeoServer
-	 * @param layer
-	 * @return
-	 */
-	private Layer setIcon(Layer layer)
-	{
-		if( layer.getDataSource() != null && layer.getDataSource().getUrl() != null )
-		{
-			layer.setLegend((getLegendLayerFromGeoServer(layer)));	
-			layer.setIcon((layer.getLegend()));
-		}
-		return layer;
-	}
+//	/**
+//	 * Traz a legenda da camada do GeoServer
+//	 * @param layer
+//	 * @return
+//	 */
+//	private Layer setIcon(Layer layer)
+//	{
+//		if( layer.getDataSource() != null && layer.getDataSource().getUrl() != null )
+//		{
+//			layer.setLegend((getLegendLayerFromGeoServer(layer)));	
+//			layer.setIcon((layer.getLegend()));
+//		}
+//		return layer;
+//	}
 	
 	
 	/**
@@ -1026,7 +1015,7 @@ public class LayerGroupService
 
 	
 	/**
-	 * Mï¿½todo responsï¿½vel para listar as camadas
+	 * Método responsável para listar as camadas
 	 *
 	 * @param filter
 	 * @param idExcluso
@@ -1102,7 +1091,7 @@ public class LayerGroupService
 		return layer;
 	}
 	/**
-	 * mï¿½todo para atualizar uma {@link Camada}
+	 * método para atualizar uma {@link Camada}
 	 * 
 	 * @param camada
 	 * @return camada
@@ -1121,7 +1110,7 @@ public class LayerGroupService
 			this.attributeRepository.delete(attribute);	
 		}
 		
-		/* Na atualização não foi permitido modificar a fonte de dados, camada e títuulo, dessa forma, 
+		/* Na atualização não foi permitido modificar a fonte de dados, camada e título, dessa forma, 
 		Os valores originais são mantidos. */
 		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setDataSource(layerDatabase.getDataSource());
@@ -1140,7 +1129,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * mï¿½todo para remover uma {@link Camada}
+	 * método para remover uma {@link Camada}
 	 * 
 	 * @param id
 	 */
@@ -1165,7 +1154,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * mï¿½todo para encontrar uma {@link Camada} pelo id
+	 * método para encontrar uma {@link Camada} pelo id
 	 * 
 	 * @param id
 	 * @return camada
@@ -1187,7 +1176,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Mï¿½todo para listar as configuraï¿½ï¿½es de camadas paginadas com opï¿½ï¿½o do filtro
+	 * Método para listar as configurações de camadas paginadas com opção do filtro
 	 *
 	 * @param filter
 	 * @param pageable
@@ -1212,7 +1201,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Mï¿½todo que busca a legenda de uma camada no geo server
+	 * Método que busca a legenda de uma camada no geo server
 	 * @param camada
 	 * @return
 	 */
@@ -1431,7 +1420,7 @@ public class LayerGroupService
 		
 		List<LayerGroup> listLayerGroups = this.layerGroupRepository.listLayersGroupByLayerGroupId(layerGroup.getId());
 		List<Layer> layers = this.layerRepository.listLayersByLayerGroupId(layerGroup.getId());
-		this.setIcon(layers);
+//		this.setIcon(layers);
 		
 		layerGroup.setLayers(layers);
 		// Verifica se tem filhos, sejam layersGroups ou layers
