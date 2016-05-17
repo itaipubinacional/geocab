@@ -784,7 +784,7 @@ uri="http://www.springframework.org/security/tags"%>
           </li>
 
           <li id="menu-item-1"
-              title="<spring:message code='map.Layer-menu' />" ng-click="listPublishedLayersGroup();" class="menu-item">
+              title="<spring:message code='map.Layer-menu' />" ng-click="openMenuPublishedLayersGroup();" class="menu-item">
           <a href="#tabs-1">
             <div class="icon itaipu-icon-layers sidebar-icon"></div>
           </a>

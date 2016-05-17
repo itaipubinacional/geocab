@@ -1189,6 +1189,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   /**
    *
    */
+
+
+
   $scope.listPublishedLayersGroup = function () {
 
 
@@ -1238,7 +1241,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.allLayers = result;
 
         $scope.toggleSidebarMenu(300, '#menu-item-1');
-
 
         /*var parseNode = function (node) {
           var item = {};
@@ -1302,7 +1304,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     });
 
-  }
+  };
+
+  $scope.openMenuPublishedLayersGroup = function () {
+
+    if ( !$scope.allLayers.length ){
+      $scope.listPublishedLayersGroup();
+    } else {
+      $scope.toggleSidebarMenu(300, '#menu-item-1');
+    }
+
+
+  };
+
+
 
   /**
    * Formats the url with the name of the layer for each data source
