@@ -493,7 +493,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     $scope.listToolsByUser();
 
-    // $scope.listPublishedLayersGroup();
+    $scope.listPublishedLayersGroup();
 
     // Initializes map
     if ($scope.mapConf.type == $scope.MAP_TYPE_OSM) {
@@ -1116,29 +1116,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.$apply();
       }
     });
-  };
+  }
 
-  $scope.loadStartEnabledLayers = function() {
-
-    layerGroupService.listLayerPublished({
-      callback: function (result) {
-
-        $scope.startEnabledLayers = angular.copy(result);
-
-        angular.forEach(result, function(layer){
-           $scope.showLayer(layer);
-        });
-
-      },
-      errorHandler: function (message, exception) {
-        $scope.msg = {type: "danger", text: message, dismiss: true};
-        $scope.$apply();
-      }
-    });
-
-  };
-
-  $scope.loadStartEnabledLayers();
 
   /**
    *
@@ -1183,25 +1162,70 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     });
 
-  };
-
+  }
 
   /**
    *
    */
-
-
-
   $scope.listPublishedLayersGroup = function () {
-
 
     //Lists the groups of layers and layers published according to user access profile
     layerGroupService.listLayerGroupUpperPublished({
       callback: function (result) {
 
-        $scope.allLayers = result;
+        var parseNode = function (node) {
+          var item = {};
 
-        $scope.toggleSidebarMenu(300, '#menu-item-1');
+          item.id = (!!node.nodes ? 'grupo' : 'layer') + '_' + node.id.toString();
+          item.label = !!node.nodes ? node.name : node.title;
+          item.name = !!node.nodes ? '' : node.name;
+          item.legenda = !!node.nodes ? '' : node.legend;
+          item.selected = !!node.nodes ? '' : node.startEnabled;
+          item.dataSourceUrl = !!node.nodes ? '' : node.dataSource.url;
+          item.value = node.id;
+          item.type = !!node.nodes ? 'grupo' : 'layer';
+
+          item.maximumScaleMap = !!node.nodes ? '' : node.maximumScaleMap;
+          item.minimumScaleMap = !!node.nodes ? '' : node.minimumScaleMap;
+
+          if (item.selected) {
+            $scope.getSelectedNode(item);
+          }
+
+          item.children = [];
+
+          if (!!node.nodes) {
+            for (var i = 0; i < node.nodes.length; ++i) {
+              item.children.push(parseNode(node.nodes[i]));
+//                            if( true === node.nodes[i].startVisible ) {
+//                                item.children.push(parseNode(node.nodes[i]));
+//                            }
+            }
+          }
+          return item;
+        }
+
+        $scope.allLayers = [];
+
+        for (var i = 0; i < result.length; ++i) {
+          $scope.allLayers.push(parseNode(result[i]))
+        }
+
+        if ($scope.allLayers[0]) {
+          for (var i in $scope.allLayers[0].children) {
+            if ($scope.allLayers[0].children.length == 1 && $scope.allLayers[0].children[i].selected) {
+              $scope.allLayers[0].selected = true;
+              $scope.allLayers[0].children[i].selected = true;
+            }
+            else if (!$scope.allLayers[0].children[i].selected) {
+              $scope.allLayers[0].selected = false;
+            }
+            else {
+              $scope.allLayers[0].selected = true;
+            }
+          }
+        }
+
 
         $scope.$apply();
       },
@@ -1211,20 +1235,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     });
 
-  };
-
-  $scope.openMenuPublishedLayersGroup = function () {
-
-    if ( !$scope.allLayers.length ){
-      $scope.listPublishedLayersGroup();
-    } else {
-      $scope.toggleSidebarMenu(300, '#menu-item-1');
-    }
-
-
-  };
-
-
+  }
 
   /**
    * Formats the url with the name of the layer for each data source
@@ -1242,10 +1253,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       var formattedUrl = node.dataSource.url.substring(0, dataSourceAddress) + layerType + '/wms';
     }
     else {
-
-      if(!angular.isDefined(node.dataSourceUrl))
-        node.dataSourceUrl = node.dataSource.url;
-
       var index = node.name.indexOf(":");
       var dataSourceAddress = node.dataSourceUrl.lastIndexOf("ows?");
       var layerType = node.name.substring(0, index);
@@ -1255,82 +1262,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     return {'name': layerName, 'url': formattedUrl};
 
-  };
-  
-
-  $scope.onChange = function(node){
-
-      if(node.layersGroup && node.layersGroup.length){
-        $scope.onChange(node.layersGroup);
-      } else if (node.layers && node.layers.length) {
-        $scope.onChange(node.layers);
-      } else if ( node.length ){
-        angular.forEach( node, function ( layer ) {
-          $scope.onChange( layer );
-        });
-      } else {
-
-        if( node.selected ){
-
-          if ( !$filter('filter')($scope.internalLayers , {id: node.id})[0] && !$filter('filter')($scope.layers , {id: node.id})[0] ){
-            $scope.showLayer(node);
-          }
-
-        } else {
-          $scope.getSelectedNode(node);
-        }
-      }
-
-
-    // layerGroupService.listAllChildrenByLayerGroupId( node.id , {
-    //   callback: function (result) {
-    //     console.log(result);
-    //   },
-    //   errorHandler: function (message, exception) {
-    //     console.log(message);
-    //     console.log(exception);
-    //   }
-    // });
-
-  };
-
-  $scope.showLayer = function (layer) {
-
-    /* Check if it is an internal layer */
-    if (angular.isDefined(layer.dataSource) && layer.dataSource.url == null) {
-
-      $scope.addInternalLayer(layer.id);
-
-        return;
-    }
-
-    var item = $scope.formatUrl(layer, false);
-
-    var wmsOptions = {
-      url: item.url,
-      params: {
-        'LAYERS': item.name
-      }
-    };
-
-    if (layer.dataSourceUrl.match(/&authkey=(.*)/)) {
-      wmsOptions.url += "?" + layer.dataSourceUrl.match(/&authkey=(.*)/)[0];
-    }
-
-    var wmsSource = new ol.source.TileWMS(wmsOptions);
-
-    var wmsLayer = new ol.layer.Tile({
-      source: wmsSource,
-      maxResolution: minEscalaToMaxResolutionn(layer.minimumScaleMap),
-      minResolution: maxEscalaToMinResolutionn(layer.maximumScaleMap)
-    });
-
-    $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name": layer.name, "titulo": layer.label, "id": layer.id});
-
-    //Adds the selected layers in the map
-    $scope.map.addLayer(wmsLayer);
-
-  };
+  }
 
   /**
    * Treat the selection and deselection of each of the tree
@@ -1343,14 +1275,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     /* Check if it is an internal layer */
     if (typeof node.dataSourceUrl != 'undefined' && node.dataSourceUrl == null) {
       if (node.selected) {
-        $scope.addInternalLayer(node.id);
+        $scope.addInternalLayer(node.value);
       } else {
-        $scope.removeInternalLayer(node.id);
+        $scope.removeInternalLayer(node.value);
       }
       return;
     }
 
-    if (node && !node.search) {
+    if (node && node.type == 'layer' && !node.search) {
       if (node.selected) {
 
         var item = $scope.formatUrl(node, false);
@@ -1489,24 +1421,30 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.getSelectedKMLNode = function (node) {
 
-    if(angular.isDefined(node.children)) {
-      if(node.selected) {
-        angular.forEach(node.children, function (children) {
-          $scope.map.addLayer(children.layer);
-        });
-      } else {
-        angular.forEach(node.children, function (children) {
-          $scope.map.removeLayer(children.layer);
-        });
+
+    if (node && node.type == 'kml' && $scope.allLayersKML[0]) {
+
+      if (node.selected) {
+
+        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
+          if ($scope.allLayersKML[0].children[i].name == node.name) {
+            $scope.map.removeLayer(node.layer);
+            $scope.map.addLayer($scope.allLayersKML[0].children[i].layer);
+          }
+        }
       }
-    } else {
-      if(node.selected) {
-        $scope.map.addLayer(node.layer);
-      } else {
-        $scope.map.removeLayer(node.layer);
+      else {
+        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
+          if ($scope.allLayersKML[0].children[i].name == node.name) {
+            //Remove as camadas desselecionadas pelo usuário
+            $scope.map.removeLayer($scope.allLayersKML[0].children[i].layer);
+
+          }
+        }
       }
     }
-  };
+
+  }
 
 
   /**
@@ -2703,7 +2641,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
         }
 
-        customSearchService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, $scope.currentCustomSearch.layerFields, {
+        markerService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, {
           callback: function (results) {
 
             $scope.markersByLayer = results;
@@ -3059,7 +2997,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       item.id = 'kmlLayers'
       item.label = 'Camadas KML';
       item.type = 'kml';
-      item.selected = true;
 
       item.children = [];
 
@@ -3200,22 +3137,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
 
     if (typeof $scope.marker != "undefined") {
-
-      var pageRequest = {
-        "page":0,
-        "size":1,
-        "sort":{
-          "orders":[
-            {
-              "direction":"DESC",
-              "nullHandling":null,
-              "property":"id"
-            }
-          ]
-        }
-      };
-      
-      markerService.lastPhotoByMarkerId($scope.marker.id, pageRequest, {
+      markerService.lastPhotoByMarkerId($scope.marker.id, {
         callback: function (result) {
 
           $scope.imgResult = result.content[0].image;
@@ -4416,21 +4338,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     if (typeof $scope.marker != "undefined") {
 
-      var pageRequest = {
-        "page":0,
-        "size":1,
-        "sort":{
-          "orders":[
-            {
-              "direction":"DESC",
-              "nullHandling":null,
-              "property":"id"
-            }
-          ]
-        }
-      };
-      
-      markerService.lastPhotoByMarkerId($scope.marker.id, pageRequest, {
+      markerService.lastPhotoByMarkerId($scope.marker.id, {
         callback: function (result) {
 
           $scope.imgResult = result.content[0].image;

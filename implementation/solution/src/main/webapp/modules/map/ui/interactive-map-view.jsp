@@ -784,7 +784,7 @@ uri="http://www.springframework.org/security/tags"%>
           </li>
 
           <li id="menu-item-1"
-              title="<spring:message code='map.Layer-menu' />" ng-click="openMenuPublishedLayersGroup();" class="menu-item">
+              title="<spring:message code='map.Layer-menu' />" ng-click="toggleSidebarMenu(300, '#menu-item-1');" class="menu-item">
           <a href="#tabs-1">
             <div class="icon itaipu-icon-layers sidebar-icon"></div>
           </a>
@@ -904,68 +904,26 @@ uri="http://www.springframework.org/security/tags"%>
                   <br style="clear: both;">
 
                   <div ng-show="allLayers.length > 0">
-                    <input maxlength="144" type="text" ng-model="bagSearch" ng-change="searchLayers(bagSearch)"
+                    <input maxlength="144" type="text" ng-model="bagSearch"
                            placeholder="<spring:message code="map.Group-or-layer"/>"
                     class="sidebar-content-search form-control" />
                   </div>
 
-                    <div ivh-treeview="allLayers"
-                         ivh-treeview-filter="bagSearch"
-                         ivh-treeview-children-attribute="'nodes'"
-                         ivh-treeview-label-attribute="'title'"
-                         <%--ivh-treeview-on-toggle="listLayersGroupPublishedByLayerGroupId(ivhNode, ivhIsExpanded, ivhTree)"--%>
-                         ivh-treeview-on-cb-change="onChange(ivhNode)">
-                        <script type="text/ng-template">
-                            <div class="ivh-treeview-node" >
-                                <span ivh-treeview-toggle >
-                                    <span ivh-treeview-twistie></span>
-                                </span>
-                                <img ng-click="showLegendDetail(itm)" ng-hide="!node.icon" class="label-image" src="{{node.icon}}">
-                                <tree-view-box></tree-view-box>
-                                <label class="ivh-treeview-node-label dynamic-text text-tvw" style="margin: 0">
-                                    <span class="ivh-treeview-node-label" ivh-treeview-toggle>
-                                        {{trvw.label(node)}}
-                                    </span>
-                                </label>
-                            </div>
-                            <div style="padding-left: 15px" ivh-treeview-children></div>
-                        </script>
-                    </div>
+                  <div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
+                       ivh-treeview-label-attribute="'label'"
+                       ivh-treeview-legend-attribute="'legenda'"
+                       ivh-treeview-children-attribute="'children'"
+                       ivh-treeview-id-attribute="'id'"
+                       ivh-treeview-filter="filter:bagSearch">
+                  </div>
 
-
-                    <!--<div id="tree" ivh-treeview="allLayers" ivh-fn="getSelectedNode"
-                    ivh-treeview-label-attribute="'label'"
-                    ivh-treeview-legend-attribute="'legenda'"
-                    ivh-treeview-children-attribute="'children'"
-                    ivh-treeview-id-attribute="'id'"
-                    ivh-treeview-on-toggle="awesomeCallback(ivhNode, ivhIsExpanded, ivhTree)"
-                    ivh-treeview-filter="bagSearch">
-                    </div>-->
-
-                <div class="sidebar-content-header" ng-if="allSearchs.length > 0" style="margin: 30px 0px;"><spring:message code="map.Searchs"/></div>
+                  <div class="sidebar-content-header" ng-if="allSearchs.length > 0" style="margin: 30px 0px;"><spring:message code="map.Searchs"/></div>
                   <br style="clear: both;">
                   <div id="tree-pesquisas"
                        ivh-treeview="allSearchs"
-                        ivh-treeview-on-cb-change="getSelectedSearchNode(ivhNode)"
+                       ivh-fn="getSelectedSearchNode"
                        ivh-treeview-label-attribute="'label'"
                        ivh-treeview-children-attribute="'children'">
-
-                        <script type="text/ng-template">
-                            <div class="ivh-treeview-node" >
-                               <span ivh-treeview-toggle >
-                                   <span ivh-treeview-twistie></span>
-                                </span>
-                                <tree-view-box></tree-view-box>
-                                <label class="ivh-treeview-node-label dynamic-text text-tvw" style="margin: 0">
-                                    <span class="ivh-treeview-node-label" ivh-treeview-toggle>
-                                        {{trvw.label(node)}}
-                                    </span>
-                               </label>
-                            </div>
-                            <div style="padding-left: 15px" ivh-treeview-children></div>
-                        </script>
-
-
                   </div>
                   <br />
                 </div>
@@ -1059,33 +1017,13 @@ uri="http://www.springframework.org/security/tags"%>
                 <spring:message code="map.None-KML-file-enabled"/>
               </div>
               <div style="overflow: auto;top: 110px;bottom: 0px;left: 20px;right: 0px;">
-
                 <div id="tree-kml"
-                     ivh-treeview="allLayersKML"
-                     ivh-treeview-on-cb-change="getSelectedKMLNode(ivhNode)">
-                    <script type="text/ng-template">
-                    <div class="ivh-treeview-node">
-                        <span ivh-treeview-toggle>
-                            <span ivh-treeview-twistie></span>
-                        </span>
-                        <tree-view-box></tree-view-box>
-                        <label class="ivh-treeview-node-label dynamic-text " style="margin: 0">
-                            <span class="ivh-treeview-node-label" ivh-treeview-toggle>
-                            {{trvw.label(node)}}
-                            </span>
-                        </label>
-                    </div>
-                        <div style="padding-left: 15px" ivh-treeview-children></div>
-                    </script>
-                </div>
-
-                <!--<div id="tree-kml"
                      ivh-treeview="allLayersKML"
                      ivh-fn="getSelectedKMLNode"
                      ivh-treeview-label-attribute="'label'"
                      ivh-treeview-children-attribute="'children'"
                     >
-                </div>-->
+                </div>
               </div>
             </div>
 
