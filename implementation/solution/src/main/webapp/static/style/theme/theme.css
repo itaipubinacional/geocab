@@ -10,10 +10,6 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
   overflow: hidden;
 }
 
-.text-tvw {
-	max-width: 70%;
-}
-
 .overflow-hidden {
     overflow: hidden;
 }
@@ -1247,10 +1243,9 @@ ul.abn-tree li.abn-tree-row a {
 }
 
 .larger-btn {
-	padding-left: 20px;
-	padding-right: 20px;
-}
-
+    padding-left: 20px;
+    padding-right: 20px;
+=======
 html,body { height:100%; background-color: #ffffff!important; }
 
 input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
