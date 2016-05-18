@@ -2641,7 +2641,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
         }
 
-        markerService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, {
+        customSearchService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, $scope.currentCustomSearch.layerFields, {
           callback: function (results) {
 
             $scope.markersByLayer = results;
@@ -3026,6 +3026,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.allLayersKML = [];
       $scope.allLayersKML.push(item);
 
+      $scope.$apply();
 
     });
 

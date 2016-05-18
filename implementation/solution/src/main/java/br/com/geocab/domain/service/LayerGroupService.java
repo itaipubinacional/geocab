@@ -549,7 +549,7 @@ public class LayerGroupService
 	public List<LayerGroup> listLayerGroupUpperPublished()
 	{
 		List<LayerGroup> layersGroupUpperPublished = new ArrayList<LayerGroup>();
-		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listAllLayersGroupPublished();
+		final List<LayerGroup> layersGroupPublished = hasChildren(this.layerGroupRepository.listAllLayersGroupPublished());
 		
 		if ( layersGroupPublished != null )
 		{
@@ -565,26 +565,28 @@ public class LayerGroupService
 		}
 		
 		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
-		return hasChildren(this.layersGroupUpperByRole(layersGroupUpperPublished));
+		return /*hasChildren*/(this.layersGroupUpperByRole(layersGroupUpperPublished));
 		
 	}
-	//TODO organizar método
-	public List<Layer> listLayerPublished()
-	{
-		
-		LayerGroup layerGroup = new LayerGroup();
-		
-		List<LayerGroup> layerGroups = new ArrayList<LayerGroup>();
-		
-		layerGroup.setLayers( this.layerRepository.listLayersStartEnable() );
-		
-		layerGroups.add( layerGroup );
-		
-		layerGroups = layersGroupUpperByRole(layerGroups);
-		
-		return layerGroups.get(0).getLayers();
-		
-	}
+	
+	
+//	//TODO organizar método
+//	public List<Layer> listLayerPublished()
+//	{
+//		
+//		LayerGroup layerGroup = new LayerGroup();
+//		
+//		List<LayerGroup> layerGroups = new ArrayList<LayerGroup>();
+//		
+//		layerGroup.setLayers( this.layerRepository.listLayersStartEnable() );
+//		
+//		layerGroups.add( layerGroup );
+//		
+//		layerGroups = layersGroupUpperByRole(layerGroups);
+//		
+//		return layerGroups.get(0).getLayers();
+//		
+//	}
 	
 	/**
 	 * 
@@ -1421,6 +1423,13 @@ public class LayerGroupService
 		List<Layer> layers = this.layerRepository.listLayersByLayerGroupId(layerGroup.getId());
 //		this.setIcon(layers);
 		
+		for (Layer layer : layers)
+		{
+			if (layer != null)
+			{
+				System.out.println("não é null");
+			}
+		}
 		layerGroup.setLayers(layers);
 		// Verifica se tem filhos, sejam layersGroups ou layers
 		layerGroup.setHasChildren((listLayerGroups != null && listLayerGroups.size() >0 || layers != null && layers.size() >0) 
@@ -1432,5 +1441,6 @@ public class LayerGroupService
 		}
 		return layerGroup;
 	}
+	
 	
 }

@@ -60,10 +60,11 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param idLayer
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, layer.publishedLayer.id )  " +
-			"FROM Layer layer " +
-			"WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " +
-			"ORDER BY layer.publishedLayer.orderLayer")
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, publishedLayer.id )  "
+			+ " FROM Layer layer "
+			+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "
+			+ "WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " 
+			+ "ORDER BY layer.publishedLayer.orderLayer")
 	public List<Layer> listLayersByLayerGroupPublished( @Param("idLayer") Long idLayer);
 	
 	/**
@@ -143,5 +144,19 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
             "WHERE ( layer.name = :layerName) AND ( layer.dataSource.id = :dataSourceId )")
     public List<Long> listLayerGroupIdsByNameAndDataSource( @Param("layerName") String layerName, @Param("dataSourceId") Long dataSourceId);
 
+    
+    /**
+	 * 
+	 * @param layerName
+	 * @param dataSourceId
+	 * @return
+	 */
+    @Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, dataSource, layerGroup.name, layerGroup.id, publishedLayer.id)"
+            + " FROM Layer layer "
+            + " LEFT OUTER JOIN layer.dataSource dataSource "
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup "
+			+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "  
+            + "WHERE ( publishedLayer.id = :publishedLayerId)")
+    public Layer listNotPublishedByPublishedId( @Param("publishedLayerId") Long publishedLayerId);
 
 }
