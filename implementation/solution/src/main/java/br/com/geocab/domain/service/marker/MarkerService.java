@@ -24,7 +24,6 @@ import javax.xml.bind.JAXBException;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.io.FileTransfer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,14 +44,12 @@ import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
-import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.entity.marker.photo.Photo;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
-import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -419,10 +416,7 @@ public class MarkerService extends AbstractMarkerService
 	{
 		return ContextHolder.getAuthenticatedUser();
 	}
-
-	@Autowired
-	ILayerRepository layerRepository;
-
+	
 	/**
 	 * Method to find an {@link Marker} by layer
 	 * 
@@ -441,19 +435,16 @@ public class MarkerService extends AbstractMarkerService
 		{
 			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE))
 			{
-				Layer layer = this.layerRepository.listNotPublishedByPublishedId(layerId); //TODO
 				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
 			}
 			else
 			{
-				Layer layer = this.layerRepository.listNotPublishedByPublishedId(layerId);
-				listMarker = this.markerRepository.listMarkerByLayer(layer.getId(), user.getId());
+				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
 			}
 		}
 		else
 		{
-			Layer layer = this.layerRepository.listNotPublishedByPublishedId(layerId);
-			listMarker = this.markerRepository.listMarkerByLayerPublic(layer.getId());
+			listMarker = this.markerRepository.listMarkerByLayerPublic(layerId);
 		}
 
 		return listMarker;

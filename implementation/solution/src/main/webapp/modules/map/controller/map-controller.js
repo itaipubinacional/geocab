@@ -1179,7 +1179,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           item.id = (!!node.nodes ? 'grupo' : 'layer') + '_' + node.id.toString();
           item.label = !!node.nodes ? node.name : node.title;
           item.name = !!node.nodes ? '' : node.name;
-          item.legenda = !!node.nodes ? '' : node.legend;
+          item.legenda = !!node.nodes ? '' : node.icon;
           item.selected = !!node.nodes ? '' : node.startEnabled;
           item.dataSourceUrl = !!node.nodes ? '' : node.dataSource.url;
           item.value = node.id;

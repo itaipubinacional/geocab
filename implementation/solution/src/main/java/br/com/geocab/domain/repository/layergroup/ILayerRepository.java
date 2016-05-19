@@ -60,9 +60,10 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * @param idLayer
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, publishedLayer.id )  "
-			+ " FROM Layer layer "
-			+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "
+	@Query(value=/*"SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, publishedLayer.id )  "
+			+ */" FROM Layer layer "
+			/*+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "
+			+ " LEFT OUTER JOIN publishedLayer.layerGroup layerGroup "*/
 			+ "WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " 
 			+ "ORDER BY layer.publishedLayer.orderLayer")
 	public List<Layer> listLayersByLayerGroupPublished( @Param("idLayer") Long idLayer);

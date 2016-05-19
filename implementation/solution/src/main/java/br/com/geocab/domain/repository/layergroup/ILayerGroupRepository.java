@@ -88,11 +88,14 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new LayerGroup( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroupUpper.id )  " +
-			"FROM LayerGroup layerGroup " +
-			"LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " +
-			"WHERE ( layerGroup.published = true ) " +
-			"ORDER BY layerGroup.orderLayerGroup")
+//	@Query(value="SELECT new LayerGroup( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroupUpper.id )  " +
+//			"FROM LayerGroup layerGroup " +
+//			"LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " +
+//			"WHERE ( layerGroup.published = true ) " +
+//			"ORDER BY layerGroup.orderLayerGroup")
+	@Query(value="FROM LayerGroup layerGroup " 
+			+ "WHERE ( layerGroup.published = true ) "
+			+ "ORDER BY orderLayerGroup" )
 	public List<LayerGroup> listAllLayersGroupPublished();
 	
 	/**

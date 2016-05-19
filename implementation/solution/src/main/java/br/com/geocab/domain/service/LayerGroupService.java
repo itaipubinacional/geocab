@@ -549,7 +549,7 @@ public class LayerGroupService
 	public List<LayerGroup> listLayerGroupUpperPublished()
 	{
 		List<LayerGroup> layersGroupUpperPublished = new ArrayList<LayerGroup>();
-		final List<LayerGroup> layersGroupPublished = hasChildren(this.layerGroupRepository.listAllLayersGroupPublished());
+		final List<LayerGroup> layersGroupPublished = /*hasChildren*/(this.layerGroupRepository.listAllLayersGroupPublished());
 		
 		if ( layersGroupPublished != null )
 		{
@@ -778,7 +778,7 @@ public class LayerGroupService
 //			}
 //		}
 //	}
-	
+//	
 //	/**
 //	 * Traz a legenda da camada do GeoServer
 //	 * @param layers
@@ -792,7 +792,7 @@ public class LayerGroupService
 //		}
 //		return layers;
 //	}
-	
+//	
 //	/**
 //	 * Traz a legenda da camada do GeoServer
 //	 * @param layer
@@ -1423,13 +1423,6 @@ public class LayerGroupService
 		List<Layer> layers = this.layerRepository.listLayersByLayerGroupId(layerGroup.getId());
 //		this.setIcon(layers);
 		
-		for (Layer layer : layers)
-		{
-			if (layer != null)
-			{
-				System.out.println("não é null");
-			}
-		}
 		layerGroup.setLayers(layers);
 		// Verifica se tem filhos, sejam layersGroups ou layers
 		layerGroup.setHasChildren((listLayerGroups != null && listLayerGroups.size() >0 || layers != null && layers.size() >0) 
