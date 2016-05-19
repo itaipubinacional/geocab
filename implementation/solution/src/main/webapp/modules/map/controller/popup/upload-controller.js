@@ -142,8 +142,6 @@ function UploadPopUpController($scope, $modalInstance, $filter, $importService, 
 
   $scope.onError = function(msg){
 
-    //console.log(msg);
-
     $scope.msg = {
       type: "danger",
       text: $translate(msg)

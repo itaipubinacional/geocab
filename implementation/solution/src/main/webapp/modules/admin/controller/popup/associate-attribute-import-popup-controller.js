@@ -24,11 +24,8 @@ function AssociateAttributeImportPopUpController($scope, $log, $timeout, $inject
 	/*layerGroupService.listAttributesByLayer($scope.layer.layerId, {
 		callback: function (result) {
 
-			//console.log(result);
 
 			angular.forEach(result, function(attribute){
-
-				//console.log(attribute);
 
 				if(attribute.type != 'PHOTO_ALBUM') {
 					attribute.option = attribute.name + ' (' + attribute.type + ')';

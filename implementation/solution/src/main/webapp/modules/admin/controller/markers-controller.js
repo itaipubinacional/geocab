@@ -1832,9 +1832,6 @@ ront controller of angle won't let enter an invalid URL.
 
           if (attribute.attribute.type == 'PHOTO_ALBUM' && attribute.attribute.required && attribute.photoAlbum != null && attribute.photoAlbum.photos.length == 0) {
 
-            // console.log(attribute.attribute.name);
-            // console.log(attribute.photoAlbum.photos.length);
-
             var text = $translate('photos.Insert-Photos-in-attribute').replace('"{0}"', '') + attribute.attribute.name;
             $scope.msg = {type: "danger", text: text, dismiss: true};
             $scope.fadeMsg();

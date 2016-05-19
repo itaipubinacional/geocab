@@ -68,7 +68,6 @@ function SelectLayerGroupPopUpController($scope, layerGroups,currentLayerGroup, 
 		if( currentLayerGroup )
 		{
 			$scope.currentGroup = currentLayerGroup;
-			console.log(currentLayerGroup);
 		}
 
 	};

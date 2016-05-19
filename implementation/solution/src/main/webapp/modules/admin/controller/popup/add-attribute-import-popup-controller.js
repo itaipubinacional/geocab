@@ -88,8 +88,6 @@ function AddAttributeImportPopUpController($scope, $injector, $modalInstance, $s
 	 */
 	$scope.close = function(form_add_attribute)
 	{
-		console.log(form_add_attribute);
-
 		if( !$scope.form('form_add_attribute').$valid ){
 
 			return;
