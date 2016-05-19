@@ -87,6 +87,17 @@ public class PhotoAlbum extends AbstractEntity implements Serializable
 	 * @param markerAttribute
 	 * @param photos
 	 */
+	public PhotoAlbum(Long id, String identifier, Long markerAttributeId)
+	{
+		super(id);
+		this.setIdentifier(identifier);
+		this.markerAttribute = new MarkerAttribute(markerAttributeId);
+	}
+	
+	/**
+	 * @param markerAttribute
+	 * @param photos
+	 */
 	public PhotoAlbum(MarkerAttribute markerAttribute, List<Photo> photos)
 	{
 		super();

@@ -330,7 +330,7 @@ public class MarkerService extends AbstractMarkerService
 	{
 		try
         {
-			Marker marker = this.findMarkerById(id);
+			Marker marker = this.markerRepository.findOne(id);
 			
 			Assert.isTrue( ContextHolder.getAuthenticatedUser().getId().equals(marker.getUser().getId()), messages.getMessage("Access-is-denied", null, null));
 			
@@ -355,7 +355,7 @@ public class MarkerService extends AbstractMarkerService
 	{
 		try
 		{
-			Marker marker = this.findMarkerById(id);
+			Marker marker = this.markerRepository.findOne(id);
 			marker.setStatus(MarkerStatus.ACCEPTED);
 			marker = this.markerRepository.save(marker);
 		}
@@ -376,7 +376,7 @@ public class MarkerService extends AbstractMarkerService
 	{
 		try
 		{
-			Marker marker = this.findMarkerById(id);
+			Marker marker = this.markerRepository.findOne(id);
 			marker.setStatus(MarkerStatus.REFUSED);
 			marker = this.markerRepository.save(marker);
 		}

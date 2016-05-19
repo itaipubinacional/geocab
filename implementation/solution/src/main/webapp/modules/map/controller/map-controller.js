@@ -3128,6 +3128,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   };
 
+  var pageRequest = new PageRequest();
+  pageRequest.size = 10;
+  pageRequest.sort = new Sort();
+  pageRequest.sort.orders = [{direction: 'DESC', property: 'created'}];
+  
   $scope.toggleSidebarMarkerDetailUpdate = function (time, element) {
     $scope.currentEntity = $scope.marker;
 
@@ -3138,7 +3143,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
 
     if (typeof $scope.marker != "undefined") {
-      markerService.lastPhotoByMarkerId($scope.marker.id, {
+      markerService.lastPhotoByMarkerId($scope.marker.id, pageRequest, {
         callback: function (result) {
 
           $scope.imgResult = result.content[0].image;
@@ -4339,7 +4344,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     if (typeof $scope.marker != "undefined") {
 
-      markerService.lastPhotoByMarkerId($scope.marker.id, {
+      markerService.lastPhotoByMarkerId($scope.marker.id, pageRequest, {
         callback: function (result) {
 
           $scope.imgResult = result.content[0].image;
