@@ -76,15 +76,11 @@
 			</activation>
 			<properties>
 				<!-- Database -->
-                <!-- <mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/geocab</mvn.jdbc.jdbcUrl>
+                <mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/geocab</mvn.jdbc.jdbcUrl>
                 <mvn.jdbc.username>geocab</mvn.jdbc.username>
-                <mvn.jdbc.password>geocab</mvn.jdbc.password> -->
+                <mvn.jdbc.password>geocab</mvn.jdbc.password>
                 
-                <mvn.jdbc.jdbcUrl>jdbc:postgresql://geocab/geocab</mvn.jdbc.jdbcUrl>
-				<mvn.jdbc.username>geocab</mvn.jdbc.username>
-				<mvn.jdbc.password>geocab</mvn.jdbc.password>
-
-				<!-- Hibernate -->
+                <!-- Hibernate -->
 				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
 				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
