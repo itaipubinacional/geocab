@@ -283,6 +283,7 @@ input[type=checkbox].css-checkbox {
     -webkit-user-select: none;
     -ms-user-select:none;
     user-select:none;
+    line-height: 20px;
 }
 
 .tree-view:before, input[type=checkbox].css-checkbox + label:before {
@@ -325,9 +326,9 @@ input[type=checkbox].css-checkbox {
 
 .label-image {
     border: 1px solid #c9c9c9;
-    margin: -1px -40px 4px 37px;
+    margin: -1px -40px 4px 55px;
     height: 22px;
-    width: 22px;
+    /*width: 22px;*/
     border-radius: 3px;
     cursor: pointer;
 }
@@ -335,14 +336,18 @@ input[type=checkbox].css-checkbox {
 .ivh-treeview-node {
     position: relative;
     margin: 10px 0;
-    line-height: 16px;
-    /*display : flex;*/
+    line-height: 24px;
+    display : flex;
 }
 
 .ivh-treeview-node-label span::after {
     content : " ";
     width   : 20px;
     display : inline-block;
+}
+#tree ul.ivh-treeview li.ivh-treeview-node-leaf .ivh-treeview-toggle-leaf{
+    display: table;
+    width: 0px;
 }
 ul.ivh-treeview{
     list-style-type: none;
