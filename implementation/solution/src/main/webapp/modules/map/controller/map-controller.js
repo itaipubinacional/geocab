@@ -924,6 +924,17 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           $scope.marker = feature.getProperties().marker;
 
+          if(!$scope.marker.layer && $scope.importLayers.length > 0) {
+
+            $scope.msg = {
+              type: "danger",
+              text: $translate("admin.shape.error.marker-not-imported"),
+              dismiss: true
+            };
+            $scope.fadeMsg();
+            return;
+          }
+
           var iconStyle = new ol.style.Style({
             image: new ol.style.Icon(({
               anchor: [0.5, 1],
@@ -5202,6 +5213,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.insertMarkers = function () {
 
     $scope.isLoading = true;
+    $scope.isImport = true;
 
     var importMarkers = [];
 
@@ -5285,7 +5297,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           dismiss: true
         };
         $scope.fadeMsg();
-        $scope.$apply();
 
         $scope.markerAttributes = [];
         $scope.attributesByLayer = [];
@@ -5294,14 +5305,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.shapeFile.layerType = 'layer';
         $('#upload').val('');
 
+        $scope.isImport = false;
+        $scope.isExport = false;
+
+        $scope.toggleSidebarMenu(300, 'closeButton');
+
       }, errorHandler: function (message, exception) {
+
+        $scope.isImport = false;
+        $scope.isExport = false;
+
     	$scope.isLoading = false;
         $scope.msg = {type: "error", text: message};
-        $scope.$apply();
       }
     });
-
-    $scope.toggleSidebarMenu(300, 'closeButton');
 
   };
 
@@ -5402,9 +5419,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                   }
 
                 });
-
-                $scope.isImport = false;
-                $scope.isExport = false;
 
                 $scope.insertMarkers();
 

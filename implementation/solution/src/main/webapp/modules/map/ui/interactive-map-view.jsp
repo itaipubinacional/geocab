@@ -1253,7 +1253,11 @@ uri="http://www.springframework.org/security/tags"%>
                     </div>
                   </div>
                   <div>
-                    <button id="shapeFileButtonInsert" ng-click="importShapeFile(form)" type="button" style="margin: 6px 0 20px 0;" class="btn btn-success"><spring:message code="layer-group-popup.Save"/></button>
+                    <button id="shapeFileButtonInsert" ng-disabled="isLoading" ng-click="importShapeFile(form)" type="button" style="margin: 6px 0 20px 0;"
+                            class="btn btn-success">
+                        <spring:message code="layer-group-popup.Save"/>
+                        <i ng-if="isLoading && !isImport" class="loading"></i>
+                    </button>
                   </div>
 
                 </form>
