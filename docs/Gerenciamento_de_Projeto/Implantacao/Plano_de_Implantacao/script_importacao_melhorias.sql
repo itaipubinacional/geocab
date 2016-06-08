@@ -57,3 +57,5 @@ fk_photo_audited_revision FOREIGN KEY (revision) REFERENCES
 geocab_auditoria.revision (id) MATCH SIMPLE ON UPDATE NO ACTION ON
 DELETE NO ACTION );
 ALTER TABLE geocab_auditoria.photo_audited OWNER TO geocab_auditoria;
+-- Alteração do squema de dados da tabela revision
+ALTER TABLE geocab_auditoria.revision SET SCHEMA geocab;

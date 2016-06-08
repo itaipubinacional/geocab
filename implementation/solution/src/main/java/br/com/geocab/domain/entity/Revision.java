@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.envers.RevisionNumber;
@@ -22,7 +21,6 @@ import org.hibernate.envers.RevisionTimestamp;
  * @category Entity
  */
 @Entity
-@Table(schema="geocab_auditoria")
 @org.hibernate.envers.RevisionEntity(EntityTrackingRevisionListener.class)
 public class Revision<T extends IEntity<ID>, ID extends Serializable> implements Serializable
 {
