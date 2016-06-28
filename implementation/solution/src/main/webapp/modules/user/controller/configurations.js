@@ -14,7 +14,7 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	 * @see AbstractCRUDController
 	 */
 	$injector.invoke(AbstractCRUDController, this, {$scope: $scope});
-
+	
 	/**
 	 * Include accountService class
 	 */
@@ -49,6 +49,8 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 			$scope.listUsersByFilters( $scope.data.filter, $scope.currentPage.pageable );
 		}
 	});
+	
+	
 
 
 	/*-------------------------------------------------------------------
@@ -59,12 +61,14 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	//STATES
 
 	$scope.UPDATE_STATE = "my-account.form";
+	
+	$scope.GENERAL_CONFIGURATION_STATE = "general-configuration-state";
 
 	/**
 	 * This variable store the current view state
 	 * This variable should ALWAYS be in agreement with the URL in browser.
 	 */
-	$scope.currentState;
+	$scope.currentState = $scope.UPDATE_STATE;
 
 	/**
 	 * Store the state of paging
@@ -111,6 +115,7 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		 * */
 		accountService.getUserAuthenticated({
     		callback : function(result) {
+    			$scope.userLogged = result;
     			$scope.currentEntity = result;
 
 					$scope.setBackgroundMap(result.backgroundMap);
@@ -125,15 +130,6 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 
 
 		$log.info('Starting the front controller. Users');
-
-		switch (state) {
-			case $scope.UPDATE_STATE: {
-				$scope.changeToUpdate( $state.params.id );
-			}
-			default : {
-				$state.go( $scope.UPDATE_STATE );
-			}
-		}
 
 		$scope.flag = 0;
 	};
@@ -206,6 +202,10 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		$scope.currentState = form;
 	};
 
+	$scope.changeState = function(state){
+		$scope.currentState = state;
+	};
+	
 	$scope.updateUser = function() {
 
 		if(!$scope.form('form').$valid){

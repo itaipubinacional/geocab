@@ -77,8 +77,8 @@
                 </li>
 
                 <li class="position-relative"><a
-                    href="user#/account"
-                    ng-class="{active: menuActive == 'my-account'}"
+                    href="user#/configurations"
+                    ng-class="{active: menuActive == 'configurations'}"
                     style="width: 150px;">Minha conta</a></li>
 
 
@@ -112,7 +112,7 @@
                   ng-class="{active: menuActive == 'data-source'}"
                   style="width: 150px;">
                 <spring:message code="admin.datasource.Data-Source"/>
-                </label></a></li>
+               </a></li>
 
               <li class="position-relative"><a
                   href="admin#/layer-group"
@@ -161,10 +161,10 @@
                     </a>
                 </li>
                 <li class="position-relative">
-                    <a  href="user#/account"
-                        ng-class="{active: menuActive == 'my-account'}"
+                    <a  href="user#/configurations"
+                        ng-class="{active: menuActive == 'configurations'}"
                         style="width: 150px;">
-                        <spring:message code="admin.my-account.My-account"/>
+                        <spring:message code="Configurations"/>
                     </a>
                 </li>
 

@@ -20,34 +20,33 @@
         </div>
 
         <div class="navbar-inner navbar-container row" >
-            <div class="col-md-5">
-                <div class="navbar-title">
-                    <p style="text-transform:uppercase;cursor:pointer;" class="ng-scope" ng-click="changeForm('my-account.form')">
-                        <spring:message code="admin.my-account.My-account"/>
+            <div class="col-md-5">                
+                <div ng-if="currentState == GENERAL_CONFIGURATION_STATE" class="navbar-title">
+                	<p style="text-transform:uppercase;">
+                        <spring:message code="General-Configurations"/>
                     </p>
                 </div>
-                <!--<div class="navbar-title">
-                    <p style="text-transform:uppercase;cursor:pointer;" class="ng-scope" ng-click="changeForm('my-preferences.form')">
-                        <spring:message code="admin.users.Account-preferences"/>
-                    </p>
-                </div>-->
-            </div>
-            <button ng-show="currentState == UPDATE_STATE || currentState== 'my-preferences.form'" style="float: right;"
-                    class="btn btn-success"
-                    id="buttonUpdate"
-                    title="<spring:message code='admin.users.Save'/>"
-                    ng-click="updateUser()">
-                <spring:message code="admin.users.Save"/>
-            </button>
+                <div ng-if="currentState == UPDATE_STATE" class="navbar-title">
+                    <p style="text-transform:uppercase;">
+                        <spring:message code="admin.my-account.My-account"/>
+                    </p>                    
+                </div>
+            </div>            
         </div>
     </div>
 
     <tabset>
-        <tab heading="<spring:message code='admin.users.Account-information'/>">
+    	<tab heading="<spring:message code='admin.users.Account-information'/>" ng-click="changeState(UPDATE_STATE)">
             <div ng-include="'modules/user/ui/my-account/my-account-form.jsp'"></div>
         </tab>
-        <tab heading="<spring:message code='admin.users.Account-preferences'/>">
+        <tab heading="<spring:message code='admin.users.Account-preferences'/>" ng-click="changeState(UPDATE_STATE)">
             <div ng-include="'modules/user/ui/my-account/my-preferences-form.jsp'"></div>
+        </tab>
+    	<tab ng-if="userLogged.role == 'ADMINISTRATOR'" heading="Plano de fundo padrão" ng-click="changeState(GENERAL_CONFIGURATION_STATE)"> <!-- TODO -->
+            <div ng-include="'modules/user/ui/configurations/default-background.jsp'"></div>
+        </tab>
+        <tab ng-if="userLogged.role == 'ADMINISTRATOR'" heading="Envio de e-mail" ng-click="changeState(GENERAL_CONFIGURATION_STATE)"> <!-- TODO -->
+            <div ng-include="'modules/user/ui/configurations/send-email.jsp'"></div>
         </tab>
     </tabset>
     <!-- Partial views of states -->

@@ -12,45 +12,16 @@
 <div>
     <form name="form" novalidate default-button="buttonUpdate">
 
-        <div class="content-tab">
-			<button ng-show="currentState == UPDATE_STATE || currentState== 'my-preferences.form'" style="float: right;"
+      <div class="content-tab">
+			<button style="float: right;"
                     class="btn btn-success"
                     id="buttonUpdate"
                     title="<spring:message code='admin.users.Save'/>"
                     ng-click="updateUser()">
                 <spring:message code="admin.users.Save"/>
             </button>
-            <!-- coordinates -->
-
-            <label class="detail-label">
-                <spring:message code="admin.users.Account-coordinates"/>
-            </label>
-
-            <i class="icon-question-sign icon-large" tooltip-placement="right" tooltip="<spring:message code='admin.users.Coordinates-info'/>"></i>
-
-            <br />
-
-            <div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
-                <input type="radio" id="DMS" ng-model="currentEntity.coordinates" value="DEGREES_MINUTES_SECONDS"
-                       name="DMS">
-                <label class="radio-label" for="DMS"> <spring:message code='admin.users.coordinatesDMS'/> (<spring:message code='admin.users.coordinatesDMS-format'/>) </label>
-            </div>
-
-            <br />
-
-            <div class="form-item-horizontal radio" style="margin-left: 0;">
-                <input type="radio" id="DD" ng-model="currentEntity.coordinates" value="DEGREES_DECIMAL"
-                       name="DD">
-                <label class="radio-label" for="DD"> <spring:message code='admin.users.coordinatesDD'/> (<spring:message code='admin.users.coordinatesDD-format'/>) </label>
-            </div>
-
-            <hr>
-
+            
             <!-- BACKGROUND MAP -->
-            <label class="detail-label" required>
-                <spring:message code="admin.users.backgroundMap"/>
-            </label>
-            <br>
 
             <div class="row">
                 <div class="col-md-2">

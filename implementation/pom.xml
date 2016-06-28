@@ -132,7 +132,7 @@
 			<id>homologation</id>
 			<properties>
 				<!-- Database -->
-                <mvn.jdbc.jdbcUrl>jdbc:postgresql://chi25/desenvolvimento</mvn.jdbc.jdbcUrl>
+                <mvn.jdbc.jdbcUrl>jdbc:postgresql://chi656/desenvolvimento</mvn.jdbc.jdbcUrl>
                 <mvn.jdbc.username>geocab_pool</mvn.jdbc.username>
                 <mvn.jdbc.password>geocab_pool</mvn.jdbc.password>
 

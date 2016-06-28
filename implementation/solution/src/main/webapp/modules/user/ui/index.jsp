@@ -35,7 +35,7 @@
 	<!-- container -->
 	<div class="container-fluid">
 		<header>
-				<jsp:include page="../../common/header.jsp"/>
+			<jsp:include page="../../common/header.jsp"/>
 		</header>
 
 		<!-- content -->
@@ -49,7 +49,7 @@
 	
 	<!-- Controllers -->
 	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
-	<script type="text/javascript" src="modules/user/controller/my-account.js"></script>
+	<script type="text/javascript" src="modules/user/controller/configurations.js"></script>
 	<script type="text/javascript" src="modules/user/controller/markers.js"></script>
 
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
