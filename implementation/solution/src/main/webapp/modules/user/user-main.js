@@ -26,7 +26,8 @@
 		$stateProvider.state('configurations', {
 			url : "/configurations",
 			templateUrl : "modules/user/ui/configurations-view.jsp",
-			controller : MyAccountController
+			controller : MyAccountController,
+			menu : 'configurations'
 		});
     	
 	});

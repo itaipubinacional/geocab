@@ -5,7 +5,7 @@ package br.com.geocab.tests.entity;
 
 import org.junit.Test;
 
-import br.com.geocab.domain.entity.account.Email;
+import br.com.geocab.domain.entity.configuration.account.Email;
 
 /**
  * @author emanuelvictor

@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
-import br.com.geocab.domain.entity.account.Email;
-import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.configuration.account.Email;
+import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.repository.IContactMailRepository;
 import nl.captcha.Captcha;
 

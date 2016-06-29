@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.domain.entity.account;
+package br.com.geocab.domain.entity.configuration.account;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

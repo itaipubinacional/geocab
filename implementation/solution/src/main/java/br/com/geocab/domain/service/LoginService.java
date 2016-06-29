@@ -20,11 +20,12 @@ import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.account.UserRole;
+import br.com.geocab.domain.entity.configuration.account.User;
+import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.repository.IAccountMailRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.account.IUserRepository;
+import br.com.geocab.domain.repository.configuration.IConfigurationRepository;
 
 /**
  * @author Thiago Rossetto Afonso
@@ -40,7 +41,11 @@ public class LoginService
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	
+	/**
+	 * User Repository
+	 */
+	@Autowired
+	private IConfigurationRepository configurationRepository;
 	/**
 	 * Password encoder
 	 */
@@ -90,7 +95,7 @@ public class LoginService
 		//encrypt password
 		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); 
 		user.setPassword( encodedPassword );
-		
+		user.verifyBackgroundMap( configurationRepository.findAll() );
 		user = this.userRepository.save( user );
 		
 		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
@@ -118,6 +123,7 @@ public class LoginService
 		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); */
 		user.setPassword( "no password" );
 	
+		user.verifyBackgroundMap( configurationRepository.findAll() );
 		user = this.userRepository.save( user );
 		
 		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
@@ -138,7 +144,8 @@ public class LoginService
 	
 	public User authenticatedUser()
 	{
-		User user = this.userRepository.save(ContextHolder.getAuthenticatedUser());		
+		User user = ContextHolder.getAuthenticatedUser();
+		user = this.userRepository.save(ContextHolder.getAuthenticatedUser());		
 		return user;
 	}
 	
@@ -157,7 +164,7 @@ public class LoginService
 		
 		final String encodedPassword = this.passwordEncoder.encodePassword( userValid.getNewPassword(), saltSource.getSalt( userValid ) ); 
 		userValid.setPassword( encodedPassword );
-		
+		userValid.verifyBackgroundMap( configurationRepository.findAll() );
 		this.userRepository.save(userValid);
 		userValid.getBackgroundMap();
 		userValid.getCoordinates();

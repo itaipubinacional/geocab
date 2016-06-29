@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.geocab.domain.entity.account.preferences;
+package br.com.geocab.domain.entity.configuration.preferences;
 
 import org.directwebremoting.annotations.DataTransferObject;
 

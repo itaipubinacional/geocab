@@ -12,7 +12,8 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.web.context.request.NativeWebRequest;
-import br.com.geocab.domain.entity.account.User;
+
+import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.repository.account.IUserRepository;
 
 /**

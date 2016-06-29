@@ -1,4 +1,4 @@
-package br.com.geocab.domain.entity.account;
+package br.com.geocab.domain.entity.configuration.account;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.springframework.security.core.GrantedAuthority;

@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.account.UserSocialConnection;
+import br.com.geocab.domain.entity.configuration.account.User;
+import br.com.geocab.domain.entity.configuration.account.UserSocialConnection;
 import br.com.geocab.domain.repository.account.IUserSocialConnectionRepository;
 
 /**

@@ -13,13 +13,13 @@
     <form name="form" novalidate default-button="buttonUpdate">
 
       <div class="content-tab">
-			<button style="float: right;"
-                    class="btn btn-success"
-                    id="buttonUpdate"
-                    title="<spring:message code='admin.users.Save'/>"
-                    ng-click="updateUser()">
-                <spring:message code="admin.users.Save"/>
-            </button>
+<!-- 			<button style="float: right;" -->
+<!--                     class="btn btn-success" -->
+<!--                     id="buttonUpdate" -->
+<%--                     title="<spring:message code='admin.users.Save'/>" --%>
+<!--                     ng-click="updateConfiguration()"> -->
+<%--                 <spring:message code="admin.users.Save"/> --%>
+<!--             </button> -->
             
             <!-- BACKGROUND MAP -->
 
@@ -27,71 +27,71 @@
                 <div class="col-md-2">
 
 					<div class="form-item-horizontal radio" style="margin-left: 0; margin-top: 15px">
-                        <input type="radio" id="OPEN_STREET_MAP" ng-click="setBackgroundMap('OPEN_STREET_MAP')" ng-model="backgroundMap.map" value="OPEN_STREET_MAP"
-                               name="OPEN_STREET_MAP">
-                        <label class="radio-label" for="OPEN_STREET_MAP"> Open Street </label>
+                        <input type="radio" id="CONFIGURATION_OPEN_STREET_MAP" ng-click="setConfigurationBackgroundMap('CONFIGURATION_OPEN_STREET_MAP')" ng-model="configurationBackgroundMap.map" value="CONFIGURATION_OPEN_STREET_MAP"
+                               name="CONFIGURATION_OPEN_STREET_MAP">
+                        <label class="radio-label" for="CONFIGURATION_OPEN_STREET_MAP"> Open Street </label>
                     </div>
                     
                     <br />
                     
                     <div class="form-item-horizontal radio" style="margin-left: 0">
-                        <input type="radio" id="GOOGLE" ng-click="setBackgroundMap('GOOGLE_MAP')" ng-model="backgroundMap.map" value="GOOGLE"
-                               name="GOOGLE">
-                        <label class="radio-label" for="GOOGLE"> Google Maps </label>
+                        <input type="radio" id="CONFIGURATION_GOOGLE" ng-click="setConfigurationBackgroundMap('CONFIGURATION_GOOGLE_MAP')" ng-model="configurationBackgroundMap.map" value="CONFIGURATION_GOOGLE"
+                               name="CONFIGURATION_GOOGLE">
+                        <label class="radio-label" for="CONFIGURATION_GOOGLE"> Google Maps </label>
                     </div>
 
                     <br />
 
                     <div class="form-item-horizontal radio" style="margin-left: 0">
-                        <input type="radio" id="MAP_QUEST" ng-click="setBackgroundMap('MAP_QUEST')" ng-model="backgroundMap.map" value="MAP_QUEST"
-                               name="MAP_QUEST">
-                        <label class="radio-label" for="MAP_QUEST"> MapQuest </label>
+                        <input type="radio" id="CONFIGURATION_MAP_QUEST" ng-click="setConfigurationBackgroundMap('CONFIGURATION_MAP_QUEST')" ng-model="configurationBackgroundMap.map" value="CONFIGURATION_MAP_QUEST"
+                               name="CONFIGURATION_MAP_QUEST">
+                        <label class="radio-label" for="CONFIGURATION_MAP_QUEST"> MapQuest </label>
                     </div>
 
                 </div>
 
-                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="backgroundMap.map == 'GOOGLE'">
+                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="configurationBackgroundMap.map == 'CONFIGURATION_GOOGLE'">
 
                     <div>
                         <div class="form-item-horizontal radio" style="margin-left: 0;">
-                            <input type="radio" id="Map" ng-click="setBackgroundMap('GOOGLE_MAP')" ng-model="backgroundMap.subType" value="GOOGLE_MAP"
-                                   name="Map">
-                            <label class="radio-label" for="Map"> <spring:message code='admin.users.Map'/> </label>
+                            <input type="radio" id="CONFIGURATION_Map" ng-click="setConfigurationBackgroundMap('CONFIGURATION_GOOGLE_MAP')" ng-model="configurationBackgroundMap.subType" value="CONFIGURATION_GOOGLE_MAP"
+                                   name="CONFIGURATION_Map">
+                            <label class="radio-label" for="CONFIGURATION_Map"> <spring:message code='admin.users.Map'/> </label>
                         </div>
 
                         <div class="form-item-horizontal radio" style="margin-left: 0;">
-                            <input type="radio" id="Satellite" ng-click="setBackgroundMap('GOOGLE_SATELLITE')" ng-model="backgroundMap.subType" value="GOOGLE_SATELLITE"
-                                   name="Satellite">
-                            <label class="radio-label" for="Satellite"> <spring:message code='admin.users.Satellite'/> </label>
+                            <input type="radio" id="CONFIGURATION_Satellite" ng-click="setConfigurationBackgroundMap('CONFIGURATION_GOOGLE_SATELLITE')" ng-model="configurationBackgroundMap.subType" value="CONFIGURATION_GOOGLE_SATELLITE"
+                                   name="CONFIGURATION_Satellite">
+                            <label class="radio-label" for="CONFIGURATION_Satellite"> <spring:message code='admin.users.Satellite'/> </label>
                         </div>
                     </div>
 
-                    <div style="margin-left: 30px" ng-if="backgroundMap.subType == 'GOOGLE_MAP'">
-                        <label><input ng-change="setType('GOOGLE_MAP_TERRAIN', backgroundMap.type.GOOGLE_MAP_TERRAIN)" name="GOOGLE_MAP_TERRAIN" type="checkbox"
-                               ng-model="backgroundMap.type.GOOGLE_MAP_TERRAIN" value="GOOGLE_MAP_TERRAIN">
+                    <div style="margin-left: 30px" ng-if="configurationBackgroundMap.subType == 'CONFIGURATION_GOOGLE_MAP'">
+                        <label><input ng-change="setConfigurationType('CONFIGURATION_GOOGLE_MAP_TERRAIN', configurationBackgroundMap.type.CONFIGURATION_GOOGLE_MAP_TERRAIN)" name="CONFIGURATION_GOOGLE_MAP_TERRAIN" type="checkbox"
+                               ng-model="configurationBackgroundMap.type.CONFIGURATION_GOOGLE_MAP_TERRAIN" value="CONFIGURATION_GOOGLE_MAP_TERRAIN">
                             <spring:message code='admin.users.Terrain'/>
                         </label>
                     </div>
-                    <div style="margin-left: 130px" ng-if="backgroundMap.subType == 'GOOGLE_SATELLITE'">
-                        <label><input ng-change="setType('GOOGLE_SATELLITE_LABELS', backgroundMap.type.GOOGLE_SATELLITE_LABELS)" name="GOOGLE_SATELLITE_LABELS" type="checkbox" style="margin-left: 20px "
-                               ng-model="backgroundMap.type.GOOGLE_SATELLITE_LABELS" value="GOOGLE_SATELLITE_LABELS">
+                    <div style="margin-left: 130px" ng-if="configurationBackgroundMap.subType == 'CONFIGURATION_GOOGLE_SATELLITE'">
+                        <label><input ng-change="setConfigurationType('CONFIGURATION_GOOGLE_SATELLITE_LABELS', configurationBackgroundMap.type.CONFIGURATION_GOOGLE_SATELLITE_LABELS)" name="CONFIGURATION_GOOGLE_SATELLITE_LABELS" type="checkbox" style="margin-left: 20px "
+                               ng-model="configurationBackgroundMap.type.CONFIGURATION_GOOGLE_SATELLITE_LABELS" value="CONFIGURATION_GOOGLE_SATELLITE_LABELS">
                             <spring:message code='admin.users.Labels'/>
                         </label>
                     </div>
                 </div>
 
-                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="backgroundMap.map == 'MAP_QUEST'">
+                <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="configurationBackgroundMap.map == 'CONFIGURATION_MAP_QUEST'">
 
                     <div class="form-item-horizontal radio" style="margin-left: 0;">
-                        <input type="radio" id="OSM" ng-click="setBackgroundMap('MAP_QUEST_OSM')" ng-model="backgroundMap.subType" value="MAP_QUEST_OSM"
-                               name="OSM">
-                        <label class="radio-label" for="OSM"> OSM </label>
+                        <input type="radio" id="CONFIGURATION_OSM" ng-click="setConfigurationBackgroundMap('CONFIGURATION_MAP_QUEST_OSM')" ng-model="configurationBackgroundMap.subType" value="CONFIGURATION_MAP_QUEST_OSM"
+                               name="CONFIGURATION_OSM">
+                        <label class="radio-label" for="CONFIGURATION_OSM"> OSM </label>
                     </div>
 
                     <div class="form-item-horizontal radio" style="margin-left: 0;">
-                        <input type="radio" id="SAT" ng-click="setBackgroundMap('MAP_QUEST_SAT')" ng-model="backgroundMap.subType" value="MAP_QUEST_SAT"
-                               name="SAT">
-                        <label class="radio-label" for="SAT"> SAT </label>
+                        <input type="radio" id="CONFIGURATION_SAT" ng-click="setConfigurationBackgroundMap('CONFIGURATION_MAP_QUEST_SAT')" ng-model="configurationBackgroundMap.subType" value="CONFIGURATION_MAP_QUEST_SAT"
+                               name="CONFIGURATION_SAT">
+                        <label class="radio-label" for="CONFIGURATION_SAT"> SAT </label>
                     </div>
 
                 </div>

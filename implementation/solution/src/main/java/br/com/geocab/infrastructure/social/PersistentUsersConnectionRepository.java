@@ -12,7 +12,7 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UsersConnectionRepository;
 
-import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.repository.account.IUserRepository;
 import br.com.geocab.domain.repository.account.IUserSocialConnectionRepository;
 

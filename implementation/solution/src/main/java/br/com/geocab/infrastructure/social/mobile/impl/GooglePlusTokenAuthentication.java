@@ -6,7 +6,7 @@ package br.com.geocab.infrastructure.social.mobile.impl;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.infrastructure.social.mobile.SocialAuthentication;
 
 /**

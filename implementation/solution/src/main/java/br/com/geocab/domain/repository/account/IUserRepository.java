@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**

@@ -50,7 +50,6 @@
 	<!-- Controllers -->
 	<script type="text/javascript" src="modules/abstract-crud-controller.js"></script>
 	<script type="text/javascript" src="modules/user/controller/configurations.js"></script>
-	<script type="text/javascript" src="modules/user/controller/markers.js"></script>
 
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
    		

@@ -2,7 +2,7 @@ package br.com.geocab.domain.repository;
 
 import java.util.concurrent.Future;
 
-import br.com.geocab.domain.entity.account.Email;
+import br.com.geocab.domain.entity.configuration.account.Email;
 
 /**
  * Interface para o envio de e-mails de contato

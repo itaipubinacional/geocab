@@ -5,7 +5,7 @@ package br.com.geocab.infrastructure.social.mobile;
 
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.configuration.account.User;
 
 /**
  * @author emanuelvictor

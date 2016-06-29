@@ -76,10 +76,13 @@
                     </a>
                 </li>
 
-                <li class="position-relative"><a
-                    href="user#/configurations"
-                    ng-class="{active: menuActive == 'configurations'}"
-                    style="width: 150px;">Minha conta</a></li>
+                <li class="position-relative">
+               		<a href="user#/configurations"
+	                   ng-class="{active: menuActive == 'configurations'}"
+	                   style="width: 150px;">
+	                   <spring:message code="admin.my-account.My-account"/>
+                   	</a>
+                </li>
 
 
               </ul>

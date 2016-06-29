@@ -1,7 +1,8 @@
-package br.com.geocab.domain.entity.account;
+package br.com.geocab.domain.entity.configuration.account;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -23,8 +24,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.account.preferences.BackgroundMap;
-import br.com.geocab.domain.entity.account.preferences.Coordinates;
+import br.com.geocab.domain.entity.configuration.Configuration;
+import br.com.geocab.domain.entity.configuration.preferences.BackgroundMap;
+import br.com.geocab.domain.entity.configuration.preferences.Coordinates;
 
 /**
  * 
@@ -33,7 +35,8 @@ import br.com.geocab.domain.entity.account.preferences.Coordinates;
 @Entity
 @Audited
 @DataTransferObject(javascript = "User")
-@JsonIgnoreProperties({"authorities"})
+@JsonIgnoreProperties(
+{ "authorities" })
 public class User extends AbstractEntity implements Serializable, UserDetails
 {
 	/**
@@ -44,8 +47,10 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	// ----
 	// Default user
 	// ----
-	public static final User ADMINISTRATOR = new User(1L, "Administrator", "admin@geocab.com.br", true, UserRole.ADMINISTRATOR, "admin");
-	public static final User ANONYMOUS = new User(0L, "Anonymous", null, true, UserRole.ANONYMOUS, "anonymous");
+	public static final User ADMINISTRATOR = new User(1L, "Administrator",
+			"admin@geocab.com.br", true, UserRole.ADMINISTRATOR, "admin");
+	public static final User ANONYMOUS = new User(0L, "Anonymous", null, true,
+			UserRole.ANONYMOUS, "anonymous");
 
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
@@ -106,7 +111,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	@Column(nullable = false)
 	@Enumerated(EnumType.ORDINAL)
 	private Coordinates coordinates;
-	
+
 	/**
 	 * 
 	 */
@@ -158,7 +163,6 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		this.name = name;
 		this.enabled = enabled;
 	}
-	
 
 	/**
 	 * 
@@ -178,7 +182,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 * 
 	 * @param id
 	 */
-	public User(Long id, String name, String email, boolean enabled, UserRole role, String password)
+	public User(Long id, String name, String email, boolean enabled,
+			UserRole role, String password)
 	{
 		super(id);
 		this.email = email;
@@ -212,7 +217,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		this.backgroundMap = backgroundMap;
 		this.coordinates = coordinates;
 	}
-	
+
 	/**
 	 * @param name
 	 * @param email
@@ -255,6 +260,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		}
 		return enabled;
 	}
+
 	/**
 	 * 
 	 */
@@ -286,31 +292,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 
 		return authorities;
 	}
-	
-	/**
-	 * @return the backgroundMap
-	 */
-	public BackgroundMap getBackgroundMap()
-	{
-		if (backgroundMap == null)
-		{
-			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
-		}
-		return backgroundMap;
-	}
 
-	/**
-	 * @param backgroundMap
-	 *            the backgroundMap to set
-	 */
-	public void setBackgroundMap(BackgroundMap backgroundMap)
-	{
-		if (backgroundMap == null)
-		{
-			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
-		}
-		this.backgroundMap = backgroundMap;
-	}
+	
 
 	/**
 	 * @return the coordinates
@@ -336,7 +319,7 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		}
 		this.coordinates = coordinates;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -400,31 +383,44 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	{
 		return this.email;
 	}
-	
+
+	/**
+	 * @param findAll
+	 */
+	public void verifyBackgroundMap(List<Configuration> configurations)
+	{
+		if (this.getBackgroundMap() == null)
+		{
+			if (configurations != null && configurations.size() > 0)
+			{
+				this.setBackgroundMap(configurations.get(0).getBackgroundMap());
+			}
+			else
+			{
+				this.setBackgroundMap(new Configuration().getBackgroundMap());
+			}
+		}
+	}
+
 	/*-------------------------------------------------------------------
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
+	/**
+	 * @param backgroundMap
+	 *            the backgroundMap to set
+	 */
+	public void setBackgroundMap(BackgroundMap backgroundMap)
+	{
+		this.backgroundMap = backgroundMap;
+	}
+	/**
+	 * @return the backgroundMap
+	 */
+	public BackgroundMap getBackgroundMap()
+	{
+		return backgroundMap;
+	}
 
-//	/**
-//	 * 
-//	 * @param authorities
-//	 * @return
-//	 */
-//	public Set<UserRole> setAuthorities(Set<UserRole> authorities)
-//	{
-//		return null;
-//	}
-	
-	
-//	/**
-//	 * 
-//	 * @param authorities
-//	 * @return
-//	 */
-//	public Set<GrantedAuthority> setAuthorities(Set<GrantedAuthority> authorities)
-//	{
-//		return null;
-//	}
 	/**
 	 * @return the name
 	 */
@@ -511,8 +507,6 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		this.newPassword = newPassword;
 	}
 
-	
-
 	/**
 	 * @return the token
 	 */
@@ -522,10 +516,12 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	}
 
 	/**
-	 * @param token the token to set
+	 * @param token
+	 *            the token to set
 	 */
 	public void setToken(String token)
 	{
 		this.token = token;
 	}
+
 }

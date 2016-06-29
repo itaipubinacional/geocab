@@ -11,7 +11,7 @@
     <div class="navbar">
 
         <!--Mensagens-->
-
+ 
         <div class="alert"
              ng-class="{'alert-dismissable': msg.dismiss, 'danger' : (msg.type == 'danger'), 'info' : (msg.type == 'info'), 'warning' : (msg.type == 'warning'), 'success' : (msg.type == 'success')}"
              ng-show="msg != null">
@@ -31,7 +31,14 @@
                         <spring:message code="admin.my-account.My-account"/>
                     </p>                    
                 </div>
-            </div>            
+            </div>
+            <button style="float: right;"
+                    class="btn btn-success"
+                    id="buttonUpdate"
+                    title="<spring:message code='admin.users.Save'/>"
+                    ng-click="updateConfigurations()">
+                <spring:message code="admin.users.Save"/>
+            </button>
         </div>
     </div>
 
@@ -49,17 +56,5 @@
             <div ng-include="'modules/user/ui/configurations/send-email.jsp'"></div>
         </tab>
     </tabset>
-    <!-- Partial views of states -->
-    <!--<div ng-switch on="currentState">
-        <div ng-switch-when="my-account.form">
-            <div ng-include="'modules/user/ui/my-account/my-account-form.jsp'"></div>
-        </div>
-        <div ng-switch-when="my-preferences.form">
-            <div ng-include="'modules/user/ui/my-account/my-preferences-form.jsp'"></div>
-        </div>
-        <div ng-switch-default>
-            <div ng-include="'modules/loading.html'"></div>
-        </div>
-    </div>-->
 </div>
 </html>

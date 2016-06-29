@@ -6,7 +6,7 @@ import org.hibernate.envers.RevisionType;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 
 import br.com.geocab.application.security.ContextHolder;
-import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.configuration.account.User;
 
 /**
  * @author Rodrigo P. Fraga

@@ -17,12 +17,12 @@ import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.account.UserRole;
-import br.com.geocab.domain.entity.account.preferences.BackgroundMap;
-import br.com.geocab.domain.entity.account.preferences.Coordinates;
+import br.com.geocab.domain.entity.configuration.account.User;
+import br.com.geocab.domain.entity.configuration.account.UserRole;
+import br.com.geocab.domain.entity.configuration.preferences.Coordinates;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.account.IUserRepository;
+import br.com.geocab.domain.repository.configuration.IConfigurationRepository;
 
 /**
  * 
@@ -40,7 +40,11 @@ public class AccountService
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-
+	/**
+	 * User Repository
+	 */
+	@Autowired
+	private IConfigurationRepository configurationRepository;
 	/**
 	 * User Repository
 	 */
@@ -50,8 +54,7 @@ public class AccountService
 	/**
 	 * Logger
 	 */
-	private static final Logger LOG = Logger
-			.getLogger(AccountService.class.getName());
+	private static final Logger LOG = Logger.getLogger(AccountService.class.getName());
 
 	/**
 	 * Password encoder
@@ -82,7 +85,7 @@ public class AccountService
 	 * @return
 	 */
 	public User insertUser(User user)
-	{
+	{ 
 		Assert.notNull(user);
 
 		user.setEnabled(true);
@@ -95,12 +98,8 @@ public class AccountService
 		{
 			user.setCoordinates(Coordinates.DEGREES_MINUTES_SECONDS);
 		}
-
-		if (user.getBackgroundMap() == null)
-		{
-			user.setBackgroundMap(BackgroundMap.OPEN_STREET_MAP);
-		}
-
+		
+		user.verifyBackgroundMap( configurationRepository.findAll() );
 		user = this.userRepository.save(user);
 
 		AccessGroup publicAccessGroup = this.accessGroupRepository
@@ -126,6 +125,10 @@ public class AccountService
 		return this.userRepository.listByFilters(filter, pageable);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public List<User> listAllUsers()
 	{
@@ -166,6 +169,7 @@ public class AccountService
 	{
 		User user = this.userRepository.findOne(id); // Load user
 		user.setEnabled(false); // Disable user
+		user.verifyBackgroundMap( configurationRepository.findAll() );
 		this.userRepository.save(user); // Save user
 
 		return true;
@@ -181,6 +185,7 @@ public class AccountService
 	{
 		User user = this.userRepository.findOne(id); // Load user
 		user.setEnabled(true); // Enable user
+		user.verifyBackgroundMap( configurationRepository.findAll() );
 		this.userRepository.save(user); // Save user
 
 		return true;
@@ -210,7 +215,8 @@ public class AccountService
 								saltSource.getSalt(dbUser));
 				dbUser.setPassword(encodedPassword);
 			}
-
+			
+			user.verifyBackgroundMap( configurationRepository.findAll() );
 			user = this.userRepository.save(dbUser);// save data in database
 
 		}
@@ -233,8 +239,7 @@ public class AccountService
 	@PreAuthorize("permitAll")
 	public User getUserAuthenticated() throws Exception
 	{
-		User user = this.userRepository
-				.findOne(ContextHolder.getAuthenticatedUser().getId());
+		User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
 
 		User u = new User();
 		u.setCreated(user.getCreated());
@@ -268,19 +273,26 @@ public class AccountService
 
 		if (!(user.getPassword() == null) && !user.getPassword().isEmpty())
 		{ // if set new password
-			if (!this.passwordEncoder.encodePassword(user.getPassword(), saltSource.getSalt(user)).equals(dbUser.getPassword()))
+			if (!this.passwordEncoder
+					.encodePassword(user.getPassword(),
+							saltSource.getSalt(user))
+					.equals(dbUser.getPassword()))
 			{
 				throw new Exception("A senha informada não é correspondente!");
 			}
-			else if (!(user.getNewPassword() == null) && !user.getNewPassword().isEmpty())
+			else if (!(user.getNewPassword() == null)
+					&& !user.getNewPassword().isEmpty())
 			{
-				String encodedPassword = this.passwordEncoder.encodePassword(user.getNewPassword(), saltSource.getSalt(user));
+				String encodedPassword = this.passwordEncoder.encodePassword(
+						user.getNewPassword(), saltSource.getSalt(user));
 				dbUser.setPassword(encodedPassword);
-			}else{
+			}
+			else
+			{
 				throw new Exception("Nova senha inválida!");
 			}
 		}
-
+		user.verifyBackgroundMap( configurationRepository.findAll() );
 		return this.userRepository.save(dbUser);
 	}
 

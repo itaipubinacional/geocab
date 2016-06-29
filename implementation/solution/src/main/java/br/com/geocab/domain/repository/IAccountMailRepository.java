@@ -2,7 +2,7 @@ package br.com.geocab.domain.repository;
 
 import java.util.concurrent.Future;
 
-import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
 

@@ -19,7 +19,10 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	 * Include accountService class
 	 */
 	$importService("accountService");
-
+	/**
+	 * Include accountService class
+	 */
+	$importService("configurationService");
 
 	/*-------------------------------------------------------------------
 	 * 		 				 	EVENT HANDLERS
@@ -91,6 +94,12 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	$scope.backgroundMap = [];
 
 	$scope.backgroundMap.type = [];
+	
+	$scope.configurationCurrentEntity = {};
+	
+	$scope.configurationBackgroundMap = [];
+	
+	$scope.configurationBackgroundMap.type = [];
 
 	$scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
 	$scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
@@ -127,13 +136,106 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
                 $scope.$apply();
             }
     	});
-
+		/**
+		 * Get configuration
+		 */
+		configurationService.getConfiguration({
+    		callback : function(result) {
+    			$scope.configurationCurrentEntity = result;
+    			$scope.configurationCurrentEntity.backgroundMap = 'CONFIGURATION_' + $scope.configurationCurrentEntity.backgroundMap;
+				$scope.setConfigurationBackgroundMap($scope.configurationCurrentEntity.backgroundMap);
+				
+    			$scope.$apply();
+            },
+            errorHandler : function(message, exception) {
+                $scope.message = {type:"error", text: message};
+                $scope.$apply();
+            }
+    	});
 
 		$log.info('Starting the front controller. Users');
 
 		$scope.flag = 0;
 	};
+	
+	$scope.updateConfigurations = function(){
+		$scope.updateUser();
+		$scope.updateConfiguration();
+	};
+	
+	/**
+	 * Seta configuração de mapa de todos os usuários (genérica)
+	 */
+	$scope.setConfigurationType = function(type, status) {
+		
+		if(type) type = type.replace("CONFIGURATION_", '');
+//		if(status) status = status.replace("CONFIGURATION_", '');
+		
+		if(status) {
+			if (type == 'GOOGLE_SATELLITE_LABELS') {
+				$scope.configurationCurrentEntity.backgroundMap = type;
+			} else {
+				$scope.configurationCurrentEntity.backgroundMap = type;
+			}
+		} else {
+			$scope.configurationCurrentEntity.backgroundMap = $scope.configurationBackgroundMap.subType;
+		}
+	};
+	
 
+	/**
+	 * Seta configuração genérica de backgroundMap
+	 */
+	$scope.setConfigurationBackgroundMap = function(configurationBackgroundMap){
+		
+		if(configurationBackgroundMap) configurationBackgroundMap = configurationBackgroundMap.replace("CONFIGURATION_", '');
+		
+		$scope.configurationCurrentEntity.backgroundMap = configurationBackgroundMap;
+
+		if(configurationBackgroundMap.match(/GOOGLE/i))
+			$scope.configurationBackgroundMap.map = 'GOOGLE';
+
+		if(configurationBackgroundMap.match(/MAP_QUEST/i))
+			$scope.configurationBackgroundMap.map = 'MAP_QUEST';
+
+		if(configurationBackgroundMap.match(/OPEN_STREET_MAP/i))
+			$scope.configurationBackgroundMap.map = 'OPEN_STREET_MAP';
+
+		if(configurationBackgroundMap.match(/MAP_QUEST|MAP_QUEST_OSM/i) && configurationBackgroundMap != 'MAP_QUEST_SAT') {
+			$scope.configurationCurrentEntity.backgroundMap = 'MAP_QUEST_OSM';
+			$scope.configurationBackgroundMap.subType = 'MAP_QUEST_OSM';
+		}
+
+		if(configurationBackgroundMap.match(/MAP_QUEST_SAT/i))
+			$scope.configurationBackgroundMap.subType = 'MAP_QUEST_SAT';
+
+		if(configurationBackgroundMap == 'GOOGLE_MAP' && configurationBackgroundMap != 'GOOGLE_SATELLITE') {
+	      $scope.configurationBackgroundMap.type.CONFIGURATION_GOOGLE_SATELLITE_LABELS = false;
+	      $scope.configurationBackgroundMap.subType = 'GOOGLE_MAP';
+	    }
+
+		if(configurationBackgroundMap == 'GOOGLE_SATELLITE') {
+	      $scope.configurationBackgroundMap.type.CONFIGURATION_GOOGLE_MAP_TERRAIN = false;
+	      $scope.configurationBackgroundMap.subType = 'GOOGLE_SATELLITE';
+	    }
+
+		if(configurationBackgroundMap == 'GOOGLE_MAP_TERRAIN') {
+	      $scope.configurationBackgroundMap.subType = 'GOOGLE_MAP';
+	      $scope.configurationBackgroundMap.type.CONFIGURATION_GOOGLE_MAP_TERRAIN = true;
+	    }
+
+		if(configurationBackgroundMap == 'GOOGLE_SATELLITE_LABELS') {
+	      $scope.configurationBackgroundMap.subType = 'GOOGLE_SATELLITE';
+	      $scope.configurationBackgroundMap.type.CONFIGURATION_GOOGLE_SATELLITE_LABELS = true;
+	    }
+		
+		$scope.configurationBackgroundMap.map = 'CONFIGURATION_' + $scope.configurationBackgroundMap.map;
+		if($scope.configurationBackgroundMap.subType) $scope.configurationBackgroundMap.subType = 'CONFIGURATION_' + $scope.configurationBackgroundMap.subType;
+	};
+	
+	/**
+	 * Seta configuração de mapa do usuário
+	 */
 	$scope.setType = function(type, status) {
 		if(status) {
 			if (type == 'GOOGLE_SATELLITE_LABELS') {
@@ -145,10 +247,13 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 			$scope.currentEntity.backgroundMap = $scope.backgroundMap.subType;
 		}
 	};
-
+	
+	/**
+	 * Seta backgroundMap do usuário
+	 */
 	$scope.setBackgroundMap = function(backgroundMap){
 
-    $scope.currentEntity.backgroundMap = backgroundMap;
+		$scope.currentEntity.backgroundMap = backgroundMap;
 
 		if(backgroundMap.match(/GOOGLE/i))
 			$scope.backgroundMap.map = 'GOOGLE';
@@ -168,24 +273,24 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 			$scope.backgroundMap.subType = 'MAP_QUEST_SAT';
 
 		if(backgroundMap == 'GOOGLE_MAP' && backgroundMap != 'GOOGLE_SATELLITE') {
-      $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
-      $scope.backgroundMap.subType = 'GOOGLE_MAP';
-    }
+	      $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = false;
+	      $scope.backgroundMap.subType = 'GOOGLE_MAP';
+	    }
 
 		if(backgroundMap == 'GOOGLE_SATELLITE') {
-      $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
-      $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
-    }
+	      $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = false;
+	      $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
+	    }
 
 		if(backgroundMap == 'GOOGLE_MAP_TERRAIN') {
-      $scope.backgroundMap.subType = 'GOOGLE_MAP';
-      $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = true;
-    }
+	      $scope.backgroundMap.subType = 'GOOGLE_MAP';
+	      $scope.backgroundMap.type.GOOGLE_MAP_TERRAIN = true;
+	    }
 
 		if(backgroundMap == 'GOOGLE_SATELLITE_LABELS') {
-      $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
-      $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = true;
-    }
+	      $scope.backgroundMap.subType = 'GOOGLE_SATELLITE';
+	      $scope.backgroundMap.type.GOOGLE_SATELLITE_LABELS = true;
+	    }
 
 	};
 
@@ -218,12 +323,6 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 			$scope.currentEntity.newPassword = null;
 		}
 
-//		if($scope.currentEntity.newPassword != $scope.currentEntity.repeatNewPassword) {
-//			$scope.msg = {type:"danger", text: "As senhas não coincidem" + '!', dismiss:true};
-//			return false;
-//		}
-		//delete $scope.currentEntity.repeatNewPassword;
-
 		accountService.updateUserAuthenticated($scope.currentEntity, {
     		callback : function(result) {
     			result.password = null;
@@ -239,13 +338,30 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
     	});
 
 	}
+	
+	$scope.updateConfiguration = function() {
+		
+		configurationService.updateConfiguration($scope.configurationCurrentEntity, {
+    		callback : function(result) {
+    			$scope.configurationCurrentEntity = result;
+    			$scope.msg = {type:"success", text: $translate("admin.user.Successfully-updated-informations") + '!', dismiss:true};
+    			$scope.fadeMsg();
+    			$scope.$apply();
+            },
+            errorHandler : function(message, exception) {
+                $scope.msg = {type:"danger", text: message};
+                $scope.$apply();
+            }
+    	});
+
+	}
 
 	$scope.fadeMsg = function(){
-		$("div.msg").show();
-
+		
 		setTimeout(function(){
-		  	$("div.msg").fadeOut();
-		 }, 3000);
+			$scope.msg = null;
+			$scope.$apply();
+		 }, 5000);
 	}
 
 	$scope.passwordRequired = function(){

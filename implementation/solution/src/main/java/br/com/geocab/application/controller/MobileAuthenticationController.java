@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.geocab.domain.entity.account.User;
+import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.infrastructure.social.mobile.impl.FacebookTokenAuthentication;
 import br.com.geocab.infrastructure.social.mobile.impl.GeocabTokenAuthentication;
 import br.com.geocab.infrastructure.social.mobile.impl.GooglePlusTokenAuthentication;

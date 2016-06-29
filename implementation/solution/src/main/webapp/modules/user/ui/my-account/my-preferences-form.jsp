@@ -13,13 +13,13 @@
     <form name="form" novalidate default-button="buttonUpdate">
 
         <div class="content-tab">
-			<button ng-show="currentState == UPDATE_STATE || currentState== 'my-preferences.form'" style="float: right;"
-                    class="btn btn-success"
-                    id="buttonUpdate"
-                    title="<spring:message code='admin.users.Save'/>"
-                    ng-click="updateUser()">
-                <spring:message code="admin.users.Save"/>
-            </button>
+<!-- 			<button ng-show="currentState == UPDATE_STATE || currentState== 'my-preferences.form'" style="float: right;" -->
+<!--                     class="btn btn-success" -->
+<!--                     id="buttonUpdate" -->
+<%--                     title="<spring:message code='admin.users.Save'/>" --%>
+<!--                     ng-click="updateUser()"> -->
+<%--                 <spring:message code="admin.users.Save"/> --%>
+<!--             </button> -->
             <!-- coordinates -->
 
             <label class="detail-label">
