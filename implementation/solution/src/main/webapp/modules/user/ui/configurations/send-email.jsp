@@ -18,12 +18,12 @@
 			<div class="column" style="margin-top: -7px;">
 
 				<div class="form-item position-relative"
-					style="width: 300px; margin: 12px 0px 4px 0;">
-					<div class="col-md-2">
-						<input ng-model="configurationCurrentEntity.stopSendEmail" type="checkbox">
-					</div>
-					<div class="col-md-10">
-						<label class="detail-label">Interromper envio de emails?</label>
+					style="margin: 12px 0px 4px 0;">
+					<div class="col-md-12">
+						<label style="cursor:pointer;">
+							<input style="width: 50px;" ng-model="configurationCurrentEntity.stopSendEmail" type="checkbox"> 
+							<span style="position: fixed; margin-top: -19px;margin-left: 40px;">Interromper envio de emails?</span>
+						</label>
 					</div>
 				</div>
 <!-- 				<button style="float: right; margin-top: 6px;" class="btn btn-success" -->
