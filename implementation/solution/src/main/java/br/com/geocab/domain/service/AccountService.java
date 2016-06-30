@@ -239,19 +239,24 @@ public class AccountService
 	@PreAuthorize("permitAll")
 	public User getUserAuthenticated() throws Exception
 	{
-		User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
-
-		User u = new User();
-		u.setCreated(user.getCreated());
-		u.setEmail(user.getEmail());
-		u.setEnabled(user.getEnabled());
-		u.setId(user.getId());
-		u.setName(user.getName());
-		u.setRole(user.getRole());
-		u.setUpdated(user.getUpdated());
-		u.setBackgroundMap(user.getBackgroundMap());
-		u.setCoordinates(user.getCoordinates());
-		return u;
+		if(ContextHolder.getAuthenticatedUser() == null || ContextHolder.getAuthenticatedUser().getRole().equals(UserRole.ANONYMOUS)){
+			User user = new User();
+			user.verifyBackgroundMap(configurationRepository.findAll());
+			return user;
+		}else {
+			User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
+			User u = new User();
+			u.setCreated(user.getCreated());
+			u.setEmail(user.getEmail());
+			u.setEnabled(user.getEnabled());
+			u.setId(user.getId());
+			u.setName(user.getName());
+			u.setRole(user.getRole());
+			u.setUpdated(user.getUpdated());
+			u.setBackgroundMap(user.getBackgroundMap());
+			u.setCoordinates(user.getCoordinates());
+			return u;
+		}	
 	}
 
 	/**
