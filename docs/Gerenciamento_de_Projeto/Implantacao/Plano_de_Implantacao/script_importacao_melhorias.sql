@@ -59,3 +59,44 @@ DELETE NO ACTION );
 ALTER TABLE geocab_auditoria.photo_audited OWNER TO geocab_auditoria;
 -- Alteração do squema de dados da tabela revision
 ALTER TABLE geocab_auditoria.revision SET SCHEMA geocab;
+
+-- Table: geocab.configuration
+
+-- DROP TABLE geocab.configuration;
+
+CREATE TABLE geocab.configuration
+(
+  id bigserial NOT NULL,
+  created timestamp without time zone NOT NULL,
+  updated timestamp without time zone,
+  background_map integer NOT NULL,
+  stop_send_email boolean NOT NULL,
+  CONSTRAINT configuration_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE geocab.configuration
+  OWNER TO geocab;
+
+-- Table: geocab_auditoria.configuration_audited
+
+-- DROP TABLE geocab_auditoria.configuration_audited;
+
+CREATE TABLE geocab_auditoria.configuration_audited
+(
+  id bigint NOT NULL,
+  revision bigint NOT NULL,
+  revision_type smallint,
+  background_map integer,
+  stop_send_email boolean,
+  CONSTRAINT configuration_audited_pkey PRIMARY KEY (id, revision)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE geocab_auditoria.configuration_audited
+  OWNER TO geocab;
+GRANT ALL ON TABLE geocab_auditoria.configuration_audited TO public;
+GRANT ALL ON TABLE geocab_auditoria.configuration_audited TO geocab;
+
