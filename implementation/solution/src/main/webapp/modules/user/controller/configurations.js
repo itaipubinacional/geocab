@@ -169,7 +169,6 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	$scope.setConfigurationType = function(type, status) {
 		
 		if(type) type = type.replace("CONFIGURATION_", '');
-//		if(status) status = status.replace("CONFIGURATION_", '');
 		
 		if(status) {
 			if (type == 'GOOGLE_SATELLITE_LABELS') {
@@ -340,7 +339,10 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	}
 	
 	$scope.updateConfiguration = function() {
-		
+		console.log($scope.currentEntity);
+		if ($scope.currentEntity.authorities != "ADMINISTRATOR") {
+			return;
+		}
 		configurationService.updateConfiguration($scope.configurationCurrentEntity, {
     		callback : function(result) {
     			$scope.configurationCurrentEntity = result;
