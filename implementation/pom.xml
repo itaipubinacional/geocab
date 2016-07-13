@@ -8,7 +8,7 @@
 	<name>Geocab</name>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+
 	<!-- Properties -->
 	<properties>
 		<!-- Maven -->
@@ -17,7 +17,7 @@
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
 		<!-- Java -->
 		<java.version>1.7</java.version>
-		
+
 		<!-- SpringFramework -->
 		<springframework.version>4.0.6.RELEASE</springframework.version>
 		<springsecurity.version>3.2.4.RELEASE</springsecurity.version>
@@ -30,6 +30,7 @@
 		<!-- ModeShape -->
 		<modeshape.version>3.6.0.Final</modeshape.version>
 		<infinispan.version>5.3.0.Final</infinispan.version>
+		
 		<!-- Testing -->
 		<junit.version>4.11</junit.version>
 		<dbunit.version>2.5.0</dbunit.version>
@@ -39,9 +40,15 @@
 		<dwr.version>3.0.0-RELEASE</dwr.version>
 
 		<!-- Default Environment -->
+<<<<<<< HEAD
 		<environment>bosque</environment>
+=======
+		<environment>development</environment>
+
+
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	</properties>
-	
+
 	<!-- Repositories -->
 	<repositories>
 		<repository>
@@ -61,18 +68,19 @@
 			<url>http://www.hibernatespatial.org/repository</url>
 		</repository>
 	</repositories>
-	
+
 
 	<!-- Profiles -->
 	<profiles>
-	
+
 		<profile>
 			<id>bosque</id>
 			<activation>
-          		<activeByDefault>true</activeByDefault>
-        	</activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<!-- Database -->
+<<<<<<< HEAD
 				<mvn.jdbc.jdbcUrl>jdbc:postgresql://chi25/desenvolvimento</mvn.jdbc.jdbcUrl>
 				<mvn.jdbc.username>bosque_pool</mvn.jdbc.username>
 				<mvn.jdbc.password>bosque_pool</mvn.jdbc.password>
@@ -118,12 +126,20 @@
 				<mvn.jdbc.password>postgres</mvn.jdbc.password>
 
 				<!-- Hibernate -->
+=======
+                <mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/geocab</mvn.jdbc.jdbcUrl>
+                <mvn.jdbc.username>geocab</mvn.jdbc.username>
+                <mvn.jdbc.password>geocab</mvn.jdbc.password>
+                
+                <!-- Hibernate -->
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
 				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
 				
+<<<<<<< HEAD
 				 <!-- Mail -->
                 <mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
                 <mvn.mail.port>25</mvn.mail.port>
@@ -134,18 +150,105 @@
                 <mvn.mail.tls>false</mvn.mail.tls>
                 <mvn.mail.ssl>false</mvn.mail.ssl>
                 <mvn.mail.debug>true</mvn.mail.debug>
+=======
+				<!-- Mail -->
+				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
+				<mvn.mail.port>25</mvn.mail.port>
+				<mvn.mail.username>no-reply</mvn.mail.username>
+				<mvn.mail.protocol>smtp</mvn.mail.protocol>
+				<mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
+				<mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
+				<mvn.mail.tls>false</mvn.mail.tls>
+				<mvn.mail.ssl>false</mvn.mail.ssl>
+				<mvn.mail.debug>true</mvn.mail.debug>
+				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 				
+				<!-- ModeShape -->
+				<mvn.jcr.indexes>/tmp/geocab/indexes</mvn.jcr.indexes>
+				<mvn.jcr.files>/tmp/geocab/files</mvn.jcr.files>
+				<mvn.jcr.caches>/tmp/geocab/caches</mvn.jcr.caches>
+				
+				<!-- shapeFiles import -->
+				<mvn.path.shapefiles>/tmp/geocab/files/shapefile/</mvn.path.shapefiles>
+
 				<!-- Social -->
 				<!-- Facebook -->
 				<mvn.social.facebook.app.id>1565690900310619</mvn.social.facebook.app.id>
 				<mvn.social.facebook.app.secret>d2d9844ea944dd01630804f4eea5b8fd</mvn.social.facebook.app.secret>
-				
+
 				<!-- Google plus -->
 				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
 				<mvn.social.google.app.secret>G4iRWyyJ0hcdiylrzDesQmeL</mvn.social.google.app.secret>
+
+				<!-- geotools version -->
+				<geotools.version>13.2</geotools.version>
+				
+				<!-- jcaptcha version -->
+				<jcaptcha.version>1.0</jcaptcha.version>
+				
+				<!-- jcaptcha version -->
+				<mvn.geocab.url>http://localhost:8080/geocab</mvn.geocab.url>
+				
 			</properties>
 		</profile>
 		
+		<profile>
+			<id>homologation</id>
+			<properties>
+				<!-- Database -->
+                <mvn.jdbc.jdbcUrl>jdbc:postgresql://chi656/desenvolvimento</mvn.jdbc.jdbcUrl>
+                <mvn.jdbc.username>geocab_pool</mvn.jdbc.username>
+                <mvn.jdbc.password>geocab_pool</mvn.jdbc.password>
+
+				<!-- Hibernate -->
+				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
+				<mvn.hibernate.showSql>false</mvn.hibernate.showSql>
+				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
+				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
+				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
+				
+				<!-- Mail -->
+				<mvn.mail.host>host</mvn.mail.host>
+				<mvn.mail.port>25</mvn.mail.port>
+				<mvn.mail.username>user</mvn.mail.username>
+				<mvn.mail.protocol>smtp</mvn.mail.protocol>
+				<mvn.mail.password>password</mvn.mail.password>
+				<mvn.mail.from>geocab@itaipu.gov.br</mvn.mail.from>
+				<mvn.mail.tls>false</mvn.mail.tls>
+				<mvn.mail.ssl>false</mvn.mail.ssl>
+				<mvn.mail.debug>true</mvn.mail.debug>
+				<mvn.mail.support>geocab@itaipu.gov.br</mvn.mail.support>			
+			
+				<!-- ModeShape -->
+				<mvn.jcr.indexes>/tmp/geocab/indexes</mvn.jcr.indexes>
+				<mvn.jcr.files>/sistemas/geocab/upload</mvn.jcr.files>
+				<mvn.jcr.caches>/tmp/geocab/cache</mvn.jcr.caches>
+				
+				<!-- shapeFiles import -->
+				<mvn.path.shapefiles>/tmp/geocab/files/shapefile/</mvn.path.shapefiles>
+
+				<!-- Social -->
+				<!-- Facebook -->
+				<mvn.social.facebook.app.id>1565690900310619</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>d2d9844ea944dd01630804f4eea5b8fd</mvn.social.facebook.app.secret>
+
+				<!-- Google plus -->
+				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
+				<mvn.social.google.app.secret>G4iRWyyJ0hcdiylrzDesQmeL</mvn.social.google.app.secret>
+
+				<!-- geotools version -->
+				<geotools.version>13.2</geotools.version>
+				
+				<!-- jcaptcha version -->
+				<jcaptcha.version>1.0</jcaptcha.version>
+				
+				<!-- jcaptcha version -->
+				<mvn.geocab.url>http://localhost:8080/geocab</mvn.geocab.url>
+				
+			</properties>
+		</profile>
+
 		<profile>
 			<id>sandbox</id>
 			<properties>
@@ -155,11 +258,12 @@
 				<mvn.jdbc.password>geocab</mvn.jdbc.password>
 
 				<!-- Hibernate -->
-				<mvn.hibernate.hbm2ddl>update</mvn.hibernate.hbm2ddl>
-				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
+				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
+				<mvn.hibernate.showSql>false</mvn.hibernate.showSql>
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
+<<<<<<< HEAD
 				
 				 <!-- Mail -->
                 <mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
@@ -171,26 +275,61 @@
                 <mvn.mail.tls>false</mvn.mail.tls>
                 <mvn.mail.ssl>false</mvn.mail.ssl>
                 <mvn.mail.debug>true</mvn.mail.debug>
+=======
+
+				<!-- Mail server -->
+				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
+				<mvn.mail.port>25</mvn.mail.port>
+				<mvn.mail.username>no-reply</mvn.mail.username>
+				<mvn.mail.protocol>smtp</mvn.mail.protocol>
+				<mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
+				<mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
+				<mvn.mail.tls>false</mvn.mail.tls>
+				<mvn.mail.ssl>false</mvn.mail.ssl>
+				<mvn.mail.debug>true</mvn.mail.debug>
+				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
 				
+				<!-- ModeShape -->
+				<mvn.jcr.indexes>/tmp/geocab-sandbox/indexes</mvn.jcr.indexes>
+				<mvn.jcr.files>/tmp/geocab-sandbox/files</mvn.jcr.files>
+				<mvn.jcr.caches>/tmp/geocab-sandbox/files</mvn.jcr.caches>
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
+				
+				<!-- shapeFiles import -->
+				<mvn.path.shapefiles>/tmp/geocab-sandbox/files/shapefile/</mvn.path.shapefiles>
+
 				<!-- Social -->
 				<!-- Facebook -->
 				<mvn.social.facebook.app.id>1565690900310619</mvn.social.facebook.app.id>
 				<mvn.social.facebook.app.secret>d2d9844ea944dd01630804f4eea5b8fd</mvn.social.facebook.app.secret>
-				
+
 				<!-- Google plus -->
 				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
 				<mvn.social.google.app.secret>G4iRWyyJ0hcdiylrzDesQmeL</mvn.social.google.app.secret>
+
+				<!-- geotools version -->
+				<geotools.version>13.2</geotools.version>
+				
+				<!-- jcaptcha version -->
+				<jcaptcha.version>1.0</jcaptcha.version>
+				
+				<mvn.geocab.url>http://geocab.sbox.me</mvn.geocab.url>
+				
 			</properties>
 		</profile>
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	</profiles>
 
-		
+
 	<!-- Modules -->
 	<modules>
 		<module>solution</module>
 	</modules>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -203,7 +342,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- SpringFramework -->
@@ -222,90 +361,90 @@
 				<artifactId>spring-orm</artifactId>
 				<version>${springframework.version}</version>
 			</dependency>
-			 <dependency>
+			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
 				<version>${springframework.version}</version>
 			</dependency>
-	    	<dependency>
+			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
 				<version>${springframework.version}</version>
 			</dependency>
-		
+
 			<!-- Spring Security -->
 			<dependency>
-        		<groupId>org.springframework.security</groupId>
-        		<artifactId>spring-security-web</artifactId>
-        		<version>${springsecurity.version}</version>
-    		</dependency>
-    		<dependency>
-        		<groupId>org.springframework.security</groupId>
-        		<artifactId>spring-security-config</artifactId>
-        		<version>${springsecurity.version}</version>
-    		</dependency>
-			<dependency>
-       			<groupId>org.springframework.security</groupId>
-       			<artifactId>spring-security-taglibs</artifactId>
-       			<version>${springsecurity.version}</version>
-   			</dependency>
-    		<dependency>
-        		<groupId>org.springframework.security</groupId>
-        		<artifactId>spring-security-acl</artifactId>
-        		<version>${springsecurity.version}</version>
-    		</dependency>
-    		
-    		<!-- Spring Data -->
-    		<dependency>
-        		<groupId>org.springframework.data</groupId>
-        		<artifactId>spring-data-jpa</artifactId>
-        		<version>${springdata.version}</version>
-    		</dependency>
-    		
-    		<!-- Spring Social -->
-	    	<dependency>
-	        	<groupId>org.springframework.social</groupId>
-	        	<artifactId>spring-social-config</artifactId>
-	        	<version>${springsocial.version}</version>
-	    	</dependency>
-	    	<dependency>     
-    			<groupId>org.springframework.social</groupId>
-    			<artifactId>spring-social-security</artifactId>
-    			<version>${springsocial.version}</version>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-web</artifactId>
+				<version>${springsecurity.version}</version>
 			</dependency>
 			<dependency>
-		        <groupId>org.springframework.social</groupId>
-		        <artifactId>spring-social-facebook</artifactId>
-		        <version>${springsocial.version}</version>
-		    </dependency>
-	    	<dependency>
-	  			<groupId>org.springframework.social</groupId>
-	  			<artifactId>spring-social-google</artifactId>
-	  			<version>${springsocialgoogle.version}</version>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-config</artifactId>
+				<version>${springsecurity.version}</version>
 			</dependency>
-    		
-    		<!-- AspectJ -->
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-taglibs</artifactId>
+				<version>${springsecurity.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-acl</artifactId>
+				<version>${springsecurity.version}</version>
+			</dependency>
+
+			<!-- Spring Data -->
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-jpa</artifactId>
+				<version>${springdata.version}</version>
+			</dependency>
+
+			<!-- Spring Social -->
+			<dependency>
+				<groupId>org.springframework.social</groupId>
+				<artifactId>spring-social-config</artifactId>
+				<version>${springsocial.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.social</groupId>
+				<artifactId>spring-social-security</artifactId>
+				<version>${springsocial.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.social</groupId>
+				<artifactId>spring-social-facebook</artifactId>
+				<version>${springsocial.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.social</groupId>
+				<artifactId>spring-social-google</artifactId>
+				<version>${springsocialgoogle.version}</version>
+			</dependency>
+
+			<!-- AspectJ -->
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjweaver</artifactId>
 				<version>${aspectj.version}</version>
 			</dependency>
-			
+
 			<!-- Hibernate -->
 			<dependency>
-	    		<groupId>org.hibernate</groupId>
-	    		<artifactId>hibernate-entitymanager</artifactId>
-	    		<version>${hibernate.version}</version>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>${hibernate.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.hibernate</groupId>
-			    <artifactId>hibernate-envers</artifactId>
-			    <version>${hibernate.version}</version>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-envers</artifactId>
+				<version>${hibernate.version}</version>
 			</dependency>
-			
+
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -317,38 +456,40 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-			
+
 		<!-- Javax Validation -->
 		<dependency>
-    		<groupId>org.hibernate</groupId>
-    		<artifactId>hibernate-validator</artifactId>
-    		<version>${hibernatevalidator.version}</version>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernatevalidator.version}</version>
 		</dependency>
 		<dependency>
-   			<groupId>javax.el</groupId>
-   			<artifactId>javax.el-api</artifactId>
-   			<version>3.0.0</version>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.web</groupId>
 			<artifactId>javax.el</artifactId>
 			<version>2.2.6</version>
 		</dependency>
-            
+
 		<!-- Logs -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.6</version>
 		</dependency>
-		
+
 		<!-- DWR -->
 		<dependency>
-    		<groupId>org.directwebremoting</groupId>
-    		<artifactId>dwr</artifactId>
-    		<version>${dwr.version}</version>
-  		</dependency>
+			<groupId>org.directwebremoting</groupId>
+			<artifactId>dwr</artifactId>
+			<version>${dwr.version}</version>
+		</dependency>
 		
+		
+
 		<!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>

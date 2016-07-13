@@ -62,6 +62,16 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
+    <!-- CORS Filter -->
+    <filter>
+        <filter-name>corsFilter</filter-name>
+        <filter-class>br.com.geocab.application.security.CorsFilter</filter-class>
+    </filter>
+	<filter-mapping>
+        <filter-name>corsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
 	<!-- SpringSecurityFilterChain -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
@@ -92,7 +102,25 @@
   		<url-pattern>/broker/*</url-pattern>
 	</servlet-mapping>
 	
+	 <servlet>
+        <servlet-name>StickyCaptcha</servlet-name>
+        <servlet-class>nl.captcha.servlet.SimpleCaptchaServlet</servlet-class>
+        <init-param>
+            <param-name>width</param-name>
+            <param-value>250</param-value>
+        </init-param>
+        <init-param>
+            <param-name>height</param-name>
+            <param-value>75</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>StickyCaptcha</servlet-name>
+        <url-pattern>/stickyImg</url-pattern>
+    </servlet-mapping>
 	
+
 	<!-- Spring mobile -->
 	<servlet>
 		<servlet-name>springRestfulDispatcherServlet</servlet-name>

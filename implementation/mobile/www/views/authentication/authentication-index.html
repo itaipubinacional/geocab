@@ -1,0 +1,50 @@
+<ion-view view-title="Login" hide-nav-bar="true">
+  <ion-content class="login-image-footer">
+    <div class="login-content">
+      <form id="login" name="loginForm" novalidate ng-submit="loginHandler(loginForm)">
+        <div style="width: 100%; text-align: center">
+          <img alt="Logo itaipu" src="./static/images/itaipu-logo.png" width="130"/>
+          <img alt="Logo Água boa" src="./static/images/CAB-LOGO.svg" width="70"/>
+        </div>
+        <div class="list" style="margin-top : 30px">
+          <label class="item item-input item-floating-label login-label"
+                 ng-class="{'has-error': (loginForm.email.$invalid && loginForm.email.$touched) || (isFormSubmit && loginForm.email.$invalid)}">
+            <span class="input-label">{{ 'authentication.Email' | translate }}</span>
+            <input type="email" name="email" placeholder="{{ 'authentication.Email' | translate }}"
+                   ng-model="model.user.email" ng-required="true">
+          </label>
+          <div class="form-error" style="padding-left: 0px"
+               ng-show="(loginForm.email.$invalid && loginForm.email.$touched) || (isFormSubmit && loginForm.email.$invalid)">
+            {{'admin.users.The-email-is-not-valid' | translate}}
+          </div>
+
+          <label class="item item-input item-floating-label login-label"
+                 ng-class="{'has-error': (loginForm.password.$invalid && loginForm.password.$touched) || (isFormSubmit && loginForm.password.$invalid)}">
+            <span class="input-label">{{'authentication.Password' | translate}}</span>
+            <input type="password" name="password" placeholder="{{'authentication.Password' | translate}}"
+                   ng-model="model.user.password" ng-required="true">
+          </label>
+          <div class="form-error" style="padding-left: 0px"
+               ng-show="(loginForm.password.$invalid && loginForm.password.$touched) || (isFormSubmit && loginForm.password.$invalid)">
+            {{'admin.datasource.Enter-your-password' | translate}}
+          </div>
+        </div>
+        <div>
+          <button nav-clear form="login" class="login-button button button-block button-positive">
+            <b>{{'authentication.Enter' | translate}}</b>
+          </button>
+          <div style="margin-top: 50px"></div>
+        </div>
+      </form>
+      <div >
+        <button nav-clear class="login-button button button-block button-small button-assertive" 
+                ng-click="googleSignIn()">
+          <b>{{'authentication.Login-with-Google-+' | translate}}</b>
+        </button>
+        <button nav-clear class="login-button button button-block button-small login-button-face" ng-click="fbLogin()">
+          <b>{{'authentication.Login-with-Facebook' | translate}}</b>
+        </button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

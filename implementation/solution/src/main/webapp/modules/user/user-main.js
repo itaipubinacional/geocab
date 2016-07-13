@@ -8,7 +8,7 @@
 		//-------
 		//Broker configuration
 		//-------
-		$importServiceProvider.setBrokerURL("broker/interface");
+		$importServiceProvider.setBrokerURL("./broker");
 		
 		//-------
 		//Translate configuration
@@ -23,16 +23,16 @@
         $urlRouterProvider.otherwise("/");
                 
       //Users
-		$stateProvider.state('my-account', {
-			url : "/account",
-			templateUrl : "modules/user/ui/my-account/my-account-view.jsp",
-			controller : MyAccountController
-		}).state('my-account.form', {
-			url: "/form",
-			menu: "my-account"
+		$stateProvider.state('configurations', {
+			url : "/configurations",
+			templateUrl : "modules/user/ui/configurations-view.jsp",
+			controller : MyAccountController,
+			menu : 'configurations'
 		});
-
+    	
 	});
+
+
 	
 	projectModule.run( function( $rootScope, $state, $stateParams, $translate ) {
 				

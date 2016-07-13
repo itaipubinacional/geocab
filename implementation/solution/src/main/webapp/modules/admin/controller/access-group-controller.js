@@ -368,7 +368,18 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         $log.info("changeToList");
 
         var pageRequest = new PageRequest();
-        pageRequest.size = 10;
+        pageRequest = {  
+						  "size":10,
+						  "sort":{  
+							"orders":[  
+							  {   
+								"direction":"ASC",
+								"nullHandling":null,
+								"property":"name"
+							  }
+							]
+						  }
+						}
         $scope.pageRequest = pageRequest;
 
         $scope.listAccessGroupByFilters(null, pageRequest);
@@ -461,7 +472,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         $log.info("changeToDetail", id);
 
         if (id == null || id == "" || id == 0) {
-            $scope.msg = {type: "error", text: $scope.INVALID_ID_MESSAGE, dismiss: true};
+            $scope.msg = {type: "danger", text: $scope.INVALID_ID_MESSAGE, dismiss: true};
             $scope.currentState = $scope.LIST_STATE;
             $state.go($scope.LIST_STATE);
             return;
@@ -602,7 +613,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "danger", text: $translate(message), dismiss: true};
                 $scope.$apply();
             }
         });
@@ -630,7 +641,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
                 if (exception.message.indexOf("ConstraintViolationException") > -1) {
                     message = $translate("admin.access-group.Informed-name-or-address-field-already-exists-change-and-try-again") + '.';
                 }
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "danger", text: $translate(message), dismiss: true};
                 $scope.$apply();
             }
         });

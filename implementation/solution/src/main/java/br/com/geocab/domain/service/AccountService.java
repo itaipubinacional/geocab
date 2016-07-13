@@ -17,88 +17,106 @@ import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
+<<<<<<< HEAD
 import br.com.geocab.domain.entity.account.User;
 import br.com.geocab.domain.entity.account.UserRole;
+=======
+import br.com.geocab.domain.entity.configuration.account.User;
+import br.com.geocab.domain.entity.configuration.account.UserRole;
+import br.com.geocab.domain.entity.configuration.preferences.Coordinates;
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.account.IUserRepository;
+import br.com.geocab.domain.repository.configuration.IConfigurationRepository;
 
 /**
  * 
- * @author Cristiano Correa 
+ * @author Cristiano Correa
  * @since 22/04/2014
  * @version 1.0
  * @category Service
  */
 @Service
 @Transactional
-@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
-@RemoteProxy(name="accountService")
+@PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+@RemoteProxy(name = "accountService")
 public class AccountService
 {
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	
+	/**
+	 * User Repository
+	 */
+	@Autowired
+	private IConfigurationRepository configurationRepository;
 	/**
 	 * User Repository
 	 */
 	@Autowired
 	private IUserRepository userRepository;
-	
+
 	/**
 	 * Logger
 	 */
-	private static final Logger LOG = Logger.getLogger( AccountService.class.getName() );
-	
+	private static final Logger LOG = Logger.getLogger(AccountService.class.getName());
+
 	/**
 	 * Password encoder
 	 */
 	@Autowired
 	private ShaPasswordEncoder passwordEncoder;
-	
+
 	/**
 	 * Hash generator for encryption
 	 */
 	@Autowired
 	private SaltSource saltSource;
-	
+
 	/**
 	 * 
 	 */
 	@Autowired
 	private IAccessGroupRepository accessGroupRepository;
 
-	
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
-	
+
 	/**
 	 * Insert a new User
 	 * 
 	 * @param user
 	 * @return
 	 */
-	public User insertUser( User user )
-	{
-		Assert.notNull( user );
-		
+	public User insertUser(User user)
+	{ 
+		Assert.notNull(user);
+
 		user.setEnabled(true);
-		//encrypt password
-		final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( user ) ); 
-		user.setPassword( encodedPassword );
+		// encrypt password
+		final String encodedPassword = this.passwordEncoder
+				.encodePassword(user.getPassword(), saltSource.getSalt(user));
+		user.setPassword(encodedPassword);
+
+		if (user.getCoordinates() == null)
+		{
+			user.setCoordinates(Coordinates.DEGREES_MINUTES_SECONDS);
+		}
 		
-		user = this.userRepository.save( user );
-		
-		AccessGroup publicAccessGroup = this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID);
-		
+		user.verifyBackgroundMap( configurationRepository.findAll() );
+		user = this.userRepository.save(user);
+
+		AccessGroup publicAccessGroup = this.accessGroupRepository
+				.findOne(AccessGroup.PUBLIC_GROUP_ID);
+
 		publicAccessGroup.getUsers().add(user);
-		
+
 		this.accessGroupRepository.save(publicAccessGroup);
-		
+
 		return user;
 	}
-		
+
 	/**
 	 * List Users with pagination and filters
 	 *
@@ -106,18 +124,22 @@ public class AccountService
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(readOnly=true)
-	public Page<User> listUsersByFilters( String filter, PageRequest pageable )
+	@Transactional(readOnly = true)
+	public Page<User> listUsersByFilters(String filter, PageRequest pageable)
 	{
 		return this.userRepository.listByFilters(filter, pageable);
 	}
-	
-	@Transactional(readOnly=true)
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly = true)
 	public List<User> listAllUsers()
 	{
 		return this.userRepository.findAll();
 	}
-	
+
 	/**
 	 * Find User by id
 	 * 
@@ -125,11 +147,11 @@ public class AccountService
 	 * @return User
 	 */
 	@Transactional(readOnly = true)
-	public User findUserById( Long id )
+	public User findUserById(Long id)
 	{
-		return this.userRepository.findOne( id );
+		return this.userRepository.findOne(id);
 	}
-	
+
 	/**
 	 * Find User by userName
 	 * 
@@ -137,131 +159,155 @@ public class AccountService
 	 * @return User
 	 */
 	@Transactional(readOnly = true)
-	public User findUserByEmail( String userName )
+	public User findUserByEmail(String userName)
 	{
-		return this.userRepository.findByEmail( userName );
+		return this.userRepository.findByEmail(userName);
 	}
-	
+
 	/**
 	 * Disable User
 	 * 
 	 * @param id
-	 * @return boolean 
+	 * @return boolean
 	 */
-	public Boolean disableUser( Long id )
+	public Boolean disableUser(Long id)
 	{
-		User user = this.userRepository.findOne( id ); //Load user
-		user.setEnabled(false); //Disable user
-		this.userRepository.save( user ); //Save user
-		
+		User user = this.userRepository.findOne(id); // Load user
+		user.setEnabled(false); // Disable user
+		user.verifyBackgroundMap( configurationRepository.findAll() );
+		this.userRepository.save(user); // Save user
+
 		return true;
 	}
-	
+
 	/**
 	 * Enable User
 	 * 
 	 * @param id
 	 * @return boolean
 	 */
-	public Boolean enableUser( Long id )
-	{	
-		User user = this.userRepository.findOne( id ); //Load user
-		user.setEnabled(true); //Enable user
-		this.userRepository.save( user ); //Save user
-		
+	public Boolean enableUser(Long id)
+	{
+		User user = this.userRepository.findOne(id); // Load user
+		user.setEnabled(true); // Enable user
+		user.verifyBackgroundMap( configurationRepository.findAll() );
+		this.userRepository.save(user); // Save user
+
 		return true;
 	}
-	
+
 	/**
 	 * Update User
 	 * 
 	 * @param User
 	 * @return User
 	 */
-	public User updateUser( User user )
-	{			
-		try{
+	public User updateUser(User user)
+	{
+		try
+		{
 			User dbUser = this.userRepository.findOne(user.getId());
-			
-			//Update database user
+
+			// Update database user
 			dbUser.setEmail(user.getEmail());
 			dbUser.setName(user.getName());
 			dbUser.setRole(user.getRole());
-			
-			if( !user.getPassword().isEmpty() ){ //if set new password
-				final String encodedPassword = this.passwordEncoder.encodePassword( user.getPassword(), saltSource.getSalt( dbUser ) ); 
-				dbUser.setPassword( encodedPassword );
+
+			if (!user.getPassword().isEmpty())
+			{ // if set new password
+				final String encodedPassword = this.passwordEncoder
+						.encodePassword(user.getPassword(),
+								saltSource.getSalt(dbUser));
+				dbUser.setPassword(encodedPassword);
 			}
-						
-			user = this.userRepository.save( dbUser );//save data in database
 			
+			user.verifyBackgroundMap( configurationRepository.findAll() );
+			user = this.userRepository.save(dbUser);// save data in database
+
 		}
-		catch ( DataIntegrityViolationException e )
+		catch (DataIntegrityViolationException e)
 		{
 			final String error = e.getCause().getCause().getMessage();
+<<<<<<< HEAD
 			LOG.info( error );
+=======
+			LOG.info(error);
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		}
-		
+
 		return user;
 	}
-	
+
 	/**
 	 * Update User
 	 * 
 	 * @param user
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@PreAuthorize("permitAll")
 	public User getUserAuthenticated() throws Exception
 	{
-		User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
-		
-		User u =new User();
-		u.setCreated(user.getCreated());
-		u.setEmail(user.getEmail());
-		u.setEnabled(user.getEnabled());
-		u.setId(user.getId());
-		u.setName(user.getName());
-		u.setRole(user.getRole());
-		u.setUpdated(user.getUpdated());
-		
-		return u;
+		if(ContextHolder.getAuthenticatedUser() == null || ContextHolder.getAuthenticatedUser().getRole().equals(UserRole.ANONYMOUS)){
+			User user = new User();
+			user.verifyBackgroundMap(configurationRepository.findAll());
+			return user;
+		}else {
+			User user = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
+			User u = new User();
+			u.setCreated(user.getCreated());
+			u.setEmail(user.getEmail());
+			u.setEnabled(user.getEnabled());
+			u.setId(user.getId());
+			u.setName(user.getName());
+			u.setRole(user.getRole());
+			u.setUpdated(user.getUpdated());
+			u.setBackgroundMap(user.getBackgroundMap());
+			u.setCoordinates(user.getCoordinates());
+			return u;
+		}	
 	}
-	
+
 	/**
 	 * Update User
 	 * 
 	 * @param user
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@PreAuthorize("permitAll")
-	public User updateUserAuthenticated( User u ) throws Exception
+	public User updateUserAuthenticated(User user) throws Exception
 	{
-		Assert.notNull( u );
-		
-		User userAuthencated = ContextHolder.getAuthenticatedUser();
-		
-		User user = this.findUserByEmail(userAuthencated.getEmail());
-		
-		if(user == null){
-			throw new Exception("Usuário inexistente!");
+		User dbUser = this.userRepository.findOne(ContextHolder.getAuthenticatedUser().getId());
+
+		// Update database user
+		dbUser.setName(user.getName());
+		dbUser.setCoordinates(user.getCoordinates());
+		dbUser.setBackgroundMap(user.getBackgroundMap());
+
+		if (!(user.getPassword() == null) && !user.getPassword().isEmpty())
+		{ // if set new password
+			if (!this.passwordEncoder
+					.encodePassword(user.getPassword(),
+							saltSource.getSalt(user))
+					.equals(dbUser.getPassword()))
+			{
+				throw new Exception("A senha informada não é correspondente!");
+			}
+			else if (!(user.getNewPassword() == null)
+					&& !user.getNewPassword().isEmpty())
+			{
+				String encodedPassword = this.passwordEncoder.encodePassword(
+						user.getNewPassword(), saltSource.getSalt(user));
+				dbUser.setPassword(encodedPassword);
+			}
+			else
+			{
+				throw new Exception("Nova senha inválida!");
+			}
 		}
-		
-		if(!this.passwordEncoder.encodePassword( u.getPassword(), saltSource.getSalt( u ) ).equals(user.getPassword())) {
-			throw new Exception("A senha informada não é correspondente!");
-		}
-		
-		user.setName(u.getName());
-		user.setRole(userAuthencated.getRole());
-		
-		if(u.getNewPassword() != null) {	
-			final String encodedPassword = this.passwordEncoder.encodePassword( u.getNewPassword(), saltSource.getSalt( u ) ); 
-			user.setPassword( encodedPassword );
-		}
-		
-		return this.userRepository.save( user );
+		user.verifyBackgroundMap( configurationRepository.findAll() );
+		return this.userRepository.save(dbUser);
 	}
-	
+
 }

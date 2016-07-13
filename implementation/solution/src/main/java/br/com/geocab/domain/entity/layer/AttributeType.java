@@ -13,5 +13,5 @@ import org.directwebremoting.annotations.DataTransferObject;
 @DataTransferObject(type="enum")
 public enum AttributeType
 {
-	TEXT, NUMBER, DATE, BOOLEAN;
+	TEXT, NUMBER, DATE, BOOLEAN, PHOTO_ALBUM;
 }

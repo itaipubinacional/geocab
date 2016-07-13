@@ -7,17 +7,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+<<<<<<< HEAD
 import javax.persistence.OneToMany;
+=======
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
+import org.springframework.util.Assert;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,39 +36,57 @@ import br.com.geocab.domain.entity.marker.MarkerAttribute;
  */
 @Entity
 @Audited
+<<<<<<< HEAD
 @DataTransferObject(javascript="Attribute")
+=======
+@DataTransferObject(javascript = "Attribute")
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 public class Attribute extends AbstractEntity implements Serializable
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 754889878712215160L;
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-	
+
+	/**
+	 * 
+	 */
 	@Transient
 	private Long temporaryId;
-	
+
 	/**
 	 * Name {@link Attribute}
-	 * */
-	@NotNull
+	 */
+	@NotNull(message = "admin.layer-config.The-all-fields-name-in-attributes-must-be-set")
 	private String name;
+
 	/**
 	 * Type {@link Attribute}
-	 * */
-	@NotNull
+	 */
+	@NotNull(message = "admin.layer-config.The-all-fields-type-in-attributes-must-be-set")
 	private AttributeType type;
+
 	/**
 	 * Required {@link Attribute}
-	 * */
+	 */
 	@NotNull
 	private Boolean required;
-	
-	private Boolean attributeDefault; 
-	
+
+	/**
+	 * Visible {@link Attribute}
+	 */
+	@NotNull
+	private Boolean visible;
+
+	/**
+	 * 
+	 */
+	private Boolean attributeDefault;
+
 	/**
 	 * Order {@link Attribute}
 	 */
@@ -72,53 +95,268 @@ public class Attribute extends AbstractEntity implements Serializable
 	
 	/**
 	 * Layer {@link Layer}
-	 * */
+	 */
 	@JsonIgnore
-	@ManyToOne(fetch=FetchType.EAGER, optional=true, cascade={CascadeType.ALL})
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	private Layer layer;
-	
+
+	/**
+	 * 
+	 */
 	@JsonIgnore
-	@OneToMany(mappedBy="attribute", fetch=FetchType.EAGER, cascade={CascadeType.REMOVE})
+//	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
+	@Transient
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
 
-	public Attribute(){
-		
+	/*-------------------------------------------------------------------
+	 *								CONSTRUCTORS
+	 *-------------------------------------------------------------------*/
+
+	/**
+	 * 
+	 */
+	public Attribute()
+	{
+
 	}
-	
-	public Attribute( Long id )
+
+	/**
+	 * 
+	 * @param id
+	 */
+	public Attribute(Long id)
 	{
 		this.setId(id);
 	}
+<<<<<<< HEAD
 	
 	public Attribute(Long id, String name, AttributeType type, Boolean required, Integer orderAttribute){
+=======
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param type
+	 * @param required
+	 * @param orderAttribute
+	 * @param visible
+	 */
+	public Attribute(Long id, String name, AttributeType type, Boolean required,
+			Integer orderAttribute, Boolean visible)
+	{
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		this.setId(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
 		this.setOrderAttribute(orderAttribute);
+		this.setVisible(visible);
 	}
-	
-	public Attribute(String name){
-		//this.setTemporaryId(id);
+
+	/**
+	 * 
+	 * @param name
+	 */
+	public Attribute(String name)
+	{
 		this.setName(name);
 	}
+<<<<<<< HEAD
 	
 	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute){
+=======
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param required
+	 * @param type
+	 * @param orderAttribute
+	 * @param visible
+	 */
+	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute, Boolean visible)
+	{
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		this.setId(id);
 		this.setTemporaryId(id);
 		this.setType(type);
 		this.setName(name);
 		this.setRequired(required);
 		this.setOrderAttribute(orderAttribute);
+		this.setVisible(visible);
 	}
+<<<<<<< HEAD
 	
 	public Attribute(Long id, String name, AttributeType type, Layer layer){
+=======
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param type
+	 * @param layer
+	 */
+	public Attribute(Long id, String name, AttributeType type, Layer layer)
+	{
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		this.setId(id);
 		this.setType(type);
 		this.setName(name);
-	    this.setLayer(layer);
+		this.setLayer(layer);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param type
+	 * @param layer
+	 */
+	public Attribute(Long id, String name, String type, Layer layer)
+	{
+		this.setId(id);
+		this.setType(formmatAttributes(type));
+		this.setName(name);
+		this.setLayer(layer);
+	}
+
+	/*-------------------------------------------------------------------
+	 *								BEHAVIORS
+	 *-------------------------------------------------------------------*/
+	/**
+	 * Formata os atributos para importação
+	 * @return
+	 */
+	public void validate()
+	{
+		Assert.notNull(this.getType(), "admin.layer-config.The-all-fields-type-in-attributes-must-be-set");
 	}
 	
+	/**
+	 * Formata os atributos para importação
+	 * @return
+	 */
+	public String formmattedTypeAttributes()
+	{
+		if (this.getType() == AttributeType.TEXT)
+		{
+			return "String";
+		}
+		else if (this.getType() == AttributeType.DATE)
+		{
+			return "Date";
+		}
+		else if (this.getType() == AttributeType.BOOLEAN)
+		{
+			return "Boolean";
+		}
+		else if (this.getType() != AttributeType.PHOTO_ALBUM)
+		{
+			return "Integer";
+		}
+		else // Se for do tipo PHOTO_ALBUM retorna null
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * Formata o nome do atributo para exportação (A documentação informa que o nome não pode ser maior que 15 caracteres)
+	 * @param type
+	 * @return
+	 */
+	public void formmatNameAttribute()
+	{
+		if (this.getName().length() >= 10)
+		{
+			this.setName(this.getName().substring(0, 5) + "...");
+		}
+	}
+	
+	/**
+	 * Formata os atributos para exportação
+	 * @param type
+	 * @return
+	 */
+	private static AttributeType formmatAttributes(String type)
+	{
+		AttributeType attributeType = null;
+		if (type.contains("java.lang.String"))
+		{
+			attributeType = AttributeType.TEXT;
+		}
+		else if (type.contains("java.lang.Integer") || type.contains("java.lang.Long"))
+		{
+			attributeType = AttributeType.NUMBER;
+		}
+		else if (type.contains("java.util.Date"))
+		{
+			attributeType = AttributeType.DATE;
+		}
+		else if (type.contains("java.lang.Boolean"))
+		{
+			attributeType = AttributeType.BOOLEAN;
+		}
+		return attributeType;
+	}
+	
+	/**
+	 * @return the required
+	 */
+	public Boolean getRequired()
+	{
+		if (required == null)
+		{
+			required = false;
+		}
+		return required;
+	}
+
+	/**
+	 * @param required
+	 *            the required to set
+	 */
+	public void setRequired(Boolean required)
+	{
+		if (required == null)
+		{
+			required = false;
+		}
+		this.required = required;
+	}
+	
+	/**
+	 * @return the visible
+	 */
+	public Boolean getVisible()
+	{
+		if (visible == null)
+		{
+			visible = false;
+		}
+		return visible;
+	}
+
+	/**
+	 * @param visible
+	 *            the visible to set
+	 */
+	public void setVisible(Boolean visible)
+	{
+		if (visible == null)
+		{
+			visible = false;
+		}
+		this.visible = visible;
+	}
+
+	/*-------------------------------------------------------------------
+	 *								SETTERS/GETTERS
+	 *-------------------------------------------------------------------*/
+
 	/**
 	 * @return the name
 	 */
@@ -126,13 +364,17 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		return name;
 	}
+
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
+	 * 
 	 */
 	public void setName(String name)
 	{
 		this.name = name;
 	}
+
 	/**
 	 * @return the type
 	 */
@@ -140,13 +382,16 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		return type;
 	}
+
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(AttributeType type)
 	{
 		this.type = type;
 	}
+
 	/**
 	 * @return the layer
 	 */
@@ -154,28 +399,14 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		return layer;
 	}
+
 	/**
-	 * @param layer the layer to set
+	 * @param layer
+	 *            the layer to set
 	 */
 	public void setLayer(Layer layer)
 	{
 		this.layer = layer;
-	}
-
-	/**
-	 * @return the required
-	 */
-	public Boolean getRequired()
-	{
-		return required;
-	}
-
-	/**
-	 * @param required the required to set
-	 */
-	public void setRequired(Boolean required)
-	{
-		this.required = required;
 	}
 
 	/**
@@ -187,7 +418,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param attributeDefault the attributeDefault to set
+	 * @param attributeDefault
+	 *            the attributeDefault to set
 	 */
 	public void setAttributeDefault(Boolean attributeDefault)
 	{
@@ -203,7 +435,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param temporaryId the temporaryId to set
+	 * @param temporaryId
+	 *            the temporaryId to set
 	 */
 	public void setTemporaryId(Long temporaryId)
 	{
@@ -219,11 +452,11 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param orderAttribute the orderAttribute to set
+	 * @param orderAttribute
+	 *            the orderAttribute to set
 	 */
 	public void setOrderAttribute(Integer orderAttribute)
 	{
 		this.orderAttribute = orderAttribute;
 	}
-	
 }

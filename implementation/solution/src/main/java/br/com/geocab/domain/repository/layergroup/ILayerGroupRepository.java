@@ -27,16 +27,52 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 */
 	public LayerGroup findByDraftId( Long draftId );
 	
+	
+	
+	
+	@Query(value="SELECT new LayerGroup(layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id)"
+			+ "FROM LayerGroup layerGroup " +
+			"WHERE ( layerGroup.id = :id ) " )
+	public LayerGroup findLayerGroupById( @Param("id") Long id );
+	
 	/**
 	 * 
 	 * @return
 	 */
-	@Query(value="FROM LayerGroup layerGroup " 
-			+ "WHERE ( layerGroup.layerGroupUpper = NULL "
-			+	"AND layerGroup.draft = null "
-			+	"AND layerGroup.published = false ) "
-			+ "ORDER BY orderLayerGroup" )
+	@Query(value="SELECT new LayerGroup(layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroupUpper.id)"
+			 + "FROM LayerGroup layerGroup "
+			 + "LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " 
+			 + "WHERE ( layerGroupUpper.id = null "
+			 +	"AND layerGroup.draft = null "
+			 +	"AND layerGroup.published = false ) "
+			 + "ORDER BY layerGroup.orderLayerGroup" )
 	public List<LayerGroup> listLayersGroupUpper();
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Query(value="SELECT New LayerGroup ( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroupUpper.id)"
+			+ "FROM LayerGroup layerGroup "
+			+ "LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " 
+			+ "WHERE ( layerGroupUpper.id = :id "
+			+	"AND layerGroup.published = :published ) "
+			+ "ORDER BY layerGroup.orderLayerGroup" )
+	public List<LayerGroup> listLayersGroupByLayerGroupId( @Param("id") Long id, @Param("published") Boolean published );
+		
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Query(value="SELECT New LayerGroup ( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroupUpper.id)"
+			+ "FROM LayerGroup layerGroup "
+			+ "LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " 
+			+ "WHERE ( layerGroupUpper.id = :id ) "
+			+ "ORDER BY layerGroup.orderLayerGroup" )
+	public List<LayerGroup> listLayersGroupByLayerGroupId( @Param("id") Long id );
+	
 	
 	/**
 	 * 
@@ -47,19 +83,19 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 			+	"AND layerGroup.published = true ) "
 			+ "ORDER BY orderLayerGroup" )
 	public List<LayerGroup> listLayersGroupUpperPublished();
-	
-	
-//	/**
-//	 * 
-//	 * @return
-//	 */
-//	@Query(value="FROM LayerGroup layerGroup " 
-//			+ "WHERE ( layerGroup.published = true ) "
-//			+ "ORDER BY orderLayerGroup" )
-	@Query(value="SELECT new LayerGroup( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id )  " +
-			"FROM LayerGroup layerGroup " +
-			"WHERE ( layerGroup.published = true ) " +
-			"ORDER BY orderLayerGroup")
+
+	/**
+	 * 
+	 * @return
+	 */
+//	@Query(value="SELECT new LayerGroup( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroupUpper.id )  " +
+//			"FROM LayerGroup layerGroup " +
+//			"LEFT OUTER JOIN layerGroup.layerGroupUpper layerGroupUpper " +
+//			"WHERE ( layerGroup.published = true ) " +
+//			"ORDER BY layerGroup.orderLayerGroup")
+	@Query(value="FROM LayerGroup layerGroup " 
+			+ "WHERE ( layerGroup.published = true ) "
+			+ "ORDER BY orderLayerGroup" )
 	public List<LayerGroup> listAllLayersGroupPublished();
 	
 	/**
@@ -95,7 +131,8 @@ public interface ILayerGroupRepository extends IDataRepository<LayerGroup, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="FROM LayerGroup layerGroup " 
+	@Query(value="SELECT New LayerGroup ( layerGroup.id, layerGroup.name, layerGroup.orderLayerGroup, layerGroup.published, layerGroup.layerGroupUpper.id)" 
+			+ "FROM LayerGroup layerGroup "
 			+ "WHERE ( layerGroup.layerGroupUpper = NULL "
 			+ "AND layerGroup.draft = null "
 			+ "AND layerGroup.published = false ) "

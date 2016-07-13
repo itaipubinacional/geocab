@@ -38,7 +38,7 @@
   display: block;
   overflow: hidden;
   padding: 0 0 0 8px;
-  height: 23px;
+  height: 34px;
   border: 1px solid #aaa;
   border-radius: 5px;
   background-color: #fff;
@@ -52,7 +52,7 @@
   color: #444;
   text-decoration: none;
   white-space: nowrap;
-  line-height: 24px;
+  line-height: 34px;
 }
 .chosen-container-single .chosen-default {
   color: #999;
@@ -85,7 +85,7 @@
 }
 .chosen-container-single .chosen-single div {
   position: absolute;
-  top: 0;
+  top: 5px;
   right: 0;
   display: block;
   width: 18px;

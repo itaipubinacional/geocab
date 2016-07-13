@@ -16,7 +16,6 @@
 			       ng-click="listLayersByFilters(data.filter, currentPage.pageable)"/>
 	    </form>
 	</div>
-
 	<div ng-grid="gridOptions" style="height: 320px; border: 1px solid rgb(212,212,212);"></div>
     <div class="gridFooterDiv">
        <pagination style="text-align: center;"

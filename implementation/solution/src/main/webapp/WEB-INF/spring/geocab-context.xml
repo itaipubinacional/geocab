@@ -35,8 +35,7 @@
 		MISCELLANEOUS 
 	-->
 	<!-- Configuration files -->
-	<context:property-placeholder ignore-unresolvable="false"
-		location="classpath:geocab.properties, classpath:geocab-persistence.properties" />
+	<context:property-placeholder ignore-unresolvable="false" location="classpath:geocab.properties, classpath:geocab-persistence.properties" />
 		
 	<!-- I18N -->
     <bean id="messageSource" class="br.com.geocab.application.ResourceBundleMessageSource">
@@ -53,14 +52,17 @@
     </bean>
     <tx:annotation-driven transaction-manager="transactionManager"/>
     
+    
+    <!-- Scheduling --> 
+ 	<bean id="photoScheduling" class="br.com.geocab.application.scheduling.PhotoScheduling"/>
+    
 	<!--
 		ASPECTS 
 	-->
 	<aop:aspectj-autoproxy/>
 	
 	<!-- Exception Handler --> 
-	<bean id="exceptionHandlerAspect" 
-		class="br.com.geocab.application.aspect.ExceptionHandlerAspect"/>
+	<bean id="exceptionHandlerAspect" class="br.com.geocab.application.aspect.ExceptionHandlerAspect"/>
 		
     <!-- 
 		SECURITY  
@@ -84,26 +86,20 @@
 	</security:authentication-manager>
 	
 	<!-- Social -->
-	<facebook:config app-id="${social.facebook.app-id}" 
-		app-secret="${social.facebook.app-secret}"/>
-	<google:config app-id="${social.google.app-id}" 
-		app-secret="${social.google.app-secret}" />
+	<facebook:config app-id="${social.facebook.app-id}" app-secret="${social.facebook.app-secret}"/>
+	<google:config app-id="${social.google.app-id}" app-secret="${social.google.app-secret}"/>
 		
-	<bean id="usersConnectionRepository" 
-		class="br.com.geocab.infrastructure.social.PersistentUsersConnectionRepository">
+	<bean id="usersConnectionRepository" class="br.com.geocab.infrastructure.social.PersistentUsersConnectionRepository">
 		<property name="connectionSignUp">
 			<bean id="connectionSignUp" class="br.com.geocab.infrastructure.social.ConnectionSignUp"/>
 		</property>
 	</bean>
-	<bean id="connectionRepository" factory-method="createConnectionRepository" 
-		factory-bean="usersConnectionRepository" scope="request">
+	<bean id="connectionRepository" factory-method="createConnectionRepository" factory-bean="usersConnectionRepository" scope="request">
     	<constructor-arg value="#{request.userPrincipal.name}" />
     	<aop:scoped-proxy proxy-target-class="false" />
 	</bean>
-	<bean id="userIdSource"
-		class="org.springframework.social.security.AuthenticationNameUserIdSource" />
-	<bean id="signInAdapter" 
-		class="br.com.geocab.infrastructure.social.SpringSecuritySignInAdapter"/>
+	<bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource" />
+	<bean id="signInAdapter" class="br.com.geocab.infrastructure.social.SpringSecuritySignInAdapter"/>
 	
 	<!-- 
 		DWR
@@ -112,10 +108,10 @@
   		This will NOT scan any classes not managed by Spring.-->
 	<dwr:annotation-config/>
 	
+	
 	<!-- DWR will scan the classpath and search classes containing @RemoteProxy or @RemoteMethod annotations. 
 		This will register the beans and Creator proxies for these classes.-->
- 	<dwr:annotation-scan base-package="br.com.geocab.domain.entity"
- 		scanDataTransferObject="true" scanRemoteProxy="false"/>
+ 	<dwr:annotation-scan base-package="br.com.geocab.domain.entity" scanDataTransferObject="true" scanRemoteProxy="false"/>
 
  	<!-- DWR - This is required if you want to configure any beans not managed by Spring.-->
 	<dwr:configuration>
@@ -128,6 +124,8 @@
 		<dwr:convert type="enum" class="org.springframework.data.domain.Sort$Direction"/>
 		<dwr:convert type="enum" class="org.springframework.data.domain.Sort$NullHandling"/>
 		<dwr:convert type="bean" class="org.springframework.data.domain.Sort$Order" javascript="Order"/>
+		<dwr:convert type="enum" class="org.geotools.data.shapefile.files.ShpFileType" javascript="ShpFileType"/>
+		
 		
 		<dwr:convert type="bean" class="com.vividsolutions.jts.geom.Point" javascript="Point">
   			<dwr:include method="coordinateString"/>
@@ -138,21 +136,18 @@
 		OTHERS 
 	 -->
 	 <!-- Validation -->
-	 <bean id="validator"
-    	class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+	 <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
     	
 	<!-- =============================== DOMAIN =================================== -->
 	<!-- 
 		SERVICES 
 	-->
-	<context:component-scan 
-		base-package="br.com.geocab.domain.service"/>
+	<context:component-scan base-package="br.com.geocab.domain.service"/>
 	
 	<!--
 		REPOSITORIES 
 	-->
-	<jpa:repositories base-package="br.com.geocab.domain.repository"
-		factory-class="br.com.geocab.infrastructure.jpa2.springdata.JpaRepositoryFactoryBean"/>
+	<jpa:repositories base-package="br.com.geocab.domain.repository" factory-class="br.com.geocab.infrastructure.jpa2.springdata.JpaRepositoryFactoryBean"/>
 	 
 	<!-- ============================ INFRASTRUCTURE ============================= -->
 	<!--  

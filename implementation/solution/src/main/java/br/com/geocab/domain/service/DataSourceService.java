@@ -18,7 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.geocab.domain.entity.account.UserRole;
+import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerGroup;
@@ -185,6 +185,18 @@ public class DataSourceService
 	public Page<DataSource> listDataSourceByFilters( String filter, PageRequest pageable )
 	{
 		return this.dataSourceRepository.listByFilters(filter, pageable);
+	}
+	
+	/**
+	 * 
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public Page<DataSource> listInternalDataSourceByFilters( String filter, PageRequest pageable )
+	{
+		return this.dataSourceRepository.listInternalDatasourceByFilters(filter, pageable);
 	}
 	
 	/**

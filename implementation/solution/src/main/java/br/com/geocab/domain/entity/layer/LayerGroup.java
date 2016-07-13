@@ -9,13 +9,13 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.directwebremoting.annotations.DataTransferObject;
@@ -33,16 +33,24 @@ import br.com.geocab.domain.entity.AbstractEntity;
  */
 @Entity
 @Audited
+<<<<<<< HEAD
 @DataTransferObject(javascript="LayerGroup")
 @Table(uniqueConstraints= @UniqueConstraint(columnNames={"name", "layer_group_upper_id"}))
 public class LayerGroup extends AbstractEntity implements Serializable, ITreeNode
+=======
+@DataTransferObject(javascript = "LayerGroup")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames =
+{ "name", "layer_group_upper_id" }))
+public class LayerGroup extends AbstractEntity
+		implements Serializable, ITreeNode
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8774128410822834963L;
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
@@ -50,46 +58,57 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	 * nome do {@link LayerGroup}
 	 */
 	@NotEmpty
-	@Column(nullable=false, length=144)
+	@Column(nullable = false, length = 144)
 	private String name;
 	/**
 	 * 
 	 */
 	@Column
+<<<<<<< HEAD
     private Integer orderLayerGroup;
+=======
+	private Integer orderLayerGroup;
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	/**
 	 * {@link LayerGroup} upper than the current {@link LayerGroup}
 	 */
-	@ManyToOne(fetch=FetchType.EAGER, optional=true)
+	@ManyToOne
 	private LayerGroup layerGroupUpper;
 	/**
 	 * {@link LayerGroup} of {@link Layer}
 	 */
-	@OrderBy( value = "orderLayer" ) 
-	@OneToMany(fetch=FetchType.LAZY)
-	@JoinColumn(referencedColumnName="id", name="layer_group_id")
+	@OrderBy(value = "orderLayer")
+	@OneToMany
+	@JoinColumn(referencedColumnName = "id", name = "layer_group_id")
 	private List<Layer> layers = new LinkedList<Layer>();
-	
+
 	/**
 	 * {@link LayerGroup} of {@link LayerGroup}
 	 */
-	@OrderBy( value = "orderLayerGroup" ) 
-	@OneToMany(fetch=FetchType.LAZY)
-	@JoinColumn(referencedColumnName="id", name="layer_group_upper_id")
+	@OrderBy(value = "orderLayerGroup")
+	@OneToMany
+	@JoinColumn(referencedColumnName = "id", name = "layer_group_upper_id")
 	private List<LayerGroup> layersGroup = new LinkedList<LayerGroup>();
-	
+
 	/**
 	 * Draft {@link LayerGroup} that originated the published {@link LayerGroup}
 	 */
-	@OneToOne(fetch=FetchType.EAGER, optional=true)
+	@OneToOne
 	private LayerGroup draft;
-	
+
 	/**
 	 * Field that informs if the {@link LayerGroup} is published
 	 */
 	@Column
 	private Boolean published;
-	
+
+	/**
+	 * Informa se a camada tem filhos ou não (sejam outros grupos de camadas ou
+	 * outras camadas)
+	 */
+	@Transient
+	private Boolean hasChildren;
+
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -98,57 +117,61 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	 */
 	public LayerGroup()
 	{
-		
+
 	}
-	
+
 	/**
 	 * 
 	 *
 	 * @param id
 	 */
-	public LayerGroup( Long id )
+	public LayerGroup(Long id)
 	{
 		this.setId(id);
 	}
-	
+
 	/**
 	 * 
 	 *
 	 * @param id
 	 */
-	public LayerGroup( Long id, LayerGroup draft )
+	public LayerGroup(Long id, LayerGroup draft)
 	{
 		this.setId(id);
 		this.setDraft(draft);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @param name
 	 * @param layerGroupUpper
 	 */
-	public LayerGroup( Long id, String name, LayerGroup layerGroupUpper )
+	public LayerGroup(Long id, String name, LayerGroup layerGroupUpper)
 	{
 		this.setId(id);
 		this.setName(name);
 		this.setLayerGroupUpper(layerGroupUpper);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @param name
 	 */
-	public LayerGroup( Long id, String name )
+	public LayerGroup(Long id, String name)
 	{
 		this.setId(id);
 		this.setName(name);
 	}
+<<<<<<< HEAD
 	
 	
 	
 	
+=======
+
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	/**
 	 * @param name
 	 * @param orderLayerGroup
@@ -158,6 +181,7 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	 * @param draft
 	 * @param published
 	 */
+<<<<<<< HEAD
 	public LayerGroup(Long id, String name, Integer orderLayerGroup, Boolean published, Long layerGroupUpperId)
 	{
 		this.setId(id);
@@ -165,66 +189,127 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 		this.orderLayerGroup = orderLayerGroup;
 		this.setLayerGroupUpper(new LayerGroup(layerGroupUpperId));
 		this.published = published;
+=======
+	public LayerGroup(Long id, String name, Integer orderLayerGroup)
+	{
+		this.setId(id);
+		this.setName(name);
+		this.setOrderLayerGroup(orderLayerGroup);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param orderLayerGroup
+	 * @param published
+	 * @param layerGroupUpperId
+	 */
+	public LayerGroup(Long id, String name, Integer orderLayerGroup,
+			Boolean published, Long layerGroupUpperId)
+	{
+		this.setId(id);
+		this.setName(name);
+		this.setOrderLayerGroup(orderLayerGroup);
+		this.setPublished(published);
+		this.setLayerGroupUpper(layerGroupUpperId != null
+				? new LayerGroup(layerGroupUpperId) : null);
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	}
 
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
-	
-	/**
-	 * 
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((draft == null) ? 0 : draft.hashCode());
-		result = prime * result
-				+ ((layerGroupUpper == null) ? 0 : layerGroupUpper.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + orderLayerGroup;
-		result = prime * result
-				+ ((published == null) ? 0 : published.hashCode());
-		return result;
-	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * @return the published
 	 */
-	@Override
-	public boolean equals(Object obj)
+	public Boolean getPublished()
 	{
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
-		LayerGroup other = (LayerGroup) obj;
-		if (draft == null)
-		{
-			if (other.draft != null) return false;
-		}
-		else if (!name.equals(other.name)) return false;
-		if (orderLayerGroup != other.orderLayerGroup) return false;
 		if (published == null)
 		{
-			if (other.published != null) return false;
+			published = false;
 		}
-		else if (!published.equals(other.published)) return false;
-		return true;
+		return published;
+	}
+
+	/**
+	 * @param published
+	 *            the published to set
+	 */
+	public void setPublished(Boolean published)
+	{
+		if (published == null)
+		{
+			published = false;
+		}
+		this.published = published;
+	}
+
+	/**
+	 * @return the orderLayerGroup
+	 */
+	public Integer getOrderLayerGroup()
+	{
+		if (orderLayerGroup == null)
+		{
+			orderLayerGroup = 0;
+		}
+		return orderLayerGroup;
+	}
+
+	/**
+	 * @param orderLayerGroup
+	 *            the orderLayerGroup to set
+	 */
+	public void setOrderLayerGroup(Integer orderLayerGroup)
+	{
+		if (orderLayerGroup == null)
+		{
+			orderLayerGroup = 0;
+		}
+		this.orderLayerGroup = orderLayerGroup;
+	}
+
+	/**
+	 * @return the hasChildren
+	 */
+	public Boolean getHasChildren()
+	{
+		if (hasChildren == null)
+		{
+			hasChildren = (this.getLayers() != null
+					&& this.getLayers().size() > 0)
+					|| (this.getLayersGroup() != null
+							&& this.getLayersGroup().size() > 0);
+		}
+		return hasChildren;
+	}
+
+	/**
+	 * @param hasChildren
+	 *            the hasChildren to set
+	 */
+	public void setHasChildren(Boolean hasChildren)
+	{
+		if (hasChildren == null)
+		{
+			hasChildren = (this.getLayers() != null
+					&& this.getLayers().size() > 0)
+					|| (this.getLayersGroup() != null
+							&& this.getLayersGroup().size() > 0);
+		}
+		this.hasChildren = hasChildren;
 	}
 	
-	
-	/*-------------------------------------------------------------------
-	 *						GETTERS AND SETTERS
-	 *-------------------------------------------------------------------*/
-	
-	/**
-	 * 
+	/*
+	 * (non-Javadoc)
+	 * @see br.com.geocab.domain.entity.layer.ITreeNode#getNodes()
 	 */
 	@Override
 	public List<? extends ITreeNode> getNodes()
 	{
-		if ( layersGroup != null && !layersGroup.isEmpty() )
+		if (layersGroup != null && !layersGroup.isEmpty())
 		{
 			return this.layersGroup;
 		}
@@ -233,6 +318,18 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 			return this.layers;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see br.com.geocab.domain.entity.layer.ITreeNode#getTitle()
+	 */
+	@Override
+	public String getTitle()
+	{
+		return this.getName();
+	}
+	/*-------------------------------------------------------------------
+	 *						GETTERS AND SETTERS
+	 *-------------------------------------------------------------------*/
 
 	/**
 	 * @return the name
@@ -243,7 +340,8 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name)
 	{
@@ -251,6 +349,7 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	}
 
 	/**
+<<<<<<< HEAD
 	 * @return the orderLayerGroup
 	 */
 	public Integer getOrderLayerGroup()
@@ -267,6 +366,8 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	}
 
 	/**
+=======
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	 * @return the layerGroupUpper
 	 */
 	public LayerGroup getLayerGroupUpper()
@@ -275,7 +376,8 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	}
 
 	/**
-	 * @param layerGroupUpper the layerGroupUpper to set
+	 * @param layerGroupUpper
+	 *            the layerGroupUpper to set
 	 */
 	public void setLayerGroupUpper(LayerGroup layerGroupUpper)
 	{
@@ -291,7 +393,8 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	}
 
 	/**
-	 * @param layers the layers to set
+	 * @param layers
+	 *            the layers to set
 	 */
 	public void setLayers(List<Layer> layers)
 	{
@@ -307,7 +410,8 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	}
 
 	/**
-	 * @param layersGroup the layersGroup to set
+	 * @param layersGroup
+	 *            the layersGroup to set
 	 */
 	public void setLayersGroup(List<LayerGroup> layersGroup)
 	{
@@ -323,29 +427,15 @@ public class LayerGroup extends AbstractEntity implements Serializable, ITreeNod
 	}
 
 	/**
-	 * @param draft the draft to set
+	 * @param draft
+	 *            the draft to set
 	 */
 	public void setDraft(LayerGroup draft)
 	{
 		this.draft = draft;
 	}
 
-	/**
-	 * @return the published
-	 */
-	public Boolean getPublished()
-	{
-		return published;
-	}
+	
 
-	/**
-	 * @param published the published to set
-	 */
-	public void setPublished(Boolean published)
-	{
-		this.published = published;
-	}
-	
-	
 	
 }

@@ -51,13 +51,21 @@
 				<option value="NUMBER"><spring:message code="admin.layer-config.Number" /></option>
 				<option value="DATE"><spring:message code="admin.layer-config.Date" /></option>
 				<option value="BOOLEAN"><spring:message code="admin.layer-config.Boolean" /></option>
+				<option value="PHOTO_ALBUM"><spring:message code="admin.layer-config.Photo-album" /></option>
 			</select>
 			</div>
 			
 			 <span  ng-show="form_add_attribute.$submitted && form_add_attribute.select.$error.required" class="tooltip-validation" style="right:16px;top:62px;"><spring:message code="admin.users.Field-required" /></span>
-			
-			<input  type="checkbox" ng-model="currentEntity.required">
-			<spring:message code="Required" /> 
+
+			<div>
+				<input  type="checkbox" ng-model="currentEntity.required">
+				<spring:message code="Required" />
+			</div>
+
+			<div>
+				<input  type="checkbox" ng-model="currentEntity.visible">
+				<spring:message code="Visible" />
+			</div>
      
         </form>
         

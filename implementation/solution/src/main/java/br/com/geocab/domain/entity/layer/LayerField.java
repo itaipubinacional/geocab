@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -42,13 +43,13 @@ public class LayerField extends AbstractEntity implements Serializable
 	/**
 	 * name of {@link LayerField}
 	 */
-	@NotEmpty
+	@NotEmpty(message = "admin.layer-config.The-all-fields-name-in-attributes-must-be-set")
 	@Column(nullable=false, length=144)
 	private String name;
 	/**
 	 * type of  {@link LayerField}
 	 */
-	@NotNull
+	@NotNull(message = "admin.layer-config.The-all-fields-type-in-attributes-must-be-set")
 	@Enumerated(EnumType.ORDINAL)
 	private LayerFieldType type;
 	/**
@@ -73,6 +74,17 @@ public class LayerField extends AbstractEntity implements Serializable
 	@Column(nullable=true)
 	private Long attributeId;
 	
+	/**
+	 * Utilizado somente para execução de pesquisas a partir do mapa principal
+	 */
+	@Transient
+	private String value;
+	/**
+	 * 
+	 */
+	@NotAudited
+	@Column(nullable=false, name="pesquisa_id")
+	private Long customSearchId;
 	
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -98,12 +110,14 @@ public class LayerField extends AbstractEntity implements Serializable
 	 * @param label
 	 * @param order
 	 */
-	public LayerField( Long id, String name, String label, int order )
+	public LayerField( Long id, String name, String label, Integer orderLayer, LayerFieldType type, Long attributeId )
 	{
 		this.setId(id);
 		this.setName(name);
 		this.setLabel(label);
-		this.setOrderLayer(order);
+		this.setOrderLayer(orderLayer);
+		this.setType(type);
+		this.setAttributeId(attributeId);
 	}
 	
 	/*-------------------------------------------------------------------
@@ -125,8 +139,8 @@ public class LayerField extends AbstractEntity implements Serializable
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
-	}
-	/* (non-Javadoc)
+		}
+		/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -160,6 +174,8 @@ public class LayerField extends AbstractEntity implements Serializable
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
 	
+	
+	
 	/**
 	 * @param descricaoTipo the descricaoTipo to set
 	 */
@@ -171,6 +187,20 @@ public class LayerField extends AbstractEntity implements Serializable
 			this.type = parseTipoGeoserver(descricaoTipo);
 	}
 	
+	/**
+	 * @return the customSearchId
+	 */
+	public Long getCustomSearchId()
+	{
+		return customSearchId;
+	}
+	/**
+	 * @param customSearchId the customSearchId to set
+	 */
+	public void setCustomSearchId(Long customSearchId)
+	{
+		this.customSearchId = customSearchId;
+	}
 	/**
 	 * @param descricaoTipo the descricaoTipo to set
 	 */
@@ -316,5 +346,21 @@ public class LayerField extends AbstractEntity implements Serializable
 	{
 		this.attributeId = attributeId;
 	}
+	/**
+	 * @return the value
+	 */
+	public String getValue()
+	{
+		return value;
+	}
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value)
+	{
+		this.value = value;
+	}
+	
+	
 	
 }

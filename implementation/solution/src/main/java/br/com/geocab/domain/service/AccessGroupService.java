@@ -17,8 +17,8 @@ import org.springframework.util.Assert;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
 import br.com.geocab.domain.entity.accessgroup.AccessGroupCustomSearch;
 import br.com.geocab.domain.entity.accessgroup.AccessGroupLayer;
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.account.UserRole;
+import br.com.geocab.domain.entity.configuration.account.User;
+import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.layer.CustomSearch;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.tool.Tool;
@@ -50,19 +50,29 @@ public class AccessGroupService
 	 */
 	@Autowired
 	private IAccessGroupRepository accessGroupRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private IToolRepository toolRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private IUserRepository userRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private IAccessGroupCustomSearchRepository accessGroupCustomSearchRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private IAccessGroupLayerRepository accessGroupLayerRepository;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private LayerGroupService layerGroupService;
 	
@@ -257,9 +267,9 @@ public class AccessGroupService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public List<Tool> listTools()
+	public Page<Tool> listTools(PageRequest pageable)
 	{
-		return this.toolRepository.findAll();
+		return this.toolRepository.findAll(pageable);
 	}
 	
 	/**

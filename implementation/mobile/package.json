@@ -1,0 +1,37 @@
+{
+  "name": "geocab-mobile",
+  "version": "1.1.1",
+  "description": "Geocab Mobile",
+  "dependencies": {
+    "gulp": "^3.5.6",
+    "gulp-sass": "^2.0.4",
+    "gulp-concat": "^2.2.0",
+    "gulp-minify-css": "^0.3.0",
+    "gulp-rename": "^1.2.0"
+  },
+  "devDependencies": {
+    "bower": "^1.3.3",
+    "gulp-util": "^2.2.14",
+    "shelljs": "^0.3.0"
+  },
+  "cordovaPlugins": [
+    "cordova-plugin-whitelist",
+    "cordova-plugin-datepicker",
+    "cordova-plugin-keyboard",
+    "org.apache.cordova.inappbrowser",
+    "cordova-plugin-googleplus",
+    "org.apache.cordova.statusbar",
+    "cordova-plugin-camera",
+    "org.apache.cordova.splashscreen",
+    "cordova-plugin-network-information",
+    "cordova-plugin-x-toast",
+    "cordova-plugin-file",
+    "ionic-plugin-keyboard",
+    "cordova-plugin-crosswalk-webview",
+    "cordova-plugin-splashscreen"
+  ],
+  "cordovaPlatforms": [
+    "ios",
+    "android"
+  ]
+}

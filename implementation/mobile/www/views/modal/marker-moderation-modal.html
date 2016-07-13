@@ -1,0 +1,21 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-assertive">
+    <h1 class="title">Recusar postagem</h1>
+  </ion-header-bar>
+  <ion-content>
+    <form>
+      <label class="item item-input item-select">
+        <span class="input-label">{{'admin.marker-moderation.Motive' | translate}}</span>
+        <select ng-model="refuse.motive"
+                ng-options="motive.name for motive in motives"
+                required></select>
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">{{'Description' | translate}}</span>
+        <textarea rows="5" cols="100" ng-model="refuse.description"></textarea>
+      </label>
+      <button class="button button-assertive" ng-click="confirmRefuseMarkerModal(refuse)">{{'map.Refuse' | translate}}</button>
+      <button class="button button-stable" ng-click="closeRefuseMarkerModal()">{{'map.Close' | translate}}</button>
+    </form>
+  </ion-content>
+</ion-modal-view>

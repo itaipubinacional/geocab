@@ -1,0 +1,211 @@
+.bar.bar-positive{background-color: #1e88e5;}
+.footer-shadow{box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.scroll{height: 100%}
+
+#map.loading{
+  background: transparent url('./../images/loader-transparent.gif') no-repeat center center;
+}
+
+.item-input{padding-left: 10px}
+
+fieldset{margin: 0px; padding: 0px; border: none}
+
+.platform-android .bar .title{font-size: 16px; font-weight: 900}
+
+/* BUTTONS */
+.fab{ border-radius: 50%; width: 50px; height: 50px; line-height: 30px}
+
+.drawer-button{z-index: 2; background-color: #fff; position: absolute; top:15px; left:-3px; padding: 0px 12px;box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
+.gps-button{color: #fff;z-index: 2; background-color: #1e88e5; position: absolute; bottom:15px; right:15px; box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
+.button-icon.icon.gps-button:before{font-size: 25px}
+.add-button{color: #fff;z-index: 2; background-color: #1e88e5; position: absolute; bottom:15px; right:15px; padding: 0px 12px;box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
+.confirm-marker-button{color: #fff;z-index: 10; background-color: #f44336; position: absolute; bottom:67px; right:15px; padding: 0px 12px;box-shadow: 0px 1px 5px rgba(0,0,0,0.3);}
+.button-icon.button.active.confirm-marker-button, .button-icon.button.activated.confirm-marker-button{opacity: 1; color: #fff;z-index: 10; background-color: #f44336; box-shadow: 0px 3px 5px rgba(0,0,0,0.5);}
+
+.dynamic-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.layers .list{padding-top: 2px}
+.layers .item-checkbox{border-top:none;font-size: 12px;font-weight: bold;padding-right: 40px;}
+.layers .item-checkbox-img {
+  vertical-align: middle;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  height: 25px;
+}
+
+/*LOGIN*/
+
+.login-label{
+  border-width: 0 0 1px 0;
+  padding: 0;
+}
+
+.login-content{
+  padding: 30px 50px 50px 50px ;
+}
+
+.login-image-footer {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-attachment: scroll;
+  background-image : url('./../images/WAVE-CAB.svg');
+  min-height: 402px;
+}
+
+.login-button {
+  text-transform: uppercase;
+}
+
+.login-button-face {
+  background: #3b5998;
+  color: white;
+}
+
+
+/*SLIDE INTRO*/
+.intro-image{
+  background-color: #434343;
+  margin-bottom: -5px;
+}
+
+.intro-image > img {
+  width: 100%;
+  height: 100%;
+}
+
+.intro-detail{
+  top: -5px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  background-color: #1e88e5;
+  color: #fff;
+  text-align: center;
+}
+
+.intro-detail > p {
+  font-size: 4.0vw;
+  margin: 0;
+}
+.intro-detail > p:first-child {
+  margin-top: 10px;
+}
+
+.intro-detail  {
+  font-size: 18px;
+}
+
+.intro-detail-footer{
+  margin-top: -60px;
+}
+
+.intro-detail-footer > div {
+  z-index: 10;
+}
+
+.slider {
+  height: 100%;
+}
+
+/* FORM VALIDATION */
+label.item.has-error {
+  border-bottom: 2px solid red;
+}
+
+label.item.has-error-lr {
+  border-left: 2px solid red;
+  border-right: 2px solid red;
+}
+
+label.item.valid-lr {
+  border-left: 2px solid green;
+  border-right: 2px solid green;
+}
+
+.form-errors {
+  margin: 5px 0
+}
+
+.form-error {
+  padding: 2px 0 2px 16px;
+  color: red;
+}
+
+/* GALLERY */
+.selected{
+  border: 2px solid #3b5998;
+}
+.transparent {
+  background: transparent !important;
+}
+.image-modal {
+  width: 100% !important;
+  height: 100%;
+  top: 0 !important;
+  left: 0 !important;
+}
+.fullscreen-image {
+  max-width: 100%;
+  max-height: 70%;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  overflow: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+.slider {
+  width: 100%;
+  height: 100%;
+}
+
+p.info {
+  position: absolute;
+  bottom: 55px;
+  margin: 0 auto;
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 18px;
+  color: #ffffff;
+}
+.deleted{
+  opacity: .5;
+}
+
+.slider-pager .slider-pager-page{color:#999}
+
+/* Fix modal backdrop for smaller devices */
+@media (max-width: 679px) {
+  .active .modal-backdrop-bg {
+    opacity: 1;
+  }
+  .modal-backdrop-bg {
+    -webkit-transition: opacity 300ms ease-in-out;
+    transition: opacity 300ms ease-in-out;
+    background-color: #000;
+    opacity: 0;
+  }
+}
+
+.options-menu-button ion-item .button {
+  padding: 20px 0px 0 25px;
+  width: 250px;
+  text-align: left;
+}
+
+.options-menu-button ion-item {
+  padding: 0;
+}

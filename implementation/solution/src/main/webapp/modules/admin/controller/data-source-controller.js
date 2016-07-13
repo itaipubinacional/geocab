@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 /**
  * 
@@ -194,7 +194,21 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 		$log.info("changeToList");
 		
 		var pageRequest = new PageRequest();
-		pageRequest.size = 6;
+
+		pageRequest = {  
+						  "size":6,
+						  "sort":{  
+							"orders":[  
+							  {  
+								"direction":"ASC",
+								"ignoreCase":false,
+								"nullHandling":null,
+								"property":"name"
+							  }
+							]
+						  }
+						}
+
 		$scope.pageRequest = pageRequest;
 
 		$scope.listDataSourceByFilters( null, pageRequest );
@@ -270,7 +284,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 		$log.info("changeToDetail", id);
 
 		if ( id == null || id == "" || id == 0 ) {
-			$scope.msg = {type:"error", text: $scope.INVALID_ID_MESSAGE, dismiss:true};
+			$scope.msg = {type:"danger", text: $scope.INVALID_ID_MESSAGE, dismiss:true};
 			
 			$scope.currentState = $scope.LIST_STATE;
 			$state.go($scope.LIST_STATE);
@@ -404,7 +418,7 @@ function DataSourceController( $scope, $injector, $log, $state, $timeout, $modal
 				$scope.data.showFieldUrl = null;
 			},
 			errorHandler : function(message, exception) {
-				$scope.msg = {type:"danger", text: message, dismiss:true};
+				$scope.msg = {type:"danger", text: $translate(message), dismiss:true};
 				$scope.fadeMsg();
 				$scope.$apply();
 			}

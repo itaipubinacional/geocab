@@ -4,6 +4,12 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
 	border-color: #e32102;
 }
 
+.dynamic-text {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+  overflow: hidden;
+}
+
 .overflow-hidden {
     overflow: hidden;
 }
@@ -211,7 +217,7 @@ input[readonly],select[readonly],textarea[readonly] {
 	right         : -5px !important;
 }
 
-.tooltip {
+/*.tooltip {
     background    : #2c2c2c;
     color         : #fff;
     position      : absolute;
@@ -235,7 +241,7 @@ input[readonly],select[readonly],textarea[readonly] {
     border-width : 5px 4px 0 4px;
     border-color : #aa0606 transparent transparent transparent;
     z-index      : 2;
-}
+}*/
 
 /*########################################################*/
 * {
@@ -400,6 +406,7 @@ input:-moz-placeholder {
 #header-page .navbar-1 {
 	margin-bottom: 0;
     height: 65px;
+	background-color: #fff;
 }
 
 #header-page .navbar-1 .navbar-inner {
@@ -469,7 +476,7 @@ input:-moz-placeholder {
     border-right: 1px solid #d9d9d9;
     border-bottom: 1px solid #d9d9d9;
     height: 50px;
-    width: 110px;
+    width: 150px;
     text-align: center;
 }
 
@@ -607,7 +614,7 @@ input:-moz-placeholder {
 
 .navbar-inner {
 	min-height: 40px;
-	padding-left: 47px;
+	padding-left: 20px;
 	padding-right: 46px;
 	border: 1px solid #dedede; /* stroke */
 	margin-bottom: 8px;
@@ -874,7 +881,7 @@ input:-moz-placeholder {
 }
 .container-login .close{
 	margin-right: 32px;
-	margin-top: 6px;	
+	margin-top: 6px;
 }
 
 .cell-centered [class^="itaipu-icon-"], .cell-centered [class*="itaipu-icon-"], .tree-itaipu-icon {
@@ -888,6 +895,29 @@ input:-moz-placeholder {
 .itaipu-icon-delete, .itaipu-icon-delete:hover {
 	color: #D44545
 }
+
+.itaipu-icon-schedules, .itaipu-icon-schedules:hover {
+	color: #eee400
+}
+.itaipu-icon-like-filled, .itaipu-icon-like-filled:hover {
+	color: #09ba00;
+}
+ .itaipu-icon-dislike, .itaipu-icon-dislike:hover {
+	color: #d45a05;
+}
+.itaipu-icon-close, .itaipu-icon-close:hover {
+	color: #ba0000
+}
+.itaipu-icon-floppy, .itaipu-icon-floppy:hover {
+	color: #777576
+}
+
+.btn-default >  i, i:hover {
+	/*font-size: 30px;*/
+}
+/*.btn-default >  .itaipu-icon-dislike, .itaipu-icon-dislike:hover {*!/*/
+	/*font-size: 30px;*/
+/*}*/
 
 .tree-itaipu-icon:hover {
     cursor: pointer;
@@ -1001,6 +1031,12 @@ input:-moz-placeholder {
     height: 34px;
 }
 
+
+.btn-icon{
+	padding-top: 15px;
+}
+
+
 /* Scale Slider - Começo */
 
 .ui-slider-horizontal .ui-slider-handle {
@@ -1018,7 +1054,7 @@ input:-moz-placeholder {
 .ui-widget-content {
     margin-bottom: 19px;
     top: 7px;
-    height: 5px;
+    /*height: 5px;*/
     background: #c9c9c9;
 }
 
@@ -1986,7 +2022,7 @@ input:-moz-placeholder {
 .dialog-delete .modal-body b{
      overflow-wrap: break-word;
  }
- 
+
 .dialog-enable .modal-header{
     background-color: #DA4F49;
     background-image: linear-gradient(to bottom, #EE5F5B, #BD362F);
@@ -1999,7 +2035,7 @@ input:-moz-placeholder {
 .dialog-enable .modal-body b{
      overflow-wrap: break-word;
  }
- 
+
 .dialog-disable .modal-header{
     background-color: #DA4F49;
     background-image: linear-gradient(to bottom, #EE5F5B, #BD362F);
@@ -2094,7 +2130,7 @@ input:-moz-placeholder {
 }
 .container-login .close{
 	margin-right: 32px;
-	margin-top: 6px;	
+	margin-top: 6px;
 }
 
 .cell-centered [class^="itaipu-icon-"], .cell-centered [class*="itaipu-icon-"], .tree-itaipu-icon {
@@ -2435,8 +2471,45 @@ ul.abn-tree li.abn-tree-row a {
 	margin-bottom: 15px;
 }
 
+.ol-scale-line {
+	color: #000;
+	left: 75px;
+}
 
+.progress-bar {
+	width: 300px; height: 14px;
+	border-radius: 10px;
+	border: 1px solid #CCC;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#6666cc), to(#4b4b95));
+	border-image: initial;
+}
+.uploaded {
+	padding: 0;
+	height: 14px;
+	border-radius: 10px;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#66cc00), to(#4b9500));
+	border-image: initial;
+}
+.dropbox {
+	width: 15em;
+	height: 3em;
+	border: 2px solid #DDD;
+	border-radius: 8px;
+	background-color: #FEFFEC;
+	text-align: center;
+	color: #BBB;
+	font-size: 2em;
+	font-family: Arial, sans-serif;
+}
+.dropbox span {
+	margin-top: 0.9em;
+	display: block;
+}
+.dropbox.not-available {
+	background-color: #F88;
+}
+.dropbox.over {
+	background-color: #bfb;
+}
 
-
-
-
+div.thumbnail.active{border: 2px solid #428bca;}

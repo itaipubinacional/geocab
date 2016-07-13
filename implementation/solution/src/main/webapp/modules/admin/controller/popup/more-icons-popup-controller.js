@@ -212,7 +212,7 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
 	{
 		$scope.currentEntity.icon = $scope.currentEntity.iconTemporary;
 		$scope.msg = null;
-		$modalInstance.close(null);
+		$modalInstance.close($scope.currentEntity);
 	};
     
 	/**

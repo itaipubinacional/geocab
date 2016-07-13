@@ -333,10 +333,21 @@
 		$log.info("changeToList");
 
 		var pageRequest = new PageRequest();
-		pageRequest.size = 10;
+		pageRequest = {  
+						  "size":10,
+						  "sort":{  
+							"orders":[  
+							  {  
+								"direction":"ASC",
+								"nullHandling":null,
+								"property":"name"
+							  }
+							]
+						  }
+						};
 		$scope.pageRequest = pageRequest;
 
-		$scope.listCustomSearchByFilters( null, pageRequest );
+		$scope.listCustomSearchByFilters( null, $scope.pageRequest );
 	};
 
 	/**
@@ -410,7 +421,7 @@
 		$log.info("changeToDetail", id);
 
 		if ( id == null || id == "" || id == 0 ) {
-			$scope.msg = {type:"error", text: $scope.INVALID_ID_MESSAGE, dismiss:true};
+			$scope.msg = {type:"danger", text: $scope.INVALID_ID_MESSAGE, dismiss:true};
 			$scope.currentState = $scope.LIST_STATE;
 			$state.go($scope.LIST_STATE);
 			return;

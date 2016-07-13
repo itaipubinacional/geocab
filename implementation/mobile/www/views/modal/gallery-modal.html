@@ -1,0 +1,22 @@
+<div class="modal image-modal transparent">
+  <div class="bar bar-header transparent">
+    <div class="buttons" ng-if="!isDisabled">
+      <button style="color:#fff" class="button button-icon icon ion-android-refresh" ng-if="selectedPhoto.deleted" ng-click="restorePhoto(selectedPhoto)"></button>
+      <button style="color:#fff" class="button button-icon icon ion-android-create" ng-if="!selectedPhoto.deleted && !showEditableDescription" ng-click="editPhoto(true);"></button>
+      <!--<button style="color:#fff" class="button button-icon icon ion-android-delete" ng-if="!selectedPhoto.deleted && !showEditableDescription" ng-click="deletePhoto(selectedPhoto)"></button>-->
+    </div>
+    <label class="item item-input" ng-if="showEditableDescription">
+      <input type="text" ng-model="selectedPhoto.description" placeholder="{{'Description' | translate}}">
+    </label>
+    <button style="color:#fff" class="button button-icon icon ion-android-done" ng-if="showEditableDescription" ng-click="editPhoto(false)"></button>
+  </div>
+  <ion-content class="has-header padding">
+    <ion-slide-box on-slide-changed="slideChanged(index)"
+                   show-pager="true" ng-click="closeModal()" disable-scroll="false">
+      <ion-slide ng-repeat="photo in selectedPhotoAlbumAttribute.photoAlbum.photos">
+        <img ng-src="{{ setImagePath(photo) }}" class="fullscreen-image"/>
+        <p class="info">{{ photo.description ? photo.description :  photo.name }}</p>
+      </ion-slide>
+    </ion-slide-box>
+  </ion-content>
+</div>

@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.repository.IMetaFileRepository;
-import br.com.geocab.domain.service.MarkerService;
+import br.com.geocab.domain.service.marker.MarkerService;
 
 
 /**

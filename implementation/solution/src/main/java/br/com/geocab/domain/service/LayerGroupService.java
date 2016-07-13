@@ -37,8 +37,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
 import br.com.geocab.domain.entity.accessgroup.AccessGroupLayer;
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.account.UserRole;
+import br.com.geocab.domain.entity.configuration.account.User;
+import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
 import br.com.geocab.domain.entity.layer.AttributeType;
@@ -65,7 +65,6 @@ import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
  * @category Service
  *
  */
-
 @Service
 @Transactional
 @RemoteProxy(name="layerGroupService")
@@ -74,7 +73,11 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	/**
 	 * 
 	 */
@@ -132,6 +135,10 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	/**
+	 * 
+	 * @return
+	 */
 	public List<String> listLayersIcons()
 	{
 		final String path = this.servletContext.getRealPath("/static/icons");
@@ -159,8 +166,7 @@ public class LayerGroupService
 	public LayerGroup insertLayerGroup( LayerGroup layerGroup )
 	{
 		layerGroup.setPublished(false);
-		return this.layerGroupRepository.save( layerGroup );
-		
+		return hasChildren(this.layerGroupRepository.save( layerGroup ));		
 	}
 	
 	/**
@@ -172,23 +178,10 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public LayerGroup updateLayerGroup( LayerGroup layerGroup )
 	{
-		return this.layerGroupRepository.save( layerGroup );
-		
+		return hasChildren(this.layerGroupRepository.save( layerGroup ));		
 	}
 	
-	/**
-	 * Method to save a list of {@link LayerGroup}
-	 * 
-	 * @param List<layerGroup>
-	 * @return
-	 */
-	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
-	public void saveAllLayersGroup( List<LayerGroup> layerGroup )
-	{
-		this.prioritizeLayersGroup( layerGroup, null );
-		
-		this.prioritizeLayers( layerGroup);
-	}
+	
 	
 	/**
 	 * Find {@link LayerGroup} by id
@@ -199,7 +192,7 @@ public class LayerGroupService
 	@Transactional(readOnly = true)
 	public LayerGroup findLayerGroupById( Long id )
 	{
-		return this.layerGroupRepository.findOne( id );
+		return hasChildren(this.layerGroupRepository.findOne( id ));
 	}
 	
 	/**
@@ -218,6 +211,144 @@ public class LayerGroupService
 		}
 	}
 	
+	
+	
+	/**
+	 * Método que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
+	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
+	private void populateChildrenInLayerGroupPublished()
+	{
+		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listAllLayersGroupPublished();
+		
+		for (LayerGroup layerGroupPublished : layersGroupPublished)
+		{
+			//Pega o grupo de camadas pois a query anterior (layerGroupRepository.listAllLayersGroupPublished()) foi alterada e não pega todos os atributos da camada
+			layerGroupPublished = this.layerGroupRepository.findOne(layerGroupPublished.getId());
+			
+			layerGroupPublished.setLayersGroup(this.layerGroupRepository.listLayersGroupPublishedChildren(layerGroupPublished.getId()));
+		
+			this.layerGroupRepository.save(layerGroupPublished);	
+		}
+	}
+	
+	
+	/**
+	 * Método recursivo que remove os grupos de camadas publicados filhos
+	 * @param gruposCamadasPublicados
+	 * @param grupoCamadaPublicadosSuperior
+	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
+	private void removeLayerGroupPublished( LayerGroup layerGroupPublished )
+	{
+		if ( layerGroupPublished.getLayersGroup() != null )
+		{
+			for (LayerGroup layerGroupChildPublished : layerGroupPublished.getLayersGroup())
+			{
+				// remove quando o rascunho for null e o publicado is true
+				if (layerGroupChildPublished.getPublished() && layerGroupChildPublished.getDraft() == null )
+				{
+					removeLayerGroupPublished(layerGroupChildPublished);
+					this.layerGroupRepository.delete(layerGroupChildPublished);
+				}	
+			}	
+		}
+		
+	}
+	
+	
+	/**
+	 * 
+	 * @param grupoCamadaOriginal
+	 * @param grupoCamadaPaiPublicado
+	 */
+	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
+	public void recursive( LayerGroup layerGroupOriginal, LayerGroup layerGroupUpperPublished )
+	{
+		final Long layerGroupOriginalId = layerGroupOriginal.getId();
+		
+		// verifica se foi possui o grupo publicado
+		final LayerGroup layerGroupPublishedExistent = this.layerGroupRepository.findByDraftId(layerGroupOriginalId);
+		
+		// efetua a cópia do grupo de camadas original
+		LayerGroup layerGroupPublished = new LayerGroup();
+		BeanUtils.copyProperties(layerGroupOriginal, layerGroupPublished);
+		
+		// update nos dados do grupo publicado
+		layerGroupPublished.setPublished(true);
+		layerGroupPublished.setLayerGroupUpper(layerGroupUpperPublished);
+		layerGroupPublished.setDraft(new LayerGroup(layerGroupOriginalId));
+		layerGroupPublished.setLayersGroup(new ArrayList<LayerGroup>());
+		layerGroupPublished.setLayers(new ArrayList<Layer>());
+		
+		// se já possui o grupo criado apenas altera o existente sentido cria o grupo publicado
+		if (layerGroupPublishedExistent != null)
+		{
+			layerGroupPublished.setId(layerGroupPublishedExistent.getId());
+			layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
+		} 
+		else
+		{
+			layerGroupPublished.setId(null);
+			layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
+		}
+		
+		// criação atualização de camadas para camadas publicadas
+		if ( layerGroupOriginal.getLayers() != null )
+		{
+			for ( Layer layerOriginal : layerGroupOriginal.getLayers() )
+			{
+				//final Camada camadaPublicadaExistente = this.camadaRepository.findByRascunhoId(camadaOriginal.getId());
+				
+				// criação da camada publicada que iria conter a ordem publicada e os grupos
+				Layer layerPublished = new Layer();
+//				BeanUtils.copyProperties(camadaOriginal, camadaPublicada);
+				
+				
+				// criação/update na camada publicada
+				layerPublished.setName(layerOriginal.getName());
+				layerPublished.setTitle(layerOriginal.getTitle());
+				layerPublished.setIcon(layerOriginal.getIcon());
+				layerPublished.setDataSource(new DataSource(layerOriginal.getDataSource().getId()));
+				layerPublished.setMinimumScaleMap(layerOriginal.getMinimumScaleMap());
+				layerPublished.setMaximumScaleMap(layerOriginal.getMaximumScaleMap());
+				layerPublished.setOrderLayer(layerOriginal.getOrderLayer());
+				layerPublished.setLayerGroup(layerGroupPublished);
+				layerPublished.setPublished(true);
+				
+				// se já possui a camada publicada apenas altera a existente sentido cria a camada publicada
+				if (layerOriginal.getPublishedLayer() != null)
+				{
+					layerPublished.setId(layerOriginal.getPublishedLayer().getId());
+				} 
+				else
+				{
+					layerPublished.setId(null);
+				}
+				
+				layerPublished = this.layerRepository.save(layerPublished);
+				
+				layerGroupPublished.getLayers().add(layerPublished);
+				layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
+				
+				// update na camada original
+				layerOriginal.setPublishedLayer(layerPublished);
+				layerOriginal = this.layerRepository.save(layerOriginal);
+			}
+		}
+		
+		// faz a recursivo para atualizar todos os filhos
+		if ( layerGroupPublished.getLayersGroup() != null)
+		{
+			if ( layerGroupOriginal.getLayersGroup() != null )
+			{
+				for ( LayerGroup layerGroupOriginalChild : layerGroupOriginal.getLayersGroup() )
+				{
+					this.recursive( layerGroupOriginalChild, layerGroupPublished );
+				}
+			}
+		}					
+	}
 	
 	/**
 	 * 
@@ -256,140 +387,22 @@ public class LayerGroupService
 				}
 			}
 		}
-		
 	}
 	
 	/**
-	 * Mï¿½todo que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
-	 */
-	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
-	private void populateChildrenInLayerGroupPublished()
-	{
-		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listAllLayersGroupPublished();
-		
-		for (LayerGroup layerGroupPublished : layersGroupPublished)
-		{
-			layerGroupPublished.setLayersGroup(this.layerGroupRepository.listLayersGroupPublishedChildren(layerGroupPublished.getId()));
-			this.layerGroupRepository.save(layerGroupPublished);
-		}
-	}
-	
-	
-	/**
-	 * Mï¿½todo recursivo que remove os grupos de camadas publicados filhos
-	 * @param gruposCamadasPublicados
-	 * @param grupoCamadaPublicadosSuperior
-	 */
-	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
-	private void removeLayerGroupPublished( LayerGroup layerGroupPublished )
-	{
-		if ( layerGroupPublished.getLayersGroup() != null )
-		{
-			for (LayerGroup layerGroupChildPublished : layerGroupPublished.getLayersGroup())
-			{
-				// remove quando o rascunho for null e o publicado is true
-				if (layerGroupChildPublished.getPublished() && layerGroupChildPublished.getDraft() == null )
-				{
-					removeLayerGroupPublished(layerGroupChildPublished);
-					this.layerGroupRepository.delete(layerGroupChildPublished);
-				}	
-			}	
-		}
-		
-	}
-	
-	
-	/**
+	 * Method to save a list of {@link LayerGroup}
 	 * 
-	 * @param grupoCamadaOriginal
-	 * @param grupoCamadaPaiPublicado
+	 * @param List<layerGroup>
+	 * @return
 	 */
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
-	public void recursive( LayerGroup layerGroupOriginal, LayerGroup layerGroupUpperPublished )
-	{
-		final Long layerGroupOriginalId = layerGroupOriginal.getId();
+	public void saveAllLayersGroup( List<LayerGroup> layerGroup )
+	{		
+		this.prioritizeLayersGroup( layerGroup, null );	
 		
-		// verifica se jï¿½ possui o grupo publicado
-		final LayerGroup layerGroupPublishedExistent = this.layerGroupRepository.findByDraftId(layerGroupOriginalId);
-		
-		// efetua a cï¿½pia do grupo de camadas original
-		LayerGroup layerGroupPublished = new LayerGroup();
-		BeanUtils.copyProperties(layerGroupOriginal, layerGroupPublished);
-		
-		// update nos dados do grupo publicado
-		layerGroupPublished.setPublished(true);
-		layerGroupPublished.setLayerGroupUpper(layerGroupUpperPublished);
-		layerGroupPublished.setDraft(new LayerGroup(layerGroupOriginalId));
-		layerGroupPublished.setLayersGroup(new ArrayList<LayerGroup>());
-		layerGroupPublished.setLayers(new ArrayList<Layer>());
-		
-		// se jï¿½s possui o grupo criado apenas altera o existente senï¿½o cria o grupo publicado
-		if (layerGroupPublishedExistent != null)
-		{
-			layerGroupPublished.setId(layerGroupPublishedExistent.getId());
-			layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
-		} 
-		else
-		{
-			layerGroupPublished.setId(null);
-			layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
-		}
-		
-		// criaï¿½ï¿½o/atualizaï¿½ï¿½o de camadas para camadas publicadas
-		if ( layerGroupOriginal.getLayers() != null )
-		{
-			for ( Layer layerOriginal : layerGroupOriginal.getLayers() )
-			{
-				//final Camada camadaPublicadaExistente = this.camadaRepository.findByRascunhoId(camadaOriginal.getId());
-				
-				// criaï¿½ï¿½o da camada publicada que irï¿½ conter a ordem publicada e os grupos
-				Layer layerPublished = new Layer();
-//				BeanUtils.copyProperties(camadaOriginal, camadaPublicada);
-				
-				
-				// criaï¿½ï¿½o/update na camada publicada
-				layerPublished.setName(layerOriginal.getName());
-				layerPublished.setTitle(layerOriginal.getTitle());
-				layerPublished.setMinimumScaleMap(layerOriginal.getMinimumScaleMap());
-				layerPublished.setMaximumScaleMap(layerOriginal.getMaximumScaleMap());
-				layerPublished.setOrderLayer(layerOriginal.getOrderLayer());
-				layerPublished.setLayerGroup(layerGroupPublished);
-				layerPublished.setPublished(true);
-				
-				// se jï¿½ possui a camada publicada apenas altera a existente senï¿½o cria a camada publicada
-				if (layerOriginal.getPublishedLayer() != null)
-				{
-					layerPublished.setId(layerOriginal.getPublishedLayer().getId());
-				} 
-				else
-				{
-					layerPublished.setId(null);
-				}
-				
-				layerPublished = this.layerRepository.save(layerPublished);
-				
-				layerGroupPublished.getLayers().add(layerPublished);
-				layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
-				
-				// update na camada original
-				layerOriginal.setPublishedLayer(layerPublished);
-				layerOriginal = this.layerRepository.save(layerOriginal);
-			}
-		}
-		
-		// faz a recursï¿½o para atualizar todos os filhos
-		if ( layerGroupPublished.getLayersGroup() != null)
-		{
-			if ( layerGroupOriginal.getLayersGroup() != null )
-			{
-				for ( LayerGroup layerGroupOriginalChild : layerGroupOriginal.getLayersGroup() )
-				{
-					this.recursive( layerGroupOriginalChild, layerGroupPublished );
-				}
-			}
-		}					
+		this.prioritizeLayers( layerGroup);
 	}
-
+	
 	/**
 	 * 
 	 * @param layerGroups
@@ -400,14 +413,13 @@ public class LayerGroupService
 	{
 		if ( layerGroups != null )
 		{
-			
 			for (int i = 0; i < layerGroups.size(); i++)
 			{
 				layerGroups.get(i).setOrderLayerGroup(i);
 				layerGroups.get(i).setLayerGroupUpper(layerGroupUpper);
-				this.layerGroupRepository.save( layerGroups.get(i) );
-				
-				prioritizeLayersGroup(layerGroups.get(i).getLayersGroup(), layerGroups.get(i));
+			
+				this.layerGroupRepository.save( layerGroups.get(i) );	
+				prioritizeLayersGroup(layerGroups.get(i).getLayersGroup(), layerGroups.get(i));		
 			}
 		}
 	}
@@ -418,31 +430,25 @@ public class LayerGroupService
 	 */
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void prioritizeLayers( List<LayerGroup> layerGroups )
-	{
-		if ( layerGroups != null )
+	{		
+		for (LayerGroup layerGroup : layerGroups)
 		{
-			for (LayerGroup layerGroup : layerGroups)
+			if (layerGroup.getLayers() != null)
 			{
-				if( layerGroup.getLayers() != null )
-				{					
-					if( layerGroup.getLayers().size() > 0 )
-					{
-						for(int j = 0; j < layerGroup.getLayers().size(); j++)
-						{
-							layerGroup.getLayers().get(j).setOrderLayer(j);
-							layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
-							this.layerRepository.save( layerGroup.getLayers().get(j) );
-						}
-					}
+				for(int j = 0; j < layerGroup.getLayers().size(); j++)
+				{
+					layerGroup.getLayers().get(j).setOrderLayer(j);
+					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
+					
+					this.layerRepository.save( layerGroup.getLayers().get(j) );
 				}
-				
-				prioritizeLayers(layerGroup.getLayersGroup());
-			}
-		}
+				if (layerGroup.getLayersGroup() != null) prioritizeLayers(layerGroup.getLayersGroup());
+			}			
+		}	
 	}
 	
 	/**
-	 * mï¿½todo para remover um {@link GrupoCamadas}
+	 * Método para remover um {@link GrupoCamadas}
 	 * 
 	 * @param id
 	 */
@@ -475,15 +481,69 @@ public class LayerGroupService
 	public List<LayerGroup> listLayersGroupUpper()
 	{
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupUpper();
-		
-		setLegendsLayers(layersGroup);
-		
-		return layersGroup;
-		
+				
+		return hasChildren(layersGroup);
 	}
 	
 	/**
-	 * Mï¿½todo que retorna a estrutura completa dos grupos de camadas publicados
+	 * Lista os Grupos de camadas publicados
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public LayerGroup listLayersGroupPublishedByLayerGroupId(Long id)
+	{
+		return hasChildren(this.listLayersGroupByLayerGroupId(id , true));
+	}
+	
+	/**
+	 * Lista os Grupos de camadas não publicados
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public LayerGroup listLayersGroupByLayerGroupId(Long id)
+	{		
+		return hasChildren(this.listLayersGroupByLayerGroupId(id , false));
+	}
+	
+	/**
+	 * Lista os Grupos de camadas
+	 * 
+	 * @param id
+	 * @param published
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public LayerGroup listLayersGroupByLayerGroupId(Long id, Boolean published)
+	{
+		
+		LayerGroup layerGroup = this.layerGroupRepository.findLayerGroupById( id );			
+	
+		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupByLayerGroupId( id, published);
+		
+		//Se o grupo de camadas está vazio (se não tem outros grupos de camadas internamente) pega as camadas desse grupo de camadas
+		if( layersGroup.isEmpty() )
+		{
+			
+			List<Layer> layers = this.layerRepository.listLayersByLayerGroupId( id, published );
+			
+			layerGroup.setLayers(layers);
+			
+		}
+		//Se o grupo de camadas tem outros grupos de camadas internamente, seta o grupo de camadas
+		else
+		{
+			layerGroup.setLayersGroup(layersGroup);
+		} 
+		return hasChildren(layerGroup);	
+	}
+	
+	
+	/**
+	 * Método que retorna a estrutura completa dos grupos de camadas publicados
 	 * @param filter
 	 * @param idExcluso
 	 * @param pageable
@@ -493,7 +553,7 @@ public class LayerGroupService
 	public List<LayerGroup> listLayerGroupUpperPublished()
 	{
 		List<LayerGroup> layersGroupUpperPublished = new ArrayList<LayerGroup>();
-		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listAllLayersGroupPublished();
+		final List<LayerGroup> layersGroupPublished = /*hasChildren*/(this.layerGroupRepository.listAllLayersGroupPublished());
 		
 		if ( layersGroupPublished != null )
 		{
@@ -504,48 +564,56 @@ public class LayerGroupService
 				if (layerGroupPublished.getLayerGroupUpper() == null || layerGroupPublished.getLayerGroupUpper().getId() == null)
 				{
 					layersGroupUpperPublished.add(layerGroupPublished);
-				}
-				
+				}				
 			}
 		}
 		
-		setLegendsLayers(layersGroupUpperPublished);
-		
 		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
+		return /*hasChildren*/(this.layersGroupUpperByRole(layersGroupUpperPublished));
 		
-			
-			List<AccessGroup> accessGroupsUser =  new ArrayList<AccessGroup>();
-			final User user = ContextHolder.getAuthenticatedUser();
-			
-			if (!user.equals(User.ANONYMOUS))
+	}
+	
+	
+//	//TODO organizar método
+//	public List<Layer> listLayerPublished()
+//	{
+//		
+//		LayerGroup layerGroup = new LayerGroup();
+//		
+//		List<LayerGroup> layerGroups = new ArrayList<LayerGroup>();
+//		
+//		layerGroup.setLayers( this.layerRepository.listLayersStartEnable() );
+//		
+//		layerGroups.add( layerGroup );
+//		
+//		layerGroups = layersGroupUpperByRole(layerGroups);
+//		
+//		return layerGroups.get(0).getLayers();
+//		
+//	}
+	
+	/**
+	 * 
+	 * @param layersGroupUpperPublished
+	 * @return
+	 */
+	private List<LayerGroup> layersGroupUpperByRole( List<LayerGroup> layersGroupUpperPublished )
+	{
+		
+		List<AccessGroup> accessGroupsUser =  new ArrayList<AccessGroup>();
+		final User user = ContextHolder.getAuthenticatedUser();
+		
+		if (!user.equals(User.ANONYMOUS))
+		{
+			if( user.getRole() != UserRole.ADMINISTRATOR ) 
 			{
-				if( user.getRole() != UserRole.ADMINISTRATOR ) 
+				accessGroupsUser = this.accessGroupRepository.listByUser(user.getEmail());
+				
+				for (AccessGroup accessGroup : accessGroupsUser)
 				{
-					accessGroupsUser = this.accessGroupRepository.listByUser(user.getEmail());
-					
-					for (AccessGroup accessGroup : accessGroupsUser)
-					{
-						accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
-					}
-					
-					if ( !layersGroupUpperPublished.isEmpty() )
-					{
-						verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
-					}
-					
-					List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
-					
-					for ( LayerGroup layerGroup : layersGroupUpperPublished )
-					{
-						this.removeLayerGroupEmptyPublished(layerGroup);
-						
-						if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
-						{
-							layerGroupToDelete.add(layerGroup);
-						}
-					}
-					layersGroupUpperPublished.removeAll(layerGroupToDelete);
+					accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
 				}
+<<<<<<< HEAD
 			}
 			else 
 			{
@@ -553,6 +621,8 @@ public class LayerGroupService
 				accessGroupsUser.add(accessGroup);
 				
 				accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
+=======
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 				
 				if ( !layersGroupUpperPublished.isEmpty() )
 				{
@@ -572,6 +642,35 @@ public class LayerGroupService
 				}
 				layersGroupUpperPublished.removeAll(layerGroupToDelete);
 			}
+<<<<<<< HEAD
+=======
+		}
+		else 
+		{
+			AccessGroup accessGroup = this.accessGroupRepository.findById(AccessGroup.PUBLIC_GROUP_ID);
+			accessGroupsUser.add(accessGroup);
+			
+			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
+			
+			if ( !layersGroupUpperPublished.isEmpty() )
+			{
+				verifyLayerPermission(layersGroupUpperPublished, accessGroupsUser);
+			}
+			
+			List<LayerGroup> layerGroupToDelete = new ArrayList<LayerGroup>();
+			
+			for ( LayerGroup layerGroup : layersGroupUpperPublished )
+			{
+				this.removeLayerGroupEmptyPublished(layerGroup);
+				
+				if (layerGroup.getLayersGroup().isEmpty() & layerGroup.getLayers().isEmpty())
+				{
+					layerGroupToDelete.add(layerGroup);
+				}
+			}
+			layersGroupUpperPublished.removeAll(layerGroupToDelete);
+		}
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		
 		return layersGroupUpperPublished;
 		
@@ -607,7 +706,7 @@ public class LayerGroupService
 										{
 											for (AccessGroupLayer accessGroupLayer : accessGroup.getAccessGroupLayer())
 											{
-												if(layer.getId().equals(accessGroupLayer.getLayer().getId()) && layer.isStartVisible())
+												if(layer.getId().equals(accessGroupLayer.getLayer().getId()) && layer.getStartEnabled())
 												{
 													hasAccess = true;
 													break;
@@ -672,41 +771,67 @@ public class LayerGroupService
 		
 	}
 	
+//	/**
+//	 * OBS:. Método recursivo
+//	 * @param layersGroup
+//	 */
+//	private void setIcon( List<LayerGroup> layersGroup )
+//	{
+//		if ( layersGroup != null )
+//		{
+//			
+//			for (LayerGroup layerGroup : layersGroup)
+//			{
+//				if( layerGroup.getLayers() != null )
+//				{					
+//					if( layerGroup.getLayers().size() > 0 )
+//					{
+//						
+//						this.setIcon(layerGroup.getLayers());
+//					}
+//				}
+//				
+//				setIcon(layerGroup.getLayersGroup());
+//			}
+//		}
+//	}
+//	
+//	/**
+//	 * Traz a legenda da camada do GeoServer
+//	 * @param layers
+//	 * @return
+//	 */
+//	private Collection<Layer> setIcon(Collection<Layer> layers)
+//	{
+//		for (Layer layer : layers)
+//		{
+//			layer = this.setIcon(layer);
+//		}
+//		return layers;
+//	}
+//	
+//	/**
+//	 * Traz a legenda da camada do GeoServer
+//	 * @param layer
+//	 * @return
+//	 */
+//	private Layer setIcon(Layer layer)
+//	{
+//		if( layer.getDataSource() != null && layer.getDataSource().getUrl() != null )
+//		{
+//			layer.setLegend((getLegendLayerFromGeoServer(layer)));	
+//			layer.setIcon((layer.getLegend()));
+//		}
+//		return layer;
+//	}
+	
+	
 	/**
 	 * 
-	 * @param gruposCamadas
-	 * @param grupoCamadasSuperior
+	 * @param layer
+	 * @param sUrl
+	 * @return
 	 */
-	private void setLegendsLayers( List<LayerGroup> layersGroup )
-	{
-		if ( layersGroup != null )
-		{
-			
-			for (LayerGroup layerGroup : layersGroup)
-			{
-				if( layerGroup.getLayers() != null )
-				{					
-					if( layerGroup.getLayers().size() > 0 )
-					{
-						for(int j = 0; j < layerGroup.getLayers().size(); j++)
-						{
-							// traz a legenda da camada do GeoServer
-							if( layerGroup.getLayers().get(j).getDataSource().getUrl() != null ) {
-								layerGroup.getLayers().get(j).setLegend((getLegendLayerFromGeoServer(layerGroup.getLayers().get(j))));	
-							}
-							
-						}
-					}
-				}
-				
-				setLegendsLayers(layerGroup.getLayersGroup());
-			}
-		}
-	}
-	
-	
-	//Camadas
-	
 	private String getUrl(Layer layer, String sUrl)
 	{
 		if(layer.getDataSource().getToken()!= null)
@@ -717,7 +842,6 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * 
 	 * @param filter
 	 * @param pageable
 	 * @return
@@ -725,18 +849,20 @@ public class LayerGroupService
 	@Transactional(readOnly=true)
 	public Page<LayerGroup> listLayerGroups(String filter, PageRequest pageable)
 	{
-		return this.layerGroupRepository.listByFilter(filter, pageable);
+		return this.hasChildren(this.layerGroupRepository.listByFilter(filter, pageable));
 	}
 	
+	
+
 	/**
-	 * 
+	 * Não é necessária a sincronização com hasChildren 
 	 * @param filter
 	 * @param pageable
 	 * @return
 	 */
 	@Transactional(readOnly=true)
 	public List<LayerGroup> listAllLayerGroups()
-	{
+	{		
 		return this.layerGroupRepository.findAll();
 	}
 	
@@ -783,17 +909,10 @@ public class LayerGroupService
 	  */
     @Transactional(readOnly=true)
     public List<LayerGroup> listSupervisorsFilter(String layer, Long dataSource)
-    {
-        /* Retorna lista de ids dos grupos de camadas para não cadastramento de camadas repetidos no grupo */
-        //List<Long> layerGroupIds = this.layerRepository.listLayerGroupIdsByNameAndDataSource(layer, dataSource);
-         
-        //List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layerGroupIds);
-    	
+    {    	
     	List<LayerGroup> layersGroup = this.layerGroupRepository.listSupervisorsFilter(layer, dataSource);
-         
-        this.setLegendsLayers(layersGroup);
-         
-        return layersGroup;
+                 
+        return hasChildren(layersGroup);
          
     }
 	
@@ -868,9 +987,6 @@ public class LayerGroupService
 				{
 					
 					JSONObject jsonOb = (JSONObject) propertiesArray.get(i);
-//					FieldLayer fieldLayer = new FieldLayer();
-//					fieldLayer.setName(jsonOb.get("name").toString());
-//					fieldLayer.set(jsonOb.get("type").toString());
 							
 					LayerField layerField = new LayerField();
 					
@@ -917,7 +1033,7 @@ public class LayerGroupService
 
 	
 	/**
-	 * Mï¿½todo responsï¿½vel para listar as camadas
+	 * Método responsável para listar as camadas
 	 *
 	 * @param filter
 	 * @param idExcluso
@@ -940,7 +1056,12 @@ public class LayerGroupService
 		
 		return layers;
 	}
-	
+	/**
+	 * 
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
 	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, PageRequest pageable )
 	{
@@ -975,13 +1096,20 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer insertLayer( Layer layer )
 	{
-		layer.setLayerGroup(this.findLayerGroupById(layer.getLayerGroup().getId()));
+		layer.setLayerGroup(this.layerGroupRepository.findOne(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
-		return this.layerRepository.save( layer );
+		//Valida se os atributos são válidos
+		layer.validate();
+		
+		this.layerRepository.save( layer );
+		
+		List<Attribute> attributies = layer.getAttributes();
+		layer.setAttributes(this.attributeRepository.save(attributies));
+		return layer;
 	}
 	/**
-	 * mï¿½todo para atualizar uma {@link Camada}
+	 * método para atualizar uma {@link Camada}
 	 * 
 	 * @param camada
 	 * @return camada
@@ -1000,13 +1128,18 @@ public class LayerGroupService
 			this.attributeRepository.delete(attribute);	
 		}
 		
+<<<<<<< HEAD
 		/* Na atualização não foi permitido modificar a fonte de dados, camada e títuulo, dessa forma, 
+=======
+		/* Na atualização não foi permitido modificar a fonte de dados, camada e título, dessa forma, 
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		Os valores originais são mantidos. */
 		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setDataSource(layerDatabase.getDataSource());
 		layer.setName(layerDatabase.getName());
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		
+<<<<<<< HEAD
 		
 		//Pega os atributos para serem salvos no banco de dados
 		List<Attribute> attributesToSave = layer.getAttributes();
@@ -1019,15 +1152,25 @@ public class LayerGroupService
 		
 		//Atualiza todos os atributos antes separadamente da camada. Assim o sistema não fica confiado ao cascade do hibernate
 		for (Attribute attribute : attributesToSave)
+=======
+		for (Attribute attribute : layer.getAttributes())
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		{
 			this.attributeRepository.save(attribute);
 		}
 		
+<<<<<<< HEAD
 		return layer;
+=======
+		layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));
+		
+		return this.layerRepository.save( layer );	
+		
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	}
 	
 	/**
-	 * mï¿½todo para remover uma {@link Camada}
+	 * método para remover uma {@link Camada}
 	 * 
 	 * @param id
 	 */
@@ -1042,18 +1185,17 @@ public class LayerGroupService
 		
 		try
 		{
-			this.layerRepository.delete( id );
-			
+			this.layerRepository.delete( id );			
 		}
 		catch (ConstraintViolationException e)
 		{
-			
+			e.printStackTrace();
 		}
 		
 	}
 	
 	/**
-	 * mï¿½todo para encontrar uma {@link Camada} pelo id
+	 * método para encontrar uma {@link Camada} pelo id
 	 * 
 	 * @param id
 	 * @return camada
@@ -1061,8 +1203,9 @@ public class LayerGroupService
 	 */
 	@Transactional(readOnly = true)
 	public Layer findLayerById( Long id )
-	{
-		final Layer layer = this.layerRepository.findOne(id);
+	{		
+		final Layer layer = this.layerRepository.findById(id);
+		
 		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));
 		
 		// traz a legenda da camada do GeoServer
@@ -1074,7 +1217,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Mï¿½todo para listar as configuraï¿½ï¿½es de camadas paginadas com opï¿½ï¿½o do filtro
+	 * Método para listar as configurações de camadas paginadas com opção do filtro
 	 *
 	 * @param filter
 	 * @param pageable
@@ -1092,7 +1235,6 @@ public class LayerGroupService
 			if( layer.getDataSource().getUrl() != null) {
 				layer.setLegend(getLegendLayerFromGeoServer(layer));
 			}
-			
 		}
 		
 		return layers;
@@ -1100,7 +1242,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Mï¿½todo que busca a legenda de uma camada no geo server
+	 * Método que busca a legenda de uma camada no geo server
 	 * @param camada
 	 * @return
 	 */
@@ -1162,11 +1304,14 @@ public class LayerGroupService
 		
 		for (AccessGroupLayer grupoAcessoCamada : grupoAcessoCamadas)
 		{
+			grupoAcessoCamada.setAccessGroup(this.accessGroupRepository.findById(grupoAcessoCamada.getAccessGroup().getId()));
 			grupos.add(grupoAcessoCamada.getAccessGroup());
 		}
 		
 		return grupos;
 	}
+	
+	
 	
 	/**
 	 * 
@@ -1189,7 +1334,6 @@ public class LayerGroupService
 				System.out.println(e.getMessage()	);
 				continue;
 			}
-			
 		}
 		
 		return listFeatures;
@@ -1223,18 +1367,15 @@ public class LayerGroupService
 		}
 		
 	}
-	
+	/**
+	 * 
+	 * @param layerId
+	 * @return
+	 */
 	public List<Attribute> listAttributesByLayer(Long layerId){
 		
 		return this.attributeRepository.listAttributeByLayer(layerId);
 	}
-	/*
-	public List<File> listIcons(){
-		//File diretorio = new File(); 
-		//InputStream input = getClass().getResourceAsStream("/main/webapp/static/icons");
-		File folder = new File("/main/webapp/static/icons");
-		
-	}*/
 	
 	/**
 	 * Method that return a list of tools by user access group
@@ -1280,4 +1421,59 @@ public class LayerGroupService
 		
 		return toolsUser ;
 	}
+	
+	/**
+	 * Verifica se os grupos de acesso de uma página de grupos de acessos tem filhos
+	 * @param listByFilter
+	 * @return
+	 */
+	private Page<LayerGroup> hasChildren(Page<LayerGroup> layersGroups)
+	{
+		for (LayerGroup layerGroup : layersGroups)
+		{
+			layerGroup = this.hasChildren(layerGroup);
+		}
+		return layersGroups;
+	}
+	
+	/**
+	 * Verifica se os grupos de acesso de uma lista de grupos de acessos tem filhos
+	 * @param accessGroups
+	 * @param published
+	 * @return
+	 */
+	private List<LayerGroup> hasChildren(List<LayerGroup> layersGroups)
+	{
+		for (LayerGroup layerGroup : layersGroups)
+		{
+			layerGroup = this.hasChildren(layerGroup);
+		}
+		return layersGroups;
+	}
+	
+	/**
+	 * Verifica se o grupo de acesso tem filhos
+	 * @param accessGroups
+	 * @return
+	 */
+	private LayerGroup hasChildren(LayerGroup layerGroup)
+	{		
+		
+		List<LayerGroup> listLayerGroups = this.layerGroupRepository.listLayersGroupByLayerGroupId(layerGroup.getId());
+		List<Layer> layers = this.layerRepository.listLayersByLayerGroupId(layerGroup.getId());
+//		this.setIcon(layers);
+		
+		layerGroup.setLayers(layers);
+		// Verifica se tem filhos, sejam layersGroups ou layers
+		layerGroup.setHasChildren((listLayerGroups != null && listLayerGroups.size() >0 || layers != null && layers.size() >0) 
+				|| ((listLayerGroups != null && listLayerGroups.size() >0 && layers != null && layers.size() >0)));
+		
+		if (layerGroup.getHasChildren())
+		{
+			layerGroup.setLayersGroup(hasChildren(listLayerGroups));
+		}
+		return layerGroup;
+	}
+	
+	
 }

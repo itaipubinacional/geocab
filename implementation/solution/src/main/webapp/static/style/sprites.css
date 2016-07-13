@@ -17,7 +17,7 @@
 	background: url(../images/logo-itaipu.png) 19px 20px no-repeat;
 	background-size: 61px;
 	width: 79px;
-	height: 85px;
+	height: 60px;
 	display: block;
 	float: left;
 	margin-left: -15px;
@@ -55,7 +55,12 @@
 }
 
 .approve1:hover{
-	background: url(../images/marker-moderation/aceitar.png) green 24px 8px no-repeat;
+	background: url(../images/marker-moderation/aceitar.png) 24px 8px no-repeat;
+	background-size: 26px;
+	color: white
+}
+.cancel{
+	background: url(../images/marker-moderation/aceitar.png) 24px 8px no-repeat;
 	background-size: 26px;
 	color: white
 }

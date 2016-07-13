@@ -11,7 +11,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 
     $importService("dataSourceService");
-    
+
     /*-------------------------------------------------------------------
      * 		 				 	EVENTS
      *-------------------------------------------------------------------*/
@@ -44,7 +44,7 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
     });
 
     /**
-     * 
+     *
      */
     $scope.selectedEntity = null;
 
@@ -109,15 +109,15 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
      * @filter - Query filter
      */
     $scope.data = { filter:null };
-    
+
     /**
     *
     * @type {boolean}
     */
    $scope.showLoading = true;
-   
+
    /**
-    * 
+    *
     */
    $scope.currentEntity;
 
@@ -133,14 +133,14 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
         pageRequest.size = 6;
         $scope.pageRequest = pageRequest;
 
-        /*var order = new Order();
+        var order = new Order();
         order.direction = 'ASC';
-        order.property = 'id';
+        order.property = 'name';
 
         $scope.pageRequest.sort = new Sort();
-        $scope.pageRequest.sort.orders = [ order ];*/
+        $scope.pageRequest.sort.orders = [ order ];
 
-        $scope.listDataSourceByFilters( null, pageRequest );
+        $scope.listDataSourceByFilters( null, $scope.pageRequest );
     };
 
     /**
@@ -169,24 +169,24 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
         }
 
     };
-    
+
     /**
 	 * Performs the query records, consirando filter, paging and sorting.
 	 * When ok, change the State of the screen to list.
-	 * 
+	 *
 	 * @see data.filter
 	 * @see currentPage
 	 */
 	$scope.listDataSourceByFilters = function( filter, pageRequest ) {
-		
+
 		$scope.showLoading = true;
-		
+
 		dataSourceService.listDataSourceByFilters( filter, pageRequest, {
 			callback : function(result) {
 				$scope.currentPage = result;
 				$scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
                 $scope.$apply();
-				
+
 				$scope.showLoading = false;
 
                 //Function responsible for marking the records that were already tagged prior to the opening of pop-up
@@ -210,14 +210,14 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
                 }
 
 				$scope.$apply();
-				
+
 			},
 			errorHandler : function(message, exception) {
 				$scope.msg = {type:"danger", text: message, dismiss:true};
 				$scope.$apply();
 			}
 		});
-		
+
 	};
 
     /**

@@ -11,16 +11,17 @@
 <!-- My account - Update -->
 <div>
 
-	
-	<!--Mensagens-->
-    <div class="alert" ng-class="{'alert-dismissable': msg.dismiss, 'danger' : (msg.type == 'danger'), 'info' : (msg.type == 'info'), 'warning' : (msg.type == 'warning'), 'success' : (msg.type == 'success')}" ng-show="msg != null">
-	    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button> 
-	    {{msg.text}}
-	</div>
+
     <form name="form" novalidate default-button="buttonUpdate">
         <div class="content-tab">
       		
-      		
+<!--       		<button ng-show="currentState == UPDATE_STATE || currentState== 'my-preferences.form'" style="float: right;" -->
+<!--                     class="btn btn-success" -->
+<!--                     id="buttonUpdate" -->
+<%--                     title="<spring:message code='admin.users.Save'/>" --%>
+<!--                     ng-click="updateUser()"> -->
+<%--                 <spring:message code="admin.users.Save"/> --%>
+<!--             </button> -->
             <div class="form-item position-relative" style="width: 300px;">
                 <label class="detail-label" ><spring:message code="admin.users.Name"/></label>
                 <input name="name" type="text" class="form-control"
@@ -88,11 +89,14 @@
                
                 
             </div>
-  			<br>
+  			
             
             
+            <br>
         </div>
+        
     </form>
+    
     
     
   

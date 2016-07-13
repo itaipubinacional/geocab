@@ -15,7 +15,7 @@
 			<loader class="org.infinispan.loaders.jdbm.JdbmCacheStore"
 				fetchPersistentState="false" purgeOnStartup="false">
 				<properties>
-					<property name="location" value="/tmp/geocab/cache" />
+					<property name="location" value="@mvn.jcr.caches@" />
 				</properties>
 			</loader>
 		</loaders>

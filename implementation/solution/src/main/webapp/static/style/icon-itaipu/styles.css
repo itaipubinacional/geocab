@@ -113,3 +113,48 @@
 .itaipu-icon-ruler-1:before {
   content: "z";
 }
+.itaipu-icon-reset:before {
+  content: "C";
+}
+.itaipu-icon-export:before {
+  content: "D";
+}
+.itaipu-icon-ruler:before {
+  content: "x";
+}
+.itaipu-icon-geolocation:before {
+  content: "F";
+}
+.itaipu-icon-zoom-extend:before {
+  content: "G";
+}
+.itaipu-icon-zoom-in:before {
+  content: "A";
+}
+.itaipu-icon-zoom-out:before {
+  content: "B";
+}
+.itaipu-icon-search:before {
+  content: "H";
+}
+.itaipu-icon-shp:before {
+  content: "E";
+}
+.itaipu-icon-floppy:before {
+  content: "I";
+}
+.itaipu-icon-dislike:before {
+  content: "K";
+}
+.itaipu-icon-like-filled:before {
+  content: "L";
+}
+.itaipu-icon-book:before {
+  content: "J";
+}
+.itaipu-icon-arrow-left-1:before {
+  content: "M";
+}
+.itaipu-icon-globe-world:before {
+  content: "N";
+}

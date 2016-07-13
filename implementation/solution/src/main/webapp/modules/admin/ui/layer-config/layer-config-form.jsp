@@ -172,7 +172,7 @@
             </span>
 
             <br/>
-            <div class="form-item position-relative" style="width: 350px;">
+            <div class="form-item position-relative" style="width: 350px;" ng-if="currentEntity.dataSource">
                 <label class="detail-label" required><spring:message code="admin.layer-config.Layer-group"/> </label>
                 <div class="input-group">
                     <input name="layerGroup" type="text" disabled class="form-control"
@@ -206,8 +206,11 @@
 
             <div class="form-item position-relative" style="width: 300px;"
                  ng-if="currentState">
-                <input type="checkbox" id="grupo" style="width: 20px;"
-                       ng-model="currentEntity.startEnabled"> <label><spring:message code="admin.layer-config.Start-allowed-in-map"/></label>
+                <label>
+                    <input type="checkbox" id="grupo" style="width: 20px;"
+                           ng-change="currentEntity.startVisible = currentEntity.startEnabled || currentEntity.enabled || currentEntity.startVisible"
+                           ng-model="currentEntity.startEnabled"> <spring:message code="admin.layer-config.Start-allowed-in-map"/>
+                </label>
 
             </div>
 
@@ -215,9 +218,12 @@
 
             <div class="form-item position-relative" style="width: 300px;"
                  ng-if="currentState">
-                <input type="checkbox" style="width: 20px;"
-                       ng-model="currentEntity.startVisible"
-                       ng-disabled="currentState == DETAIL_STATE"> <label><spring:message code="admin.layer-config.Available-in-the-layers-menu"/></label>
+                <label>
+                    <input type="checkbox" style="width: 20px;"
+                               ng-model="currentEntity.startVisible"
+                               ng-disabled="currentState == DETAIL_STATE || currentEntity.startEnabled || currentEntity.enabled">
+                      <spring:message code="admin.layer-config.Available-in-the-layers-menu"/>
+                </label>
 
             </div>
 
@@ -225,9 +231,13 @@
 			
 			<div ng-if="!currentEntity.dataSource.url" class="form-item position-relative" style="width: 300px;"
                  ng-if="currentState">
-                <input type="checkbox" style="width: 20px;"
+                <label>
+                    <input type="checkbox" style="width: 20px;"
                        ng-model="currentEntity.enabled"
-                       ng-disabled="currentState == DETAIL_STATE"> <label><spring:message code="admin.layer-config.Available-to-receive-posts"/></label>
+                       ng-change="currentEntity.startVisible = currentEntity.startEnabled || currentEntity.enabled || currentEntity.startVisible"
+                       ng-disabled="currentState == DETAIL_STATE">
+                    <spring:message code="admin.layer-config.Available-to-receive-posts"/>
+                </label>
 
             </div>
             

@@ -1,0 +1,10 @@
+<ion-footer-bar class="bar-positive bar-subfooter" align-title="left">
+  <h1 class="title" style="text-align: left" ng-if="currentEntity.layer.name">{{ currentEntity.layer.title ? currentEntity.layer.title : currentEntity.name }}</h1>
+  <h1 class="title" style="text-align: left" ng-if="!currentEntity.layer.name">{{'map.New-post' | translate}}</h1>
+</ion-footer-bar>
+<ion-footer-bar align-title="center" class="bar-positive">
+  <div class="row">
+    <p>{{ showMarkerPosition() }}</p>
+  </div>
+</ion-footer-bar>
+<button class="button button-icon icon ion-android-done confirm-marker-button fab" ng-if="!currentEntity.id"></button>

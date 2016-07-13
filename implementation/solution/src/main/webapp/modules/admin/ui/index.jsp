@@ -74,8 +74,12 @@
 	<script type="text/javascript" src="modules/admin/controller/access-group-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/users-controller.js"></script>
 	<script type="text/javascript" src="modules/admin/controller/marker-moderation-controller.js"></script>
+	<script type="text/javascript" src="modules/admin/controller/markers-controller.js"></script>
+	<script type="text/javascript" src="modules/map/controller/popup/upload-controller.js"></script>
+	<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
 	<script type="text/javascript" src="static/libs/eits-directives/autocomplete/autocomplete.js"></script>
+
    		
 	</body>
 </html>

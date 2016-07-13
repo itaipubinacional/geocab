@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 /**
  *
@@ -14,7 +14,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
 
     $importService("layerGroupService");
-    
+
     /*-------------------------------------------------------------------
      * 		 				 	EVENT HANDLERS
      *-------------------------------------------------------------------*/
@@ -99,14 +99,17 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @type {Array}
      */
     $scope.originalGroups = [];
-    
+
     /**
      * @type {Array}
      * */
     $scope.attributes = [];
-    
+
     $scope.allLayers = null;
-    
+
+
+
+
     /**
     *
     */
@@ -122,19 +125,25 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         '<a ui-sref="layer-config.update({id:row.entity.id})"  " title="'+ $translate("admin.layer-config.Update") +'" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
         '<a ng-click="changeToRemove(row.entity)" title="'+ $translate("admin.layer-config.Delete") +'" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
         '</div>';
-    
+
     var LAYER_TYPE_NAME = '<div class="ngCellText ng-scope col4 colt4">' +
     '<span ng-if="!row.entity.dataSource.url" ng-cell-text="" class="ng-binding">Camada interna</span>' +
     '<span ng-if="row.entity.dataSource.url" ng-cell-text="" class="ng-binding">{{ row.entity.name }}</span>' +
     '</div>';
 
-    
+
+    var LAYER_TITLE =
+    '<div class="ngCellText ng-scope col3">' +
+      '<span title="{{row.entity.title}}" class="dynamic-text ng-binding">{{ row.entity.title }}</span>' +
+    '</div>';
+
+
     var MARKER_BUTTONS = '<div  class="cell-centered">' +
     '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == false" class="btn btn-mini"><i style="font-size: 16px; color: red" class="glyphicon glyphicon-ban-circle"></i></a>'+
     '<a ng-if="!row.entity.dataSource.url && row.entity.enabled == true" class="btn btn-mini"><i style="font-size: 16px; color: green" class="glyphicon glyphicon-ok"></i></a>'+
     '<a ng-if="row.entity.dataSource.url" class="btn btn-mini"><i style="font-size: 16px; color: blue" class="glyphicon glyphicon glyphicon-minus"></i></a>'+
     '</div>';
-    
+
     var IMAGE_LEGEND = '<div class="ngCellText" ng-cell-text ng-class="col.colIndex()">' +
 	'<img ng-if="row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.legend}}"/>' +
 	'<img ng-if="!row.entity.dataSource.url" style="width: 20px; height: 20px; border: solid 1px #c9c9c9;" ng-src="{{row.entity.icon}}"/>' +
@@ -158,7 +167,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         columnDefs: [
             {displayName: 'Postagem', sortable: false, cellTemplate: MARKER_BUTTONS, width: '6%'},
             {displayName: $translate('admin.layer-config.Symbology'), field:'legend', sortable:false, width: '6%', cellTemplate: IMAGE_LEGEND},
-            {displayName: $translate('Title'), field: 'title', width: '19%'},
+            {displayName: $translate('Title'), cellTemplate: LAYER_TITLE, width: '19%'},
+            // {displayName: $translate('Title'), field: 'title', width: '19%'},
             //{displayName: $translate('Layer'), field: 'name', width: '19%'},
             {displayName: $translate('Layer'), cellTemplate: LAYER_TYPE_NAME, width: '19%'},
             {displayName: $translate('admin.datasource.Data-Source'), field: 'dataSource.name', width: '30%'},
@@ -175,8 +185,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * General settings of ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
      */
-    
-    
+
+
     $scope.gridAccessOptions = {
 			data: 'selectedGroups',
 			multiSelect: false,
@@ -191,24 +201,30 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 				 {displayName: '',sortable: false, cellTemplate: GRID_ACTION_ACCESS_BUTTONS, width: '100px'}
 			]
 	};
-    
+
     var GRID_ACTION_ATTRIBUTES_BUTTONS = '<div class="cell-centered">' +
     '<a ng-if="!row.entity.attributeDefault" ng-click="updateAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Update" class="btn btn-mini"><i class="itaipu-icon-edit"></i></a>' +
     '<a ng-if="!row.entity.attributeDefault" ng-click="removeAttribute(row.entity)" ng-if="currentState != DETAIL_STATE" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>' +
     '</div>';
-    
+
     var TYPE_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'DATE\'" >'+ $translate("admin.layer-config.DATE") +'</span>' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'BOOLEAN\'" >'+ $translate("admin.layer-config.BOOLEAN") +'</span>' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'TEXT\'" >'+ $translate("admin.layer-config.TEXT") +'</span>' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'NUMBER\'" >'+ $translate("admin.layer-config.NUMBER") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'PHOTO_ALBUM\'" >'+ $translate("admin.layer-config.PHOTO_ALBUM") +'</span>' +
     '</div>';
-    
+
     var REQUIRED_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == false" >'+ $translate("admin.layer-config.false") +'</span>' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.required == true" >'+ $translate("admin.layer-config.true") +'</span>' +
     '</div>';
-    
+
+    var VISIBLE_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.visible == false" >'+ $translate("admin.layer-config.false") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.visible == true" >'+ $translate("admin.layer-config.true") +'</span>' +
+    '</div>';
+
     /**
      * Configurações gerais da ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
@@ -232,15 +248,16 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         columnDefs: [
             {displayName: $translate('Name'), field: 'name', width: '30%'},
             {displayName: $translate('Type'), field: 'type', cellTemplate:TYPE_COLUMN ,  width: '30%'},
-            {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: REQUIRED_COLUMN}, 
+            {displayName: $translate('Required'),field: 'required', sortable: false, cellTemplate: REQUIRED_COLUMN},
+            {displayName: $translate('Visible'),field: 'visible', sortable: false, cellTemplate: VISIBLE_COLUMN},
 //            	'<div>' +
 //                '<input type="checkbox" disabled="disabled" ng-checked="row.entity.required" >' +
 //                '</div>', width: '30%'},
             {displayName: '', sortable: false, cellTemplate: GRID_ACTION_ATTRIBUTES_BUTTONS, width: '10%'}
         ]
     };
-    
-    
+
+
     /**
      * Configurações gerais da ng-grid.
      * @see https://github.com/angular-ui/ng-grid/wiki/Configuration-Options
@@ -257,14 +274,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 				$state.go($scope.DETAIL_STATE, {id:row.entity.id});*/
         },
         columnDefs: [
-            {displayName: $translate('Name'), field: 'name', width: '33%'},
-            {displayName: $translate('Type'),  cellTemplate: TYPE_COLUMN ,  width: '33%'},
-            {displayName: $translate('Required'), cellTemplate: REQUIRED_COLUMN,  width: '33%'},
+            {displayName: $translate('Name'), field: 'name', width: '30%'},
+            {displayName: $translate('Type'),  cellTemplate: TYPE_COLUMN ,  width: '30%'},
+            {displayName: $translate('Required'), cellTemplate: REQUIRED_COLUMN,  width: '20%'},
+            {displayName: $translate('Visible'), cellTemplate: VISIBLE_COLUMN,  width: '20%'}
         ]
     };
 
-    
-    
+
+
     /**
      * Variable that stores the State of the paging
      * to render the pager and also to make requisitions of
@@ -312,9 +330,9 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.initialize = function (toState, toParams, fromState, fromParams) {
         var state = $state.current.name;
-        
-        
-        
+
+
+
         /**
          * It is necessary to remove the sortInfo attribute because the return of an edition was doubling the value of the same with the Sort attribute
          * preventing the ordinations in the columns of the grid.
@@ -363,11 +381,24 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.changeToList = function () {
         $log.info("changeToList");
-        
+
         $scope.currentState = $scope.LIST_STATE;
 
         var pageRequest = new PageRequest();
-        pageRequest.size = 10;
+
+        pageRequest = {
+						  "size":10,
+						  "sort":{
+							"orders":[
+							  {
+								"direction":"ASC",
+								"nullHandling":null,
+								"property":"title"
+							  }
+							]
+						  }
+						}
+
         $scope.pageRequest = pageRequest;
 
         $scope.listLayersByFilters(null, pageRequest);
@@ -386,7 +417,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $log.info("changeToInsert");
 
         $scope.layers = {};
-        
+
         /**
          * Attributes default
          * */
@@ -395,20 +426,20 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         attribute.type = "TEXT";
         attribute.required = "true";
         attribute.attributeDefault = true;*/
-         
+
         $scope.attributes = [];
         //$scope.attributes.push(attribute);
-        
+
         $scope.originalGroups = [];
         $scope.selectedGroups = [];
         $scope.addGroups = [];
         $scope.removeGroups = [];
 
         $scope.currentEntity = new Object();
-        
+
         $scope.currentEntity.icon = 'static/icons/default_blue.png';
 
-        $scope.currentState = $scope.INSERT_STATE;       
+        $scope.currentState = $scope.INSERT_STATE;
 
     };
 
@@ -435,8 +466,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentState = $scope.UPDATE_STATE;
                 $state.go($scope.UPDATE_STATE);
                 $scope.$apply();
-                
+
                 $scope.loadAccessGroups(result.id);
+
+                $scope.currentEntity.startVisible = $scope.currentEntity.startEnabled || $scope.currentEntity.enabled || $scope.currentEntity.startVisible;
+
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -459,7 +493,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $log.info("changeToDetail", id);
 
         if (id == null || id == "" || id == 0) {
-            $scope.msg = {type: "error", text: $scope.INVALID_ID_MESSAGE, dismiss: true};
+            $scope.msg = {type: "danger", text: $scope.INVALID_ID_MESSAGE, dismiss: true};
             $scope.currentState = $scope.LIST_STATE;
             $state.go($scope.LIST_STATE);
             return;
@@ -468,18 +502,22 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         layerGroupService.findLayerById(id, {
             callback: function (result) {
                 $scope.currentEntity = result;
-                $scope.attributes = result.attributes;                
+                $scope.attributes = result.attributes;
                 $scope.layers.values = {};
                 $scope.layers.values[0] = '1:'+$scope.currentEntity.minimumScaleMap.substring(2);
                 $scope.layers.values[1] = '1:'+$scope.currentEntity.maximumScaleMap.substring(2);
                 $scope.currentState = $scope.DETAIL_STATE;
                 $state.go($scope.DETAIL_STATE, {id: id});
                 $scope.$apply();
-                
+
                 $scope.loadAccessGroups(result.id);
+
+                $scope.currentEntity.startVisible = $scope.currentEntity.startEnabled || $scope.currentEntity.enabled || $scope.currentEntity.startVisible;
+
+
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "danger", text: $translate(message), dismiss: true};
                 $scope.$apply();
             }
         });
@@ -530,16 +568,16 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                     }
 
                     $scope.msg = {type: "success", text: $translate('admin.datasource.The-register')+' "'+ layer.name + '" '+$translate('admin.datasource.was-successfully-deleted')+'.', dismiss: true};
-                         			  
+
       			  	$scope.fadeMsg();
                 },
                 errorHandler: function (message, exception) {
                 	if (exception.message.indexOf("ConstraintViolationException") > -1){
-                		message = $translate('admin.layer-config.Is-not-possible-to-remove-the-layer-because-the-layer-is-present-at-a-custom-search');
+                		message = $translate('admin.layer-config.You-can-not-remove-the-layer-check-that-it-is-referenced-in-a-post-or-custom-search');
                 	}
-                    $scope.msg = {type: "danger", text: message, dismiss: true};
-                    $scope.fadeMsg();                   
-                    
+                    $scope.msg = {type: "danger", text:message, dismiss: true};
+                    $scope.fadeMsg();
+
                     $scope.$apply();
                 }
             });
@@ -570,16 +608,16 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      * @see currentPage
      */
     $scope.listLayersByFilters = function (filter, pageRequest) {
-    	
+
     	if ( pageRequest.sort == null ){
     		var order = new Order();
             order.direction = 'ASC';
             order.property = 'id';
-            	
+
             pageRequest.sort = new Sort();
             pageRequest.sort.orders = [order];
     	}
-    	
+
         layerGroupService.listLayersByFilters(filter, pageRequest, {
             callback: function (result) {
                 $scope.currentPage = result;
@@ -601,19 +639,19 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
      */
     $scope.insertLayer = function (layer) {
 
-    	
+
     	layer.minimumScaleMap = 'UM'+$scope.layers.values[0].substring(2);
     	layer.maximumScaleMap = 'UM'+$scope.layers.values[1].substring(2);
-        
+
         if (!$scope.form().$valid) {
             $scope.msg = {type: "danger", text: $translate("admin.layer-config.The-highlighted-fields-are-required"), dismiss: true};
             $scope.fadeMsg();
             return;
         }
-        
+
         if ($scope.currentEntity.dataSource.url == null) {
         	layer.name = $scope.currentEntity.title
-        	
+
         	for (var k = 0; k < $scope.currentPage.content.length; k++ ){
         		if ( $scope.currentEntity.title.toUpperCase() == $scope.currentPage.content[k].title.toUpperCase() ){
         			$scope.msg = {type:"danger", text: $translate('admin.layer-config.The-field-name-already-exists,-change-and-try-again'), dismiss : true };
@@ -621,10 +659,10 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         			return;
         		}
         	}
-        	
+
         }
-        
-        	
+
+
         if( ($scope.currentEntity.dataSource.url == null) && ($scope.currentEntity.icon == undefined) ){
         	$scope.msg = {type:"danger", text:$translate("admin.layer-config.Choose-an-icon"),dissmiss:true };
         	$scope.fadeMsg();
@@ -632,25 +670,26 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         }
 
         if ( layer.legend == null ) {
-            
+
             angular.forEach($scope.attributes, function(value, index){
             	value.layer = layer;
             })
-            
-            layer.attributes = $scope.attributes;	
+
+            layer.attributes = $scope.attributes;
         }
-        
+
         layerGroupService.insertLayer(layer, {
             callback: function (result) {
 				$scope.currentState = $scope.LIST_STATE;
                 $scope.currentEntity = result;
 				$state.go($scope.LIST_STATE);
                 $scope.msg = {type: "success", text: $translate("admin.layer-config.The-layer-has-been-created-successfully")+"!", dismiss: true};
+                $scope.fadeMsg();
                 $scope.$apply();
                 $scope.saveGroups();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "danger", text:$translate(message), dismiss: true};
                 $scope.$apply();
             }
         });
@@ -671,13 +710,13 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         }
 
         layer.name = layer.title;
-        
+
         angular.forEach($scope.attributes, function(value, index){
         	value.layer = layer;
         })
-        
+
         layer.attributes = $scope.attributes;
-        
+
 
         layerGroupService.updateLayer(layer, {
             callback: function () {
@@ -688,20 +727,20 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: message, dismiss: true};
+                $scope.msg = {type: "danger", text:$translate(message), dismiss: true};
                 $scope.$apply();
             }
         });
     };
 
     /**
-     * 
+     *
      */
     $scope.selectLayerGroup = function () {
 
     	var request = {
 	            callback: function (result) {
-	
+
 	                var dialog = $modal.open({
 	                    templateUrl: "modules/admin/ui/layer-config/popup/layer-group-popup.jsp",
 	                    controller: SelectLayerGroupPopUpController,
@@ -715,23 +754,23 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 	                        }
 	                    }
 	                });
-	
+
 	                dialog.result.then(function (result) {
-	
+
 	                    if (result) {
 	                        $scope.currentEntity.layerGroup = result;
 	                        $scope.currentEntity.layerGroup.name = result.label;
 	                    }
-	
+
 	                });
-	
+
 	            },
 	            errorHandler: function (message, exception) {
-	                $scope.message = {type: "error", text: message};
+	                $scope.message = {type: "danger", text: message};
 	                $scope.$apply();
 	            }
 	        };
-    	
+
     	// checks if is internal layer
     	if($scope.currentEntity.dataSource.url == null){
     		layerGroupService.listLayersGroupUpper(request);
@@ -815,8 +854,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
         $scope.msg = null;
     };
 
-    
-    
+
+
     /*-------------------------------------------------------------------
      *                 ACCESS GROUP - BEHAVIORS
      *-------------------------------------------------------------------*/
@@ -861,7 +900,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             }
         });
     };
-    
+
     $scope.loadAccessGroups = function(camadaId) {
         layerGroupService.listAccessGroupByLayerId(camadaId, {
             callback: function(result) {
@@ -875,7 +914,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             }
         })
     };
-    
+
     $scope.removeAccessGroup = function (entity) {
         var index = $scope.selectedGroups.indexOf(entity);
         var index2 = $scope.addGroups.indexOf(entity);
@@ -890,7 +929,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             $scope.removeGroups.push(entity);
         }
     };
-     
+
      $scope.selectAccessGroups = function() {
          var dialog = $modal.open({
              templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
@@ -947,7 +986,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
          });
      }
-    
+
 //    $scope.selectAccessGroups = function () {
 //        var dialog = $modal.open({
 //            templateUrl: "modules/admin/ui/custom-search/popup/access-group-popup.jsp",
@@ -977,11 +1016,11 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 //            }
 //        });
 //    }
-    
+
     /*-------------------------------------------------------------------
-     *                
+     *
      *-------------------------------------------------------------------*/
-  
+
     $scope.moreIcons = function() {
     	var dialog = $modal.open({
             templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
@@ -1007,12 +1046,12 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         });
     }
-    
+
     /**
      * Update attribute
      * */
     $scope.updateAttribute = function(attribute) {
-    	
+
     	var dialog = $modal.open({
             templateUrl: "modules/admin/ui/layer-config/popup/update-attribute-popup.jsp",
             controller: UpdateAttributePopUpController,
@@ -1034,7 +1073,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         });
     }
-    
+
     /**
      * Add attribute
      * */
@@ -1057,15 +1096,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.currentEntity.title = result.title;
                 $scope.currentEntity.legend = result.legend;
             }
-            
+
             for(var i = 0; i < $scope.attributes.length; i++)
             {
                 $scope.attributes[i].orderAttribute = i;
             }
 
         });
-    }
-    
+    };
+
     /**
      * Remove attribute
      * */
@@ -1074,15 +1113,15 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
 
         $scope.attributes.splice(index, 1);
     }
-    
+
     $scope.fadeMsg = function(){
     	$("div.msg").show();
-		  
+
     	setTimeout(function(){
 	  		$("div.msg").fadeOut();
 	  	}, 5000);
     }
-    
+
     /**
     *
     */
@@ -1106,7 +1145,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
        }
        $scope.apply;
    };
-    
+
     /**
     *
     */

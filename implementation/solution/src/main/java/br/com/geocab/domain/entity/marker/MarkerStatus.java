@@ -12,7 +12,7 @@ import org.directwebremoting.annotations.DataTransferObject;
  * @version 1.0
  * 
  */
-@DataTransferObject(type="enum")
+@DataTransferObject(type="enum", javascript = "MarkerStatus")
 public enum MarkerStatus
 {
 	
@@ -20,8 +20,8 @@ public enum MarkerStatus
 	 *				 		     ENUMS
 	 *-------------------------------------------------------------------*/
 	//Do not change this order
-	PENDING, ACCEPTED, REFUSED;
-	
+	PENDING, ACCEPTED, REFUSED, SAVED, CANCELED;
+//	YELLOW    GREEN    ORANGE    GRAY   RED
 	/**
 	 *
 	 * @return value of enum

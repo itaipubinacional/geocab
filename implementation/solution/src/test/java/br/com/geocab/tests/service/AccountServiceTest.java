@@ -9,8 +9,8 @@ import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.account.UserRole;
+import br.com.geocab.domain.entity.configuration.account.User;
+import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.service.AccountService;
 import br.com.geocab.tests.AbstractIntegrationTest;
 

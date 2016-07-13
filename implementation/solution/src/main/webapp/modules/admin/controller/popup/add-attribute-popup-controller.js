@@ -72,7 +72,8 @@ function AddAttributePopUpController($scope, $injector,$modalInstance, $state, a
 		}
 		
 		if(!$scope.currentEntity.required) $scope.currentEntity.required = false;
-		
+		if(!$scope.currentEntity.visible) $scope.currentEntity.visible = false;
+
 		attributes.push($scope.currentEntity);
 		$scope.close();
 	}

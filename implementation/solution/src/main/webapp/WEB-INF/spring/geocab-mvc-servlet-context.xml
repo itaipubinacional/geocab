@@ -7,7 +7,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
 		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr/spring-dwr-3.0.xsd"
 	default-autowire="byName">
@@ -45,7 +45,10 @@
 	<!-- DWR - Defines the dwrController. During production, set the debug property to false -->
 	<dwr:controller debug="false">
 		<dwr:config-param name="scriptCompressed" value="true"/>
-    	<dwr:config-param name="activeReverseAjaxEnabled" value="false"/> 
+		<!-- Enable CORS -->
+    	<dwr:config-param name="allowScriptTagRemoting" value="true"/>
+    	<dwr:config-param name="crossDomainSessionSecurity" value="false"/>
+    	<dwr:config-param name="allowGetForSafariButMakeForgeryEasier" value="true"/>
 	</dwr:controller>
 	
 	<!--
@@ -54,8 +57,8 @@
 	<mvc:annotation-driven />
 	
 	<!-- The controllers are autodetected POJOs labeled with the @Controller annotation. --> 
-	<context:component-scan  
-		base-package="br.com.geocab.application.controller"/>
+	<context:component-scan base-package="br.com.geocab.application.controller"/>		
+	<context:component-scan base-package="br.com.geocab.infrastructure.social.mobile"/>
 		
 	<!-- Social -->
 	<bean class="org.springframework.social.connect.web.ProviderSignInController"/>

@@ -31,7 +31,7 @@ public interface ICustomSearchRepository extends IDataRepository<CustomSearch, L
 	 * @param pageable
 	 * @return
 	 */
-	@Query(value="SELECT new CustomSearch( customSearch.id, customSearch.name, layer ) " +
+	@Query(value="SELECT new CustomSearch( customSearch.id, customSearch.name, layer.id, layer.name, layer.title, layer.icon, dataSource ) " +
 				"FROM CustomSearch customSearch " +
 				"LEFT OUTER JOIN customSearch.layer layer " + 
 				"LEFT OUTER JOIN layer.dataSource dataSource " +
@@ -41,7 +41,18 @@ public interface ICustomSearchRepository extends IDataRepository<CustomSearch, L
 				"OR ( LOWER(dataSource.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) )" )
 	public Page<CustomSearch> listByFilters( @Param("filter") String filter, Pageable pageable );
 	
+	
+	
 
+	/**
+	 * @param id
+	 * @return
+	 */
+	@Query(value="SELECT new CustomSearch( customSearch.id, customSearch.name, customSearch.layer.id, customSearch.layer.name, customSearch.layer.title, customSearch.layer.icon , customSearch.layer.dataSource ) " +
+			"FROM CustomSearch customSearch " +
+			"WHERE  ( customSearch.id = :id )" )
+	public CustomSearch findById( @Param("id") Long id);
+	
 	/**
 	 * @param id
 	 * @return

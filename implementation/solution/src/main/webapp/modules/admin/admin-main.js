@@ -2,13 +2,13 @@
 	"use strict";
 			
 	//Start the AngularJS
-	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", "ui.tree",'angularBootstrapNavTree', 'ui-scaleSlider', 'localytics.directives', 'grid-no-result', 'eits-default-button']);
+	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", 'angularBootstrapNavTree', "ui.tree", 'ui-scaleSlider', 'localytics.directives', 'grid-no-result', 'eits-default-button', 'eits-upload-file']);
 	
 	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider, $translateProvider ) {
 		//-------
 		//Broker configuration
 		//-------
-		$importServiceProvider.setBrokerURL("broker/interface");
+		$importServiceProvider.setBrokerURL("./broker");
 		
 		//-------
 		//Translate configuration
@@ -144,8 +144,6 @@
             menu: "access-group"
         });
 		
-	
-	
 		//Marker moderation
 		$stateProvider.state('marker-moderation', {
 			url : "/marker-moderation",
@@ -153,6 +151,19 @@
 			controller : MarkerModerationController,
 			menu: 'marker-moderation'
 		});
+
+		//Markers
+		$stateProvider.state('markers', {
+			url : "/markers",
+			templateUrl : "modules/admin/ui/markers/markers-view.jsp",
+			//templateUrl : "modules/admin/ui/marker-moderation/marker-moderation-view.jsp",
+			controller : MarkersController,
+			menu: 'markers'
+		})
+		.state('markers.detail', {
+			url: "/detail/:id",
+			menu: 'markers'
+        });
 		
 	});
 	
@@ -161,12 +172,14 @@
 		$rootScope.$state = $state;
 	    $rootScope.$stateParams = $stateParams;
 	});
+
 	
+
 	/**
 	 * 
 	 */
 	angular.element(document).ready( function() {
-		angular.bootstrap(document, ['admin']);
+		angular.bootstrap(document.getElementsByTagName("body")[0], ['admin']);
 	});
 	
 	

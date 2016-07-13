@@ -21,9 +21,9 @@ import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 import br.com.geocab.domain.entity.markermoderation.Motive;
 import br.com.geocab.domain.entity.markermoderation.MotiveMarkerModeration;
-import br.com.geocab.domain.service.MarkerModerationService;
-import br.com.geocab.domain.service.MarkerService;
 import br.com.geocab.domain.service.MotiveService;
+import br.com.geocab.domain.service.marker.MarkerModerationService;
+import br.com.geocab.domain.service.marker.MarkerService;
 
 
 /**
@@ -74,7 +74,7 @@ public class MarkerRESTful
 		List<Marker> markers = this.markerService.listMarkerByLayer(layerId);
 		final WKTWriter writer = new WKTWriter();
 		
-		// Pega a localização do objeto e converte para o formato WKT
+		// Pega a localizaï¿½ï¿½o do objeto e converte para o formato WKT
 		for (Marker marker : markers)
 		{
 		    marker.setWktCoordenate(writer.write(marker.getLocation()));

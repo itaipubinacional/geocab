@@ -72,7 +72,7 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
 
         var order = new Order();
         order.direction = 'ASC';
-        order.property = 'id';
+        order.property = 'name';
 
         $scope.pageRequest.sort = new Sort();
         $scope.pageRequest.sort.orders = [ order ];
@@ -121,7 +121,7 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
 
             },
             errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
+                $scope.message = {type:"danger", text: message};
                 $scope.showLoading = false;
                 $scope.$apply();
             }

@@ -36,6 +36,19 @@ public interface IDataSourceRepository extends IDataRepository<DataSource, Long>
 	
 	/**
 	 * 
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value="SELECT new DataSource( dataSource.id, dataSource.name, dataSource.url, dataSource.login, dataSource.password ) " +
+			"FROM DataSource dataSource " +
+			"WHERE  ( (( LOWER(dataSource.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " +
+			"OR ( LOWER(dataSource.url) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL )) AND (dataSource.url IS NULL ))" )
+	public Page<DataSource> listInternalDatasourceByFilters( @Param("filter") String filter, Pageable pageable );
+	
+
+	/**
+	 * 
 	 * @return
 	 */
 	@Query(value="SELECT new DataSource( dataSource.id, dataSource.name, dataSource.url ) " +

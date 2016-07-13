@@ -36,6 +36,7 @@
  	<security:http auto-config="false" use-expressions="true" disable-url-rewriting="true" pattern="/api/**" 
  		realm="Geocab API Authentication" entry-point-ref="socialAuthenticationEntryPoint">
  		<security:http-basic/>
+		<security:custom-filter ref="corsFilter" after="PRE_AUTH_FILTER"/>
 		<security:custom-filter ref="socialAuthenticationFilter" before="BASIC_AUTH_FILTER"/>
         <security:intercept-url pattern="/api/authentication/**" access="isAuthenticated()" />
         <security:intercept-url pattern="/api/marker/**" access="isAuthenticated()" />
@@ -59,5 +60,7 @@
  		<constructor-arg ref="authenticationManager"/>
  		<constructor-arg ref="socialAuthenticationEntryPoint"/>
  	</bean>
+ 	
+ 	<bean id="corsFilter" class="br.com.geocab.application.security.CorsFilter"/>
 
 </beans>

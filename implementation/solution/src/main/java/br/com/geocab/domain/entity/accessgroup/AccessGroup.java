@@ -18,7 +18,11 @@ import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
+<<<<<<< HEAD
 import br.com.geocab.domain.entity.account.User;
+=======
+import br.com.geocab.domain.entity.configuration.account.User;
+>>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 import br.com.geocab.domain.entity.tool.Tool;
 
 /**
@@ -39,9 +43,9 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = 6380496199746377568L;
-	
+
 	public static final Long PUBLIC_GROUP_ID = 1L;
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
@@ -49,27 +53,27 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	 * name of {@link AccessGroup}
 	 */
 	@NotEmpty
-	@Column(nullable=false, length=144, unique=true)
+	@Column(nullable = false, length = 144, unique = true)
 	private String name;
 	/**
 	 * description of {@link AccessGroup}
 	 */
 	@NotEmpty
-	@Column(nullable=false, length=255)
+	@Column(nullable = false, length = 255)
 	private String description;
-	
+
 	/**
 	 * 
 	 */
-	@OneToMany(mappedBy="accessGroup")
-	private Set<AccessGroupLayer> accessGroupLayer= new HashSet<AccessGroupLayer>();
-	
+	@OneToMany(mappedBy = "accessGroup")
+	private Set<AccessGroupLayer> accessGroupLayer = new HashSet<AccessGroupLayer>();
+
 	/**
 	 * 
 	 */
-	@OneToMany(mappedBy="accessGroup")
+	@OneToMany(mappedBy = "accessGroup")
 	private Set<AccessGroupCustomSearch> accessGroupCustomSearch = new HashSet<AccessGroupCustomSearch>();
-	
+
 	/**
 	 * list of {@link Tool} tools of {@link AccessGroup}
 	 */
@@ -82,7 +86,7 @@ public class AccessGroup extends AbstractEntity implements Serializable
 		@JoinColumn(name="tool_id", referencedColumnName="id", nullable=true)
 	})
 	private Set<Tool> tools = new HashSet<Tool>();
-	
+
 	/**
 	 * list of {@link User} users of {@link AccessGroup}
 	 */
@@ -95,7 +99,7 @@ public class AccessGroup extends AbstractEntity implements Serializable
 		@JoinColumn(name="user_username", referencedColumnName="id", nullable=true)
 	})
 	private Set<User> users = new HashSet<User>();
-	
+
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -105,25 +109,25 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	 */
 	public AccessGroup()
 	{
-		
+
 	}
 
 	/**
 	 * 
 	 * @param id
 	 */
-	public AccessGroup( Long id )
+	public AccessGroup(Long id)
 	{
 		this.setId(id);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @param name
 	 * @param description
 	 */
-	public AccessGroup( Long id, String name, String description )
+	public AccessGroup(Long id, String name, String description)
 	{
 		this.setId(id);
 		this.setName(name);
@@ -142,7 +146,9 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	{
 		return id;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -156,7 +162,8 @@ public class AccessGroup extends AbstractEntity implements Serializable
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -182,7 +189,7 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	/*-------------------------------------------------------------------
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
-	
+
 	/**
 	 * @return the name
 	 */
@@ -192,7 +199,8 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name)
 	{
@@ -208,7 +216,8 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
 	 */
 	public void setDescription(String description)
 	{
@@ -224,7 +233,8 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param accessGroupLayer the accessGroupLayer to set
+	 * @param accessGroupLayer
+	 *            the accessGroupLayer to set
 	 */
 	public void setAccessGroupLayer(Set<AccessGroupLayer> accessGroupLayer)
 	{
@@ -240,7 +250,8 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param accessGroupCustomSearch the accessGroupCustomSearch to set
+	 * @param accessGroupCustomSearch
+	 *            the accessGroupCustomSearch to set
 	 */
 	public void setAccessGroupCustomSearch(
 			Set<AccessGroupCustomSearch> accessGroupCustomSearch)
@@ -257,7 +268,8 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param tools the tools to set
+	 * @param tools
+	 *            the tools to set
 	 */
 	public void setTools(Set<Tool> tools)
 	{
@@ -273,7 +285,8 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param users the users to set
+	 * @param users
+	 *            the users to set
 	 */
 	public void setUsers(Set<User> users)
 	{

@@ -122,7 +122,7 @@ function SelectConfiguracoesCamadasPopUpController( $scope, $modalInstance, font
 
         var order = new Order();
         order.direction = 'ASC';
-        order.property = 'id';
+        order.property = 'title';
 
         // seta a fonte de dados
         $scope.data.fonteDados = fonteDados;
@@ -192,7 +192,7 @@ function SelectConfiguracoesCamadasPopUpController( $scope, $modalInstance, font
                 $scope.$apply();
             },
             errorHandler : function(message, exception) {
-                $scope.message = {type:"error", text: message};
+                $scope.message = {type:"danger", text: message};
                 $scope.showLoading = false;
                 $scope.$apply();
             }
