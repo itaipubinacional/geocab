@@ -34,10 +34,6 @@ public class NavigationController
 	 */
 	@Autowired
 	private ResourceBundleMessageSource messageSource;
-<<<<<<< HEAD
-	
-=======
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	
 	/*-------------------------------------------------------------------
 	 * 		 				 		BEHAVIORS

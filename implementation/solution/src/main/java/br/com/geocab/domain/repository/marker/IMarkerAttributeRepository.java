@@ -8,10 +8,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-<<<<<<< HEAD
-=======
 import br.com.geocab.domain.entity.layer.AttributeType;
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
@@ -33,22 +30,14 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 			+ " markerAttribute.marker.id, markerAttribute.marker.status, markerAttribute.marker.created, "
 			+ "markerAttribute.marker.layer.id, markerAttribute.marker.layer.name, markerAttribute.marker.layer.title, "
 			+ "markerAttribute.marker.user.id, markerAttribute.marker.user.name, markerAttribute.marker.user.email, markerAttribute.marker.user.enabled, "
-<<<<<<< HEAD
-			+ "markerAttribute.attribute.id, markerAttribute.attribute.name, markerAttribute.attribute.type, markerAttribute.attribute.required, markerAttribute.attribute.orderAttribute) " +
-=======
 			+ "markerAttribute.attribute.id, markerAttribute.attribute.name, markerAttribute.attribute.type, markerAttribute.attribute.required, markerAttribute.attribute.visible, markerAttribute.attribute.orderAttribute) " +
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 				 " FROM MarkerAttribute markerAttribute "+
 				 " WHERE (markerAttribute.marker.id = :markerId)"+ 
 				 " ORDER BY markerAttribute.id ASC")
 	public List<MarkerAttribute> listAttributeByMarker( @Param("markerId") Long markerId );
 	
 	/**
-<<<<<<< HEAD
-	 * É utilizado somente no update LAYER
-=======
 	 * ï¿½ utilizado somente no update LAYER
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	 * 
 	 * @param layerId
 	 * @return

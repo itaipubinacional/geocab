@@ -29,12 +29,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-<<<<<<< HEAD
-import br.com.geocab.domain.entity.account.User;
-=======
 import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.entity.layer.AttributeType;
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
 
@@ -49,13 +45,8 @@ import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
  */
 @Entity
 @Audited
-<<<<<<< HEAD
-@DataTransferObject(javascript="Marker")
-@TypeDef(name="geometry", typeClass=GeometryType.class)
-=======
 @DataTransferObject(javascript = "Marker")
 @TypeDef(name = "geometry", typeClass = GeometryType.class)
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 public class Marker extends AbstractEntity implements Serializable
 {
 	/**

@@ -11,18 +11,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-<<<<<<< HEAD
-import javax.persistence.OneToMany;
-=======
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 import org.springframework.util.Assert;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -36,11 +30,7 @@ import br.com.geocab.domain.entity.marker.MarkerAttribute;
  */
 @Entity
 @Audited
-<<<<<<< HEAD
-@DataTransferObject(javascript="Attribute")
-=======
 @DataTransferObject(javascript = "Attribute")
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 public class Attribute extends AbstractEntity implements Serializable
 {
 	/**
@@ -128,10 +118,6 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		this.setId(id);
 	}
-<<<<<<< HEAD
-	
-	public Attribute(Long id, String name, AttributeType type, Boolean required, Integer orderAttribute){
-=======
 
 	/**
 	 * 
@@ -145,7 +131,6 @@ public class Attribute extends AbstractEntity implements Serializable
 	public Attribute(Long id, String name, AttributeType type, Boolean required,
 			Integer orderAttribute, Boolean visible)
 	{
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		this.setId(id);
 		this.setType(type);
 		this.setName(name);
@@ -162,10 +147,6 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		this.setName(name);
 	}
-<<<<<<< HEAD
-	
-	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute){
-=======
 
 	/**
 	 * 
@@ -178,7 +159,6 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute, Boolean visible)
 	{
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		this.setId(id);
 		this.setTemporaryId(id);
 		this.setType(type);
@@ -187,10 +167,6 @@ public class Attribute extends AbstractEntity implements Serializable
 		this.setOrderAttribute(orderAttribute);
 		this.setVisible(visible);
 	}
-<<<<<<< HEAD
-	
-	public Attribute(Long id, String name, AttributeType type, Layer layer){
-=======
 
 	/**
 	 * 
@@ -201,7 +177,6 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public Attribute(Long id, String name, AttributeType type, Layer layer)
 	{
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		this.setId(id);
 		this.setType(type);
 		this.setName(name);

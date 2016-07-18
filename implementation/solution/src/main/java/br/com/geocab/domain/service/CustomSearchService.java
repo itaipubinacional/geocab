@@ -161,39 +161,12 @@ public class CustomSearchService
 	@PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
 	public CustomSearch updateCustomSearch(CustomSearch customSearch)
 	{
-<<<<<<< HEAD
-		//Assert.notNull(customSearch.getLayer(), Messages.getException( "pesquisapersonalizada.camada" ));
-		try{
-			/* 
-			 * On update isn't allow to modify an layer
-			 * The original layer stay. 
-			 * 
-			 * */
-//			CustomSearch customSearchDatabase = this.findCustomSearchById(customSearch.getId());
-			customSearch.setLayer(this.customSearchRepository.getFindLayerById(customSearch.getLayer().getId()));
-			
-			customSearch.setAccessGroupCustomSearch(null);
-//			customSearch.setLayerFields(null);
-			customSearch = this.customSearchRepository.save( customSearch );
-		}
-		catch ( DataIntegrityViolationException e )
-		{
-			LOG.info( e.getMessage() );
-			//throw new IllegalArgumentException( Messages.getException( "pesquisapersonalizada.nome_existe" ) );
-		}
-		catch ( ConstraintViolationException e ){
-			LOG.info( e.getMessage() );
-			//throw new IllegalArgumentException( Messages.getException( "pesquisapersonalizada.nome_existe" ) );
-		}
-		
-=======
 		customSearch.setLayer(this.customSearchRepository
 				.getFindLayerById(customSearch.getLayer().getId()));
 		customSearch.setAccessGroupCustomSearch(null);
 		customSearch = this.customSearchRepository
 				.save(removeAttributesPhotoAlbum(customSearch));
 
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		return customSearch;
 	}
 

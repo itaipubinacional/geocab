@@ -74,7 +74,7 @@ public class MarkerRESTful
 		List<Marker> markers = this.markerService.listMarkerByLayer(layerId);
 		final WKTWriter writer = new WKTWriter();
 		
-		// Pega a localizaï¿½ï¿½o do objeto e converte para o formato WKT
+		// Pega a localização do objeto e converte para o formato WKT
 		for (Marker marker : markers)
 		{
 		    marker.setWktCoordenate(writer.write(marker.getLocation()));

@@ -33,17 +33,11 @@ import br.com.geocab.domain.entity.AbstractEntity;
  */
 @Entity
 @Audited
-<<<<<<< HEAD
-@DataTransferObject(javascript="LayerGroup")
-@Table(uniqueConstraints= @UniqueConstraint(columnNames={"name", "layer_group_upper_id"}))
-public class LayerGroup extends AbstractEntity implements Serializable, ITreeNode
-=======
 @DataTransferObject(javascript = "LayerGroup")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames =
 { "name", "layer_group_upper_id" }))
 public class LayerGroup extends AbstractEntity
 		implements Serializable, ITreeNode
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 {
 
 	/**
@@ -64,11 +58,7 @@ public class LayerGroup extends AbstractEntity
 	 * 
 	 */
 	@Column
-<<<<<<< HEAD
-    private Integer orderLayerGroup;
-=======
 	private Integer orderLayerGroup;
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	/**
 	 * {@link LayerGroup} upper than the current {@link LayerGroup}
 	 */
@@ -164,14 +154,7 @@ public class LayerGroup extends AbstractEntity
 		this.setId(id);
 		this.setName(name);
 	}
-<<<<<<< HEAD
-	
-	
-	
-	
-=======
 
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	/**
 	 * @param name
 	 * @param orderLayerGroup
@@ -181,15 +164,6 @@ public class LayerGroup extends AbstractEntity
 	 * @param draft
 	 * @param published
 	 */
-<<<<<<< HEAD
-	public LayerGroup(Long id, String name, Integer orderLayerGroup, Boolean published, Long layerGroupUpperId)
-	{
-		this.setId(id);
-		this.name = name;
-		this.orderLayerGroup = orderLayerGroup;
-		this.setLayerGroupUpper(new LayerGroup(layerGroupUpperId));
-		this.published = published;
-=======
 	public LayerGroup(Long id, String name, Integer orderLayerGroup)
 	{
 		this.setId(id);
@@ -214,7 +188,6 @@ public class LayerGroup extends AbstractEntity
 		this.setPublished(published);
 		this.setLayerGroupUpper(layerGroupUpperId != null
 				? new LayerGroup(layerGroupUpperId) : null);
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	}
 
 	/*-------------------------------------------------------------------
@@ -349,25 +322,6 @@ public class LayerGroup extends AbstractEntity
 	}
 
 	/**
-<<<<<<< HEAD
-	 * @return the orderLayerGroup
-	 */
-	public Integer getOrderLayerGroup()
-	{
-		return orderLayerGroup;
-	}
-
-	/**
-	 * @param orderLayerGroup the orderLayerGroup to set
-	 */
-	public void setOrderLayerGroup(Integer orderLayerGroup)
-	{
-		this.orderLayerGroup = orderLayerGroup;
-	}
-
-	/**
-=======
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	 * @return the layerGroupUpper
 	 */
 	public LayerGroup getLayerGroupUpper()

@@ -11,24 +11,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-<<<<<<< HEAD
-=======
 import javax.persistence.OneToOne;
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-<<<<<<< HEAD
-
-import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.layer.Attribute;
-import br.com.geocab.domain.entity.layer.AttributeType;
-import br.com.geocab.domain.entity.layer.Layer;
-=======
 import com.vividsolutions.jts.geom.Geometry;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -40,7 +29,6 @@ import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.MapScale;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 /**
  * @author Thiago Rossetto Afonso
  * @since 02/10/2014
@@ -48,11 +36,7 @@ import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
  */
 @Entity
 @Audited
-<<<<<<< HEAD
-@DataTransferObject(javascript="MarkerAttribute")
-=======
 @DataTransferObject(javascript = "MarkerAttribute")
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 public class MarkerAttribute extends AbstractEntity implements Serializable
 {
 	/**
@@ -97,24 +81,6 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 		super();
 	}
 	
-<<<<<<< HEAD
-	public MarkerAttribute(Long id){
-		this.setId(id);
-	}
-	
-	public MarkerAttribute(Long id, String value, Marker marker, Attribute attribute){
-		this.setId(id);
-		this.setValue(value);
-		this.setMarker(marker);
-		this.setAttribute(attribute);
-	}
-	
-	public MarkerAttribute(Long id, String value, 
-			Long markerId, /*Geometry location,*/ MarkerStatus markerStatus, Calendar markerCreated,
-			Long markerLayerId, String markerLayerName, String markerLayerTitle,  
-			Long markerUserId, String markerUserName, String markerUserEmail, Boolean markerUserStatus,
-			Long attributeId, String attributeName, AttributeType attributeType, Boolean attributeRequired, Integer attributeOrder)
-=======
 	/**
 	 * 
 	 */
@@ -130,43 +96,11 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	 * @param attribute
 	 */
 	public MarkerAttribute(Long id, String value, Marker marker, Attribute attribute)
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	{
 		this.setId(id);
 		this.setValue(value);
-		
-		Marker marker = new Marker();
-		
-		marker.setId(markerId);
-		marker.setStatus(markerStatus);
-		marker.setCreated(markerCreated);
-		
-		Layer layer = new Layer();
-		layer.setId(markerLayerId);
-		layer.setName(markerLayerName);
-		layer.setTitle(markerLayerTitle);
-		
-		marker.setLayer(layer);
-		
-		User user = new User();
-		user.setId(markerUserId);
-		user.setName(markerUserName);
-		user.setEmail(markerUserEmail);
-		user.setEnabled(markerUserStatus);
-		
-		marker.setUser(user);
-		
 		this.setMarker(marker);
-		
-		Attribute attribute = new Attribute();
-		attribute.setId(attributeId);
-		attribute.setName(attributeName);
-		attribute.setType(attributeType);
-		attribute.setRequired(attributeRequired);
-		attribute.setOrderAttribute(attributeOrder);
-		
 		this.setAttribute(attribute);
-		
 	}
 	/**
 	 * 

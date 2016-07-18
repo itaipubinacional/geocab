@@ -40,13 +40,9 @@
 		<dwr.version>3.0.0-RELEASE</dwr.version>
 
 		<!-- Default Environment -->
-<<<<<<< HEAD
-		<environment>bosque</environment>
-=======
 		<environment>development</environment>
 
 
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	</properties>
 
 	<!-- Repositories -->
@@ -74,83 +70,23 @@
 	<profiles>
 
 		<profile>
-			<id>bosque</id>
+			<id>development</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<!-- Database -->
-<<<<<<< HEAD
-				<mvn.jdbc.jdbcUrl>jdbc:postgresql://chi25/desenvolvimento</mvn.jdbc.jdbcUrl>
-				<mvn.jdbc.username>bosque_pool</mvn.jdbc.username>
-				<mvn.jdbc.password>bosque_pool</mvn.jdbc.password>
-
-				<!-- Hibernate -->
-				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
-				<mvn.hibernate.showSql>false</mvn.hibernate.showSql>
-				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
-				<mvn.hibernate.default_schema>bosque</mvn.hibernate.default_schema>
-				<mvn.hibernate.envers.default_schema>bosque_auditoria</mvn.hibernate.envers.default_schema>
-				
-				 <!-- Mail -->
-                <mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
-                <mvn.mail.port>25</mvn.mail.port>
-                <mvn.mail.username>no-reply</mvn.mail.username>
-                <mvn.mail.protocol>smtp</mvn.mail.protocol>
-                <mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
-                <mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
-                <mvn.mail.tls>false</mvn.mail.tls>
-                <mvn.mail.ssl>false</mvn.mail.ssl>
-                <mvn.mail.debug>true</mvn.mail.debug>
-				
-				<!-- Social -->
-				<!-- Facebook -->
-				<mvn.social.facebook.app.id>1565690900310619</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>d2d9844ea944dd01630804f4eea5b8fd</mvn.social.facebook.app.secret>
-				
-				<!-- Google plus -->
-				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
-				<mvn.social.google.app.secret>G4iRWyyJ0hcdiylrzDesQmeL</mvn.social.google.app.secret>
-			</properties>
-		</profile>
-	
-		<profile>
-			<id>development</id>
-<!-- 			<activation> -->
-<!--           		<activeByDefault>true</activeByDefault> -->
-<!--         	</activation> -->
-			<properties>
-				<!-- Database -->
-				<mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost/geocab_bosque</mvn.jdbc.jdbcUrl>
-				<mvn.jdbc.username>postgres</mvn.jdbc.username>
-				<mvn.jdbc.password>postgres</mvn.jdbc.password>
-
-				<!-- Hibernate -->
-=======
                 <mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/geocab</mvn.jdbc.jdbcUrl>
                 <mvn.jdbc.username>geocab</mvn.jdbc.username>
                 <mvn.jdbc.password>geocab</mvn.jdbc.password>
                 
                 <!-- Hibernate -->
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
 				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
 				
-<<<<<<< HEAD
-				 <!-- Mail -->
-                <mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
-                <mvn.mail.port>25</mvn.mail.port>
-                <mvn.mail.username>no-reply</mvn.mail.username>
-                <mvn.mail.protocol>smtp</mvn.mail.protocol>
-                <mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
-                <mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
-                <mvn.mail.tls>false</mvn.mail.tls>
-                <mvn.mail.ssl>false</mvn.mail.ssl>
-                <mvn.mail.debug>true</mvn.mail.debug>
-=======
 				<!-- Mail -->
 				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
 				<mvn.mail.port>25</mvn.mail.port>
@@ -162,7 +98,6 @@
 				<mvn.mail.ssl>false</mvn.mail.ssl>
 				<mvn.mail.debug>true</mvn.mail.debug>
 				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 				
 				<!-- ModeShape -->
 				<mvn.jcr.indexes>/tmp/geocab/indexes</mvn.jcr.indexes>
@@ -263,19 +198,6 @@
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
-<<<<<<< HEAD
-				
-				 <!-- Mail -->
-                <mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
-                <mvn.mail.port>25</mvn.mail.port>
-                <mvn.mail.username>no-reply</mvn.mail.username>
-                <mvn.mail.protocol>smtp</mvn.mail.protocol>
-                <mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
-                <mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
-                <mvn.mail.tls>false</mvn.mail.tls>
-                <mvn.mail.ssl>false</mvn.mail.ssl>
-                <mvn.mail.debug>true</mvn.mail.debug>
-=======
 
 				<!-- Mail server -->
 				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
@@ -293,7 +215,6 @@
 				<mvn.jcr.indexes>/tmp/geocab-sandbox/indexes</mvn.jcr.indexes>
 				<mvn.jcr.files>/tmp/geocab-sandbox/files</mvn.jcr.files>
 				<mvn.jcr.caches>/tmp/geocab-sandbox/files</mvn.jcr.caches>
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 				
 				<!-- shapeFiles import -->
 				<mvn.path.shapefiles>/tmp/geocab-sandbox/files/shapefile/</mvn.path.shapefiles>
@@ -317,11 +238,7 @@
 				
 			</properties>
 		</profile>
-<<<<<<< HEAD
-		
-=======
 
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	</profiles>
 
 

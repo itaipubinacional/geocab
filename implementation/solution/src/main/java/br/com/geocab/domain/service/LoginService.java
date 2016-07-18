@@ -20,13 +20,8 @@ import org.springframework.util.Assert;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
-<<<<<<< HEAD
-import br.com.geocab.domain.entity.account.User;
-import br.com.geocab.domain.entity.account.UserRole;
-=======
 import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.entity.configuration.account.UserRole;
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 import br.com.geocab.domain.repository.IAccountMailRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.account.IUserRepository;

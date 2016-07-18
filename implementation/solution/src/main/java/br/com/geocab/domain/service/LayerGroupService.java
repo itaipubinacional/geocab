@@ -73,11 +73,7 @@ public class LayerGroupService
 	/*-------------------------------------------------------------------
 	 * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-<<<<<<< HEAD
-	
-=======
 
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	/**
 	 * 
 	 */
@@ -613,16 +609,6 @@ public class LayerGroupService
 				{
 					accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
 				}
-<<<<<<< HEAD
-			}
-			else 
-			{
-				AccessGroup accessGroup = this.accessGroupRepository.findById(AccessGroup.PUBLIC_GROUP_ID);
-				accessGroupsUser.add(accessGroup);
-				
-				accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())) );
-=======
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 				
 				if ( !layersGroupUpperPublished.isEmpty() )
 				{
@@ -642,8 +628,6 @@ public class LayerGroupService
 				}
 				layersGroupUpperPublished.removeAll(layerGroupToDelete);
 			}
-<<<<<<< HEAD
-=======
 		}
 		else 
 		{
@@ -670,7 +654,6 @@ public class LayerGroupService
 			}
 			layersGroupUpperPublished.removeAll(layerGroupToDelete);
 		}
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		
 		return layersGroupUpperPublished;
 		
@@ -1128,45 +1111,22 @@ public class LayerGroupService
 			this.attributeRepository.delete(attribute);	
 		}
 		
-<<<<<<< HEAD
-		/* Na atualização não foi permitido modificar a fonte de dados, camada e títuulo, dessa forma, 
-=======
 		/* Na atualização não foi permitido modificar a fonte de dados, camada e título, dessa forma, 
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		Os valores originais são mantidos. */
 		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setDataSource(layerDatabase.getDataSource());
 		layer.setName(layerDatabase.getName());
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		
-<<<<<<< HEAD
-		
-		//Pega os atributos para serem salvos no banco de dados
-		List<Attribute> attributesToSave = layer.getAttributes();
-		
-		//Seta 'null' nos atributos da camada para o hibernate não dar cascade nos mesmos
-		layer.setAttributes(null);
-		
-		//Atualiza a camada
-		layer =	this.layerRepository.save( layer );
-		
-		//Atualiza todos os atributos antes separadamente da camada. Assim o sistema não fica confiado ao cascade do hibernate
-		for (Attribute attribute : attributesToSave)
-=======
 		for (Attribute attribute : layer.getAttributes())
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 		{
 			this.attributeRepository.save(attribute);
 		}
 		
-<<<<<<< HEAD
-		return layer;
-=======
 		layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));
 		
 		return this.layerRepository.save( layer );	
 		
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 	}
 	
 	/**

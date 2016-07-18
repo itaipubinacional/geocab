@@ -28,11 +28,7 @@ import org.springframework.social.google.api.plus.PlusOperations;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
 
-<<<<<<< HEAD
-import br.com.geocab.domain.entity.account.User;
-=======
 import br.com.geocab.domain.entity.configuration.account.User;
->>>>>>> 22ca1de34d48288e70521329e6a8095d94d71a26
 import br.com.geocab.domain.service.LoginService;
 
 /**
