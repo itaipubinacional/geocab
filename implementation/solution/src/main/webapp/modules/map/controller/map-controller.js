@@ -4665,9 +4665,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.$apply();
         }
       });
-
+      
       $scope.resolveDatePicker();
 
+      $scope.shapeFileFilter();
+      
     }
   };
 
@@ -4914,6 +4916,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.shapeFile.filter.dateStart= null;
     $scope.shapeFile.filter.dateEnd= null;
     $scope.shapeFile.filter.user = null;
+    
+    $scope.shapeFileFilter();
 
   };
 
