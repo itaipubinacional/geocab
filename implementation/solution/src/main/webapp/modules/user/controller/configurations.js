@@ -339,6 +339,7 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 	}
 	
 	$scope.updateConfiguration = function() {
+		console.log($scope.currentEntity);
 		if ($scope.currentEntity.authorities != "ADMINISTRATOR") {
 			return;
 		}
