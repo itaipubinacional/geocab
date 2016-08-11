@@ -54,7 +54,7 @@
     
     
     <!-- Scheduling --> 
- 	<bean id="photoScheduling" class="br.com.geocab.application.scheduling.PhotoScheduling"/>
+<!--  	<bean id="photoScheduling" class="br.com.geocab.application.scheduling.PhotoScheduling"/> -->
     
 	<!--
 		ASPECTS 
