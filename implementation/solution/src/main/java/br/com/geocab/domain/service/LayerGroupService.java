@@ -478,7 +478,16 @@ public class LayerGroupService
 	{
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupUpper();
 				
-		return hasChildren(layersGroup);
+		List<LayerGroup> listLayersGroups = hasChildren(layersGroup);
+		
+		for (LayerGroup layerGroup : listLayersGroups)
+		{
+			for (Layer layer : layerGroup.getLayers())
+			{
+				this.setIcon(layer);
+			}
+		}
+		return listLayersGroups;
 	}
 	
 	/**
@@ -564,29 +573,19 @@ public class LayerGroupService
 			}
 		}
 		
+		
+		for (LayerGroup layerGroup : layersGroupPublished)
+		{
+			for (Layer layer : layerGroup.getLayers())
+			{
+				layer = this.setIcon(layer);
+			}
+		}
 		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
 		return /*hasChildren*/(this.layersGroupUpperByRole(layersGroupUpperPublished));
 		
 	}
 	
-	
-//	//TODO organizar método
-//	public List<Layer> listLayerPublished()
-//	{
-//		
-//		LayerGroup layerGroup = new LayerGroup();
-//		
-//		List<LayerGroup> layerGroups = new ArrayList<LayerGroup>();
-//		
-//		layerGroup.setLayers( this.layerRepository.listLayersStartEnable() );
-//		
-//		layerGroups.add( layerGroup );
-//		
-//		layerGroups = layersGroupUpperByRole(layerGroups);
-//		
-//		return layerGroups.get(0).getLayers();
-//		
-//	}
 	
 	/**
 	 * 
@@ -753,60 +752,21 @@ public class LayerGroupService
 		}
 		
 	}
-	
-//	/**
-//	 * OBS:. Método recursivo
-//	 * @param layersGroup
-//	 */
-//	private void setIcon( List<LayerGroup> layersGroup )
-//	{
-//		if ( layersGroup != null )
-//		{
-//			
-//			for (LayerGroup layerGroup : layersGroup)
-//			{
-//				if( layerGroup.getLayers() != null )
-//				{					
-//					if( layerGroup.getLayers().size() > 0 )
-//					{
-//						
-//						this.setIcon(layerGroup.getLayers());
-//					}
-//				}
-//				
-//				setIcon(layerGroup.getLayersGroup());
-//			}
-//		}
-//	}
-//	
-//	/**
-//	 * Traz a legenda da camada do GeoServer
-//	 * @param layers
-//	 * @return
-//	 */
-//	private Collection<Layer> setIcon(Collection<Layer> layers)
-//	{
-//		for (Layer layer : layers)
-//		{
-//			layer = this.setIcon(layer);
-//		}
-//		return layers;
-//	}
-//	
-//	/**
-//	 * Traz a legenda da camada do GeoServer
-//	 * @param layer
-//	 * @return
-//	 */
-//	private Layer setIcon(Layer layer)
-//	{
-//		if( layer.getDataSource() != null && layer.getDataSource().getUrl() != null )
-//		{
-//			layer.setLegend((getLegendLayerFromGeoServer(layer)));	
-//			layer.setIcon((layer.getLegend()));
-//		}
-//		return layer;
-//	}
+
+	/**
+	 * Traz a legenda da camada do GeoServer
+	 * @param layer
+	 * @return
+	 */
+	private Layer setIcon(Layer layer)
+	{
+		if( layer.getDataSource() != null && layer.getDataSource().getUrl() != null )
+		{
+			layer.setLegend((getLegendLayerFromGeoServer(layer)));	
+			layer.setIcon((layer.getLegend()));
+		}
+		return layer;
+	}
 	
 	
 	/**
