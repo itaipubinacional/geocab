@@ -1209,6 +1209,15 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             controls: [
                 $scope.mousePositionControl
             ],
+            
+         // rotation
+            interactions: ol.interaction.defaults({
+              dragPan: false
+            }).extend([
+//                          $scope.dragRotateAndZoom,
+              dragAndDropInteraction,
+              new ol.interaction.DragPan({kinetic: null})
+            ]),
 
             layers: [
                 new ol.layer.Tile({
@@ -2102,6 +2111,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 sketch = null;
 
             }, this);
+        
     }
 
 
@@ -2137,5 +2147,73 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         }
         return output;
     };
+    
+   
+    
+    $scope.kmlLayers = [];
+  //Allowed formats to be dragged on a map
+    var dragAndDropInteraction = new ol.interaction.DragAndDrop({
+      formatConstructors: [
+        ol.format.KML
+      ]
+    });
+    	
+    /**
+     * Method that allowed drag a KML file to the interactive map
+    */
+	  dragAndDropInteraction.on('addfeatures', function (event) {
+	    var vectorSource = new ol.source.Vector({
+	      features: event.features,
+	      projection: event.projection
+	    });
+	
+	    var kmlLayer = new ol.layer.Vector({
+	      source: vectorSource
+	    });
+	
+	    $scope.kmlLayers.push({layer: kmlLayer});
+	
+	    $scope.map.getLayers().push(kmlLayer);
+	    //Redirects to the point that the KML file is dragged
+	    var view = $scope.map.getView();
+	    view.fitExtent(
+	      vectorSource.getExtent(), ($scope.map.getSize()));
+	//
+	//        var item = {};
+	//        item.id = 'kmlLayers'
+	//        item.label = 'Camadas KML';
+	//        item.type = 'kml';
+	//
+	//        item.children = [];
+	//
+	//        for (var i = 0; i < $scope.kmlLayers.length; ++i) {
+	//          $scope.kmlLayers[i].id = (i + 1).toString();
+	//          $scope.kmlLayers[i].label = "Camada " + (i + 1);
+	//          $scope.kmlLayers[i].type = 'kml';
+	//          $scope.kmlLayers[i].name = "Camada" + (i + 1);
+	//
+	//          item.children.push($scope.kmlLayers[i]);
+	//        }
+	//
+	//        // selects the last search
+	//        item.children[item.children.length - 1].selected = true;
+	//
+	//        // Select the parent group
+	//        var selectItemPai = true;
+	//        for (var i in item.children) {
+	//          if (item.children[i].selected != true) {
+	//            selectItemPai = false
+	//          }
+	//        }
+	//
+	//        // Select the parent group
+	//        if (selectItemPai) item.selected = true;
+	//
+	//        $scope.allLayersKML = [];
+	//        $scope.allLayersKML.push(item);
+	
+	    $scope.$apply();
+	
+	  });
 
 }

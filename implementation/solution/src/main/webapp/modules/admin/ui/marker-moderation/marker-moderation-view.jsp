@@ -52,8 +52,7 @@
         <div ng-include="'modules/common/loading.jsp'"></div>
     </div>
 </div>
-
-<div class="menu-sidebar-container" style="right: 5px" ng-mouseover="hideMousePosition()">
+<div id='slide' class="menu-sidebar-container" style="right: 5px" ng-mouseover="hideMousePosition()">
     <ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
         <li ng-click="eventIncreaseZoom()" title="<spring:message code='map.Zoom-in'/>">
             <a href="#tabs-2">
@@ -84,6 +83,14 @@
             ng-class="{ferramenta_active : menu.fcArea}">
             <a>
                 <div class="icon itaipu-icon-square sidebar-icon"></div>
+            </a>
+        </li>
+        
+        <li ng-click="toggleSidebarMenu(); menu.fcKml = !menu.fcKml"
+            title="<spring:message code='map.KML-enabled'/>"
+            ng-class="{ferramenta_active : menu.fcKml}">
+            <a>
+                <div class="icon itaipu-icon-kml sidebar-icon"></div>
             </a>
         </li>
     </ul>
