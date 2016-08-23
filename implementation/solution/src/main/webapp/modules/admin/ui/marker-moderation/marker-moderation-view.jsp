@@ -55,15 +55,6 @@
 
   <div class="menu-sidebar-container" style="right: 5px" ng-mouseover="hideMousePosition()">
 
-
-<!--       <ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px"> -->
-<%--         <li ng-click="aumentarZoom()" title="<spring:message code="map.Zoom-in" />"> --%>
-<!--         	<a href="#tabs-2"> -->
-<!--         		<div class="icon itaipu-icon-zoom-in sidebar-icon"></div> -->
-<!--       		</a> -->
-<!--    	    </li> -->
-<!--       </ul> -->
-      
       
 	<ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
         <li ng-click="eventIncreaseZoom()" title="<spring:message code='map.Zoom-in'/>">
@@ -127,12 +118,11 @@
               <div class="sidebar-content-header"><spring:message code="map.KML-files"/></div>
               <br style="clear: both; ">
 
-<!--               <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center"> -->
-              <div id="msgKml" class="alert info" style="margin-top: 40px;text-align: center">
+              <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
                 <spring:message code="map.None-KML-file-enabled"/>
               </div>
               <div style="overflow: auto;top: 110px;bottom: 0px;left: 20px;right: 0px;">
-                <div id="tree-kml"
+                <div id="tree-kml-marker-moderation"
                      ivh-treeview="allLayersKML"
                      ivh-fn="getSelectedKMLNode"
                      ivh-treeview-label-attribute="'label'"

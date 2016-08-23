@@ -2141,7 +2141,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         return output;
     };
     
-   
+    $scope.allLayersKML = [];
     
     $scope.kmlLayers = [];
   //Allowed formats to be dragged on a map
@@ -2171,41 +2171,41 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	    var view = $scope.map.getView();
 	    view.fitExtent(
 	      vectorSource.getExtent(), ($scope.map.getSize()));
-	//
-	//        var item = {};
-	//        item.id = 'kmlLayers'
-	//        item.label = 'Camadas KML';
-	//        item.type = 'kml';
-	//
-	//        item.children = [];
-	//
-	//        for (var i = 0; i < $scope.kmlLayers.length; ++i) {
-	//          $scope.kmlLayers[i].id = (i + 1).toString();
-	//          $scope.kmlLayers[i].label = "Camada " + (i + 1);
-	//          $scope.kmlLayers[i].type = 'kml';
-	//          $scope.kmlLayers[i].name = "Camada" + (i + 1);
-	//
-	//          item.children.push($scope.kmlLayers[i]);
-	//        }
-	//
-	//        // selects the last search
-	//        item.children[item.children.length - 1].selected = true;
-	//
-	//        // Select the parent group
-	//        var selectItemPai = true;
-	//        for (var i in item.children) {
-	//          if (item.children[i].selected != true) {
-	//            selectItemPai = false
-	//          }
-	//        }
-	//
-	//        // Select the parent group
-	//        if (selectItemPai) item.selected = true;
-	//
-	//        $scope.allLayersKML = [];
-	//        $scope.allLayersKML.push(item);
 	
-	    $scope.$apply();
+	        var item = {};
+	        item.id = 'kmlLayers'
+	        item.label = 'Camadas KML';
+	        item.type = 'kml';
+	
+	        item.children = [];
+	
+	        for (var i = 0; i < $scope.kmlLayers.length; ++i) {
+	          $scope.kmlLayers[i].id = (i + 1).toString();
+	          $scope.kmlLayers[i].label = "Camada " + (i + 1);
+	          $scope.kmlLayers[i].type = 'kml';
+	          $scope.kmlLayers[i].name = "Camada" + (i + 1);
+	
+	          item.children.push($scope.kmlLayers[i]);
+	        }
+	
+	        // selects the last search
+	        item.children[item.children.length - 1].selected = true;
+	
+	        // Select the parent group
+	        var selectItemPai = true;
+	        for (var i in item.children) {
+	          if (item.children[i].selected != true) {
+	            selectItemPai = false
+	          }
+	        }
+	
+	        // Select the parent group
+	        if (selectItemPai) item.selected = true;
+	
+	        $scope.allLayersKML = [];
+	        $scope.allLayersKML.push(item);
+	
+	        $scope.$apply();
 	
 	  });
 	  
@@ -2224,51 +2224,88 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	      $scope.toggleSidebar(time, element, '#sidebar-layers'); //TODO
 	  };
 	  
+	  /**
+	   * 
+	   */
 	  $scope.toggleSidebar = function (time, element, slide) {
 		  	  
-		    time = !time || time != 300 ? 300 : time;
+	    time = !time || time != 300 ? 300 : time;
 
-		    //Este 'if' Deve ser substituído deve ser reimplementado caso outras opções requisitem a abertura do menu
-		    var closed = $scope.fcKml;
+	    //Este 'if' Deve ser substituído deve ser reimplementado caso outras opções requisitem a abertura do menu
+	    var closed = $scope.fcKml;
 
-		    // Checks whether the user has clicked a button that is active and the bar's sample, if it is open or if the click left of the close button.
-		    if ((element == $scope.lastActive && !closed) || (closed) || (element == "closeButton")) {
+	    // Checks whether the user has clicked a button that is active and the bar's sample, if it is open or if the click left of the close button.
+	    if ((element == $scope.lastActive && !closed) || (closed) || (element == "closeButton")) {
 
-		      //Manages the class ' bg-inactive ' which activates and deactivates the buttons.
-		      if (closed) {
-		        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-		      } else {
-		        $(".menu-item").addClass("bg-inactive");
-		      }
-		      //Performs the animation
+	      //Manages the class ' bg-inactive ' which activates and deactivates the buttons.
+	      if (closed) {
+	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+	      } else {
+	        $(".menu-item").addClass("bg-inactive");
+	      }
+	      //Performs the animation
 
-		      $(slide).toggle('slide', {direction: 'right'}, time);
+	      $(slide).toggle('slide', {direction: 'right'}, time);
 
-		      $('.menu-sidebar-container').animate({
-		        'right': closed ? $(slide).width() : '3px'
-		      }, time);
+	      $('.menu-sidebar-container').animate({
+	        'right': closed ? $(slide).width() : '3px'
+	      }, time);
 
-		      $timeout(function(){
+	      $timeout(function(){
 
-		        var displayed = false;
+	        var displayed = false;
 
-		        $('.sidebar-style').each(function(index){
-		          if($(this).css('display') == 'block')
-		            displayed = true
-		        });
+	        $('.sidebar-style').each(function(index){
+	          if($(this).css('display') == 'block')
+	            displayed = true
+	        });
 
-		        if(!displayed && $('.menu-sidebar-container').css('right') == '389px'){
-		          //alert('Teste');
-		          $('.menu-sidebar-container').css('right', '3px');
-		        }
-		      }, 400);
+	        if(!displayed && $('.menu-sidebar-container').css('right') == '389px'){
+	          //alert('Teste');
+	          $('.menu-sidebar-container').css('right', '3px');
+	        }
+	      }, 400);
 
-		    } else {
-		      if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
-		    }
-		    $scope.lastActive = element;
+	    } else {
+	      if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+	    }
+	    $scope.lastActive = element;
 
-		    $scope.slideActived = element == 'closeButton' ? '' : slide;
-		  }
+	    $scope.slideActived = element == 'closeButton' ? '' : slide;
 
+	  }
+
+	  
+	  /**
+	   * Treat the selection and deselection of each of the kml tree
+	   * @param node
+	   */
+	  $scope.getSelectedKMLNode = function (node) {
+
+
+	    if (node && node.type == 'kml' && $scope.allLayersKML[0]) {
+
+	      if (node.selected) {
+
+	        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
+	          if ($scope.allLayersKML[0].children[i].name == node.name) {
+	            $scope.map.removeLayer(node.layer);
+	            $scope.map.addLayer($scope.allLayersKML[0].children[i].layer);
+	          }
+	        }
+	      }
+	      else {
+	        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
+	          if ($scope.allLayersKML[0].children[i].name == node.name) {
+	            //Remove as camadas desselecionadas pelo usuário
+	            $scope.map.removeLayer($scope.allLayersKML[0].children[i].layer);
+
+	          }
+	        }
+	      }
+	    }
+
+	  }
+	  
+	  
 }
