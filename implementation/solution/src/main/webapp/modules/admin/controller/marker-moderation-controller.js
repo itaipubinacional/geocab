@@ -1886,8 +1886,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
         if ($scope.menu.fcMarker) {
             $scope.clearFcMarker();
-        } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
-            $scope.clearDetailMarker();
         }
 
 
@@ -1934,9 +1932,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     $scope.initializeMarker = function () {
 
-        if ($("#sidebar-marker-detail-update").css("display") == 'block') {
-            $scope.clearDetailMarker();
-        }
+        
 
         $scope.map.removeInteraction(draw);
         source.clear();
@@ -1976,10 +1972,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
         if ($scope.menu.fcMarker) {
             $scope.clearFcMarker();
-        } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
-            $scope.clearDetailMarker();
         }
-
 
         // checks whether any functionality is already active
         if ($scope.menu.fcArea || $scope.menu.fcDistancia || $scope.menu.fcMarker) {
@@ -2082,7 +2075,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $('#popup').css("display", "block");
         }
     };
-
+    
 
     /**
      * Method that adds a user interaction on a map
@@ -2215,5 +2208,67 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	    $scope.$apply();
 	
 	  });
+	  
+	  
+	  
+	  /**
+	   * Function that manages the Sidebar
+	   * @param time Time animation plays.
+	   * @param element Element name that is calling the function.
+	   */
+	  $scope.toggleSidebarMenu = function (time, element) {
+		  // Caso existam mais comportamentos onde o menu lateral deve abrir (dentro do menu de 'Avaliação de Postagem') 
+		  // as demais opções devem ser implementadas
+		  $scope.fcKml = !$scope.fcKml;
+		  
+	      $scope.toggleSidebar(time, element, '#sidebar-layers'); //TODO
+	  };
+	  
+	  $scope.toggleSidebar = function (time, element, slide) {
+		  	  
+		    time = !time || time != 300 ? 300 : time;
+
+		    //Este 'if' Deve ser substituído deve ser reimplementado caso outras opções requisitem a abertura do menu
+		    var closed = $scope.fcKml;
+
+		    // Checks whether the user has clicked a button that is active and the bar's sample, if it is open or if the click left of the close button.
+		    if ((element == $scope.lastActive && !closed) || (closed) || (element == "closeButton")) {
+
+		      //Manages the class ' bg-inactive ' which activates and deactivates the buttons.
+		      if (closed) {
+		        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+		      } else {
+		        $(".menu-item").addClass("bg-inactive");
+		      }
+		      //Performs the animation
+
+		      $(slide).toggle('slide', {direction: 'right'}, time);
+
+		      $('.menu-sidebar-container').animate({
+		        'right': closed ? $(slide).width() : '3px'
+		      }, time);
+
+		      $timeout(function(){
+
+		        var displayed = false;
+
+		        $('.sidebar-style').each(function(index){
+		          if($(this).css('display') == 'block')
+		            displayed = true
+		        });
+
+		        if(!displayed && $('.menu-sidebar-container').css('right') == '389px'){
+		          //alert('Teste');
+		          $('.menu-sidebar-container').css('right', '3px');
+		        }
+		      }, 400);
+
+		    } else {
+		      if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+		    }
+		    $scope.lastActive = element;
+
+		    $scope.slideActived = element == 'closeButton' ? '' : slide;
+		  }
 
 }

@@ -3066,17 +3066,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    */
   $scope.toggleSidebarMenu = function (time, element) {
 
-    /*if ($scope.slideActived == '#sidebar-layers') {
-      $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
-
-      $timeout(function () {
-        $scope.toggleSidebar(time, element, '#sidebar-marker-create');
-      }, 400)
-    } else {
-
-      $scope.toggleSidebar(time, element, '#sidebar-marker-create');
-    }*/
-
     /**
     * If the marker tab is open, close it and wait to open the new.
     * */
