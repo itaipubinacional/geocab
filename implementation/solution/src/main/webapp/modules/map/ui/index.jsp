@@ -71,12 +71,17 @@
 	            height:200px;
 	            border-radius:5px;
 	        }
-					.ol-scale-line {
-						background: none;
-						color: #000;
-						left: 75px;
-					}
-					.ol-scale-line-inner{color: #333; border-color: #333}
+			.ol-scale-line {
+				background: #ffffff;
+				color: #000;
+				left: 80px;
+			}
+		
+			.ol-scale-line-inner{
+				color: #333; 
+				border-color: #333
+			}
+			
 	    </style>
 	</head>
 
