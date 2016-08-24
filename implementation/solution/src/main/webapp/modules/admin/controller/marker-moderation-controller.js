@@ -199,6 +199,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.menu = {
         fcDistancia: false,
         fcArea: false,
+        fcKml: false,
         selectMarker: false
     };
 
@@ -1709,6 +1710,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     $scope.eventMarkerTool = function () {
 
+    	//Se o menu de KML estiver aberto, fecha o mesmo
+    	if($scope.menu.fcKml){
+    		$scope.toggleSidebarMenu(300, 'closeButton')
+    	}
+    	
         $scope.menu.selectMarker = !$scope.menu.selectMarker;
 
         // checks whether any functionality is already active
@@ -1882,6 +1888,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.initializeDistanceCalc = function () {
 
+    	//Se o menu de KML estiver aberto, fecha o mesmo
+    	if($scope.menu.fcKml){
+    		$scope.toggleSidebarMenu(300, 'closeButton')
+    	}
+    	
         $scope.selectMarkerTool = false;
 
         if ($scope.menu.fcMarker) {
@@ -1932,8 +1943,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     $scope.initializeMarker = function () {
 
-        
-
         $scope.map.removeInteraction(draw);
         source.clear();
         $scope.map.removeLayer(vector);
@@ -1968,6 +1977,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.initializeAreaCalc = function () {
 
+    	//Se o menu de KML estiver aberto, fecha o mesmo
+    	if($scope.menu.fcKml){
+    		$scope.toggleSidebarMenu(300, 'closeButton')
+    	}
+    	
         $scope.selectMarkerTool = false;
 
         if ($scope.menu.fcMarker) {
@@ -2219,9 +2233,9 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	  $scope.toggleSidebarMenu = function (time, element) {
 		  // Caso existam mais comportamentos onde o menu lateral deve abrir (dentro do menu de 'Avaliação de Postagem') 
 		  // as demais opções devem ser implementadas
-		  $scope.fcKml = !$scope.fcKml;
+		  $scope.menu.fcKml = !$scope.menu.fcKml;
 		  
-	      $scope.toggleSidebar(time, element, '#sidebar-layers'); //TODO
+	      $scope.toggleSidebar(time, element, '#sidebar-layers');
 	  };
 	  
 	  /**
@@ -2232,7 +2246,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	    time = !time || time != 300 ? 300 : time;
 
 	    //Este 'if' Deve ser substituído deve ser reimplementado caso outras opções requisitem a abertura do menu
-	    var closed = $scope.fcKml;
+	    var closed = $scope.menu.fcKml;
 
 	    // Checks whether the user has clicked a button that is active and the bar's sample, if it is open or if the click left of the close button.
 	    if ((element == $scope.lastActive && !closed) || (closed) || (element == "closeButton")) {

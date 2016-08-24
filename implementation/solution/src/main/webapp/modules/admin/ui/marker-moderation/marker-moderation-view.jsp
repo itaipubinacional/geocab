@@ -98,7 +98,8 @@
         <ul class="map-menu-items tab-flag" id="menu-sidebar-2" style="padding:9px">
        		<li 	class="menu-item" id="menu-item-3" ng-click="toggleSidebarMenu(300, '#menu-item-3');" 
 	       		title="<spring:message code="map.KML-enabled" />" 
-	       		style="padding-bottom: 37px; padding-top: 17px;">
+	       		style="padding-bottom: 37px; padding-top: 17px;"
+	       		ng-class="{ferramenta_active : menu.fcKml}">
 	          <a href="#tabs-3">
 	            <div class="icon itaipu-icon-kml sidebar-icon"></div>
 	          </a>
