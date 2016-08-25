@@ -61,7 +61,8 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       });
 
       scope.isValidFormat = function (fileFormat) {
-        if (scope.formats.indexOf(fileFormat) != -1)
+    	  
+        if (scope.formats.indexOf( fileFormat.toLowerCase() ) != -1)
           return true;
 
         scope.isLoading = false;
@@ -70,7 +71,7 @@ angular.module("eits-upload-file", []).directive('uploadFile', [function(){
       };
 
       scope.isValidExtension = function (fileExtension) {
-        if (scope.extension.indexOf(fileExtension) != -1)
+        if (scope.extension.indexOf( fileExtension.toLowerCase() ) != -1)
           return true;
 
         scope.isLoading = false;
