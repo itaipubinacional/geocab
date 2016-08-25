@@ -44,11 +44,16 @@
 		<security:intercept-url pattern="/api/files/**" access="isAuthenticated()" />
  	</security:http>
  	
+ 	<bean id="authenticationSuccessHandler"  class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler"  >
+	   <!-- After login, return to the last visited page -->
+	    <property name="useReferer" value="true" />
+	</bean>
+ 	
 	<!-- Default Security -->
  	<security:http auto-config="false" use-expressions="true" disable-url-rewriting="true">
  		<security:intercept-url pattern="/admin/**" access="isAuthenticated()" />
  		<security:intercept-url pattern="/user/**" access="isAuthenticated()" />
- 		<security:form-login login-page="/authentication" always-use-default-target="true"
+ 		<security:form-login login-page="/authentication" always-use-default-target="false" authentication-success-handler-ref="authenticationSuccessHandler"
  			password-parameter="password" username-parameter="email"/>
  		<security:logout/>
  	</security:http>

@@ -94,6 +94,10 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         }
     });
 
+    
+    if (window.location.href) {
+		console.log(window.location.href);
+	}
 
     /*-------------------------------------------------------------------
      * 		 				 	ATTRIBUTES

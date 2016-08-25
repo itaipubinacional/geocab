@@ -20,7 +20,7 @@
 		//-------
 		
 		//HOME
-        $urlRouterProvider.otherwise("/");
+        $urlRouterProvider.otherwise("/markers");
                 
       //Users
 		$stateProvider.state('users', {

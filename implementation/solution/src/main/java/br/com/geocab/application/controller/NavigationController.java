@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.geocab.application.ResourceBundleMessageSource;
+import br.com.geocab.application.security.ContextHolder;
+import br.com.geocab.domain.entity.configuration.account.User;
+import br.com.geocab.domain.entity.configuration.account.UserRole;
 
 /**
  * 
@@ -60,18 +63,36 @@ public class NavigationController
 	 * 
 	 */
 	@RequestMapping( value="/admin", method=RequestMethod.GET )
-	public ModelAndView admin()
+	public ModelAndView admin(HttpServletRequest request)
 	{
-		return new ModelAndView("modules/admin/ui/index");
+		return new ModelAndView("modules/admin/ui/index"  );
+	}
+	
+	/**
+	 * 
+	 */
+	@RequestMapping( value="/admin/markers", method=RequestMethod.GET )
+	public ModelAndView markers(HttpServletRequest request)
+	{
+		if (request.getParameter("id")!= null)
+		{
+			return new ModelAndView("redirect:/admin#/markers?id=" + request.getParameter("id"));
+		}
+		return new ModelAndView("redirect:/admin"  );
 	}
 	
 	/**
 	 * 
 	 */
 	@RequestMapping( value="/authentication", method=RequestMethod.GET )
-	public String authentication( Locale locale )
+	public String authentication( Locale locale,HttpServletRequest request) 
 	{
-		return "modules/authentication/ui/index";
+		User user = ContextHolder.getAuthenticatedUser();
+		if (user == null || user.getRole().equals(UserRole.ANONYMOUS))
+		{
+			return "modules/authentication/ui/index";
+		}
+		return "redirect:/";
 	}
 	
 	/**
