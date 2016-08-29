@@ -582,7 +582,8 @@ public class LayerGroupService
 			}
 		}
 		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
-		return /*hasChildren*/(this.layersGroupUpperByRole(layersGroupUpperPublished));
+	
+		return /*hasChildren*/this.layersGroupUpperByRole(layersGroupUpperPublished);
 		
 	}
 	
@@ -678,6 +679,7 @@ public class LayerGroupService
 						if( group.getLayers().size() > 0 )
 						{
 							List<Layer> layersToDelete = new ArrayList<Layer>();
+							
 							for(Layer layer : group.getLayers())
 							{
 								if ( !accessGroupUser.isEmpty() )
@@ -688,7 +690,7 @@ public class LayerGroupService
 										{
 											for (AccessGroupLayer accessGroupLayer : accessGroup.getAccessGroupLayer())
 											{
-												if(layer.getId().equals(accessGroupLayer.getLayer().getId()) && layer.getStartEnabled())
+												if(layer.getId().equals(accessGroupLayer.getLayer().getId()))
 												{
 													hasAccess = true;
 													break;
