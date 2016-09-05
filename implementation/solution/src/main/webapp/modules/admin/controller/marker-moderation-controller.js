@@ -199,6 +199,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
     $scope.menu = {
         fcDistancia: false,
         fcArea: false,
+        fcKml: false,
         selectMarker: false
     };
 
@@ -1209,6 +1210,15 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             controls: [
                 $scope.mousePositionControl
             ],
+            
+         // rotation
+            interactions: ol.interaction.defaults({
+              dragPan: false
+            }).extend([
+//                          $scope.dragRotateAndZoom,
+              dragAndDropInteraction,
+              new ol.interaction.DragPan({kinetic: null})
+            ]),
 
             layers: [
                 new ol.layer.Tile({
@@ -1700,6 +1710,11 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     $scope.eventMarkerTool = function () {
 
+    	//Se o menu de KML estiver aberto, fecha o mesmo
+    	if($scope.menu.fcKml){
+    		$scope.toggleSidebarMenu(300, 'closeButton')
+    	}
+    	
         $scope.menu.selectMarker = !$scope.menu.selectMarker;
 
         // checks whether any functionality is already active
@@ -1873,12 +1888,15 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.initializeDistanceCalc = function () {
 
+    	//Se o menu de KML estiver aberto, fecha o mesmo
+    	if($scope.menu.fcKml){
+    		$scope.toggleSidebarMenu(300, 'closeButton')
+    	}
+    	
         $scope.selectMarkerTool = false;
 
         if ($scope.menu.fcMarker) {
             $scope.clearFcMarker();
-        } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
-            $scope.clearDetailMarker();
         }
 
 
@@ -1925,10 +1943,6 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     $scope.initializeMarker = function () {
 
-        if ($("#sidebar-marker-detail-update").css("display") == 'block') {
-            $scope.clearDetailMarker();
-        }
-
         $scope.map.removeInteraction(draw);
         source.clear();
         $scope.map.removeLayer(vector);
@@ -1963,14 +1977,16 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
      */
     $scope.initializeAreaCalc = function () {
 
+    	//Se o menu de KML estiver aberto, fecha o mesmo
+    	if($scope.menu.fcKml){
+    		$scope.toggleSidebarMenu(300, 'closeButton')
+    	}
+    	
         $scope.selectMarkerTool = false;
 
         if ($scope.menu.fcMarker) {
             $scope.clearFcMarker();
-        } else if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
-            $scope.clearDetailMarker();
         }
-
 
         // checks whether any functionality is already active
         if ($scope.menu.fcArea || $scope.menu.fcDistancia || $scope.menu.fcMarker) {
@@ -2073,7 +2089,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             $('#popup').css("display", "block");
         }
     };
-
+    
 
     /**
      * Method that adds a user interaction on a map
@@ -2102,6 +2118,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 sketch = null;
 
             }, this);
+        
     }
 
 
@@ -2137,5 +2154,172 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         }
         return output;
     };
+    
+    $scope.allLayersKML = [];
+    
+    $scope.kmlLayers = [];
+  //Allowed formats to be dragged on a map
+    var dragAndDropInteraction = new ol.interaction.DragAndDrop({
+      formatConstructors: [
+        ol.format.KML
+      ]
+    });
+    	
+    /**
+     * Method that allowed drag a KML file to the interactive map
+    */
+	  dragAndDropInteraction.on('addfeatures', function (event) {
+	    var vectorSource = new ol.source.Vector({
+	      features: event.features,
+	      projection: event.projection
+	    });
+	
+	    var kmlLayer = new ol.layer.Vector({
+	      source: vectorSource
+	    });
+	
+	    $scope.kmlLayers.push({layer: kmlLayer});
+	
+	    $scope.map.getLayers().push(kmlLayer);
+	    //Redirects to the point that the KML file is dragged
+	    var view = $scope.map.getView();
+	    view.fitExtent(
+	      vectorSource.getExtent(), ($scope.map.getSize()));
+	
+	        var item = {};
+	        item.id = 'kmlLayers'
+	        item.label = 'Camadas KML';
+	        item.type = 'kml';
+	
+	        item.children = [];
+	
+	        for (var i = 0; i < $scope.kmlLayers.length; ++i) {
+	          $scope.kmlLayers[i].id = (i + 1).toString();
+	          $scope.kmlLayers[i].label = "Camada " + (i + 1);
+	          $scope.kmlLayers[i].type = 'kml';
+	          $scope.kmlLayers[i].name = "Camada" + (i + 1);
+	
+	          item.children.push($scope.kmlLayers[i]);
+	        }
+	
+	        // selects the last search
+	        item.children[item.children.length - 1].selected = true;
+	
+	        // Select the parent group
+	        var selectItemPai = true;
+	        for (var i in item.children) {
+	          if (item.children[i].selected != true) {
+	            selectItemPai = false
+	          }
+	        }
+	
+	        // Select the parent group
+	        if (selectItemPai) item.selected = true;
+	
+	        $scope.allLayersKML = [];
+	        $scope.allLayersKML.push(item);
+	
+	        $scope.$apply();
+	
+	  });
+	  
+	  
+	  
+	  /**
+	   * Function that manages the Sidebar
+	   * @param time Time animation plays.
+	   * @param element Element name that is calling the function.
+	   */
+	  $scope.toggleSidebarMenu = function (time, element) {
+		  // Caso existam mais comportamentos onde o menu lateral deve abrir (dentro do menu de 'Avaliação de Postagem') 
+		  // as demais opções devem ser implementadas
+		  $scope.menu.fcKml = !$scope.menu.fcKml;
+		  
+	      $scope.toggleSidebar(time, element, '#sidebar-layers');
+	  };
+	  
+	  /**
+	   * 
+	   */
+	  $scope.toggleSidebar = function (time, element, slide) {
+		  	  
+	    time = !time || time != 300 ? 300 : time;
 
+	    //Este 'if' Deve ser substituído deve ser reimplementado caso outras opções requisitem a abertura do menu
+	    var closed = $scope.menu.fcKml;
+
+	    // Checks whether the user has clicked a button that is active and the bar's sample, if it is open or if the click left of the close button.
+	    if ((element == $scope.lastActive && !closed) || (closed) || (element == "closeButton")) {
+
+	      //Manages the class ' bg-inactive ' which activates and deactivates the buttons.
+	      if (closed) {
+	        if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+	      } else {
+	        $(".menu-item").addClass("bg-inactive");
+	      }
+	      //Performs the animation
+
+	      $(slide).toggle('slide', {direction: 'right'}, time);
+
+	      $('.menu-sidebar-container').animate({
+	        'right': closed ? $(slide).width() : '3px'
+	      }, time);
+
+	      $timeout(function(){
+
+	        var displayed = false;
+
+	        $('.sidebar-style').each(function(index){
+	          if($(this).css('display') == 'block')
+	            displayed = true
+	        });
+
+	        if(!displayed && $('.menu-sidebar-container').css('right') == '389px'){
+	          //alert('Teste');
+	          $('.menu-sidebar-container').css('right', '3px');
+	        }
+	      }, 400);
+
+	    } else {
+	      if ($(element).hasClass('bg-inactive')) $(element).removeClass('bg-inactive');
+	    }
+	    $scope.lastActive = element;
+
+	    $scope.slideActived = element == 'closeButton' ? '' : slide;
+
+	  }
+
+	  
+	  /**
+	   * Treat the selection and deselection of each of the kml tree
+	   * @param node
+	   */
+	  $scope.getSelectedKMLNode = function (node) {
+
+
+	    if (node && node.type == 'kml' && $scope.allLayersKML[0]) {
+
+	      if (node.selected) {
+
+	        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
+	          if ($scope.allLayersKML[0].children[i].name == node.name) {
+	            $scope.map.removeLayer(node.layer);
+	            $scope.map.addLayer($scope.allLayersKML[0].children[i].layer);
+	          }
+	        }
+	      }
+	      else {
+	        for (var i = 0; i < $scope.allLayersKML[0].children.length; i++) {
+	          if ($scope.allLayersKML[0].children[i].name == node.name) {
+	            //Remove as camadas desselecionadas pelo usuário
+	            $scope.map.removeLayer($scope.allLayersKML[0].children[i].layer);
+
+	          }
+	        }
+	      }
+	    }
+
+	  }
+	  
+	  
 }

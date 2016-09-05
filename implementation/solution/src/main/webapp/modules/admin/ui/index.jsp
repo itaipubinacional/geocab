@@ -23,9 +23,19 @@
 		<script type="text/javascript"
 			src="static/libs/grid-no-results/grid-directive.js"></script>
 		
-		<link href="<c:url value="/static/libs/angular-ui-tree/css/angular-ui-tree.min.css"/>" type="text/css" rel="stylesheet" />
+<%-- 		<link href="<c:url value="/static/libs/angular-ui-tree/css/angular-ui-tree.min.css"/>" type="text/css" rel="stylesheet" /> --%>
 		
-		<script type="text/javascript" src="<c:url value="/static/libs/angular-ui-tree/js/angular-ui-tree.min.js"/>"></script>
+		  <!-- Treeview -->
+	    <link href="<c:url value="/static/libs/angular-treeview/ivh-treeview.min.css"/>" type="text/css" rel="stylesheet">
+		
+		<%-- <script type="text/javascript" src="<c:url value="/static/libs/angular-ui-tree/js/angular-ui-tree.min.js"/>"></script> --%>
+		
+		<!-- Treeview -->
+		<script type="text/javascript" src="<c:url value="/static/libs/angular-treeview/ivh-treeview.min.js"/>"></script>
+
+		<script src="<c:url value="/static/libs/angular-treeview/ivh-treeview.extend.js"/>" type="text/javascript"></script>
+
+		<script src="<c:url value="/static/libs/angular-sortable-view/src/angular-sortable-view.js"/>" type="text/javascript"></script>
 		
 		<!-- Controllers -->
 		

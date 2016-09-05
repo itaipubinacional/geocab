@@ -2,7 +2,7 @@
 	"use strict";
 			
 	//Start the AngularJS
-	var projectModule = angular.module("admin", ["ui.bootstrap", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", 'angularBootstrapNavTree', "ui.tree", 'ui-scaleSlider', 'localytics.directives', 'grid-no-result', 'eits-default-button', 'eits-upload-file']);
+	var projectModule = angular.module("admin", ["ui.bootstrap", "angular-sortable-view", "ui.router", "ngGrid", "eits-broker", "eits-angular-translate", "ivh.treeview", "ivh.treeview-extend", 'angularBootstrapNavTree', "ui.tree", 'ui-scaleSlider', 'localytics.directives', 'grid-no-result', 'eits-default-button', 'eits-upload-file']);
 	
 	projectModule.config( function( $stateProvider , $urlRouterProvider, $importServiceProvider, $translateProvider ) {
 		//-------
@@ -20,7 +20,7 @@
 		//-------
 		
 		//HOME
-        $urlRouterProvider.otherwise("/");
+        $urlRouterProvider.otherwise("/markers");
                 
       //Users
 		$stateProvider.state('users', {

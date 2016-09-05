@@ -76,6 +76,7 @@ import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.shapefile.Shapefile;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
+import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
 /**
@@ -110,6 +111,11 @@ public class ShapefileService
 	 */
 	@Autowired
 	private IMarkerRepository markerRepository;
+	/**
+	 * 
+	 */
+	@Autowired
+	private IMarkerAttributeRepository markerAttributeRepository;
 	/**
 	 * 
 	 */
@@ -385,6 +391,7 @@ public class ShapefileService
 	            {	
 					final Marker marker = markerRepository.findOne(layer.getMarkers().get(i).getId());
 					
+					marker.setMarkerAttribute(this.markerAttributeRepository.listAttributeByMarker(marker.getId()));
 					
 					final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
 	    			final MathTransform transform = CRS.findMathTransform(EPSG3857, DefaultGeographicCRS.WGS84, true);
@@ -470,26 +477,31 @@ public class ShapefileService
 	{
 		//Verifica qual marker tem mais atributos
 		int sum = 0;
-		Long markerIndex = 0L;
+		long markerIndex = 0L;
 		
 		Marker markerTest = null;
 		for (int i = 0; i < layer.getMarkers().size(); i++)
 		{
 			markerTest = markerRepository.findOne(layer.getMarkers().get(i).getId());
-			if (markerTest.getMarkerAttribute().size()>sum)
+			
+			List<MarkerAttribute> markerAttributes = markerAttributeRepository.listAttributeByMarker(markerTest.getId());
+			
+			if (markerAttributes.size()>sum)
 			{
 				markerIndex = markerTest.getId();
-				sum = markerTest.getMarkerAttribute().size();
+				sum = markerAttributes.size();
 			}
 		}
 		
 		markerTest = markerRepository.findOne(markerIndex);
 		
+		markerTest.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(markerTest.getId()));
+		
 		markerTest.formattedNameAttributes();
 		
 		markerTest.handlerDuplicateAttributes();
 		
-		return DataUtilities.createType(layer.getName(), "the_geom:Point,"+markerRepository.findOne(markerIndex).formattedAttributes());
+		return DataUtilities.createType(layer.getName(), "the_geom:Point,"+markerTest.formattedAttributes());
 	}
 	
 	/**

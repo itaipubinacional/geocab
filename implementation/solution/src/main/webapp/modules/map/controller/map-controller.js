@@ -362,6 +362,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.dragRotateAndZoom = new ol.interaction.DragRotateAndZoom();
 
 
+  
   /**
    * Setting the mouse position control
    */
@@ -375,6 +376,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     undefinedHTML: '&nbsp;'
   });
 
+  $scope.scaleLineControl = new ol.control.ScaleLine();
+  
   $scope.firstTime = true;
 
   $scope.overlay = new ol.Overlay({
@@ -427,7 +430,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       //]),
 
       controls: [
-        $scope.mousePositionControl
+        $scope.mousePositionControl,
+        $scope.scaleLineControl
+        
       ],
 
       // rotation
@@ -741,7 +746,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           anchorYUnits: 'fraction',
           src: 'static/images/' + type + '_shadow.png'
         }),
-        zIndex: 1
+        zIndex: -1
       });
     };
 
@@ -1893,7 +1898,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
      */
     var displayCoordinateMouse = function (pixel) {
 
-      info.html("<p>" + formatCoordinate($scope.mousePositionControl.l) + "</p>");
+      info.html("<p> " + formatCoordinate($scope.mousePositionControl.l) + "</p>");
       info.css("display", "block");
 
     };
@@ -3065,17 +3070,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * @param element Element name that is calling the function.
    */
   $scope.toggleSidebarMenu = function (time, element) {
-
-    /*if ($scope.slideActived == '#sidebar-layers') {
-      $scope.toggleSidebar(time, 'closeButton', '#sidebar-layers');
-
-      $timeout(function () {
-        $scope.toggleSidebar(time, element, '#sidebar-marker-create');
-      }, 400)
-    } else {
-
-      $scope.toggleSidebar(time, element, '#sidebar-marker-create');
-    }*/
 
     /**
     * If the marker tab is open, close it and wait to open the new.
@@ -4665,9 +4659,11 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.$apply();
         }
       });
-
+      
       $scope.resolveDatePicker();
 
+      $scope.shapeFileFilter();
+      
     }
   };
 
@@ -4914,6 +4910,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.shapeFile.filter.dateStart= null;
     $scope.shapeFile.filter.dateEnd= null;
     $scope.shapeFile.filter.user = null;
+    
+    $scope.shapeFileFilter();
 
   };
 
