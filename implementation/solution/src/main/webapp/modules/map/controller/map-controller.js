@@ -5255,7 +5255,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     	layers.push( $scope.shapeFile.filter.layer.layerId )
 	} else {
 		
-		angular.forEach( $scope.selectLayerGroup , function(value, key) {
+		angular.forEach( $scope.selectedLayers , function(value, key) {
 			layers.push( value.layerId );
 		});
 		
@@ -5278,8 +5278,17 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 	    	          $scope.$apply();
 	    	      },
 		          errorHandler: function (message, exception) {
-	    	          alert(message);
-	    	          $scope.$apply();
+	    	          
+		        	  $scope.msg = {type: "danger", text: $translate(message), dismiss: true};
+		        	  $scope.fadeMsg();
+		        	  
+		        	  
+		        	  $scope.isLoading = false;
+		        	  
+	    	          $('#export-download').remove();
+		        	  
+		        	  $scope.$apply();          
+	    	          
 	    	      }
     	      });
     	 

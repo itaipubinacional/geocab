@@ -375,6 +375,8 @@ public class ShapefileService
 	public FileTransfer exportShapefile(final List<Marker> markers)
 	{
 		
+		Assert.isTrue( !markers.isEmpty(), "map.No-marker-to-export");
+		
 		final List<Layer> layers = groupByLayers(markers);
 		
 		final String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis() );
