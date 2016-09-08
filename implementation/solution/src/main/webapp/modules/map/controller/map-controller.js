@@ -1211,6 +1211,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           item.dataSourceUrl = !!node.nodes ? '' : node.dataSource.url;
           item.value = node.id;
           item.type = !!node.nodes ? 'grupo' : 'layer';
+          item.group = (!!node.nodes ? '' : node.layerGroup.name); 
 
           item.maximumScaleMap = !!node.nodes ? '' : node.maximumScaleMap;
           item.minimumScaleMap = !!node.nodes ? '' : node.minimumScaleMap;
@@ -4621,44 +4622,69 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $scope.listAllUsers();
 
-      /*layerGroupService.listLayersByFilters( null, null, {
-
-        callback: function (result) {
-
-          $scope.shapeFile.layers = result.content;
-
-          $scope.$apply();
-        },
-        errorHandler: function (message, exception) {
-          $scope.message = {type: "error", text: message};
-          $scope.$apply();
-        }
-      });*/
-
-      layerGroupService.listAllInternalLayerGroups({
-        callback: function (result) {
-          $scope.selectLayerGroup = [];
-
-          angular.forEach(result, function (layer, index) {
-
-            $scope.selectLayerGroup.push({
-              "layerTitle": layer.title,
-              "layerId": layer.id,
-              "layerIcon": layer.icon,
-              "group": layer.layerGroup.name
+      
+      	$scope.selectLayerGroup = [];
+      	
+      	searchTree( { children : $scope.allLayers} );
+      	
+      	
+      	function searchTree(data) {
+      		
+      		if(data.selected && data.group && !data.dataSourceUrl) {
+      			
+      			addLayer(data);
+    
+    		}
+    		if(data.children && data.children.length > 0) {
+    			
+    		    for(var i=0; i < data.children.length; i++) {
+    		    	
+    		        var node = searchTree(data.children[i]);
+    		        
+    		        if(node != null) {
+    		        	
+    		        	addLayer(node);
+    		        	
+    		        }
+    		    }
+    		}
+    		return null;
+      	}	
+      
+      	function addLayer( layer ) {
+      		$scope.selectLayerGroup.push({
+                "layerTitle": layer.name,
+                "layerId": layer.value,
+                "group": layer.group
             });
-
-          })
-
-          $scope.currentState = $scope.LIST_STATE;
-
-          $scope.$apply();
-        },
-        errorHandler: function (message, exception) {
-          $scope.message = {type: "error", text: message};
-          $scope.$apply();
-        }
-      });
+		}
+      
+      
+//      layerGroupService.listAllInternalLayerGroups({
+//        callback: function (result) {
+//          $scope.selectLayerGroup = [];
+//
+//          angular.forEach(result, function (layer, index) {
+//
+//            $scope.selectLayerGroup.push({
+//              "layerTitle": layer.title,
+//              "layerId": layer.id,
+//              "layerIcon": layer.icon,
+//              "group": layer.layerGroup.name
+//            });
+//
+//          })
+//
+//          $scope.currentState = $scope.LIST_STATE;
+//
+//          $scope.$apply();
+//        },
+//        errorHandler: function (message, exception) {
+//          $scope.message = {type: "error", text: message};
+//          $scope.$apply();
+//        }
+//      });
+      
       
       $scope.resolveDatePicker();
 
@@ -5202,24 +5228,78 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.exportShapeFile= function (){
 
     $scope.isLoading = true;
+    
+//    $scope.exportMarker
+    
+    var userEmail = null;
 
-	  shapefileService.exportShapefile( $scope.exportMarkers, {
+    if ($scope.shapeFile.filter.user != null){
+    	userEmail = $scope.shapeFile.filter.user.email;
+    } 
+      
+      var layers = [];
+      
+    if ($scope.shapeFile.filter.layer) {
+    	layers.push( $scope.shapeFile.filter.layer.layerId )
+	} else {
+		
+		angular.forEach( $scope.selectLayerGroup , function(value, key) {
+			layers.push( value.layerId );
+		});
+		
+	}
+    
+      $scope.checkFilters();
+      
+      markerService.listMarkersToExport( layers, $scope.shapeFile.filter.status, $scope.shapeFile.filter.dateStart, $scope.shapeFile.filter.dateEnd, userEmail,{
          callback: function (result) {
 
-           $scope.isLoading = false;
+        	  shapefileService.exportShapefile( result,{
+    	         callback: function (result) {
 
-              $('body').append('<a id="export-download" href="' + result + '"></a>');
-              $('#export-download')[0].click();
-           $('#export-download').remove();
-
-           $scope.$apply();
+	    	          $scope.isLoading = false;
+	
+	    	          $('body').append('<a id="export-download" href="' + result + '"></a>');
+	    	          $('#export-download')[0].click();
+	    	          $('#export-download').remove();
+	
+	    	          $scope.$apply();
+	    	      },
+		          errorHandler: function (message, exception) {
+	    	          alert(message);
+	    	          $scope.$apply();
+	    	      }
+    	      });
+    	 
          },
          errorHandler: function (message, exception) {
-          alert(message);
-          $scope.$apply();
+	          alert(message);
+	          $scope.$apply();
          }
       });
+      
+      
+      
+      
+	
     };
+    
+    
+    $scope.checkFilters = function(){
+    	
+        if ($scope.shapeFile.filter.status == ""){
+        	 $scope.shapeFile.filter.status = null;
+        }
+
+        if ($scope.shapeFile.filter.dateStart == ""){
+        	$scope.shapeFile.filter.dateStart = null;
+        }
+            
+        if ($scope.shapeFile.filter.dateEnd == ""){
+        	$scope.shapeFile.filter.dateEnd = null;
+        }
+           
+    };  
 
   $scope.insertMarkers = function () {
 

@@ -1059,6 +1059,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <!--<p><b><spring:message code="admin.filter-active-layers"/></b></p>-->
 
                 <div>
+               
                   <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer'/>" name="camada"
                           ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
                           ng-model="shapeFile.filter.layer" chosen class="form-control"
@@ -1095,7 +1096,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                 <div style="float: left;margin-top: 10px">
                   <a href="" ng-click="clearFilters()"><spring:message code="clear.Filters"/></a>
-                  <input type="button" style="margin-right:5px" ng-click="shapeFileFilter()" value="<spring:message code='Filter'/>"
+                  <input type="button" style="margin-right:5px" ng-click="shapeFileFilter()" value="<spring:message code='Visualize'/>"
                          title="<spring:message code='Search'/>" class="btn btn-default"/>
                 </div>
 

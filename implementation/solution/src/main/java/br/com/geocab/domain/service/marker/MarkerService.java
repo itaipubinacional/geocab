@@ -449,6 +449,40 @@ public class MarkerService extends AbstractMarkerService
 
 		return listMarker;
 	}
+	
+	@Transactional(readOnly = true)
+	public List<Marker> listMarkersToExport(  List<Long> layersId, MarkerStatus status, String dateStart, String dateEnd, String user ){
+		
+		List<Marker> markers = new ArrayList<>();
+		
+		try
+		{
+			
+			for (Long layerId : layersId)
+			{
+				
+				
+				Page<Marker> markersPage =  this.listMarkerByFilters( layerId, status, dateStart, dateEnd, user, null);
+				
+				markers.addAll( markersPage.getContent() );
+				
+			}
+			
+			return markers;
+			
+		}
+		catch (Exception e)
+		{
+			
+			e.printStackTrace();
+			
+			return null;
+		}
+
+		
+	}
+	
+	
 
 	/**
 	 * 
