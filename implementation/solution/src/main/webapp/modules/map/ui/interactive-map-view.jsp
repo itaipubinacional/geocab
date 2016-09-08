@@ -800,7 +800,7 @@ uri="http://www.springframework.org/security/tags"%>
           </a>
           </li>
 
-          <li class="menu-item" id="menu-item-4" ng-click="toggleSidebarMenu(300, '#menu-item-4');" title="<spring:message code="map.SHP-enabled" />">
+          <li class="menu-item" id="menu-item-4" ng-click="listSelectedLayers()" title="<spring:message code="map.SHP-enabled" />">
           <a href="#tabs-4">
             <div style="font-size:25px" class="icon itaipu-icon-shp sidebar-icon"></div>
           </a>
@@ -1061,7 +1061,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <div>
                
                   <select data-placeholder="<spring:message code='admin.layer-config.Enter-the-layer'/>" name="camada"
-                          ng-options="layer.layerTitle group by layer.group for layer in selectLayerGroup"
+                          ng-options="layer.layerTitle group by layer.group for layer in selectedLayers"
                           ng-model="shapeFile.filter.layer" chosen class="form-control"
                           ng-class="{ngInvalid: sidebarMarker.camada.$error.required }"
                           required>

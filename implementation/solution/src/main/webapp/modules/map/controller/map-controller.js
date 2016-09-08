@@ -2538,6 +2538,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     }
     return output;
   };
+  
+  
 
   /*-------------------------------------------------------------------
    * 		 			CUSTOM SEARCH FUNCTIONALITY
@@ -2570,6 +2572,51 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     });
 
   }
+  
+  
+  
+  $scope.listSelectedLayers = function(){
+	  
+	  	$scope.toggleSidebarMenu(300, '#menu-item-4');
+	  
+		$scope.selectedLayers = [];
+	  	
+	  	searchTree( { children : $scope.allLayers} );
+	  	
+	  	function searchTree(data) {
+	  		
+	  		if(data.selected && data.group && !data.dataSourceUrl) {
+	  			
+	  			addLayer(data);
+	
+			}
+			if(data.children && data.children.length > 0) {
+				
+			    for(var i=0; i < data.children.length; i++) {
+			    	
+			        var node = searchTree(data.children[i]);
+			        
+			        if(node != null) {
+			        	
+			        	addLayer(node);
+			        	
+			        }
+			    }
+			}
+			return null;
+	  	}	
+	  
+	  	function addLayer( layer ) {
+	  		$scope.selectedLayers.push({
+	            "layerTitle": layer.name,
+	            "layerId": layer.value,
+	            "group": layer.group
+	        });
+		}
+	  
+	  
+  }
+
 
   /**
    * The custom search receive the selected value
@@ -4623,41 +4670,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       $scope.listAllUsers();
 
       
-      	$scope.selectLayerGroup = [];
-      	
-      	searchTree( { children : $scope.allLayers} );
-      	
-      	
-      	function searchTree(data) {
-      		
-      		if(data.selected && data.group && !data.dataSourceUrl) {
-      			
-      			addLayer(data);
-    
-    		}
-    		if(data.children && data.children.length > 0) {
-    			
-    		    for(var i=0; i < data.children.length; i++) {
-    		    	
-    		        var node = searchTree(data.children[i]);
-    		        
-    		        if(node != null) {
-    		        	
-    		        	addLayer(node);
-    		        	
-    		        }
-    		    }
-    		}
-    		return null;
-      	}	
-      
-      	function addLayer( layer ) {
-      		$scope.selectLayerGroup.push({
-                "layerTitle": layer.name,
-                "layerId": layer.value,
-                "group": layer.group
-            });
-		}
       
       
 //      layerGroupService.listAllInternalLayerGroups({
