@@ -58,7 +58,7 @@
       
 	<ul class="map-menu-items tool-items" id="menu-sidebar" style="padding:3px">
         <li ng-click="eventIncreaseZoom()" title="<spring:message code='map.Zoom-in'/>">
-            <a href="#tabs-2">
+            <a>
                 <div class="icon itaipu-icon-zoom-in sidebar-icon"></div>
             </a>
         </li>
