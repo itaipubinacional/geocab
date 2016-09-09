@@ -1132,8 +1132,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           } else if (!$scope.feature) {
 //        	  $scope.clearAllSelectedMarkers();
         	  if ($scope.menu.fcSelect) {
+        		  
         		  $scope.closeSelectMarker();  
         	  } else {
+        		  
         		  $scope.clearDetailMarker();  
         	  }
           }
