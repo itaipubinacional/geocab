@@ -1,4 +1,4 @@
-package br.com.geocab.application.controller;
+package br.com.geocab.application.restful;
 
 import javax.servlet.http.HttpServletRequest;
 
