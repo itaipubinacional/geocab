@@ -110,11 +110,11 @@
 				<!-- Social -->
 				<!-- Facebook -->
 				<mvn.social.facebook.app.id>801316929973059</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>21bd46d7b659c651909e3964ff2403d3</mvn.social.facebook.app.secret>
+				<mvn.social.facebook.app.secret>78ff77afd6149462d39c99a390dd845d</mvn.social.facebook.app.secret>
 
 				<!-- Google plus -->
-				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
-				<mvn.social.google.app.secret>G4iRWyyJ0hcdiylrzDesQmeL</mvn.social.google.app.secret>
+				<mvn.social.google.app.id>856589923551-997fukn75b05miqvnucb7034l5o3qgqp.apps.googleusercontent.com</mvn.social.google.app.id>
+				<mvn.social.google.app.secret>gfxTEdpAY9ofTBV0Q5xePxgS</mvn.social.google.app.secret>
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
@@ -165,8 +165,8 @@
 
 				<!-- Social -->
 				<!-- Facebook -->
-				<mvn.social.facebook.app.id>1565690900310619</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>d2d9844ea944dd01630804f4eea5b8fd</mvn.social.facebook.app.secret>
+				<mvn.social.facebook.app.id>1563968713815015</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>8c0181078fbbb7e5cafe1147b23ac0f2</mvn.social.facebook.app.secret>
 
 				<!-- Google plus -->
 				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
@@ -221,8 +221,9 @@
 
 				<!-- Social -->
 				<!-- Facebook -->
-				<mvn.social.facebook.app.id>801316929973059</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>21bd46d7b659c651909e3964ff2403d3</mvn.social.facebook.app.secret>
+				
+				<mvn.social.facebook.app.id>1563968713815015</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>8c0181078fbbb7e5cafe1147b23ac0f2</mvn.social.facebook.app.secret>
 
 				<!-- Google plus -->
 				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>

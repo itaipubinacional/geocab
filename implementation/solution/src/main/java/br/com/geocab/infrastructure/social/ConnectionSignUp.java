@@ -57,6 +57,8 @@ public class ConnectionSignUp implements org.springframework.social.connect.Conn
 			user.setName(name);
 			user.setRole(UserRole.USER);
 			user.setEnabled(true);
+			user.getBackgroundMap();
+			user.getCoordinates();
 			user = this.loginService.insertSocialUser(user);
 			
 		}else if( !user.isEnabled() ){//Disabled User
