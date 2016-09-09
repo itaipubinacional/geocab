@@ -746,7 +746,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           anchorYUnits: 'fraction',
           src: 'static/images/' + type + '_shadow.png'
         }),
-        zIndex: -1
+        zIndex: 1
       });
     };
 
@@ -3803,21 +3803,43 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.removeInternalLayer($scope.currentEntity.layer.id, function (layerId) {
           //$scope.addInternalLayer(layerId);
 
+        	  var  node;
 
-          //Select layer on treeview
-          angular.forEach($scope.allLayers, function(layer){
+	        //Select layer on treeview 
+	        function searchTree(currChild, searchString){
+	        	
+	        	console.log("VALOR : " +  currChild.value );
+	        	
+	            if(currChild.value == searchString){
+	                 return currChild;
+	            }else if (currChild.children != null){
+	                 for(var i=0; i < currChild.children.length; i ++){
+	                      if (currChild.children[i].value == searchString){
+	                    	  
+	                    	  node = currChild.children[i];
+	                    	  break;
+	                          return;
+	                          
+	                      }else{
+	                    	  
+	                           searchTree(currChild.children[i], searchString);
+	                      }
+	                 }
+	             
+	            }
+	         
+	        }
+          
+	      searchTree( { children : $scope.allLayers } , result.layer.id );
 
-            var node = $filter('filter')(layer.children, {value: result.layer.id})[0];
-
-            if(angular.isDefined(node)) {
-              if(node.selected) {
-                $('#layer_' + result.layer.id).trigger('click');
-                $('#layer_' + result.layer.id).trigger('click');
-              } else {
-                $('#layer_' + result.layer.id).trigger('click');
-              }
+          if( node ) {
+            if(node.selected) {
+              $('#layer_' + result.layer.id).trigger('click');
+              $('#layer_' + result.layer.id).trigger('click');
+            } else {
+              $('#layer_' + result.layer.id).trigger('click');
             }
-          });
+          }
 
 
         });
