@@ -1127,10 +1127,15 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         if ($("#sidebar-layers").css("display") == 'none' && $('.menu-sidebar-container').css('right') != '3px') {
 
-          if ($scope.menu.fcMarker || $scope.menu.fcSelect) {
+          if ($scope.menu.fcMarker /*|| $scope.menu.fcSelect*/) {
             $scope.clearFcMarker();
           } else if (!$scope.feature) {
-            $scope.clearDetailMarker();
+//        	  $scope.clearAllSelectedMarkers();
+        	  if ($scope.menu.fcSelect) {
+        		  $scope.closeSelectMarker();  
+        	  } else {
+        		  $scope.clearDetailMarker();  
+        	  }
           }
         }
 
