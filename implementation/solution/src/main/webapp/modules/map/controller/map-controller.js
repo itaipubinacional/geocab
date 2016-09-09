@@ -3813,8 +3813,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 	        //Select layer on treeview 
 	        function searchTree(currChild, searchString){
 	        	
-	        	console.log("VALOR : " +  currChild.value );
-	        	
 	            if(currChild.value == searchString){
 	                 return currChild;
 	            }else if (currChild.children != null){
