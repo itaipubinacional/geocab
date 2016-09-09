@@ -746,7 +746,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           anchorYUnits: 'fraction',
           src: 'static/images/' + type + '_shadow.png'
         }),
-        zIndex: -1
+        zIndex: 1
       });
     };
 
