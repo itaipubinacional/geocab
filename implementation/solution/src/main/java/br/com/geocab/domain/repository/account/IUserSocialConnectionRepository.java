@@ -65,4 +65,6 @@ public interface IUserSocialConnectionRepository extends IDataRepository<UserSoc
 				+ "WHERE user.id = :userId "
 					+ "AND providerId = :providerId")
 	public int findNewRankByUserIdAndProviderId( @Param(value="userId") Long userId, @Param(value="providerId") String providerId );
+	
+	public UserSocialConnection findByUserId( @Param(value="userId") Long userId);
 }

@@ -214,6 +214,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
     accountService.getUserAuthenticated({
         callback : function(result) {
+        	$scope.kmlLabel = $translate("map.None-KML-file-enabled");
             $scope.userMe = result;
             //$scope.setBackgroundMap(result.backgroundMap);
             $scope.$apply();

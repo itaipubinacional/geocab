@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <tabset>
+	<tabset>
     	<tab heading="<spring:message code='admin.users.Account-information'/>" ng-click="changeState(UPDATE_STATE)">
             <div ng-include="'modules/user/ui/my-account/my-account-form.jsp'"></div>
         </tab>
@@ -56,5 +56,6 @@
             <div ng-include="'modules/user/ui/configurations/send-email.jsp'"></div>
         </tab>
     </tabset>
+    
 </div>
 </html>

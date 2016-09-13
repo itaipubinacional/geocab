@@ -47,6 +47,9 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	// ----
 	// Default user
 	// ----
+	
+	public static final String NO_PASSWORD = new String("no password");
+	
 	public static final User ADMINISTRATOR = new User(1L, "Administrator",
 			"admin@geocab.com.br", true, UserRole.ADMINISTRATOR, "admin");
 	public static final User ANONYMOUS = new User(0L, "Anonymous", null, true,

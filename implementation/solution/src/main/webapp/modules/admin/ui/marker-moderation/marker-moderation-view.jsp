@@ -119,8 +119,9 @@
               <div class="sidebar-content-header"><spring:message code="map.KML-files"/></div>
               <br style="clear: both; ">
 
-              <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center">
-                <spring:message code="map.None-KML-file-enabled"/>
+              <div id="msgKml" ng-if="allLayersKML.length == 0" class="alert info" style="margin-top: 40px;text-align: center;">
+<%--                 <spring:message code="map.None-KML-file-enabled"/> --%>
+                {{kmlLabel}}
               </div>
               <div style="overflow: auto;top: 110px;bottom: 0px;left: 20px;right: 0px;">
                 <div id="tree-kml-marker-moderation"

@@ -3717,26 +3717,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.$apply();
         }
       });
-    }
-  
-//    $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-//    
-//    $scope.removeInternalLayer($scope.currentEntity.layer.id, function(){
-//    	
-//    	$scope.addInternalLayer($scope.currentEntity.layer.id);
-//    
-//    });
-    
-   setTimeout(function () {
-	   $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-    }, 500);
-  
-   setTimeout(function () {
+    }    
+   
+   $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+   /**
+    * 
+    */ 
+   $timeout(function () {
 	   $scope.addInternalLayer($scope.currentEntity.layer.id);
-    }, 1000);
-
-	 
-	 
+    }, 50);
+	   
   };
   
   $scope.insertMarkerSaved = function() {
@@ -4066,7 +4056,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     markerService.listMarkerByLayer(layerId, {
       callback: function (result) {
-
+    	  
         var iconPath = "static/images/marker.png";
 
         if (result.length > 0) {
@@ -4086,6 +4076,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var icons = [];
 
         angular.forEach(result, function (marker, index) {
+        	
 
           //$scope.exportMarkers.push(marker);
           /* var iconFeature = new ol.Feature({
@@ -4112,6 +4103,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.map.addLayer(layer);
 
           $scope.internalLayers.push({"layer": layer, "id": layerId, "feature": iconFeature, "extent": source.getExtent()});
+          
+          
         });
 
 
