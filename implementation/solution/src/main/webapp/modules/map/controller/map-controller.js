@@ -624,13 +624,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       if($scope.formattedLatitude && $scope.formattedLongitude) {
 
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-
+        
+          
         var formattedLatitude = $scope.formattedLatitude.toString();
         var formattedLongitude = $scope.formattedLongitude.toString();
 
         var regEx = '';
 
-
+      
 
         if ($scope.coordinatesFormat != 'DECIMAL_DEGREES') {
 
@@ -691,12 +692,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           if ($scope.currentEntity.layer)
             styleType = false;
 
+         
+          
           var shadowStyle = $scope.setShadowMarker(styleType);
 
           var olCoordinates = ol.proj.transform([formattedLongitude, formattedLatitude], 'EPSG:4326', 'EPSG:900913');
 
           $scope.currentEntity.latitude = olCoordinates[0];
           $scope.currentEntity.longitude = olCoordinates[1];
+          
+         
 
           var iconFeature = new ol.Feature({
             geometry: new ol.geom.Point([olCoordinates[0], olCoordinates[1]]),
@@ -706,14 +711,19 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           var layer = new ol.layer.Vector({
             source: new ol.source.Vector({features: [iconFeature]})
           });
+          
+         
 
           layer.setStyle([iconStyle, shadowStyle]);
 
           $scope.currentCreatingInternalLayer = layer;
+          
+          
           $scope.map.addLayer(layer);
 
           var zoom = $scope.map.getView().getZoom();
 
+  
           var extent = layer.getSource().getExtent();
           $scope.map.getView().fitExtent(extent, $scope.map.getSize());
 
@@ -3498,7 +3508,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   };
 
   $scope.updateMarker = function () {
-
+	   
     $scope.isLoading = true;
 
     var isValid = true;
@@ -3520,6 +3530,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       layer.id = $scope.currentEntity.layer;
       $scope.currentEntity.layer = layer;
     }
+    
+ 
 
     angular.forEach($scope.attributesByMarker, function(attribute){
         if(attribute.photoAlbum){
@@ -3706,9 +3718,27 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         }
       });
     }
+  
+//    $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+//    
+//    $scope.removeInternalLayer($scope.currentEntity.layer.id, function(){
+//    	
+//    	$scope.addInternalLayer($scope.currentEntity.layer.id);
+//    
+//    });
+    
+   setTimeout(function () {
+	   $scope.map.removeLayer($scope.currentCreatingInternalLayer);
+    }, 500);
+  
+   setTimeout(function () {
+	   $scope.addInternalLayer($scope.currentEntity.layer.id);
+    }, 1000);
 
+	 
+	 
   };
-
+  
   $scope.insertMarkerSaved = function() {
     $scope.currentEntity.status = 'SAVED';
 
