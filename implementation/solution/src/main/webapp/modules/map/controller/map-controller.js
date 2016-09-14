@@ -625,6 +625,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
         
+        
           
         var formattedLatitude = $scope.formattedLatitude.toString();
         var formattedLongitude = $scope.formattedLongitude.toString();
@@ -3708,10 +3709,16 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 		}, function (newValue, oldValue) {
 	
 			if(newValue != oldValue){
+				
+			  $scope.removeInternalLayer( $scope.currentEntity.layer.id  );	
+			  
+			  
 			  $timeout(function () {
+				  
 				  $scope.addInternalLayer($scope.currentEntity.layer.id);
 				  
-			  }, 100);
+			  }, 150);
+			  
 			  
 			  // Encerra o watch
 			  watch();
