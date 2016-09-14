@@ -3675,7 +3675,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           $scope.isLoading = false;
 
-          $scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton')
+          $scope.toggleSidebarMarkerDetailUpdate(300, 'closeButton');
 
           $scope.msg = {type: "success", text: $translate("map.Mark-updated-succesfully"), dismiss: true};
           $("div.msgMap").show();
@@ -3702,28 +3702,34 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
     }
     
-	var watch = $scope.$watch(
-		
-		function(){ 
-			return $scope.map.removeLayer($scope.currentCreatingInternalLayer)
-		}, function (newValue, oldValue) {
-	
-			if(newValue != oldValue){
-				
-			  $scope.removeInternalLayer( $scope.currentEntity.layer.id  );	
-			  
-			  
-			  $timeout(function () {
-				  
-				  $scope.addInternalLayer($scope.currentEntity.layer.id);
-				  
-			  }, 150);
-			  
-			  
-			  // Encerra o watch
-			  watch();
-			}
-	});
+    
+    $scope.removeInternalLayer( $scope.currentEntity.layer.id, function(){
+    	   
+    	var watch = $scope.$watch(
+    		
+    		function(){ 
+    			return $scope.map.removeLayer($scope.currentCreatingInternalLayer)
+    		}, function (newValue, oldValue) {
+    	
+    			if(newValue != oldValue){
+    				
+    			  $scope.removeInternalLayer( $scope.currentEntity.layer.id  );	
+    			  
+    			  
+    			  $timeout(function () {
+    				  
+    				  $scope.addInternalLayer($scope.currentEntity.layer.id);
+    				  
+    			  }, 500);
+    			  
+    			  
+    			  // Encerra o watch
+    			  watch();
+    			}
+    	});
+    	
+    });	
+ 
 
   };
   
