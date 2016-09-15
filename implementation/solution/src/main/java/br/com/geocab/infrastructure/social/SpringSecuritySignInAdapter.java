@@ -29,8 +29,8 @@ public class SpringSecuritySignInAdapter implements SignInAdapter
 	 */
 	@Autowired
 	private IUserRepository userRepository;
-	
 	/**
+	
 	 * Complete a provider sign-in attempt by signing in the local user account with the specified id.
 	 * @param userId the local user id
 	 * @param connection the connection
@@ -72,9 +72,9 @@ public class SpringSecuritySignInAdapter implements SignInAdapter
 //		return null;//redirects to /
 		
 		final HttpServletRequest request = (HttpServletRequest) nativeWebRequest.getNativeRequest();
-		
+
 		final User user = this.userRepository.findByEmail(userId);
-		
+
 		Assert.isTrue(user.isEnabled(), "User is not enabled");
 		
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
