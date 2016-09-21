@@ -22,7 +22,8 @@
 		<springframework.version>4.0.6.RELEASE</springframework.version>
 		<springsecurity.version>3.2.4.RELEASE</springsecurity.version>
 		<springdata.version>1.6.2.RELEASE</springdata.version>
-		<springsocial.version>1.1.0.RELEASE</springsocial.version>
+		<springsocial.version>1.1.4.RELEASE</springsocial.version>
+		<springsocialfacebook.version>2.0.3.RELEASE</springsocialfacebook.version>
 		<springsocialgoogle.version>1.0.0.RELEASE</springsocialgoogle.version>
 		<!-- Hibernate -->
 		<hibernate.version>4.3.5.Final</hibernate.version>
@@ -109,13 +110,13 @@
 
 				<!-- Social -->
 				<!-- Facebook -->
-				<mvn.social.facebook.app.id>1563968713815015</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>8c0181078fbbb7e5cafe1147b23ac0f2</mvn.social.facebook.app.secret>
+				<mvn.social.facebook.app.id>303469610010652</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>1e6313d26c77e3708e4bea47c476ec62</mvn.social.facebook.app.secret>
 
 			
 				<!-- Google plus -->
-				<mvn.social.google.app.id>978630797426-4h7nurl83m50q9gpsor4othbugt49igs.apps.googleusercontent.com</mvn.social.google.app.id>
-				<mvn.social.google.app.secret>qPhTWxxxw1-vsmell51LycoS</mvn.social.google.app.secret>
+				<mvn.social.google.app.id>856589923551-997fukn75b05miqvnucb7034l5o3qgqp.apps.googleusercontent.com</mvn.social.google.app.id>
+				<mvn.social.google.app.secret>gfxTEdpAY9ofTBV0Q5xePxgS</mvn.social.google.app.secret>
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
@@ -167,13 +168,13 @@
 
 				<!-- Social -->
 				<!-- Facebook -->
-				<mvn.social.facebook.app.id>1563968713815015</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>8c0181078fbbb7e5cafe1147b23ac0f2</mvn.social.facebook.app.secret>
+				<mvn.social.facebook.app.id>303469610010652</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>1e6313d26c77e3708e4bea47c476ec62</mvn.social.facebook.app.secret>
 
 			
 				<!-- Google plus -->
-				<mvn.social.google.app.id>978630797426-4h7nurl83m50q9gpsor4othbugt49igs.apps.googleusercontent.com</mvn.social.google.app.id>
-				<mvn.social.google.app.secret>qPhTWxxxw1-vsmell51LycoS</mvn.social.google.app.secret>
+				<mvn.social.google.app.id>856589923551-997fukn75b05miqvnucb7034l5o3qgqp.apps.googleusercontent.com</mvn.social.google.app.id>
+				<mvn.social.google.app.secret>gfxTEdpAY9ofTBV0Q5xePxgS</mvn.social.google.app.secret>
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
@@ -338,7 +339,7 @@
 			<dependency>
 				<groupId>org.springframework.social</groupId>
 				<artifactId>spring-social-facebook</artifactId>
-				<version>${springsocial.version}</version>
+				<version>${springsocialfacebook.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.social</groupId>
