@@ -1041,6 +1041,7 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer insertLayer( Layer layer )
 	{
+		
 		layer.setLayerGroup(this.layerGroupRepository.findOne(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
@@ -1051,6 +1052,7 @@ public class LayerGroupService
 		
 		List<Attribute> attributies = layer.getAttributes();
 		layer.setAttributes(this.attributeRepository.save(attributies));
+
 		return layer;
 	}
 	/**
@@ -1085,8 +1087,9 @@ public class LayerGroupService
 			this.attributeRepository.save(attribute);
 		}
 		
-		layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));
-		
+		if(layer.getPublishedLayer() != null){
+			layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));	
+		}		
 		return this.layerRepository.save( layer );	
 		
 	}
@@ -1128,8 +1131,8 @@ public class LayerGroupService
 	{		
 		final Layer layer = this.layerRepository.findById(id);
 		
-		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));
-		
+		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));	
+				
 		// traz a legenda da camada do GeoServer
 		if( layer.getDataSource().getUrl() != null ) {
 			layer.setLegend(getLegendLayerFromGeoServer(layer));	

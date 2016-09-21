@@ -120,7 +120,7 @@ public class AccountServiceTest extends AbstractIntegrationTest
 		
 		Assert.assertNotNull( user );
 		Assert.assertNotNull( user.getId() );
-		Assert.assertEquals("user@geocab.com.br", user.getEmail());
+		Assert.assertEquals("test_prognus@mailinator.com", user.getEmail());
 		Assert.assertEquals("Testing User", user.getName());
 		Assert.assertEquals(UserRole.ADMINISTRATOR, user.getRole());
 		
@@ -139,11 +139,11 @@ public class AccountServiceTest extends AbstractIntegrationTest
 	{
 		this.authenticate(100L);
 		
-		User user = this.accountService.findUserByEmail("user@geocab.com.br");
+		User user = this.accountService.findUserByEmail("test_prognus@mailinator.com");
 		
 		Assert.assertNotNull( user );
 		Assert.assertNotNull( user.getId() );
-		Assert.assertEquals("user@geocab.com.br", user.getEmail());
+		Assert.assertEquals("test_prognus@mailinator.com", user.getEmail());
 		Assert.assertEquals("Testing User", user.getName());
 		Assert.assertEquals(UserRole.ADMINISTRATOR, user.getRole());
 		

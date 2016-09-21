@@ -50,7 +50,7 @@ public class AccessGroupServiceTest extends AbstractIntegrationTest
 	{
 		this.authenticate(100L);
 		
-		AccessGroup accessGroup = new AccessGroup();
+		AccessGroup accessGroup = this.accessGroupService.findAccessGroupById(1L);
 		accessGroup.setName("Grupo de acesso 02");
 		accessGroup.setDescription("Descrição 02");
 		

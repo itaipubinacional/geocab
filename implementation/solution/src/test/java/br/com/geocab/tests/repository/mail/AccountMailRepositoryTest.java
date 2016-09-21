@@ -36,8 +36,8 @@ public class AccountMailRepositoryTest extends AbstractIntegrationTest
 	public void sendRecoveryPassword()
 	{
 		final User user = new User();
-		user.setEmail("thiago.rossetto@eits.com.br");
-		user.setName("Thiago Rossetttttttto");
+		user.setEmail("test_prognus@mailinator.com");
+		user.setName("Test Prognus");
 		
 		this.accountMailRepository.sendRecoveryPassword( user );
 	}

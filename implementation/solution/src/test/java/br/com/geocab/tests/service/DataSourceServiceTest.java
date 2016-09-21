@@ -39,7 +39,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 		dataSource.setLogin("user");
 		dataSource.setPassword("password123");
 //		dataSource.setInternal(true);
-		dataSource.setUrl("url1");
+		dataSource.setUrl("http://geocab.sbox.me/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities");
 	
 		
 		dataSource = dataSourceService.insertDataSource(dataSource);
@@ -48,7 +48,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals("Data Source", dataSource.getName());
 		Assert.assertEquals("user", dataSource.getLogin());
 		Assert.assertEquals("password123", dataSource.getPassword());
-		Assert.assertEquals("url1", dataSource.getUrl());
+		Assert.assertEquals("http://geocab.sbox.me/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities&authkey=2da2ca323d28628d05151b9070e27da0", dataSource.getUrl());
 //		Assert.assertTrue(dataSource.getInternal());
 			
 	}
@@ -67,7 +67,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 		dataSource.setName("Data Source changed");
 		dataSource.setLogin("user changed");
 		dataSource.setPassword("password123 changed");
-		dataSource.setUrl("url1 changed");
+		dataSource.setUrl("http://geocab.sbox.me/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities");
 //		dataSource.setInternal(false);
 		
 		dataSource = dataSourceService.updateDataSource(dataSource);
@@ -77,7 +77,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals("Data Source changed", dataSource.getName());
 		Assert.assertEquals("user changed", dataSource.getLogin());
 		Assert.assertEquals("password123 changed", dataSource.getPassword());
-		Assert.assertEquals("url1 changed", dataSource.getUrl());
+		Assert.assertEquals("http://geocab.sbox.me/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities&authkey=5d8101ca1d34c56858a5fc7fae979527", dataSource.getUrl());
 //		Assert.assertFalse(dataSource.getInternal());
 		
 	}

@@ -83,7 +83,7 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals(MapScale.UM100km, layer.getMaximumScaleMap());
 		Assert.assertEquals(MapScale.UM10km, layer.getMinimumScaleMap());
 		Assert.assertEquals(
-				"http://172.17.6.112:80/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=v_ag_demandantes",
+				"http://172.17.6.112:80/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=v_ag_demandantes&authkey=2da2ca323d28628d05151b9070e27da0",
 				layer.getLegend());
 	}
 
@@ -98,7 +98,7 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 	{
 		this.authenticate(100L);
 
-		Layer layer = this.layerGroupService.findLayerById(2L);
+		Layer layer = this.layerGroupService.findLayerById(502L);
 
 		layer.setName("bdgeo:v_ag_demandantes2");
 		layer.setTitle("Demandantes2");
@@ -126,8 +126,8 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 	{
 		this.authenticate(100L);
 
-		Layer layer = this.layerGroupService.findLayerById(2L);
-		Assert.assertTrue(layer.getId().equals(2L));
+		Layer layer = this.layerGroupService.findLayerById(502L);
+		Assert.assertTrue(layer.getId().equals(502L));
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 	{
 		this.authenticate(100L);
 
-		this.layerGroupService.removeLayer(2L);
+		this.layerGroupService.removeLayer(502L);
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals("Demandantes2", layer.getTitle());
 		Assert.assertEquals(MapScale.UM100km, layer.getMaximumScaleMap());
 		Assert.assertEquals(MapScale.UM10km, layer.getMinimumScaleMap());
-		Assert.assertEquals("http://172.17.6.112:80/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=v_ag_demandantes", layer.getLegend());
+		Assert.assertEquals("http://172.17.6.112:80/geoserver/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=v_ag_demandantes&authkey=2da2ca323d28628d05151b9070e27da0", layer.getLegend());
 	}
 
 //	/**

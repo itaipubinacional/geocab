@@ -82,16 +82,7 @@ public class MarkerAttributeTest
 			markerAttributes.add(ma);
 		}
 		marker.handlerDuplicateAttributes();
-		System.out.println("-------ARRAY DE SAÍDA -------");
-		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
-		{
-			System.out.println(markerAttribute.getAttribute().getName());
-		}
-		System.out.println("-------ARRAY DE DESTINO -------");
-		for (MarkerAttribute markerAttribute : markerAttributes)
-		{
-			System.out.println(markerAttribute.getAttribute().getName());
-		}
+		
 		
 		//TODO encontrar forma de comparar valores de COLLECTIONST CollectionUtils.isEqualCollection(markerAttributes, marker.getMarkerAttribute());
 		
@@ -154,17 +145,7 @@ public class MarkerAttributeTest
 		}
 		marker.formattedAttributes();
 		marker.handlerDuplicateAttributes();
-		System.out.println("-------ARRAY DE SAÍDA -------");
-		for (MarkerAttribute markerAttribute : marker.getMarkerAttribute())
-		{
-			System.out.println(markerAttribute.getAttribute().getName());
-		}
-		System.out.println("-------ARRAY DE DESTINO -------");
-		for (MarkerAttribute markerAttribute : markerAttributes)
-		{
-			System.out.println(markerAttribute.getAttribute().getName());
-		}
-		
+				
 		//TODO encontrar forma de comparar valores de COLLECTIONST CollectionUtils.isEqualCollection(markerAttributes, marker.getMarkerAttribute());
 		
 	}
