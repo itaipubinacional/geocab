@@ -433,17 +433,17 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.changeToUpdate = function (id) {
         $log.info("changeToUpdate", id);
         
-        var actions = {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'};
+//        var actions = {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'};
         
         
-        if( $scope.gridLayers.columnDefs.indexOf(actions) == -1){
+//        if( $scope.gridLayers.columnDefs.indexOf(actions) == -1){
         	
-        	$scope.gridCustomSearch.columnDefs.push(actions);
-        	$scope.gridUsers.columnDefs.push(actions);
-        	$scope.gridTools.columnDefs.push(actions);
-        	$scope.gridLayers.columnDefs.push(actions);
+        	$scope.gridCustomSearch.columnDefs.push({displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'});
+        	$scope.gridUsers.columnDefs.push({displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_USER_BUTTONS, width: '10%'});
+        	$scope.gridTools.columnDefs.push({displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_TOOLS_BUTTONS, width: '10%'});
+        	$scope.gridLayers.columnDefs.push({displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_LAYER_BUTTONS, width: '10%'});
         	
-        }
+//        }
         
         accessGroupService.findAccessGroupById($state.params.id, {
             callback: function (result) {
@@ -1166,5 +1166,5 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         $scope.updateTools();
         $scope.updateUsers();
     }
-
+    
 };

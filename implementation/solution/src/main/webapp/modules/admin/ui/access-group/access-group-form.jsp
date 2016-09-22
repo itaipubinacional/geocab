@@ -70,13 +70,8 @@
                     </div>
                     <br style="clear: both">
                     <div ng-grid="gridUsers" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);"></div>
-                    
-                    <div>
-                        <!-- State Create -->
-
-                    </div>
                 </tab>
-                <tab heading="Camadas" ng-if="currentEntity.id != null">
+                <tab heading="Camadas" ng-if="currentEntity.id != null" >
                     <div style="margin-bottom: 20px; float: right;">
                         <button class="btn btn-primary" type="button" ng-click="associateLayer()"><spring:message code="admin.access-group.Associate-layer"/></button>
                         <button class="btn btn-success larger-btn" ng-click="saveAssotiations()"><spring:message code="admin.access-group.Save"/></button>
@@ -85,7 +80,7 @@
                     <div ng-grid="gridLayers" style="height: 300px; width: 100%; border: 1px solid rgb(212,212,212);">
                     </div>
                 </tab>
-                <tab heading="Pesquisas Personalizadas" ng-if="currentEntity.id != null">
+                <tab heading="Pesquisas Personalizadas" ng-if="currentEntity.id != null" >
                     <div style="margin-bottom: 20px; float: right;">
                         <button class="btn btn-primary" ng-click="associateSearch()" type="button"><spring:message code="admin.access-group.Associate-custom-search"/></button>
                         <button class="btn btn-success larger-btn" ng-click="saveAssotiations()"><spring:message code="admin.access-group.Save"/></button>
