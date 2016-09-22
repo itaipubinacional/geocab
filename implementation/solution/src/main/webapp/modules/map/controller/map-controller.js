@@ -14,6 +14,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * @see AbstractCRUDController
    */
   $injector.invoke(AbstractCRUDController, this, {$scope: $scope});
+  
 
   /**
    * Include services
