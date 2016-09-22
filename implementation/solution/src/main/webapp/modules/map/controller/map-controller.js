@@ -3702,33 +3702,29 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
     }
     
-    
-    $scope.removeInternalLayer( $scope.currentEntity.layer.id, function(){
     	   
-    	var watch = $scope.$watch(
-    		
-    		function(){ 
-    			return $scope.map.removeLayer($scope.currentCreatingInternalLayer)
-    		}, function (newValue, oldValue) {
-    	
-    			if(newValue != oldValue){
-    				
-    			  $scope.removeInternalLayer( $scope.currentEntity.layer.id  );	
-    			  
-    			  
-    			  $timeout(function () {
-    				  
-    				  $scope.addInternalLayer($scope.currentEntity.layer.id);
-    				  
-    			  }, 500);
-    			  
-    			  
-    			  // Encerra o watch
-    			  watch();
-    			}
-    	});
-    	
-    });	
+	var watch = $scope.$watch(
+		
+		function(){ 
+			return $scope.map.removeLayer($scope.currentCreatingInternalLayer)
+		}, function (newValue, oldValue) {
+	
+			if(newValue != oldValue){
+				
+			  $scope.removeInternalLayer( $scope.currentEntity.layer.id  );	
+			  
+			  
+			  $timeout(function () {
+				  
+				  $scope.addInternalLayer($scope.currentEntity.layer.id);
+				  
+			  }, 500);
+			  
+			  
+			  // Encerra o watch
+			  watch();
+			}
+	});	
  
 
   };
