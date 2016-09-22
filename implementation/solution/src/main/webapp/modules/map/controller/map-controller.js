@@ -832,7 +832,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.currentEntity.status = 'PENDING';
 
         if(angular.equals($scope.currentEntity, {})) {
-          layerGroupService.listAllInternalLayerGroups({
+          layerGroupService.listAllInternalLayerGroupsByAccessGroup({
             callback: function (result) {
               $scope.selectLayerGroup = [];
 
@@ -2331,7 +2331,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.toggleSidebar(300, '', '#sidebar-marker-create');
       }, timeOut);*/
 
-      layerGroupService.listAllInternalLayerGroups({
+      layerGroupService.listAllInternalLayerGroupsByAccessGroup({
         callback: function (result) {
           $scope.selectLayerGroup = [];
 
@@ -3299,7 +3299,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
     }
     /* List for the edit */
-    layerGroupService.listAllInternalLayerGroups({
+    layerGroupService.listAllInternalLayerGroupsByAccessGroup({
       callback: function (result) {
         // $scope.layersGroups = result;
 
@@ -4550,55 +4550,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
     }
 
-    /*layerGroupService.listAllInternalLayerGroups({
-      callback: function (result) {
-
-        $scope.selectLayerGroup = [];
-
-        angular.forEach(result, function (layer, index) {
-
-          $scope.selectLayerGroup.push($.extend(layer, {
-            "layerTitle": layer.title,
-            "layerId": layer.id,
-            "group": layer.layerGroup.name
-          }));
-
-        })
-
-        markerService.listAttributeByMarker($scope.currentEntity.id, {
-          callback: function (result) {
-            $scope.attributesByMarker = result;
-
-            angular.forEach(result, function (markerAttribute, index) {
-              if (markerAttribute.attribute.type == "NUMBER") {
-                markerAttribute.value = parseInt(markerAttribute.value);
-              }
-            })
-
-            angular.forEach($scope.selectLayerGroup, function (layer, index) {
-              if (layer.layerId == $scope.currentEntity.layer.id) {
-                layer.created = $scope.currentEntity.layer.created;
-                $scope.currentEntity.layer = layer;
-
-                return false;
-              }
-            })
-
-            $scope.$apply();
-          },
-          errorHandler: function (message, exception) {
-            $scope.message = {type: "error", text: message};
-            $scope.$apply();
-          }
-        });
-
-      },
-      errorHandler: function (message, exception) {
-        $scope.message = {type: "error", text: message};
-        $scope.$apply();
-      }
-    });*/
-
     if ($scope.slideActived == '#sidebar-marker-detail-update') {
       $(".panel-body").height($("#sidebar-marker-detail-update").height() - 68 - 30);
       return
@@ -4645,7 +4596,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     angular.element('#upload').trigger('click');
   };
 
-  layerGroupService.listAllInternalLayerGroups({
+  layerGroupService.listAllInternalLayerGroupsByAccessGroup({
     callback: function (result) {
       $scope.selectLayerGroup = [];
 
@@ -4729,35 +4680,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       };
 
       $scope.listAllUsers();
-
-      
-      
-      
-//      layerGroupService.listAllInternalLayerGroups({
-//        callback: function (result) {
-//          $scope.selectLayerGroup = [];
-//
-//          angular.forEach(result, function (layer, index) {
-//
-//            $scope.selectLayerGroup.push({
-//              "layerTitle": layer.title,
-//              "layerId": layer.id,
-//              "layerIcon": layer.icon,
-//              "group": layer.layerGroup.name
-//            });
-//
-//          })
-//
-//          $scope.currentState = $scope.LIST_STATE;
-//
-//          $scope.$apply();
-//        },
-//        errorHandler: function (message, exception) {
-//          $scope.message = {type: "error", text: message};
-//          $scope.$apply();
-//        }
-//      });
-      
       
       $scope.resolveDatePicker();
 

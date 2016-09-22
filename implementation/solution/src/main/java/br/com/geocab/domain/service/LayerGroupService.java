@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.validation.ConstraintViolationException;
@@ -115,7 +116,7 @@ public class LayerGroupService
 	 */
 	@Autowired
 	private IToolRepository toolRepository;
-	
+		
 	/**
 	 * 
 	 */
@@ -821,6 +822,41 @@ public class LayerGroupService
 		return this.layerRepository.listAllInternalLayerGroups();
 	}
 	
+	
+	/**
+	 * 
+	 * @return camadas filtradas pelos grupos de acesso do usuário
+	 */
+	@Transactional(readOnly=true)
+	public List<Layer> listAllInternalLayerGroupsByAccessGroup()
+	{
+		User user = ContextHolder.getAuthenticatedUser();
+		
+		List<Layer> layers = this.layerRepository.listAllInternalLayerGroups();
+		
+		List<AccessGroup> accessGroups = this.accessGroupRepository.listByUser(user.getEmail());
+				
+		Set<Long> layersId = new HashSet<>();
+		for (AccessGroup accessGroup : accessGroups) {
+			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())));
+			
+			Set<AccessGroupLayer> accessGroupsLayers = accessGroup.getAccessGroupLayer();
+			for (AccessGroupLayer accessGroupLayer : accessGroupsLayers) {
+				layersId.add(accessGroupLayer.getLayer().getId());
+			}		
+		}
+		
+		List<Layer> layersToReturn = new ArrayList<>();
+		for (Layer layer : layers) {
+			for (Long layerId : layersId) {
+				if(layer.getId().equals(layerId)){
+					layersToReturn.add(layer);
+				}
+			}
+		}
+		
+		return layersToReturn;
+	}
 	
 	/**
 	 * 
