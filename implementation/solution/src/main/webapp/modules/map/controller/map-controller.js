@@ -625,9 +625,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       if($scope.formattedLatitude && $scope.formattedLongitude) {
 
         $scope.map.removeLayer($scope.currentCreatingInternalLayer);
-        
-        
-          
+
         var formattedLatitude = $scope.formattedLatitude.toString();
         var formattedLongitude = $scope.formattedLongitude.toString();
 
@@ -3511,6 +3509,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.updateMarker = function () {
 	  
+  	$scope.map.removeLayer($scope.currentCreatingInternalLayer);
+  	
+  	 $scope.removeInternalLayer( $scope.currentEntity.layer.id  );	
+	  
     $scope.isLoading = true;
 
     var isValid = true;
@@ -3553,6 +3555,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     angular.forEach($scope.attributesByMarker, function (attribute, i) {
 
+
+    	
         if (attribute.value == null) {
             attribute.value = "";
         }
@@ -3685,6 +3689,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             $("div.msgMap").fadeOut();
           }, 5000);
 
+//          ADD LAYERS 
+          $scope.addInternalLayer($scope.currentEntity.layer.id);
+          
           $scope.$apply();
         },
         errorHandler: function (message, exception) {
@@ -3703,30 +3710,30 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
     }
     
-    	   
-	var watch = $scope.$watch(
-		
-		function(){ 
-			return $scope.map.removeLayer($scope.currentCreatingInternalLayer)
-		}, function (newValue, oldValue) {
-	
-			if(newValue != oldValue){
-				
-			  $scope.removeInternalLayer( $scope.currentEntity.layer.id  );	
-			  
-			  
-			  $timeout(function () {
-				  
-				  $scope.addInternalLayer($scope.currentEntity.layer.id);
-				  
-			  }, 500);
-			  
-			  
-			  // Encerra o watch
-			  watch();
-			}
-	});	
- 
+//    	   
+//	var watch = $scope.$watch(
+//		
+//		function(){ 
+//			return $scope.map.removeLayer($scope.currentCreatingInternalLayer)
+//		}, function (newValue, oldValue) {
+//	
+//			if(newValue != oldValue){
+//				
+//			  $scope.removeInternalLayer( $scope.currentEntity.layer.id  );	
+//			  
+//			  
+//			  $timeout(function () {
+//				  
+//				  $scope.addInternalLayer($scope.currentEntity.layer.id);
+//				  
+//			  }, 500);
+//			  
+//			  
+//			  // Encerra o watch
+//			  watch();
+//			}
+//	});	
+// 
 
   };
   
