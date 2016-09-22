@@ -284,6 +284,12 @@ public class CustomSearchService
 	@PreAuthorize("true")
 	public List<CustomSearch> listCustomSearchsByUser()
 	{
+		
+		if(ContextHolder.getAuthenticatedUser().getRole().equals(UserRole.ADMINISTRATOR))
+		{
+			return this.customSearchRepository.findAll();
+		}
+		
 		List<CustomSearch> customsSearchUser = new ArrayList<CustomSearch>();
 
 		List<AccessGroup> accessGroupUser = null;
