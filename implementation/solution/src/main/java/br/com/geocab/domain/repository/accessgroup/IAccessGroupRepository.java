@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
+import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
 /**
@@ -79,5 +80,5 @@ public interface IAccessGroupRepository extends IDataRepository<AccessGroup, Lon
 				"FROM AccessGroup accessGroup " +
 				"WHERE accessGroup.id = :id" )
 	public AccessGroup findById(@Param("id") Long id);
-	
+
 }
