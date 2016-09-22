@@ -832,7 +832,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.currentEntity.status = 'PENDING';
 
         if(angular.equals($scope.currentEntity, {})) {
-          layerGroupService.listAllInternalLayerGroupsByAccessGroup({
+          layerGroupService.listAllInternalLayerGroups({
             callback: function (result) {
               $scope.selectLayerGroup = [];
 
@@ -2331,7 +2331,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         $scope.toggleSidebar(300, '', '#sidebar-marker-create');
       }, timeOut);*/
 
-      layerGroupService.listAllInternalLayerGroupsByAccessGroup({
+      layerGroupService.listAllInternalLayerGroups({
         callback: function (result) {
           $scope.selectLayerGroup = [];
 
@@ -3299,7 +3299,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       });
     }
     /* List for the edit */
-    layerGroupService.listAllInternalLayerGroupsByAccessGroup({
+    layerGroupService.listAllInternalLayerGroups({
       callback: function (result) {
         // $scope.layersGroups = result;
 
@@ -4596,7 +4596,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     angular.element('#upload').trigger('click');
   };
 
-  layerGroupService.listAllInternalLayerGroupsByAccessGroup({
+  layerGroupService.listAllInternalLayerGroups({
     callback: function (result) {
       $scope.selectLayerGroup = [];
 

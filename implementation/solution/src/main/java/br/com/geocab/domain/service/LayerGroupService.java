@@ -814,24 +814,16 @@ public class LayerGroupService
 	
 	/**
 	 * 
-	 * @return
+	 * @return camadas filtradas pelos grupos de acesso do usuário
 	 */
 	@Transactional(readOnly=true)
 	public List<Layer> listAllInternalLayerGroups()
 	{
-		return this.layerRepository.listAllInternalLayerGroups();
-	}
-	
-	
-	/**
-	 * 
-	 * @return camadas filtradas pelos grupos de acesso do usuário
-	 */
-	@Transactional(readOnly=true)
-	public List<Layer> listAllInternalLayerGroupsByAccessGroup()
-	{
 		User user = ContextHolder.getAuthenticatedUser();
 		
+		if (user.getRole().equals(UserRole.ADMINISTRATOR)) {
+			return this.layerRepository.listAllInternalLayerGroups();
+		}
 		List<Layer> layers = this.layerRepository.listAllInternalLayerGroups();
 		
 		List<AccessGroup> accessGroups = this.accessGroupRepository.listByUser(user.getEmail());
