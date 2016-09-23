@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Layer;
-import br.com.geocab.domain.entity.layer.LayerGroup;
 import br.com.geocab.domain.repository.datasource.IDataSourceRepository;
+import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
 
 /**
@@ -62,10 +62,10 @@ public class DataSourceService
 	private IDataSourceRepository dataSourceRepository;
 	
 	/**
-	 * Service of {@link LayerGroup}
+	 * 
 	 */
 	@Autowired
-	private LayerGroupService layerGroupService;
+	private ILayerRepository layerRepository;
 	
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
@@ -90,7 +90,7 @@ public class DataSourceService
 		}
 		return dataSource; 
 	}
-	
+
 	/**
 	 * Method to update an {@link DataSource}
 	 * 
@@ -101,7 +101,7 @@ public class DataSourceService
 	{			
 		PageRequest pageable = new PageRequest();
 		
-		Page<Layer> allLayers = this.layerGroupService.listLayersByFilters(null,pageable );
+		Page<Layer> allLayers =  this.layerRepository.listByFilters(null, null, pageable);
 		
 		DataSource oldDataSource = this.dataSourceRepository.findOne(dataSource.getId());
 		
