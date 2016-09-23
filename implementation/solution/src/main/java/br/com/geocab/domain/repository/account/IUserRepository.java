@@ -29,8 +29,8 @@ public interface IUserRepository extends IDataRepository<User, Long>, UserDetail
 	 * @return
 	 */
 	@Query(value="SELECT new User( user.id, user.name, user.email , user.enabled , user.role, user.password ) " +
-			"FROM User user WHERE  (:asdf = user.email)" )
-	public User findUser( @Param("asdf") String asdf);
+			"FROM User user WHERE  (:email = user.email)" )
+	public User findUser( @Param("email") String email);
 	
 	/**
 	 * @param filter
