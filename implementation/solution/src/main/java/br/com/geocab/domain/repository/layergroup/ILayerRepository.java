@@ -71,10 +71,12 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 					+ "OR ( LOWER(dataSource.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " 
 					+ "OR ( LOWER(layerGroup.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) ) " 
 					+ "AND ( layer.dataSource.id = :dataSourceId OR :dataSourceId = NULL ) " 
-					+ "AND ( layer.published = false ) ) AND (layer.id IN ("
-						+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE (accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id ) "
-					+ ")) ")
-	public Page<Layer> provisorio( @Param("filter") String filter, @Param("dataSourceId") Long dataSourceId, @Param("userId") Long userId, Pageable pageable );
+					+ "AND ( layer.published = false ) ) "
+					//SUBSELECT para restrição de usuário pelo grupo de acesso
+						+ "AND (layer.id IN ("
+							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE (accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id ) "
+						+ ")) ")
+	public Page<Layer> listByFiltersAndByUser( @Param("filter") String filter, @Param("dataSourceId") Long dataSourceId, @Param("userId") Long userId, Pageable pageable );
 	
 //	@Query(value="SELECT DISTINCT layer"
 //			+ "	FROM  layer"?#{ principal?.id }

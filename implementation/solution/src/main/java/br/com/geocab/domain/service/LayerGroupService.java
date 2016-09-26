@@ -1023,11 +1023,11 @@ public class LayerGroupService
 		//Se for administrador trás todas as camadas
 		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
 		{
-			layers = this.layerRepository.listByFilters(filter, null, pageable);
+			layers = this.layerRepository.listByFilters(filter, null, pageable); //TODO porque o dataSourceId esta entrnando null?
 		}
 		else
 		{
-//			layers = this.layerRepository.listByFiltersAndByUser(user.getId(), pageable); TODO
+			layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
 		}
 		for ( Layer layer : layers.getContent() )
 		{
@@ -1061,9 +1061,8 @@ public class LayerGroupService
 		}
 		else
 		{
-//			layers = this.layerRepository.listByFiltersAndByUser(user.getId(), pageable); todo
+			layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable);
 		}
-		
 		
 		for ( Layer layer : layers.getContent() )
 		{
