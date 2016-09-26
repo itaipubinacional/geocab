@@ -1016,9 +1016,19 @@ public class LayerGroupService
 //	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, Long dataSourceId,PageRequest pageable )
 	{
-		Page<Layer> layers = this.layerRepository.listByFilters(filter, dataSourceId, pageable);
+		Page<Layer> layers = null;
 		
+		User user = ContextHolder.getAuthenticatedUser();
 		
+		//Se for administrador trás todas as camadas
+		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
+		{
+			layers = this.layerRepository.listByFilters(filter, null, pageable);
+		}
+		else
+		{
+//			layers = this.layerRepository.listByFiltersAndByUser(user.getId(), pageable); TODO
+		}
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
@@ -1026,38 +1036,9 @@ public class LayerGroupService
 				layer.setLegend(getLegendLayerFromGeoServer(layer));	
 			}
 		}
-		
-		User user = ContextHolder.getAuthenticatedUser();
-		
-		if (user.getRole().equals(UserRole.ADMINISTRATOR)) {
-			return layers;
-		}
-		
-		List<AccessGroup> accessGroups = this.accessGroupRepository.listByUser(user.getEmail());
 				
-		Set<Long> layersId = new HashSet<>();
-		for (AccessGroup accessGroup : accessGroups) {
-			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())));
-			
-			Set<AccessGroupLayer> accessGroupsLayers = accessGroup.getAccessGroupLayer();
-			for (AccessGroupLayer accessGroupLayer : accessGroupsLayers) {
-				layersId.add(accessGroupLayer.getLayer().getId());
-			}		
-		}
-		
-		List<Layer> layersToReturn = new ArrayList<>();
-		for (Layer layer : layers.getContent()) {
-			for (Long layerId : layersId) {
-				if(layer.getId().equals(layerId)){
-					layersToReturn.add(layer);
-					layers.getContent().remove(layer);
-				}
-			}
-		}
-		
 		return layers;
-		
-		
+				
 	}
 	/**
 	 * 
@@ -1068,7 +1049,20 @@ public class LayerGroupService
 	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, PageRequest pageable )
 	{
-		Page<Layer> layers = this.layerRepository.listByFilters(filter, null, pageable);
+
+		Page<Layer> layers = null;
+		
+		User user = ContextHolder.getAuthenticatedUser();
+		
+		//Se for administrador trás todas as camadas
+		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
+		{
+			layers = this.layerRepository.listByFilters(filter, null, pageable);
+		}
+		else
+		{
+//			layers = this.layerRepository.listByFiltersAndByUser(user.getId(), pageable); todo
+		}
 		
 		
 		for ( Layer layer : layers.getContent() )
@@ -1078,37 +1072,7 @@ public class LayerGroupService
 				layer.setLegend(getLegendLayerFromGeoServer(layer));	
 			}
 		}
-		
-		User user = ContextHolder.getAuthenticatedUser();
-		
-		//Se for administrador trás todas as camadas
-		if (user.getRole().equals(UserRole.ADMINISTRATOR)) {
-			return layers;
-		}
-		
-		//Se não for administrador filtra
-		List<AccessGroup> accessGroups = this.accessGroupRepository.listByUser(user.getEmail());
-				
-		Set<Long> layersId = new HashSet<>();
-		for (AccessGroup accessGroup : accessGroups) {
-			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())));
 			
-			Set<AccessGroupLayer> accessGroupsLayers = accessGroup.getAccessGroupLayer();
-			for (AccessGroupLayer accessGroupLayer : accessGroupsLayers) {
-				layersId.add(accessGroupLayer.getLayer().getId());
-			}		
-		}
-		
-		List<Layer> layersToReturn = new ArrayList<>();
-		for (Layer layer : layers.getContent()) {
-			for (Long layerId : layersId) {
-				if(layer.getId().equals(layerId)){
-					layersToReturn.add(layer);
-					layers.getContent().remove(layer);
-				}
-			}
-		}
-		
 		return layers;
 	}
 	

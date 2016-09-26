@@ -57,6 +57,34 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	
 	/**
 	 * 
+	 * @param filter
+	 * @param dataSourceId
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value="SELECT DISTINCT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup.name, layer.publishedLayer.id ) "  
+			+ " FROM Layer layer, AccessGroupLayer accessGroupLayer, AccessGroupUser accessGroupUser "
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "  
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup " 
+				+ "WHERE (( ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " 
+					+ "OR ( LOWER(layer.title) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " 
+					+ "OR ( LOWER(dataSource.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " 
+					+ "OR ( LOWER(layerGroup.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) ) " 
+					+ "AND ( layer.dataSource.id = :dataSourceId OR :dataSourceId = NULL ) " 
+					+ "AND ( layer.published = false ) ) AND (layer.id IN ("
+						+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE (accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id ) "
+					+ ")) ")
+	public Page<Layer> provisorio( @Param("filter") String filter, @Param("dataSourceId") Long dataSourceId, @Param("userId") Long userId, Pageable pageable );
+	
+//	@Query(value="SELECT DISTINCT layer"
+//			+ "	FROM  layer"?#{ principal?.id }
+//			+ "		INNER JOIN access_group_layer ON access_group_layer.layer_id = layer.id"
+//			+ "		INNER JOIN access_group_user ON access_group_layer.access_group_id = access_group_user.access_group_id"
+//			+ "	WHERE access_group_user.user_username = ?1 ", nativeQuery=true)
+//	public Page<Layer> listByFiltersAndByUser( Long userId, Pageable pageable );
+	
+	/**
+	 * 
 	 * @param idLayer
 	 * @return
 	 */
