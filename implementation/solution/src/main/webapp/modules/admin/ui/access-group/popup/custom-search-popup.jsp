@@ -20,7 +20,11 @@
 		
         <form novalidate name="form" default-button="{{buttonInsert}}">
             <input type="text" class="form-control" autofocus ng-model="data.filter" placeholder="<spring:message code="admin.access-group.Search-by-name-or-title"/>" style="width: 300px; float: left; margin-bottom: 10px;"/>
-            <input type="submit" class="btn btn-default" style="margin-left: 5px" value="<spring:message code="admin.access-group.Search-by-name-or-title"/>" ng-disabled="currentPage == null" ng-click="listByFilters(data.filter, data.fonteDados.id, currentPage.pageable )"/>
+
+			<button class="btn btn-default" ng-click="listByFilters(data.filter, currentPage.pageable )" type="submit" ng-disabled="currentPage == null">
+				<spring:message code="admin.access-group.Search-by-name-or-title"/>
+			</button>
+
         </form>
 
 		<br style="clear: both"/>
