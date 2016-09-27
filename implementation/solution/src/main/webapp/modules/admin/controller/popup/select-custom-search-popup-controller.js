@@ -97,34 +97,30 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
         showSelectionCheckbox: true,
         selectedItems: $scope.gridSelectedItems,
         rowHeight: 50,
-        afterSelectionChange: function (rowItem){
+        afterSelectionChange: function (rowItem, event){
             if (rowItem.length > 0) {
                 var i;
                 for (var rowItemIndex = 0; rowItemIndex < rowItem.length; rowItemIndex++) {
-
-                    i = $scope.findByIdInArray($scope.itensMarcados, rowItem[rowItemIndex].entity);
-
                     if (rowItem[rowItemIndex].selected){
-                        if (i == -1){
+                        i = $scope.findByIdInArray($scope.itensMarcados, rowItem[rowItemIndex].entity);
+                        if (i == -1)
                             $scope.itensMarcados.push(rowItem[rowItemIndex].entity);
-                        }
                     } else {
-                        if (i > -1){
+                        i = $scope.findByIdInArray($scope.itensMarcados, rowItem[rowItemIndex].entity);
+                        if (i > -1)
                             $scope.itensMarcados.splice(i, 1);
-                        }
                     }
                 }
             } else {
-
-                var i = $scope.findByIdInArray($scope.itensMarcados, rowItem.entity);
+                var i;
                 if (rowItem.selected){
-                    if (i == -1){
+                    i = $scope.findByIdInArray($scope.itensMarcados, rowItem.entity);
+                    if (i == -1)
                         $scope.itensMarcados.push(rowItem.entity);
-                    }
                 } else {
-                    if (i > -1){
+                    i = $scope.findByIdInArray($scope.itensMarcados, rowItem.entity);
+                    if (i > -1)
                         $scope.itensMarcados.splice(i, 1);
-                    }
                 }
             }
         },
@@ -173,7 +169,7 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
      */
     $scope.initialize = function () {
 
-        $scope.itensMarcados = angular.copy(selectedSearchs);
+        $scope.itensMarcados = selectedSearchs.slice(0);
 
         var pageRequest = new PageRequest();
         pageRequest.size = 6;
@@ -228,7 +224,7 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
             if (list[index].nome == string) return index;
         }
         return -1;
-    };
+    }
 
     /**
      * Realiza a consulta de registros, considerando filtro, paginação e sorting.
@@ -239,20 +235,15 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
      */
     $scope.listByFilters = function (filter, pageRequest) {
 
+        $scope.itensMarcados = $scope.gridOptions.selectedItems.length > 0 ? $scope.gridOptions.selectedItems.slice(0): $scope.itensMarcados;
+        $scope.gridOptions.selectedItems.length = 0;
+
         $scope.showLoading = true;
 
         customSearchService.listCustomSearchByFilters(filter, pageRequest, {
             callback: function (result) {
-
                 $scope.currentPage = result;
-
-                if ($scope.currentPage.pageable) {
-                    //Para fazer o bind com o pagination
-                    $scope.currentPage.pageable.pageNumber++;
-                } else {
-                    $scope.currentPage.pageable = {pageNumber: 0}
-                }
-
+                $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
                 $scope.showLoading = false;
                 $scope.$apply();
 
@@ -264,7 +255,7 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
                             $scope.gridOptions.selectItem(i, true);
                         }
                     });
-                }
+                };
 
                 $scope.showLoading = false;
                 $scope.$apply();
@@ -276,4 +267,4 @@ function SelectCustomSearchPopUpController($scope, $modalInstance, $injector,  s
             }
         });
     };
-}
+};

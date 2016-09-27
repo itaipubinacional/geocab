@@ -64,7 +64,7 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
 	$scope.initialize = function() 
 	{
         
-        $scope.currentEntity = angular.copy(usersSelected);
+        $scope.currentEntity = usersSelected.slice(0);
         
         var pageRequest = new PageRequest();
         pageRequest.size = 6;
@@ -94,26 +94,16 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
      */
     $scope.listUsersByFilters = function( filter, pageRequest ) {
 
-    	// $scope.currentEntity = $scope.gridOptions.selectedItems.length > 0 ? $scope.gridOptions.selectedItems.slice(0): $scope.currentEntity;
-
-        // $scope.gridOptions.selectedItems.length = 0;
+    	$scope.currentEntity = $scope.gridOptions.selectedItems.length > 0 ? $scope.gridOptions.selectedItems.slice(0): $scope.currentEntity;
+        $scope.gridOptions.selectedItems.length = 0;
         
         $scope.showLoading = true;
 
         accountService.listUsersByFilters( filter, pageRequest, {
             callback : function(result) {
             	$scope.currentPage = result;
-
+                $scope.currentPage.pageable.pageNumber++;//Para fazer o bind com o pagination
                 $scope.showLoading = false;
-
-                if($scope.currentPage.pageable){
-                    //Para fazer o bind com o pagination
-                    $scope.currentPage.pageable.pageNumber++;
-                } else {
-                    $scope.currentPage.pageable = { pageNumber : 0 }
-                }
-
-
                 $scope.$apply();
 
                 //Função responsável por marcar os registros na grid que já estavam marcados
@@ -175,7 +165,6 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
     }
     
     $scope.gridOptions = {
-
         data: 'currentPage.content',
         multiSelect: true,
         useExternalSorting: true,
@@ -185,37 +174,31 @@ function SelectUsersPopUpController($scope, $modalInstance , usersSelected, $log
         selectedItems: $scope.gridSelectedItems,
         rowHeight: 45,
         enableRowSelection: true,
-
-        afterSelectionChange: function (rowItem) {
+        afterSelectionChange: function (rowItem, event) {
         	
             if (rowItem.length > 0) {
                 var i;
-
                 for (var rowItemIndex = 0; rowItemIndex < rowItem.length; rowItemIndex++) {
-
-                    i = $scope.findByIdInArray($scope.currentEntity, rowItem[rowItemIndex].entity);
-
                     if (rowItem[rowItemIndex].selected){
-                        if (i == -1){
+                        i = $scope.findByIdInArray($scope.currentEntity, rowItem[rowItemIndex].entity);
+                        if (i == -1)
                             $scope.currentEntity.push(rowItem[rowItemIndex].entity);
-                        }
                     } else {
-                        if (i > -1){
+                        i = $scope.findByIdInArray($scope.currentEntity, rowItem[rowItemIndex].entity);
+                        if (i > -1)
                             $scope.currentEntity.splice(i, 1);
-                        }
                     }
                 }
             } else {
-
-                var i = $scope.findByIdInArray($scope.currentEntity, rowItem.entity);
+                var i;
                 if (rowItem.selected){
-                    if (i == -1){
+                    i = $scope.findByIdInArray($scope.currentEntity, rowItem.entity);
+                    if (i == -1)
                         $scope.currentEntity.push(rowItem.entity);
-                    }
                 } else {
-                    if (i > -1){
+                    i = $scope.findByIdInArray($scope.currentEntity, rowItem.entity);
+                    if (i > -1)
                         $scope.currentEntity.splice(i, 1);
-                    }
                 }
             }
         },

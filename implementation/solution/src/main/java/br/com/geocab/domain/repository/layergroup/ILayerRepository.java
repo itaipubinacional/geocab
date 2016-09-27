@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.infrastructure.jpa2.springdata.IDataRepository;
 
@@ -72,28 +73,20 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 					+ "OR ( LOWER(layerGroup.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) ) " 
 					+ "AND ( layer.dataSource.id = :dataSourceId OR :dataSourceId = NULL ) " 
 					+ "AND ( layer.published = false ) ) "
-					//SUBSELECT para restrição de usuário pelo grupo de acesso
-						+ "AND (layer.id IN ("
-							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE (accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id ) "
-						+ ")) ")
+						+ "AND ((accessGroupUser.user.role = "+0L+") OR ((accessGroupUser.user.role != "+0L+") AND layer.id IN ("
+							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE (accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id  "
+						+ "  )))) ") 
 	public Page<Layer> listByFiltersAndByUser( @Param("filter") String filter, @Param("dataSourceId") Long dataSourceId, @Param("userId") Long userId, Pageable pageable );
-	
-//	@Query(value="SELECT DISTINCT layer"
-//			+ "	FROM  layer"?#{ principal?.id }
-//			+ "		INNER JOIN access_group_layer ON access_group_layer.layer_id = layer.id"
-//			+ "		INNER JOIN access_group_user ON access_group_layer.access_group_id = access_group_user.access_group_id"
-//			+ "	WHERE access_group_user.user_username = ?1 ", nativeQuery=true)
-//	public Page<Layer> listByFiltersAndByUser( Long userId, Pageable pageable );
 	
 	/**
 	 * 
 	 * @param idLayer
 	 * @return
 	 */
-	@Query(value=/*"SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, publishedLayer.id )  "
-			+ */" FROM Layer layer "
-			/*+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "
-			+ " LEFT OUTER JOIN publishedLayer.layerGroup layerGroup "*/
+	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, publishedLayer.id )  "
+			+ " FROM Layer layer "
+			+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "
+			+ " LEFT OUTER JOIN publishedLayer.layerGroup layerGroup "
 			+ "WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " 
 			+ "ORDER BY layer.publishedLayer.orderLayer")
 	public List<Layer> listLayersByLayerGroupPublished( @Param("idLayer") Long idLayer);
@@ -150,10 +143,14 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.layerGroup.id, layer.layerGroup.name, layer.layerGroup.orderLayerGroup, layer.publishedLayer.id) " 
-			+ "FROM Layer layer "
-			+ "WHERE ( layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE ) " )
-	public List<Layer> listAllInternalLayerGroups();
+	@Query(value="SELECT DISTINCT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup.name, layer.publishedLayer.id, accessGroupUser.user.role ) "  
+			+ " FROM Layer layer, AccessGroupLayer accessGroupLayer, AccessGroupUser accessGroupUser "
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "  
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup " 
+				+ "WHERE (layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE) "
+						+ "AND ( layer.id IN ("
+							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE (accessGroupUser.user.role = "+0+" ) OR ( accessGroupUser.user.role != "+0+" AND accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id ))) " )
+	public List<Layer> listAllInternalLayerGroups(@Param("userId") Long userId);
 	
 	/**
 	 * 

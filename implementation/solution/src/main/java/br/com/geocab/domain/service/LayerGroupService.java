@@ -821,33 +821,7 @@ public class LayerGroupService
 	{
 		User user = ContextHolder.getAuthenticatedUser();
 		
-		if (user.getRole().equals(UserRole.ADMINISTRATOR)) {
-			return this.layerRepository.listAllInternalLayerGroups();
-		}
-		List<Layer> layers = this.layerRepository.listAllInternalLayerGroups();
-		
-		List<AccessGroup> accessGroups = this.accessGroupRepository.listByUser(user.getEmail());
-				
-		Set<Long> layersId = new HashSet<>();
-		for (AccessGroup accessGroup : accessGroups) {
-			accessGroup.setAccessGroupLayer(new HashSet<AccessGroupLayer>(this.accessGroupLayerRepository.listByAccessGroupId(accessGroup.getId())));
-			
-			Set<AccessGroupLayer> accessGroupsLayers = accessGroup.getAccessGroupLayer();
-			for (AccessGroupLayer accessGroupLayer : accessGroupsLayers) {
-				layersId.add(accessGroupLayer.getLayer().getId());
-			}		
-		}
-		
-		List<Layer> layersToReturn = new ArrayList<>();
-		for (Layer layer : layers) {
-			for (Long layerId : layersId) {
-				if(layer.getId().equals(layerId)){
-					layersToReturn.add(layer);
-				}
-			}
-		}
-		
-		return layersToReturn;
+		return this.layerRepository.listAllInternalLayerGroups(user.getId());
 	}
 	
 	/**
@@ -1016,19 +990,10 @@ public class LayerGroupService
 //	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, Long dataSourceId,PageRequest pageable )
 	{
-		Page<Layer> layers = null;
-		
 		User user = ContextHolder.getAuthenticatedUser();
-		
-		//Se for administrador trás todas as camadas
-		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
-		{
-			layers = this.layerRepository.listByFilters(filter, null, pageable); //TODO porque o dataSourceId esta entrnando null?
-		}
-		else
-		{
-			layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
-		}
+				
+		Page<Layer> layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
+	
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
@@ -1048,22 +1013,12 @@ public class LayerGroupService
 	 */
 	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, PageRequest pageable )
-	{
-
-		Page<Layer> layers = null;
+	{	
 		
 		User user = ContextHolder.getAuthenticatedUser();
-		
-		//Se for administrador trás todas as camadas
-		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
-		{
-			layers = this.layerRepository.listByFilters(filter, null, pageable);
-		}
-		else
-		{
-			layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable);
-		}
-		
+	
+		Page<Layer> layers  = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable);
+
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
