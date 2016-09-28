@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.validation.ConstraintViolationException;
@@ -820,8 +819,11 @@ public class LayerGroupService
 	public List<Layer> listAllInternalLayerGroups()
 	{
 		User user = ContextHolder.getAuthenticatedUser();
-		
-		return this.layerRepository.listAllInternalLayerGroups(user.getId());
+		if (user.getRole().equals(UserRole.ADMINISTRATOR))
+		{
+			return this.layerRepository.listAllInternalLayerGroups();	
+		}
+		return this.layerRepository.listAllInternalLayerGroupsAndByUser(user.getId());
 	}
 	
 	/**
@@ -990,10 +992,19 @@ public class LayerGroupService
 //	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, Long dataSourceId,PageRequest pageable )
 	{
+		Page<Layer> layers = null; 
+		
 		User user = ContextHolder.getAuthenticatedUser();
-				
-		Page<Layer> layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
 	
+		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
+		{
+			layers = this.layerRepository.listByFilters(filter, dataSourceId, pageable); //TODO porque o dataSourceId esta entrnando null?
+		} else 
+		{
+			layers = this.layerRepository.listByFiltersAndByUser(filter, dataSourceId, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
+		}
+		
+		
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
@@ -1014,10 +1025,17 @@ public class LayerGroupService
 	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, PageRequest pageable )
 	{	
+		Page<Layer> layers = null; 
 		
 		User user = ContextHolder.getAuthenticatedUser();
-	
-		Page<Layer> layers  = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable);
+		
+		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
+		{
+			layers = this.layerRepository.listByFilters(filter, null, pageable); //TODO porque o dataSourceId esta entrnando null?
+		} else 
+		{
+			layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
+		}
 
 		for ( Layer layer : layers.getContent() )
 		{
