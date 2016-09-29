@@ -88,7 +88,7 @@
 	<script type="text/javascript" src="modules/map/controller/popup/upload-controller.js"></script>
 	<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
-	<script type="text/javascript" src="static/libs/eits-directives/autocomplete/autocomplete.js"></script>
+	<script type="text/javascript" src="static/libs/eits-directives/autocomplete/autocomplete-directive.js"></script>
 
    		
 	</body>
