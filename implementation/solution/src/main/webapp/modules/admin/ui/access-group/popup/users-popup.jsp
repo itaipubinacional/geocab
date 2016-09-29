@@ -21,8 +21,7 @@
         <form novalidate name="form" default-button="{{buttonInsert}}">
             <input type="text" class="form-control" autofocus ng-model="data.filter" placeholder="<spring:message code="admin.access-group.Search-by-name"/>" style="width: 300px; float: left; margin-bottom: 10px;"/>
 
-            <button class="btn btn-default" ng-click="listUsersByFilters(data.filter)" type="submit"
-                    ng-disabled="data.filter.length < 3">
+            <button class="btn btn-default" ng-click="listUsersByFilters(data.filter)" type="submit">
                  <spring:message code="Search"/>
             </button>
 
@@ -45,7 +44,7 @@
 		</div>
 
 		<div class="grid-elements-count" ng-show="currentPage.totalElements > 0">
-			{{users.length}} <spring:message code="admin.access-group.Registers"/>
+			{{currentPage.numberOfElements}} <spring:message code="admin.layer-config.of"/> {{currentPage.totalElements}} <spring:message code="admin.access-group.Registers"/>
 		</div>
 
 	</div>

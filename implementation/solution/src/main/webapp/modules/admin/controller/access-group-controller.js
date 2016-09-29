@@ -717,7 +717,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
                     }
 
                     if (index3 > -1) {
-                        $scope.removeLayer.splice(index3, 1);
+                        $scope.removeLayers.splice(index3, 1);
                     }
 
                 }
