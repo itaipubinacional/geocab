@@ -407,7 +407,7 @@ function UsersController( $scope, $injector, $log, $state, $timeout, $modal, $lo
 				$scope.$apply();
 			},
 			errorHandler : function(message, exception) {
-				$scope.msg = {type:"danger", text: $translate(message), dismiss:true};
+				$scope.msg = {type:"danger", text: message, dismiss:true};
 				$scope.fadeMsg();
 				$scope.$apply();
 			}
