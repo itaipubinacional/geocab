@@ -48,38 +48,6 @@ public class AccountServiceTest extends AbstractIntegrationTest
 	 *				 		     	TESTS
 	 *-------------------------------------------------------------------*/
 
-	@Test
-	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
-			"/dataset/AccountDataSet.xml",
-			"/dataset/AccessGroupDataSet.xml"
-	})
-	public void insertUser()
-	{
-		this.authenticate(100L);
-		
-		User user = new User();
-		user.setEmail("someUser@geocab.com.br");
-		user.setName("Testing User");
-		user.setPassword("123");
-		user.setRole(UserRole.ADMINISTRATOR);
-		user.setEnabled(true);
-		
-		user = this.accountService.insertUser( user );
-		
-		Assert.assertNotNull( user );
-		Assert.assertNotNull( user.getId() );
-		Assert.assertNotNull( user.getCreated() );
-		
-		Assert.assertEquals("someUser@geocab.com.br", user.getEmail());
-		Assert.assertEquals("Testing User", user.getName());
-		Assert.assertEquals(UserRole.ADMINISTRATOR, user.getRole());
-		
-		Assert.assertTrue(user.isEnabled());
-		
-		final String encodedPassword = this.passwordEncoder.encodePassword( "123" , saltSource.getSalt( user ) ); 
-		Assert.assertEquals(encodedPassword , user.getPassword());
-		
-	}
 	
 	@Test
 	@DatabaseSetup(type=DatabaseOperation.INSERT, value={
