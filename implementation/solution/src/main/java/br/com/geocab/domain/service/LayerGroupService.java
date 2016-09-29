@@ -1112,9 +1112,10 @@ public class LayerGroupService
 			this.attributeRepository.save(attribute);
 		}
 		
-		if(layer.getPublishedLayer() != null){
+		if(layer.getPublishedLayer() != null)
+		{
 			layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));	
-		}		
+		}
 		return this.layerRepository.save( layer );	
 		
 	}
@@ -1134,7 +1135,8 @@ public class LayerGroupService
 		}
 		
 		try
-		{
+		{	
+			this.attributeRepository.delete(attributeRepository.listAttributeByLayerMarker(id));
 			this.layerRepository.delete( id );			
 		}
 		catch (ConstraintViolationException e)
