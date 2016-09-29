@@ -102,7 +102,7 @@
     var height = $('#olmap').height();
     $('#markers-sidebar').height(height - 40);
     $('#markers-sidebar').css('overflow', 'auto');
-    $('body').css('overflow', 'hidden');
+//     $('body').css('overflow', 'hidden');
   }
 
   setSidebarHeight();

@@ -43,7 +43,7 @@
 		<script type="text/javascript" src="modules/admin/admin-main.js"></script>
 	</head>
 	
-	<body>
+	<body ng-style="($state.includes('marker-moderation') || $state.includes('markers')) && {'overflow':'hidden'} || {'overflow':auto}">
 	
 	<!-- container -->
 	<div class="container-fluid">
