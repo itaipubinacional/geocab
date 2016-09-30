@@ -341,7 +341,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 field: 'layer.title',
                 cellTemplate:
                 '<span title="{{row.entity.layer.title}}" ' +
-                'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
+                'style="font-size: 14px; max-width:95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
                 '{{row.entity.layer.title }}' +
                 '</span>'
             },
@@ -690,7 +690,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             //
             //return latitude + ", " + longitude;
 
-        }
+        };
 
         /**
          * Events to display coordinate of the mouse
@@ -761,7 +761,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                     $scope.selectUsers.push({
                         "name": user.name,
                         "email": user.email,
-                        "userName": user.username,
+                        "userName": user.username
                     });
 
                 });
@@ -937,7 +937,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                 return;
             }
         }
-    }
+    };
 
     /*
      * List motives of marker moderation
@@ -1040,7 +1040,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             //else return all the markers
             $scope.listMarkerByFiltersMapNoVectorMarkers(null, null, null, null);
         }
-    }
+    };
 
     /**
      * Accept status marker moderation
@@ -1271,7 +1271,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
             var feature = new ol.Feature({
                 geometry: geometry,
-                marker: marker,
+                marker: marker
             });
 
             var fill = new ol.style.Fill({
@@ -1291,7 +1291,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                         image: new ol.style.Circle({
                             fill: fill,
                             stroke: stroke,
-                            radius: 10,
+                            radius: 10
                         }),
                         fill: fill,
                         stroke: stroke
@@ -1333,7 +1333,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
             var feature = new ol.Feature({
                 geometry: geometry,
-                marker: marker,
+                marker: marker
             });
 
             var fill = new ol.style.Fill({
@@ -1353,7 +1353,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
                       image: new ol.style.Circle({
                           fill: fill,
                           stroke: stroke,
-                          radius: 10,
+                          radius: 10
                       }),
                       fill: fill,
                       stroke: stroke
@@ -1939,7 +1939,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             // initializes the interaction
             addInteraction('LineString');
         }
-    }
+    };
 
 
     $scope.initializeMarker = function () {
@@ -1971,7 +1971,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             };
 
         }
-    }
+    };
 
     /**
      * Method that calculates the area of points on interactive map
@@ -2027,7 +2027,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
             addInteraction('Polygon');
         }
 
-    }
+    };
 
 
     /**
@@ -2188,7 +2188,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 	      vectorSource.getExtent(), ($scope.map.getSize()));
 	
 	        var item = {};
-	        item.id = 'kmlLayers'
+	        item.id = 'kmlLayers';
 	        item.label = 'Camadas KML';
 	        item.type = 'kml';
 	
@@ -2288,7 +2288,7 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
 
 	    $scope.slideActived = element == 'closeButton' ? '' : slide;
 
-	  }
+	  };
 
 	  
 	  /**
