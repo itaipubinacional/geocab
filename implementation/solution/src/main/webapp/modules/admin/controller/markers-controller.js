@@ -2180,7 +2180,7 @@ ront controller of angle won't let enter an invalid URL.
         var statusColor;
         if (status == $scope.REFUSED) {
             // ORANGE
-            statusColor = "#FFA500";
+            statusColor = "#ff5e00";
         } else if (status == $scope.ACCEPTED) {
             // GREEN
             statusColor = "#09ba00";
@@ -2192,7 +2192,7 @@ ront controller of angle won't let enter an invalid URL.
             statusColor = "#A3A3A3";
         } else if (status == $scope.CANCELED) {
             // RED
-            statusColor = "#ba0000";
+            statusColor = "#ff0000";
         }
         return statusColor;
     };

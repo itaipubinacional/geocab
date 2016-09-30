@@ -1666,19 +1666,19 @@ function MarkerModerationController($scope, $injector, $log, $state, $timeout, $
         var statusColor;
         if (status == $scope.REFUSED) {
             // ORANGE
-            statusColor = "#d45a05";
+            statusColor = "#ff5e00";
         } else if (status == $scope.ACCEPTED) {
             // GREEN
             statusColor = "#09ba00";
-        } else if(status == $scope.PENDING){
+        } else if (status == $scope.PENDING) {
             // YELLOW
             statusColor = "#eee400";
-        }else if(status == $scope.SAVED){
+        } else if (status == $scope.SAVED) {
             // GRAY
             statusColor = "#A3A3A3";
-        }else if(status == $scope.CANCELED){
+        } else if (status == $scope.CANCELED) {
             // RED
-            statusColor = "#ba0000";
+            statusColor = "#ff0000";
         }
         return statusColor;
     };
