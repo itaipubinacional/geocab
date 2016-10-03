@@ -178,8 +178,22 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 			+ " LEFT OUTER JOIN layer.layerGroup layerGroup " 
 				+ "WHERE (layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE) "
 						+ "AND ( (layer.id IN ("
-							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE (  accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id )))) " )
+							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE ( accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id )))) " )
 	public List<Layer> listAllInternalLayerGroupsAndByUser(@Param("userId") Long userId);
+	
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	@Query(value="SELECT DISTINCT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup.name, layer.publishedLayer.id) "  
+			+ " FROM Layer layer, AccessGroupLayer accessGroupLayer, AccessGroupUser accessGroupUser "
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "  
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup " 
+				+ "WHERE (layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE) "
+						+ "AND ( (layer.id IN ("
+							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE ( accessGroupLayer.accessGroup.id = 1 )))) " )
+	public List<Layer> listAllInternalLayerGroupsAndByAnonymousUser();
 	
 	/**
 	 * 
