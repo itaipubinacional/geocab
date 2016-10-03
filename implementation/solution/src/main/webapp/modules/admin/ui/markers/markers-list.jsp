@@ -9,8 +9,7 @@
 <!-- Users - List -->
 <div>
 	<!-- Posting evaluation - List -->
-	<div style="width:38%; height: 100%; float:left; padding: 20px;z-index: 1; position: relative;
-            box-shadow: 2px 1px 7px 2px #999, -6px 0 5px -2px #999" id="markers-sidebar">
+	<div class="markers-menu" style="padding: 20px;" id="markers-sidebar">
 
 		<!-- Filter Bar -->
 		<div class="search-div" style="margin-bottom:10px">
