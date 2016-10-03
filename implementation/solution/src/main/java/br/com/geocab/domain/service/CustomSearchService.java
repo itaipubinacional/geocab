@@ -31,6 +31,7 @@ import br.com.geocab.domain.repository.accessgroup.IAccessGroupCustomSearchRepos
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.customsearch.ICustomSearchRepository;
+import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
@@ -103,6 +104,11 @@ public class CustomSearchService
 	 */
 	@Autowired
 	IAccessGroupCustomSearchRepository accessGroupCustomSearch;
+	/**
+	 * 
+	 */
+	@Autowired
+	ILayerRepository layerRepository;
 
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
@@ -277,6 +283,7 @@ public class CustomSearchService
 		return accessGroups;
 	}
 
+	
 	/**
 	 * Method that return an list of custom searchs according the access group
 	 * of user
@@ -309,22 +316,25 @@ public class CustomSearchService
 
 		for (AccessGroup accessGroup : accessGroupUser)
 		{
-			accessGroup = this.accessGroupRepository
-					.findById(accessGroup.getId());
+			accessGroup = this.accessGroupRepository.findById(accessGroup.getId());
 
-			for (AccessGroupCustomSearch accessGroupCustomSearch : this.accessGroupCustomSearch
-					.listByAccessGroupId(accessGroup.getId(), null))
+			for (AccessGroupCustomSearch accessGroupCustomSearch : this.accessGroupCustomSearch.listByAccessGroupId(accessGroup.getId(), null))
 			{
-				accessGroupCustomSearch.setCustomSearch(
-						customSearchRepository.findById(accessGroupCustomSearch
-								.getCustomSearch().getId()));
+				CustomSearch customSearch = customSearchRepository.findById(accessGroupCustomSearch.getCustomSearch().getId());
+				
+				List<Layer> layers = layerRepository.listAllInternalLayerGroupsAndByUser(ContextHolder.getAuthenticatedUser().getId());
+				
+				for (Layer layer : layers) 
+				{
+					if(layer.getId().equals(customSearch.getLayer().getId()))
+					{
+						accessGroupCustomSearch.setCustomSearch(customSearch);
 
-				accessGroupCustomSearch.getCustomSearch()
-						.setLayerFields(new HashSet<>(layerFieldRepository
-								.findByCustomSearchId(accessGroupCustomSearch
-										.getCustomSearch().getId())));
-				customsSearchUser
-						.add(accessGroupCustomSearch.getCustomSearch());
+						accessGroupCustomSearch.getCustomSearch().setLayerFields(new HashSet<>(layerFieldRepository.findByCustomSearchId(accessGroupCustomSearch.getCustomSearch().getId())));
+						
+						customsSearchUser.add(accessGroupCustomSearch.getCustomSearch());	
+					}
+				}
 			}
 		}
 		return customsSearchUser;
