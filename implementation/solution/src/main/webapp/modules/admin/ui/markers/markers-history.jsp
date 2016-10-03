@@ -7,8 +7,7 @@
 <!DOCTYPE html>
 <html>
 <!--class="content-tab"-->
-<div style="width:38%;height: 100%; float:left;z-index: 1; position: relative;
-            box-shadow: 8px -6px 5px -5px #999, -6px 0 5px -5px #999; ">
+<div class="markers-menu">
     <div class="col-md-12" style="padding: 15px; background-color: #f5f5f5">
         <div class="col-md-1" style="margin-top: 10px">
             <i style="cursor:pointer; font-size: 25px;" ng-click="changeToDetail(currentEntity)"
@@ -24,7 +23,7 @@
     </div>
 
 
-    <div class="col-md-12" style="overflow:auto;height:78vh; padding: 30px">
+    <div class="col-md-12" style="overflow:auto;height:85vh; padding: 30px">
 
         <div ng-repeat="markerModeration in markersModeration " style="width:97%">
 
