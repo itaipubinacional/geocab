@@ -897,7 +897,7 @@
             anchorYUnits: 'fraction',
             src: $rootScope.$API_ENDPOINT + '/static/images/' + type + '_shadow.png'
           }),
-          zIndex: 1
+          zIndex: -1
         });
       };
 
