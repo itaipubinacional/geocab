@@ -341,6 +341,7 @@
             break;
           }
           case $scope.MAP_MARKER:
+            case $scope.MAP_WMS:
           {
             $scope.imgResult = '';
 
@@ -1002,7 +1003,7 @@
 
             //$log.debug(response);
 
-            if (response.data.features.length != 0) {
+            if (response.data.features && response.data.features.length != 0) {
 
               $scope.currentWMS.layer = layer;
               $scope.currentWMS.attributes = [];
