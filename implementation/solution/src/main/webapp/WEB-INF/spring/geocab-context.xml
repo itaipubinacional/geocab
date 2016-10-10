@@ -240,8 +240,8 @@
 		<property name="protocol" value="${mail.protocol}"/>
 		<property name="host" value="${mail.host}"/>
 		<property name="port" value="${mail.port}"/>
-		<property name="username" value="${mail.user}"/>
-		<property name="password" value="${mail.password}"/>
+<!-- 		<property name="username" value="${mail.user}"/> -->
+<!-- 		<property name="password" value="${mail.password}"/> -->
   		<property name="javaMailProperties">
   			<props>
   				<prop key="mail.smtp.starttls.enable">${mail.tls}</prop>
