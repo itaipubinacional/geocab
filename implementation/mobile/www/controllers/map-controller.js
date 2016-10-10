@@ -341,7 +341,6 @@
             break;
           }
           case $scope.MAP_MARKER:
-            case $scope.MAP_WMS:
           {
             $scope.imgResult = '';
 
@@ -360,6 +359,15 @@
 
             break;
           }
+          case $scope.MAP_WMS:
+          {
+              $ionicPlatform.ready(function() {
+              $ionicPlatform.registerBackButtonAction(function (e) {
+                $state.go($scope.MAP_INDEX);
+              }, 100);
+            });
+              
+          }        
 
         }
       });
