@@ -133,6 +133,9 @@
 		
 		<profile>
 			<id>sandbox</id>
+<!-- 			<activation> -->
+<!-- 				<activeByDefault>true</activeByDefault> -->
+<!-- 			</activation> -->
 			<properties>
 				<!-- Database -->
 				<mvn.jdbc.jdbcUrl>jdbc:postgresql://geocab/geocab</mvn.jdbc.jdbcUrl>
@@ -161,7 +164,7 @@
 				<!-- ModeShape -->
 				<mvn.jcr.indexes>/tmp/geocab-sandbox/indexes</mvn.jcr.indexes>
 				<mvn.jcr.files>/tmp/geocab-sandbox/files</mvn.jcr.files>
-				<mvn.jcr.caches>/tmp/geocab-sandbox/files</mvn.jcr.caches>
+				<mvn.jcr.caches>/tmp/geocab-sandbox/caches</mvn.jcr.caches>
 				
 				<!-- shapeFiles import -->
 				<mvn.path.shapefiles>/tmp/geocab-sandbox/files/shapefile/</mvn.path.shapefiles>
