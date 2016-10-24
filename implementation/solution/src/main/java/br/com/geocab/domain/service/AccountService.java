@@ -40,6 +40,7 @@ public class AccountService
 	/*-------------------------------------------------------------------
 	 *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
+	
 	/**
 	 * User Repository
 	 */
@@ -258,6 +259,18 @@ public class AccountService
 			return u;
 		}	
 	}
+	
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	@PreAuthorize("permitAll")
+	public Boolean getSocialUser(Long userId)
+	{
+		return this.userRepository.findOne(userId).getPassword().equals(User.NO_PASSWORD);
+	}
 
 	/**
 	 * Update User
@@ -275,7 +288,16 @@ public class AccountService
 		dbUser.setName(user.getName());
 		dbUser.setCoordinates(user.getCoordinates());
 		dbUser.setBackgroundMap(user.getBackgroundMap());
-
+		
+		// Se o usuário alterou a senha de um usuário que era acessado via rede social
+		if(dbUser.getPassword().equals(User.NO_PASSWORD)){
+			String encodedPassword = this.passwordEncoder.encodePassword(user.getNewPassword(), saltSource.getSalt(user));
+			dbUser.setPassword(encodedPassword);
+			dbUser.verifyBackgroundMap( configurationRepository.findAll() );
+			return this.userRepository.save(dbUser);
+		}
+		
+		
 		if (!(user.getPassword() == null) && !user.getPassword().isEmpty())
 		{ // if set new password
 			if (!this.passwordEncoder
@@ -296,6 +318,10 @@ public class AccountService
 			{
 				throw new Exception("Nova senha inválida!");
 			}
+		}
+		else if (!(user.getNewPassword() == null) && !user.getNewPassword().isEmpty() && !(user.getPassword() == null) && !user.getPassword().isEmpty())
+		{
+			throw new Exception("A senha informada não é correspondente!");
 		}
 		user.verifyBackgroundMap( configurationRepository.findAll() );
 		return this.userRepository.save(dbUser);

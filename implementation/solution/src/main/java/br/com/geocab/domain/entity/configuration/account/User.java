@@ -47,6 +47,9 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	// ----
 	// Default user
 	// ----
+	
+	public static final String NO_PASSWORD = new String("no password");
+	
 	public static final User ADMINISTRATOR = new User(1L, "Administrator",
 			"admin@geocab.com.br", true, UserRole.ADMINISTRATOR, "admin");
 	public static final User ANONYMOUS = new User(0L, "Anonymous", null, true,
@@ -127,6 +130,8 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 	 */
 	public User()
 	{
+		this.getCoordinates();
+		this.getBackgroundMap();
 	}
 
 	/**
@@ -402,24 +407,35 @@ public class User extends AbstractEntity implements Serializable, UserDetails
 		}
 	}
 
-	/*-------------------------------------------------------------------
-	 *						GETTERS AND SETTERS
-	 *-------------------------------------------------------------------*/
+	/**
+	 * @return the backgroundMap
+	 */
+	public BackgroundMap getBackgroundMap()
+	{
+		if (backgroundMap == null)
+		{
+			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
+		}
+		return backgroundMap;
+	}
+
 	/**
 	 * @param backgroundMap
 	 *            the backgroundMap to set
 	 */
 	public void setBackgroundMap(BackgroundMap backgroundMap)
 	{
+		if (backgroundMap == null)
+		{
+			backgroundMap = BackgroundMap.OPEN_STREET_MAP;
+		}
 		this.backgroundMap = backgroundMap;
 	}
-	/**
-	 * @return the backgroundMap
-	 */
-	public BackgroundMap getBackgroundMap()
-	{
-		return backgroundMap;
-	}
+	
+	/*-------------------------------------------------------------------
+	 *						GETTERS AND SETTERS
+	 *-------------------------------------------------------------------*/
+	
 
 	/**
 	 * @return the name

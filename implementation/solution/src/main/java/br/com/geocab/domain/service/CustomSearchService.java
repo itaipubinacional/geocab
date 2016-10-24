@@ -4,6 +4,7 @@
 package br.com.geocab.domain.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,7 @@ import br.com.geocab.domain.repository.accessgroup.IAccessGroupCustomSearchRepos
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
 import br.com.geocab.domain.repository.customsearch.ICustomSearchRepository;
+import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 
@@ -103,6 +105,11 @@ public class CustomSearchService
 	 */
 	@Autowired
 	IAccessGroupCustomSearchRepository accessGroupCustomSearch;
+	/**
+	 * 
+	 */
+	@Autowired
+	ILayerRepository layerRepository;
 
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
@@ -277,6 +284,7 @@ public class CustomSearchService
 		return accessGroups;
 	}
 
+	
 	/**
 	 * Method that return an list of custom searchs according the access group
 	 * of user
@@ -284,41 +292,44 @@ public class CustomSearchService
 	@PreAuthorize("true")
 	public List<CustomSearch> listCustomSearchsByUser()
 	{
+		
+		if(ContextHolder.getAuthenticatedUser().getRole().equals(UserRole.ADMINISTRATOR))
+		{
+			return this.customSearchRepository.findAll();
+		}
+		
 		List<CustomSearch> customsSearchUser = new ArrayList<CustomSearch>();
 
-		List<AccessGroup> accessGroupUser = null;
+		List<Layer> layers = layerRepository.listAllInternalLayerGroupsAndByAnonymousUser();
+		
+		List<AccessGroup> accessGroupUser = new ArrayList<>(Arrays.asList(this.accessGroupRepository.findOne(AccessGroup.PUBLIC_GROUP_ID)));
+		
 		// List of all access groups of user
 		if (ContextHolder.getAuthenticatedUser() != null && !ContextHolder.getAuthenticatedUser().getRole().equals(UserRole.ANONYMOUS))
 		{
+			layers = layerRepository.listAllInternalLayerGroupsAndByUser(ContextHolder.getAuthenticatedUser().getId());
 			accessGroupUser = this.accessGroupRepository.listByUser(ContextHolder.getAuthenticatedUser().getEmail());
 		}
-		else if (ContextHolder.getAuthenticatedUser().getRole().equals(UserRole.ANONYMOUS))
-		{
-			accessGroupUser = this.accessGroupRepository.listPublicGroups();
-		}
-		else
-		{
-			accessGroupUser = this.accessGroupRepository.listPublicGroups();
-		}
-
+		
 		for (AccessGroup accessGroup : accessGroupUser)
 		{
-			accessGroup = this.accessGroupRepository
-					.findById(accessGroup.getId());
+			accessGroup = this.accessGroupRepository.findById(accessGroup.getId());
 
-			for (AccessGroupCustomSearch accessGroupCustomSearch : this.accessGroupCustomSearch
-					.listByAccessGroupId(accessGroup.getId(), null))
+			for (AccessGroupCustomSearch accessGroupCustomSearch : this.accessGroupCustomSearch.listByAccessGroupId(accessGroup.getId(), null))
 			{
-				accessGroupCustomSearch.setCustomSearch(
-						customSearchRepository.findById(accessGroupCustomSearch
-								.getCustomSearch().getId()));
+				CustomSearch customSearch = customSearchRepository.findById(accessGroupCustomSearch.getCustomSearch().getId());
+				
+				for (Layer layer : layers) 
+				{
+					if(layer.getId().equals(customSearch.getLayer().getId()))
+					{
+						accessGroupCustomSearch.setCustomSearch(customSearch);
 
-				accessGroupCustomSearch.getCustomSearch()
-						.setLayerFields(new HashSet<>(layerFieldRepository
-								.findByCustomSearchId(accessGroupCustomSearch
-										.getCustomSearch().getId())));
-				customsSearchUser
-						.add(accessGroupCustomSearch.getCustomSearch());
+						accessGroupCustomSearch.getCustomSearch().setLayerFields(new HashSet<>(layerFieldRepository.findByCustomSearchId(accessGroupCustomSearch.getCustomSearch().getId())));
+						
+						customsSearchUser.add(accessGroupCustomSearch.getCustomSearch());	
+					}
+				}
 			}
 		}
 		return customsSearchUser;

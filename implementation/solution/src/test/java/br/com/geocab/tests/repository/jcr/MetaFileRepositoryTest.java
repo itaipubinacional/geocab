@@ -46,7 +46,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	{
 
 		final FileInputStream file = new FileInputStream(
-				this.getClass().getResource("/example.pdf").getPath());
+				this.getClass().getResource("/example.pdf").getPath().replaceAll( "%20", " " ));
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf",
 				"application/pdf", file);
 
@@ -78,7 +78,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	public void insertWithCreator() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(
-				this.getClass().getResource("/example.pdf").getPath());
+				this.getClass().getResource("/example.pdf").getPath().replaceAll( "%20", " " ));
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf",
 				"application/pdf", file);
 
@@ -109,7 +109,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	public void removeByPath() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(
-				this.getClass().getResource("/example.pdf").getPath());
+				this.getClass().getResource("/example.pdf").getPath().replaceAll( "%20", " " ));
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf",
 				"application/pdf", file);
 
@@ -144,7 +144,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	public void removeByFolder() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(
-				this.getClass().getResource("/example.pdf").getPath());
+				this.getClass().getResource("/example.pdf").getPath().replaceAll( "%20", " " ));
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf",
 				"application/pdf", file);
 
@@ -185,7 +185,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	public void remove() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(
-				this.getClass().getResource("/example.pdf").getPath());
+				this.getClass().getResource("/example.pdf").getPath().replaceAll( "%20", " " ));
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf",
 				"application/pdf", file);
 
@@ -220,7 +220,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	public void findByPath() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(
-				this.getClass().getResource("/example.pdf").getPath());
+				this.getClass().getResource("/example.pdf").getPath().replaceAll( "%20", " " ));
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf",
 				"application/pdf", file);
 
@@ -267,7 +267,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	public void findById() throws RepositoryException, IOException
 	{
 		final FileInputStream file = new FileInputStream(
-				this.getClass().getResource("/example.pdf").getPath());
+				this.getClass().getResource("/example.pdf").getPath().replaceAll( "%20", " " ));
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf",
 				"application/pdf", file);
 
@@ -313,8 +313,9 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 	@Test
 	public void listByFolder() throws RepositoryException, IOException
 	{
+		
 		final FileInputStream file = new FileInputStream(
-				this.getClass().getResource("/example.pdf").getPath());
+				this.getClass().getResource("/example.pdf").getPath().replaceAll( "%20", " " ));
 		final FileTransfer fileTransfer = new FileTransfer("test.pdf",
 				"application/pdf", file);
 
@@ -332,6 +333,7 @@ public class MetaFileRepositoryTest extends AbstractIntegrationTest
 				.listByFolder("/test/files");
 		Assert.assertNotNull(metaFiles);
 		Assert.assertTrue(metaFiles.size() > 0);
+		
 	}
 
 }

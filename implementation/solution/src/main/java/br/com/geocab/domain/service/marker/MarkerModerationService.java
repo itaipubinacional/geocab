@@ -11,6 +11,7 @@ import javax.jcr.RepositoryException;
 
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.marker.Marker;
@@ -45,7 +47,6 @@ import br.com.geocab.domain.repository.motive.IMotiveMarkerModerationRepository;
 @Service
 @Transactional
 @RemoteProxy(name="markerModerationService")
-@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 public class MarkerModerationService
 {
 	/*-------------------------------------------------------------------
@@ -56,6 +57,12 @@ public class MarkerModerationService
 	 * Log
 	 */
 	private static final Logger LOG = Logger.getLogger( MarkerModeration.class.getName() );
+	
+	/**
+	 * I18n 
+	 */
+	@Autowired
+	private MessageSource messages;
 	
 	/**
 	 * 
@@ -307,10 +314,17 @@ public class MarkerModerationService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public List<MarkerModeration> listMarkerModerationByMarker( Long markerId  )
 	{
-		return this.markerModerationRepository.listMarkerModerationByMarker(markerId);
+		List<MarkerModeration> markersModerations = this.markerModerationRepository.listMarkerModerationByMarker(markerId);
+		for (MarkerModeration markerModeration : markersModerations) 
+		{
+			if (!markerModeration.getMarker().getUser().getId().equals(ContextHolder.getAuthenticatedUser().getId()) && !ContextHolder.getAuthenticatedUser().getRole().equals(UserRole.ADMINISTRATOR)) 
+			{
+				throw new RuntimeException(this.messages.getMessage("admin.Access-denied", new Object [] {}, null ));
+			}
+		}
+		return markersModerations;
 	}
 	
 	
@@ -321,12 +335,20 @@ public class MarkerModerationService
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Page<MarkerModeration> listMarkerModerationByMarker( Long markerId, PageRequest pageable  )
 	{
 		pageable.setSort(new Sort(Direction.ASC, "id"));
+		
+		Page<MarkerModeration> markersModerations = this.markerModerationRepository.listMarkerModerationByMarker(markerId, pageable);
+		for (MarkerModeration markerModeration : markersModerations) 
+		{
+			if (!markerModeration.getMarker().getUser().getId().equals(ContextHolder.getAuthenticatedUser().getId()) && !ContextHolder.getAuthenticatedUser().getRole().equals(UserRole.ADMINISTRATOR)) 
+			{
+				throw new RuntimeException(this.messages.getMessage("admin.Access-denied", new Object [] {}, null ));
+			}
+		}
 
-        return this.markerModerationRepository.listMarkerModerationByMarker(markerId, pageable);
+        return markersModerations;
 	}
 	
 }

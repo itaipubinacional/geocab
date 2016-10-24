@@ -359,6 +359,15 @@
 
             break;
           }
+          case $scope.MAP_WMS:
+          {
+              $ionicPlatform.ready(function() {
+              $ionicPlatform.registerBackButtonAction(function (e) {
+                $state.go($scope.MAP_INDEX);
+              }, 100);
+            });
+              
+          }        
 
         }
       });
@@ -897,7 +906,7 @@
             anchorYUnits: 'fraction',
             src: $rootScope.$API_ENDPOINT + '/static/images/' + type + '_shadow.png'
           }),
-          zIndex: 1
+          zIndex: -1
         });
       };
 
@@ -1002,7 +1011,7 @@
 
             //$log.debug(response);
 
-            if (response.data.features.length != 0) {
+            if (response.data.features && response.data.features.length != 0) {
 
               $scope.currentWMS.layer = layer;
               $scope.currentWMS.attributes = [];

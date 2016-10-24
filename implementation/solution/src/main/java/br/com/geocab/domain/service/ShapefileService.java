@@ -364,6 +364,8 @@ public class ShapefileService
 		return new ArrayList<Layer>(layers);
 	}	
 	
+	
+	
 	/**
 	 * Serviço de exportação para shapefile (Obs:. FileTransfer do DWR não pode ser final)
 	 * 
@@ -372,6 +374,8 @@ public class ShapefileService
 	 */
 	public FileTransfer exportShapefile(final List<Marker> markers)
 	{
+		
+		Assert.isTrue( !markers.isEmpty(), "map.No-marker-to-export");
 		
 		final List<Layer> layers = groupByLayers(markers);
 		
@@ -382,6 +386,8 @@ public class ShapefileService
 			try
 			{				
 				layer.setAttributes(this.attributeRepository.listAttributeByLayer(layer.getId()));
+				
+				layer.setName( layer.getTitle() );
 				
 				final SimpleFeatureType type = createType(layer); 
 	
@@ -703,5 +709,6 @@ public class ShapefileService
 			file.delete();
 		}
 	}
+	
 	
 }

@@ -124,10 +124,20 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 		 * */
 		accountService.getUserAuthenticated({
     		callback : function(result) {
+    			accountService.getSocialUser(result.id, {
+    	    		callback : function(data) {
+    	    			$scope.socialLogged = data;
+    	    			$scope.$apply();
+    	            },
+    	            errorHandler : function(message, exception) {
+    	                $scope.message = {type:"error", text: message};
+    	                $scope.$apply();
+    	            }
+    	    	});    			
     			$scope.userLogged = result;
     			$scope.currentEntity = result;
 
-					$scope.setBackgroundMap(result.backgroundMap);
+				$scope.setBackgroundMap(result.backgroundMap);
 
     			$scope.$apply();
             },
@@ -324,6 +334,17 @@ function MyAccountController( $scope, $injector, $log, $state, $timeout, $modal,
 
 		accountService.updateUserAuthenticated($scope.currentEntity, {
     		callback : function(result) {
+    			accountService.getSocialUser(result.id, {
+    	    		callback : function(data) {
+    	    			$scope.socialLogged = data;
+    	    			$scope.$apply();
+    	            },
+    	            errorHandler : function(message, exception) {
+    	                $scope.message = {type:"error", text: message};
+    	                $scope.$apply();
+    	            }
+    	    	});
+    			
     			result.password = null;
     			$scope.currentEntity = result;
     			$scope.msg = {type:"success", text: $translate("admin.user.Successfully-updated-informations") + '!', dismiss:true};

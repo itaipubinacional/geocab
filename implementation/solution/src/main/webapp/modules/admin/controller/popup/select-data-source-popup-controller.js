@@ -36,8 +36,8 @@ function SelectDataSourcePopUpController( $scope, $modalInstance, dataSourceSele
             $scope.currentPage.pageable.sort = new Sort();
             $scope.currentPage.pageable.sort.orders = [ order ];
 
-            $scope.itensMarcados = $scope.gridOptions.selectedItems.slice(0);
-            $scope.gridOptions.selectedItems.length = 0;
+            // $scope.itensMarcados = $scope.gridOptions.selectedItems.slice(0);
+            // $scope.gridOptions.selectedItems.length = 0;
 
             $scope.listDataSourceByFilters( $scope.data.filter, $scope.currentPage.pageable );
         }

@@ -24,6 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.geocab.domain.entity.AbstractEntity;
+import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.marker.Marker;
 
@@ -333,6 +334,15 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 		this.setLayerGroup(layerGroup);
 		
 		this.setPublishedLayer(publishedLayerId != null ? new Layer(publishedLayerId) : null);
+		
+	}
+	
+	public Layer(Long id, String name, String title, String icon,
+			Boolean startEnabled, Boolean startVisible, Boolean enabled,
+			Boolean published, Long layerGroupId, String layerGroupName,
+			Integer orderLayerGroup, DataSource dataSource, Long publishedLayerId, UserRole userRole)
+	{
+		System.out.println(userRole);
 		
 	}
 

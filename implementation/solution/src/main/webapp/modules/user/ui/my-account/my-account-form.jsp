@@ -14,14 +14,6 @@
 
     <form name="form" novalidate default-button="buttonUpdate">
         <div class="content-tab">
-      		
-<!--       		<button ng-show="currentState == UPDATE_STATE || currentState== 'my-preferences.form'" style="float: right;" -->
-<!--                     class="btn btn-success" -->
-<!--                     id="buttonUpdate" -->
-<%--                     title="<spring:message code='admin.users.Save'/>" --%>
-<!--                     ng-click="updateUser()"> -->
-<%--                 <spring:message code="admin.users.Save"/> --%>
-<!--             </button> -->
             <div class="form-item position-relative" style="width: 300px;">
                 <label class="detail-label" ><spring:message code="admin.users.Name"/></label>
                 <input name="name" type="text" class="form-control"
@@ -37,7 +29,7 @@
                       class="tooltip-validation"><spring:message code="admin.users.Name"/> <spring:message code="admin.users.required"/></span>
             </div>
             <br>
-  			<div class="form-item position-relative" style="width: 300px;">
+  			<div class="form-item position-relative" style="width: 300px;" ng-if="!socialLogged">
                 <label class="detail-label" required><spring:message code="admin.users.Password"/></label>
                 <input name="password" type="password" id="password" class="form-control"
                        ng-model="currentEntity.password"

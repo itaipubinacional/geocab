@@ -433,12 +433,17 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
     $scope.changeToUpdate = function (id) {
         $log.info("changeToUpdate", id);
         
-        var actions = {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'};
+//        var actions = {displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'};
         
-        $scope.gridCustomSearch.columnDefs.push(actions);
-        $scope.gridUsers.columnDefs.push(actions);
-        $scope.gridTools.columnDefs.push(actions);
-        $scope.gridLayers.columnDefs.push(actions);
+        
+//        if( $scope.gridLayers.columnDefs.indexOf(actions) == -1){
+        	
+        	$scope.gridCustomSearch.columnDefs.push({displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_SEARCH_BUTTONS, width: '10%'});
+        	$scope.gridUsers.columnDefs.push({displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_USER_BUTTONS, width: '10%'});
+        	$scope.gridTools.columnDefs.push({displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_TOOLS_BUTTONS, width: '10%'});
+        	$scope.gridLayers.columnDefs.push({displayName: $translate('admin.access-group.Actions'), sortable: false, cellTemplate: GRID_ACTION_LAYER_BUTTONS, width: '10%'});
+        	
+//        }
         
         accessGroupService.findAccessGroupById($state.params.id, {
             callback: function (result) {
@@ -477,11 +482,17 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
             $state.go($scope.LIST_STATE);
             return;
         }
+
         
-        $scope.gridLayers.columnDefs.splice($scope.gridLayers.columnDefs.length - 1, 1);
-        $scope.gridTools.columnDefs.splice($scope.gridTools.columnDefs.length - 1, 1);
-        $scope.gridUsers.columnDefs.splice($scope.gridUsers.columnDefs.length - 1, 1);
-        $scope.gridCustomSearch.columnDefs.splice($scope.gridCustomSearch.columnDefs.length - 1, 1);
+        if( $scope.gridLayers.columnDefs[$scope.gridLayers.columnDefs.length - 1].displayName == $translate('admin.access-group.Actions') ){
+        	
+        	  $scope.gridLayers.columnDefs.splice($scope.gridLayers.columnDefs.length - 1, 1);
+              $scope.gridTools.columnDefs.splice($scope.gridTools.columnDefs.length - 1, 1);
+              $scope.gridUsers.columnDefs.splice($scope.gridUsers.columnDefs.length - 1, 1);
+              $scope.gridCustomSearch.columnDefs.splice($scope.gridCustomSearch.columnDefs.length - 1, 1);
+        }
+        
+      
         
         accessGroupService.findAccessGroupById(id, {
             callback: function (result) {
@@ -706,7 +717,7 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
                     }
 
                     if (index3 > -1) {
-                        $scope.removeLayer.splice(index3, 1);
+                        $scope.removeLayers.splice(index3, 1);
                     }
 
                 }
@@ -1155,5 +1166,5 @@ function AccessGroupController($scope, $injector, $log, $state, $timeout, $modal
         $scope.updateTools();
         $scope.updateUsers();
     }
-
+    
 };

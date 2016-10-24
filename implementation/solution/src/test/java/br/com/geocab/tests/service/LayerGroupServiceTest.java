@@ -66,7 +66,7 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 		Assert.assertEquals("Group 1", layerGroup.getName());
 		Assert.assertEquals(null, layerGroup.getLayerGroupUpper());
 		Assert.assertEquals(new Integer(0), layerGroup.getOrderLayerGroup());
-		Assert.assertEquals(null, layerGroup.getLayers());
+		Assert.assertEquals(new ArrayList<>(), layerGroup.getLayers());
 		Assert.assertEquals(null, layerGroup.getLayersGroup());
 		
 	}
@@ -94,7 +94,7 @@ public class LayerGroupServiceTest extends AbstractIntegrationTest
 		
 		Assert.assertNotNull(layerGroup);
 		Assert.assertEquals("Group 10 updated", layerGroup.getName());
-		Assert.assertEquals(null, layerGroup.getLayers());
+		Assert.assertEquals(new ArrayList<>(), layerGroup.getLayers());
 		Assert.assertEquals(null, layerGroup.getLayersGroup());
 		
 		

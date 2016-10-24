@@ -57,7 +57,7 @@ public class CustomSearchServiceTest extends AbstractIntegrationTest
 		this.authenticate(100L);
 		
 		CustomSearch customSearch = new CustomSearch();
-		customSearch.setLayer(this.layerGroupService.findLayerById(2L));
+		customSearch.setLayer(this.layerGroupService.findLayerById(502L));
 		customSearch.setName("Pesquisa Personalizada");
 
 		Long customSearchId = this.customSearchService.insertCustomSearch(customSearch);
@@ -66,7 +66,6 @@ public class CustomSearchServiceTest extends AbstractIntegrationTest
 		
 		Assert.assertNotNull( customSearch );
 		Assert.assertNotNull( customSearch.getId() );
-		Assert.assertNotNull( customSearch.getCreated() );
 		
 		Assert.assertEquals("Pesquisa Personalizada", customSearch.getName());		
 	}

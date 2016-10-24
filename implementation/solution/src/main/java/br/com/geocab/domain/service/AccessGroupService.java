@@ -76,6 +76,7 @@ public class AccessGroupService
 	@Autowired
 	private LayerGroupService layerGroupService;
 	
+	
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -127,9 +128,10 @@ public class AccessGroupService
 	@Transactional(readOnly = true)
 	public AccessGroup findAccessGroupById( Long id )
 	{
-		return this.accessGroupRepository.findOne( id );
-		
+		return this.accessGroupRepository.findOne( id );	
 	}
+	
+		
 	
 	/**
 	 * Method to list access groups pageable with filter option
@@ -228,7 +230,8 @@ public class AccessGroupService
 		
 		for (AccessGroupLayer accessGroupLayer : accessGroupLayers)
 		{
-			if(accessGroupLayer.getLayer().getDataSource().getUrl() != null) {
+			accessGroupLayer.setLayer(this.layerGroupService.findLayerById(accessGroupLayer.getLayer().getId()));
+			if(accessGroupLayer.getLayer().getDataSource() != null && accessGroupLayer.getLayer().getDataSource().getUrl() != null) {
 				accessGroupLayer.getLayer().setLegend(layerGroupService.getLegendLayerFromGeoServer(accessGroupLayer.getLayer()));
 			}
 			

@@ -23,7 +23,7 @@
         "enabled" : true,
         "indexStorage" : {
             "type" : "filesystem",
-            "location" : "@mvn.jcr.indexes@",
+            "location" : "@mvn.jcr.indexes@"
         },
         "indexing" : {
             "rebuildOnStartup" : {

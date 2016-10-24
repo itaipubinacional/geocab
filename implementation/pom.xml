@@ -22,7 +22,8 @@
 		<springframework.version>4.0.6.RELEASE</springframework.version>
 		<springsecurity.version>3.2.4.RELEASE</springsecurity.version>
 		<springdata.version>1.6.2.RELEASE</springdata.version>
-		<springsocial.version>1.1.0.RELEASE</springsocial.version>
+		<springsocial.version>1.1.4.RELEASE</springsocial.version>
+		<springsocialfacebook.version>2.0.3.RELEASE</springsocialfacebook.version>
 		<springsocialgoogle.version>1.0.0.RELEASE</springsocialgoogle.version>
 		<!-- Hibernate -->
 		<hibernate.version>4.3.5.Final</hibernate.version>
@@ -109,12 +110,13 @@
 
 				<!-- Social -->
 				<!-- Facebook -->
-				<mvn.social.facebook.app.id>1565690900310619</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>d2d9844ea944dd01630804f4eea5b8fd</mvn.social.facebook.app.secret>
+				<mvn.social.facebook.app.id>303469610010652</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>1e6313d26c77e3708e4bea47c476ec62</mvn.social.facebook.app.secret>
 
+			
 				<!-- Google plus -->
-				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
-				<mvn.social.google.app.secret>G4iRWyyJ0hcdiylrzDesQmeL</mvn.social.google.app.secret>
+				<mvn.social.google.app.id>856589923551-997fukn75b05miqvnucb7034l5o3qgqp.apps.googleusercontent.com</mvn.social.google.app.id>
+				<mvn.social.google.app.secret>gfxTEdpAY9ofTBV0Q5xePxgS</mvn.social.google.app.secret>
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
@@ -124,6 +126,67 @@
 				
 				<!-- jcaptcha version -->
 				<mvn.geocab.url>http://localhost:8080/geocab</mvn.geocab.url>
+				
+			</properties>
+		</profile>
+		
+		
+		<profile>
+			<id>sandbox</id>
+<!-- 			<activation> -->
+<!-- 				<activeByDefault>true</activeByDefault> -->
+<!-- 			</activation> -->
+			<properties>
+				<!-- Database -->
+				<mvn.jdbc.jdbcUrl>jdbc:postgresql://geocab/geocab</mvn.jdbc.jdbcUrl>
+				<mvn.jdbc.username>geocab</mvn.jdbc.username>
+				<mvn.jdbc.password>geocab</mvn.jdbc.password>
+
+				<!-- Hibernate -->
+				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
+				<mvn.hibernate.showSql>false</mvn.hibernate.showSql>
+				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
+				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
+				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
+
+				<!-- Mail server -->
+				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
+				<mvn.mail.port>25</mvn.mail.port>
+				<mvn.mail.username>no-reply</mvn.mail.username>
+				<mvn.mail.protocol>smtp</mvn.mail.protocol>
+				<mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
+				<mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
+				<mvn.mail.tls>false</mvn.mail.tls>
+				<mvn.mail.ssl>false</mvn.mail.ssl>
+				<mvn.mail.debug>true</mvn.mail.debug>
+				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
+				
+				<!-- ModeShape -->
+				<mvn.jcr.indexes>/tmp/geocab-sandbox/indexes</mvn.jcr.indexes>
+				<mvn.jcr.files>/tmp/geocab-sandbox/files</mvn.jcr.files>
+				<mvn.jcr.caches>/tmp/geocab-sandbox/caches</mvn.jcr.caches>
+				
+				<!-- shapeFiles import -->
+				<mvn.path.shapefiles>/tmp/geocab-sandbox/files/shapefile/</mvn.path.shapefiles>
+
+				<!-- Social -->
+				<!-- Facebook -->
+				<mvn.social.facebook.app.id>303469610010652</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>1e6313d26c77e3708e4bea47c476ec62</mvn.social.facebook.app.secret>
+
+			
+				<!-- Google plus -->
+				<mvn.social.google.app.id>856589923551-997fukn75b05miqvnucb7034l5o3qgqp.apps.googleusercontent.com</mvn.social.google.app.id>
+				<mvn.social.google.app.secret>gfxTEdpAY9ofTBV0Q5xePxgS</mvn.social.google.app.secret>
+
+
+				<!-- geotools version -->
+				<geotools.version>13.2</geotools.version>
+				
+				<!-- jcaptcha version -->
+				<jcaptcha.version>1.0</jcaptcha.version>
+				
+				<mvn.geocab.url>http://geocab.sbox.me</mvn.geocab.url>
 				
 			</properties>
 		</profile>
@@ -165,12 +228,13 @@
 
 				<!-- Social -->
 				<!-- Facebook -->
-				<mvn.social.facebook.app.id>1565690900310619</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>d2d9844ea944dd01630804f4eea5b8fd</mvn.social.facebook.app.secret>
+				<mvn.social.facebook.app.id>303469610010652</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>1e6313d26c77e3708e4bea47c476ec62</mvn.social.facebook.app.secret>
 
+			
 				<!-- Google plus -->
-				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
-				<mvn.social.google.app.secret>G4iRWyyJ0hcdiylrzDesQmeL</mvn.social.google.app.secret>
+				<mvn.social.google.app.id>856589923551-997fukn75b05miqvnucb7034l5o3qgqp.apps.googleusercontent.com</mvn.social.google.app.id>
+				<mvn.social.google.app.secret>gfxTEdpAY9ofTBV0Q5xePxgS</mvn.social.google.app.secret>
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
@@ -184,60 +248,7 @@
 			</properties>
 		</profile>
 
-		<profile>
-			<id>sandbox</id>
-			<properties>
-				<!-- Database -->
-				<mvn.jdbc.jdbcUrl>jdbc:postgresql://geocab/geocab</mvn.jdbc.jdbcUrl>
-				<mvn.jdbc.username>geocab</mvn.jdbc.username>
-				<mvn.jdbc.password>geocab</mvn.jdbc.password>
-
-				<!-- Hibernate -->
-				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
-				<mvn.hibernate.showSql>false</mvn.hibernate.showSql>
-				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
-				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
-				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
-
-				<!-- Mail server -->
-				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
-				<mvn.mail.port>25</mvn.mail.port>
-				<mvn.mail.username>no-reply</mvn.mail.username>
-				<mvn.mail.protocol>smtp</mvn.mail.protocol>
-				<mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
-				<mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
-				<mvn.mail.tls>false</mvn.mail.tls>
-				<mvn.mail.ssl>false</mvn.mail.ssl>
-				<mvn.mail.debug>true</mvn.mail.debug>
-				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
-				
-				<!-- ModeShape -->
-				<mvn.jcr.indexes>/tmp/geocab-sandbox/indexes</mvn.jcr.indexes>
-				<mvn.jcr.files>/tmp/geocab-sandbox/files</mvn.jcr.files>
-				<mvn.jcr.caches>/tmp/geocab-sandbox/files</mvn.jcr.caches>
-				
-				<!-- shapeFiles import -->
-				<mvn.path.shapefiles>/tmp/geocab-sandbox/files/shapefile/</mvn.path.shapefiles>
-
-				<!-- Social -->
-				<!-- Facebook -->
-				<mvn.social.facebook.app.id>1565690900310619</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>d2d9844ea944dd01630804f4eea5b8fd</mvn.social.facebook.app.secret>
-
-				<!-- Google plus -->
-				<mvn.social.google.app.id>109726247011-u580v7qurhll0hidgpjectbdacgplck1.apps.googleusercontent.com</mvn.social.google.app.id>
-				<mvn.social.google.app.secret>G4iRWyyJ0hcdiylrzDesQmeL</mvn.social.google.app.secret>
-
-				<!-- geotools version -->
-				<geotools.version>13.2</geotools.version>
-				
-				<!-- jcaptcha version -->
-				<jcaptcha.version>1.0</jcaptcha.version>
-				
-				<mvn.geocab.url>http://geocab.sbox.me</mvn.geocab.url>
-				
-			</properties>
-		</profile>
+		
 
 	</profiles>
 
@@ -332,7 +343,7 @@
 			<dependency>
 				<groupId>org.springframework.social</groupId>
 				<artifactId>spring-social-facebook</artifactId>
-				<version>${springsocial.version}</version>
+				<version>${springsocialfacebook.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.social</groupId>

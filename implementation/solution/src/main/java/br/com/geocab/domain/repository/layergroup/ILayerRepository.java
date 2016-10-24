@@ -55,15 +55,18 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 				"AND ( layer.published = false )")
 	public Page<Layer> listByFilters( @Param("filter") String filter, @Param("dataSourceId") Long dataSourceId, Pageable pageable );
 	
+	
+	
 	/**
 	 * 
 	 * @param idLayer
 	 * @return
 	 */
-	@Query(value=/*"SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.dataSource, publishedLayer.id )  "
-			+ */" FROM Layer layer "
-			/*+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "
-			+ " LEFT OUTER JOIN publishedLayer.layerGroup layerGroup "*/
+	@Query(value="SELECT New Layer (layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.published, dataSource, layerGroup.name, layerGroup.id, publishedLayer.id)"
+			+ " FROM Layer layer "
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "
+			+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "
+			+ " LEFT OUTER JOIN publishedLayer.layerGroup layerGroup "
 			+ "WHERE ( layer.publishedLayer.layerGroup.id = :idLayer ) " 
 			+ "ORDER BY layer.publishedLayer.orderLayer")
 	public List<Layer> listLayersByLayerGroupPublished( @Param("idLayer") Long idLayer);
@@ -120,11 +123,14 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 	 * 
 	 * @return
 	 */
-	@Query(value="SELECT new Layer(layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.enabled, layer.published, layer.layerGroup.id, layer.layerGroup.name, layer.layerGroup.orderLayerGroup, layer.publishedLayer.id) " 
-			+ "FROM Layer layer "
-			+ "WHERE ( layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE ) " )
+	@Query(value="SELECT DISTINCT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup.name, layer.publishedLayer.id) "    
+			+ " FROM Layer layer "
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "  
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup " 
+				+ "WHERE (layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE) " )
 	public List<Layer> listAllInternalLayerGroups();
 	
+
 	/**
 	 * 
 	 * @return
@@ -159,5 +165,57 @@ public interface ILayerRepository extends IDataRepository<Layer, Long>
 			+ " LEFT OUTER JOIN layer.publishedLayer publishedLayer "  
             + "WHERE ( publishedLayer.id = :publishedLayerId)")
     public Layer listNotPublishedByPublishedId( @Param("publishedLayerId") Long publishedLayerId);
+    
+    //Serviços para restrição //TODO
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	@Query(value="SELECT DISTINCT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup.name, layer.publishedLayer.id) "  
+			+ " FROM Layer layer, AccessGroupLayer accessGroupLayer, AccessGroupUser accessGroupUser "
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "  
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup " 
+				+ "WHERE (layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE) "
+						+ "AND ( (layer.id IN ("
+							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE ( accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id )))) " )
+	public List<Layer> listAllInternalLayerGroupsAndByUser(@Param("userId") Long userId);
+	
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	@Query(value="SELECT DISTINCT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup.name, layer.publishedLayer.id) "  
+			+ " FROM Layer layer, AccessGroupLayer accessGroupLayer, AccessGroupUser accessGroupUser "
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "  
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup " 
+				+ "WHERE (layer.dataSource.url = NULL AND layer.publishedLayer != NULL AND layer.enabled = TRUE) "
+						+ "AND ( (layer.id IN ("
+							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE ( accessGroupLayer.accessGroup.id = 1 )))) " )
+	public List<Layer> listAllInternalLayerGroupsAndByAnonymousUser();
+	
+	/**
+	 * 
+	 * @param filter
+	 * @param dataSourceId
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value="SELECT DISTINCT new Layer( layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, dataSource, layerGroup.name, layer.publishedLayer.id ) "  
+			+ " FROM Layer layer, AccessGroupLayer accessGroupLayer, AccessGroupUser accessGroupUser "
+			+ " LEFT OUTER JOIN layer.dataSource dataSource "  
+			+ " LEFT OUTER JOIN layer.layerGroup layerGroup " 
+				+ "WHERE (( ( LOWER(layer.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " 
+					+ "OR ( LOWER(layer.title) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " 
+					+ "OR ( LOWER(dataSource.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " 
+					+ "OR ( LOWER(layerGroup.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) ) " 
+					+ "AND ( layer.dataSource.id = :dataSourceId OR :dataSourceId = NULL ) " 
+					+ "AND ( layer.published = false ) ) "
+						+ "AND  ( layer.id IN ("
+							+ "	SELECT accessGroupLayer.layer.id FROM accessGroupLayer.layer.id WHERE (accessGroupUser.user.id = :userId AND accessGroupUser.accessGroup.id = accessGroupLayer.accessGroup.id  "
+						+ "  ))) ") 
+	public Page<Layer> listByFiltersAndByUser( @Param("filter") String filter, @Param("dataSourceId") Long dataSourceId, @Param("userId") Long userId, Pageable pageable );
+	
 
 }

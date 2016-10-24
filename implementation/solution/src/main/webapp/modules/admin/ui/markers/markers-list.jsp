@@ -9,8 +9,7 @@
 <!-- Users - List -->
 <div>
 	<!-- Posting evaluation - List -->
-	<div style="width:38%; height: 100%; float:left; padding: 20px;z-index: 1; position: relative;
-            box-shadow: 2px 1px 7px 2px #999, -6px 0 5px -2px #999" id="markers-sidebar">
+	<div class="markers-menu" style="padding: 20px;" id="markers-sidebar">
 
 		<!-- Filter Bar -->
 		<div class="search-div" style="margin-bottom:10px">
@@ -30,11 +29,9 @@
 				</div>
 
 
-				<input type="button" style="margin-right:5px;margin-bottom:0px" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"
-				/>
+				<input type="button" style="margin-right:5px;margin-bottom:0px" ng-click="bindFilter()" value="<spring:message code="Filter"/>" title="<spring:message code="Search"/>" class="btn btn-default" ng-disabled="currentPage == null"/>
 
-				<input type="button" ng-click="clearFilters()" style="margin-bottom:0px" value="<spring:message code='clear.Filters'/>" class="btn btn-default" ng-disabled="currentPage == null"
-						/>
+				<input type="button" ng-click="clearFilters()" style="margin-bottom:0px" value="<spring:message code='clear.Filters'/>" class="btn btn-default" ng-disabled="currentPage == null"/>
 
 
 				<a class="btn btn-mini" ng-show="visible"   ng-click="visible = false" ><i class="glyphicon glyphicon-chevron-up"></i></a>
@@ -63,61 +60,27 @@
 					<input ng-model="filter.dateEnd" class="form-control datepicker" style="width:35%;margin-right:10px" placeholder="<spring:message code="admin.marker-moderation.Ending"/>"/>
 				</div>
 
-
 			</form>
 
 		</div>
 
-		<!--<div class="row">
-			<div class="col-md-4">
-				<h4 ng-if="itensMarcados.length > 1">{{itensMarcados.length}}
-				<spring:message code="admin.marker-moderation.Selected-items"/>
-			</h4>
-				<h4 ng-if="itensMarcados.length == 1">{{itensMarcados.length}}
-					<spring:message code="admin.marker-moderation.Selected-item"/>
-				</h4></div>
-			<div class="col-md-4 col-md-offset-4">
-				<button type="button" class="btn btn-primary" name="btnSave"
-								ng-click="postMarkersModal()" ng-disabled="!disableButtonPost">
-					<spring:message code="admin.marker-moderation.Post"/>
-				</button>
-				<button type="button" class="btn btn-primary" name="btnSave" ng-click="removeMarkersModal()">
-					<spring:message code="admin.marker-moderation.Delete"/>
-				</button>
-			</div>
-		</div>-->
 
 		<div class="row" ng-if="!itensMarcados.length">
-			<div class="col-md-5">
+			<div class="col-md-6">
 				<h4 style="margin: 0;height: 42px;line-height: 42px"><spring:message code="admin.access-group.my-markers"/></h4>
 			</div>
 		</div>
 		<div class="row" ng-if="itensMarcados.length" style="height: 42px;line-height: 42px">
-			<div class="col-md-5">
-				<h4 ng-if="itensMarcados.length > 1">{{itensMarcados.length}}
-					<spring:message code="admin.marker-moderation.Selected-items"/>
+			<div class="col-md-6">
+				<h4 ng-if="itensMarcados.length > 1">
+					{{itensMarcados.length}} <spring:message code="admin.marker-moderation.Selected-items"/>
 				</h4>
-				<h4 ng-if="itensMarcados.length == 1">{{itensMarcados.length}}
-					<spring:message code="admin.marker-moderation.Selected-item"/>
+				<h4 ng-if="itensMarcados.length == 1">
+					{{itensMarcados.length}} <spring:message code="admin.marker-moderation.Selected-item"/>
 				</h4>
 			</div>
 
-			<!-- BUTTONS-->
-			<!--<div class="btn-group col-md-4" role="group" aria-label="group buttons">-->
-			<!--<button type="button" ng-click="postMarkersModal()" ng-disabled="!disableButtonPost"-->
-			<!--tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Post'/>"-->
-			<!--style="float: right"-->
-			<!--class="btn btn-secondary">-->
-			<!--<i style="font-size: 18px" class="icon itaipu-icon-export"></i>-->
-			<!--</button>-->
-			<!--<button type="button" ng-click="removeMarkersModal()"-->
-			<!--tooltip-placement="top" tooltip=" <spring:message code='admin.marker-moderation.Delete'/>"-->
-			<!--style="float: right"-->
-			<!--class="btn btn-secondary">-->
-			<!--<i style="font-size: 18px" class="icon itaipu-icon-delete"></i>-->
-			<!--</button>-->
-			<!--</div>-->
-			<div class="col-md-7">
+			<div class="col-md-6">
 
 				<button type="button" class="btn btn-default pull-right" name="btnSave"
 							ng-click="removeMarkersModal()" ng-disabled="disableButtonDelete" >

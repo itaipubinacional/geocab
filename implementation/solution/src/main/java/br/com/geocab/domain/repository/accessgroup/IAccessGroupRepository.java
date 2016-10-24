@@ -79,5 +79,5 @@ public interface IAccessGroupRepository extends IDataRepository<AccessGroup, Lon
 				"FROM AccessGroup accessGroup " +
 				"WHERE accessGroup.id = :id" )
 	public AccessGroup findById(@Param("id") Long id);
-	
+
 }

@@ -43,7 +43,7 @@
 		<script type="text/javascript" src="modules/admin/admin-main.js"></script>
 	</head>
 	
-	<body>
+	<body ng-style="($state.includes('marker-moderation') || $state.includes('markers')) && {'overflow':'hidden'} || {'overflow':auto}">
 	
 	<!-- container -->
 	<div class="container-fluid">
@@ -88,7 +88,7 @@
 	<script type="text/javascript" src="modules/map/controller/popup/upload-controller.js"></script>
 	<script type="text/javascript" src="modules/map/controller/popup/img-controller.js"></script>
 	<script type="text/javascript" src="static/libs/eits-directives/default-button/default-button.js"></script>
-	<script type="text/javascript" src="static/libs/eits-directives/autocomplete/autocomplete.js"></script>
+	<script type="text/javascript" src="static/libs/eits-directives/autocomplete/autocomplete-directive.js"></script>
 
    		
 	</body>

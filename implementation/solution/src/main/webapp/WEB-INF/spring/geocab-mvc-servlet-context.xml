@@ -61,7 +61,11 @@
 	<context:component-scan base-package="br.com.geocab.infrastructure.social.mobile"/>
 		
 	<!-- Social -->
-	<bean class="org.springframework.social.connect.web.ProviderSignInController"/>
+	<bean class="org.springframework.social.connect.web.ProviderSignInController">	
+		<constructor-arg name="connectionFactoryLocator" ref="connectionFactoryLocator"/>
+        <constructor-arg name="usersConnectionRepository" ref="usersConnectionRepository"/>
+        <constructor-arg name="signInAdapter" ref="signInAdapter"/>
+	</bean>
 		
 	<!-- Interceptors -->
 	<mvc:interceptors>

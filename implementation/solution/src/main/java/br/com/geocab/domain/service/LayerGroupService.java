@@ -115,7 +115,7 @@ public class LayerGroupService
 	 */
 	@Autowired
 	private IToolRepository toolRepository;
-	
+		
 	/**
 	 * 
 	 */
@@ -813,14 +813,18 @@ public class LayerGroupService
 	
 	/**
 	 * 
-	 * @return
+	 * @return camadas filtradas pelos grupos de acesso do usuário
 	 */
 	@Transactional(readOnly=true)
 	public List<Layer> listAllInternalLayerGroups()
 	{
-		return this.layerRepository.listAllInternalLayerGroups();
+		User user = ContextHolder.getAuthenticatedUser();
+		if (user.getRole().equals(UserRole.ADMINISTRATOR))
+		{
+			return this.layerRepository.listAllInternalLayerGroups();	
+		}
+		return this.layerRepository.listAllInternalLayerGroupsAndByUser(user.getId());
 	}
-	
 	
 	/**
 	 * 
@@ -985,21 +989,32 @@ public class LayerGroupService
 	 * @param pageable
 	 * @return camadas
 	 */
-	@Transactional(readOnly=true)
+//	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, Long dataSourceId,PageRequest pageable )
 	{
-		Page<Layer> layers = this.layerRepository.listByFilters(filter, dataSourceId, pageable);
+		Page<Layer> layers = null; 
+		
+		User user = ContextHolder.getAuthenticatedUser();
+	
+		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
+		{
+			layers = this.layerRepository.listByFilters(filter, dataSourceId, pageable); //TODO porque o dataSourceId esta entrnando null?
+		} else 
+		{
+			layers = this.layerRepository.listByFiltersAndByUser(filter, dataSourceId, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
+		}
 		
 		
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
-			if(layer.getDataSource().getUrl() != null ) {
+			if(layer.getDataSource() != null && layer.getDataSource().getUrl() != null ) {
 				layer.setLegend(getLegendLayerFromGeoServer(layer));	
 			}
 		}
-		
+				
 		return layers;
+				
 	}
 	/**
 	 * 
@@ -1009,17 +1024,27 @@ public class LayerGroupService
 	 */
 	@Transactional(readOnly=true)
 	public Page<Layer> listLayersByFilters( String filter, PageRequest pageable )
-	{
-		Page<Layer> layers = this.layerRepository.listByFilters(filter, null,pageable);
+	{	
+		Page<Layer> layers = null; 
 		
+		User user = ContextHolder.getAuthenticatedUser();
+		
+		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
+		{
+			layers = this.layerRepository.listByFilters(filter, null, pageable); //TODO porque o dataSourceId esta entrnando null?
+		} else 
+		{
+			layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
+		}
+
 		for ( Layer layer : layers.getContent() )
 		{
 			// traz a legenda da camada do GeoServer
-			if(layer.getDataSource().getUrl() != null ) {
+			if(layer.getDataSource() != null && layer.getDataSource().getUrl() != null ) {
 				layer.setLegend(getLegendLayerFromGeoServer(layer));	
 			}
 		}
-		
+			
 		return layers;
 	}
 	
@@ -1041,6 +1066,7 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer insertLayer( Layer layer )
 	{
+		
 		layer.setLayerGroup(this.layerGroupRepository.findOne(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
@@ -1051,6 +1077,7 @@ public class LayerGroupService
 		
 		List<Attribute> attributies = layer.getAttributes();
 		layer.setAttributes(this.attributeRepository.save(attributies));
+
 		return layer;
 	}
 	/**
@@ -1085,8 +1112,10 @@ public class LayerGroupService
 			this.attributeRepository.save(attribute);
 		}
 		
-		layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));
-		
+		if(layer.getPublishedLayer() != null)
+		{
+			layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));	
+		}
 		return this.layerRepository.save( layer );	
 		
 	}
@@ -1106,7 +1135,8 @@ public class LayerGroupService
 		}
 		
 		try
-		{
+		{	
+			this.attributeRepository.delete(attributeRepository.listAttributeByLayerMarker(id));
 			this.layerRepository.delete( id );			
 		}
 		catch (ConstraintViolationException e)
@@ -1128,8 +1158,8 @@ public class LayerGroupService
 	{		
 		final Layer layer = this.layerRepository.findById(id);
 		
-		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));
-		
+		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));	
+				
 		// traz a legenda da camada do GeoServer
 		if( layer.getDataSource().getUrl() != null ) {
 			layer.setLegend(getLegendLayerFromGeoServer(layer));	
