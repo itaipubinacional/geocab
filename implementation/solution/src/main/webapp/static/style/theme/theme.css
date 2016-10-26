@@ -75,7 +75,7 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
 }
 
 .button-action{
-	padding-left: 0px;
+	padding-left: 0;
 	position: absolute;
 	margin-left: -15px;
 }
@@ -390,7 +390,7 @@ input:-moz-placeholder {
 }
 
 .nav-stacked>li+li {
-	margin-top: 0px;
+	margin-top: 0;
 	margin-left: 0;
 }
 
@@ -925,8 +925,8 @@ input:-moz-placeholder {
 }
 
 .row.tree{
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 .detail-label {
@@ -946,7 +946,7 @@ input:-moz-placeholder {
 }
 
 .btn-primary:hover, .btn-primary:focus, .open .dropdown-toggle.btn-primary {
-    background-color: ;
+    /*background-color: ;*/
     border-color: #0283d0;
     border-bottom-width: 3px;
     border-bottom-color: #0165a2;
@@ -968,7 +968,7 @@ input:-moz-placeholder {
 }
 
 .btn-success:hover, .btn-success:focus, .open .dropdown-toggle.btn-success {
-    background-color: ;  /*MUDEI AQUI*/
+    /*background-color: ;*/
     border-color: #00b34a;
     border-bottom-width: 3px;
     border-bottom-color: #017933;
@@ -989,7 +989,7 @@ input:-moz-placeholder {
     border-color: #e32102;
 }
 .btn-danger:hover, .btn-danger:focus, .open .dropdown-toggle.btn-danger {
-    background-color: ;
+    /*background-color: ;*/
     border-color: #ee4e34;
     border-bottom-width: 3px;
     border-bottom-color: #b71d04;
@@ -1010,7 +1010,7 @@ input:-moz-placeholder {
 }
 
 .btn-default:hover, .btn-default:focus, .open .dropdown-toggle.btn-default {
-    background-color: ;
+    /*background-color: ;*/
     border-bottom-width: 3px;
     height: 34px;
 }
@@ -1024,7 +1024,7 @@ input:-moz-placeholder {
 }
 
 .btn-warning:hover, .btn-warning:focus, .open .dropdown-toggle.btn-warning {
-    background-color: #EB9418; /*MUDEI AQUi*/
+    background-color: #EB9418;
     border-color: #fee08d;
     border-bottom-width: 3px;
     border-bottom-color: #cb9f25;
@@ -1151,7 +1151,7 @@ button.close span {
 }
 
 .modal-header .close {
-	margin-top: 0px;
+	margin-top: 0;
 }
 
 /*Desabilita qualquer área fora da popup de inatividade de sistema quando exibida*/
@@ -1247,6 +1247,7 @@ ul.abn-tree li.abn-tree-row a {
 	padding-right: 20px;
 }
 
+
 .addAttribute{
 	margin-bottom: 15px;
 }
@@ -1255,7 +1256,7 @@ ul.abn-tree li.abn-tree-row a {
 	color: #000;
 	left: 75px;
 }
-
+/**/
 .progress-bar {
 	width: 300px; height: 14px;
 	border-radius: 10px;
@@ -1270,6 +1271,7 @@ ul.abn-tree li.abn-tree-row a {
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#66cc00), to(#4b9500));
 	border-image: initial;
 }
+/*
 .dropbox {
 	width: 15em;
 	height: 3em;
@@ -1281,6 +1283,8 @@ ul.abn-tree li.abn-tree-row a {
 	font-size: 2em;
 	font-family: Arial, sans-serif;
 }
+*/
+
 .dropbox span {
 	margin-top: 0.9em;
 	display: block;
@@ -1291,6 +1295,7 @@ ul.abn-tree li.abn-tree-row a {
 .dropbox.over {
 	background-color: #bfb;
 }
+/**/
 
 div.thumbnail.active{border: 2px solid #428bca;}
 
