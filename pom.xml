@@ -110,13 +110,16 @@
 
 				<!-- Social -->
 				<!-- Facebook -->
-				<mvn.social.facebook.app.id>303469610010652</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>1e6313d26c77e3708e4bea47c476ec62</mvn.social.facebook.app.secret>
-
+				<!--
+				<mvn.social.facebook.app.id></mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret></mvn.social.facebook.app.secret>
+				-->
 			
 				<!-- Google plus -->
-				<mvn.social.google.app.id>856589923551-997fukn75b05miqvnucb7034l5o3qgqp.apps.googleusercontent.com</mvn.social.google.app.id>
-				<mvn.social.google.app.secret>gfxTEdpAY9ofTBV0Q5xePxgS</mvn.social.google.app.secret>
+				<!--
+				<mvn.social.google.app.id></mvn.social.google.app.id>
+				<mvn.social.google.app.secret></mvn.social.google.app.secret>
+				-->
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
