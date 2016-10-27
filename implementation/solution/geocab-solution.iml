@@ -61,16 +61,16 @@
     <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:jcl-over-slf4j:1.7.7" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-config:1.1.0.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-web:1.1.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-config:1.1.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-security:1.1.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-web:1.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-core:1.1.0.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-security:1.1.0.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-facebook:1.1.0.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-core:1.1.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.social:spring-social-facebook:2.0.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.social:spring-social-google:1.0.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.3.3" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-entitymanager:4.3.5.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.1.3.GA" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging-annotations:1.2.0.Beta1" level="project" />
@@ -203,13 +203,6 @@
     <orderEntry type="library" name="Maven: org.jdom:jdom:1.1.3" level="project" />
     <orderEntry type="library" name="Maven: javax.media:jai_core:1.1.3" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-swing:13.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-referencing:13.2" level="project" />
-    <orderEntry type="library" name="Maven: java3d:vecmath:1.3.2" level="project" />
-    <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.5.4" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-metadata:13.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-opengis:13.2" level="project" />
-    <orderEntry type="library" name="Maven: net.java.dev.jsr-275:jsr-275:1.0-beta-2" level="project" />
-    <orderEntry type="library" name="Maven: jgridshift:jgridshift:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-render:13.2" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-coverage:13.2" level="project" />
     <orderEntry type="library" name="Maven: javax.media:jai_imageio:1.1" level="project" />
@@ -220,6 +213,16 @@
     <orderEntry type="library" name="Maven: org.jaitools:jt-utils:1.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-cql:13.2" level="project" />
     <orderEntry type="library" name="Maven: com.miglayout:miglayout:swing:3.7" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-referencing:13.2" level="project" />
+    <orderEntry type="library" name="Maven: java3d:vecmath:1.3.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-metadata:13.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-opengis:13.2" level="project" />
+    <orderEntry type="library" name="Maven: net.java.dev.jsr-275:jsr-275:1.0-beta-2" level="project" />
+    <orderEntry type="library" name="Maven: jgridshift:jgridshift:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-epsg-hsql:13.2" level="project" />
+    <orderEntry type="library" name="Maven: org.hsqldb:hsqldb:2.2.8" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-epsg-extension:13.2" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:jstl:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator:5.1.1.Final" level="project" />
