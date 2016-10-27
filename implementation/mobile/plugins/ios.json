@@ -20,6 +20,7 @@
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
         "cordova-plugin-googleplus": {
+            "REVERSED_CLIENT_ID": "978630797426-4h7nurl83m50q9gpsor4othbugt49igs.apps.googleusercontent.com",
             "PACKAGE_NAME": "br.com.geocab.mobile"
         },
         "cordova-plugin-inappbrowser": {
