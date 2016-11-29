@@ -1,1 +1,0 @@
-Create a project with the Cordova CLI and copy over this index.html file
