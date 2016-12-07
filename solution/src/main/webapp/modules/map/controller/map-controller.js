@@ -1244,10 +1244,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           if (!!node.nodes) {
             for (var i = 0; i < node.nodes.length; ++i) {
-              item.children.push(parseNode(node.nodes[i]));
-//                            if( true === node.nodes[i].startVisible ) {
-//                                item.children.push(parseNode(node.nodes[i]));
-//                            }
+                if( true === node.nodes[i].startVisible ) {
+                    item.children.push(parseNode(node.nodes[i]));
+                }
             }
           }
           return item;

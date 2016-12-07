@@ -558,7 +558,7 @@ public class LayerGroupService
 	public List<LayerGroup> listLayerGroupUpperPublished()
 	{
 		List<LayerGroup> layersGroupUpperPublished = new ArrayList<LayerGroup>();
-		final List<LayerGroup> layersGroupPublished = /*hasChildren*/(this.layerGroupRepository.listAllLayersGroupPublished());
+		final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listAllLayersGroupPublished();
 		
 		if ( layersGroupPublished != null )
 		{
@@ -583,7 +583,7 @@ public class LayerGroupService
 		}
 		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
 	
-		return /*hasChildren*/this.layersGroupUpperByRole(layersGroupUpperPublished);
+		return this.layersGroupUpperByRole(layersGroupUpperPublished);
 		
 	}
 	
