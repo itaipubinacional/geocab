@@ -1,4 +1,7 @@
+*.iml
 .idea
-*.project
+.project
+target
 .settings
-/solution/*.classpath
+.classpath
+.springBeans
