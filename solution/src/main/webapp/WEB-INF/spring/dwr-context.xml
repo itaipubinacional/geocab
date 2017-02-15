@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.directwebremoting.org/schema/spring-dwr
+            http://www.directwebremoting.org/schema/spring-dwr/spring-dwr-3.0.xsd">
+
+    <!-- DWR will scan all Spring managed beans containing @RemoteProxy or @RemoteMethod annotations and register Creator proxies for them.
+  		This will NOT scan any classes not managed by Spring.-->
+    <dwr:annotation-config/>
+
+
+    <!-- DWR will scan the classpath and search classes containing @RemoteProxy or @RemoteMethod annotations.
+        This will register the beans and Creator proxies for these classes.-->
+    <dwr:annotation-scan base-package="br.com.geocab.domain.entity" scanDataTransferObject="true" scanRemoteProxy="false"/>
+
+    <!-- DWR - This is required if you want to configure any beans not managed by Spring.-->
+    <dwr:configuration>
+        <dwr:convert type="bean" class="java.lang.StackTraceElement"/>
+        <dwr:convert type="exception" class="java.lang.Exception"/>
+
+        <dwr:convert type="bean" class="org.springframework.data.domain.PageImpl" javascript="PageImpl"/>
+        <dwr:convert type="bean" class="org.springframework.data.domain.PageRequest" javascript="PageRequest"/>
+        <dwr:convert type="bean" class="org.springframework.data.domain.Sort" javascript="Sort"/>
+        <dwr:convert type="enum" class="org.springframework.data.domain.Sort$Direction"/>
+        <dwr:convert type="enum" class="org.springframework.data.domain.Sort$NullHandling"/>
+        <dwr:convert type="bean" class="org.springframework.data.domain.Sort$Order" javascript="Order"/>
+        <dwr:convert type="enum" class="org.geotools.data.shapefile.files.ShpFileType" javascript="ShpFileType"/>
+
+
+        <dwr:convert type="bean" class="com.vividsolutions.jts.geom.Point" javascript="Point">
+            <dwr:include method="coordinateString"/>
+        </dwr:convert>
+    </dwr:configuration>
+
+    <!-- DWR will map util.js and engine.js files to the dwrController.
+  		You can then include this files as external Javascript references from your JSP  -->
+    <dwr:url-mapping />
+
+    <!-- DWR - Defines the dwrController. During production, set the debug property to false -->
+    <dwr:controller debug="false">
+        <dwr:config-param name="scriptCompressed" value="true"/>
+        <!-- Enable CORS -->
+        <dwr:config-param name="allowScriptTagRemoting" value="true"/>
+        <dwr:config-param name="crossDomainSessionSecurity" value="false"/>
+        <dwr:config-param name="allowGetForSafariButMakeForgeryEasier" value="true"/>
+    </dwr:controller>
+</beans>

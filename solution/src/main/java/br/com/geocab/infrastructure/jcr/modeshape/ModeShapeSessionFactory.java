@@ -27,7 +27,6 @@ public class ModeShapeSessionFactory implements FactoryBean<Session>
 	/**
 	 * 
 	 */
-	@Autowired
 	private Repository repository;
 	/**
 	 * 
@@ -37,6 +36,10 @@ public class ModeShapeSessionFactory implements FactoryBean<Session>
 	/*-------------------------------------------------------------------
 	 *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
+	@Autowired
+	public ModeShapeSessionFactory(Repository repository) {
+		this.repository = repository;
+	}
 	/**
 	 * 
 	 */

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.infrastructure.jcr.modeshape.MetadataNodeType;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -31,6 +32,7 @@ import br.com.geocab.infrastructure.jcr.modeshape.MetadataNodeType;
  * @version 1.0
  * @category
  */
+@Component
 public class MetaFileRepository implements IMetaFileRepository
 {
 	
@@ -40,12 +42,12 @@ public class MetaFileRepository implements IMetaFileRepository
 	/**
 	 * 
 	 */
-	@Autowired
+    @Autowired
 	private Session session;
 	/**
 	 * 
 	 */
-	@Autowired
+    @Autowired
 	private Validator validator;
 	/**
 	 * 
