@@ -10,6 +10,8 @@ import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 
 
@@ -58,6 +60,10 @@ public class DataSource extends AbstractEntity implements Serializable {
     @Column(nullable = true, length = 144)
     private String password;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ServiceType serviceType;
+
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
@@ -83,12 +89,13 @@ public class DataSource extends AbstractEntity implements Serializable {
      * @param login
      * @param password
      */
-    public DataSource(Long id, String name, String url, String login, String password) {
+    public DataSource(Long id, String name, String url, String login, String password, ServiceType serviceType) {
         this.setId(id);
         this.setName(name);
         this.setUrl(url);
         this.setLogin(login);
         this.setPassword(password);
+        this.setServiceType(serviceType);
     }
 
     /**
@@ -96,7 +103,7 @@ public class DataSource extends AbstractEntity implements Serializable {
      * @param name
      * @param url
      */
-    public DataSource(Long id, String name, String url) {
+    public DataSource(Long id, String name, String url, ServiceType serviceType) {
         this.setId(id);
         this.setName(name);
         this.setUrl(url);
@@ -177,7 +184,9 @@ public class DataSource extends AbstractEntity implements Serializable {
     }
 
     /**
-     * @return the url
+     * Função que retorna a URL de acesso a fonte de dados.
+     * @return O endereço da fonte de dados acessada. Caso a URL for igual a
+     * <code>null</code>, a fonte de dados é interna.
      */
     public String getUrl() {
         //if there's a token at the url, remove it to add again
@@ -245,5 +254,13 @@ public class DataSource extends AbstractEntity implements Serializable {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public ServiceType getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(ServiceType serviceType) {
+        this.serviceType = serviceType;
     }
 }

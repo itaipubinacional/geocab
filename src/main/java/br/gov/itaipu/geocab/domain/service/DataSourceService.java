@@ -8,7 +8,6 @@ import br.gov.itaipu.geocab.domain.entity.datasource.DataSource;
 import br.gov.itaipu.geocab.domain.entity.layer.Layer;
 import br.gov.itaipu.geocab.domain.repository.datasource.DataSourceRepository;
 import br.gov.itaipu.geocab.domain.repository.layer.LayerRepository;
-import br.gov.itaipu.geocab.infrastructure.geoserver.GeoserverConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,7 +36,7 @@ import java.util.logging.Logger;
 @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
 public class DataSourceService {
     /*-------------------------------------------------------------------
-	 * 		 					ATTRIBUTES
+     * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
     /**
      * Log
@@ -176,18 +175,6 @@ public class DataSourceService {
     @Transactional(readOnly = true)
     public Page<DataSource> listInternalDataSourceByFilters(String filter, PageRequest pageable) {
         return this.dataSourceRepository.listInternalDatasourceByFilters(filter, pageable);
-    }
-
-    /**
-     * Method to test Data source connection
-     *
-     * @param url
-     * @return boolean
-     */
-    @Transactional(readOnly = true)
-    public boolean testConnection(String url) {
-        GeoserverConnection geoserverConnection = new GeoserverConnection();
-        return geoserverConnection.testConnection(url);
     }
 
     /**

@@ -14,6 +14,7 @@ import br.gov.itaipu.geocab.domain.repository.layer.AttributeRepository;
 import br.gov.itaipu.geocab.domain.repository.marker.MarkerAttributeRepository;
 import br.gov.itaipu.geocab.domain.repository.marker.MarkerRepository;
 import br.gov.itaipu.geocab.infrastructure.jts.PointUtils;
+import com.google.common.io.Files;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -21,7 +22,6 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.util.Assert;
 import org.apache.commons.codec.binary.Base64;
-import org.directwebremoting.io.FileTransfer;
 import org.geotools.data.*;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.shapefile.files.ShpFileType;
@@ -40,23 +40,23 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * @author emanuelvictor
@@ -65,19 +65,9 @@ import java.util.zip.ZipOutputStream;
 @SuppressWarnings("unchecked")
 public class ShapefileService {
     /*-------------------------------------------------------------------
-	 * 		 					ATTRIBUTES
+     * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
 
-    /**
-     * export shapefile path
-     */
-    @Value("${path.shapefiles:/tmp/geocab/files/shapefile/}" + "export/")
-    private String pathShapefilesExport;
-    /**
-     * import shapefile path
-     */
-    @Value("${path.shapefiles:/tmp/geocab/files/shapefile/}" + "import/")
-    private String pathShapefilesImport;
     /**
      * Log
      */
@@ -110,48 +100,32 @@ public class ShapefileService {
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
 
-
-    /**
-     * Logo após o component ser instanciado,
-     * o mesmo verifica se existe a pasta shapefile e caso a mesma não exista será criada
-     */
-    @PostConstruct
-    public void createPaths() {
-        try {
-            new File(pathShapefilesExport).mkdirs();
-            new File(pathShapefilesImport).mkdirs();
-        } catch (final RuntimeException e) {
-            e.printStackTrace();
-            LOG.info(e.getMessage());
-        }
-    }
-
     /**
      * Serviço de importação de shapefile
      *
      * @param shapefiles
      * @return
      */
-    public final List<Marker> importShapefile(final List<Shapefile> shapefiles) {
+    public List<Marker> importShapefile(List<Shapefile> shapefiles) {
         try {
-            final String pathFile = pathShapefilesImport + String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis());
             // Lê os arquivos
-            final List<File> files = new ArrayList<>();
-
-            for (final Shapefile shapefile : shapefiles) {
-                files.add(readFile(shapefile, pathFile));
-            }
-
             List<Marker> markers = new ArrayList<>();
 
-            for (final Shapefile shapefile : shapefiles) {
+            for (Shapefile shapefile : shapefiles) {
                 if (shapefile.getType() == ShpFileType.SHP) {
-                    markers = importt(readFile(shapefile, pathFile), this.messages);
+                    File shpFile = null;
+                    try {
+                        shpFile = generateShpTmpFile(shapefile);
+
+                        // faz a importação dos markers
+                        markers.addAll(importShpFile(shpFile, this.messages));
+                    } finally {
+                        // apaga o arquivo temporário
+                        if (shpFile != null)
+                            shpFile.delete();
+                    }
                 }
             }
-
-            // Deleta o arquivo
-            delete(new File(pathShapefilesImport));
 
             return markers;
         } catch (final GeodesicCoordinatesAcceptedException e) {
@@ -188,12 +162,9 @@ public class ShapefileService {
      * @param messages
      * @return
      * @throws GeodesicCoordinatesAcceptedException
-     * @throws FactoryException
-     * @throws NoSuchAuthorityCodeException
-     * @throws TransformException
-     * @throws MismatchedDimensionException
      */
-    private static final List<Marker> importt(final File file, final MessageSource messages) throws GeodesicCoordinatesAcceptedException {
+    private static List<Marker> importShpFile(final File file, final MessageSource messages) throws GeodesicCoordinatesAcceptedException {
+
         try {
             final Map<String, Object> map = new HashMap<>();
             map.put("url", file.toURI().toURL());
@@ -261,21 +232,22 @@ public class ShapefileService {
      *
      * @param shapefile
      * @return
+     * @throws IOException
      */
-    private static final File readFile(final Shapefile shapefile, String pathFile) {
-        pathFile += "." + shapefile.getType().toString().toLowerCase();//".shp";
+    private static File generateShpTmpFile(Shapefile shapefile) throws IOException {
+        // gera o arquivo temporário
+        File shpFile = File.createTempFile("geocab", "." + shapefile.getType().toString().toLowerCase());
 
-        final Base64 decoder = new Base64();
-        final byte[] shpBytes = decoder.decode(shapefile.getSource());
-        try {
-            final FileOutputStream osf = new FileOutputStream(new File(pathFile));
+        // escreve o arquivo temporário
+        try (FileOutputStream osf = new FileOutputStream(shpFile)) {
+
+            Base64 decoder = new Base64();
+            byte[] shpBytes = decoder.decode(shapefile.getSource());
+
             osf.write(shpBytes);
             osf.flush();
-            osf.close();
-            return new File(pathFile);
-        } catch (final IOException e) {
-            LOG.info(e.getMessage());
-            throw new RuntimeException("admin.shape.error.import");
+
+            return shpFile;
         }
     }
 
@@ -285,39 +257,43 @@ public class ShapefileService {
      * @param markers
      * @return
      */
-    private static final List<Layer> groupByLayers(final List<Marker> markers) {
-        final Set<Layer> layers = new HashSet<>();
+    private static List<Layer> groupByLayers(List<Marker> markers) {
 
-        for (final Marker marker : markers) {
-            layers.add(marker.getLayer());
-        }
+        // pega todas as camadas referenciadas pelos markers
+        Set<Layer> layers = markers.stream()
+                .map(Marker::getLayer)
+                .collect(Collectors.toSet());
 
-        for (final Layer layer : layers) {
+        for (Layer layer : layers) {
+
+            // pega os marcadores para camada atual
+            List<Marker> layerMarkers = markers.parallelStream()
+                    .filter(m -> m.getLayer().getId() == layer.getId())
+                    .collect(Collectors.toList());
+
             // Inicializa os markers da layer
-            layer.setMarkers(new ArrayList<Marker>());
-            for (final Marker marker : markers) {
-                if (marker.getLayer().getId().equals(layer.getId())) {
-                    layer.getMarkers().add(marker);
-                }
-            }
+            layer.setMarkers(layerMarkers);
         }
         return new ArrayList<>(layers);
     }
 
 
     /**
-     * Serviço de exportação para shapefile (Obs:. FileTransfer do DWR não pode ser final)
+     * Função que gera um shapefile a partir da lista de pontos passada.
      *
-     * @param markers
-     * @return
+     * @param markers A lista de pontos a serem inclusos no shapefile.
+     * @return O arquivo do shapefile
      */
-    public FileTransfer exportShapefile(final List<Marker> markers) {
+    public InputStream exportShapefile(final List<Marker> markers) {
 
         Assert.isTrue(!markers.isEmpty(), "map.No-marker-to-export");
 
         final List<Layer> layers = groupByLayers(markers);
 
         final String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis());
+
+        // gera a pasta temporária para a geração dos shapefiles das camadas
+        File tempDir = Files.createTempDir();
 
         for (final Layer layer : layers) {
             try {
@@ -364,7 +340,7 @@ public class ShapefileService {
 
                 final DataStoreFactorySpi dataStoreFactorySpi = new ShapefileDataStoreFactory();
 
-                final File newFile = new File(pathShapefilesExport + layer.getName() + ".shp");
+                final File newFile = new File(tempDir, layer.getName() + ".shp");
                 final Map<String, Serializable> create = new HashMap<>();
                 create.put("url", newFile.toURI().toURL());
                 create.put("create spatial index", Boolean.TRUE);
@@ -394,13 +370,12 @@ public class ShapefileService {
             }
         }
 
-        //Compcta os arquivos de exportação e traz para memória
-        final FileTransfer fileTransfer = new FileTransfer(fileExport + ".zip", "application/zip", compactFilesToZip(pathShapefilesExport, fileExport + ".zip"));
+        FileInputStream zip = compactFilesToZip(tempDir.getAbsolutePath(), fileExport + ".zip");
 
         //Deleta os arquivos de exportação
-        delete(new File(pathShapefilesExport));
+        tempDir.delete();
 
-        return fileTransfer;
+        return zip;
     }
 
     /**
@@ -541,7 +516,7 @@ public class ShapefileService {
      * @param pathExport
      * @return
      */
-    public static final FileInputStream compactFilesToZip(final String pathExport, final String fileExport) {
+    private static FileInputStream compactFilesToZip(String pathExport, String fileExport) {
         try {
             final File file = new File(pathExport);
 

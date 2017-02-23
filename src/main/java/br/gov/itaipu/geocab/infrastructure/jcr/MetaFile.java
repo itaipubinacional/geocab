@@ -49,7 +49,7 @@ public class MetaFile implements Serializable, Cloneable {
     @NotNull
     private String folder;
     /**
-     * o tipo do conteudo do {@link Metafile}
+     * o tipo do conteudo do {@link MetaFile}
      */
     @NotNull
     private String contentType;

@@ -19,11 +19,6 @@ import br.gov.itaipu.geocab.domain.repository.layer.LayerRepository;
 import br.gov.itaipu.geocab.domain.repository.tool.ToolRepository;
 import br.gov.itaipu.geocab.infrastructure.file.FileRepository;
 import br.gov.itaipu.geocab.infrastructure.geoserver.GeoserverConnection;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import org.directwebremoting.json.parse.JsonParseException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,13 +31,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.ServletContext;
 import javax.validation.ConstraintViolationException;
 import javax.xml.bind.JAXBException;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -113,7 +102,7 @@ public class LayerGroupService {
      */
     @Autowired
     private FileRepository fileRepository;
-	
+
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -708,9 +697,9 @@ public class LayerGroupService {
      * @throws JAXBException
      */
     @Transactional(readOnly = true)
-    public List<ExternalLayer> listExternalLayersByFilters(DataSource dataSource) {
-        GeoserverConnection geoserverConnection = new GeoserverConnection();
-        return geoserverConnection.listExternalLayersByFilters(dataSource);
+    public List<ExternalLayer> listExternalLayersByFilters(DataSource dataSource) throws Exception {
+        GeoserverConnection conn = GeoserverConnection.createConnection(dataSource);
+        return conn.getExternalLayers();
 
     }
 
@@ -729,98 +718,72 @@ public class LayerGroupService {
 
 
     /**
-     * @return
-     * @throws JAXBException
-     * @throws URISyntaxException
-     * @throws IOException
-     * @throws JsonMappingException
-     * @throws JsonParseException
+     * Retorna a lista de campos configurados em uma camada.
+     *
+     * @param layer A camada a ser pesquisada.
+     * @return Retorna a lista de campos da camada.
+     * @throws Exception Lança exceção caso ocorra algum problema durante a
+     *                   consulta.
      */
     @Transactional(readOnly = true)
-    public List<LayerField> listFieldLayersByFilter(Layer layer) {
-        if (layer.getDataSource().getUrl() == null) {
-            List<LayerField> layerFields = new ArrayList<LayerField>();
-            List<Attribute> attrs = this.listAttributesByLayer(layer.getId());
+    public List<LayerField> getLayerFields(Layer layer) throws Exception {
+        // se for uma camada interna
+        if (layer.getDataSource().getUrl() == null)
+            return getInternalLayerFields(layer);
+        else
+            return getExternalLayerFields(layer);
+    }
 
-            for (Attribute attr : attrs) {
-                LayerField layerField = new LayerField();
-                layerField.setName(attr.getName());
-                layerField.setAttributeId(attr.getId());
+    /**
+     * Retorna a lista de campos configurados em uma camada interna.
+     *
+     * @param layer A camada a ser pesquisada.
+     * @return Retorna a lista de campos da camada interna. Se a camada passada não
+     * for interna, será retornado <code>null</code>.
+     */
+    private List<LayerField> getInternalLayerFields(Layer layer) {
+        // se a fonte de dados da camada não for interna
+        if (layer.getDataSource().getUrl() != null)
+            return null;
 
-                if (attr.getType() == AttributeType.TEXT) {
-                    layerField.setType(LayerFieldType.STRING);
-                } else if (attr.getType() == AttributeType.DATE) {
-                    layerField.setType(LayerFieldType.DATE);
-                } else if (attr.getType() == AttributeType.NUMBER) {
-                    layerField.setType(LayerFieldType.INT);
-                } else if (attr.getType() == AttributeType.BOOLEAN) {
-                    layerField.setType(LayerFieldType.BOOLEAN);
-                }
+        List<LayerField> layerFields = new ArrayList<>();
+        List<Attribute> attrs = this.listAttributesByLayer(layer.getId());
 
-                layerFields.add(layerField);
+        for (Attribute attr : attrs) {
+            LayerField layerField = new LayerField();
+            layerField.setName(attr.getName());
+            layerField.setAttributeId(attr.getId());
 
+            if (attr.getType() == AttributeType.TEXT) {
+                layerField.setType(LayerFieldType.STRING);
+            } else if (attr.getType() == AttributeType.DATE) {
+                layerField.setType(LayerFieldType.DATE);
+            } else if (attr.getType() == AttributeType.NUMBER) {
+                layerField.setType(LayerFieldType.INT);
+            } else if (attr.getType() == AttributeType.BOOLEAN) {
+                layerField.setType(LayerFieldType.BOOLEAN);
             }
 
-            return layerFields;
+            layerFields.add(layerField);
+
         }
 
-        int position = layer.getDataSource().getUrl().lastIndexOf("ows?");
-        String urlGeoserver = layer.getDataSource().getUrl().substring(0, position);
+        return layerFields;
+    }
 
-        String sUrl = this.getUrl(layer, urlGeoserver + ExternalLayer.CAMPO_CAMADA_URL + layer.getName());
-
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(sUrl);
-            reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-            StringBuffer buffer = new StringBuffer();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1) {
-                buffer.append(chars, 0, read);
-            }
-
-            try {
-                JSONObject json = new JSONObject(buffer.toString());
-                JSONArray featureTypes = json.getJSONArray("featureTypes");
-                JSONObject properties = (JSONObject) featureTypes.get(0);
-                JSONArray propertiesArray = (JSONArray) properties.get("properties");
-
-                List<LayerField> campos = new ArrayList<>();
-
-                for (int i = 0; i < propertiesArray.length(); i++) {
-
-                    JSONObject jsonOb = (JSONObject) propertiesArray.get(i);
-
-                    LayerField layerField = new LayerField();
-
-                    if (layerField.isValidTipoGeoserver(jsonOb.get("type").toString())) {
-                        layerField.setName(jsonOb.get("name").toString());
-                        layerField.setTipoGeoServer(jsonOb.get("type").toString());
-                        campos.add(layerField);
-                    }
-
-                    //campos.add(layerField);
-                }
-
-                return campos;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
+    /**
+     * Retorna a lista de campos configurados em uma camada externa. Esta lista será consultada
+     * através do serviço WFS da fonte de dados configurada.
+     *
+     * @param layer A camada a ser pesquisada.
+     * @return Retorna a lista de campos da camada externa. Caso ocorrer um problema na comunicação
+     * com o serviço WFS ou a camada passada não for externa, será retornado <code>null</code>.
+     * @throws Exception Lança exceção em caso de problema com a conexão com o Geoserver.
+     */
+    private List<LayerField> getExternalLayerFields(Layer layer) throws Exception {
+        // cria uma conexão com o Geoserver e faz a consulta
+        GeoserverConnection conn = GeoserverConnection.createConnection(layer.getDataSource());
+        return conn.getLayerFields(layer.getName());
     }
 
 
