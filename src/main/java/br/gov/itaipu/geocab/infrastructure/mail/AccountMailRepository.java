@@ -1,5 +1,6 @@
 package br.gov.itaipu.geocab.infrastructure.mail;
 
+import br.gov.itaipu.geocab.application.configuration.MailConfig;
 import br.gov.itaipu.geocab.domain.entity.configuration.Configuration;
 import br.gov.itaipu.geocab.domain.entity.configuration.account.User;
 import br.gov.itaipu.geocab.domain.entity.marker.Marker;
@@ -32,7 +33,7 @@ import java.util.concurrent.Future;
 @Component
 public class AccountMailRepository {
     /*-------------------------------------------------------------------
-	 * 		 					ATTRIBUTES
+     * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
     /**
      *
@@ -52,13 +53,13 @@ public class AccountMailRepository {
     /**
      *
      */
-    @Value("${mail.from}")
-    private String mailFrom;
+    @Autowired
+    private MailConfig.Server mailServerConfig;
 
     /**
      *
      */
-    @Value("${geocab.url}")
+    @Value("bla")
     private String geocabUrl;
 	
 	/*-------------------------------------------------------------------
@@ -77,7 +78,7 @@ public class AccountMailRepository {
                     final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                     message.setSubject("Redefinição de senha"); //FIXME Localize
                     message.setTo(user.getEmail());
-                    message.setFrom(mailFrom);
+                    message.setFrom(mailServerConfig.from);
 
                     final Map<String, Object> model = new HashMap<String, Object>();
                     model.put("userName", user.getName());
@@ -115,7 +116,7 @@ public class AccountMailRepository {
                     final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                     message.setSubject("Postagem aprovada!"); //FIXME Localize
                     message.setTo(user.getEmail());
-                    message.setFrom(mailFrom);
+                    message.setFrom(mailServerConfig.from);
 
                     final Map<String, Object> model = new HashMap<String, Object>();
                     model.put("userName", user.getName());
@@ -146,7 +147,7 @@ public class AccountMailRepository {
                     final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                     message.setSubject("Postagem recusada!"); //FIXME Localize
                     message.setTo(user.getEmail());
-                    message.setFrom(mailFrom);
+                    message.setFrom(mailServerConfig.from);
 
                     final Map<String, Object> model = new HashMap<String, Object>();
                     model.put("userName", user.getName());
@@ -179,7 +180,7 @@ public class AccountMailRepository {
                     final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                     message.setSubject("Postagem cancelada!"); //FIXME Localize
                     message.setTo(user.getEmail());
-                    message.setFrom(mailFrom);
+                    message.setFrom(mailServerConfig.from);
 
                     final Map<String, Object> model = new HashMap<String, Object>();
                     model.put("userName", user.getName());

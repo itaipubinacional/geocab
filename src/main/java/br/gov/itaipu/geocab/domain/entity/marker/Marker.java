@@ -12,9 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.spatial.GeometryType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,14 +29,13 @@ import java.util.List;
  * @since 03/10/2014
  */
 @Entity
-@TypeDef(name = "geometry", typeClass = GeometryType.class)
 public class Marker extends AbstractEntity implements Serializable {
     /**
      *
      */
     private static final long serialVersionUID = 1806026076674494131L;
     /*-------------------------------------------------------------------
-	 *				 		     ATTRIBUTES
+     *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
     /**
      *
@@ -62,8 +58,7 @@ public class Marker extends AbstractEntity implements Serializable {
     /**
      *
      */
-    @Column(nullable = true)
-    @Type(type = "org.hibernate.spatial.GeometryType")
+    @Column(columnDefinition = "Geometry")
     @JsonIgnore
     private Point location;
     /**
@@ -78,28 +73,28 @@ public class Marker extends AbstractEntity implements Serializable {
     /**
      *
      */
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @ManyToOne
     private Layer layer;
     /**
      *
      */
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @ManyToOne
     private User user;
     /**
      *
      */
     @JsonManagedReference
-    @OneToMany(mappedBy = "marker", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "marker", cascade = {CascadeType.ALL})
     private List<MarkerAttribute> markerAttributes = new ArrayList<MarkerAttribute>();
     /**
      *
      */
     @JsonIgnore
-    @OneToMany(mappedBy = "marker", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "marker", cascade = {CascadeType.ALL})
     private List<MarkerModeration> markerModeration = new ArrayList<>();
 
 	/*-------------------------------------------------------------------
-	 * 		 					CONSTRUCTORS
+     * 		 					CONSTRUCTORS
 	 *-------------------------------------------------------------------*/
 
     /**

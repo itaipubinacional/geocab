@@ -1,0 +1,20 @@
+{
+    "name" : "geocab-repository",
+    "workspaces" : {
+        "default" : "default",
+        "allowCreation" : true
+    },
+    "security" : {
+        "anonymous" : {
+            "roles" : ["readonly","readwrite","admin"],
+            "useOnFailedLogin" : false
+        }
+    },
+    "storage" : {
+        "binaryStorage" : {
+            "type" : "file",
+            "directory": "c:\\bla",
+            "minimumBinarySizeInBytes" : 40
+        }
+    }
+}

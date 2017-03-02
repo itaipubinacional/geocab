@@ -498,7 +498,7 @@ public class Layer extends AbstractEntity implements Serializable, TreeNode {
     }
 
 	/*-------------------------------------------------------------------
-	 *				 		     BEHAVIORS
+     *				 		     BEHAVIORS
 	 *-------------------------------------------------------------------*/
 
     /**
@@ -515,15 +515,6 @@ public class Layer extends AbstractEntity implements Serializable, TreeNode {
      * @return
      */
     public String getLegend() {
-        if (this.legend != null && this.legend.contains("&authkey=")) {
-            this.legend = this.legend.replace(
-                    this.legend.substring(this.legend.indexOf("&authkey="),
-                            this.legend.length()),
-                    "");
-        }
-        if (this.dataSource != null && this.dataSource.getToken() != null) {
-            return this.legend + "&authkey=" + this.dataSource.getToken();
-        }
         return legend;
     }
 
@@ -531,19 +522,6 @@ public class Layer extends AbstractEntity implements Serializable, TreeNode {
      * @param legend
      */
     public void setLegend(String legend) {
-        if (this.legend != null && this.legend.contains("&authkey=")) {
-            this.legend = this.legend.replace(
-                    this.legend.substring(this.legend.indexOf("&authkey="),
-                            this.legend.length()),
-                    "");
-        }
-        if (legend != null && legend.contains("&authkey=")) {
-            legend = legend.replace(legend.substring(
-                    legend.indexOf("&authkey="), legend.length()), "");
-        }
-        if (this.dataSource != null && this.dataSource.getToken() != null) {
-            legend += "&authkey=" + this.dataSource.getToken();
-        }
         this.legend = legend;
     }
 

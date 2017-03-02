@@ -638,19 +638,6 @@ public class LayerGroupService {
         return layer;
     }
 
-
-    /**
-     * @param layer
-     * @param sUrl
-     * @return
-     */
-    private String getUrl(Layer layer, String sUrl) {
-        if (layer.getDataSource().getToken() != null) {
-            sUrl += "&authkey=" + layer.getDataSource().getToken();
-        }
-        return sUrl;
-    }
-
     /**
      * @param filter
      * @param pageable
@@ -668,7 +655,7 @@ public class LayerGroupService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<LayerGroup> listAllLayerGroups() {
+    public List<LayerGroup> getLayerGroups() {
         return this.layerGroupRepository.findAll();
     }
 
@@ -676,7 +663,7 @@ public class LayerGroupService {
      * @return camadas filtradas pelos grupos de acesso do usuário
      */
     @Transactional(readOnly = true)
-    public List<Layer> listAllInternalLayerGroups() {
+    public List<Layer> getInternalLayerGroups() {
         User user = ContextHolder.getAuthenticatedUser();
         if (user.getRole().equals(UserRole.ADMINISTRATOR)) {
             return this.layerRepository.listAllInternalLayerGroups();
@@ -688,7 +675,7 @@ public class LayerGroupService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<Layer> listAllInternalLayers() {
+    public List<Layer> getInternalLayers() {
         return this.layerRepository.listAllInternalLayers();
     }
 
@@ -697,7 +684,7 @@ public class LayerGroupService {
      * @throws JAXBException
      */
     @Transactional(readOnly = true)
-    public List<ExternalLayer> listExternalLayersByFilters(DataSource dataSource) throws Exception {
+    public List<ExternalLayer> getExternalLayers(DataSource dataSource) throws Exception {
         GeoserverConnection conn = GeoserverConnection.createConnection(dataSource);
         return conn.getExternalLayers();
 

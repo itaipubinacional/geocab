@@ -1,10 +1,10 @@
 package br.gov.itaipu.geocab.infrastructure.jcr.modeshape;
 
-import org.infinispan.schematic.document.ParsingException;
 import org.modeshape.jcr.ConfigurationException;
 import org.modeshape.jcr.ModeShapeEngine;
 import org.modeshape.jcr.RepositoryConfiguration;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -52,6 +52,7 @@ public class ModeShapeRepositoryFactory implements FactoryBean<Repository> {
     /**
      *
      */
+    @Value("classpath:jcr-modeshape-config.json")
     private Resource configuration;
     /**
      *
@@ -63,13 +64,12 @@ public class ModeShapeRepositoryFactory implements FactoryBean<Repository> {
 	 *-------------------------------------------------------------------*/
 
     /**
-     * @throws ParsingException
      * @throws IOException
      * @throws ConfigurationException
      * @throws RepositoryException
      */
     @PostConstruct
-    public void start() throws ParsingException, IOException, ConfigurationException, RepositoryException {
+    public void start() throws IOException, ConfigurationException, RepositoryException {
         Assert.notNull(configuration, "The repository configuration file is required");
 
         ENGINE.start();
@@ -135,7 +135,7 @@ public class ModeShapeRepositoryFactory implements FactoryBean<Repository> {
     }
 
 	/*-------------------------------------------------------------------
-	 *				 		    GETTERS AND SETTERS
+     *				 		    GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
 
     /**

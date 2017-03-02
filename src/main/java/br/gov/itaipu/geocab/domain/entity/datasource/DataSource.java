@@ -60,7 +60,7 @@ public class DataSource extends AbstractEntity implements Serializable {
     @Column(nullable = true, length = 144)
     private String password;
 
-    @Column
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
 
@@ -107,7 +107,7 @@ public class DataSource extends AbstractEntity implements Serializable {
         this.setId(id);
         this.setName(name);
         this.setUrl(url);
-
+        this.setServiceType(serviceType);
     }
 
     /*-------------------------------------------------------------------
@@ -158,18 +158,6 @@ public class DataSource extends AbstractEntity implements Serializable {
 	 *-------------------------------------------------------------------*/
 
     /**
-     * @return the token
-     */
-    public String getToken() {
-        if (!(this.getLogin() == null)
-                && !this.getLogin().equals(null)
-                && this.getLogin().length() > 0) {
-            return PublicKeyGenerator.generateKey(this.getLogin());
-        }
-        return null;
-    }
-
-    /**
      * @return the name
      */
     public String getName() {
@@ -184,23 +172,12 @@ public class DataSource extends AbstractEntity implements Serializable {
     }
 
     /**
-     * Função que retorna a URL de acesso a fonte de dados.
+     * Função que retorna a URL de acesso a fonte de dados. Esta URL deverá
+     * apontar para o endpoint do serviço referenciado.
      * @return O endereço da fonte de dados acessada. Caso a URL for igual a
      * <code>null</code>, a fonte de dados é interna.
      */
     public String getUrl() {
-        //if there's a token at the url, remove it to add again
-        if (this.url != null && this.url.contains("&authkey=")) {
-            this.url = this.url.replace(
-                    this.url.substring(this.url.indexOf("&authkey="),
-                            this.url.length()), "");
-        }
-
-        //Concat the authentication token case the data source needs authentication
-        if (this.getToken() != null) {
-            this.url = this.url.concat("&authkey=" + this.getToken());
-        }
-
         return this.url;
     }
 
@@ -208,23 +185,6 @@ public class DataSource extends AbstractEntity implements Serializable {
      * @param url the url to set
      */
     public void setUrl(String url) {
-        //if there's a token at the url, remove it to add again
-        if (this.url != null && this.url.contains("&authkey=")) {
-            this.url = this.url.replace(
-                    this.url.substring(this.url.indexOf("&authkey="),
-                            this.url.length()), "");
-        }
-        if (url != null && url.contains("&authkey=")) {
-            url = url.replace(
-                    url.substring(url.indexOf("&authkey="),
-                            url.length()), "");
-        }
-
-        //Concat the authentication token case the data source needs authentication
-        if (this.getToken() != null) {
-            url = url.concat("&authkey=" + this.getToken());
-        }
-
         this.url = url;
     }
 

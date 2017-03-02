@@ -11,6 +11,7 @@ import org.geotools.ows.ServiceException;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +26,28 @@ import java.util.stream.Collectors;
  */
 class WfsGeoserverConnection extends GeoserverConnection {
 
+    /**
+     * Versão do protocolo WFS a ser utilizado por esta conexão.
+     */
+    private static final String WFS_VERSION = "1.1.1";
+
     private DataStore dataStore;
+
+    /**
+     * Retorna a URL para a requisição GetCapabilities do serviço WMS do
+     * Geoserver.
+     * @return A URL para a requisição GetCapabilities.
+     */
+    private String getGetCapabilitiesURL() {
+        // adiciona os parâmetros da query a ser realizada no servidor
+        return UriComponentsBuilder
+                .fromUriString(this.dataSource.getUrl())
+                .queryParam("service", "WFS")
+                .queryParam("version", WFS_VERSION)
+                .queryParam("request", "GetCapabilities")
+                .build()
+                .toUriString();
+    }
 
     /**
      * Construtor da classe. Esta também realiza a inicialização da conexão com
@@ -46,7 +68,7 @@ class WfsGeoserverConnection extends GeoserverConnection {
     protected void initialize() throws IOException {
         // inicializa a conexão a partir dos atributos da conexão
         Map connectionParameters = new HashMap();
-        connectionParameters.put("WFSDataStoreFactory:GET_CAPABILITIES_URL", this.dataSource.getUrl());
+        connectionParameters.put("WFSDataStoreFactory:GET_CAPABILITIES_URL", this.getGetCapabilitiesURL());
 
         this.dataStore = DataStoreFinder.getDataStore(connectionParameters);
     }

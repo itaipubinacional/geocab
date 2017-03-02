@@ -26,7 +26,7 @@ public interface DataSourceRepository extends JpaRepository<DataSource, Long> {
      * @param pageable
      * @return
      */
-    @Query(value = "SELECT new DataSource( dataSource.id, dataSource.name, dataSource.url, dataSource.login, dataSource.password ) " +
+    @Query(value = "SELECT new DataSource( dataSource.id, dataSource.name, dataSource.url, dataSource.login, dataSource.password, dataSource.serviceType ) " +
             "FROM DataSource dataSource " +
             "WHERE  ( ( LOWER(dataSource.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " +
             "OR ( LOWER(dataSource.url) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ))")
@@ -37,7 +37,7 @@ public interface DataSourceRepository extends JpaRepository<DataSource, Long> {
      * @param pageable
      * @return
      */
-    @Query(value = "SELECT new DataSource( dataSource.id, dataSource.name, dataSource.url, dataSource.login, dataSource.password ) " +
+    @Query(value = "SELECT new DataSource( dataSource.id, dataSource.name, dataSource.url, dataSource.login, dataSource.password, dataSource.serviceType ) " +
             "FROM DataSource dataSource " +
             "WHERE  ( (( LOWER(dataSource.name) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL ) " +
             "OR ( LOWER(dataSource.url) LIKE '%' || LOWER(CAST(:filter AS string))  || '%' OR :filter = NULL )) AND (dataSource.url IS NULL ))")
@@ -47,7 +47,7 @@ public interface DataSourceRepository extends JpaRepository<DataSource, Long> {
     /**
      * @return
      */
-    @Query(value = "SELECT new DataSource( dataSource.id, dataSource.name, dataSource.url ) " +
+    @Query(value = "SELECT new DataSource( dataSource.id, dataSource.name, dataSource.url, dataSource.serviceType ) " +
             "FROM DataSource dataSource ")
     List<DataSource> listAll();
 }

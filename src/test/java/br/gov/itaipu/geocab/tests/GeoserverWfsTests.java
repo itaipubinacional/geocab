@@ -1,14 +1,8 @@
 package br.gov.itaipu.geocab.tests;
 
-import net.opengis.wfs.DescribeFeatureTypeType;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.wfs.WFSDataStore;
-import org.geotools.data.wfs.WFSDataStoreFactory;
-import org.geotools.data.wfs.v1_1_0.WFSFeatureSource;
-import org.geotools.data.wfs.v1_1_0.parsers.DescribeFeatureTypeParser;
-import org.geotools.wfs.bindings.DescribeFeatureTypeTypeBinding;
 import org.junit.Test;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;

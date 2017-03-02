@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!--
+        Este dataset é utilizado para apagar todos os dados antes de executar um teste
+        -->
+<dataset>
+    <geocab_test.data_source></geocab_test.data_source>
+    <geocab_test.user></geocab_test.user>
+    <geocab_test.layer_group></geocab_test.layer_group>
+    <geocab_test.layer></geocab_test.layer>
+    <geocab_test.marker></geocab_test.marker>
+    <geocab_test.marker_moderation></geocab_test.marker_moderation>
+    <geocab_test.motive></geocab_test.motive>
+    <geocab_test.custom_search></geocab_test.custom_search>
+    <geocab_test.access_group></geocab_test.access_group>
+    <geocab_test.access_group_user></geocab_test.access_group_user>
+    <geocab_test.motive_marker_moderation></geocab_test.motive_marker_moderation>
+</dataset>
