@@ -1,0 +1,65 @@
+
+.btn {
+    margin-right: 8px;
+}
+
+.angular-ui-tree {
+    color: #ffffff;
+}
+
+.angular-ui-tree-handle {
+    background: #ffffff;
+    border: 1px solid #dae2ea;
+    color: black;
+    padding: 10px 10px;
+}
+
+.angular-ui-tree-handle:hover {
+    background: #e0e5e9;
+    border-color: #dce2e8;
+}
+
+.glyphicon-chevron-right {
+    color: #a7a7a7;
+}
+
+.glyphicon-chevron-down {
+    color: #a7a7a7;
+}
+
+.col-lg-6 {
+    width: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    background: #ffffff;
+    border: 1px solid;
+    border-color: #dae2ea;
+}
+
+.open-tree {
+    cursor: pointer;
+}
+
+.angular-ui-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.angular-ui-tree-empty {
+    border: 1px solid #bbb;
+    min-height: 270px;
+    background-color: #ffffff;
+    background-image: -webkit-linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%,#fff),-webkit-linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%,#fff);
+    background-image: -moz-linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%,#fff),-moz-linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%,#fff);
+    background-image: linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%,#fff),linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%,#fff);
+    background-size: 60px 60px;
+    background-position: 0 0,30px 30px;
+}
+
+.group-title {
+    background-color: #687074 !important;
+    color: #FFF !important;
+}

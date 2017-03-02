@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+		<geocab.user 
+		id="100"
+		created="2014-09-22 00:00:00"
+		name="Testing User"
+		email="user@geocab.com.br" 
+		password="9ea1157637574ce4633bf01aa2074aaf69eda89d"
+		role="0"
+		enabled="true"
+		 />
+	
+</dataset>
