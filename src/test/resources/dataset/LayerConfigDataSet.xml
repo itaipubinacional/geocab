@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+    <geocab_test.data_source
+            id="1"
+            created="2014-09-22 00:00:00"
+            name="Data Source"
+            login="user"
+            password="password123"
+            url="http://geoserver.itaipu/ows"
+            service_type="WMS"
+    />
+
+    <geocab_test.layer_group
+            id="1"
+            created="2014-09-23 00:00:00"
+            name="Abastecedouros"
+            order_layer_group="0"
+    />
+
+    <geocab_test.layer
+            id="502"
+            data_source_id="1"
+            created="2014-09-23 00:00:00"
+            start_enabled="false"
+            start_visible="false"
+            layer_group_id="1"
+            order_layer="0"
+            maximum_scale_map="13"
+            minimum_scale_map="0"
+            name="bdgeo:v_ag_demandantes"
+            title="Demandantes"
+    />
+
+</dataset>
