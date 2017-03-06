@@ -20,7 +20,7 @@ import javax.persistence.TypedQuery;
 @Component
 public class UserDetailServiceImpl implements UserDetailsService {
     /*-------------------------------------------------------------------
-	 *				 		     ATTRIBUTES
+     *				 		     ATTRIBUTES
 	 *-------------------------------------------------------------------*/
     /**
      *
@@ -46,7 +46,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
             return query.getSingleResult();
         } catch (NoResultException e) {
-            throw new UsernameNotFoundException("O usu�rio com o email " + email + " n�o foi encontrado.");//FIXME Localize
+            throw new UsernameNotFoundException("O usuário com o email " + email + " não foi encontrado.");//FIXME Localize
         }
     }
 }
