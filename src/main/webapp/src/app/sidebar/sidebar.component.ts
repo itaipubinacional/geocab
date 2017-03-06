@@ -13,14 +13,15 @@ export class SidebarComponent implements OnInit {
 
   private visible: boolean = false;
 
-  toggle(event) {
+  toggle() {
     if (this.visible) {
-      $("#sidebar").fadeOut("fast");
-          
+      $("#sidebar").fadeOut("fast");          
     }
+
     else {
       $("#sidebar").fadeIn("fast");      
     }
+
     this.visible = !this.visible;
   }
 

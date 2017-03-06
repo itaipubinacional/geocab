@@ -1,8 +1,10 @@
-<div id="drawerExample" class="drawer dw-xs-4 dw-sm-4 dw-md-2 fold" aria-labelledby="drawerExample">
-            <div class="drawer-controls">
-                <a class="btn" href="#drawerExample" data-toggle="drawer" href="#drawerExample" aria-foldedopen="false" aria-controls="drawerExample">
+<div id="drawer" [ngClass]="{open: !isHidden}" class="drawer dw-xs-4 dw-sm-4 dw-md-2 fold" aria-labelledby="drawer">
+            
+            <div class="drawer-controls" [ngClass]="{hidden: isToggleButtonHidden}">
+                <a class="btn" href="#drawer" data-toggle="drawer" href="#drawer" aria-foldedopen="false" aria-controls="drawer">
                   <span class="glyphicon glyphicon-menu-hamburger"></span></a>
-            </div>            
+            </div>
+
             <div class="drawer-contents">
                 <div class="drawer-heading">
                     <h4 class="drawer-title">Portal de Mapas Itaipu</h4>

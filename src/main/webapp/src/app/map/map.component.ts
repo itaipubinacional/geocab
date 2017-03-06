@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ButtonMenuComponent } from '../button-menu/button-menu.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 declare var google: any;
 
@@ -15,6 +17,12 @@ export class MapComponent implements OnInit {
   private mapElement: Element;
   private mapOptions;
 
+  @ViewChild(ButtonMenuComponent)
+  private buttonMenuComponent : ButtonMenuComponent;
+
+  @ViewChild(SidebarComponent)
+  private sidebarComponent : SidebarComponent;
+
   ngOnInit() {
     this.mapElement = document.getElementById('map-main-container');
     this.mapOptions  = {
@@ -27,4 +35,8 @@ export class MapComponent implements OnInit {
     this.map = new google.maps.Map(this.mapElement, this.mapOptions);
   }
 
+  onButtonClicked(event: string) {
+    //alert(event);
+    this.sidebarComponent.toggle();
+  }
 }
