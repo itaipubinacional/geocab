@@ -1,335 +1,220 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>br.com.geocab</groupId>
-	<artifactId>geocab-multimodule</artifactId>
-	<name>Geocab</name>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>br.gov.itaipu</groupId>
+    <artifactId>geocab</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
 
-	<!-- Properties -->
-	<properties>
-		<!-- Maven -->
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
-		<!-- Java -->
-		<java.version>1.7</java.version>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.1.RELEASE</version>
+    </parent>
 
-		<!-- SpringFramework -->
-		<springframework.version>4.0.6.RELEASE</springframework.version>
-		<springsecurity.version>3.2.4.RELEASE</springsecurity.version>
-		<springdata.version>1.6.2.RELEASE</springdata.version>
-		<springsocial.version>1.1.4.RELEASE</springsocial.version>
-		<springsocialfacebook.version>2.0.3.RELEASE</springsocialfacebook.version>
-		<springsocialgoogle.version>1.0.0.RELEASE</springsocialgoogle.version>
-		<!-- Hibernate -->
-		<hibernate.version>4.3.5.Final</hibernate.version>
-		<hibernatevalidator.version>5.1.1.Final</hibernatevalidator.version>
-		<!-- ModeShape -->
-		<modeshape.version>3.6.0.Final</modeshape.version>
-		<infinispan.version>5.3.0.Final</infinispan.version>
-		
-		<!-- Testing -->
-		<junit.version>4.11</junit.version>
-		<dbunit.version>2.5.0</dbunit.version>
-		<!-- Others -->
-		<bonecp.version>0.8.0.RELEASE</bonecp.version>
-		<aspectj.version>1.8.1</aspectj.version>
-		<dwr.version>3.0.0-RELEASE</dwr.version>
+    <properties>
+        <!-- Java -->
+        <java.version>1.8</java.version>
 
-		<!-- Default Environment -->
-		<environment>development</environment>
+        <!-- geotools -->
+        <geotools.version>16.1</geotools.version>
 
+        <!-- modeshape -->
+        <modeshape.version>5.3.0.Final</modeshape.version>
+    </properties>
 
-	</properties>
+    <repositories>
+        <!-- para baixar o Geotools -->
+        <repository>
+            <id>OSGEO GeoTools repo</id>
+            <url>http://download.osgeo.org/webdav/geotools</url>
+        </repository>
 
-	<!-- Repositories -->
-	<repositories>
-		<repository>
-			<id>jboss-repository</id>
-			<url>https://repository.jboss.org/nexus/content/groups/public</url>
-		</repository>
-		<repository>
-			<id>eits-repository</id>
-			<url>http://maven.eits.com.br/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>OSGEO GeoTools repo</id>
-			<url>http://download.osgeo.org/webdav/geotools</url>
-		</repository>
-		<repository>
-			<id>Hibernate Spatial repo</id>
-			<url>http://www.hibernatespatial.org/repository</url>
-		</repository>
-	</repositories>
+        <!-- para baixar as ferramentas de geo do hibernate -->
+        <repository>
+            <id>Hibernate Spatial repo</id>
+            <url>http://www.hibernatespatial.org/repository</url>
+        </repository>
+    </repositories>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-	<!-- Profiles -->
-	<profiles>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
-		<profile>
-			<id>development</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<!-- Database -->
-                <mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/geocab</mvn.jdbc.jdbcUrl>
-                <mvn.jdbc.username>geocab</mvn.jdbc.username>
-                <mvn.jdbc.password>geocab</mvn.jdbc.password>
-                
-                <!-- Hibernate -->
-				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
-				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
-				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
-				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
-				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
-				
-				<!-- Mail -->
-				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
-				<mvn.mail.port>25</mvn.mail.port>
-				<mvn.mail.username>no-reply</mvn.mail.username>
-				<mvn.mail.protocol>smtp</mvn.mail.protocol>
-				<mvn.mail.password>soAsx2gGX6Rbhk</mvn.mail.password>
-				<mvn.mail.from>no-reply@prognus.org</mvn.mail.from>
-				<mvn.mail.tls>false</mvn.mail.tls>
-				<mvn.mail.ssl>false</mvn.mail.ssl>
-				<mvn.mail.debug>true</mvn.mail.debug>
-				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
-				
-				<!-- ModeShape -->
-				<mvn.jcr.indexes>/tmp/geocab/indexes</mvn.jcr.indexes>
-				<mvn.jcr.files>/tmp/geocab/files</mvn.jcr.files>
-				<mvn.jcr.caches>/tmp/geocab/caches</mvn.jcr.caches>
-				
-				<!-- shapeFiles import -->
-				<mvn.path.shapefiles>/tmp/geocab/files/shapefile/</mvn.path.shapefiles>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
-				<!-- Social -->
-				<!-- Facebook -->
-				<!--
-				<mvn.social.facebook.app.id></mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret></mvn.social.facebook.app.secret>
-				-->
-			
-				<!-- Google plus -->
-				<!--
-				<mvn.social.google.app.id></mvn.social.google.app.id>
-				<mvn.social.google.app.secret></mvn.social.google.app.secret>
-				-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
 
-				<!-- geotools version -->
-				<geotools.version>13.2</geotools.version>
-				
-				<!-- jcaptcha version -->
-				<jcaptcha.version>1.0</jcaptcha.version>
-				
-				<!-- jcaptcha version -->
-				<mvn.geocab.url>http://localhost:8080/geocab</mvn.geocab.url>
-				
-			</properties>
-		</profile>
-	</profiles>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-google</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-facebook</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-spatial</artifactId>
+            <version>${hibernate.version}</version>
+
+            <!--
+            para evitar que o driver do postgres seja incluso duas vezes já
+            que este artefato referencia uma versão mais antiga
+            -->
+            <exclusions>
+                <exclusion>
+                    <groupId>postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4.1212</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
 
 
-	<!-- Modules -->
-	<modules>
-		<module>solution</module>
-	</modules>
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <version>1.13</version>
+        </dependency>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+        <dependency>
+            <groupId>org.geoserver</groupId>
+            <artifactId>community</artifactId>
+            <version>2.8-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/gs-authkey-pmi-2.8-SNAPSHOT.jar</systemPath>
+        </dependency>
 
-	<dependencyManagement>
-		<dependencies>
-			<!-- SpringFramework -->
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context-support</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-orm</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
+        <!-- Ferramentas do Geotools -->
 
-			<!-- Spring Security -->
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-web</artifactId>
-				<version>${springsecurity.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-config</artifactId>
-				<version>${springsecurity.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-taglibs</artifactId>
-				<version>${springsecurity.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-acl</artifactId>
-				<version>${springsecurity.version}</version>
-			</dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-shapefile</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
 
-			<!-- Spring Data -->
-			<dependency>
-				<groupId>org.springframework.data</groupId>
-				<artifactId>spring-data-jpa</artifactId>
-				<version>${springdata.version}</version>
-			</dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-wfs-ng</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
 
-			<!-- Spring Social -->
-			<dependency>
-				<groupId>org.springframework.social</groupId>
-				<artifactId>spring-social-config</artifactId>
-				<version>${springsocial.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.social</groupId>
-				<artifactId>spring-social-security</artifactId>
-				<version>${springsocial.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.social</groupId>
-				<artifactId>spring-social-facebook</artifactId>
-				<version>${springsocialfacebook.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.social</groupId>
-				<artifactId>spring-social-google</artifactId>
-				<version>${springsocialgoogle.version}</version>
-			</dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-wms</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
 
-			<!-- AspectJ -->
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>aspectjweaver</artifactId>
-				<version>${aspectj.version}</version>
-			</dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-epsg-hsql</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
 
-			<!-- Hibernate -->
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>${hibernate.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-envers</artifactId>
-				<version>${hibernate.version}</version>
-			</dependency>
+        <dependency>
+            <groupId>org.modeshape</groupId>
+            <artifactId>modeshape-jcr</artifactId>
+            <version>${modeshape.version}</version>
+        </dependency>
 
-		</dependencies>
-	</dependencyManagement>
+        <!-- testes -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
 
-	<dependencies>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- Javax Validation -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>${hibernatevalidator.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>javax.el-api</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.web</groupId>
-			<artifactId>javax.el</artifactId>
-			<version>2.2.6</version>
-		</dependency>
+        <dependency>
+            <groupId>com.github.springtestdbunit</groupId>
+            <artifactId>spring-test-dbunit</artifactId>
+            <version>1.3.0</version>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- Logs -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.6</version>
-		</dependency>
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.5.3</version>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- DWR -->
-		<dependency>
-			<groupId>org.directwebremoting</groupId>
-			<artifactId>dwr</artifactId>
-			<version>${dwr.version}</version>
-		</dependency>
-		
-		
+    </dependencies>
 
-		<!-- Testing -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${springframework.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.github.springtestdbunit</groupId>
-			<artifactId>spring-test-dbunit</artifactId>
-			<version>1.1.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
-			<version>${dbunit.version}</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>junit</artifactId>
-					<groupId>junit</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

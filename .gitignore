@@ -1,4 +1,10 @@
+*.iml
 .idea
-*.project
+.project
+target
 .settings
-/solution/*.classpath
+.classpath
+.springBeans
+
+# ignora o arquivo de propriedades local
+/application.properties
