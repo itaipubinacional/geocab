@@ -28,6 +28,7 @@ public class ModeShapeSessionFactory implements FactoryBean<Session> {
     /**
      *
      */
+    @Autowired
     private Repository repository;
     /**
      *
@@ -37,17 +38,14 @@ public class ModeShapeSessionFactory implements FactoryBean<Session> {
     /*-------------------------------------------------------------------
      *				 		     BEHAVIORS
      *-------------------------------------------------------------------*/
-    @Autowired
-    public ModeShapeSessionFactory(Repository repository) {
-        this.repository = repository;
-    }
 
     /**
      *
      */
     @PreDestroy
     public void logout() {
-        session.logout();
+        if (session != null)
+            session.logout();
         session = null;
     }
 
@@ -61,10 +59,8 @@ public class ModeShapeSessionFactory implements FactoryBean<Session> {
      */
     @Override
     public Session getObject() throws LoginException, RepositoryException {
-        if (session == null) {
+        if (session == null)
             session = repository.login();
-        }
-
         return session;
     }
 

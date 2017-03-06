@@ -11,11 +11,11 @@ Como começar a desenvolver
 
 1. Prepare o seu [ambiente](https://github.com/itaipubinacional/geocab/blob/master/README.md#ambiente) de desenvolvimento
 
-2. Faça um [fork](https://help.github.com/articles/fork-a-repo) do projeto
+2. Faça o clone no repositório
 
-3. Crie um [branch](https://github.com/Kunena/Kunena-Forum/wiki/Create-a-new-branch-with-git-and-manage-branches)
+3. Copie o arquivo ```src/main/resources/application.properties``` para a pasta raiz do projeto
 
-4. Recupere o *script* do banco de dados na sua instância local - link
+4. Configure as propriedades contidas no arquivo copiado de acordo com as configurações do seu ambiente
 
 5. Divirta-se! :smile:
 
@@ -24,10 +24,10 @@ Como começar a desenvolver
 Ambiente
 --------
 
-- Java 1.7.0_55
-- Eclipse
-- PostgreSQL 9.1 + Postgis 2.0
-- Geoserver 2.5.3
+- Java 1.8
+- PostgreSQL 9.1+ + Postgis 2.0+
+- Geoserver 2.6+
+- Keycloak 2.5+
 
 
 Socialize

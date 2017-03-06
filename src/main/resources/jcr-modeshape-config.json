@@ -13,7 +13,7 @@
     "storage" : {
         "binaryStorage" : {
             "type" : "file",
-            "directory": "c:\\bla",
+            "directory": "${files.repository.path}",
             "minimumBinarySizeInBytes" : 40
         }
     }
