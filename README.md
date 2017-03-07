@@ -13,7 +13,7 @@ Como começar a desenvolver
 
 2. Faça o clone no repositório
 
-3. Copie o arquivo ```src/main/resources/application.properties``` para a pasta raiz do projeto
+3. Copie o arquivo ```backend/src/main/resources/application.properties``` para a pasta raiz do projeto ```backend```
 
 4. Configure as propriedades contidas no arquivo copiado de acordo com as configurações do seu ambiente
 
