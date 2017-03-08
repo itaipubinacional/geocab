@@ -1,3 +1,19 @@
-<p>
-  list-data-sources works!
-</p>
+<h1>Lista de Fontes de Dados Geográficos</h1>
+<hr/>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th>Endereço</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let datasource of dataSources">
+        <td>{{datasource.name}}</td>
+        <td>{{DataSourceType[datasource.type]}}</td>
+        <td>{{datasource.address}}</td>
+    </tr>
+    </tbody>
+</table>
