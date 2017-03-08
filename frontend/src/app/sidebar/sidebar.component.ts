@@ -15,18 +15,18 @@ export class SidebarComponent implements OnInit {
 
   toggle() {
     if (this.visible) {
-      $("#sidebar").fadeOut("fast");          
+      $("#sidebar").fadeOut("fast");
     }
 
     else {
-      $("#sidebar").fadeIn("fast");      
+      $("#sidebar").fadeIn("fast");
     }
 
     this.visible = !this.visible;
   }
 
   ngOnInit() {
-    $("#sidebar").hide();      
+    $("#sidebar").hide();
   }
 
 }

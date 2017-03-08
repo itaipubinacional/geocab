@@ -1,32 +1,34 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
-
-import { AppComponent } from './app.component';
-import { rootRouterConfig } from './app.routes';
-import { MapComponent } from './map/map.component';
-import { NavComponent } from './nav/nav.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { ButtonMenuComponent } from './button-menu/button-menu.component';
+import {BrowserModule} from "@angular/platform-browser";
+import {NgModule} from "@angular/core";
+import {FormsModule} from "@angular/forms";
+import {HttpModule} from "@angular/http";
+import {AppComponent} from "./app.component";
+import {MapComponent} from "./map/map.component";
+import {SidebarComponent} from "./sidebar/sidebar.component";
+import {ButtonMenuComponent} from "./button-menu/button-menu.component";
+import {AppRoutingModule} from "./app.routes";
+import {DataSourceModule} from "./data-source/data-source.module";
+import {SharedModule} from "./shared/shared.module";
+import { MapNavComponent } from './map-nav/map-nav.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MapComponent,
-    NavComponent,
-    SidebarComponent,
-    ButtonMenuComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-        RouterModule.forRoot(rootRouterConfig, { useHash: true })
-
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        MapComponent,
+        SidebarComponent,
+        ButtonMenuComponent,
+        MapNavComponent
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        SharedModule,
+        DataSourceModule,
+        AppRoutingModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
