@@ -1,6 +1,5 @@
 package br.gov.itaipu.geocab.application.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,7 +20,13 @@ public class HelloWorldController {
     }
 
     @RequestMapping("/api/user")
+    @PreAuthorize("hasRole('user')")
     public @ResponseBody Principal user(Principal principal) {
         return principal;
+    }
+
+    @RequestMapping("/api/jajaja")
+    public String jajaja() {
+        return "jajajaja";
     }
 }
