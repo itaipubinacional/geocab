@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 import { AppComponent } from './app.component';
 import { rootRouterConfig } from './app.routes';
@@ -23,7 +24,8 @@ import { ButtonMenuComponent } from './button-menu/button-menu.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-        RouterModule.forRoot(rootRouterConfig, { useHash: true })
+        RouterModule.forRoot(rootRouterConfig, { useHash: true }),
+    OAuthModule.forRoot()
 
   ],
   providers: [],

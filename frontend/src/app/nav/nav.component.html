@@ -10,16 +10,27 @@
                     <h4 class="drawer-title">Portal de Mapas Itaipu</h4>
                 </div>
                 <ul class="drawer-nav">
-                      <li><a role="button" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-user dw-xs-1"></span>Usuários</a></li>
-                      <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-hdd dw-xs-1"></span>Fonte de dados</a></li>
-                      <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-th-list dw-xs-1"></span>Grupo de Camadas</a></li>
-                      <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-align-justify dw-xs-1"></span>Camadas</a></li>
-                      <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-search dw-xs-1"></span>Pesquisa</a></li>
-                      <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-eye-open dw-xs-1"></span>Grupo de acesso</a></li>
-                      <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-ok-sign dw-xs-1"></span>Avaliação de postagem</a></li>
-                      <li role="separator" ><hr/></li>
-                      <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-user dw-xs-1"></span>Minhas contribuições</a></li>
-                      <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-cog dw-xs-1"></span>Configurações</a></li>
+                      <div *ngIf="name">
+                   
+                        <li><a role="button" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-user dw-xs-1"></span>Usuários</a></li>
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-hdd dw-xs-1"></span>Fonte de dados</a></li>
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-th-list dw-xs-1"></span>Grupo de Camadas</a></li>
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-align-justify dw-xs-1"></span>Camadas</a></li>
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-search dw-xs-1"></span>Pesquisa</a></li>
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-eye-open dw-xs-1"></span>Grupo de acesso</a></li>
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-ok-sign dw-xs-1"></span>Avaliação de postagem</a></li>
+                        
+                        <li role="separator" ><hr/></li>                  
+                        
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class=""></span>{{name}}</a></li>
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-user dw-xs-1"></span>Minhas contribuições</a></li>
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-cog dw-xs-1"></span>Configurações</a></li>
+                        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true" (click)="logout()"><span class="glyphicon glyphicon-log-out dw-xs-1"></span>Logout</a></li>
+                      </div>
+
+                                                
+                      <li *ngIf="!name"><a role="button" id="calciteToggleNavbar" aria-haspopup="true" (click)="login()"><span class="glyphicon glyphicon-log-in dw-xs-1"></span>Login</a></li>
+                      
                 </ul>
                 
                 <div class="drawer-footer locked text-center">
