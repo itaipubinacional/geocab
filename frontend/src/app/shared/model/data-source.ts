@@ -5,12 +5,12 @@ export enum DataSourceType {
 
 export class DataSource {
     name:string;
-    type:DataSourceType;
-    address:string;
+    serviceType:DataSourceType;
+    url:string;
 
-    constructor(name:string, type:DataSourceType, address:string) {
+    constructor(name:string, serviceType:DataSourceType, url:string) {
         this.name = name;
-        this.type = type;
-        this.address = address;
+        this.serviceType = serviceType;
+        this.url = url;
     }
 }

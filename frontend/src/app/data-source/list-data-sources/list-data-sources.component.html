@@ -12,8 +12,8 @@
     <tbody>
     <tr *ngFor="let datasource of dataSources">
         <td>{{datasource.name}}</td>
-        <td>{{DataSourceType[datasource.type]}}</td>
-        <td>{{datasource.address}}</td>
+        <td>{{DataSourceType[datasource.serviceType]}}</td>
+        <td>{{datasource.url}}</td>
     </tr>
     </tbody>
 </table>
