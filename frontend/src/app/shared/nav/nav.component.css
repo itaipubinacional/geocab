@@ -1,0 +1,7 @@
+.nav-heading {
+    border-bottom: 1px solid #eee;
+}
+
+.navbar .active {
+    background: #f5f5f5;
+}
