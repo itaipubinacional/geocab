@@ -11,11 +11,10 @@ declare var google: any;
 })
 export class MapComponent implements OnInit {
 
-  constructor() { }
-
   private map;
   private mapElement: Element;
   private mapOptions;
+  public name: string;
 
   @ViewChild(ButtonMenuComponent)
   private buttonMenuComponent : ButtonMenuComponent;
@@ -23,6 +22,10 @@ export class MapComponent implements OnInit {
   @ViewChild(SidebarComponent)
   private sidebarComponent : SidebarComponent;
 
+  constructor() {
+    
+   }
+   
   ngOnInit() {
     this.mapElement = document.getElementById('map-main-container');
     this.mapOptions  = {

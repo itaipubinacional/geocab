@@ -10,6 +10,7 @@ import {AppRoutingModule} from "./app.routes";
 import {DataSourceModule} from "./data-source/data-source.module";
 import {SharedModule} from "./shared/shared.module";
 import { MapNavComponent } from './map-nav/map-nav.component';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 @NgModule({
     declarations: [
@@ -25,7 +26,8 @@ import { MapNavComponent } from './map-nav/map-nav.component';
         HttpModule,
         SharedModule,
         DataSourceModule,
-        AppRoutingModule
+        AppRoutingModule,
+        OAuthModule.forRoot()
     ],
     providers: [],
     bootstrap: [AppComponent]
