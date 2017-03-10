@@ -2,7 +2,7 @@
     <h4>Portal de Mapas Itaipu</h4>
 </div>
 <div class="navbar-collapse">
-    <ul class="nav navbar">
+    <ul *ngIf="name" class="nav navbar">
         <li>
             <a role="button" data-target="#panelBasemaps" aria-haspopup="true">
                 <span class="glyphicon glyphicon-user"></span>Usuários</a>
@@ -41,6 +41,18 @@
         <li>
             <a role="button">
                 <span class="glyphicon glyphicon-cog"></span>Configurações</a>
+        </li>
+
+        <li>
+            <a role="button"(click)="logout()">
+                <span class="glyphicon glyphicon-log-out dw-xs-1"></span>Logout</a>
+        </li>
+    </ul>
+
+    <ul *ngIf="!name" class="nav navbar">
+        <li>
+            <a role="button" (click)="login()">
+                <span class="glyphicon glyphicon-log-in dw-xs-1"></span>Login</a>
         </li>
     </ul>
 </div>
