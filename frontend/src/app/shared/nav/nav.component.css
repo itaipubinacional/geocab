@@ -5,3 +5,7 @@
 .navbar .active {
     background: #f5f5f5;
 }
+
+.menu-icon {
+	padding-right: 10px;
+}

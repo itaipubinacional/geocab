@@ -2,45 +2,53 @@
     <h4>Portal de Mapas Itaipu</h4>
 </div>
 <div class="navbar-collapse">
+        
     <ul *ngIf="name" class="nav navbar">
+        <li routerLink="/map" routerLinkActive="active">
+            <a role="button">
+                <span class="glyphicon glyphicon-picture  menu-icon"></span>Mapa</a>        
+        </li>
+        
         <li>
             <a role="button" data-target="#panelBasemaps" aria-haspopup="true">
-                <span class="glyphicon glyphicon-user"></span>Usuários</a>
+                <span class="glyphicon glyphicon-user menu-icon"></span>Usuários</a>
         </li>
+        
+        
         <li routerLink="/data-source" routerLinkActive="active">
             <a role="button">
-                <span class="glyphicon glyphicon-hdd"></span>Fonte de dados</a>
+                <span class="glyphicon glyphicon-hdd  menu-icon"></span>Fonte de dados</a>
+        </li>
+        <li routerLink="/layer-group" routerLinkActive="ative">
+            <a role="button">
+                <span class="glyphicon glyphicon-th-list  menu-icon"></span>Grupo de Camadas</a>
         </li>
         <li>
             <a role="button">
-                <span class="glyphicon glyphicon-th-list"></span>Grupo de Camadas</a>
+                <span class="glyphicon glyphicon-align-justify  menu-icon"></span>Camadas</a>
         </li>
         <li>
             <a role="button">
-                <span class="glyphicon glyphicon-align-justify"></span>Camadas</a>
+                <span class="glyphicon glyphicon-search  menu-icon"></span>Pesquisa</a>
         </li>
         <li>
             <a role="button">
-                <span class="glyphicon glyphicon-search"></span>Pesquisa</a>
+                <span class="glyphicon glyphicon-eye-open  menu-icon"></span>Grupo de acesso</a>
         </li>
         <li>
             <a role="button">
-                <span class="glyphicon glyphicon-eye-open"></span>Grupo de acesso</a>
-        </li>
-        <li>
-            <a role="button">
-                <span class="glyphicon glyphicon-ok-sign"></span>Avaliação de postagem</a>
+                <span class="glyphicon glyphicon-ok-sign  menu-icon"></span>Avaliação de postagem</a>
         </li>
         <li role="separator">
             <hr/>
         </li>
         <li>
             <a role="button">
-                <span class="glyphicon glyphicon-user"></span>Minhas contribuições</a>
+                <span class="glyphicon glyphicon-user  menu-icon"></span>Minhas contribuições</a>
         </li>
         <li>
             <a role="button">
-                <span class="glyphicon glyphicon-cog"></span>Configurações</a>
+                <span class="glyphicon glyphicon-cog  menu-icon"></span>Configurações</a>
         </li>
 
         <li>

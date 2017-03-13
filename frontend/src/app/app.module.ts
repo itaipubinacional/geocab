@@ -8,6 +8,7 @@ import {SidebarComponent} from "./sidebar/sidebar.component";
 import {ButtonMenuComponent} from "./button-menu/button-menu.component";
 import {AppRoutingModule} from "./app.routes";
 import {DataSourceModule} from "./data-source/data-source.module";
+import {LayerGroupModule} from './layer-group/layer-group.module';
 import {SharedModule} from "./shared/shared.module";
 import { MapNavComponent } from './map-nav/map-nav.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
@@ -25,6 +26,7 @@ import { OAuthModule } from 'angular-oauth2-oidc';
         FormsModule,
         HttpModule,
         SharedModule,
+        LayerGroupModule,
         DataSourceModule,
         AppRoutingModule,
         OAuthModule.forRoot()

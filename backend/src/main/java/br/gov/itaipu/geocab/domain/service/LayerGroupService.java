@@ -648,7 +648,6 @@ public class LayerGroupService {
         return this.hasChildren(this.layerGroupRepository.listByFilter(filter, pageable));
     }
 
-
     /**
      * Não é necessária a sincronização com hasChildren
      *

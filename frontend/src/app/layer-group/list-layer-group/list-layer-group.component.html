@@ -1,0 +1,29 @@
+<h3>Grupos de Camadas</h3>
+<br/>
+<div class="panel">
+    <div class="panel-body">
+        <button class="btn btn-primary pull-right">Novo Grupo</button>
+    </div>
+</div>
+<div class="panel panel-default">    
+	<div class="panel-body">
+	   
+	  <table class="table">
+	       <thead>
+			   <tr>
+			       <th>Nome</th>
+			       <th>Ações</th>
+			   </tr>
+		  </thead>
+			<tbody>
+				<tr *ngFor="let layerGroup of layerGroups">				    
+			        <td>{{layerGroup.name}}</td>			        
+			        <td>
+			         <a><span class="glyphicon glyphicon-pencil"></span></a>
+			         <a><span class="glyphicon glyphicon-remove"></span></a>
+			        </td>
+			    </tr>
+			</tbody>		   
+	  </table> 
+	</div>
+</div>
