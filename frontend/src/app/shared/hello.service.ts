@@ -1,24 +1,20 @@
-import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions }    from '@angular/http';
-import { OAuthService } from 'angular-oauth2-oidc';
+import {Injectable} from "@angular/core";
+import {Http, Headers, RequestOptions} from "@angular/http";
+import {OAuthService} from "angular-oauth2-oidc";
 
 @Injectable()
 export class HelloService {
     private helloUrl = 'http://localhost:8080/api/hello';
 
-    constructor(private http: Http, private oAuthService:OAuthService) {}
-    
-    getHelloMessage() : Promise<string> {
+    constructor(private http: Http, private oAuthService: OAuthService) {
+    }
 
-        let header = new Headers();
-        header.append
-        header.append('Authorization', 'Bearer ' + this.oAuthService.getAccessToken());
-        
-        //console.log(header);
+    getHelloMessage(): Promise<string> {
+
         let headers = new Headers({
             "Authorization": "Bearer " + this.oAuthService.getAccessToken()
         });
-        let options = new RequestOptions({headers: header});
+        let options = new RequestOptions({headers: headers});
 
         return this.http.get(this.helloUrl, options)
             .toPromise()

@@ -1,0 +1,47 @@
+<h1>Nova Fonte de Dados Geográficos</h1>
+<hr/>
+<form (ngSubmit)="onSubmit()" target="_parent">
+    <div class="pull-right">
+        <button type="submit" class="btn btn-success">Salvar</button>
+        <button type="button" class="btn btn-warning">Testar conexão</button>
+    </div>
+
+    <div class="content">
+        <div class="form-group">
+            <label for="name">Nome</label>
+            <input type="text" class="form-control" id="name" name="name" required [(ngModel)]="model.name">
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="externalDataSourceCheckbox" [(ngModel)]="externalDataSource">
+                Fonte de dados externa
+            </label>
+        </div>
+
+        <div [hidden]="!externalDataSource">
+            <div class="form-group">
+                <label for="url">Endereço</label>
+                <input type="text" class="form-control" id="url" name="url" [(ngModel)]="model.url">
+            </div>
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="authenticationRequiredCheckbox" [(ngModel)]="authenticationRequired">
+                    Autenticação obrigatória
+                </label>
+            </div>
+
+            <div [hidden]="!authenticationRequired">
+                <div class="form-group">
+                    <label for="username">Usuário</label>
+                    <input type="text" class="form-control" id="username" name="username" [(ngModel)]="model.username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" class="form-control" id="password" name="password" [(ngModel)]="model.password">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
