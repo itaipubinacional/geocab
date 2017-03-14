@@ -1,9 +1,8 @@
 import {Injectable} from "@angular/core";
 import {DataSource, DataSourceType} from "../shared/model/data-source";
 import {Http, Response, Headers, RequestOptions} from "@angular/http";
-
-import 'rxjs/add/operator/toPromise';
-import {OAuthService} from "angular-oauth2-oidc/dist/index";
+import "rxjs/add/operator/toPromise";
+import {OAuthService} from "angular-oauth2-oidc";
 
 @Injectable()
 export class DataSourceService {
@@ -21,25 +20,33 @@ export class DataSourceService {
 
         return this.http.get("http://localhost:8080/api/data-source", options)
             .toPromise()
-            .then(res => this.extractData(res))
+            .then(res => res.json()) // o objeto tem um enum
             .catch(res => this.handleError(res));
     }
 
-    private extractData(res:Response):DataSource[] {
-        let body = res.json();
-        return body.map(this.toDataSource);
+    getDataSourceById(id:number):Promise<DataSource> {
+        return new Promise<DataSource>(resolve => {
+            resolve(<DataSource>{
+                id: id,
+                name: "teste",
+                serviceType: DataSourceType.WMS,
+                url: "teste"
+            });
+        });
     }
 
-    private toDataSource(p:any):DataSource {
-        let dsTypeStr:string = p.serviceType;
-        var dataServiceType = DataSourceType[dsTypeStr];
-
-        let dataSource = <DataSource>({
-            name: p.name,
-            url: p.url,
-            serviceType: dataServiceType
+    createDataSource(dataSource: DataSource): Promise<DataSource> {
+        let token:string = this.oAuthService.getAccessToken();
+        let headers = new Headers({
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
         });
-        return dataSource;
+        let options = new RequestOptions({headers: headers});
+
+        return this.http.post("http://localhost:8080/api/data-source", dataSource, options)
+            .toPromise()
+            .then(res => res.json()) // o objeto tem um enum
+            .catch(res => this.handleError(res));
     }
 
     private handleError(error:Response | any) {

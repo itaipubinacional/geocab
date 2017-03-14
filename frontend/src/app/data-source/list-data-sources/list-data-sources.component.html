@@ -1,5 +1,8 @@
 <h1>Lista de Fontes de Dados Geográficos</h1>
 <hr/>
+<div class="pull-right">
+    <button type="button" class="btn btn-primary" routerLink="/data-source/new">Adicionar</button>
+</div>
 
 <table class="table table-striped">
     <thead>
@@ -12,7 +15,7 @@
     <tbody>
     <tr *ngFor="let datasource of dataSources">
         <td>{{datasource.name}}</td>
-        <td>{{DataSourceType[datasource.serviceType]}}</td>
+        <td>{{datasource.serviceType}}</td>
         <td>{{datasource.url}}</td>
     </tr>
     </tbody>

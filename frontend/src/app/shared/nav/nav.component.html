@@ -1,8 +1,8 @@
-<div class="nav-heading">
-    <h4>Portal de Mapas Itaipu</h4>
-</div>
-<div class="navbar-collapse">
-    <ul *ngIf="name" class="nav navbar">
+<nav class="navbar navbar-default">
+    <div class="navbar-header">
+        <span class="navbar-brand">Portal de Mapas Itaipu</span>
+    </div>
+    <ul *ngIf="name" class="nav nav-pills nav-stacked">
         <li>
             <a role="button" data-target="#panelBasemaps" aria-haspopup="true">
                 <span class="glyphicon glyphicon-user"></span>Usuários</a>
@@ -31,9 +31,11 @@
             <a role="button">
                 <span class="glyphicon glyphicon-ok-sign"></span>Avaliação de postagem</a>
         </li>
-        <li role="separator">
+
+        <li role="separator" class="divider">
             <hr/>
         </li>
+
         <li>
             <a role="button">
                 <span class="glyphicon glyphicon-user"></span>Minhas contribuições</a>
@@ -44,15 +46,15 @@
         </li>
 
         <li>
-            <a role="button"(click)="logout()">
+            <a role="button" (click)="logout()">
                 <span class="glyphicon glyphicon-log-out dw-xs-1"></span>Logout</a>
         </li>
     </ul>
 
-    <ul *ngIf="!name" class="nav navbar">
+    <ul *ngIf="!name" class="nav nav-pills nav-stacked">
         <li>
             <a role="button" (click)="login()">
                 <span class="glyphicon glyphicon-log-in dw-xs-1"></span>Login</a>
         </li>
     </ul>
-</div>
+</nav>

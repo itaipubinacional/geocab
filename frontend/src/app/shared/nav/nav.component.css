@@ -1,7 +1,10 @@
-.nav-heading {
-    border-bottom: 1px solid #eee;
+/* para evitar que o header fique em cima do menu */
+.navbar-header {
+    float: none;
 }
 
-.navbar .active {
-    background: #f5f5f5;
+/* adiciona um espaçamento entre o ícone e o texto do menu */
+.glyphicon {
+    margin-left: 5px;
+    margin-right: 5px;
 }
