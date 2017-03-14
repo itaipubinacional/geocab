@@ -8,6 +8,6 @@ export class DataSource {
     name:string;
     serviceType:DataSourceType;
     url:string;
-    username:string;
+    login:string;
     password:string;
 }

@@ -60,7 +60,7 @@ public class DataSource extends AbstractEntity implements Serializable {
     @Column(nullable = true, length = 144)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
 

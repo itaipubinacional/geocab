@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DataSourceService} from "../data-source.service";
-import {DataSource} from "../../shared/model/data-source";
+import {DataSource, DataSourceType} from "../../shared/model/data-source";
 
 @Component({
     selector: 'app-detail-data-source',
@@ -9,6 +9,8 @@ import {DataSource} from "../../shared/model/data-source";
     styleUrls: ['./detail-data-source.component.css']
 })
 export class DetailDataSourceComponent implements OnInit {
+    dataSourceTypes: any[];
+
     model: DataSource;
 
     externalDataSource: boolean;
@@ -18,6 +20,7 @@ export class DetailDataSourceComponent implements OnInit {
     constructor(private activatedRoute: ActivatedRoute,
                 private router: Router,
                 private dataSourceService: DataSourceService) {
+        this.dataSourceTypes = Object.keys(DataSourceType);
     }
 
     ngOnInit() {
