@@ -3,15 +3,21 @@
         <span class="navbar-brand">Portal de Mapas Itaipu</span>
     </div>
     <ul *ngIf="name" class="nav nav-pills nav-stacked">
+       <li routerLink="/map" routerLinkActive="active">
+            <a role="button">
+                <span class="glyphicon glyphicon-picture"></span>Mapa</a>        
+        </li>
         <li>
             <a role="button" data-target="#panelBasemaps" aria-haspopup="true">
                 <span class="glyphicon glyphicon-user"></span>Usuários</a>
         </li>
+        
+        
         <li routerLink="/data-source" routerLinkActive="active">
             <a role="button">
                 <span class="glyphicon glyphicon-hdd"></span>Fonte de dados</a>
         </li>
-        <li>
+        <li routerLink="/layer-group" routerLinkActive="ative">
             <a role="button">
                 <span class="glyphicon glyphicon-th-list"></span>Grupo de Camadas</a>
         </li>
@@ -38,7 +44,7 @@
 
         <li>
             <a role="button">
-                <span class="glyphicon glyphicon-user"></span>Minhas contribuições</a>
+                <span class="glyphicon glyphicon-user "></span>Minhas contribuições</a>
         </li>
         <li>
             <a role="button">

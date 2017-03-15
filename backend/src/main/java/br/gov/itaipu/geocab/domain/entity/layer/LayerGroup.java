@@ -60,7 +60,7 @@ public class LayerGroup extends AbstractEntity
      */
     @OrderBy(value = "orderLayerGroup")
     @OneToMany
-    @JoinColumn(referencedColumnName = "id", name = "layer_group_upper_id")
+    @JoinColumn(referencedColumnName = "id", name = "layer_group_upper_id")    
     private List<LayerGroup> layersGroup = new LinkedList<LayerGroup>();
 
     /**

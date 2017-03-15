@@ -5,6 +5,7 @@ import {MapComponent} from "./map/map.component";
 import {SidebarComponent} from "./sidebar/sidebar.component";
 import {ButtonMenuComponent} from "./button-menu/button-menu.component";
 import {AppRoutingModule} from "./app.routes";
+
 import {SharedModule} from "./shared/shared.module";
 import {MapNavComponent} from "./map-nav/map-nav.component";
 import {OAuthModule} from "angular-oauth2-oidc";
@@ -19,7 +20,7 @@ import {OAuthModule} from "angular-oauth2-oidc";
     ],
     imports: [
         SharedModule,
-        BrowserModule,
+        BrowserModule,        
         AppRoutingModule,
         OAuthModule.forRoot()
     ],
