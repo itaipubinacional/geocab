@@ -6,7 +6,7 @@ import {LayerGroupComponent} from './layer-group.component';
 
 const routes: Routes = [
     {
-        path: 'layer-group',
+        path: '',
         component: LayerGroupComponent,
         children: [
             {path: '', component: ListLayerGroupComponent}
