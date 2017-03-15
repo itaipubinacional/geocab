@@ -6,8 +6,6 @@ package br.gov.itaipu.geocab.domain.entity.layer;
 import br.gov.itaipu.geocab.domain.entity.AbstractEntity;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -55,7 +53,6 @@ public class LayerGroup extends AbstractEntity
     @OrderBy(value = "orderLayer")
     @OneToMany
     @JoinColumn(referencedColumnName = "id", name = "layer_group_id")
-    @JsonIgnore
     private List<Layer> layers = new LinkedList<Layer>();
 
     /**

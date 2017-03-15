@@ -9,18 +9,18 @@ import {DataSourceService} from "../data-source.service";
     providers: [DataSourceService]
 })
 export class ListDataSourcesComponent implements OnInit {
-    DataSourceType: typeof DataSourceType = DataSourceType;
+    DataSourceType:typeof DataSourceType = DataSourceType;
 
-    dataSources: DataSource[] = [];
+    dataSources:DataSource[] = [];
 
-    constructor(private dataSourceService: DataSourceService) {
+    constructor(private dataSourceService:DataSourceService) {
     }
 
     ngOnInit() {
         // pega os datasources
         this.dataSourceService.getDataSources()
             .then(ds => this.dataSources = ds,
-                  error => {
+                error => {
                     alert(error);
                 });
     }

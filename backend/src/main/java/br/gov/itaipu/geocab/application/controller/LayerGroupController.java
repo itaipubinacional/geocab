@@ -25,6 +25,6 @@ public class LayerGroupController {
     @PreAuthorize("hasRole('admin')")
     public @ResponseBody List<LayerGroup> getLayerGroups() {
     	
-        return this.layerGroupService.listLayerGroups(null, null).getContent();    	
+    	return this.layerGroupService.listLayersGroupUpper();
     }
 }
