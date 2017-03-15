@@ -1,16 +1,13 @@
 export enum DataSourceType {
-    WMS,
-    WFS
+    WMS = <any>"WMS",
+    WFS = <any>"WFS"
 }
 
 export class DataSource {
+    id:number;
     name:string;
     serviceType:DataSourceType;
     url:string;
-
-    constructor(name:string, serviceType:DataSourceType, url:string) {
-        this.name = name;
-        this.serviceType = serviceType;
-        this.url = url;
-    }
+    login:string;
+    password:string;
 }
