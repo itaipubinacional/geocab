@@ -1,11 +1,11 @@
-<app-map-nav [isToggleButtonHidden]=false [isHidden]=true></app-map-nav>
+<md-sidenav-container class="map-viewport">
+    <md-sidenav #sidenav>
+        <app-nav></app-nav>
+    </md-sidenav>
 
-<div id=map-wrapper>
-    <div id=map-main-container class='map-main-container'></div>
-</div>
+    <button md-mini-fab (click)="sidenav.open()">
+        <i class="material-icons">menu</i>
+    </button>
 
-
-<app-button-menu (buttonClicked)="onButtonClicked($event)">
-</app-button-menu>
-
-<app-sidebar></app-sidebar>
+    <router-outlet></router-outlet>
+</md-sidenav-container>
