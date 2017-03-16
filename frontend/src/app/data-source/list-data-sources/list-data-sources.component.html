@@ -1,22 +1,30 @@
-<h1>Lista de Fontes de Dados Geográficos</h1>
-<hr/>
-<div class="pull-right">
-    <button type="button" class="btn btn-primary" routerLink="/data-source/new">Adicionar</button>
-</div>
+<md-toolbar color="primary" class="mat-elevation-z4">
+    <span>Fontes de Dados Geográficos</span>
+    <span spacer></span>
 
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>Nome</th>
-        <th>Tipo</th>
-        <th>Endereço</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let datasource of dataSources">
-        <td>{{datasource.name}}</td>
-        <td>{{datasource.serviceType}}</td>
-        <td>{{datasource.url}}</td>
-    </tr>
-    </tbody>
-</table>
+</md-toolbar>
+
+<section class="screen-actions">
+    <a md-fab routerLink="/data-source/new">
+        <md-icon>add</md-icon>
+    </a>
+</section>
+
+<section class="screen-content">
+    <table md-data-table>
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Endereço</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let datasource of dataSources">
+            <td>{{datasource.name}}</td>
+            <td>{{datasource.serviceType}}</td>
+            <td>{{datasource.url}}</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
