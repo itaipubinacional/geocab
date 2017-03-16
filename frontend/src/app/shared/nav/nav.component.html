@@ -1,66 +1,75 @@
-<nav class="navbar navbar-default">
-    <div class="navbar-header">
-        <span class="navbar-brand">Portal de Mapas Itaipu</span>
+<md-toolbar>
+    <img src="/assets/img/logo_itaipu.png">
+    <span>Portal de Mapas</span>
+</md-toolbar>
+
+<md-nav-list>
+
+    <div *ngIf="name">
+
+        <a md-list-item routerLink="/map" routerLinkActive="active">
+            <md-icon md-list-icon>map</md-icon>
+            <span md-line>Mapa</span>
+        </a>
+
+        <a md-list-item>
+            <md-icon md-list-icon>person</md-icon>
+            <span md-line>Usuários</span>
+        </a>
+
+        <a md-list-item routerLink="/data-source" routerLinkActive="active">
+            <md-icon md-list-icon fontSet="fa" fontIcon="fa-database"></md-icon>
+            <span md-line>Fontes de dados</span>
+        </a>
+
+        <a md-list-item routerLink="/layer-group" routerLinkActive="active">
+            <md-icon md-list-icon>format_list_numbered</md-icon>
+            <span md-line>Grupo de Camadas</span>
+        </a>
+
+        <a md-list-item>
+            <md-icon md-list-icon>layers</md-icon>
+            <span md-line>Camadas</span>
+        </a>
+
+        <a md-list-item>
+            <md-icon md-list-icon>search</md-icon>
+            <span md-line>Pesquisa</span>
+        </a>
+
+        <a md-list-item>
+            <md-icon md-list-icon>group</md-icon>
+            <span md-line>Grupos de Acesso</span>
+        </a>
+
+        <a md-list-item>
+            <md-icon md-list-icon>thumb_up</md-icon>
+            <span md-line>Avaliação de Postagem</span>
+        </a>
+
+        <md-divider></md-divider>
+
+        <a md-list-item>
+            <md-icon md-list-icon>rate_review</md-icon>
+            <span md-line>Minhas Contribuições</span>
+        </a>
+
+        <a md-list-item>
+            <md-icon md-list-icon>settings</md-icon>
+            <span md-line>Configurações</span>
+        </a>
+
+        <a md-list-item (click)="logout()">
+            <md-icon md-list-icon>power_settings_new</md-icon>
+            <span md-line>Sair</span>
+        </a>
+
     </div>
-    <ul *ngIf="name" class="nav nav-pills nav-stacked">
-       <li routerLink="/map" routerLinkActive="active">
-            <a role="button">
-                <span class="glyphicon glyphicon-picture"></span>Mapa</a>        
-        </li>
-        <li>
-            <a role="button" data-target="#panelBasemaps" aria-haspopup="true">
-                <span class="glyphicon glyphicon-user"></span>Usuários</a>
-        </li>
-        
-        
-        <li routerLink="/data-source" routerLinkActive="active">
-            <a role="button">
-                <span class="glyphicon glyphicon-hdd"></span>Fonte de dados</a>
-        </li>
-        <li routerLink="/layer-group" routerLinkActive="ative">
-            <a role="button">
-                <span class="glyphicon glyphicon-th-list"></span>Grupo de Camadas</a>
-        </li>
-        <li>
-            <a role="button">
-                <span class="glyphicon glyphicon-align-justify"></span>Camadas</a>
-        </li>
-        <li>
-            <a role="button">
-                <span class="glyphicon glyphicon-search"></span>Pesquisa</a>
-        </li>
-        <li>
-            <a role="button">
-                <span class="glyphicon glyphicon-eye-open"></span>Grupo de acesso</a>
-        </li>
-        <li>
-            <a role="button">
-                <span class="glyphicon glyphicon-ok-sign"></span>Avaliação de postagem</a>
-        </li>
 
-        <li role="separator" class="divider">
-            <hr/>
-        </li>
-
-        <li>
-            <a role="button">
-                <span class="glyphicon glyphicon-user "></span>Minhas contribuições</a>
-        </li>
-        <li>
-            <a role="button">
-                <span class="glyphicon glyphicon-cog"></span>Configurações</a>
-        </li>
-
-        <li>
-            <a role="button" (click)="logout()">
-                <span class="glyphicon glyphicon-log-out dw-xs-1"></span>Logout</a>
-        </li>
-    </ul>
-
-    <ul *ngIf="!name" class="nav nav-pills nav-stacked">
-        <li>
-            <a role="button" (click)="login()">
-                <span class="glyphicon glyphicon-log-in dw-xs-1"></span>Login</a>
-        </li>
-    </ul>
-</nav>
+    <div *ngIf="!name">
+        <a md-list-item (click)="login()">
+            <md-icon md-list-icon>lock_outline</md-icon>
+            <span md-line>Login</span>
+        </a>
+    </div>
+</md-nav-list>

@@ -3,12 +3,10 @@ import {ListLayerGroupComponent} from "./list-layer-group/list-layer-group.compo
 import {LayerGroupRoutingModule} from "./layer-group.routes";
 import {LayerGroupComponent} from "./layer-group.component";
 import {SharedModule} from "../shared/shared.module";
-import {HttpModule} from "@angular/http";
 
 @NgModule({
     imports: [
         SharedModule,
-        HttpModule,
         LayerGroupRoutingModule
     ],
     declarations: [

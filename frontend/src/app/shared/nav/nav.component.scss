@@ -1,0 +1,27 @@
+@import '~@angular/material/core/theming/all-theme';
+
+@import '~@angular/material/core/theming/prebuilt/deeppurple-amber';
+
+@include mat-core();
+
+md-nav-list {
+    /* modifica a cor do link que estiver ativo na navbar*/
+    [md-list-item].active {
+        color: mat-color($primary);
+
+        md-icon[md-list-avatar] {
+            background-color: mat-color($primary);
+            color: mat-color($primary, default-contrast)
+        }
+        md-icon[md-list-icon] {
+            color: mat-color($primary);
+        }
+    }
+
+    /* correção do alinhamento dos ícones do font-awesome nas listas */
+    md-icon[fontSet="fa"][md-list-icon] {
+        width: 1.33em;
+        font-size: calc(16px * 1.3333);
+        text-align: center;
+    }
+}
