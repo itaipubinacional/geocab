@@ -1,18 +1,7 @@
-<div class="container">
-    <div class="row">
-        <!-- coluna da navbar -->
-        <div class="col-sm-3">
-            <app-nav></app-nav>
-        </div>
-        <!-- coluna do conteúdo -->
-        <div class="col-sm-9">
-            <router-outlet></router-outlet>
-        </div>
-    </div>
-    <!-- footer -->
-    <footer>
-        <div class="drawer-footer text-center">
-            <small>&copy; Itaipu Binacional</small>
-        </div>
-    </footer>
-</div>
+<md-sidenav-container class="viewport">
+    <md-sidenav #sidenav mode="side" opened="true">
+        <app-nav></app-nav>
+    </md-sidenav>
+
+    <router-outlet></router-outlet>
+</md-sidenav-container>
