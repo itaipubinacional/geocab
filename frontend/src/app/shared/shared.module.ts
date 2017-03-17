@@ -6,6 +6,7 @@ import {HttpModule} from "@angular/http";
 import {MaterialModule} from "@angular/material";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {UserService} from "./user.service";
+import {UserRouteGuard, ModeratorUserRouteGuard, AdminUserRouteGuard} from "./user.route-guards";
 
 @NgModule({
     imports: [
@@ -27,7 +28,10 @@ import {UserService} from "./user.service";
         NavComponent
     ],
     providers: [
-        UserService
+        UserService,
+        UserRouteGuard,
+        ModeratorUserRouteGuard,
+        AdminUserRouteGuard
     ]
 })
 export class SharedModule {

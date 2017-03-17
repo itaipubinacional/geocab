@@ -29,14 +29,31 @@ export class AppModule {
         // Login-Url
         this.oauthService.loginUrl = "https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/auth"; //Id-Provider?
 
+        /*
+         * Não tem como redirecionar para uma determinada página utilizando o
+         * redirect_uri. Esta URL é usada apenas para que o cliente receba o
+         * token do servidor de autenticação. Caso desejar fazer o redirecionamento
+         * para uma determinada página será necessário fazer esse controle na
+         * aplicação (ex.: armazenar o endereço na sessão e depois redirecionar).
+         */
         this.oauthService.redirectUri = window.location.origin;
+
         this.oauthService.clientId = "geocab-dev-becker";
         this.oauthService.scope = "";
         this.oauthService.oidc = true;
-        this.oauthService.setStorage(sessionStorage);
+        this.oauthService.setStorage(localStorage);
         this.oauthService.logoutUrl = "https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/logout";
         this.oauthService.tokenEndpoint = "https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/token";
+        this.oauthService.userinfoEndpoint = "https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/userinfo";
 
-        this.oauthService.tryLogin({});
+        this.oauthService.tryLogin({
+            validationHandler: context => {
+                /*
+                 * Tenta carregar as informações do usuário. Caso não conseguir é porque
+                 * não está autenticado.
+                 */
+                return this.oauthService.loadUserProfile();
+            }
+        });
     }
 }

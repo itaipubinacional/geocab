@@ -25,14 +25,14 @@ export class UserService {
      * comportamento deste método depende do servidor de autenticação
      * que estiver configurado no sistema.
      */
-    login() {
+    login(): void {
         this.oauthService.initImplicitFlow();
     }
 
     /**
      * Função que desloga o usuário atual.
      */
-    logout() {
+    logout(): void {
         this.oauthService.logOut();
     }
 
@@ -54,12 +54,32 @@ export class UserService {
      * @param headers O objeto do header previamente alocado. Caso o usuário
      * não estiver logado o objeto do header não será alterado.
      */
-    appendAuthorizationHeaders(headers: Headers) {
+    appendAuthorizationHeaders(headers: Headers): void {
         // se o usuário estiver logado
         if (this.authenticated) {
             let token: string = this.oauthService.getAccessToken();
             headers.append("Authorization", "Bearer " + token);
         }
+    }
+
+    /**
+     * Informa se o usuário possui a atribuição passada no parâmetro.
+     * @param role A string com a identificação da atribuição.
+     * @returns {boolean} Retorna <code>true</code> caso o usuário possuir a
+     * atribuição. Caso contrário, retorna <code>false</code>.
+     */
+    hasRole(role: string): boolean {
+        /*
+         * O Spring requer que o objeto retornado do user_info tenha o claim
+          * authorities com a lista de roles do usuário com o prefixo 'ROLE_'.
+         */
+        let claims = this.oauthService.getIdentityClaims();
+        if (!claims && !("authorities" in claims)) return false;
+
+        let authoritiesClaim = claims.authorities;
+
+        // checa se o usuário possui a role desejada
+        return authoritiesClaim.indexOf("ROLE_" + role) > -1;
     }
 
     /**
@@ -73,11 +93,11 @@ export class UserService {
 
     /**
      * Retorna o nome do usuário autenticado.
-     * @returns {any} O nome do usuário autenticado. Caso o servidor de
+     * @returns {string} O nome do usuário autenticado. Caso o servidor de
      * autenticação não estiver configurado para fornecer esta informação
      * será retornado <code>null</code>.
      */
-    get name() {
+    get name(): string {
         let claims = this.oauthService.getIdentityClaims();
         if (!claims) return null;
         return claims.given_name;

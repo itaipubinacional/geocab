@@ -4,11 +4,13 @@ import {ListDataSourcesComponent} from "./list-data-sources/list-data-sources.co
 import {NgModule} from "@angular/core";
 import {DataSourceComponent} from "./data-source.component";
 import {DetailDataSourceComponent} from "./detail-data-source/detail-data-source.component";
+import {AdminUserRouteGuard} from "../shared/user.route-guards";
 
 const routes:Routes = [
     {
         path: '',
         component: DataSourceComponent,
+        canActivateChild: [AdminUserRouteGuard],
         children: [
             {path: '', component: ListDataSourcesComponent},
             {path: ':id', component: DetailDataSourceComponent},
