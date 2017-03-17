@@ -6,6 +6,7 @@ export class LayerGroup {
   draft: LayerGroup;
   layersGroup: LayerGroup[];
   nodes: LayerGroup[];
+  groups: LayerGroup[];
   published: boolean;
   hasChildren: boolean;
 

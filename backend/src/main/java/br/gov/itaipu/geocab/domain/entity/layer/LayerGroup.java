@@ -236,7 +236,7 @@ public class LayerGroup extends AbstractEntity
             return this.layers;
         }
     }
-
+    
     /* (non-Javadoc)
      * @see br.com.geocab.domain.entity.layer.TreeNode#getTitle()
      */
@@ -248,6 +248,13 @@ public class LayerGroup extends AbstractEntity
 	 *						GETTERS AND SETTERS
 	 *-------------------------------------------------------------------*/
 
+    public List<? extends TreeNode> getGroups() {
+    	if (layersGroup != null && !layersGroup.isEmpty()) {
+            return this.layersGroup;
+        }
+    	return null;
+    }
+    
     /**
      * @return the name
      */

@@ -7,6 +7,7 @@ import {MaterialModule} from "@angular/material";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {UserService} from "./user.service";
 import {UserRouteGuard, ModeratorUserRouteGuard, AdminUserRouteGuard} from "./user.route-guards";
+import {TreeViewComponent} from './tree-view/tree-view.component';
 
 @NgModule({
     imports: [
@@ -22,10 +23,12 @@ import {UserRouteGuard, ModeratorUserRouteGuard, AdminUserRouteGuard} from "./us
         HttpModule,
         MaterialModule,
         FlexLayoutModule,
-        NavComponent
+        NavComponent,
+        TreeViewComponent
     ],
     declarations: [
-        NavComponent
+        NavComponent,
+        TreeViewComponent
     ],
     providers: [
         UserService,
