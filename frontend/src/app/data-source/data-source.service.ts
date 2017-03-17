@@ -1,21 +1,18 @@
 import {Injectable} from "@angular/core";
 import {DataSource, DataSourceType} from "../shared/model/data-source";
-import {Http, Response, Headers, RequestOptions} from "@angular/http";
+import {Http, Response, RequestOptions} from "@angular/http";
 import "rxjs/add/operator/toPromise";
-import {OAuthService} from "angular-oauth2-oidc";
+import {UserService} from "../shared/user.service";
 
 @Injectable()
 export class DataSourceService {
 
-    constructor(private http:Http, private oAuthService:OAuthService) {
+    constructor(private http: Http, private userService: UserService) {
     }
 
-    getDataSources():Promise<DataSource[]> {
-        let token:string = this.oAuthService.getAccessToken();
-        let headers = new Headers({
-            "Authorization": "Bearer " + token,
-            "Content-Type": "application/json"
-        });
+    getDataSources(): Promise<DataSource[]> {
+        // cria o header de autorização
+        let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
         return this.http.get("http://localhost:8080/api/data-source", options)
@@ -24,7 +21,7 @@ export class DataSourceService {
             .catch(res => this.handleError(res));
     }
 
-    getDataSourceById(id:number):Promise<DataSource> {
+    getDataSourceById(id: number): Promise<DataSource> {
         return new Promise<DataSource>(resolve => {
             resolve(<DataSource>{
                 id: id,
@@ -36,11 +33,8 @@ export class DataSourceService {
     }
 
     createDataSource(dataSource: DataSource): Promise<DataSource> {
-        let token:string = this.oAuthService.getAccessToken();
-        let headers = new Headers({
-            "Authorization": "Bearer " + token,
-            "Content-Type": "application/json"
-        });
+        // cria o header de autorização
+        let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
         return this.http.post("http://localhost:8080/api/data-source", dataSource, options)
@@ -49,9 +43,9 @@ export class DataSourceService {
             .catch(res => this.handleError(res));
     }
 
-    private handleError(error:Response | any) {
+    private handleError(error: Response | any) {
         // In a real world app, we might use a remote logging infrastructure
-        let errMsg:string;
+        let errMsg: string;
         if (error instanceof Response) {
             const body = error.json() || '';
             const err = body.error || JSON.stringify(body);

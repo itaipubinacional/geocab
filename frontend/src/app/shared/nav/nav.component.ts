@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {OAuthService} from "angular-oauth2-oidc/dist/index";
+import {UserService} from "../user.service";
 
 @Component({
     selector: 'app-nav',
@@ -8,28 +8,22 @@ import {OAuthService} from "angular-oauth2-oidc/dist/index";
 })
 export class NavComponent implements OnInit {
 
-    private name;
-
-    constructor(private oAuthService:OAuthService) {
-    }
-
-    public login() {
-        this.oAuthService.initImplicitFlow();
-        this.get_name();
-    }
-
-    public logout() {
-        this.oAuthService.logOut();
-    }
-
-    public get_name() {
-        let claims = this.oAuthService.getIdentityClaims();
-        if (!claims) return null;
-        this.name = claims.given_name;
+    constructor(private userService: UserService) {
     }
 
     ngOnInit() {
-        this.get_name();
+    }
+
+    login() {
+        this.userService.login();
+    }
+
+    logout() {
+        this.userService.logout();
+    }
+
+    get authenticated(): boolean {
+        return this.userService.authenticated;
     }
 
 }

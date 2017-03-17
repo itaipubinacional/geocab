@@ -7,7 +7,7 @@
 
 <md-nav-list>
 
-    <div *ngIf="name">
+    <div *ngIf="authenticated">
 
         <a md-list-item routerLink="/map" routerLinkActive="active">
             <md-icon md-list-icon>map</md-icon>
@@ -68,7 +68,7 @@
 
     </div>
 
-    <div *ngIf="!name">
+    <div *ngIf="!authenticated">
         <a md-list-item (click)="login()">
             <md-icon md-list-icon>lock_outline</md-icon>
             <span md-line>Login</span>

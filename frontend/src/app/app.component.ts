@@ -1,5 +1,4 @@
-import {Component} from '@angular/core';
-import {OAuthService} from 'angular-oauth2-oidc';
+import {Component, OnInit} from "@angular/core";
 
 @Component({
     selector: 'app-root',
@@ -7,21 +6,12 @@ import {OAuthService} from 'angular-oauth2-oidc';
     styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-    constructor(private oauthService:OAuthService) {
-        // Login-Url
-        this.oauthService.loginUrl = "https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/auth"; //Id-Provider?
+    constructor() {
 
-        this.oauthService.redirectUri = window.location.origin;
-        this.oauthService.clientId = "geocab-dev-becker";
-        this.oauthService.scope = "";
-        this.oauthService.oidc = true;
-        this.oauthService.setStorage(sessionStorage);
-        this.oauthService.logoutUrl = "https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/logout";
-        this.oauthService.tokenEndpoint = "https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/token";
-
-        this.oauthService.tryLogin({});
     }
 
+    ngOnInit() {
+    }
 }

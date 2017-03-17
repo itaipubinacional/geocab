@@ -5,6 +5,7 @@ import {RouterModule} from "@angular/router";
 import {HttpModule} from "@angular/http";
 import {MaterialModule} from "@angular/material";
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {UserService} from "./user.service";
 
 @NgModule({
     imports: [
@@ -22,7 +23,12 @@ import {FlexLayoutModule} from "@angular/flex-layout";
         FlexLayoutModule,
         NavComponent
     ],
-    declarations: [NavComponent]
+    declarations: [
+        NavComponent
+    ],
+    providers: [
+        UserService
+    ]
 })
 export class SharedModule {
 }
