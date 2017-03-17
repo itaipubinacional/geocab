@@ -1,13 +1,12 @@
-import { LayerGroup } from '../shared/model/layer-group';
-import { Injectable } from '@angular/core';
-import {Http, Response, Headers, RequestOptions} from '@angular/http';
-
-import {OAuthService} from 'angular-oauth2-oidc/dist/index';
+import {LayerGroup} from "../shared/model/layer-group";
+import {Injectable} from "@angular/core";
+import {Http, Response, RequestOptions} from "@angular/http";
+import {UserService} from "../shared/user.service";
 
 @Injectable()
 export class LayerGroupService {
 
-    constructor(private http: Http, private oAuthService: OAuthService) {
+    constructor(private http: Http, private userService: UserService) {
     }
 
     getLayerGroupById(id: number): Promise<LayerGroup> {
@@ -16,11 +15,8 @@ export class LayerGroupService {
 
     createLayerGroup(layerGroup: LayerGroup): Promise<LayerGroup> {
 
-        let headers = new Headers({
-            'Authorization': 'Bearer ' + this.oAuthService.getAccessToken(),
-            'Content-Type': 'application/json'
-        });
-
+        // cria o header de autorização
+        let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
         return this.http.post('http://localhost:8080/api/layer-group', layerGroup, options)
@@ -30,12 +26,8 @@ export class LayerGroupService {
     }
 
     getLayerGroups(): Promise<LayerGroup[]> {
-
-        let headers = new Headers({
-            'Authorization': 'Bearer ' + this.oAuthService.getAccessToken(),
-            'Content-Type': 'application/json'
-        });
-
+        // cria o header de autorização
+        let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
         return this.http.get('http://localhost:8080/api/layer-group', options)
