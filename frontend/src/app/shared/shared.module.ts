@@ -5,6 +5,7 @@ import {RouterModule} from "@angular/router";
 import {HttpModule} from "@angular/http";
 import {MaterialModule} from "@angular/material";
 import {FlexLayoutModule} from "@angular/flex-layout";
+import { TreeViewComponent } from './tree-view/tree-view.component';
 
 @NgModule({
     imports: [
@@ -20,9 +21,10 @@ import {FlexLayoutModule} from "@angular/flex-layout";
         HttpModule,
         MaterialModule,
         FlexLayoutModule,
-        NavComponent
+        NavComponent,
+        TreeViewComponent
     ],
-    declarations: [NavComponent]
+    declarations: [NavComponent, TreeViewComponent]
 })
 export class SharedModule {
 }

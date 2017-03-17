@@ -10,6 +10,25 @@ export class LayerGroupService {
     constructor(private http: Http, private oAuthService: OAuthService) {
     }
 
+    getLayerGroupById(id: number): Promise<LayerGroup> {
+      return Promise.resolve(new LayerGroup());
+    }
+
+    createLayerGroup(layerGroup: LayerGroup): Promise<LayerGroup> {
+
+        let headers = new Headers({
+            'Authorization': 'Bearer ' + this.oAuthService.getAccessToken(),
+            'Content-Type': 'application/json'
+        });
+
+        let options = new RequestOptions({headers: headers});
+
+        return this.http.post('http://localhost:8080/api/layer-group', layerGroup, options)
+            .toPromise()
+            .then(res => res.json())
+            .catch(res => this.handleError(res));
+    }
+
     getLayerGroups(): Promise<LayerGroup[]> {
 
         let headers = new Headers({

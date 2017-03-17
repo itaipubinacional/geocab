@@ -19,7 +19,7 @@ ul[md-treeview-child] {
 li[md-treeview] {
     list-style-type: none;
     color: rgba(0,0,0,0.87);
-    padding: 15px 0px 15px 32px
+    padding: 15px 0px 15px 0px
     
 }
 
@@ -27,6 +27,23 @@ li[md-treeview]:hover {
     background-color: #eeeeee;
 }
 
+li[md-treeview]:hover md-icon[md-tree-icon]{
+    visibility: visible;
+}
+
+
+md-icon[md-tree-icon] {
+    font-size: 14px;
+    visibility: hidden;        
+}
+
 li[md-treeview] {
     border-top: 1px solid rgba(0,0,0,0.12);
 }
+
+div[md-treeview-inner] {
+	padding-left: 25px;
+}
+
+
+
