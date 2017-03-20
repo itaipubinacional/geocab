@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class DetailLayerGroupComponent implements OnInit {
 
     model: LayerGroup;
-    title: string = "";
+    title: string = "Novo grupo de camadas";
 
     constructor(private activatedRoute: ActivatedRoute,
                 private router: Router,
@@ -31,9 +31,6 @@ export class DetailLayerGroupComponent implements OnInit {
                   this.model = ds;
                 });
         }
-        else {
-            this.title = "Novo grupo de camadas";
-      }
     }
 
     onSubmit() {
