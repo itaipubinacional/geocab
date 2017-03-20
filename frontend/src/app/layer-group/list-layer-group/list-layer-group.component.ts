@@ -17,22 +17,23 @@ export class ListLayerGroupComponent implements OnInit {
   constructor(private layerGroupService: LayerGroupService) {
       this.layerTree.data = null;
       this.layerTree.children = [];
-  
    }
 
   ngOnInit() {
     this.layerGroupService.getLayerGroups()
     .then((lgs) => {
         this.layerGroups = lgs;
-        console.log(this.layerGroups);
         this.layerTree.children = this.convertLayerTree(this.layerGroups);
-
-        console.log(this.layerTree);
       },
           error => alert(error));
 
   }
 
+
+  /***
+   *  converte a estrutura recursiva do grupo de camadas para a estrutura de árvore
+   *  esperada pelo componente TreeView.
+   */
   private convertLayerTree(layerGroups: LayerGroup[]) {
     let tree = [];
 

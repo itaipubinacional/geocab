@@ -1,3 +1,22 @@
+<md-toolbar color="primary" class="mat-elevation-z4">    
+    <md-icon class="example-icon" routerLink="/layer-group">arrow_back</md-icon>
+    <span>Grupos de Camadas</span>
+    <span spacer></span>    
+</md-toolbar>
+
+<section class="screen-content">
+<form (ngSubmit)="onSubmit()" target="_parent">
+    <div fxLayout="column">
+        <md-input-container>
+            <input mdInput placeholder="Nome" name="nome" [(ngModel)]="model.name">
+        </md-input-container>
+    
+    </div>
+    <button md-raised-button routerLink="/layer-group/new">Salvar</button>
+</form>            
+</section>
+
+
 <!-- 
 <h1>Novo Grupo de Camadas</h1>
 <hr/>
