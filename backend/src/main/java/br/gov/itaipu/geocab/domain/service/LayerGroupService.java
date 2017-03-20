@@ -132,7 +132,7 @@ public class LayerGroupService {
      * @param layerGroup
      * @return layerGroup
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public LayerGroup insertLayerGroup(LayerGroup layerGroup) {
         layerGroup.setPublished(false);
         return hasChildren(this.layerGroupRepository.save(layerGroup));

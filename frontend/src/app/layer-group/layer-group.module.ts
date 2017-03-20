@@ -4,11 +4,13 @@ import {DetailLayerGroupComponent} from './detail-layer-group/detail-layer-group
 import {LayerGroupRoutingModule} from "./layer-group.routes";
 import {LayerGroupComponent} from "./layer-group.component";
 import {SharedModule} from "../shared/shared.module";
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
     imports: [
         SharedModule,
-        LayerGroupRoutingModule
+        LayerGroupRoutingModule,
+        FormsModule
     ],
     declarations: [
         LayerGroupComponent,
