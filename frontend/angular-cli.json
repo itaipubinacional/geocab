@@ -22,9 +22,7 @@
         "styles.css"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.js",
-        "../node_modules/hammerjs/hammer.js",
-        "../node_modules/materialize-css/dist/js/materialize.js"
+        "../node_modules/bootstrap/dist/js/bootstrap.min.js"
       ],
       "environments": {
         "source": "environments/environment.ts",
