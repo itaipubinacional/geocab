@@ -3,26 +3,23 @@ import {CommonModule} from "@angular/common";
 import {NavComponent} from "./nav/nav.component";
 import {RouterModule} from "@angular/router";
 import {HttpModule} from "@angular/http";
-import {MaterialModule} from "@angular/material";
-import {FlexLayoutModule} from "@angular/flex-layout";
 import {UserService} from "./user.service";
 import {UserRouteGuard, ModeratorUserRouteGuard, AdminUserRouteGuard} from "./user.route-guards";
-import {TreeViewComponent} from './tree-view/tree-view.component';
+import {TreeViewComponent} from "./tree-view/tree-view.component";
+import {MaterializeModule} from "angular2-materialize";
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
         HttpModule,
-        MaterialModule,
-        FlexLayoutModule
+        MaterializeModule
     ],
     exports: [
         CommonModule,
         RouterModule,
         HttpModule,
-        MaterialModule,
-        FlexLayoutModule,
+        MaterializeModule,
         NavComponent,
         TreeViewComponent
     ],

@@ -1,27 +1,19 @@
-@import '~@angular/material/core/theming/all-theme';
+.logo {
+    margin: 10px;
+    vertical-align: middle;
 
-@import '~@angular/material/core/theming/prebuilt/deeppurple-amber';
-
-@include mat-core();
-
-md-nav-list {
-    /* modifica a cor do link que estiver ativo na navbar*/
-    [md-list-item].active {
-        color: mat-color($primary);
-
-        md-icon[md-list-avatar] {
-            background-color: mat-color($primary);
-            color: mat-color($primary, default-contrast)
-        }
-        md-icon[md-list-icon] {
-            color: mat-color($primary);
-        }
+    img {
+        vertical-align: inherit;
     }
 
-    /* correção do alinhamento dos ícones do font-awesome nas listas */
-    md-icon[fontSet="fa"][md-list-icon] {
-        width: 1.33em;
-        font-size: calc(16px * 1.3333);
-        text-align: center;
+    span {
+        vertical-align: inherit;
+        font-weight: 500;
     }
+}
+
+/* correção do alinhamento dos ícones do font-awesome nas listas */
+.side-nav .fa {
+    font-size: 1.5em;
+    text-align: center;
 }
