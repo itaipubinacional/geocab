@@ -31,10 +31,10 @@ export class AppModule {
 
         /*
          * Não tem como redirecionar para uma determinada página utilizando o
-         * redirect_uri. Esta URL é usada apenas para que o cliente receba o
-         * token do servidor de autenticação. Caso desejar fazer o redirecionamento
-         * para uma determinada página será necessário fazer esse controle na
-         * aplicação (ex.: armazenar o endereço na sessão e depois redirecionar).
+         * redirect_uri. Por algum motivo o Angular está sempre redirecionando para a
+         * página principal. Caso desejar fazer o redirecionamento para uma determinada
+         * página será necessário fazer esse controle na aplicação (ex.: armazenar o
+         * endereço na sessão e depois redirecionar).
          */
         this.oauthService.redirectUri = window.location.origin;
 

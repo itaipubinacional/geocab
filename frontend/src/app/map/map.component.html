@@ -1,11 +1,5 @@
-<md-sidenav-container class="viewport">
-    <md-sidenav #sidenav>
-        <app-nav></app-nav>
-    </md-sidenav>
-
-    <button md-mini-fab (click)="sidenav.open()">
-        <i class="material-icons">menu</i>
-    </button>
+<div class="viewport">
+    <app-nav></app-nav>
 
     <router-outlet></router-outlet>
-</md-sidenav-container>
+</div>
