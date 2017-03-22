@@ -1,0 +1,12 @@
+.logo {
+    vertical-align: middle;
+}
+
+.logo img {
+    vertical-align: inherit;
+}
+
+.logo span {
+    vertical-align: inherit;
+    font-weight: bold;
+}
