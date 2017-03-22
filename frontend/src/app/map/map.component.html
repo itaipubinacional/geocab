@@ -1,5 +1,20 @@
 <div class="viewport">
-    <app-nav></app-nav>
+    <div class="button-area">
+        <a (click)="clickMenuButton()">
+            <span class="glyphicon glyphicon-menu-hamburger"></span>
+        </a>
+    </div>
 
-    <router-outlet></router-outlet>
+    <div class="logo">
+        <img src="assets/img/logo_itaipu.png">
+        <span>Portal de Mapas</span>
+    </div>
+
+    <div class="side-nav" [class.opened]="navOpened">
+        <app-nav></app-nav>
+    </div>
+
+    <div class="map-content" (click)="closeNavbar()">
+        <router-outlet></router-outlet>
+    </div>
 </div>

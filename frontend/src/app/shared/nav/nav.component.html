@@ -1,62 +1,52 @@
-<ul id="navbar" class="side-nav">
-    <li>
-        <div class="logo">
-            <img src="assets/img/logo_itaipu.png">
-            <span>Portal de Mapas</span>
-        </div>
-    </li>
-
-    <li>
-        <div class="divider"></div>
-    </li>
+<ul class="sidebar-menu">
 
     <ng-container *ngIf="authenticated">
 
         <li>
             <a role="button" routerLink="/map" routerLinkActive="active">
-                <i class="material-icons">map</i>Mapa
+                <span class="glyphicon glyphicon-picture"></span>Mapa
             </a>
         </li>
 
         <li>
             <a role="button">
-                <i class="material-icons">person</i>Usuários
+                <span class="glyphicon glyphicon-user"></span>Usuários
             </a>
         </li>
 
         <li>
             <a role="button" routerLink="/data-source" routerLinkActive="active">
-                <i class="fa fa-database"></i>Fontes de dados
+                <span class="fa fa-database"></span>Fontes de dados
             </a>
         </li>
 
         <li>
             <a role="button" routerLink="/layer-group" routerLinkActive="active">
-                <i class="material-icons">format_list_numbered</i>Grupo de Camadas
+                <span class="glyphicon glyphicon-th-list"></span>Grupo de Camadas
             </a>
         </li>
 
         <li>
             <a role="button">
-                <i class="material-icons">layers</i>Camadas
+                <span class="fa fa-clone"></span>Camadas
             </a>
         </li>
 
         <li>
             <a role="button">
-                <i class="material-icons">search</i>Pesquisa
+                <span class="glyphicon glyphicon-search"></span>Pesquisa
             </a>
         </li>
 
         <li>
             <a role="button">
-                <i class="material-icons">group</i>Grupos de Acesso
+                <span class="fa fa-users"></span>Grupos de Acesso
             </a>
         </li>
 
         <li>
             <a role="button">
-                <i class="material-icons">thumb_up</i>Avaliação de Postagem
+                <span class="glyphicon glyphicon-thumbs-up"></span>Avaliação de Postagem
             </a>
         </li>
 
@@ -66,19 +56,19 @@
 
         <li>
             <a role="button">
-                <i class="material-icons">rate_review</i>Minhas Contribuições
+                <span class="glyphicon glyphicon-comment"></span>Minhas Contribuições
             </a>
         </li>
 
         <li>
             <a role="button">
-                <i class="material-icons">settings</i>Configurações
+                <span class="glyphicon glyphicon-cog"></span>Configurações
             </a>
         </li>
 
         <li>
             <a role="button" (click)="logout()">
-                <i class="material-icons">power_settings_new</i>Sair
+                <span class="glyphicon glyphicon-log-out"></span>Sair
             </a>
         </li>
 
@@ -87,12 +77,8 @@
     <ng-container *ngIf="!authenticated">
         <li>
             <a role="button" (click)="login()">
-                <i class="material-icons">lock_outline</i>Login
+                <span class="glyphicon glyphicon-log-in"></span>Login
             </a>
         </li>
     </ng-container>
 </ul>
-
-<a materialize="sideNav" [materializeParams]="[{edge:'left'}]" href="#" data-activates="navbar" class="btn-floating btn-large waves-effect waves-light">
-    <i class="material-icons">menu</i>
-</a>
