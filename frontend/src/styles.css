@@ -18,19 +18,32 @@ body {
     margin: 0;
 }
 
-/* espaçador */
+/*
+contêiner para uso do layout em flexbox (não usar em conjunto com o sistema de
+grid do bootstrap
+*/
+.flex-container {
+    display: flex;
+}
+
+/* espaçadores */
 [spacer] {
     -webkit-box-flex: 1;
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
 }
 
+[spacer-15] {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 15px;
+    flex: 1 1 15px;
+}
+
 /* define o posicionamento do botão principal da interface */
 .screen-actions {
+    text-align: right;
     display: inline-block;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    width: 100%;
 }
 
 .screen-content {

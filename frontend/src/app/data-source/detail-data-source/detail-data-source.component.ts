@@ -42,7 +42,10 @@ export class DetailDataSourceComponent implements OnInit {
             // e redireciona para a lista de datasources
             .then(() => this.router.navigate(['/data-source']))
             .catch(error => alert(error));
+    }
 
+    cancel() {
+        window.history.back();
     }
 
 }
