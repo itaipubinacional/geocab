@@ -1,14 +1,9 @@
-ul[md-treeview] {
-    width: 100%;
-    text-align: left;
-    border: 0;
-    border-collapse: collapse;
-    padding: 0px 0px 0px 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+ul.list-group {
+    
+    margin-bottom: 4px;
 }
 
-ul[md-treeview-child] {
+ul.treeview-child {
     width: 100%;
     text-align: left;
     border: 0;
@@ -16,32 +11,40 @@ ul[md-treeview-child] {
     padding-left: 32px;
 }
 
-li[md-treeview] {
-    list-style-type: none;
-    color: rgba(0,0,0,0.87);
-    padding: 15px 0px 15px 0px
-    
+li.list-group-item:hover {    
+    font-weight: bold;
+    cursor: default;
+    border-left: 3px solid #005df2;
 }
 
-li[md-treeview]:hover {
-    background-color: #eeeeee;
+
+li.list-group-item {
+	border-left: 0px;
+	border-right: 0px;
+	border-top: 0px;
+	border-bottom: 1px solid #bababa;
+	margin-top: 1px;
+	margin-bottom: 0px;
+	padding: 8px 0px 8px 5px;
 }
 
-li[md-treeview]:hover md-icon[md-tree-icon]{
+li.list-group-item:hover .tree-icon{
+	padding-left: 10px;
     visibility: visible;
 }
 
 
-md-icon[md-tree-icon] {
+.tree-icon {
     font-size: 14px;
     visibility: hidden;        
+    float: right;
 }
 
-li[md-treeview] {
+li.treeview {
     border-top: 1px solid rgba(0,0,0,0.12);
 }
 
-div[md-treeview-inner] {
+div.treeview-inner { 
 	padding-left: 25px;
 }
 
