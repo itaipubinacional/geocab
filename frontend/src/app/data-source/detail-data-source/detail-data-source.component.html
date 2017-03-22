@@ -1,54 +1,63 @@
-<h1>Nova Fonte de Dados Geográficos</h1>
-<hr/>
-<form (ngSubmit)="onSubmit()" target="_parent">
-    <div class="pull-right">
-        <button type="submit" class="btn btn-success">Salvar</button>
-        <button type="button" class="btn btn-warning">Testar conexão</button>
+<div class="page-header">
+    <h1>Nova Fonte de Dados Geográficos</h1>
+</div>
+
+<div class="screen-actions">
+    <button form="newForm" type="submit" class="btn btn-success">Salvar</button>
+    <button type="button" class="btn btn-warning">Testar conexão</button>
+    <button type="button" class="btn btn-danger" (click)="cancel()">Cancelar</button>
+</div>
+
+<form id="newForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+        <label for="name">Nome</label>
+        <input type="text" class="form-control" id="name" name="name" required [(ngModel)]="model.name">
     </div>
 
-    <div class="content">
-        <div class="form-group">
-            <label for="name">Nome</label>
-            <input type="text" class="form-control" id="name" name="name" required [(ngModel)]="model.name">
-        </div>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" name="externalDataSourceCheckbox" [(ngModel)]="externalDataSource">
+            Fonte de dados externa
+        </label>
+    </div>
 
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="externalDataSourceCheckbox" [(ngModel)]="externalDataSource">
-                Fonte de dados externa
-            </label>
-        </div>
-
-        <div [hidden]="!externalDataSource">
-            <div class="form-group">
+    <ng-container *ngIf="externalDataSource">
+        <div class="flex-container">
+            <div class="form-group input-service-type">
                 <label for="serviceType">Tipo de serviço</label>
                 <select class="form-control" id="serviceType" name="serviceType" [(ngModel)]="model.serviceType">
                     <option *ngFor="let dsType of dataSourceTypes" [value]="dsType">{{dsType}}</option>
                 </select>
             </div>
+            <span spacer-15></span>
 
-            <div class="form-group">
+            <div class="form-group input-url">
                 <label for="url">Endereço</label>
                 <input type="text" class="form-control" id="url" name="url" [(ngModel)]="model.url">
             </div>
+        </div>
 
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="authenticationRequiredCheckbox" [(ngModel)]="authenticationRequired">
-                    Autenticação obrigatória
-                </label>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="authenticationRequiredCheckbox" [(ngModel)]="authenticationRequired">
+                Autenticação obrigatória
+            </label>
+        </div>
+
+        <div *ngIf="authenticationRequired" class="flex-container">
+            <div class="form-group input-login">
+                <label for="username">Usuário</label>
+                <input type="text" class="form-control" id="username" name="username" [(ngModel)]="model.login">
             </div>
 
-            <div [hidden]="!authenticationRequired">
-                <div class="form-group">
-                    <label for="username">Usuário</label>
-                    <input type="text" class="form-control" id="username" name="username" [(ngModel)]="model.login">
-                </div>
-                <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" class="form-control" id="password" name="password" [(ngModel)]="model.password">
-                </div>
+            <span spacer-15></span>
+
+            <div class="form-group input-password">
+                <label for="password">Senha</label>
+                <input type="password" class="form-control" id="password" name="password"
+                       [(ngModel)]="model.password">
             </div>
         </div>
-    </div>
+    </ng-container>
 </form>
