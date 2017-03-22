@@ -11,18 +11,21 @@ ul.treeview-child {
     padding-left: 32px;
 }
 
-li.list-group-item:hover {
-    background-color: #e5e5e5;    
+li.list-group-item:hover {    
+    font-weight: bold;
     cursor: default;
-    border-left: 2px solid #005df2;
+    border-left: 3px solid #005df2;
 }
 
 
 li.list-group-item {
 	border-left: 0px;
 	border-right: 0px;
-	border-bottom: 0px;
-	margin-bottom: 1px;
+	border-top: 0px;
+	border-bottom: 1px solid #bababa;
+	margin-top: 1px;
+	margin-bottom: 0px;
+	padding: 8px 0px 8px 5px;
 }
 
 li.list-group-item:hover .tree-icon{
