@@ -51,3 +51,10 @@ grid do bootstrap
     margin-left: 8%;
     margin-right: 8%;
 }
+
+.list-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+}

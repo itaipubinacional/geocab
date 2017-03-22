@@ -11,5 +11,10 @@
         <h4 class="list-group-item-heading">{{datasource.name}}</h4>
         <p>Tipo de serviço: {{datasource.url ? datasource.serviceType : 'Interno'}}</p>
         <p *ngIf="datasource.url">Endereço: {{datasource.url}}</p>
+        <div class="list-actions">
+            <a routerLink="/data-source/{{datasource.id}}">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+        </div>
     </div>
 </div>

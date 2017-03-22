@@ -22,14 +22,14 @@ export class DataSourceService {
     }
 
     getDataSourceById(id: number): Promise<DataSource> {
-        return new Promise<DataSource>(resolve => {
-            resolve(<DataSource>{
-                id: id,
-                name: "teste",
-                serviceType: DataSourceType.WMS,
-                url: "teste"
-            });
-        });
+        // cria o header de autorização
+        let headers = this.userService.createAuthorizationHeaders();
+        let options = new RequestOptions({headers: headers});
+
+        return this.http.get("http://localhost:8080/api/data-source/" + id, options)
+            .toPromise()
+            .then(res => res.json()) // o objeto tem um enum
+            .catch(res => this.handleError(res));
     }
 
     createDataSource(dataSource: DataSource): Promise<DataSource> {
