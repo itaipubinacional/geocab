@@ -6,6 +6,7 @@ import {HttpModule} from "@angular/http";
 import {UserService} from "./user.service";
 import {UserRouteGuard, ModeratorUserRouteGuard, AdminUserRouteGuard} from "./user.route-guards";
 import {TreeViewComponent} from "./tree-view/tree-view.component";
+import { LogoComponent } from './logo/logo.component';
 
 @NgModule({
     imports: [
@@ -18,11 +19,13 @@ import {TreeViewComponent} from "./tree-view/tree-view.component";
         RouterModule,
         HttpModule,
         NavComponent,
-        TreeViewComponent
+        TreeViewComponent,
+        LogoComponent
     ],
     declarations: [
         NavComponent,
-        TreeViewComponent
+        TreeViewComponent,
+        LogoComponent
     ],
     providers: [
         UserService,

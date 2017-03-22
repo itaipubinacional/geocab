@@ -10,22 +10,11 @@
     text-decoration: none;
 }
 
-.logo {
+.map-logo {
     margin: 10px;
     position: fixed;
     left: 50px;
     z-index: 10;
-    vertical-align: middle;
-    display: block;
-}
-
-.logo img {
-    vertical-align: inherit;
-}
-
-.logo span {
-    vertical-align: inherit;
-    font-weight: bold;
 }
 
 .side-nav {
