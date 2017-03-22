@@ -1,10 +1,12 @@
-<!-- ul *ngFor="let child of node.children" md-treeview>
-    <li md-treeview> {{child.data.name}}        
-        <md-icon md-tree-icon style="padding-left:10px;">edit</md-icon><md-icon md-tree-icon>delete</md-icon>
+<ul *ngFor="let child of node.children" class="list-group">
+    <li class="list-group-item"> {{child.data.name}}
+            <span class="glyphicon glyphicon-pencil tree-icon" aria-hidden="true"></span>
+	        <span class="glyphicon glyphicon-trash tree-icon" aria-hidden="true"></span>
+        
     </li>
         
-    <div md-treeview-inner>
+    <div class="treeview-inner">
         <tree-view [node]=child></tree-view>
     </div>
                         
- </ul -->
+ </ul>

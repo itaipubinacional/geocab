@@ -1,16 +1,9 @@
-<md-toolbar color="primary" class="mat-elevation-z4">
-    <span>Grupos de Camadas</span>
-    <span spacer></span>
-</md-toolbar>
+<div class="panel">
+	<div class="row">
+	   <div class="col-sm-1">
+    	   <a routerLink="/layer-group/new" class="btn btn-primary">Novo</a>
+	   </div>
+	</div>
+</div>
 
-<section class="screen-actions">
-    <a md-fab routerLink="/layer-group/new">
-        <md-icon>add</md-icon>
-    </a>
-</section>
-
-<section class="screen-content">
-   
-    <tree-view [node]=layerTree></tree-view>
-
-</section>
+<tree-view [node]=layerTree></tree-view>

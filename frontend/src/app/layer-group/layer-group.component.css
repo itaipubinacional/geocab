@@ -1,3 +1,33 @@
-.nav-heading {
-    border-bottom: 1px solid #eee;
+.side-nav {
+    width: 300px;
+    z-index: 10; 
+    
+    left: 0px;
+    right: 0;
+}
+
+.navbar-default {	
+	margin-bottom: 0px;	
+}
+
+.navbar {
+	padding-bottom: 60px;
+}
+
+.logo {
+    margin: 10px;    
+    position: fixed;
+    left: 10px;
+    z-index: 10;
+    vertical-align: middle;
+    display: block;
+}
+
+.logo img {
+    vertical-align: inherit;
+}
+
+.logo span {
+    vertical-align: inherit;
+    font-weight: bold;
 }

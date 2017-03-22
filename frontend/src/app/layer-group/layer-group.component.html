@@ -1,7 +1,22 @@
-<md-sidenav-container class="viewport">
-    <md-sidenav #sidenav mode="side" opened="true">
-        <app-nav></app-nav>
-    </md-sidenav>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        
+        
+          <div class="logo">
+              <img src="assets/img/logo_itaipu.png">
+              <span>Portal de Mapas Itaipu</span>
+          </div>
+       </div>          
+    
+</nav>
+    
+<div class="panel col-sm-2 side-nav">
+    <app-nav></app-nav>	
+</div>
 
-    <router-outlet></router-outlet>
-</md-sidenav-container>
+<div class="panel col-sm-8 offset-3">
+    <div class="panel-body">
+        <router-outlet></router-outlet>
+    </div>    
+</div>
