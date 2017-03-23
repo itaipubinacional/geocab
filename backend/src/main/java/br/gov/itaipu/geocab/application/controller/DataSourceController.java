@@ -20,13 +20,38 @@ public class DataSourceController {
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('admin')")
-    public @ResponseBody List<DataSource> getDataSources() {
+    public
+    @ResponseBody
+    List<DataSource> getDataSources() {
         return this.dataSourceService.listAllDataSource();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @PreAuthorize("hasRole('admin')")
+    public
+    @ResponseBody
+    DataSource getDataSource(@PathVariable long id) {
+        return this.dataSourceService.findDataSourceById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('admin')")
-    public @ResponseBody DataSource createDataSource(@RequestBody DataSource dataSource) {
+    public
+    @ResponseBody
+    DataSource createDataSource(@RequestBody DataSource dataSource) {
+        // remove o ID para evitar problemas
+        dataSource.setId(0L);
         return this.dataSourceService.insertDataSource(dataSource);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    @PreAuthorize("hasRole('admin')")
+    public
+    @ResponseBody
+    DataSource updateDataSource(@PathVariable long id,
+                                @RequestBody DataSource dataSource) {
+        // ajusta o ID passado
+        dataSource.setId(id);
+        return this.dataSourceService.updateDataSource(dataSource);
     }
 }

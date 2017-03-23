@@ -4,15 +4,16 @@
 package br.gov.itaipu.geocab.domain.entity.datasource;
 
 import br.gov.itaipu.geocab.domain.entity.AbstractEntity;
+import br.gov.itaipu.geocab.domain.entity.layer.Layer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.geoserver.security.PublicKeyGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.util.StringUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -63,6 +64,10 @@ public class DataSource extends AbstractEntity implements Serializable {
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "dataSource")
+    private List<Layer> layers;
 
 	/*-------------------------------------------------------------------
 	 * 		 					CONSTRUCTORS
@@ -222,5 +227,20 @@ public class DataSource extends AbstractEntity implements Serializable {
 
     public void setServiceType(ServiceType serviceType) {
         this.serviceType = serviceType;
+    }
+
+    public List<Layer> getLayers() {
+        return layers;
+    }
+
+    public void setLayers(List<Layer> layers) {
+        this.layers = layers;
+    }
+
+    @JsonIgnore
+    @Transient
+    public boolean isInternal() {
+        // é interna se a URL não estiver ajustada
+        return StringUtils.isEmpty(this.getUrl());
     }
 }
