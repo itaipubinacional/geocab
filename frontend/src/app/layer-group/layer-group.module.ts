@@ -5,6 +5,7 @@ import {LayerGroupRoutingModule} from "./layer-group.routes";
 import {LayerGroupComponent} from "./layer-group.component";
 import {SharedModule} from "../shared/shared.module";
 import {FormsModule} from '@angular/forms';
+import { RemoveLayerGroupModalComponent } from './remove-layer-group-modal/remove-layer-group-modal.component';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {FormsModule} from '@angular/forms';
     declarations: [
         LayerGroupComponent,
         ListLayerGroupComponent,
-        DetailLayerGroupComponent
+        DetailLayerGroupComponent,
+        RemoveLayerGroupModalComponent
     ]
 })
 export class LayerGroupModule {

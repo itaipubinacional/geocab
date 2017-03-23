@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'tree-view',
@@ -8,10 +8,19 @@ import { Component, OnInit, Input } from '@angular/core';
 export class TreeViewComponent implements OnInit {
 
   @Input() node: any;
+  @Output() removeEvent: EventEmitter<any> = new EventEmitter();
+  @Output() editEvent: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  remove(data: any) {
+    this.removeEvent.emit(data);
+  }
+
+  edit(data: any) {
+    this.editEvent.emit(data);
+  }
 }

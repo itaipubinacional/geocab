@@ -13,6 +13,17 @@ export class LayerGroupService {
       return Promise.resolve(new LayerGroup());
     }
 
+    deleteLayerGroup(layerGroup: LayerGroup): Promise<any> {
+        // cria o header de autorização
+        let headers = this.userService.createAuthorizationHeaders();
+        let options = new RequestOptions({headers: headers});
+
+        return this.http.delete('http://localhost:8080/api/layer-group', {body: layerGroup, headers: headers})
+            .toPromise()
+            .then()
+            .catch(res => this.handleError(res));
+    }
+
     createLayerGroup(layerGroup: LayerGroup): Promise<LayerGroup> {
 
         // cria o header de autorização
