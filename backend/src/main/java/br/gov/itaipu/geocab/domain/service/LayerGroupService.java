@@ -144,7 +144,7 @@ public class LayerGroupService {
      * @param layerGroup
      * @return layerGroup
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public LayerGroup updateLayerGroup(LayerGroup layerGroup) {
         return hasChildren(this.layerGroupRepository.save(layerGroup));
     }
@@ -164,7 +164,7 @@ public class LayerGroupService {
     /**
      *
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public void saveAllParentLayerGroup(List<LayerGroup> layerGroup) {
         List<LayerGroup> layersGroups = this.layerGroupRepository.listAllParentLayerGroup();
 
@@ -178,7 +178,7 @@ public class LayerGroupService {
     /**
      * Método que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     private void populateChildrenInLayerGroupPublished() {
         final List<LayerGroup> layersGroupPublished = this.layerGroupRepository.listAllLayersGroupPublished();
 
@@ -196,7 +196,7 @@ public class LayerGroupService {
     /**
      * Método recursivo que remove os grupos de camadas publicados filhos
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     private void removeLayerGroupPublished(LayerGroup layerGroupPublished) {
         if (layerGroupPublished.getLayersGroup() != null) {
             for (LayerGroup layerGroupChildPublished : layerGroupPublished.getLayersGroup()) {
@@ -214,7 +214,7 @@ public class LayerGroupService {
     /**
      *
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public void recursive(LayerGroup layerGroupOriginal, LayerGroup layerGroupUpperPublished) {
         final Long layerGroupOriginalId = layerGroupOriginal.getId();
 
@@ -293,7 +293,7 @@ public class LayerGroupService {
     /**
      *
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public void publishLayerGroup(List<LayerGroup> layersGroup) {
         this.saveAllLayersGroup(layersGroup); // save layersGroup
 
@@ -328,7 +328,7 @@ public class LayerGroupService {
      *
      * @return
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public void saveAllLayersGroup(List<LayerGroup> layerGroup) {
         this.prioritizeLayersGroup(layerGroup, null);
 
@@ -339,7 +339,7 @@ public class LayerGroupService {
      * @param layerGroups
      * @param layerGroupUpper
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     private void prioritizeLayersGroup(List<LayerGroup> layerGroups, LayerGroup layerGroupUpper) {
         if (layerGroups != null) {
             for (int i = 0; i < layerGroups.size(); i++) {
@@ -355,7 +355,7 @@ public class LayerGroupService {
     /**
      * @param layerGroups
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     private void prioritizeLayers(List<LayerGroup> layerGroups) {
         for (LayerGroup layerGroup : layerGroups) {
             if (layerGroup.getLayers() != null) {
@@ -375,7 +375,7 @@ public class LayerGroupService {
      *
      * @param id
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public void removeLayerGroup(Long id) {
         final LayerGroup layerGroup = this.layerGroupRepository.findOne(id);
 
@@ -846,7 +846,7 @@ public class LayerGroupService {
      * @param layer
      * @return
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public Layer insertLayer(Layer layer) {
 
         layer.setLayerGroup(this.layerGroupRepository.findOne(layer.getLayerGroup().getId()));
@@ -869,7 +869,7 @@ public class LayerGroupService {
      * @param layer
      * @return camada
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public Layer updateLayer(Layer layer) {
         layer.setLayerGroup(layer.getLayerGroup());
 
@@ -904,7 +904,7 @@ public class LayerGroupService {
      *
      * @param id
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     public void removeLayer(Long id) {
         List<AccessGroupLayer> layers = this.accessGroupLayerRepository.listByLayerId(id);
         for (AccessGroupLayer accessGroupLayer : layers) {
@@ -1046,7 +1046,7 @@ public class LayerGroupService {
     /**
      *
      */
-    @PreAuthorize("hasRole('" + UserRole.ADMINISTRATOR_VALUE + "')")
+    
     private void removeLayersGroupPublishedEmpty(LayerGroup layerGroup) {
         if (layerGroup.getLayersGroup() != null) {
             List<LayerGroup> layersGroupExclusion = new ArrayList<LayerGroup>();
