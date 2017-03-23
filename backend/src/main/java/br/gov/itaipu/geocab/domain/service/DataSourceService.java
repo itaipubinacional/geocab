@@ -4,9 +4,7 @@
 package br.gov.itaipu.geocab.domain.service;
 
 import br.gov.itaipu.geocab.domain.entity.datasource.DataSource;
-import br.gov.itaipu.geocab.domain.entity.layer.Layer;
 import br.gov.itaipu.geocab.domain.repository.datasource.DataSourceRepository;
-import br.gov.itaipu.geocab.domain.repository.layer.LayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -52,12 +50,6 @@ public class DataSourceService {
     @Autowired
     private DataSourceRepository dataSourceRepository;
 
-    /**
-     *
-     */
-    @Autowired
-    private LayerRepository layerRepository;
-	
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
@@ -70,6 +62,8 @@ public class DataSourceService {
      */
     public DataSource insertDataSource(DataSource dataSource) {
         try {
+            // limpa o ID para evitar que haja duplicação
+            dataSource.setId(0L);
             dataSource = this.dataSourceRepository.save(dataSource);
         } catch (DataIntegrityViolationException e) {
             LOG.info(e.getMessage());
@@ -87,36 +81,26 @@ public class DataSourceService {
      * @return dataSource
      */
     public DataSource updateDataSource(DataSource dataSource) {
-        PageRequest pageable = new PageRequest(0, 10);
 
-        Page<Layer> allLayers = this.layerRepository.listByFilters(null, null, pageable);
+        try {
+            DataSource oldDataSource = this.dataSourceRepository.findOne(dataSource.getId());
 
-        DataSource oldDataSource = this.dataSourceRepository.findOne(dataSource.getId());
+            /*
+             * Checa se a fonte de dados mudou de interna para externa e vice-versa. Caso
+             * isto ocorra, impede a alteração caso existam camadas associadas a esta fonte.
+             */
+            if (oldDataSource.isInternal() != dataSource.isInternal() &&
+                    oldDataSource.getLayers().size() > 0)
+                throw new DataIntegrityViolationException("Não é possível alterar a fonte de dados");
 
-        Boolean canUpdate = true;
+            dataSource = this.dataSourceRepository.save(dataSource);
+            return dataSource;
+        } catch (DataIntegrityViolationException e) {
+            LOG.info(e.getMessage());
+            final String error = e.getCause().getCause().getMessage();
 
-        if ((oldDataSource.getUrl() == null && dataSource.getUrl() != null) || (oldDataSource.getUrl() != null && dataSource.getUrl() == null)) {
-            for (Layer layer : allLayers) {
-                if (layer.getDataSource().getId() == dataSource.getId()) {
-                    canUpdate = false;
-                    break;
-                }
-            }
+            this.dataIntegrityViolationException(error);
         }
-
-        if (canUpdate) {
-            try {
-                dataSource = this.dataSourceRepository.save(dataSource);
-                return dataSource;
-            } catch (DataIntegrityViolationException e) {
-                LOG.info(e.getMessage());
-                final String error = e.getCause().getCause().getMessage();
-
-                this.dataIntegrityViolationException(error);
-            }
-        }
-
-
         return null;
     }
 

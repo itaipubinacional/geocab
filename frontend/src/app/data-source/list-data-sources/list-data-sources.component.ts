@@ -17,9 +17,7 @@ export class ListDataSourcesComponent implements OnInit {
         // pega os datasources
         this.dataSourceService.getDataSources()
             .then(ds => this.dataSources = ds,
-                error => {
-                    alert(error);
-                });
+                error => alert(error));
     }
 
 }

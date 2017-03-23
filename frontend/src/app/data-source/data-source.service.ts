@@ -26,7 +26,7 @@ export class DataSourceService {
         let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
-        return this.http.get("http://localhost:8080/api/data-source/" + id, options)
+        return this.http.get(`http://localhost:8080/api/data-source/${id}`, options)
             .toPromise()
             .then(res => res.json()) // o objeto tem um enum
             .catch(res => this.handleError(res));
@@ -38,6 +38,17 @@ export class DataSourceService {
         let options = new RequestOptions({headers: headers});
 
         return this.http.post("http://localhost:8080/api/data-source", dataSource, options)
+            .toPromise()
+            .then(res => res.json()) // o objeto tem um enum
+            .catch(res => this.handleError(res));
+    }
+
+    updateDataSource(dataSource: DataSource): Promise<DataSource> {
+        // cria o header de autorização
+        let headers = this.userService.createAuthorizationHeaders();
+        let options = new RequestOptions({headers: headers});
+
+        return this.http.put(`http://localhost:8080/api/data-source/${dataSource.id}`, dataSource, options)
             .toPromise()
             .then(res => res.json()) // o objeto tem um enum
             .catch(res => this.handleError(res));

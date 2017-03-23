@@ -1,5 +1,6 @@
 <div class="page-header">
-    <h1>Nova Fonte de Dados Geográficos</h1>
+    <h1 *ngIf="!model.id">Nova Fonte de Dados Geográficos</h1>
+    <h1 *ngIf="model.id">Editar Fonte de Dados Geográficos</h1>
 </div>
 
 <div class="screen-actions">
