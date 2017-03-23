@@ -1,6 +1,9 @@
 import { LayerGroup } from '../../shared/model/layer-group';
 import { LayerGroupService } from '../layer-group.service';
-import { Component, OnInit } from '@angular/core';
+import { ConfirmModalDialogComponent } from '../../shared/confirm-modal-dialog/confirm-modal-dialog.component';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+
+declare var $: any;
 
 @Component({
   selector: 'app-list-layer-group',
@@ -13,6 +16,9 @@ export class ListLayerGroupComponent implements OnInit {
 
   layerGroups: LayerGroup[];
   layerTree: any = {};
+  
+  @ViewChild(ConfirmModalDialogComponent)
+  confirmModal: ConfirmModalDialogComponent;
 
   constructor(private layerGroupService: LayerGroupService) {
       this.layerTree.data = null;
@@ -20,15 +26,32 @@ export class ListLayerGroupComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.refresh();
+  }
+
+  remove(event) {
+    this.confirmModal.setTitle('Remover grupo de camadas');
+    this.confirmModal.setMessage('Tem certeza que deseja remover o grupo de camadas: ' + event.name);
+    this.confirmModal.show(() => {
+      let group = new LayerGroup();
+      group.id = event.id;
+      this.layerGroupService.deleteLayerGroup(group)
+        .then(() => this.refresh());            
+    });    
+  }
+  
+  edit(event) {
+    console.log(event);
+  }
+
+  private refresh() {
     this.layerGroupService.getLayerGroups()
     .then((lgs) => {
         this.layerGroups = lgs;
         this.layerTree.children = this.convertLayerTree(this.layerGroups);
       },
           error => alert(error));
-
   }
-
 
   /***
    *  converte a estrutura recursiva do grupo de camadas para a estrutura de árvore

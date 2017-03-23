@@ -1,5 +1,5 @@
 export class LayerGroup {
-
+  id: number;
   name: string;
   orderLayerGroup: number;
   layerGroupUpper: LayerGroup;

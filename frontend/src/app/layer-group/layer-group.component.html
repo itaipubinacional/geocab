@@ -1,21 +1,20 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-                
-          <div class="logo">
-              <img src="assets/img/logo_itaipu.png">
-              <span>Portal de Mapas Itaipu</span>
-          </div>
-       </div>          
-    
-</nav>
-    
-<div class="panel col-sm-2 side-nav">
-    <app-nav></app-nav>	
-</div>
+<div class="viewport">
 
-<div class="panel col-sm-8 offset-3">
-    <div class="panel-body">
-        <router-outlet></router-outlet>
-    </div>    
+    <div class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <app-logo [fontColor]="'#ffffff'"></app-logo>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="col-md-3">
+            <app-nav></app-nav>
+        </div>
+
+        <div class="col-md-9">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
 </div>

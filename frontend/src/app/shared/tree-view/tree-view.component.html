@@ -1,12 +1,12 @@
 <ul *ngFor="let child of node.children" class="list-group">
     <li class="list-group-item"> {{child.data.name}}
-            <span class="glyphicon glyphicon-pencil tree-icon" aria-hidden="true"></span>
-	        <span class="glyphicon glyphicon-trash tree-icon" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-pencil tree-icon" aria-hidden="true" (click)="edit(child.data)"></span>
+	        <span class="glyphicon glyphicon-trash tree-icon" aria-hidden="true" (click)="remove(child.data)"></span>
         
     </li>
         
     <div class="treeview-inner">
-        <tree-view [node]=child></tree-view>
+        <tree-view [node]=child (editEvent)="edit($event)" (removeEvent)="remove($event)"></tree-view>
     </div>
                         
  </ul>

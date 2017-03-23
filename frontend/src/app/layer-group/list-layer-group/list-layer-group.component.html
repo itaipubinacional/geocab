@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h3>Grupos de Camadas</h3>
+    <h1>Grupos de Camadas</h1>
 </div>
 
 <div class="panel">
@@ -10,4 +10,10 @@
 	</div>
 </div>
 
-<tree-view [node]=layerTree></tree-view>
+<div class="panel panel-default">    
+    <div class="panel-body">
+        <app-confirm-modal-dialog></app-confirm-modal-dialog>
+        <tree-view [node]=layerTree (removeEvent)="remove($event)" (editEvent)="edit($event)"></tree-view>
+    </div>
+</div>
+
