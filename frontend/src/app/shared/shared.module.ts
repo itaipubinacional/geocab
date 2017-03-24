@@ -8,6 +8,7 @@ import {UserRouteGuard, ModeratorUserRouteGuard, AdminUserRouteGuard} from "./us
 import {TreeViewComponent} from "./tree-view/tree-view.component";
 import { LogoComponent } from './logo/logo.component';
 import { ConfirmModalDialogComponent } from './confirm-modal-dialog/confirm-modal-dialog.component';
+import { ModalWindowComponent } from './modal-window/modal-window.component';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { ConfirmModalDialogComponent } from './confirm-modal-dialog/confirm-moda
         NavComponent,
         TreeViewComponent,
         LogoComponent,
-        ConfirmModalDialogComponent
+        ConfirmModalDialogComponent,
+        ModalWindowComponent
     ],
     providers: [
         UserService,

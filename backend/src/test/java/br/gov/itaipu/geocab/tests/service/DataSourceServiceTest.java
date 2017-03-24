@@ -56,7 +56,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest {
     public void updateDataSource() throws Exception {
         this.authenticate(100L);
 
-        DataSource dataSource = dataSourceService.findDataSourceById(100L);
+        DataSource dataSource = dataSourceService.getDataSource(100L);
 
         dataSource.setName("Data Source changed");
         dataSource.setLogin("user changed");
@@ -84,7 +84,7 @@ public class DataSourceServiceTest extends AbstractIntegrationTest {
     public void findFonteDadosById() throws Exception {
         this.authenticate(100L);
 
-        DataSource dataSource = dataSourceService.findDataSourceById(100L);
+        DataSource dataSource = dataSourceService.getDataSource(100L);
         Assert.assertNotNull(dataSource);
         Assert.assertTrue(dataSource.getId().equals(100L));
     }
@@ -97,7 +97,9 @@ public class DataSourceServiceTest extends AbstractIntegrationTest {
     public void removeDataSource() {
         this.authenticate(100L);
 
-        this.dataSourceService.removeDataSource(100L);
+        DataSource ds = new DataSource(100L);
+
+        this.dataSourceService.removeDataSource(ds);
     }
 
 

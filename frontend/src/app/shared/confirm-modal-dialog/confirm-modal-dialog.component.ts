@@ -1,40 +1,39 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-
-declare var $: any;
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {ModalWindowComponent} from "../modal-window/modal-window.component";
 
 @Component({
-  selector: 'app-confirm-modal-dialog',
-  templateUrl: './confirm-modal-dialog.component.html',
-  styleUrls: ['./confirm-modal-dialog.component.css']
+    selector: 'app-confirm-modal-dialog',
+    templateUrl: './confirm-modal-dialog.component.html',
+    styleUrls: ['./confirm-modal-dialog.component.css']
 })
 export class ConfirmModalDialogComponent implements OnInit {
 
-  constructor() { }
+    message: string;
+    title: string;
 
-  private title: string;
-  private message: string;
-  private callback: any;
+    @ViewChild(ModalWindowComponent) private modalWin: ModalWindowComponent;
 
-  setTitle(title: string) {
-    this.title = title;
-  }
 
-  setMessage(message: string) {
-    this.message = message;
-  }
+    private callback: Function;
 
-  confirm() {    
-    this.callback();
-    $('#confirm-modal-dialog').modal('hide');
-  }
+    constructor() {
+    }
 
-  show(callback: any) {    
-    this.callback = callback;
-    $('#confirm-modal-dialog').modal();
-  }
+    ngOnInit() {
+    }
 
-  ngOnInit() {
-  }
+    confirm() {
+        this.callback();
+        this.modalWin.hide();
+    }
+
+    cancel() {
+        this.modalWin.hide();
+    }
+
+    show(callback: Function) {
+        this.callback = callback;
+        this.modalWin.show();
+    }
 
 }

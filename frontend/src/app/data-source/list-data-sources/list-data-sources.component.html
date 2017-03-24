@@ -6,6 +6,8 @@
     <a role="button" routerLink="/data-source/new" class="btn btn-primary">Adicionar</a>
 </div>
 
+<app-confirm-modal-dialog></app-confirm-modal-dialog>
+
 <div class="list-group">
     <div *ngFor="let datasource of dataSources" class="list-group-item">
         <h4 class="list-group-item-heading">{{datasource.name}}</h4>
@@ -14,6 +16,9 @@
         <div class="list-actions">
             <a routerLink="/data-source/{{datasource.id}}">
                 <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+            <a role="button" (click)="remove(datasource)">
+                <span class="glyphicon glyphicon-trash"></span>
             </a>
         </div>
     </div>
