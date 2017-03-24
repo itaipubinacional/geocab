@@ -27,9 +27,8 @@ export class DetailLayerGroupComponent implements OnInit {
             // faz a leitura
             let id = parseInt(requestType, 10);
             this.layerGroupService.getLayerGroupById(id)
-                .then((ds) => {
-                    console.log(ds);
-                  this.model = ds;                  
+                .then((lg) => {                    
+                  this.model = lg;                  
                 });
         }
 
@@ -44,8 +43,7 @@ export class DetailLayerGroupComponent implements OnInit {
             // salva o grupo de camadas
             res = this.layerGroupService.createLayerGroup(this.model);                            
         } else {
-            // atualiza o grupo de camadas
-            console.log('model: '+this.model);
+            // atualiza o grupo de camadas            
             res = this.layerGroupService.updateLayerGroup(this.model);
         }
         
