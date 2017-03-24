@@ -147,8 +147,6 @@ public class LayerGroupService {
     
     public LayerGroup updateLayerGroup(LayerGroup layerGroup) {
         return this.layerGroupRepository.save(layerGroup);
-        //this.layerGroupRepository.
-        
     }
 
 
