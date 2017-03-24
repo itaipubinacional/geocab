@@ -3,6 +3,8 @@ package br.gov.itaipu.geocab.application.controller;
 import br.gov.itaipu.geocab.domain.entity.datasource.DataSource;
 import br.gov.itaipu.geocab.domain.service.DataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,15 +25,19 @@ public class DataSourceController {
     public
     @ResponseBody
     List<DataSource> getDataSources() {
-        return this.dataSourceService.listAllDataSource();
+        return this.dataSourceService.getDataSources();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @PreAuthorize("hasRole('admin')")
     public
     @ResponseBody
-    DataSource getDataSource(@PathVariable long id) {
-        return this.dataSourceService.findDataSourceById(id);
+    ResponseEntity<DataSource> getDataSource(@PathVariable long id) {
+        DataSource ds = this.dataSourceService.getDataSource(id);
+        if (ds != null)
+            return new ResponseEntity<>(ds, HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -53,5 +59,17 @@ public class DataSourceController {
         // ajusta o ID passado
         dataSource.setId(id);
         return this.dataSourceService.updateDataSource(dataSource);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @PreAuthorize("hasRole('admin')")
+    public
+    @ResponseBody
+    ResponseEntity removeDataSource(@PathVariable long id) {
+        // se tiver apagado a fonte de dados
+        if (this.dataSourceService.removeDataSource(new DataSource(id)))
+            return new ResponseEntity(HttpStatus.OK);
+
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 }

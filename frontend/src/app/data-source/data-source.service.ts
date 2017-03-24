@@ -54,6 +54,18 @@ export class DataSourceService {
             .catch(res => this.handleError(res));
     }
 
+    removeDataSource(dataSource: DataSource): Promise<boolean> {
+        // cria o header de autorização
+        let headers = this.userService.createAuthorizationHeaders();
+        let options = new RequestOptions({headers: headers});
+
+        return this.http.delete(`http://localhost:8080/api/data-source/${dataSource.id}`, options)
+            .toPromise()
+            // a api do angular já trata os erros. Se chegou no then é porque apagou
+            .then(res => true)
+            .catch(res => this.handleError(res));
+    }
+
     private handleError(error: Response | any) {
         // In a real world app, we might use a remote logging infrastructure
         let errMsg: string;

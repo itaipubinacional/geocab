@@ -1,138 +1,116 @@
-/**
- *
- */
 package br.gov.itaipu.geocab.domain.service;
 
 import br.gov.itaipu.geocab.domain.entity.datasource.DataSource;
 import br.gov.itaipu.geocab.domain.repository.datasource.DataSourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.bind.JAXBException;
 import java.util.List;
 import java.util.logging.Logger;
 
 
 /**
- * Class to manage of entities {@link DataSource}
- *
- * @author Cristiano Correa
- * @version 1.0
- * @category Service
- * @since 27/05/2014
+ * Classe de serviços para gerenciamento das fontes de dados.
  */
-
 @Service
 @Transactional
 public class DataSourceService {
     /*-------------------------------------------------------------------
      * 		 					ATTRIBUTES
 	 *-------------------------------------------------------------------*/
-    /**
-     * Log
-     */
+
     private static final Logger LOG = Logger.getLogger(DataSourceService.class.getName());
 
-    /**
-     * I18n
-     */
     @Autowired
     private MessageSource messages;
 
-    /**
-     * Repository of {@link DataSource}
-     */
     @Autowired
     private DataSourceRepository dataSourceRepository;
 
 	/*-------------------------------------------------------------------
-	 *				 		    BEHAVIORS
+     *				 		    BEHAVIORS
 	 *-------------------------------------------------------------------*/
 
     /**
-     * Method to insert an {@link DataSource}
+     * Insere uma nova fonte de dados.
      *
-     * @param dataSource
-     * @return DataSource
+     * @param dataSource O objeto da fonte de dados.
+     * @return A fonte de dados adicionada com o ID ajustado.
      */
     public DataSource insertDataSource(DataSource dataSource) {
-        try {
-            // limpa o ID para evitar que haja duplicação
-            dataSource.setId(0L);
-            dataSource = this.dataSourceRepository.save(dataSource);
-        } catch (DataIntegrityViolationException e) {
-            LOG.info(e.getMessage());
-            final String error = e.getCause().getCause().getMessage();
-
-            this.dataIntegrityViolationException(error);
-        }
+        // limpa o ID para evitar que haja duplicação
+        dataSource.setId(0L);
+        dataSource = this.dataSourceRepository.save(dataSource);
         return dataSource;
     }
 
     /**
-     * Method to update an {@link DataSource}
+     * Atualiza uma fonte de dados existente ou cria uma nova caso ela não
+     * estiver cadastrada.
      *
-     * @param dataSource
-     * @return dataSource
+     * @param dataSource O objeto da fonte de dados.
+     * @return A fonte de dados atualizada ou criada.
      */
     public DataSource updateDataSource(DataSource dataSource) {
 
-        try {
-            DataSource oldDataSource = this.dataSourceRepository.findOne(dataSource.getId());
-
+        DataSource oldDataSource = this.dataSourceRepository.findOne(dataSource.getId());
+        // se existir
+        if (oldDataSource != null) {
             /*
              * Checa se a fonte de dados mudou de interna para externa e vice-versa. Caso
              * isto ocorra, impede a alteração caso existam camadas associadas a esta fonte.
              */
             if (oldDataSource.isInternal() != dataSource.isInternal() &&
                     oldDataSource.getLayers().size() > 0)
-                throw new DataIntegrityViolationException("Não é possível alterar a fonte de dados");
+                throw new RuntimeException("Não é possível alterar a fonte de dados");
+            // ajusta o ID para evitar a criação de um novo
+            dataSource.setId(oldDataSource.getId());
+        } else
+            // adiciona a fonte em vez disso
+            dataSource.setId(0L);
 
-            dataSource = this.dataSourceRepository.save(dataSource);
-            return dataSource;
-        } catch (DataIntegrityViolationException e) {
-            LOG.info(e.getMessage());
-            final String error = e.getCause().getCause().getMessage();
-
-            this.dataIntegrityViolationException(error);
-        }
-        return null;
+        dataSource = this.dataSourceRepository.save(dataSource);
+        return dataSource;
     }
 
     /**
-     * Method to remove an {@link DataSource}
+     * Remove a fonte de dados passada.
      *
-     * @param id
+     * @param dataSource O objeto da fonte de dados a ser removida.
+     * @return Retorna <code>true</code> se a fonte for removida. Caso contrário,
+     * retorna <code>false</code>.
      */
-    public void removeDataSource(Long id) {
-        this.dataSourceRepository.delete(id);
+    public boolean removeDataSource(DataSource dataSource) {
+        // busca antes de apagar
+        dataSource = this.dataSourceRepository.findOne(dataSource.getId());
+        if (dataSource != null)
+            this.dataSourceRepository.delete(dataSource);
+        return dataSource != null;
     }
 
     /**
-     * Method to find an {@link DataSource} by id
+     * Busca uma fonte de dados pelo ID passado.
      *
-     * @param id
-     * @return dataSource
-     * @throws JAXBException
+     * @param id O ID da fonte de dados a ser buscada.
+     * @return Retorna o objeto da fonte de dados caso ela existir. Caso contrário,
+     * retorna <code>null</code>.
      */
     @Transactional(readOnly = true)
-    public DataSource findDataSourceById(Long id) {
+    public DataSource getDataSource(long id) {
         return this.dataSourceRepository.findOne(id);
     }
 
     /**
-     * Method to list all {@link DataSource}
+     * Retorna a lista de todas as fontes de dados cadastradas.
      *
-     * @return dataSource
-     * @throws JAXBException
+     * @return A lista de fontes de dados.
      */
     @Transactional(readOnly = true)
-    public List<DataSource> listAllDataSource() {
+    public List<DataSource> getDataSources() {
         return this.dataSourceRepository.listAll();
     }
 
@@ -157,26 +135,4 @@ public class DataSourceService {
     public Page<DataSource> listInternalDataSourceByFilters(String filter, PageRequest pageable) {
         return this.dataSourceRepository.listInternalDatasourceByFilters(filter, pageable);
     }
-
-    /**
-     * Method to verify DataIntegrityViolations and throw IllegalArgumentException with the field name
-     *
-     * @param error
-     * @return void
-     * @throws IllegalArgumentException
-     */
-    private void dataIntegrityViolationException(String error) {
-        String fieldError = "";
-
-        if (error.contains("uk_data_source_name")) {
-            fieldError = this.messages.getMessage("Name", new Object[]{}, null);
-        } else if (error.contains("uk_data_source_url")) {
-            fieldError = this.messages.getMessage("Address", new Object[]{}, null);
-        }
-
-        if (!fieldError.isEmpty()) {
-            throw new IllegalArgumentException(this.messages.getMessage("The-field-entered-already-exists,-change-and-try-again", new Object[]{fieldError}, null));
-        }
-    }
-
 }

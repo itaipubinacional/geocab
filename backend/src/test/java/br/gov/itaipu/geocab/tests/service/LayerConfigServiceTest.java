@@ -50,7 +50,7 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest {
 
         Assert.assertNull(layer.getId());
 
-        DataSource dataSource = dataSourceService.findDataSourceById(1L);
+        DataSource dataSource = dataSourceService.getDataSource(1L);
         LayerGroup layerGroup = layerGroupService.findLayerGroupById(1L);
 
         layer.setDataSource(dataSource);
@@ -146,7 +146,7 @@ public class LayerConfigServiceTest extends AbstractIntegrationTest {
 
         Assert.assertNull(layer.getId());
 
-        DataSource dataSource = dataSourceService.findDataSourceById(1L);
+        DataSource dataSource = dataSourceService.getDataSource(1L);
         LayerGroup layerGroup = layerGroupService.findLayerGroupById(1L);
 
         layer.setDataSource(dataSource);
