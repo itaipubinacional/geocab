@@ -14,7 +14,7 @@ export class ConfirmModalDialogComponent implements OnInit {
     @ViewChild(ModalWindowComponent) private modalWin: ModalWindowComponent;
 
 
-    private callback: any;
+    private callback: Function;
 
     constructor() {
     }
@@ -31,7 +31,7 @@ export class ConfirmModalDialogComponent implements OnInit {
         this.modalWin.hide();
     }
 
-    show(callback: any) {
+    show(callback: Function) {
         this.callback = callback;
         this.modalWin.show();
     }
