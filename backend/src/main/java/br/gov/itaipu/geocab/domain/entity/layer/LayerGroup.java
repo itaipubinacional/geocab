@@ -271,7 +271,7 @@ public class LayerGroup extends AbstractEntity
 
     /**
      * @return the layerGroupUpper
-     */
+     */    
     public LayerGroup getLayerGroupUpper() {
         return layerGroupUpper;
     }
