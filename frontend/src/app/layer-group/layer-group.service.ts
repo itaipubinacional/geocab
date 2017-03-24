@@ -29,7 +29,7 @@ export class LayerGroupService {
         let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
-        return this.http.delete('http://localhost:8080/api/layer-group', {body: layerGroup, headers: headers})
+        return this.http.delete('http://localhost:8080/api/layer-group/' + layerGroup.id, options)
             .toPromise()
             .then()
             .catch(res => this.handleError(res));
