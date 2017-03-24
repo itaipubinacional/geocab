@@ -14,7 +14,8 @@ const routes: Routes = [
         canActivateChild: [AdminUserRouteGuard],
         children: [
             {path: '', component: ListLayerGroupComponent},
-            {path: 'new', component: DetailLayerGroupComponent}
+            {path: 'new', component: DetailLayerGroupComponent},
+            {path: ':id', component: DetailLayerGroupComponent},
         ]
     },
 ];

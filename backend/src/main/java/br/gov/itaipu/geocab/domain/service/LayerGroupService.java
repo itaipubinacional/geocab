@@ -146,7 +146,7 @@ public class LayerGroupService {
      */
     
     public LayerGroup updateLayerGroup(LayerGroup layerGroup) {
-        return hasChildren(this.layerGroupRepository.save(layerGroup));
+        return this.layerGroupRepository.save(layerGroup);
     }
 
 
@@ -158,7 +158,8 @@ public class LayerGroupService {
      */
     @Transactional(readOnly = true)
     public LayerGroup findLayerGroupById(Long id) {
-        return hasChildren(this.layerGroupRepository.findOne(id));
+        //return hasChildren(this.layerGroupRepository.findOne(id));
+    	return this.layerGroupRepository.findLayerGroupById(id);
     }
 
     /**

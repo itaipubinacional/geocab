@@ -10,7 +10,18 @@ export class LayerGroupService {
     }
 
     getLayerGroupById(id: number): Promise<LayerGroup> {
-      return Promise.resolve(new LayerGroup());
+      
+      let headers = this.userService.createAuthorizationHeaders();
+      let options = new RequestOptions({headers: headers});
+
+      return this.http.get('http://localhost:8080/api/layer-group/' + id, options)
+        .toPromise()
+        .then(
+            res => {
+                console.log(res);
+                return res.json();
+            })
+        .catch(res => this.handleError(res));
     }
 
     deleteLayerGroup(layerGroup: LayerGroup): Promise<any> {
@@ -31,6 +42,18 @@ export class LayerGroupService {
         let options = new RequestOptions({headers: headers});
 
         return this.http.post('http://localhost:8080/api/layer-group', layerGroup, options)
+            .toPromise()
+            .then(res => res.json())
+            .catch(res => this.handleError(res));
+    }
+
+    updateLayerGroup(layerGroup: LayerGroup): Promise<LayerGroup> {
+        
+        // cria o header de autorização
+        let headers = this.userService.createAuthorizationHeaders();
+        let options = new RequestOptions({headers: headers});
+
+        return this.http.put('http://localhost:8080/api/layer-group', layerGroup, options)
             .toPromise()
             .then(res => res.json())
             .catch(res => this.handleError(res));
