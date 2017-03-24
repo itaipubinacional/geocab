@@ -28,18 +28,30 @@ export class DetailLayerGroupComponent implements OnInit {
             let id = parseInt(requestType, 10);
             this.layerGroupService.getLayerGroupById(id)
                 .then((ds) => {
-                  this.model = ds;
+                    console.log(ds);
+                  this.model = ds;                  
                 });
         }
+
     }
 
     onSubmit() {
-        // salva o grupo de camadas
-        this.layerGroupService.createLayerGroup(this.model)
-            // e redireciona para a lista de grupos de camadas
-            .then(() => this.router.navigate(['/layer-group']))
-            .catch(error => alert(error));
+        let res;
 
+        // verifica se é edição de um grupo existente ou um novo grupo de camadas.
+        console.log(this.model); 
+        if (!this.model.id) {
+            // salva o grupo de camadas
+            res = this.layerGroupService.createLayerGroup(this.model);                            
+        } else {
+            // atualiza o grupo de camadas
+            console.log('model: '+this.model);
+            res = this.layerGroupService.updateLayerGroup(this.model);
+        }
+        
+        // retorna para a lista de grupos de camadas
+        res.then(() => this.router.navigate(['./layer-group']))
+        .catch(error => console.log(error));
     }
 
 }

@@ -2,6 +2,7 @@ import { LayerGroup } from '../../shared/model/layer-group';
 import { LayerGroupService } from '../layer-group.service';
 import { ConfirmModalDialogComponent } from '../../shared/confirm-modal-dialog/confirm-modal-dialog.component';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -20,7 +21,7 @@ export class ListLayerGroupComponent implements OnInit {
   @ViewChild(ConfirmModalDialogComponent)
   confirmModal: ConfirmModalDialogComponent;
 
-  constructor(private layerGroupService: LayerGroupService) {
+  constructor(private layerGroupService: LayerGroupService, private router: Router) {
       this.layerTree.data = null;
       this.layerTree.children = [];
    }
@@ -41,6 +42,7 @@ export class ListLayerGroupComponent implements OnInit {
   }
   
   edit(event) {
+    this.router.navigate(['./layer-group/' + event.id]);
     console.log(event);
   }
 
