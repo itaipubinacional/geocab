@@ -1,77 +1,75 @@
-import { LayerGroup } from '../../shared/model/layer-group';
-import { LayerGroupService } from '../layer-group.service';
-import { ConfirmModalDialogComponent } from '../../shared/confirm-modal-dialog/confirm-modal-dialog.component';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-
-declare var $: any;
+import {LayerGroup} from "../../shared/model/layer-group";
+import {LayerGroupService} from "../layer-group.service";
+import {ConfirmModalDialogComponent} from "../../shared/confirm-modal-dialog/confirm-modal-dialog.component";
+import {Component, OnInit, ViewChild} from "@angular/core";
 
 @Component({
-  selector: 'app-list-layer-group',
-  templateUrl: './list-layer-group.component.html',
-  styleUrls: ['./list-layer-group.component.css'],
-  providers: [LayerGroupService]
+    selector: 'app-list-layer-group',
+    templateUrl: './list-layer-group.component.html',
+    styleUrls: ['./list-layer-group.component.css'],
+    providers: [LayerGroupService]
 })
 
 export class ListLayerGroupComponent implements OnInit {
 
-  layerGroups: LayerGroup[];
-  layerTree: any = {};
-  
-  @ViewChild(ConfirmModalDialogComponent)
-  confirmModal: ConfirmModalDialogComponent;
+    layerGroups: LayerGroup[];
+    layerTree: any = {};
 
-  constructor(private layerGroupService: LayerGroupService) {
-      this.layerTree.data = null;
-      this.layerTree.children = [];
-   }
+    @ViewChild(ConfirmModalDialogComponent)
+    confirmModal: ConfirmModalDialogComponent;
 
-  ngOnInit() {
-    this.refresh();
-  }
-
-  remove(event) {
-    this.confirmModal.setTitle('Remover grupo de camadas');
-    this.confirmModal.setMessage('Tem certeza que deseja remover o grupo de camadas: ' + event.name);
-    this.confirmModal.show(() => {
-      let group = new LayerGroup();
-      group.id = event.id;
-      this.layerGroupService.deleteLayerGroup(group)
-        .then(() => this.refresh());            
-    });    
-  }
-  
-  edit(event) {
-    console.log(event);
-  }
-
-  private refresh() {
-    this.layerGroupService.getLayerGroups()
-    .then((lgs) => {
-        this.layerGroups = lgs;
-        this.layerTree.children = this.convertLayerTree(this.layerGroups);
-      },
-          error => alert(error));
-  }
-
-  /***
-   *  converte a estrutura recursiva do grupo de camadas para a estrutura de árvore
-   *  esperada pelo componente TreeView.
-   */
-  private convertLayerTree(layerGroups: LayerGroup[]) {
-    let tree = [];
-
-    for (let group of layerGroups) {
-      let node = { children : null, data : null};
-
-      node.data = group;
-      if (group.groups !== null)
-         node.children = this.convertLayerTree(group.groups);
-
-      tree.push(node);
+    constructor(private layerGroupService: LayerGroupService) {
+        this.layerTree.data = null;
+        this.layerTree.children = [];
     }
 
-    return tree;
+    ngOnInit() {
+        this.refresh();
+    }
 
-  }
+    remove(event) {
+        this.confirmModal.title = 'Remover grupo de camadas';
+        this.confirmModal.message = `Tem certeza que deseja remover o grupo de camadas: ${event.name}`;
+        this.confirmModal.show(() => {
+            let group = new LayerGroup();
+            group.id = event.id;
+            this.layerGroupService.deleteLayerGroup(group)
+                .then(() => this.refresh());
+        });
+    }
+
+    edit(event) {
+        console.log(event);
+    }
+
+    private refresh() {
+        this.layerGroupService.getLayerGroups()
+            .then((lgs) => {
+                    this.layerGroups = lgs;
+                    this.layerTree.children = this.convertLayerTree(this.layerGroups);
+                },
+                error => alert(error));
+    }
+
+    /***
+     *  converte a estrutura recursiva do grupo de camadas para a estrutura de árvore
+     *  esperada pelo componente TreeView.
+     */
+    private convertLayerTree(layerGroups: LayerGroup[]) {
+        let tree = [];
+
+        for (let group of layerGroups) {
+            let node = {children: null, data: null};
+
+            node.data = group;
+            if (group.groups !== null)
+                node.children = this.convertLayerTree(group.groups);
+
+            tree.push(node);
+        }
+
+        return tree;
+
+    }
 
 }
