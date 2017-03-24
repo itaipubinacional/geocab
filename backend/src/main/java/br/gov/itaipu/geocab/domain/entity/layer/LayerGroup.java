@@ -6,6 +6,8 @@ package br.gov.itaipu.geocab.domain.entity.layer;
 import br.gov.itaipu.geocab.domain.entity.AbstractEntity;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -272,6 +274,7 @@ public class LayerGroup extends AbstractEntity
     /**
      * @return the layerGroupUpper
      */
+    
     public LayerGroup getLayerGroupUpper() {
         return layerGroupUpper;
     }

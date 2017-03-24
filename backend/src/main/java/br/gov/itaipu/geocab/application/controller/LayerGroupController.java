@@ -41,8 +41,10 @@ public class LayerGroupController {
     
     @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('admin')")
-    public @ResponseBody LayerGroup updateLayerGroup(@RequestBody LayerGroup layerGroup) {
-    	return this.layerGroupService.updateLayerGroup(layerGroup);
+    public @ResponseBody LayerGroup updateLayerGroup(@RequestBody LayerGroup layerGroup) {    	    	
+    	LayerGroup lg =  this.layerGroupService.updateLayerGroup(layerGroup);
+    	return this.layerGroupService.findLayerGroupById(lg.getId());
+    	
     	
     }
     
