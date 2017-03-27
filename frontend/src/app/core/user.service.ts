@@ -18,6 +18,30 @@ import {Headers} from "@angular/http";
 export class UserService {
 
     constructor(private oauthService: OAuthService) {
+        /*
+         * A configuração do serviço do OAuth2 deve ser realizada antes que
+         * qualquer componentente/serviço da aplicação seja instanciado.
+         */
+        // login-Url
+        this.oauthService.loginUrl = 'https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/auth';
+
+        this.oauthService.clientId = 'geocab-dev-becker';
+        this.oauthService.scope = '';
+        this.oauthService.oidc = true;
+        this.oauthService.setStorage(localStorage);
+        this.oauthService.logoutUrl = 'https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/logout';
+        this.oauthService.tokenEndpoint = 'https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/token';
+        this.oauthService.userinfoEndpoint = 'https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/userinfo';
+
+        this.oauthService.tryLogin({
+            validationHandler: context => {
+                /*
+                 * Tenta carregar as informações do usuário. Caso não conseguir é porque
+                 * não está autenticado.
+                 */
+                return this.oauthService.loadUserProfile();
+            }
+        });
     }
 
     /**
@@ -26,6 +50,7 @@ export class UserService {
      * que estiver configurado no sistema.
      */
     login(): void {
+        this.oauthService.redirectUri = window.location.href;
         this.oauthService.initImplicitFlow();
     }
 
@@ -33,6 +58,7 @@ export class UserService {
      * Função que desloga o usuário atual.
      */
     logout(): void {
+        this.oauthService.redirectUri = window.location.origin;
         this.oauthService.logOut();
     }
 
@@ -58,7 +84,7 @@ export class UserService {
         // se o usuário estiver logado
         if (this.authenticated) {
             let token: string = this.oauthService.getAccessToken();
-            headers.append("Authorization", "Bearer " + token);
+            headers.append('Authorization', `Bearer ${token}`);
         }
     }
 
@@ -71,15 +97,15 @@ export class UserService {
     hasRole(role: string): boolean {
         /*
          * O Spring requer que o objeto retornado do user_info tenha o claim
-          * authorities com a lista de roles do usuário com o prefixo 'ROLE_'.
+         * authorities com a lista de roles do usuário com o prefixo 'ROLE_'.
          */
         let claims = this.oauthService.getIdentityClaims();
-        if (!claims && !("authorities" in claims)) return false;
+        if (!claims && !('authorities' in claims)) return false;
 
         let authoritiesClaim = claims.authorities;
 
         // checa se o usuário possui a role desejada
-        return authoritiesClaim.indexOf("ROLE_" + role) > -1;
+        return authoritiesClaim.indexOf(`ROLE_${role}`) > -1;
     }
 
     /**

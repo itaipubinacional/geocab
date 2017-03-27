@@ -1,7 +1,7 @@
 import {LayerGroup} from "../shared/model/layer-group";
 import {Injectable} from "@angular/core";
 import {Http, Response, RequestOptions} from "@angular/http";
-import {UserService} from "../shared/user.service";
+import {UserService} from "../core/user.service";
 
 @Injectable()
 export class LayerGroupService {
@@ -10,18 +10,18 @@ export class LayerGroupService {
     }
 
     getLayerGroupById(id: number): Promise<LayerGroup> {
-      
-      let headers = this.userService.createAuthorizationHeaders();
-      let options = new RequestOptions({headers: headers});
 
-      return this.http.get('http://localhost:8080/api/layer-group/' + id, options)
-        .toPromise()
-        .then(
-            res => {
-                console.log(res);
-                return res.json();
-            })
-        .catch(res => this.handleError(res));
+        let headers = this.userService.createAuthorizationHeaders();
+        let options = new RequestOptions({headers: headers});
+
+        return this.http.get('http://localhost:8080/api/layer-group/' + id, options)
+            .toPromise()
+            .then(
+                res => {
+                    console.log(res);
+                    return res.json();
+                })
+            .catch(res => this.handleError(res));
     }
 
     deleteLayerGroup(layerGroup: LayerGroup): Promise<any> {
@@ -48,7 +48,7 @@ export class LayerGroupService {
     }
 
     updateLayerGroup(layerGroup: LayerGroup): Promise<LayerGroup> {
-        
+
         // cria o header de autorização
         let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});

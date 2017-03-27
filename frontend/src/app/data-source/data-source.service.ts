@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
-import {DataSource, DataSourceType} from "../shared/model/data-source";
+import {DataSource} from "../shared/model/data-source";
 import {Http, Response, RequestOptions} from "@angular/http";
 import "rxjs/add/operator/toPromise";
-import {UserService} from "../shared/user.service";
+import {UserService} from "../core/user.service";
 
 @Injectable()
 export class DataSourceService {
@@ -67,7 +67,6 @@ export class DataSourceService {
     }
 
     private handleError(error: Response | any) {
-        // In a real world app, we might use a remote logging infrastructure
         let errMsg: string;
         if (error instanceof Response) {
             const body = error.json() || '';

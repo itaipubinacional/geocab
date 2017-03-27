@@ -1,9 +1,7 @@
-import {Routes, RouterModule} from '@angular/router';
-
-import {MapComponent} from './map/map.component';
+import {Routes, RouterModule} from "@angular/router";
 import {NgModule} from "@angular/core";
 
-const routes:Routes = [
+const routes: Routes = [
     {path: '', redirectTo: 'map', pathMatch: 'full'},
     {path: 'map', loadChildren: 'app/map/map.module#MapModule'},
     {path: 'data-source', loadChildren: 'app/data-source/data-source.module#DataSourceModule'},
