@@ -1,12 +1,11 @@
 import {Routes, RouterModule} from "@angular/router";
-
 import {ListDataSourcesComponent} from "./list-data-sources/list-data-sources.component";
 import {NgModule} from "@angular/core";
 import {DataSourceComponent} from "./data-source.component";
 import {DetailDataSourceComponent} from "./detail-data-source/detail-data-source.component";
-import {AdminUserRouteGuard} from "../shared/user.route-guards";
+import {AdminUserRouteGuard} from "../core/user.route-guards";
 
-const routes:Routes = [
+const routes: Routes = [
     {
         path: '',
         component: DataSourceComponent,

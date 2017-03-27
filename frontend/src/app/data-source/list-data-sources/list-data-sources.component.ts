@@ -21,7 +21,7 @@ export class ListDataSourcesComponent implements OnInit {
         // pega os datasources
         this.dataSourceService.getDataSources()
             .then(ds => this.dataSources = ds,
-                error => alert(error));
+                  error => alert(error));
     }
 
     remove(dataSource: DataSource): void {
@@ -33,7 +33,7 @@ export class ListDataSourcesComponent implements OnInit {
                 .then(() => {
                     // busca a posição da fonte na lista e remove
                     let idx = this.dataSources.indexOf(dataSource);
-                    if (idx != -1) {
+                    if (idx !== -1) {
                         this.dataSources.splice(idx, 1);
                     }
                 })

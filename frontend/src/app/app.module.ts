@@ -3,17 +3,17 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app.routes';
 import {SharedModule} from './shared/shared.module';
-import {OAuthModule} from 'angular-oauth2-oidc';
+import {CoreModule} from "./core/core.module";
 
 @NgModule({
     declarations: [
         AppComponent
     ],
     imports: [
+        CoreModule,
         SharedModule,
         BrowserModule,
-        AppRoutingModule,
-        OAuthModule.forRoot()
+        AppRoutingModule
     ],
     providers: [],
     bootstrap: [AppComponent]

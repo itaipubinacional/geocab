@@ -2,10 +2,8 @@ import {Routes, RouterModule} from "@angular/router";
 import {ListLayerGroupComponent} from "./list-layer-group/list-layer-group.component";
 import {NgModule} from "@angular/core";
 import {LayerGroupComponent} from "./layer-group.component";
-import {AdminUserRouteGuard} from "../shared/user.route-guards";
-
-
-import {DetailLayerGroupComponent} from './detail-layer-group/detail-layer-group.component';
+import {DetailLayerGroupComponent} from "./detail-layer-group/detail-layer-group.component";
+import {AdminUserRouteGuard} from "../core/user.route-guards";
 
 const routes: Routes = [
     {

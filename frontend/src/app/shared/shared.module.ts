@@ -3,12 +3,10 @@ import {CommonModule} from "@angular/common";
 import {NavComponent} from "./nav/nav.component";
 import {RouterModule} from "@angular/router";
 import {HttpModule} from "@angular/http";
-import {UserService} from "./user.service";
-import {UserRouteGuard, ModeratorUserRouteGuard, AdminUserRouteGuard} from "./user.route-guards";
 import {TreeViewComponent} from "./tree-view/tree-view.component";
-import { LogoComponent } from './logo/logo.component';
-import { ConfirmModalDialogComponent } from './confirm-modal-dialog/confirm-modal-dialog.component';
-import { ModalWindowComponent } from './modal-window/modal-window.component';
+import {LogoComponent} from "./logo/logo.component";
+import {ConfirmModalDialogComponent} from "./confirm-modal-dialog/confirm-modal-dialog.component";
+import {ModalWindowComponent} from "./modal-window/modal-window.component";
 
 @NgModule({
     imports: [
@@ -31,12 +29,6 @@ import { ModalWindowComponent } from './modal-window/modal-window.component';
         LogoComponent,
         ConfirmModalDialogComponent,
         ModalWindowComponent
-    ],
-    providers: [
-        UserService,
-        UserRouteGuard,
-        ModeratorUserRouteGuard,
-        AdminUserRouteGuard
     ]
 })
 export class SharedModule {
