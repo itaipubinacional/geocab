@@ -21,7 +21,8 @@ import {ModalWindowComponent} from "./modal-window/modal-window.component";
         NavComponent,
         TreeViewComponent,
         LogoComponent,
-        ConfirmModalDialogComponent
+        ConfirmModalDialogComponent,
+        ModalWindowComponent
     ],
     declarations: [
         NavComponent,

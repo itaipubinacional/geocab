@@ -1,6 +1,10 @@
 package br.gov.itaipu.geocab.application.configuration;
 
+import br.gov.itaipu.geocab.application.security.AuthConfiguration;
+import br.gov.itaipu.geocab.application.security.OidcAuthConfiguration;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.SaltSource;
@@ -32,6 +36,16 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
         SystemWideSaltSource saltSource = new SystemWideSaltSource();
         saltSource.setSystemWideSalt(this.salt);
         return saltSource;
+    }
+
+    @Bean
+    @Qualifier("authConfiguration")
+    public AuthConfiguration authConfiguration(ApplicationContext appContext) {
+        /*
+         * No futuro o sistema deverá suportar outra forma de autenticação. Por enquanto
+         * retorna as configurações do OpenID Connect.
+         */
+        return appContext.getBean("oidcAuth", AuthConfiguration.class);
     }
 
     @Override
