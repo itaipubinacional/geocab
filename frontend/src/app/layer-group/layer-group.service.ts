@@ -14,7 +14,7 @@ export class LayerGroupService {
         let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
-        return this.http.get('http://localhost:8080/api/layer-group/' + id, options)
+        return this.http.get('/api/layer-group/' + id, options)
             .toPromise()
             .then(
                 res => {
@@ -29,7 +29,7 @@ export class LayerGroupService {
         let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
-        return this.http.delete('http://localhost:8080/api/layer-group/' + layerGroup.id, options)
+        return this.http.delete('/api/layer-group/' + layerGroup.id, options)
             .toPromise()
             .then()
             .catch(res => this.handleError(res));
@@ -41,7 +41,7 @@ export class LayerGroupService {
         let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
-        return this.http.post('http://localhost:8080/api/layer-group', layerGroup, options)
+        return this.http.post('/api/layer-group', layerGroup, options)
             .toPromise()
             .then(res => res.json())
             .catch(res => this.handleError(res));
@@ -53,7 +53,7 @@ export class LayerGroupService {
         let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
-        return this.http.put('http://localhost:8080/api/layer-group', layerGroup, options)
+        return this.http.put('/api/layer-group', layerGroup, options)
             .toPromise()
             .then(res => res.json())
             .catch(res => this.handleError(res));
@@ -64,7 +64,7 @@ export class LayerGroupService {
         let headers = this.userService.createAuthorizationHeaders();
         let options = new RequestOptions({headers: headers});
 
-        return this.http.get('http://localhost:8080/api/layer-group', options)
+        return this.http.get('/api/layer-group', options)
             .toPromise()
             .then(res => res.json())
             .catch(res => this.handleError(res));

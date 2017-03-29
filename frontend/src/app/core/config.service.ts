@@ -23,7 +23,7 @@ export class ConfigService {
      */
     load() {
         // faz a requisição para o backend para este retornar a configuração
-        return this.http.get("http://localhost:8080/api/.config")
+        return this.http.get("/api/.config")
             .toPromise()
             .then(res => {
                 this.config = res.json();

@@ -7,7 +7,7 @@
   "apps": [
     {
       "root": "src",
-      "outDir": "dist",
+      "outDir": "../backend/src/main/resources/static",
       "assets": [
         "assets",
         "favicon.ico"
