@@ -1,6 +1,8 @@
 import {Injectable} from "@angular/core";
 import {OAuthService} from "angular-oauth2-oidc";
 import {Headers} from "@angular/http";
+import {ConfigService} from "./config.service";
+import {isUndefined} from "util";
 
 /**
  * Classe que contém os serviços relacionados ao usuário do sistema. Os
@@ -17,21 +19,32 @@ import {Headers} from "@angular/http";
 @Injectable()
 export class UserService {
 
-    constructor(private oauthService: OAuthService) {
+    constructor(private oauthService: OAuthService, private configService: ConfigService) {
+    }
+
+    /**
+     * Função que carrega o serviço de usuário. Esta função deve ser chamada antes que
+     * seja realizada quaisquer operação sobre o sistema.
+     */
+    load() {
         /*
          * A configuração do serviço do OAuth2 deve ser realizada antes que
          * qualquer componentente/serviço da aplicação seja instanciado.
          */
         // login-Url
-        this.oauthService.loginUrl = 'https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/auth';
+        this.oauthService.loginUrl = this.configService.config.auth.userAuthorizationUrl;
 
-        this.oauthService.clientId = 'geocab-dev-becker';
+        this.oauthService.clientId = this.configService.config.auth.clientId;
         this.oauthService.scope = '';
         this.oauthService.oidc = true;
         this.oauthService.setStorage(localStorage);
-        this.oauthService.logoutUrl = 'https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/logout';
-        this.oauthService.tokenEndpoint = 'https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/token';
-        this.oauthService.userinfoEndpoint = 'https://kchom.itaipu:9898/auth/realms/geocab/protocol/openid-connect/userinfo';
+
+        this.oauthService.tokenEndpoint = this.configService.config.auth.accessTokenUrl;
+        this.oauthService.userinfoEndpoint = this.configService.config.auth.userInfoUrl;
+
+        // a URL de logout é opcional no backend
+        if (!isUndefined(this.configService.config.auth.logoutUrl))
+            this.oauthService.logoutUrl = this.configService.config.auth.logoutUrl;
 
         this.oauthService.tryLogin({
             validationHandler: context => {

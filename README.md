@@ -17,7 +17,9 @@ Como começar a desenvolver
 
 4. Configure as propriedades contidas no arquivo copiado de acordo com as configurações do seu ambiente
 
-5. Divirta-se! :smile:
+5. Configure o arquivo ```proxy.conf.json``` com as configurações do _proxy_ do back-end conforme descrito [nesta página](https://github.com/angular/angular-cli/blob/master/docs/documentation/stories/proxy.md)
+
+6. Divirta-se! :smile:
 
 
 

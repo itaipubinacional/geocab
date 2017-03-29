@@ -7,7 +7,7 @@ import {Injectable} from "@angular/core";
  * pode acessar uma determinada rota do Angular. As  implementações desta classe
  * deverão representar os perfis de usuários utilizados pela aplicação.
  */
-abstract class AbstractUserRouteGuard implements CanActivate, CanActivateChild {
+export abstract class AbstractUserRouteGuard implements CanActivate, CanActivateChild {
 
     constructor(protected userService: UserService, protected router: Router) {
     }

@@ -1,43 +1,64 @@
 package br.gov.itaipu.geocab.application.configuration;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
+import org.springframework.core.io.Resource;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
-import org.springframework.web.context.request.RequestContextListener;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.resource.PathResourceResolver;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /**
  * Created by lcvmelo on 23/02/2017.
  */
 @Configuration
-public class WebConfig {
+public class WebConfig extends WebMvcConfigurerAdapter {
 
-    @Bean
-    public RequestContextListener requestContextListener(){
-        return new RequestContextListener();
-    }
+    @Autowired
+    private ResourceProperties resourceProperties = new ResourceProperties();
 
-    @Bean
-    public FilterRegistrationBean corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/api/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return bean;
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        /*
+         * O Spring precisa dessa lógica para suportar as rotas do HTML5 usadas
+         * pelo Angular.
+         */
+        Integer cachePeriod = resourceProperties.getCachePeriod();
+
+        registry.addResourceHandler(
+                "/**/*.css",
+                "/**/*.html",
+                "/**/*.js",
+                "/**/*.json",
+                "/**/*.bmp",
+                "/**/*.jpeg",
+                "/**/*.jpg",
+                "/**/*.png",
+                "/**/*.ttf",
+                "/**/*.eot",
+                "/**/*.svg",
+                "/**/*.woff",
+                "/**/*.woff2")
+                .addResourceLocations("classpath:/static/")
+                .setCachePeriod(cachePeriod);
+
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/index.html")
+                .setCachePeriod(cachePeriod)
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver() {
+                    @Override
+                    protected Resource getResource(String resourcePath,
+                                                   Resource location) throws IOException {
+                        return location.exists() && location.isReadable() ? location
+                                : null;
+                    }
+                });
     }
 
     @Bean
