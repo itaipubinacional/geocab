@@ -8,6 +8,7 @@ import {LogoComponent} from "./logo/logo.component";
 import {ConfirmModalDialogComponent} from "./confirm-modal-dialog/confirm-modal-dialog.component";
 import {ModalWindowComponent} from "./modal-window/modal-window.component";
 import {DefaultLayoutComponent} from './default-layout/default-layout.component';
+import {ToolbarComponent} from './toolbar/toolbar.component';
 
 @NgModule({
     imports: [
@@ -24,7 +25,8 @@ import {DefaultLayoutComponent} from './default-layout/default-layout.component'
         LogoComponent,
         ConfirmModalDialogComponent,
         ModalWindowComponent,
-        DefaultLayoutComponent
+        DefaultLayoutComponent,
+        ToolbarComponent
     ],
     declarations: [
         NavComponent,
@@ -32,7 +34,8 @@ import {DefaultLayoutComponent} from './default-layout/default-layout.component'
         LogoComponent,
         ConfirmModalDialogComponent,
         ModalWindowComponent,
-        DefaultLayoutComponent
+        DefaultLayoutComponent,
+        ToolbarComponent
     ]
 })
 export class SharedModule {

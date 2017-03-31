@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {ModalWindowComponent} from "../modal-window/modal-window.component";
 
 @Component({
-    selector: 'app-confirm-modal-dialog',
+    selector: 'geocab-confirm-modal-dialog',
     templateUrl: './confirm-modal-dialog.component.html',
     styleUrls: ['./confirm-modal-dialog.component.css']
 })

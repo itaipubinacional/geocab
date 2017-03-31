@@ -1,4 +1,36 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 0;
+    border-radius: 0;
+    background-color: rgb(88,88,90);
+    z-index: 100;
+}
+
 .navbar-header {
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.side-nav {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    border-right: 1px solid rgba(0,0,0,0.12);
+    z-index: 99;
+    background-color: rgb(255,255,255);
+}
+
+.body {
+    position: absolute;
+    top: 50px;
+    left: 300px;
+    right: 0;
 }

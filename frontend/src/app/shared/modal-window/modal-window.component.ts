@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 @Component({
-    selector: 'app-modal-window',
+    selector: 'geocab-modal-window',
     templateUrl: './modal-window.component.html',
     styleUrls: ['./modal-window.component.css']
 })

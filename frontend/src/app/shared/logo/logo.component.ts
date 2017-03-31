@@ -1,7 +1,7 @@
 import {Component, OnInit, Input} from '@angular/core';
 
 @Component({
-    selector: 'app-logo',
+    selector: 'geocab-logo',
     templateUrl: './logo.component.html',
     styleUrls: ['./logo.component.css']
 })

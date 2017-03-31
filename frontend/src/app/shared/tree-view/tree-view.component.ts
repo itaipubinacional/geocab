@@ -1,26 +1,27 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
-  selector: 'tree-view',
-  templateUrl: './tree-view.component.html',
-  styleUrls: ['./tree-view.component.css']
+    selector: 'geocab-tree-view',
+    templateUrl: './tree-view.component.html',
+    styleUrls: ['./tree-view.component.css']
 })
 export class TreeViewComponent implements OnInit {
 
-  @Input() node: any;
-  @Output() removeEvent: EventEmitter<any> = new EventEmitter();
-  @Output() editEvent: EventEmitter<any> = new EventEmitter();
+    @Input() node: any;
+    @Output() removeEvent: EventEmitter<any> = new EventEmitter();
+    @Output() editEvent: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }
+    constructor() {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  remove(data: any) {
-    this.removeEvent.emit(data);
-  }
+    remove(data: any) {
+        this.removeEvent.emit(data);
+    }
 
-  edit(data: any) {
-    this.editEvent.emit(data);
-  }
+    edit(data: any) {
+        this.editEvent.emit(data);
+    }
 }

@@ -1,20 +1,16 @@
 <div class="viewport">
 
-    <div class="navbar navbar-inverse">
-        <div class="container">
-            <div class="navbar-header">
-                <app-logo [fontColor]="'#ffffff'"></app-logo>
-            </div>
+    <div class="navbar">
+        <div class="navbar-header">
+            <geocab-logo [fontColor]="'#ffffff'"></geocab-logo>
         </div>
     </div>
 
-    <div class="container">
-        <div class="col-md-3">
-            <app-nav></app-nav>
-        </div>
+    <div class="side-nav">
+        <geocab-nav></geocab-nav>
+    </div>
 
-        <div class="col-md-9">
-            <ng-content select="[content-body]"></ng-content>
-        </div>
+    <div class="body">
+        <ng-content></ng-content>
     </div>
 </div>

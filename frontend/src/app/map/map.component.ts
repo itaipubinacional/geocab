@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 
 @Component({
-    selector: 'app-map',
+    selector: 'geocab-map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.css']
 })

@@ -1,64 +1,89 @@
-<div class="page-header">
-    <h1 *ngIf="!model.id">Nova Fonte de Dados Geográficos</h1>
-    <h1 *ngIf="model.id">Editar Fonte de Dados Geográficos</h1>
+<geocab-toolbar
+        [title]="model.id ? 'Editar Fonte de Dados Geográficos' : 'Nova Fonte de Dados Geográficos'">
+</geocab-toolbar>
+
+<div class="screen-content">
+    <form class="form-horizontal" (ngSubmit)="onSubmit()">
+
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Nome</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="name" name="name" required [(ngModel)]="model.name">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="externalDataSourceCheckbox" [(ngModel)]="externalDataSource">
+                        Fonte de dados externa
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <ng-container *ngIf="externalDataSource">
+            <div class="form-group">
+                <label for="serviceType" class="col-sm-2 control-label">Tipo de serviço</label>
+                <div class="col-sm-2">
+                    <select class="form-control" id="serviceType" name="serviceType"
+                            [(ngModel)]="model.serviceType">
+                        <option *ngFor="let dsType of dataSourceTypes" [value]="dsType">{{dsType}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="url" class="col-sm-2 control-label">Endereço</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="url" name="url" [(ngModel)]="model.url">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" class="btn btn-info">Testar conexão</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="authenticationRequiredCheckbox"
+                                   [(ngModel)]="authenticationRequired">
+                            Autenticação obrigatória
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="authenticationRequired">
+                <div class="form-group">
+                    <label for="username" class="col-sm-2 control-label">Usuário</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="username" name="username" [(ngModel)]="model.login">
+                    </div>
+                </div>
+
+                <span spacer-15></span>
+
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">Senha</label>
+                    <div class="col-sm-3">
+                        <input type="password" class="form-control" id="password" name="password"
+                               [(ngModel)]="model.password">
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-default" routerLink="/data-source">Cancelar</button>
+            </div>
+        </div>
+    </form>
 </div>
-
-<div class="screen-actions">
-    <button form="newForm" type="submit" class="btn btn-success">Salvar</button>
-    <button type="button" class="btn btn-warning">Testar conexão</button>
-    <button type="button" class="btn btn-danger" (click)="cancel()">Cancelar</button>
-</div>
-
-<form id="newForm" (ngSubmit)="onSubmit()">
-
-    <div class="form-group">
-        <label for="name">Nome</label>
-        <input type="text" class="form-control" id="name" name="name" required [(ngModel)]="model.name">
-    </div>
-
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" name="externalDataSourceCheckbox" [(ngModel)]="externalDataSource">
-            Fonte de dados externa
-        </label>
-    </div>
-
-    <ng-container *ngIf="externalDataSource">
-        <div class="flex-container">
-            <div class="form-group input-service-type">
-                <label for="serviceType">Tipo de serviço</label>
-                <select class="form-control" id="serviceType" name="serviceType" [(ngModel)]="model.serviceType">
-                    <option *ngFor="let dsType of dataSourceTypes" [value]="dsType">{{dsType}}</option>
-                </select>
-            </div>
-            <span spacer-15></span>
-
-            <div class="form-group input-url">
-                <label for="url">Endereço</label>
-                <input type="text" class="form-control" id="url" name="url" [(ngModel)]="model.url">
-            </div>
-        </div>
-
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="authenticationRequiredCheckbox" [(ngModel)]="authenticationRequired">
-                Autenticação obrigatória
-            </label>
-        </div>
-
-        <div *ngIf="authenticationRequired" class="flex-container">
-            <div class="form-group input-login">
-                <label for="username">Usuário</label>
-                <input type="text" class="form-control" id="username" name="username" [(ngModel)]="model.login">
-            </div>
-
-            <span spacer-15></span>
-
-            <div class="form-group input-password">
-                <label for="password">Senha</label>
-                <input type="password" class="form-control" id="password" name="password"
-                       [(ngModel)]="model.password">
-            </div>
-        </div>
-    </ng-container>
-</form>
