@@ -6,14 +6,14 @@
     <form class="form-horizontal" (ngSubmit)="onSubmit()">
 
         <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">Nome</label>
-            <div class="col-sm-6">
+            <label for="name" class="col-md-3 col-lg-2 control-label">Nome</label>
+            <div class="col-md-9 col-lg-6">
                 <input type="text" class="form-control" id="name" name="name" required [(ngModel)]="model.name">
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
+            <div class="col-md-offset-3 col-lg-offset-2 col-md-9 col-lg-10">
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="externalDataSourceCheckbox" [(ngModel)]="externalDataSource">
@@ -25,8 +25,8 @@
 
         <ng-container *ngIf="externalDataSource">
             <div class="form-group">
-                <label for="serviceType" class="col-sm-2 control-label">Tipo de serviço</label>
-                <div class="col-sm-2">
+                <label for="serviceType" class="col-md-3 col-lg-2 control-label">Tipo de serviço</label>
+                <div class="col-md-3 col-lg-2">
                     <select class="form-control" id="serviceType" name="serviceType"
                             [(ngModel)]="model.serviceType">
                         <option *ngFor="let dsType of dataSourceTypes" [value]="dsType">{{dsType}}</option>
@@ -35,20 +35,20 @@
             </div>
 
             <div class="form-group">
-                <label for="url" class="col-sm-2 control-label">Endereço</label>
-                <div class="col-sm-6">
+                <label for="url" class="col-md-3 col-lg-2 control-label">Endereço</label>
+                <div class="col-md-9 col-lg-6">
                     <input type="text" class="form-control" id="url" name="url" [(ngModel)]="model.url">
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
+                <div class="col-md-offset-3 col-lg-offset-2 col-md-9 col-lg-10">
                     <button type="button" class="btn btn-info">Testar conexão</button>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
+                <div class="col-md-offset-3 col-lg-offset-2 col-md-9 col-lg-10">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" name="authenticationRequiredCheckbox"
@@ -61,17 +61,15 @@
 
             <div *ngIf="authenticationRequired">
                 <div class="form-group">
-                    <label for="username" class="col-sm-2 control-label">Usuário</label>
-                    <div class="col-sm-3">
+                    <label for="username" class="col-md-3 col-lg-2 control-label">Usuário</label>
+                    <div class="col-md-5 col-lg-3">
                         <input type="text" class="form-control" id="username" name="username" [(ngModel)]="model.login">
                     </div>
                 </div>
 
-                <span spacer-15></span>
-
                 <div class="form-group">
-                    <label for="password" class="col-sm-2 control-label">Senha</label>
-                    <div class="col-sm-3">
+                    <label for="password" class="col-md-3 col-lg-2 control-label">Senha</label>
+                    <div class="col-md-5 col-lg-3">
                         <input type="password" class="form-control" id="password" name="password"
                                [(ngModel)]="model.password">
                     </div>
@@ -80,7 +78,7 @@
         </ng-container>
 
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
+            <div class="col-md-offset-3 col-lg-offset-2 col-md-9 col-lg-10">
                 <button type="submit" class="btn btn-primary">Salvar</button>
                 <button type="button" class="btn btn-default" routerLink="/data-source">Cancelar</button>
             </div>

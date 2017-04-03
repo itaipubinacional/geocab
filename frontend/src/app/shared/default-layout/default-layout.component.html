@@ -1,16 +1,22 @@
 <div class="viewport">
 
+    <div class="button-area">
+        <a (click)="clickMenuButton()">
+            <span class="glyphicon glyphicon-menu-hamburger"></span>
+        </a>
+    </div>
+
     <div class="navbar">
         <div class="navbar-header">
             <geocab-logo [fontColor]="'#ffffff'"></geocab-logo>
         </div>
     </div>
 
-    <div class="side-nav">
+    <div class="side-nav" [class.opened]="navOpened">
         <geocab-nav></geocab-nav>
     </div>
 
-    <div class="body">
+    <div class="body" (mousedown)="closeNavbar()">
         <ng-content></ng-content>
     </div>
 </div>

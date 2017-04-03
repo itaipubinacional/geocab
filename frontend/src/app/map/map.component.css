@@ -1,6 +1,6 @@
 .button-area {
     position: fixed;
-    top: 50px;
+    top: 0;
     background-color: rgba(255,255,255,0.80);
     z-index: 9;
 }
@@ -15,6 +15,7 @@
     height: 50px;
     padding: 5px 10px;
     position: fixed;
+    left: 50px;
     z-index: 10;
 }
 
@@ -37,4 +38,15 @@
 
 .map-content {
     height: 100%;
+}
+
+/* tela maiores que de tablet */
+@media (min-width: 768px) {
+    .button-area {
+        top: 50px;
+    }
+
+    .map-logo {
+        left: 0;
+    }
 }

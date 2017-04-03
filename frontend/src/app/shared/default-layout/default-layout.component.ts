@@ -7,10 +7,19 @@ import {Component, OnInit} from "@angular/core";
 })
 export class DefaultLayoutComponent implements OnInit {
 
+    navOpened: boolean = false;
+
     constructor() {
     }
 
     ngOnInit() {
     }
 
+    clickMenuButton() {
+        this.navOpened = !this.navOpened;
+    }
+
+    closeNavbar() {
+        this.navOpened = false;
+    }
 }
