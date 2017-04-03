@@ -4,7 +4,7 @@ import {DataSourceService} from "../data-source.service";
 import {ConfirmModalDialogComponent} from "../../shared/confirm-modal-dialog/confirm-modal-dialog.component";
 
 @Component({
-    selector: 'app-list-data-sources',
+    selector: 'geocab-list-data-sources',
     templateUrl: './list-data-sources.component.html',
     styleUrls: ['./list-data-sources.component.css']
 })

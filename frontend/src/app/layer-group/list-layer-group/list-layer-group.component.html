@@ -1,19 +1,14 @@
-<div class="page-header">
-    <h1>Grupos de Camadas</h1>
-</div>
+<geocab-toolbar title="Grupos de Camadas">
+    <a class="screen-action" routerLink="/layer-group/new">Adicionar novo grupo</a>
+</geocab-toolbar>
 
-<div class="panel">
-	<div class="row">
-	   <div class="col-sm-1 pull-right">
-    	   <a routerLink="/layer-group/new" class="btn btn-primary ">Novo</a>
-	   </div>
-	</div>
-</div>
+<geocab-confirm-modal-dialog></geocab-confirm-modal-dialog>
 
-<div class="panel panel-default">    
-    <div class="panel-body">
-        <app-confirm-modal-dialog></app-confirm-modal-dialog>
-        <tree-view [node]=layerTree (removeEvent)="remove($event)" (editEvent)="edit($event)"></tree-view>
+<div class="screen-content">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <geocab-tree-view [node]=layerTree (removeEvent)="remove($event)"
+                              (editEvent)="edit($event)"></geocab-tree-view>
+        </div>
     </div>
 </div>
-

@@ -4,7 +4,7 @@ import {DataSourceService} from "../data-source.service";
 import {DataSource, DataSourceType} from "../../shared/model/data-source";
 
 @Component({
-    selector: 'app-detail-data-source',
+    selector: 'geocab-detail-data-source',
     templateUrl: './detail-data-source.component.html',
     styleUrls: ['./detail-data-source.component.css']
 })
@@ -54,10 +54,6 @@ export class DetailDataSourceComponent implements OnInit {
         // e redireciona para a lista de datasources
         res.then(() => this.router.navigate(['/data-source']))
             .catch(error => alert(error));
-    }
-
-    cancel() {
-        this.router.navigate(['/data-source']);
     }
 
     private cleanModel() {

@@ -5,7 +5,7 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {Router} from "@angular/router";
 
 @Component({
-    selector: 'app-list-layer-group',
+    selector: 'geocab-list-layer-group',
     templateUrl: './list-layer-group.component.html',
     styleUrls: ['./list-layer-group.component.css'],
     providers: [LayerGroupService]

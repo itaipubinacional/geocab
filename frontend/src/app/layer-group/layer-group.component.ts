@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-layer-group',
+  selector: 'geocab-layer-group',
   templateUrl: './layer-group.component.html',
   styleUrls: ['./layer-group.component.css']
 })

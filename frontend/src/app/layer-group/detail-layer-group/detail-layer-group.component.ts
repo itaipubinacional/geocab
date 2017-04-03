@@ -1,13 +1,13 @@
-import { LayerGroup } from '../../shared/model/layer-group';
-import { LayerGroupService } from '../layer-group.service';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {LayerGroup} from '../../shared/model/layer-group';
+import {LayerGroupService} from '../layer-group.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
-  selector: 'app-detail-layer-group',
-  templateUrl: './detail-layer-group.component.html',
-  styleUrls: ['./detail-layer-group.component.css'],
-  providers: [LayerGroupService]
+    selector: 'geocab-detail-layer-group',
+    templateUrl: './detail-layer-group.component.html',
+    styleUrls: ['./detail-layer-group.component.css'],
+    providers: [LayerGroupService]
 })
 export class DetailLayerGroupComponent implements OnInit {
 
@@ -27,8 +27,8 @@ export class DetailLayerGroupComponent implements OnInit {
             // faz a leitura
             let id = parseInt(requestType, 10);
             this.layerGroupService.getLayerGroupById(id)
-                .then((lg) => {                    
-                  this.model = lg;                  
+                .then((lg) => {
+                    this.model = lg;
                 });
         }
 
@@ -38,18 +38,18 @@ export class DetailLayerGroupComponent implements OnInit {
         let res;
 
         // verifica se é edição de um grupo existente ou um novo grupo de camadas.
-        console.log(this.model); 
+        console.log(this.model);
         if (!this.model.id) {
             // salva o grupo de camadas
-            res = this.layerGroupService.createLayerGroup(this.model);                            
+            res = this.layerGroupService.createLayerGroup(this.model);
         } else {
-            // atualiza o grupo de camadas            
+            // atualiza o grupo de camadas
             res = this.layerGroupService.updateLayerGroup(this.model);
         }
-        
+
         // retorna para a lista de grupos de camadas
         res.then(() => this.router.navigate(['./layer-group']))
-        .catch(error => console.log(error));
+            .catch(error => console.log(error));
     }
 
 }

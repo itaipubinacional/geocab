@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {UserService} from "../../core/user.service";
 
 @Component({
-    selector: 'app-nav',
+    selector: 'geocab-nav',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.css']
 })
