@@ -12,7 +12,7 @@
     
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>GeoCAB - Cultivando água boa</title>
+		<title>GeoITAIPU Sustentável</title>
 		
 		<!-- Styles -->
 		<jsp:include page="../../default-styles.jsp"/>

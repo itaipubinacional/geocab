@@ -13,7 +13,7 @@
     <packaging>war</packaging>
  
     <build>
-        <finalName>geocab</finalName>
+        <finalName>geoitaipu</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>

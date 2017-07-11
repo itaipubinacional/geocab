@@ -22,8 +22,8 @@
 			</div>		
 		</div>
 		<div class="container-login">
+		    <h2 style="font-weight: bold; text-align: center;">GeoITAIPU</h2>
 			<div class="login-logo">
-				<div class="login-logo-geocab"></div>
 				<div class="login-logo-itaipu" ></div>
 			</div>
 			<div class="title-short-login"></div>

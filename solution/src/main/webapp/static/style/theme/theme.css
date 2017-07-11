@@ -401,6 +401,7 @@ input:-moz-placeholder {
 
 #header-page .navbar-1 .btn-group {
 	float: left;
+	border-bottom: 1px solid #070c25;
 }
 
 #header-page .navbar-1 {

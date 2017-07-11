@@ -51,9 +51,10 @@ public class GeoserverConnection
 				JAXBContext context = JAXBContext.newInstance(ExternalLayer.CONTEXT_WMS);
 				// Usamos o contexto JAXB para construir um unmarshaller
 				Unmarshaller unmarshaller = context.createUnmarshaller();
-				// Fazemos o unmarshaller da url passada por parâmetro e recuperamos o elemento wmsCapabilites
+				// Fazemos o unmarshaller da url passada por parï¿½metro e recuperamos o elemento wmsCapabilites
 				JAXBElement<WMSCapabilities> wmsCapabilitiesElement = unmarshaller.unmarshal(new StreamSource(url), WMSCapabilities.class);
-				// Recuperamos a instância de WMSCapabilities
+				System.out.printf(wmsCapabilitiesElement.toString());
+				// Recuperamos a instï¿½ncia de WMSCapabilities
 				WMSCapabilities wmsCapabilities = (WMSCapabilities) wmsCapabilitiesElement.getValue();
 
 				if (wmsCapabilities.getService().getName().equals("WMS"))
@@ -104,9 +105,9 @@ public class GeoserverConnection
 				JAXBContext context = JAXBContext.newInstance(ExternalLayer.CONTEXT_WMS);
 				// Usamos o contexto JAXB para construir um unmarshaller
 				Unmarshaller unmarshaller = context.createUnmarshaller();
-				// Fazemos o unmarshaller da url passada por parâmetro e recuperamos o elemento wmsCapabilites
+				// Fazemos o unmarshaller da url passada por parï¿½metro e recuperamos o elemento wmsCapabilites
 				JAXBElement<WMSCapabilities> wmsCapabilitiesElement = unmarshaller.unmarshal(new StreamSource(dataSource.getUrl()), WMSCapabilities.class);
-				// Recuperamos a instância de WMSCapabilities
+				// Recuperamos a instï¿½ncia de WMSCapabilities
 				WMSCapabilities wmsCapabilities = (WMSCapabilities) wmsCapabilitiesElement.getValue();
 				
 				for (Layer layer : wmsCapabilities.getCapability().getLayer().getLayer()) 

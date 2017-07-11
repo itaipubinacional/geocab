@@ -13,13 +13,12 @@
   <!-- navbar 1 -->
   <div class="navbar navbar-1" style="z-index: 1002;">
     <a class="pre" href="./">&nbsp;</a>
-    <a class="logo" href="./">&nbsp;</a>
 
     <div class="nav-collapse collapse">
       <div class="left-side">
         <div style="float: left; margin-top: 23px">
-					<span style="font-size: 17px"><b style="font-size: 17px">GeoCAB</b>
-						- Cultivando Água Boa</span>
+					<span style="font-size: 17px"><b style="font-size: 17px">GeoITAIPU</b>
+						Sustentável</span>
         </div>
       </div>
 

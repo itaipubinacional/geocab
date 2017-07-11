@@ -42,12 +42,6 @@
 
                     <br />
 
-                    <div class="form-item-horizontal radio" style="margin-left: 0">
-                        <input type="radio" id="CONFIGURATION_MAP_QUEST" ng-click="setConfigurationBackgroundMap('CONFIGURATION_MAP_QUEST')" ng-model="configurationBackgroundMap.map" value="CONFIGURATION_MAP_QUEST"
-                               name="CONFIGURATION_MAP_QUEST">
-                        <label class="radio-label" for="CONFIGURATION_MAP_QUEST"> MapQuest </label>
-                    </div>
-
                 </div>
 
                 <div style="margin-top: 12px; padding-left:35px;border-left: 1px solid #ccc;" class="col-md-8" ng-if="configurationBackgroundMap.map == 'CONFIGURATION_GOOGLE'">

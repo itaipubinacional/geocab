@@ -1,5 +1,4 @@
 .logo {
-    background: url(../images/logo-login.png) 7px 0px no-repeat;
 	background-size: 50%;
 	width: 107px;
 	height: 60px;
@@ -14,8 +13,8 @@
 }
 
 .pre {
-	background: url(../images/logo-itaipu.png) 19px 20px no-repeat;
-	background-size: 61px;
+	background: url(../images/logo-itaipu.png) 19px 15px no-repeat;
+	background-size: 70px;
 	width: 79px;
 	height: 60px;
 	display: block;

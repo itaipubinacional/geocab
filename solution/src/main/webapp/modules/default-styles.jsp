@@ -29,7 +29,7 @@
 <link href="<c:url value="/static/libs/angular-chosen/chosen.css"/>" type="text/css" rel="stylesheet" />
 
 <!-- Itaipu Icons -->
-<link href="<c:url value="/static/images/logo-login.png"/>" type="text/css" rel="icon" />
+<link href="<c:url value="/static/images/globe.png"/>" type="text/css" rel="icon" />
 
 <link href="<c:url value="/static/style/icon-itaipu/styles.css"/>" type="text/css" rel="stylesheet" />
 

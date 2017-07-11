@@ -834,11 +834,6 @@ uri="http://www.springframework.org/security/tags"%>
                         class="radio-label" for="googleMap"> Google Maps </label>
                     </div>
                     <br />
-                    <div class="form-item-horizontal radio" style="margin-left: 0;">
-                      <input type="radio" id="mapQuest" ng-model="mapConf.type"
-                             value="mapQuest" ng-click="setBackgroundMap('MAP_QUEST_OSM')"> <label
-                        class="radio-label" for="mapQuest"> MapQuest </label>
-                    </div>
 
                     <hr style="border-color: #d9d9d9;"/>
 

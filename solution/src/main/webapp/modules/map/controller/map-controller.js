@@ -777,6 +777,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       }
     };
 
+
     /**
      * Click event to prompt the geoserver the information layer of the clicked coordinate
      */
@@ -1337,7 +1338,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var wmsOptions = {
           url: item.url,
           params: {
-            'LAYERS': item.name
+            'LAYERS': item.name,
+            'TILED': true
           }
         };
 
@@ -1623,9 +1625,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
               $scope.$apply();
 
               angular.forEach($scope.attributesByMarkerOnHover, function(attribute){
-                  if(attribute.attribute.type === 'NUMBER') attribute.value = attribute.value.toString().replace('.', ',');
-                  if(attribute.attribute.visible)
-                    $('#popup1').css('z-index', 0);
+                                                                     if(attribute.attribute.type === 'NUMBER') attribute.value = attribute.value.toString().replace('.', ',');
+                                                                     if(attribute.attribute.visible)
+                                                                       $('#popup1').css('z-index', 0);
               });
 
               var left = coordinatePixel[0] - $('#popup1').outerWidth() / 2;
@@ -1658,13 +1660,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.addEventListenerPointerMove = function() {
     /* POINTER MOVE LISTENER */
+    /*
     $scope.map.on('pointermove', function (evt) {
       if (evt.dragging) {
         return;
       }
       var pixel = $scope.map.getEventPixel(evt.originalEvent);
       displayFeatureInfo(pixel);
-    });
+    });*/
   };
 
   /**
@@ -2479,19 +2482,23 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
    * @param {Event} evt
    */
   var mouseMoveHandler = function (evt) {
+    /*
+    *** Código comentado por tbecker 07/07/2017 **
+    */
+    /*
     if (sketch && ( $scope.menu.fcArea || $scope.menu.fcDistancia )) {
       var output;
       var geom = (sketch.getGeometry());
       if (geom instanceof ol.geom.Polygon) {
-        output = formatArea(/** @type {ol.geom.Polygon} */ (geom));
+        output = formatArea((geom));
 
       } else if (geom instanceof ol.geom.LineString) {
-        output = formatLength(/** @type {ol.geom.LineString} */ (geom));
+        output = formatLength((geom));
       }
 
       $('#popup-content').html("<p>" + output + "</p>");
       $('#popup').css("display", "block");
-    }
+    }*/
   };
 
 
