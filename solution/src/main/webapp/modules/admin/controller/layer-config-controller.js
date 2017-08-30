@@ -1025,7 +1025,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     	var dialog = $modal.open({
             templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
             controller: MorePopupController,
-            windowClass: 'xx-dialog',
+            windowClass: 'more-icons',
             resolve: {
             	currentState: function(){
                 	return $scope.currentState;

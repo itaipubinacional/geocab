@@ -10,6 +10,8 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
   overflow: hidden;
 }
 
+
+
 .overflow-hidden {
     overflow: hidden;
 }
@@ -27,6 +29,10 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
 .xx-dialog .modal-dialog {
     width :40%;
     min-width: 750px;
+}
+
+.more-icons .modal-dialog {
+	width: 80%;
 }
 
 .grupo-camada-dialog .modal-body{
