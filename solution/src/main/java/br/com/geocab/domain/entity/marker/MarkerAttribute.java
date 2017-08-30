@@ -24,6 +24,7 @@ import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.AttributeOption;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.MapScale;
@@ -70,6 +71,14 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	 */
 	@OneToOne(optional = true, cascade = CascadeType.PERSIST )
 	private PhotoAlbum photoAlbum;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne( cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "attribute_option_id")
+	private AttributeOption attributeOption;
+	
 	/*-------------------------------------------------------------------
 	 *							CONSTRUCTOR
 	 *-------------------------------------------------------------------*/

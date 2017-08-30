@@ -10,7 +10,9 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -97,6 +99,13 @@ public class Attribute extends AbstractEntity implements Serializable
 //	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	@Transient
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
+	
+	/**
+	 * 
+	 */
+	@OneToMany
+	@JoinColumn(referencedColumnName = "id", name = "attribute_id")
+	private List<AttributeOption> attributeOptions;
 
 	/*-------------------------------------------------------------------
 	 *								CONSTRUCTORS
