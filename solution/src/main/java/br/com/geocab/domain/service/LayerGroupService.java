@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -53,6 +52,7 @@ import br.com.geocab.domain.repository.IFileRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupLayerRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
+import br.com.geocab.domain.repository.layergroup.IAttributeOptionRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.domain.repository.tool.IToolRepository;
@@ -116,6 +116,12 @@ public class LayerGroupService
 	 */
 	@Autowired
 	private IToolRepository toolRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAttributeOptionRepository attributeOptionRepository;
 		
 	/**
 	 * 
@@ -1159,7 +1165,15 @@ public class LayerGroupService
 	{		
 		final Layer layer = this.layerRepository.findById(id);
 		
-		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));	
+		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));
+		
+		for ( Attribute attribute : layer.getAttributes() ) 
+		{
+			if ( attribute.getType().equals(AttributeType.MULTIPLE_CHOICE) )
+			{
+				attribute.setOptions( this.attributeOptionRepository.listByAttributeId(attribute.getId() ) );
+			}
+		}
 				
 		// traz a legenda da camada do GeoServer
 		if( layer.getDataSource().getUrl() != null ) {

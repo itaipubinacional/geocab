@@ -145,7 +145,25 @@ function UpdateAttributePopUpController($scope, $injector,$modalInstance, $state
 		return $("form[name="+formName+"]").scope()[formName];
 	};
 
-
+    /**
+     * Adiciona uma nova opção vazia.
+     */
+    $scope.addOption = function() 
+    {
+    	$scope.currentEntity.options.push( {
+    		description : null,
+    		attribute: $scope.currentEntity
+    	});
+    }
+    
+    /**
+     * 
+     */
+    $scope.removeOption = function( option ) 
+    { 
+    	$scope.currentEntity.options.splice($scope.currentEntity.options.indexOf( option ), 1);
+    }
+    
 
     /**
      *

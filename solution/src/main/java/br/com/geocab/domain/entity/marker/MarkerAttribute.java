@@ -75,9 +75,8 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
-	@ManyToOne( cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "attribute_option_id")
-	private AttributeOption attributeOption;
+	@ManyToOne( fetch = FetchType.EAGER, optional = true )
+	private AttributeOption selectedAttribute;
 	
 	/*-------------------------------------------------------------------
 	 *							CONSTRUCTOR

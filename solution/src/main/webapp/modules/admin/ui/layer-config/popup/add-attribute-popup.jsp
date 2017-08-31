@@ -42,20 +42,44 @@
         	 <span  ng-show="form_add_attribute.$submitted  && form_add_attribute.name.$error.required" class="tooltip-validation" style="right:16px"><spring:message code="admin.users.Field-required" /></span>
         	
         	<div style="position:relative;">
-			<select name="select" class="form-control" ng-model="currentEntity.type"  style="margin-bottom: 15px" 
-								  ng-class="{ngInvalid: form_add_attribute.$submitted && form_add_attribute.select.$error.required }"
-        		   				  required
-        		   				  >
-				<option value="" disabled selected style="display:none" ><spring:message code="admin.layer-config.Attribute-type" /></option>
-				<option value="TEXT"><spring:message code="admin.layer-config.Text" /></option>
-				<option value="NUMBER"><spring:message code="admin.layer-config.Number" /></option>
-				<option value="DATE"><spring:message code="admin.layer-config.Date" /></option>
-				<option value="BOOLEAN"><spring:message code="admin.layer-config.Boolean" /></option>
-				<option value="PHOTO_ALBUM"><spring:message code="admin.layer-config.Photo-album" /></option>
-			</select>
+				<select name="select" class="form-control" ng-model="currentEntity.type"  style="margin-bottom: 15px" 
+									  ng-class="{ngInvalid: form_add_attribute.$submitted && form_add_attribute.select.$error.required }"
+	        		   				  required
+	        		   				  >
+					<option value="" disabled selected style="display:none" ><spring:message code="admin.layer-config.Attribute-type" /></option>
+					<option value="TEXT"><spring:message code="admin.layer-config.Text" /></option>
+					<option value="NUMBER"><spring:message code="admin.layer-config.Number" /></option>
+					<option value="DATE"><spring:message code="admin.layer-config.Date" /></option>
+					<option value="BOOLEAN"><spring:message code="admin.layer-config.Boolean" /></option>
+					<option value="PHOTO_ALBUM"><spring:message code="admin.layer-config.Photo-album" /></option>
+					<option value="MULTIPLE_CHOICE"><spring:message code="admin.layer-config.Multiple_choice" /></option>
+				</select>
+				<div ng-if="currentEntity.type == 'MULTIPLE_CHOICE'" style="margin: 20px;">
+					<div class="row" style="margin-bottom: 8px;">
+						<h4 class="col-md-4" style="margin: 0px;padding: 0px;">Opções do atributo</h4>
+						<span class="col-md-7"></span>
+						<div class="col-md-1">
+							<button class="btn btn-default"  ng-click="addOption()"><i class="icon-plus icon-large"></i></button>
+						</div>
+					</div>
+					<div ng-repeat="option in currentEntity.options" class="row" style="margin-bottom: 8px;">
+			        	<div class="input-group">
+					      <input type="text" class="form-control" 
+					      			placeholder="Descrição do atributo"
+					      			name="att" maxlength="50" 
+					      			ng-model="option.description" 
+					      			required>
+					      <span class="input-group-btn">
+					        <button class="btn btn-default" type="button" ng-click="removeOption( option )">
+					        	<i class="icon-remove icon-large"></i>
+				        	</button>
+					      </span>
+					    </div>
+					</div>
+				</div>
 			</div>
 			
-			 <span  ng-show="form_add_attribute.$submitted && form_add_attribute.select.$error.required" class="tooltip-validation" style="right:16px;top:62px;"><spring:message code="admin.users.Field-required" /></span>
+			<span  ng-show="form_add_attribute.$submitted && form_add_attribute.select.$error.required" class="tooltip-validation" style="right:16px;top:62px;"><spring:message code="admin.users.Field-required" /></span>
 
 			<div>
 				<input  type="checkbox" ng-model="currentEntity.required">
