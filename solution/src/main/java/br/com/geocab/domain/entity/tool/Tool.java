@@ -25,7 +25,7 @@ import br.com.geocab.domain.entity.AbstractEntity;
  */
 @Entity
 @Audited
-@DataTransferObject
+@DataTransferObject( javascript = "Tool" )
 public class Tool extends AbstractEntity implements Serializable
 {
 	

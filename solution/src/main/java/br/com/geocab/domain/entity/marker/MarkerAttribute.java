@@ -81,6 +81,7 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 	/*-------------------------------------------------------------------
 	 *							CONSTRUCTOR
 	 *-------------------------------------------------------------------*/
+	
 	/**
 	 * 
 	 */
@@ -152,7 +153,8 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 			Long markerId, /*Geometry location,*/ MarkerStatus markerStatus, Calendar markerCreated,
 			Long markerLayerId, String markerLayerName, String markerLayerTitle,  
 			Long markerUserId, String markerUserName, String markerUserEmail, Boolean markerUserStatus,
-			Long attributeId, String attributeName, AttributeType attributeType, Boolean attributeRequired, Boolean attributeVisible, Integer attributeOrder)
+			Long attributeId, String attributeName, AttributeType attributeType, Boolean attributeRequired, 
+			Boolean attributeVisible, Integer attributeOrder)
 	{
 		this.setId(id);
 		this.setValue(value);
@@ -189,7 +191,78 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 		attribute.setOrderAttribute(attributeOrder);
 		
 		this.setAttribute(attribute);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param value
+	 * @param markerId
+	 * @param markerStatus
+	 * @param markerCreated
+	 * @param markerLayerId
+	 * @param markerLayerName
+	 * @param markerLayerTitle
+	 * @param markerUserId
+	 * @param markerUserName
+	 * @param markerUserEmail
+	 * @param markerUserStatus
+	 * @param attributeId
+	 * @param attributeName
+	 * @param attributeType
+	 * @param attributeRequired
+	 * @param attributeVisible
+	 * @param attributeOrder
+	 */
+	public MarkerAttribute(Long id, String value, 
+			Long markerId, /*Geometry location,*/ MarkerStatus markerStatus, Calendar markerCreated,
+			Long markerLayerId, String markerLayerName, String markerLayerTitle,  
+			Long markerUserId, String markerUserName, String markerUserEmail, Boolean markerUserStatus,
+			Long attributeId, String attributeName, AttributeType attributeType, Boolean attributeRequired, 
+			Boolean attributeVisible, Integer attributeOrder, Long selectedAttributeId, String selectedAttributeDescription )
+	{
+		this.setId(id);
+		this.setValue(value);
 		
+		Marker marker = new Marker();
+		
+		marker.setId(markerId);
+		marker.setStatus(markerStatus);
+		marker.setCreated(markerCreated);
+		
+		Layer layer = new Layer();
+		layer.setId(markerLayerId);
+		layer.setName(markerLayerName);
+		layer.setTitle(markerLayerTitle);
+		
+		marker.setLayer(layer);
+		
+		User user = new User();
+		user.setId(markerUserId);
+		user.setName(markerUserName);
+		user.setEmail(markerUserEmail);
+		user.setEnabled(markerUserStatus);
+		
+		marker.setUser(user);
+		
+		this.setMarker(marker);
+		
+		Attribute attribute = new Attribute();
+		attribute.setId(attributeId);
+		attribute.setName(attributeName);
+		attribute.setType(attributeType);
+		attribute.setRequired(attributeRequired);
+		attribute.setVisible(attributeVisible);
+		attribute.setOrderAttribute(attributeOrder);
+		
+		if ( selectedAttributeId != null )
+		{
+			AttributeOption seletedAttribute = new AttributeOption( selectedAttributeId );
+			seletedAttribute.setDescription(selectedAttributeDescription);
+			this.selectedAttribute = seletedAttribute;
+		}
+		
+		this.setAttribute(attribute);
 	}
 	/*-------------------------------------------------------------------
 	 *								BEHAVIORS
@@ -274,6 +347,18 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 		this.photoAlbum = photoAlbum;
 	}
 
-	
+	/**
+	 * @return the selectedAttribute
+	 */
+	public AttributeOption getSelectedAttribute() {
+		return selectedAttribute;
+	}
+
+	/**
+	 * @param selectedAttribute the selectedAttribute to set
+	 */
+	public void setSelectedAttribute(AttributeOption selectedAttribute) {
+		this.selectedAttribute = selectedAttribute;
+	}
 
 }

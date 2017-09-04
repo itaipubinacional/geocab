@@ -1098,14 +1098,16 @@ public class LayerGroupService
 	{
 		layer.setLayerGroup(layer.getLayerGroup());
 						
-		List<Attribute> attributesToDelete = attributeRepository.listAttributeByLayer(layer.getId());
-		
-		attributesToDelete.removeAll(layer.getAttributes());
-		
-		for (Attribute attribute : attributesToDelete)
-		{
-			this.attributeRepository.delete(attribute);	
-		}
+//		List<Attribute> attributesToDelete = attributeRepository.listAttributeByLayer(layer.getId());
+//		
+//		attributesToDelete.removeAll(layer.getAttributes());
+//		
+//		for (Attribute attribute : attributesToDelete)
+//		{
+//			this.attributeRepository.delete(attribute);	
+//		}
+//		
+//		this.attributeOptionRepository.flush();
 		
 		/* Na atualização não foi permitido modificar a fonte de dados, camada e título, dessa forma, 
 		Os valores originais são mantidos. */
@@ -1114,10 +1116,10 @@ public class LayerGroupService
 		layer.setName(layerDatabase.getName());
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		
-		for (Attribute attribute : layer.getAttributes())
-		{
-			this.attributeRepository.save(attribute);
-		}
+//		for (Attribute attribute : layer.getAttributes())
+//		{
+//			this.attributeRepository.save(attribute);
+//		}
 		
 		if(layer.getPublishedLayer() != null)
 		{
@@ -1334,14 +1336,23 @@ public class LayerGroupService
 		}
 		
 	}
+	
 	/**
-	 * 
 	 * @param layerId
 	 * @return
 	 */
 	public List<Attribute> listAttributesByLayer(Long layerId){
+		final List<Attribute> attributes =  this.attributeRepository.listAttributeByLayer(layerId);
 		
-		return this.attributeRepository.listAttributeByLayer(layerId);
+		for ( Attribute attribute : attributes ) 
+		{
+			if ( attribute.getType().equals(AttributeType.MULTIPLE_CHOICE) )
+			{
+				attribute.setOptions( this.attributeOptionRepository.listByAttributeId(attribute.getId() ) );
+			}
+		}
+		
+		return attributes;
 	}
 	
 	/**

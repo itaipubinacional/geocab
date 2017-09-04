@@ -3783,31 +3783,37 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       attribute.id = val.id;
 
       var markerAttribute = new MarkerAttribute();
-      if (val.value != "" && val.value != undefined) {
-        markerAttribute.value = val.value;
-      } else {
-        markerAttribute.value = "";
+      
+      if ( val.type == "MULTIPLE_CHOICE" && val.selectAttribute != null ) {
+    	  markerAttribute.selectedAttribute = val.selectAttribute;
       }
-
-      if(val.files) {
-
-        attribute.type = "PHOTO_ALBUM";
-
-        var photoAlbum = new PhotoAlbum();
-        photoAlbum.photos = new Array();
-
-        angular.forEach(val.files, function(file){
-          var photo = new Photo();
-          var img = file.src.split(';base64,');
-          photo.source = img[1];
-          photo.name = file.name;
-          photo.description = file.description;
-          photo.contentLength = file.size;
-          photo.mimeType = file.type;
-          photoAlbum.photos.push(photo);
-        });
-
-        markerAttribute.photoAlbum = photoAlbum;
+      else {
+    	  if (val.value != "" && val.value != undefined) {
+    		  markerAttribute.value = val.value;
+    	  } else {
+    		  markerAttribute.value = "";
+    	  }
+    	  
+    	  if(val.files) {
+    		  
+    		  attribute.type = "PHOTO_ALBUM";
+    		  
+    		  var photoAlbum = new PhotoAlbum();
+    		  photoAlbum.photos = new Array();
+    		  
+    		  angular.forEach(val.files, function(file){
+    			  var photo = new Photo();
+    			  var img = file.src.split(';base64,');
+    			  photo.source = img[1];
+    			  photo.name = file.name;
+    			  photo.description = file.description;
+    			  photo.contentLength = file.size;
+    			  photo.mimeType = file.type;
+    			  photoAlbum.photos.push(photo);
+    		  });
+    		  markerAttribute.photoAlbum = photoAlbum;
+	      }
+	
 
       }
 
