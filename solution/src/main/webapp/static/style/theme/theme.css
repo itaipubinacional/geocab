@@ -31,6 +31,12 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
     min-width: 750px;
 }
 
+.add-attribute-dialog .modal-dialog {
+    width :80%;
+    min-width: 900px;
+}
+
+
 .more-icons .modal-dialog {
 	width: 80%;
 }

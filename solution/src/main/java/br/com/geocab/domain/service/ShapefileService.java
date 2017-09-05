@@ -379,7 +379,7 @@ public class ShapefileService
 		
 		final List<Layer> layers = groupByLayers(markers);
 		
-		final String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis() );
+		final String fileExport = String.valueOf("geoitaipu_" + Calendar.getInstance().getTimeInMillis() );
 		 
 		for (final Layer layer : layers)
 		{
@@ -397,7 +397,17 @@ public class ShapefileService
 	            {	
 					final Marker marker = markerRepository.findOne(layer.getMarkers().get(i).getId());
 					
-					marker.setMarkerAttribute(this.markerAttributeRepository.listAttributeByMarker(marker.getId()));
+					List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
+					
+					for (MarkerAttribute markerAttribute : markerAttributes) 
+					{
+						if (markerAttribute.getSelectedAttribute() != null)
+						{
+							markerAttribute.setValue( markerAttribute.getSelectedAttribute().getDescription() );							
+						}
+					}
+					
+					marker.setMarkerAttribute(markerAttributes);
 					
 					final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
 	    			final MathTransform transform = CRS.findMathTransform(EPSG3857, DefaultGeographicCRS.WGS84, true);

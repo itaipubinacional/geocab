@@ -5046,7 +5046,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     var dialog = $modal.open({
       templateUrl: "modules/admin/ui/layer-config/popup/add-attribute-import-popup.jsp",
       controller: AddAttributeImportPopUpController,
-      windowClass: 'xx-dialog',
+      windowClass: 'add-attribute-dialog',
       resolve: {
         markerAttributes: function () {
           return $scope.importMarkers[0].markerAttribute;
@@ -5060,6 +5060,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     });
   };
+  
+
 
   /**
    * Associate attribute
