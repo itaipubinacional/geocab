@@ -728,7 +728,7 @@ input:-moz-placeholder {
 }
 
 .ngRow.odd.selected, .ngRow.even.selected {
-    background-color: #0077bf;
+    background-color: #62b3e3;
     color: white;
 }
 

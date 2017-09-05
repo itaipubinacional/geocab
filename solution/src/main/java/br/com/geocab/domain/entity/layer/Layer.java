@@ -147,7 +147,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	@Transient
 	private List<Marker> markers = new ArrayList<Marker>();
 
-	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade ={ CascadeType.ALL } , orphanRemoval = true)
+	@Transient
+//	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade ={ CascadeType.ALL } , orphanRemoval = true)
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 
 	/*-------------------------------------------------------------------

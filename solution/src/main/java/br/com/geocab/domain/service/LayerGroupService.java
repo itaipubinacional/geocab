@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,6 +42,7 @@ import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.AttributeOption;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.ExternalLayer;
 import br.com.geocab.domain.entity.layer.Layer;
@@ -360,6 +362,11 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void publishLayerGroup(List<LayerGroup> layersGroup)
 	{
+		for (LayerGroup layerGroup : layersGroup) {
+			for (Layer layer : layerGroup.getLayers()) {
+				layer = this.layerRepository.findOne(layer.getId());
+			}
+		}
 		this.saveAllLayersGroup(layersGroup); // save layersGroup
 		
 		final List<LayerGroup> layerGroupOriginals = this.listLayersGroupUpper();//list parent groups
@@ -440,10 +447,11 @@ public class LayerGroupService
 			{
 				for(int j = 0; j < layerGroup.getLayers().size(); j++)
 				{
-					layerGroup.getLayers().get(j).setOrderLayer(j);
-					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
+					Layer layerToUpdate = layerGroup.getLayers().get(j);
+					layerToUpdate.setOrderLayer(j);
+					layerToUpdate.setLayerGroup(layerGroup);
 					
-					this.layerRepository.save( layerGroup.getLayers().get(j) );
+					this.layerRepository.save( layerToUpdate );
 				}
 				if (layerGroup.getLayersGroup() != null) prioritizeLayers(layerGroup.getLayersGroup());
 			}			
@@ -1073,17 +1081,28 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer insertLayer( Layer layer )
 	{
-		
 		layer.setLayerGroup(this.layerGroupRepository.findOne(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		//Valida se os atributos são válidos
 		layer.validate();
 		
-		this.layerRepository.save( layer );
+		List<Attribute> attributes = layer.getAttributes();
+		layer = this.layerRepository.save( layer );
+
+		//Salvando na mao os atributos 
+		for (Attribute attribute : attributes) 
+		{
+			attribute.setLayer(layer);
+			List<AttributeOption> attributeOptions = attribute.getOptions();
+			attribute = this.attributeRepository.save(attribute);
+			for (AttributeOption attributeOption : attributeOptions) {
+				attributeOption.setAttribute(attribute);
+				this.attributeOptionRepository.save(attributeOption);
+			}
+		}
 		
-		List<Attribute> attributies = layer.getAttributes();
-		layer.setAttributes(this.attributeRepository.save(attributies));
+		layer.setAttributes(attributes);
 
 		return layer;
 	}
@@ -1098,17 +1117,6 @@ public class LayerGroupService
 	{
 		layer.setLayerGroup(layer.getLayerGroup());
 						
-//		List<Attribute> attributesToDelete = attributeRepository.listAttributeByLayer(layer.getId());
-//		
-//		attributesToDelete.removeAll(layer.getAttributes());
-//		
-//		for (Attribute attribute : attributesToDelete)
-//		{
-//			this.attributeRepository.delete(attribute);	
-//		}
-//		
-//		this.attributeOptionRepository.flush();
-		
 		/* Na atualização não foi permitido modificar a fonte de dados, camada e título, dessa forma, 
 		Os valores originais são mantidos. */
 		Layer layerDatabase = this.findLayerById(layer.getId());
@@ -1116,17 +1124,91 @@ public class LayerGroupService
 		layer.setName(layerDatabase.getName());
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		
-//		for (Attribute attribute : layer.getAttributes())
-//		{
-//			this.attributeRepository.save(attribute);
-//		}
-		
 		if(layer.getPublishedLayer() != null)
 		{
 			layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));	
 		}
-		return this.layerRepository.save( layer );	
 		
+		//Handling attributes
+		//Salvamos os attributos que veio com o layer a ser atualizado e logo apos pegamos os que estão salvos no banco
+		//Devemos comparar e verificar quais atributos estao salvos e nao voltaram para apagarmos e adicionarmos os novos,
+		//Devemos fazer o mesmo com os options do attribute caso o attribute seja do tipo de multiple choice
+		List<Attribute> attributesToUpdate = layer.getAttributes();
+		List<Attribute> currentSavedAttributes = this.attributeRepository.listAttributeByLayer( layer.getId() );
+		for (Attribute attribute : currentSavedAttributes) 
+		{
+			if ( attribute.getType().equals(AttributeType.MULTIPLE_CHOICE ) )
+			{
+				attribute.setOptions( this.attributeOptionRepository.listByAttributeId( attribute.getId() ) );
+			}
+		}
+
+		//Vamos verificar quais attributos temos que apagar, ou seja, que está no currentAttributes mas não veio no attributesToUpdate
+		
+		for ( Attribute currentAttribute : currentSavedAttributes ) 
+		{
+			boolean found = false;
+			for ( Attribute attributeToUpdate : attributesToUpdate ) 
+			{
+				if ( currentAttribute.getId() == attributeToUpdate.getId() ) found = true;
+			}
+			
+			if ( !found )
+			{
+				//Iremos apagar os attributos e as opções 
+				if ( currentAttribute.getType().equals(AttributeType.MULTIPLE_CHOICE) )
+				{
+					this.attributeOptionRepository.delete( currentAttribute.getOptions() );
+				}
+				this.attributeRepository.delete( currentAttribute );
+				this.attributeRepository.flush();
+			}
+		}
+		
+		//Agora que já apagamos todos os attributos, devemos inserir/atualizar os que estão vindo com o layer
+		for ( Attribute attributeToUpdate : attributesToUpdate ) 
+		{
+			List<AttributeOption> attributesOptionToUpdate = attributeToUpdate.getOptions();
+			
+			attributeToUpdate = this.attributeRepository.save( attributeToUpdate );
+			
+			for ( Attribute currentAttribute : currentSavedAttributes ) 
+			{
+				if ( attributeToUpdate.getId() == currentAttribute.getId() )
+				{
+					if ( attributeToUpdate.getType().equals(AttributeType.MULTIPLE_CHOICE) )
+					{
+						//Devemos verificar os options do attributo
+						for (AttributeOption currentAttributeOption : currentAttribute.getOptions() ) 
+						{
+							boolean attributeOptionFound = false;
+							for (AttributeOption attributeOption : attributesOptionToUpdate) 
+							{
+								attributeOption.setAttribute(attributeToUpdate);
+								if ( attributeOption.getId() == currentAttributeOption.getId() ) attributeOptionFound = true;
+							}
+							
+							if ( !attributeOptionFound ) 
+							{
+								this.attributeOptionRepository.delete(currentAttributeOption);
+								this.attributeOptionRepository.flush();
+							}
+						}
+						//Apagamos todos os removidos, agora devemos inserir/alterar os do front
+						this.attributeOptionRepository.save(attributesOptionToUpdate );
+					}
+				}
+			}
+			
+			
+		}
+		
+		
+		layer = this.layerRepository.save( layer );
+		
+		return layer;
+		
+
 	}
 	
 	/**
