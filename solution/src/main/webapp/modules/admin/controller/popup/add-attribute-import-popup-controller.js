@@ -74,6 +74,22 @@ function AddAttributeImportPopUpController($scope, $injector, $modalInstance, $s
 	$scope.removeAttribute = function(index) {
 		$scope.markerAttributes.splice(index, 1);
 	};
+	
+		  
+	$scope.addOption = function( attribute ) {
+		
+		if ( !attribute.options ) {
+			attribute.options = [];
+		}
+		
+		attribute.options.push({
+			description : null
+		});
+	}
+
+	$scope.removeOption = function( attribute, option) {
+		attribute.options.splice( attribute.options.indexOf(option), 1);
+	}
 
 	/**
 	 * Close popup

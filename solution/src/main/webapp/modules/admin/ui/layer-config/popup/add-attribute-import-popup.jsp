@@ -38,15 +38,41 @@
                     <tbody sv-root sv-part="markerAttributes">
                         <tr sv-element ng-form name="innerForm_{{$index}}" ng-repeat="attribute in markerAttributes track by $index">
                             <td sv-handle class="reorder"></td>
-                            <td><input type="text"
-                                       name="name"
-                                        class="form-control"
-                                        ng-model="attribute.attribute.name"
-                                        placeholder="<spring:message code="admin.layer-config.Attribut-name" />"
-                                        ng-class="{'ngInvalid': form_add_attribute.$submitted && innerForm_{{$index}}.name.$error.required }"
-                                        maxlength="255"
-                                        required></td>
-                            <td>
+                            
+							<td><input type="text" name="name" class="form-control"
+								ng-model="attribute.attribute.name"
+								placeholder="<spring:message code="admin.layer-config.Attribut-name" />"
+								ng-class="{'ngInvalid': form_add_attribute.$submitted && innerForm_{{$index}}.name.$error.required }"
+								maxlength="255" required>
+								
+								<div style="margin-left: 20px" ng-if="attribute.attribute.type == 'MULTIPLE_CHOICE'">
+
+									<div class="row">
+									
+										<span>Opções do atributo</span>
+								
+										
+										<button class="btn btn-default" ng-click="addOption( attribute.attribute )">
+											<i class="icon-plus icon-large"></i>
+										</button>
+										
+									</div>
+									<div ng-repeat="option in attribute.attribute.options" class="row"
+										style="margin-bottom: 8px;">
+										<div class="input-group">
+											<input type="text" class="form-control"
+												placeholder="Descrição do atributo" name="att"
+												maxlength="50" ng-model="option.description" required>
+											<span class="input-group-btn">
+												<button class="btn btn-default" type="button"
+													ng-click="removeOption( attribute.attribute, option )">
+													<i class="icon-remove icon-large"></i>
+												</button>
+											</span>
+										</div>
+									</div>
+								</div></td>
+							<td>
                                 <select name="select" class="form-control" ng-model="attribute.attribute.type"
                                         ng-class="{ngInvalid: form_add_attribute.$submitted && innerForm_{{$index}}.select.$error.required }"
                                         required>
@@ -56,6 +82,7 @@
                                 <option value="DATE"><spring:message code="admin.layer-config.Date" /></option>
                                 <option value="BOOLEAN"><spring:message code="admin.layer-config.Boolean" /></option>
                                 <option value="PHOTO_ALBUM"><spring:message code="admin.layer-config.Photo-album" /></option>
+                                <option value="MULTIPLE_CHOICE"><spring:message code="admin.layer-config.Multiple_choice" /></option>
                             </select>
                             </td>
                             <td style="text-align: center"><input type="checkbox" ng-model="attribute.attribute.required"></td>
@@ -63,6 +90,7 @@
                             <td>
                                 <a ng-click="removeAttribute($index)" title="Excluir" class="btn btn-mini"><i class="itaipu-icon-delete"></i></a>
                             </td>
+                            
                         </tr>
                     </tbody>
                 </table>

@@ -379,7 +379,7 @@ public class ShapefileService
 		
 		final List<Layer> layers = groupByLayers(markers);
 		
-		final String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis() );
+		final String fileExport = String.valueOf("geoitaipu_" + Calendar.getInstance().getTimeInMillis() );
 		 
 		for (final Layer layer : layers)
 		{
@@ -396,7 +396,7 @@ public class ShapefileService
 				for (int i = 0; i < layer.getMarkers().size(); i++)
 	            {	
 					final Marker marker = markerRepository.findOne(layer.getMarkers().get(i).getId());
-					
+				
 					marker.setMarkerAttribute(this.markerAttributeRepository.listAttributeByMarker(marker.getId()));
 					
 					final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
@@ -613,6 +613,9 @@ public class ShapefileService
 				LOG.info(e.getMessage());
 				throw new RuntimeException(e);
 			}
+		}
+		else if (markerAttribute.getAttribute().getType() == AttributeType.MULTIPLE_CHOICE) {
+			feature.setAttribute( attribute, markerAttribute.getSelectedAttribute().getDescription() );
 		}
 		else
 		{
