@@ -397,7 +397,6 @@ public class MarkerService extends AbstractMarkerService
 	@Transactional(readOnly = true)
 	public Marker findMarkerById(Long id)
 	{
-		
 		Marker marker = this.markerRepository.findOne(id);	
 		
 		marker.setMarkerAttribute(this.markerAttributeRepository.listAttributeByMarker(marker.getId()));

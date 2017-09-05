@@ -69,6 +69,17 @@
                                 required
                                 ng-disabled="true">
 
+				            <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
+				            	<label>{{markerAttribute.attribute.name}}</label>
+				            	</br>
+				            	<div ng-repeat="option in markerAttribute.attribute.options">
+					                <label class="radio-label" >
+						            	<input id="role-adminstrator" ng-disabled="true" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id" />
+						            	{{ option.description }}
+					                </label>
+					                </br>
+				            	</div>
+				            </div>
                         <div ng-if="markerAttribute.attribute.type == 'BOOLEAN' && !markerAttribute.value == ''">
                             <input
                                     ng-disabled="true" type="radio"

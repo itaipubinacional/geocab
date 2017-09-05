@@ -1159,6 +1159,7 @@ public class LayerGroupService
 				if ( currentAttribute.getType().equals(AttributeType.MULTIPLE_CHOICE) )
 				{
 					this.attributeOptionRepository.delete( currentAttribute.getOptions() );
+					this.attributeOptionRepository.flush();
 				}
 				this.attributeRepository.delete( currentAttribute );
 				this.attributeRepository.flush();
@@ -1227,7 +1228,15 @@ public class LayerGroupService
 		
 		try
 		{	
-			this.attributeRepository.delete(attributeRepository.listAttributeByLayerMarker(id));
+			List<Attribute> attributesToRemove = attributeRepository.listAttributeByLayerMarker(id);
+			
+			for (Attribute attribute : attributesToRemove) 
+			{
+				this.attributeOptionRepository.delete(this.attributeOptionRepository.listByAttributeId(attribute.getId()));
+				this.attributeRepository.delete(attribute);
+				this.attributeRepository.flush();
+			}
+			
 			this.layerRepository.delete( id );			
 		}
 		catch (ConstraintViolationException e)

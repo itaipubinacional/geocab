@@ -729,6 +729,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text:message, dismiss: true};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
