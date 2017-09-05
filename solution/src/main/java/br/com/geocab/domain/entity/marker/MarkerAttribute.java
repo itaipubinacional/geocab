@@ -154,7 +154,7 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 			Long markerLayerId, String markerLayerName, String markerLayerTitle,  
 			Long markerUserId, String markerUserName, String markerUserEmail, Boolean markerUserStatus,
 			Long attributeId, String attributeName, AttributeType attributeType, Boolean attributeRequired, 
-			Boolean attributeVisible, Integer attributeOrder)
+			Boolean attributeVisible, Integer attributeOrder, AttributeOption selectedAttribute)
 	{
 		this.setId(id);
 		this.setValue(value);
@@ -191,6 +191,8 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 		attribute.setOrderAttribute(attributeOrder);
 		
 		this.setAttribute(attribute);
+		
+		this.setSelectedAttribute(selectedAttribute);
 	}
 	
 	/**

@@ -396,18 +396,8 @@ public class ShapefileService
 				for (int i = 0; i < layer.getMarkers().size(); i++)
 	            {	
 					final Marker marker = markerRepository.findOne(layer.getMarkers().get(i).getId());
-					
-					List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(marker.getId());
-					
-					for (MarkerAttribute markerAttribute : markerAttributes) 
-					{
-						if (markerAttribute.getSelectedAttribute() != null)
-						{
-							markerAttribute.setValue( markerAttribute.getSelectedAttribute().getDescription() );							
-						}
-					}
-					
-					marker.setMarkerAttribute(markerAttributes);
+				
+					marker.setMarkerAttribute(this.markerAttributeRepository.listAttributeByMarker(marker.getId()));
 					
 					final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
 	    			final MathTransform transform = CRS.findMathTransform(EPSG3857, DefaultGeographicCRS.WGS84, true);
@@ -623,6 +613,9 @@ public class ShapefileService
 				LOG.info(e.getMessage());
 				throw new RuntimeException(e);
 			}
+		}
+		else if (markerAttribute.getAttribute().getType() == AttributeType.MULTIPLE_CHOICE) {
+			feature.setAttribute( attribute, markerAttribute.getSelectedAttribute().getDescription() );
 		}
 		else
 		{
