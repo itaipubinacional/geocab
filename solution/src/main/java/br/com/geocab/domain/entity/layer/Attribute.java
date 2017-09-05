@@ -103,7 +103,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
-	@OneToMany( mappedBy = "attribute", cascade = { CascadeType.ALL }, orphanRemoval = true )
+	@Transient
 	private List<AttributeOption> options = new ArrayList<AttributeOption>();
 
 	/*-------------------------------------------------------------------
