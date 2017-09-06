@@ -26,11 +26,12 @@
 				  <span class="input-group-addon" id="basic-addon1"><i class="icon-search icon-large"></i></span>
 				  <input type="text" class="form-control" ng-model="iconFilter" placeholder="Filtre por nome" aria-describedby="basic-addon1">
 				</div>    
-           		<div style="text-align: center; margin-top:20px; overflow: auto; max-height: 450px; overflow-x: hidden;">
+           		<div style="text-align: center; margin-top:20px; overflow: auto; max-height: 410px; overflow-x: hidden;">
             		 <div style="display: inline-block;" > 
 	            		<div  ng-repeat="icon in layerIcons | filter: iconFilter"  
-	            			style="float: left; text-align: center; max-width: 100px; width: 100px;"  class="col-md-1"
-	            			ng-style="currentEntity.iconTemporary == 'static/icons/' + icon ? {'border':'2px solid red', 'margin':'3px'} : {'margin':'5px'}" >
+							  class="col-md-1 icon-container"
+            				  ng-style="currentEntity.iconTemporary == 'static/icons/' + icon ? {'border-color': 'red'} : {'border-color':'#FFFFFF'}">
+	            				
 	            			<div class="clearfix visible-xs-block"></div>
 		            		<label for="{{ icon }}" >
 		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="50" height="50" class="preview" title=""  > <br>

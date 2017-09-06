@@ -1322,3 +1322,12 @@ div.thumbnail.active{border: 2px solid #428bca;}
 	box-shadow: 2px 1px 7px 2px #999, -6px 0 5px -2px #999;
 }
 
+.icon-container {
+	float: left; 
+	text-align: center; 
+	max-width: 100px; 
+	width: 100px;
+	border: 2px solid #FFF;
+	margin: 3px;
+}
+
