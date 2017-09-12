@@ -5325,6 +5325,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.isImport = true;
 
     var importMarkers = [];
+    
+    var markerAttributeswithoutCombinations = [];
 
     angular.forEach($scope.importMarkers, function(marker){
 
@@ -5334,7 +5336,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       var layer = new Layer();
 
-      //TODO substituir por if ternário
       if($scope.shapeFile.form.layer.id){
         layer.id = $scope.shapeFile.form.layer.id;
       }else if ($scope.shapeFile.form.layer.layerId){
@@ -5349,19 +5350,51 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
         var attribute = new Attribute();
         attribute.id = val.id;
-
+        
         var markerAttribute = new MarkerAttribute();
-
+     
+        	
         angular.forEach(markerAttributes, function(attr){
 
-          if(attr.attribute.name + ' (' + attr.attribute.type + ')' == val.option && $scope.shapeFile.layerType != 'new') {
-            markerAttribute.value = attr.value;
-          }
+          var newLayerCondiction = (attr.attribute.name + ' (' + attr.attribute.type + ')' == val.option && $scope.shapeFile.layerType != 'new');
+          var existLayerCondiction = (attr.attribute.name + ' (' + attr.attribute.type + ')' == val.name + ' (' + val.type + ')' && $scope.shapeFile.layerType == 'new');
 
-          if(attr.attribute.name + ' (' + attr.attribute.type + ')' == val.name + ' (' + val.type + ')' && $scope.shapeFile.layerType == 'new') {
-            markerAttribute.value = attr.value;
-          }
+          if (newLayerCondiction || existLayerCondiction) {
+        
+            if (val.type == "MULTIPLE_CHOICE"){
+              
+              var option =  $filter('filter')( val.options, { description : attr.value })[0]
+              
+              if (option) {
 
+                markerAttribute.selectedAttribute = option;
+                
+              } else {
+                
+                markerAttribute.selectedAttribute = null;
+                
+                if ( attr.value ) {
+
+                  var markerAtts = $filter('filter')( markerAttributeswithoutCombinations, { layerAttribute : val })[0] ;
+
+                  if (markerAtts) {
+                    markerAtts.attributeValues.push(attr.value);
+                  } else {
+                    markerAttributeswithoutCombinations.push({
+                        attributeValues : [attr.value],
+                        layerAttribute : val
+                    })
+                  }
+
+                }
+              }
+              
+              markerAttribute.value = null;
+              
+            } else {
+                markerAttribute.value = attr.value;
+            }         
+          }
         });
 
         markerAttribute.attribute = attribute;
@@ -5377,57 +5410,88 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       importMarkers.push($scope.currentEntity);
 
     });
+    
+    
+    if (markerAttributeswithoutCombinations.length) {
+    	
+    	var dialog = $modal.open({
+	      templateUrl: "modules/map/ui/popup/confirm-import-popup.jsp",
+	      controller: ConfirmImportPopUpController,
+	      size: 'lg',
+	      resolve: {
+	    	  markerAttributes: function(){
+	          return markerAttributeswithoutCombinations;
+	        },
+	      }
+      });
+    
+      dialog.result.then(function (result) {
 
-    $scope.clearImportMarkers();
+        
+        
+        if ( !result ) {
 
-    // Utiliza sobrecarga de métodos no Java
-    markerService.insertMarker( importMarkers, {
-      callback: function (result) {
+          $scope.isLoading = false;
+          $scope.isImport = false;
 
-        angular.forEach($scope.allLayers, function(layer){
+        } else {
 
-          var node = $filter('filter')(layer.children, {value: result[0].layer.id})[0];
+          $scope.clearImportMarkers();
 
-          if(angular.isDefined(node)) {
-            if(node.selected) {
-              $('#layer_' + result[0].layer.id).trigger('click');
-              $('#layer_' + result[0].layer.id).trigger('click');
-            } else {
-              $('#layer_' + result[0].layer.id).trigger('click');
+          // Utiliza sobrecarga de métodos no Java
+          markerService.insertMarker( importMarkers, {
+            
+            callback: function (result) {
+
+              angular.forEach($scope.allLayers, function(layer){
+
+                var node = $filter('filter')(layer.children, {value: result[0].layer.id})[0];
+
+                if(angular.isDefined(node)) {
+                  if(node.selected) {
+                    $('#layer_' + result[0].layer.id).trigger('click');
+                    $('#layer_' + result[0].layer.id).trigger('click');
+                  } else {
+                    $('#layer_' + result[0].layer.id).trigger('click');
+                  }
+                }
+              });
+
+              $scope.isLoading = false;
+
+              $scope.importedFromShapefileNewLayerSaved = $scope.importedFromShapefileNewLayerSaved ? "map.Markers-inserted-succesfully-from-shapefile-and-new-layer" : "map.Markers-inserted-succesfully";
+              $scope.msg = {
+                type: "success",
+                text: $translate($scope.importedFromShapefileNewLayerSaved),
+                dismiss: true
+              };
+              $scope.fadeMsg();
+
+              $scope.markerAttributes = [];
+              $scope.attributesByLayer = [];
+              $scope.shapeFile.form = {};
+
+              $scope.shapeFile.layerType = 'layer';
+              $('#upload').val('');
+
+              $scope.isImport = false;
+              $scope.isExport = false;
+
+              $scope.toggleSidebarMenu(300, 'closeButton');
+
+            }, errorHandler: function (message, exception) {
+
+              $scope.isImport = false;
+              $scope.isExport = false;
+              $scope.isLoading = false;
+              $scope.msg = {type: "error", text: message};
             }
-          }
-        });
+          });
+        }
 
-        $scope.isLoading = false;
-        $scope.importedFromShapefileNewLayerSaved = $scope.importedFromShapefileNewLayerSaved ? "map.Markers-inserted-succesfully-from-shapefile-and-new-layer" : "map.Markers-inserted-succesfully";
-        $scope.msg = {
-          type: "success",
-          text: $translate($scope.importedFromShapefileNewLayerSaved),
-          dismiss: true
-        };
-        $scope.fadeMsg();
-
-        $scope.markerAttributes = [];
-        $scope.attributesByLayer = [];
-        $scope.shapeFile.form = {};
-
-        $scope.shapeFile.layerType = 'layer';
-        $('#upload').val('');
-
-        $scope.isImport = false;
-        $scope.isExport = false;
-
-        $scope.toggleSidebarMenu(300, 'closeButton');
-
-      }, errorHandler: function (message, exception) {
-
-        $scope.isImport = false;
-        $scope.isExport = false;
-
-    	$scope.isLoading = false;
-        $scope.msg = {type: "error", text: message};
-      }
-    });
+      });
+    	
+    }
 
   };
 

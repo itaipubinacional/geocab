@@ -224,7 +224,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public String formmattedTypeAttributes()
 	{
-		if (this.getType() == AttributeType.TEXT)
+		if (this.getType() == AttributeType.TEXT || this.getType() == AttributeType.MULTIPLE_CHOICE)
 		{
 			return "String";
 		}

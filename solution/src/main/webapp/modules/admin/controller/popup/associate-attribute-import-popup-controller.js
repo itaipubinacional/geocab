@@ -60,8 +60,11 @@ function AssociateAttributeImportPopUpController($scope, $log, $timeout, $inject
 	};*/
 
 	$scope.setMarkerAttribute = function(index, markerAttribute) {
-
-		if(markerAttribute.option != null && $scope.attributesByLayer[index].type != markerAttribute.option.match(/\((.*)\)/)[1]) {
+		
+		var attributeTypeImport = markerAttribute.option.match(/\((.*)\)/)[1];
+		var attributeTypeLayer = $scope.attributesByLayer[index].type;
+		
+		if(markerAttribute.option != null && attributeTypeLayer != "MULTIPLE_CHOICE" && attributeTypeLayer != attributeTypeImport) {
 			$scope.attributesByLayer[index].option = '';
 		}
 
