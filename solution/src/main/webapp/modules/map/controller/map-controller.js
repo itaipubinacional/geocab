@@ -5362,8 +5362,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           if (newLayerCondiction || existLayerCondiction) {
         
             if (val.type == "MULTIPLE_CHOICE"){
-              
-              var option =  $filter('filter')( val.options, { description : attr.value })[0]
+    
+              var option =  val.options.filter( function(option){ 
+            	return option.description.toUpperCase() == attr.value.toUpperCase()
+              })[0];
               
               if (option) {
 
@@ -5374,8 +5376,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                 markerAttribute.selectedAttribute = null;
                 
                 if ( attr.value ) {
-
-                  var markerAtts = $filter('filter')( markerAttributeswithoutCombinations, { layerAttribute : val })[0] ;
+        
+                  var markerAtts =  markerAttributeswithoutCombinations.filter( function(markerAttribute){ 
+                  	return markerAttribute == val
+                  })[0];
 
                   if (markerAtts) {
                     markerAtts.attributeValues.push(attr.value);
@@ -5425,75 +5429,82 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 	      }
       });
     
-      dialog.result.then(function (result) {
-
+      dialog.result.then(function ( continueImport ) {
         
-        
-        if ( !result ) {
+        if ( !continueImport ) {
 
           $scope.isLoading = false;
           $scope.isImport = false;
 
         } else {
-
-          $scope.clearImportMarkers();
-
-          // Utiliza sobrecarga de métodos no Java
-          markerService.insertMarker( importMarkers, {
-            
-            callback: function (result) {
-
-              angular.forEach($scope.allLayers, function(layer){
-
-                var node = $filter('filter')(layer.children, {value: result[0].layer.id})[0];
-
-                if(angular.isDefined(node)) {
-                  if(node.selected) {
-                    $('#layer_' + result[0].layer.id).trigger('click');
-                    $('#layer_' + result[0].layer.id).trigger('click');
-                  } else {
-                    $('#layer_' + result[0].layer.id).trigger('click');
-                  }
-                }
-              });
-
-              $scope.isLoading = false;
-
-              $scope.importedFromShapefileNewLayerSaved = $scope.importedFromShapefileNewLayerSaved ? "map.Markers-inserted-succesfully-from-shapefile-and-new-layer" : "map.Markers-inserted-succesfully";
-              $scope.msg = {
-                type: "success",
-                text: $translate($scope.importedFromShapefileNewLayerSaved),
-                dismiss: true
-              };
-              $scope.fadeMsg();
-
-              $scope.markerAttributes = [];
-              $scope.attributesByLayer = [];
-              $scope.shapeFile.form = {};
-
-              $scope.shapeFile.layerType = 'layer';
-              $('#upload').val('');
-
-              $scope.isImport = false;
-              $scope.isExport = false;
-
-              $scope.toggleSidebarMenu(300, 'closeButton');
-
-            }, errorHandler: function (message, exception) {
-
-              $scope.isImport = false;
-              $scope.isExport = false;
-              $scope.isLoading = false;
-              $scope.msg = {type: "error", text: message};
-            }
-          });
+        	$scope.insertImportMarkers( importMarkers );
         }
 
       });
     	
+    } else {
+    	$scope.insertImportMarkers(importMarkers );
     }
 
   };
+  
+  
+  $scope.insertImportMarkers = function( importMarkers ) {
+
+
+      $scope.clearImportMarkers();
+
+      // Utiliza sobrecarga de métodos no Java
+      markerService.insertMarker( importMarkers, {
+        
+        callback: function (result) {
+
+          angular.forEach($scope.allLayers, function(layer){
+
+            var node = $filter('filter')(layer.children, {value: result[0].layer.id})[0];
+
+            if(angular.isDefined(node)) {
+              if(node.selected) {
+                $('#layer_' + result[0].layer.id).trigger('click');
+                $('#layer_' + result[0].layer.id).trigger('click');
+              } else {
+                $('#layer_' + result[0].layer.id).trigger('click');
+              }
+            }
+          });
+
+          $scope.isLoading = false;
+
+          $scope.importedFromShapefileNewLayerSaved = $scope.importedFromShapefileNewLayerSaved ? "map.Markers-inserted-succesfully-from-shapefile-and-new-layer" : "map.Markers-inserted-succesfully";
+          $scope.msg = {
+            type: "success",
+            text: $translate($scope.importedFromShapefileNewLayerSaved),
+            dismiss: true
+          };
+          $scope.fadeMsg();
+
+          $scope.markerAttributes = [];
+          $scope.attributesByLayer = [];
+          $scope.shapeFile.form = {};
+
+          $scope.shapeFile.layerType = 'layer';
+          $('#upload').val('');
+
+          $scope.isImport = false;
+          $scope.isExport = false;
+
+          $scope.toggleSidebarMenu(300, 'closeButton');
+
+        }, errorHandler: function (message, exception) {
+
+          $scope.isImport = false;
+          $scope.isExport = false;
+          $scope.isLoading = false;
+          $scope.msg = {type: "error", text: message};
+        }
+      });
+  }
+  
 
   /**
    * Performs the insertion of a new record
