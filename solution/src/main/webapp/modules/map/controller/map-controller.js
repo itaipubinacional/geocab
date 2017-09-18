@@ -5328,6 +5328,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     
     var markerAttributeswithoutCombinations = [];
 
+    var oldImportMarkers = angular.copy($scope.importMarkers);
+
     angular.forEach($scope.importMarkers, function(marker){
 
       $scope.currentEntity = marker;
@@ -5357,10 +5359,10 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         angular.forEach(markerAttributes, function(attr){
 
           var newLayerCondiction = (attr.attribute.name + ' (' + attr.attribute.type + ')' == val.option && $scope.shapeFile.layerType != 'new');
-          var existLayerCondiction = (attr.attribute.name + ' (' + attr.attribute.type + ')' == val.name + ' (' + val.type + ')' && $scope.shapeFile.layerType == 'new');
+          var existLayerCondiction = (attr.attribute.name == val.name && $scope.shapeFile.layerType == 'new');
 
           if (newLayerCondiction || existLayerCondiction) {
-        
+
             if (val.type == "MULTIPLE_CHOICE"){
     
               var option =  val.options.filter( function(option){ 
@@ -5377,8 +5379,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                 
                 if ( attr.value ) {
         
-                  var markerAtts =  markerAttributeswithoutCombinations.filter( function(markerAttribute){ 
-                  	return markerAttribute == val
+                  var markerAtts =  markerAttributeswithoutCombinations.filter( function( markerAttributeswithoutCombination ){ 
+                  	return markerAttributeswithoutCombination.layerAttribute == val
                   })[0];
 
                   if (markerAtts) {
@@ -5418,29 +5420,36 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     
     if (markerAttributeswithoutCombinations.length) {
     	
-    	var dialog = $modal.open({
-	      templateUrl: "modules/map/ui/popup/confirm-import-popup.jsp",
-	      controller: ConfirmImportPopUpController,
-	      size: 'lg',
-	      resolve: {
-	    	  markerAttributes: function(){
-	          return markerAttributeswithoutCombinations;
-	        },
-	      }
-      });
+		var dialog = $modal.open({
+		  templateUrl: "modules/map/ui/popup/confirm-import-popup.jsp",
+		  controller: ConfirmImportPopUpController,
+		  size: 'lg',
+		  resolve: {
+			  markerAttributes: function(){
+				  return markerAttributeswithoutCombinations;
+			  },
+		  }
+		});
     
-      dialog.result.then(function ( continueImport ) {
+      dialog.result.then( function(continueImport){
+    	  
+    	  if ( !continueImport ) {
+
+              $scope.importMarkers = oldImportMarkers;
+              $scope.isLoading = false;
+         
+
+            } else {
+            	$scope.insertImportMarkers( importMarkers );
+            }
+    	  
+      }, function(){ 
         
-        if ( !continueImport ) {
-
-          $scope.isLoading = false;
-          $scope.isImport = false;
-
-        } else {
-        	$scope.insertImportMarkers( importMarkers );
-        }
-
-      });
+        $scope.importMarkers = oldImportMarkers;
+    	  $scope.isLoading = false;
+          
+      })
+      
     	
     } else {
     	$scope.insertImportMarkers(importMarkers );
@@ -5890,7 +5899,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
           $scope.clearImportMarkers();
 
           $scope.importMarkers = result;
-
+          
           var coordinates = [];
           var extent = '';
 

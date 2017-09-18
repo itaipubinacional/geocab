@@ -1186,7 +1186,8 @@ uri="http://www.springframework.org/security/tags"%>
                       <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty) "
                             class="tooltip-validation" style="top:5px"><spring:message code="admin.layer-config.Title-required"/></span>
                   </div>
-
+                  
+      
                   <div ng-if="shapeFile.layerType != 'new' && shapeFile.form.layer" style="margin-bottom: 10px">
                     <button ng-disabled="!shapeFile.form.layer.layerId" ng-click="associateAttribute()" title="<spring:message code='admin.layer-config.Associate-attributes' />"
                             class="btn btn-primary" style="margin-bottom: 5px">
