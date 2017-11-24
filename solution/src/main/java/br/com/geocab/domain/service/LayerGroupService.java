@@ -210,7 +210,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Método que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
+	 * Mï¿½todo que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
 	 */
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void populateChildrenInLayerGroupPublished()
@@ -219,7 +219,7 @@ public class LayerGroupService
 		
 		for (LayerGroup layerGroupPublished : layersGroupPublished)
 		{
-			//Pega o grupo de camadas pois a query anterior (layerGroupRepository.listAllLayersGroupPublished()) foi alterada e não pega todos os atributos da camada
+			//Pega o grupo de camadas pois a query anterior (layerGroupRepository.listAllLayersGroupPublished()) foi alterada e nï¿½o pega todos os atributos da camada
 			layerGroupPublished = this.layerGroupRepository.findOne(layerGroupPublished.getId());
 			
 			layerGroupPublished.setLayersGroup(this.layerGroupRepository.listLayersGroupPublishedChildren(layerGroupPublished.getId()));
@@ -230,7 +230,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Método recursivo que remove os grupos de camadas publicados filhos
+	 * Mï¿½todo recursivo que remove os grupos de camadas publicados filhos
 	 * @param gruposCamadasPublicados
 	 * @param grupoCamadaPublicadosSuperior
 	 */
@@ -266,7 +266,7 @@ public class LayerGroupService
 		// verifica se foi possui o grupo publicado
 		final LayerGroup layerGroupPublishedExistent = this.layerGroupRepository.findByDraftId(layerGroupOriginalId);
 		
-		// efetua a cópia do grupo de camadas original
+		// efetua a cï¿½pia do grupo de camadas original
 		LayerGroup layerGroupPublished = new LayerGroup();
 		BeanUtils.copyProperties(layerGroupOriginal, layerGroupPublished);
 		
@@ -277,7 +277,7 @@ public class LayerGroupService
 		layerGroupPublished.setLayersGroup(new ArrayList<LayerGroup>());
 		layerGroupPublished.setLayers(new ArrayList<Layer>());
 		
-		// se já possui o grupo criado apenas altera o existente sentido cria o grupo publicado
+		// se jï¿½ possui o grupo criado apenas altera o existente sentido cria o grupo publicado
 		if (layerGroupPublishedExistent != null)
 		{
 			layerGroupPublished.setId(layerGroupPublishedExistent.getId());
@@ -289,19 +289,19 @@ public class LayerGroupService
 			layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
 		}
 		
-		// criação atualização de camadas para camadas publicadas
+		// criaï¿½ï¿½o atualizaï¿½ï¿½o de camadas para camadas publicadas
 		if ( layerGroupOriginal.getLayers() != null )
 		{
 			for ( Layer layerOriginal : layerGroupOriginal.getLayers() )
 			{
 				//final Camada camadaPublicadaExistente = this.camadaRepository.findByRascunhoId(camadaOriginal.getId());
 				
-				// criação da camada publicada que iria conter a ordem publicada e os grupos
+				// criaï¿½ï¿½o da camada publicada que iria conter a ordem publicada e os grupos
 				Layer layerPublished = new Layer();
 //				BeanUtils.copyProperties(camadaOriginal, camadaPublicada);
 				
 				
-				// criação/update na camada publicada
+				// criaï¿½ï¿½o/update na camada publicada
 				layerPublished.setName(layerOriginal.getName());
 				layerPublished.setTitle(layerOriginal.getTitle());
 				layerPublished.setIcon(layerOriginal.getIcon());
@@ -312,7 +312,7 @@ public class LayerGroupService
 				layerPublished.setLayerGroup(layerGroupPublished);
 				layerPublished.setPublished(true);
 				
-				// se já possui a camada publicada apenas altera a existente sentido cria a camada publicada
+				// se jï¿½ possui a camada publicada apenas altera a existente sentido cria a camada publicada
 				if (layerOriginal.getPublishedLayer() != null)
 				{
 					layerPublished.setId(layerOriginal.getPublishedLayer().getId());
@@ -444,7 +444,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Método para remover um {@link GrupoCamadas}
+	 * Mï¿½todo para remover um {@link GrupoCamadas}
 	 * 
 	 * @param id
 	 */
@@ -503,7 +503,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Lista os Grupos de camadas não publicados
+	 * Lista os Grupos de camadas nï¿½o publicados
 	 * 
 	 * @param id
 	 * @return
@@ -529,7 +529,7 @@ public class LayerGroupService
 	
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupByLayerGroupId( id, published);
 		
-		//Se o grupo de camadas está vazio (se não tem outros grupos de camadas internamente) pega as camadas desse grupo de camadas
+		//Se o grupo de camadas estï¿½ vazio (se nï¿½o tem outros grupos de camadas internamente) pega as camadas desse grupo de camadas
 		if( layersGroup.isEmpty() )
 		{
 			
@@ -548,7 +548,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Método que retorna a estrutura completa dos grupos de camadas publicados
+	 * Mï¿½todo que retorna a estrutura completa dos grupos de camadas publicados
 	 * @param filter
 	 * @param idExcluso
 	 * @param pageable
@@ -581,7 +581,7 @@ public class LayerGroupService
 				layer = this.setIcon(layer);
 			}
 		}
-		//Se o usuário for administrador, ele poderá visualizar todas os grupos de acesso.
+		//Se o usuï¿½rio for administrador, ele poderï¿½ visualizar todas os grupos de acesso.
 	
 		return this.layersGroupUpperByRole(layersGroupUpperPublished);
 		
@@ -800,7 +800,7 @@ public class LayerGroupService
 	
 
 	/**
-	 * Não é necessária a sincronização com hasChildren 
+	 * Nï¿½o ï¿½ necessï¿½ria a sincronizaï¿½ï¿½o com hasChildren 
 	 * @param filter
 	 * @param pageable
 	 * @return
@@ -813,7 +813,7 @@ public class LayerGroupService
 	
 	/**
 	 * 
-	 * @return camadas filtradas pelos grupos de acesso do usuário
+	 * @return camadas filtradas pelos grupos de acesso do usuï¿½rio
 	 */
 	@Transactional(readOnly=true)
 	public List<Layer> listAllInternalLayerGroups()
@@ -982,7 +982,7 @@ public class LayerGroupService
 
 	
 	/**
-	 * Método responsável para listar as camadas
+	 * Mï¿½todo responsï¿½vel para listar as camadas
 	 *
 	 * @param filter
 	 * @param idExcluso
@@ -1070,7 +1070,7 @@ public class LayerGroupService
 		layer.setLayerGroup(this.layerGroupRepository.findOne(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
-		//Valida se os atributos são válidos
+		//Valida se os atributos sï¿½o vï¿½lidos
 		layer.validate();
 		
 		this.layerRepository.save( layer );
@@ -1081,7 +1081,7 @@ public class LayerGroupService
 		return layer;
 	}
 	/**
-	 * método para atualizar uma {@link Camada}
+	 * mï¿½todo para atualizar uma {@link Camada}
 	 * 
 	 * @param camada
 	 * @return camada
@@ -1100,8 +1100,8 @@ public class LayerGroupService
 			this.attributeRepository.delete(attribute);	
 		}
 		
-		/* Na atualização não foi permitido modificar a fonte de dados, camada e título, dessa forma, 
-		Os valores originais são mantidos. */
+		/* Na atualizaï¿½ï¿½o nï¿½o foi permitido modificar a fonte de dados, camada e tï¿½tulo, dessa forma, 
+		Os valores originais sï¿½o mantidos. */
 		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setDataSource(layerDatabase.getDataSource());
 		layer.setName(layerDatabase.getName());
@@ -1121,7 +1121,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * método para remover uma {@link Camada}
+	 * mï¿½todo para remover uma {@link Camada}
 	 * 
 	 * @param id
 	 */
@@ -1147,7 +1147,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * método para encontrar uma {@link Camada} pelo id
+	 * mï¿½todo para encontrar uma {@link Camada} pelo id
 	 * 
 	 * @param id
 	 * @return camada
@@ -1169,7 +1169,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Método para listar as configurações de camadas paginadas com opção do filtro
+	 * Mï¿½todo para listar as configuraï¿½ï¿½es de camadas paginadas com opï¿½ï¿½o do filtro
 	 *
 	 * @param filter
 	 * @param pageable
@@ -1194,7 +1194,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Método que busca a legenda de uma camada no geo server
+	 * Mï¿½todo que busca a legenda de uma camada no geo server
 	 * @param camada
 	 * @return
 	 */
@@ -1274,12 +1274,13 @@ public class LayerGroupService
 	{
 		this.template = new RestTemplate();
 		List<String> listFeatures = new ArrayList<String>();
-		
+
 		for (String url : listUrls)
 		{
 			try
 			{
-				listFeatures.add(this.template.getForObject(url, String.class));
+				String item = "{\"url\": \"" + url + "\", \"result\": " + this.template.getForObject(url, String.class) + "}";
+				listFeatures.add(item);
 			}
 			catch (Exception e)
 			{
@@ -1375,7 +1376,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Verifica se os grupos de acesso de uma página de grupos de acessos tem filhos
+	 * Verifica se os grupos de acesso de uma pï¿½gina de grupos de acessos tem filhos
 	 * @param listByFilter
 	 * @return
 	 */

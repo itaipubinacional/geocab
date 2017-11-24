@@ -299,6 +299,8 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.isLoading = false;
 
+  $scope.activeWMSLayers = [];
+
   // Para controle de requisições WMS
   // $scope.showLoadingWms = false;
   // $scope.contWmsLoad = 0;
@@ -920,7 +922,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         for (var i = 0; i < $scope.layers.length; i++) {
           var url = $scope.layers[i].wmsSource.getGetFeatureInfoUrl(
             evt.coordinate, $scope.view.getResolution(), $scope.view.getProjection(),
-            {'INFO_FORMAT': 'application/json'});
+            {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 100});
 
           listUrls.push(decodeURIComponent(url));
         }
@@ -1066,105 +1068,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     return Object.keys(obj);
   };
 
-  /**
-   * Function that makes request to geo server to bring the features
-   * @param url
-   * @param posicao
-   */
-  var listAllFeatures = function (listUrls) {
 
-    layerGroupService.listAllFeatures(listUrls, {
-      callback: function (result) {
-
-        for (var i = 0; i < result.length; i++) {
-
-          var feature = {
-            layer: $scope.layers[i],
-            fields: {}
-          };
-
-          try {
-            angular.forEach(JSON.parse(result[i]).features, function (value, key) {
-              angular.forEach(value.properties, function (value, key) {
-
-                try {
-                  feature.fields[decodeURIComponent(escape(key))] = decodeURIComponent(escape(value));
-                }
-                catch (e) {
-                  feature.fields[key] = value;
-                }
-
-              });
-
-              var insere = false;
-              for (var propriedade in feature.fields) {
-                insere = true;
-                break;
-              }
-
-              if (insere) {
-
-                if ($scope.features.length) {
-                  var alreadyExistLayer = false;
-
-                  angular.forEach($scope.features, function (value, key) {
-
-                    if (value.feature.layer.name == feature.layer.name) {
-                      alreadyExistLayer = true;
-                    }
-
-                  });
-
-                  if (!alreadyExistLayer) {
-                    $scope.features.push({"feature": feature, "type": "external"});
-                  }
-
-                } else {
-                  $scope.features.push({"feature": feature, "type": "external"});
-                }
-
-              }
-
-              if ($scope.features.length > 0) {
-
-                $timeout(function () {
-                  $scope.toggleSidebarMarkerDetailUpdate(300);
-
-                  //.panel-collapse
-                  $('.min-height-accordion').find('.panel-body').css('height',
-                    parseInt($('#sidebar-marker-detail-update').height()) -
-                    parseInt(( ( $scope.features.length) * 37 ) + 40) + 'px'
-                  );
-                }, 400)
-
-              }
-
-              if ($scope.features.length > 1) {
-                $timeout(function () {
-                  $(".min-height-accordion .panel-collapse .panel-body").css("min-height", "300px")
-                }, 700)
-              }
-
-            });
-          } catch (e) {
-            continue;
-          }
-
-        }
-
-
-      
-
-
-        $scope.$apply();
-
-      },
-      errorHandler: function (message, exception) {
-        $scope.msg = {type: "danger", text: message, dismiss: true};
-        $scope.$apply();
-      }
-    });
-  }
 
 
   /**
@@ -1245,9 +1149,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
           if (!!node.nodes) {
             for (var i = 0; i < node.nodes.length; ++i) {
-                if( true === node.nodes[i].startVisible ) {
+                //if( true === node.nodes[i].startVisible ) {
                     item.children.push(parseNode(node.nodes[i]));
-                }
+                //}
             }
           }
           return item;
@@ -1310,97 +1214,6 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
     return {'name': layerName, 'url': formattedUrl};
 
-  }
-
-  /**
-   * Treat the selection and deselection of each of the tree
-   * @param node
-   */
-  $scope.getSelectedNode = function (node) {
-
-    if (typeof node == 'undefined' || node.search) return false;
-
-    /* Check if it is an internal layer */
-    if (typeof node.dataSourceUrl != 'undefined' && node.dataSourceUrl == null) {
-      if (node.selected) {
-        $scope.addInternalLayer(node.value);
-      } else {
-        $scope.removeInternalLayer(node.value);
-      }
-      return;
-    }
-
-    if (node && node.type == 'layer' && !node.search) {
-      if (node.selected) {
-
-        var item = $scope.formatUrl(node, false);
-
-        var wmsOptions = {
-          url: item.url,
-          params: {
-            'LAYERS': item.name,
-            'TILED': true
-          }
-        };
-
-        if (node.dataSourceUrl.match(/&authkey=(.*)/)) {
-          wmsOptions.url += "?" + node.dataSourceUrl.match(/&authkey=(.*)/)[0];
-        }
-
-        var wmsSource = new ol.source.TileWMS(wmsOptions);
-
-        var wmsLayer = new ol.layer.Tile({
-          source: wmsSource,
-          maxResolution: minEscalaToMaxResolutionn(node.minimumScaleMap),
-          minResolution: maxEscalaToMinResolutionn(node.maximumScaleMap)
-        });
-
-        $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name": node.name, "titulo": node.label});
-
-        //Adds the selected layers in the map
-        $scope.map.addLayer(wmsLayer);
-
-
-        // Controla o loading de camadas WMS
-        // Funciona a partir da versão v3.3.0 tanto 'image' quanto 'tile'
-        // var wmsEvent = function(newWmsLoad){
-        //
-        //   $scope.contWmsLoad += newWmsLoad ? +1 : -1;
-        //
-        //   $scope.showLoadingWms = $scope.contWmsLoad > 0 ? true : false;
-        //
-        //   $scope.$apply();
-        //
-        // }
-        //
-        // wmsSource.on('imageloadstart', function() {
-        //   wmsEvent(true);
-        // });
-        // wmsSource.on('imageloadend', function() {
-        //   wmsEvent(false);
-        // });
-        // wmsSource.on('imageloaderror', function() {
-        //   wmsEvent(false);
-        // });
-
-      }
-      else {
-        for (var i = 0; i <= $scope.layers.length; i++) {
-          if (i == $scope.layers.length) {
-            if ($scope.layers[i - 1].name == node.name && $scope.layers[i - 1].searchId == undefined) {
-              $scope.map.removeLayer($scope.layers[i - 1].wmsLayer);
-              $scope.layers.splice(i - 1, 1);
-            }
-          } else {
-            if ($scope.layers[i].name == node.name && $scope.layers[i].searchId == undefined) {
-              //Removes the user-desselecionadas layers
-              $scope.map.removeLayer($scope.layers[i].wmsLayer);
-              $scope.layers.splice(i, 1);
-            }
-          }
-        }
-      }
-    }
   }
 
   $scope.getSelectedSearchNode = function (node) {
@@ -1660,14 +1473,14 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
   $scope.addEventListenerPointerMove = function() {
     /* POINTER MOVE LISTENER */
-    /*
+    // tbecker
     $scope.map.on('pointermove', function (evt) {
       if (evt.dragging) {
         return;
       }
       var pixel = $scope.map.getEventPixel(evt.originalEvent);
       displayFeatureInfo(pixel);
-    });*/
+    });
   };
 
   /**
@@ -2485,7 +2298,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     /*
     *** Código comentado por tbecker 07/07/2017 **
     */
-    /*
+
     if (sketch && ( $scope.menu.fcArea || $scope.menu.fcDistancia )) {
       var output;
       var geom = (sketch.getGeometry());
@@ -2498,7 +2311,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       $('#popup-content').html("<p>" + output + "</p>");
       $('#popup').css("display", "block");
-    }*/
+    }
   };
 
 
@@ -6103,9 +5916,218 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     $scope.checkBrowserVersion();
   }, 1000);
 
+  /****
+
+      Refatorando o código fonte do mapa
+
+  ***/
+
+    /*
+        Busca em qual camada (objeto openlayers) uma camada
+        está sendo exibida.
+    */
+    $scope.findOLLayerBySource = function (wmsSourceUrl) {
+      for (var i = 0; i < $scope.layers.length; i++) {
+          if ($scope.layers[i].wmsSource.getUrls()[0] == wmsSourceUrl) {
+              return $scope.layers[i];
+          }
+      }
+
+      return null;
+    }
+
+    /**
+     * Treat the selection and deselection of each of the tree
+     * @param node
+     */
+    $scope.getSelectedNode = function (node) {
+
+      if (typeof node == 'undefined' || node.search) return false;
+
+      /* Check if it is an internal layer */
+      if (typeof node.dataSourceUrl != 'undefined' && node.dataSourceUrl == null) {
+        if (node.selected) {
+          $scope.addInternalLayer(node.value);
+        } else {
+          $scope.removeInternalLayer(node.value);
+        }
+        return;
+      }
+
+      if (node && node.type == 'layer' && !node.search) {
+        if (node.selected) {
+          $scope.addExternalLayer(node);
+        }
+        else {
+          $scope.removeExternalLayer(node);
+        }
+      }
+    }
+
+    /*
+      Adiciona uma camada externa que foi selecionada do menu para o mapa principal
+      @param node: O node referente a camada a ser adicionada
+    */
+    $scope.addExternalLayer = function (node) {
+        var item = $scope.formatUrl(node, false);
+        var layer = $scope.findOLLayerBySource(item.url);
+
+        /*
+            Se já existe uma camada OpenLayers para esta fonte de dados WMS
+            Apenas atualiza a fonte, com a camada nova.
+        */
+        if (layer) {
+          wmsSource = layer.wmsSource;
+          var layers = wmsSource.getParams()['LAYERS'] + ',' + item.name;
+          wmsSource.updateParams({'LAYERS': layers, 'TILED': true});
+        }
+
+        /*
+            Caso ainda não exista uma camada OpenLayers para esta fonte de dados
+            cria uma nova camada no OpenLayers para acomodar a camada nova.
+        */
+        else {
+          var wmsOptions = {
+              url: item.url,
+              params: {
+                  'LAYERS': item.name,
+                  'TILED': true
+                  }
+           };
+
+           if (node.dataSourceUrl.match(/&authkey=(.*)/)) {
+              wmsOptions.url += "?" + node.dataSourceUrl.match(/&authkey=(.*)/)[0];
+           }
+
+           var wmsSource = new ol.source.TileWMS(wmsOptions);
+
+           var wmsLayer = new ol.layer.Tile({
+              source: wmsSource,
+              maxResolution: minEscalaToMaxResolutionn(node.minimumScaleMap),
+              minResolution: maxEscalaToMinResolutionn(node.maximumScaleMap)
+           });
+
+           $scope.layers.push({'wmsLayer': wmsLayer, 'wmsSource': wmsSource, "name": node.name, "titulo": node.label});
+           console.log($scope.layers);
+
+           //Adiciona a nova camada OpenLayer ao mapa.
+           $scope.map.addLayer(wmsLayer);
+        }
+
+        // Adiciona a nova camada na lista de camadas WMS ativas.
+        $scope.activeWMSLayers.push(node);
+    }
+
+    /*
+      Remove uma camada externa que foi deselecionada do menu do mapa principal
+      @param layer: O node referente a camada a ser removida
+    */
+    $scope.removeExternalLayer = function(node) {
+       var item = $scope.formatUrl(node, false);
+       var layerSource = $scope.findOLLayerBySource(item.url)
+
+        /*
+            Busca o nome da camada dentro dos atributos da camada Openlayers.
+            Remove o nome da camada da lista e atualiza a fonte de dados.
+        */
+       var layers = layerSource.wmsSource.getParams()['LAYERS'].split(',');
+       for (var i = 0; i < layers.length; i++) {
+          if (item.name == layers[i]) {
+              layers.splice(i, 1);
+              layerSource.wmsSource.updateParams({'LAYERS': layers.join(), 'TILED': true});
+          }
+       }
+
+        // Remove a camada da lista de camadas wms ativas.
+       var l = $scope.activeWMSLayers.indexOf($scope.activeWMSLayers.find(x => x.id === node.id));
+       $scope.activeWMSLayers.splice(l, 1);
+
+    }
+
+    /**
+       * Function that makes request to geo server to bring the features
+       * @param url
+       * @param posicao
+       */
+      var listAllFeatures = function (listUrls) {
+
+        layerGroupService.listAllFeatures(listUrls, {
+          callback: function (response) {
+
+            // percorre cada request realizado.
+            for (var i = 0; i < response.length; i++) {
+              try {
+                var result = JSON.parse(response[i]);
+
+                // percorre cada feature do request.
+                for (var j = 0; j < result.result.features.length; j++) {
+                    var localFeature = {fields: {}, title: ''};
+                    var responseFeature = result.result.features[j];
+
+                    /* Para cada propriedade da feature (JSON), adiciona um campo no objeto fields
+                    da feature (Local), adicionando escape aos caracteres. */
+                    angular.forEach(responseFeature.properties, function (value, key) {
+                        try {
+                            localFeature.fields[decodeURIComponent(escape(key))] = decodeURIComponent(escape(value));
+                        }
+                        catch (e) {
+                            localFeature.fields[key] = value;
+                            }
+                        });
+
+                    var serviceUrl = result.url.split("?")[0];
+
+                    /* Busca o rótulo da camada a partir de seu nome e url do serviço
+                       na lista de camadas ativas */
+                    var label = $scope.activeWMSLayers.find(x => {
+                       var item = $scope.formatUrl(x, false);
+                         if (item.url === serviceUrl && x.name.split(':')[1] === responseFeature.id.split('.')[0])
+                            return true;
+                    }).label;
+
+                    localFeature.title = label;
+
+                    // Adiciona a feature encontrada na lista de features.
+                    $scope.features.push({"feature": localFeature, "type": "external"});
+
+
+                  // ToDo: Remover daqui a lógica de abertura da sidebar.
+                  if ($scope.features.length > 0) {
+                    $timeout(function () {
+                      $scope.toggleSidebarMarkerDetailUpdate(300);
+
+                      //.panel-collapse
+                      $('.min-height-accordion').find('.panel-body').css('height',
+                        parseInt($('#sidebar-marker-detail-update').height()) -
+                        parseInt(( ( $scope.features.length) * 37 ) + 40) + 'px'
+                      );
+                    }, 400)
+                  }
+
+                  if ($scope.features.length > 1) {
+                    $timeout(function () {
+                      $(".min-height-accordion .panel-collapse .panel-body").css("min-height", "300px")
+                    }, 700)
+                  }
+                }
+              } catch (e) {
+                continue;
+              }
+            }
+            $scope.$apply();
+          },
+          errorHandler: function (message, exception) {
+            $scope.msg = {type: "danger", text: message, dismiss: true};
+            $scope.$apply();
+          }
+        });
+      }
 };
 
 function isBooleanChecked(that) {
   $(that).parent().css("border", "0");
   $(that).parent().parent().find("span.tooltip-validation").remove();
 };
+
+
+

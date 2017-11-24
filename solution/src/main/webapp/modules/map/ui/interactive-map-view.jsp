@@ -89,8 +89,8 @@ uri="http://www.springframework.org/security/tags"%>
                       <span title="{{feature.feature.layer.title}}" class="dynamic-text col-md-10" ng-if="feature.type == 'internal'" ng-click="calculo()" >
                         {{feature.feature.layer.title}}
                       </span>
-                      <span title="{{feature.feature.layer.titulo}}" class="dynamic-text col-md-10" ng-if="feature.type == 'external'" ng-click="calculo()">
-                        {{feature.feature.layer.titulo}}
+                      <span title="{{feature.feature.title}}" class="dynamic-text col-md-10" ng-if="feature.type == 'external'" ng-click="calculo()">
+                        {{feature.feature.title}}
                       </span>
 
                     </div>
