@@ -1,4 +1,5 @@
 .idea
 *.project
 .settings
+.pom-prd.xml
 /solution/*.classpath
