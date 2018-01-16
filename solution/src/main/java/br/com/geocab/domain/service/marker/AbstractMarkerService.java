@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.omg.SendingContext.RunTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,6 +33,7 @@ import br.com.geocab.domain.entity.marker.photo.Photo;
 import br.com.geocab.domain.entity.marker.photo.PhotoAlbum;
 import br.com.geocab.domain.repository.IMetaFileRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
+import br.com.geocab.domain.repository.layergroup.IAttributeOptionRepository;
 import br.com.geocab.domain.repository.marker.IMarkerAttributeRepository;
 import br.com.geocab.domain.repository.marker.IMarkerRepository;
 import br.com.geocab.domain.repository.marker.photo.IPhotoAlbumRepository;
@@ -87,6 +89,11 @@ public abstract class AbstractMarkerService
 	 */
 	@Autowired
 	protected IAttributeRepository attributeRepository;
+	/**
+	 * 
+	 */
+	@Autowired
+	protected IAttributeOptionRepository attributeOptionRepository;
 	/**
 	 * 
 	 */
@@ -359,13 +366,17 @@ public abstract class AbstractMarkerService
 			
 			Attribute attribute = attributeRepository.findOne(markerAttribute.getAttribute().getId());
 			
-			if (attribute.getRequired() && attribute.getType() != AttributeType.PHOTO_ALBUM && markerAttribute.getValue() == null)
+			if (attribute.getRequired() && ( attribute.getType() != AttributeType.PHOTO_ALBUM && attribute.getType() != AttributeType.MULTIPLE_CHOICE) && markerAttribute.getValue() == null)
 			{
 				throw new RuntimeException(messages.getMessage("admin.shape.error.value-attribute-can-not-be-null", null, null));
 			}
 			else if (attribute.getRequired() && attribute.getType() == AttributeType.PHOTO_ALBUM && (markerAttribute.getPhotoAlbum() == null || markerAttribute.getPhotoAlbum().getPhotos() == null || markerAttribute.getPhotoAlbum().getPhotos().size() == 0))
 			{
 				throw new RuntimeException(messages.getMessage("photos.Insert-Photos-in-attribute", new Object [] {attribute.getName()}, null));
+			}
+			else if ( attribute.getRequired() && attribute.getType() == AttributeType.MULTIPLE_CHOICE && markerAttribute.getSelectedAttribute() == null )
+			{
+				throw new RuntimeException(messages.getMessage("admin.shape.error.marker-attribute-multiple-choice-not-null", new Object [] {attribute.getName()}, null));
 			}
 		}
 	}

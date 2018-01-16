@@ -213,6 +213,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'TEXT\'" >'+ $translate("admin.layer-config.TEXT") +'</span>' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'NUMBER\'" >'+ $translate("admin.layer-config.NUMBER") +'</span>' +
     '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'PHOTO_ALBUM\'" >'+ $translate("admin.layer-config.PHOTO_ALBUM") +'</span>' +
+    '<span ng-cell-text="" class="ng-binding" ng-if="row.entity.type == \'MULTIPLE_CHOICE\'" >'+ $translate("admin.layer-config.MULTIPLE_CHOICE") +'</span>' +
     '</div>';
 
     var REQUIRED_COLUMN = '<div class="ngCellText ng-scope col2 colt2">' +
@@ -727,7 +728,8 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text:$translate(message), dismiss: true};
+                $scope.msg = {type: "danger", text:message, dismiss: true};
+                $scope.fadeMsg();
                 $scope.$apply();
             }
         });
@@ -1025,7 +1027,7 @@ function LayerConfigController($scope, $injector, $log, $state, $timeout, $modal
     	var dialog = $modal.open({
             templateUrl: "modules/admin/ui/layer-config/popup/more-icons-popup.jsp",
             controller: MorePopupController,
-            windowClass: 'xx-dialog',
+            windowClass: 'more-icons',
             resolve: {
             	currentState: function(){
                 	return $scope.currentState;

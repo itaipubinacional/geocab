@@ -7,10 +7,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -94,9 +97,14 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * 
 	 */
 	@JsonIgnore
-//	@OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	@Transient
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
+	
+	/**
+	 * 
+	 */
+	@Transient
+	private List<AttributeOption> options = new ArrayList<AttributeOption>();
 
 	/*-------------------------------------------------------------------
 	 *								CONSTRUCTORS
@@ -216,7 +224,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	public String formmattedTypeAttributes()
 	{
-		if (this.getType() == AttributeType.TEXT)
+		if (this.getType() == AttributeType.TEXT || this.getType() == AttributeType.MULTIPLE_CHOICE)
 		{
 			return "String";
 		}
@@ -328,6 +336,81 @@ public class Attribute extends AbstractEntity implements Serializable
 		this.visible = visible;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((attributeDefault == null) ? 0 : attributeDefault.hashCode());
+		result = prime * result + ((layer == null) ? 0 : layer.hashCode());
+		result = prime * result + ((markerAttribute == null) ? 0 : markerAttribute.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((orderAttribute == null) ? 0 : orderAttribute.hashCode());
+		result = prime * result + ((required == null) ? 0 : required.hashCode());
+		result = prime * result + ((temporaryId == null) ? 0 : temporaryId.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((visible == null) ? 0 : visible.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Attribute other = (Attribute) obj;
+		if (attributeDefault == null) {
+			if (other.attributeDefault != null)
+				return false;
+		} else if (!attributeDefault.equals(other.attributeDefault))
+			return false;
+		if (layer == null) {
+			if (other.layer != null)
+				return false;
+		} else if (!layer.equals(other.layer))
+			return false;
+		if (markerAttribute == null) {
+			if (other.markerAttribute != null)
+				return false;
+		} else if (!markerAttribute.equals(other.markerAttribute))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (orderAttribute == null) {
+			if (other.orderAttribute != null)
+				return false;
+		} else if (!orderAttribute.equals(other.orderAttribute))
+			return false;
+		if (required == null) {
+			if (other.required != null)
+				return false;
+		} else if (!required.equals(other.required))
+			return false;
+		if (temporaryId == null) {
+			if (other.temporaryId != null)
+				return false;
+		} else if (!temporaryId.equals(other.temporaryId))
+			return false;
+		if (type != other.type)
+			return false;
+		if (visible == null) {
+			if (other.visible != null)
+				return false;
+		} else if (!visible.equals(other.visible))
+			return false;
+		return true;
+	}
 	/*-------------------------------------------------------------------
 	 *								SETTERS/GETTERS
 	 *-------------------------------------------------------------------*/
@@ -434,4 +517,19 @@ public class Attribute extends AbstractEntity implements Serializable
 	{
 		this.orderAttribute = orderAttribute;
 	}
+
+	/**
+	 * @return the options
+	 */
+	public List<AttributeOption> getOptions() {
+		return options;
+	}
+
+	/**
+	 * @param options the options to set
+	 */
+	public void setOptions(List<AttributeOption> options) {
+		this.options = options;
+	}
+
 }
