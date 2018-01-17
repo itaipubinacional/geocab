@@ -13,7 +13,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -33,7 +32,6 @@ import br.com.geocab.domain.entity.configuration.preferences.Coordinates;
  * @author Vagner BC @since 02/06/2014 @version 1.0 @category
  */
 @Entity
-@Audited
 @DataTransferObject(javascript = "User")
 @JsonIgnoreProperties(
 { "authorities" })

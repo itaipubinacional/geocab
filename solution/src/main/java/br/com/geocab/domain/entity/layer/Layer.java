@@ -18,7 +18,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,7 +35,6 @@ import br.com.geocab.domain.entity.marker.Marker;
  * @category Entity
  */
 @Entity
-@Audited
 @DataTransferObject(javascript = "Layer")
 public class Layer extends AbstractEntity implements Serializable, ITreeNode
 {

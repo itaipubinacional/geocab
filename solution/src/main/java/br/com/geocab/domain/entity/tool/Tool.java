@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -24,7 +23,6 @@ import br.com.geocab.domain.entity.AbstractEntity;
  * @category Entity
  */
 @Entity
-@Audited
 @DataTransferObject
 public class Tool extends AbstractEntity implements Serializable
 {

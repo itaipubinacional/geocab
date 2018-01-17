@@ -9,7 +9,6 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.configuration.preferences.BackgroundMap;
@@ -26,7 +25,6 @@ import br.com.geocab.domain.entity.configuration.preferences.BackgroundMap;
  * @category Entity
  */
 @Entity
-@Audited
 @DataTransferObject
 public class Configuration extends AbstractEntity implements Serializable
 {

@@ -19,7 +19,6 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -32,7 +31,6 @@ import br.com.geocab.domain.entity.AbstractEntity;
  *
  */
 @Entity
-@Audited
 @DataTransferObject(javascript = "LayerGroup")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames =
 { "name", "layer_group_upper_id" }))

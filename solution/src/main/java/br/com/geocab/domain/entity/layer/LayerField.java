@@ -13,8 +13,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -29,7 +27,6 @@ import br.com.geocab.domain.entity.AbstractEntity;
  * @category Entity
  */
 @Entity
-@Audited
 @DataTransferObject
 public class LayerField extends AbstractEntity implements Serializable
 {
@@ -82,7 +79,7 @@ public class LayerField extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
-	@NotAudited
+
 	@Column(nullable=false, name="pesquisa_id")
 	private Long customSearchId;
 	

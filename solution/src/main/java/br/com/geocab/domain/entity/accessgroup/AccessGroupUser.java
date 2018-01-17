@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.configuration.account.User;
 
@@ -27,7 +26,6 @@ import br.com.geocab.domain.entity.configuration.account.User;
 @Entity
 @Table(name = "ACCESS_GROUP_USER"/*, uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "user_username", "access_group_id" }) }*/)
-@Audited
 @DataTransferObject
 public class AccessGroupUser /*extends AbstractEntity */implements Serializable {
 

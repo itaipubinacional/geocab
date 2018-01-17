@@ -203,11 +203,12 @@
 		   		<entry key="hibernate.cache.use_query_cache" value="true"/>
 		   		--> 
 		   		
-		   		<!-- Envers (Auditing) -->
+		   		<!-- Envers (Auditing)
 		   		<entry key="org.hibernate.envers.audit_table_suffix" value="_audited"/>
 		   		<entry key="org.hibernate.envers.revision_field_name" value="revision"/>
 		   		<entry key="org.hibernate.envers.revision_type_field_name" value="revision_type"/>
 		   		<entry key="org.hibernate.envers.default_schema" value="${hibernate.envers.default_schema}"/>
+		   		-->
 			</util:map>
         </property>
     </bean>

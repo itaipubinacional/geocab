@@ -5928,7 +5928,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
     */
     $scope.findOLLayerBySource = function (wmsSourceUrl) {
       for (var i = 0; i < $scope.layers.length; i++) {
-          if ($scope.layers[i].wmsSource.getUrls()[0] == wmsSourceUrl) {
+          if ($scope.layers[i].wmsSource.getUrls()[0].split('?', 1)[0] == wmsSourceUrl) {
               return $scope.layers[i];
           }
       }

@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -25,7 +24,6 @@ import br.com.geocab.domain.entity.AbstractEntity;
  */
 
 @Entity
-@Audited
 @DataTransferObject(javascript="MotiveMarkerModeration")
 public class MotiveMarkerModeration extends AbstractEntity implements Serializable
 {

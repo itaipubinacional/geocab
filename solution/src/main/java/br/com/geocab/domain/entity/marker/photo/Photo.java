@@ -12,7 +12,6 @@ import javax.persistence.Transient;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.directwebremoting.io.FileTransfer;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -23,7 +22,6 @@ import br.com.geocab.domain.entity.AbstractEntity;
  *
  */
 @Entity
-@Audited
 @DataTransferObject(javascript = "Photo")
 public class Photo extends AbstractEntity implements Serializable
 {

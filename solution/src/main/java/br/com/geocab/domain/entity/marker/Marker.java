@@ -20,7 +20,6 @@ import javax.validation.constraints.NotNull;
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.envers.Audited;
 import org.hibernate.spatial.GeometryType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -44,7 +43,6 @@ import br.com.geocab.domain.entity.markermoderation.MarkerModeration;
  * @category Entity
  */
 @Entity
-@Audited
 @DataTransferObject(javascript = "Marker")
 @TypeDef(name = "geometry", typeClass = GeometryType.class)
 public class Marker extends AbstractEntity implements Serializable

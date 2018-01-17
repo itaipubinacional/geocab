@@ -12,7 +12,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
@@ -22,7 +21,6 @@ import br.com.geocab.domain.entity.marker.MarkerAttribute;
  *
  */
 @Entity
-@Audited
 @DataTransferObject(javascript = "PhotoAlbum")
 public class PhotoAlbum extends AbstractEntity implements Serializable
 {

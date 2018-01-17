@@ -18,7 +18,6 @@ import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -35,7 +34,6 @@ import br.com.geocab.domain.entity.datasource.DataSource;
  * @category Entity
  */
 @Entity
-@Audited
 @DataTransferObject
 public class CustomSearch extends AbstractEntity implements Serializable
 {

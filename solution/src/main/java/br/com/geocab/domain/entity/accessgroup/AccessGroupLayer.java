@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
 import br.com.geocab.domain.entity.layer.Layer;
@@ -24,7 +23,6 @@ import br.com.geocab.domain.entity.layer.Layer;
  * @category Entity
  */
 @Entity
-@Audited
 @DataTransferObject
 public class AccessGroupLayer extends AbstractEntity implements Serializable
 {

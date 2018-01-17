@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.geoserver.security.PublicKeyGenerator;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -26,7 +25,6 @@ import br.com.geocab.domain.entity.AbstractEntity;
  * @category Entity
  */
 @Entity
-@Audited
 @DataTransferObject(javascript="DataSource")
 public class DataSource extends AbstractEntity implements Serializable
 {

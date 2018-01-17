@@ -15,7 +15,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,7 +28,6 @@ import br.com.geocab.domain.entity.marker.MarkerAttribute;
  * @version 1.0
  */
 @Entity
-@Audited
 @DataTransferObject(javascript = "Attribute")
 public class Attribute extends AbstractEntity implements Serializable
 {

@@ -14,7 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.directwebremoting.annotations.DataTransferObject;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.geocab.domain.entity.AbstractEntity;
@@ -31,7 +30,6 @@ import br.com.geocab.domain.entity.tool.Tool;
  * @category Entity
  */
 @Entity
-@Audited
 @DataTransferObject
 public class AccessGroup extends AbstractEntity implements Serializable
 {
@@ -101,7 +99,7 @@ public class AccessGroup extends AbstractEntity implements Serializable
 	 *-------------------------------------------------------------------*/
 	/**
 	 * 
-	 * @param id
+	 *
 	 */
 	public AccessGroup()
 	{
