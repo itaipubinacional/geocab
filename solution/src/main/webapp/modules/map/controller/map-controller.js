@@ -5978,7 +5978,12 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         */
         if (layer) {
           wmsSource = layer.wmsSource;
-          var layers = wmsSource.getParams()['LAYERS'] + ',' + item.name;
+          if (wmsSource.getParams()['LAYERS'] == '') {
+            var layers = item.name;
+          } else {
+            var layers = wmsSource.getParams()['LAYERS'] + ',' + item.name;
+          }
+
           wmsSource.updateParams({'LAYERS': layers, 'TILED': true});
         }
 
@@ -6022,28 +6027,34 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
       Remove uma camada externa que foi deselecionada do menu do mapa principal
       @param layer: O node referente a camada a ser removida
     */
-    $scope.removeExternalLayer = function(node) {
-       var item = $scope.formatUrl(node, false);
-       var layerSource = $scope.findOLLayerBySource(item.url)
+     $scope.removeExternalLayer = function(node) {
+           var item = $scope.formatUrl(node, false);
+           var layerSource = $scope.findOLLayerBySource(item.url)
 
-        /*
-            Busca o nome da camada dentro dos atributos da camada Openlayers.
-            Remove o nome da camada da lista e atualiza a fonte de dados.
-        */
-       var layers = layerSource.wmsSource.getParams()['LAYERS'].split(',');
-       for (var i = 0; i < layers.length; i++) {
-          if (item.name == layers[i]) {
-              layers.splice(i, 1);
-              layerSource.wmsSource.updateParams({'LAYERS': layers.join(), 'TILED': true});
-          }
-       }
+            /*
+                Busca o nome da camada dentro dos atributos da camada Openlayers.
+                Remove o nome da camada da lista e atualiza a fonte de dados.
+            */
+           var layers = layerSource.wmsSource.getParams()['LAYERS'].split(',');
+           var newLayers = []
 
-        // Remove a camada da lista de camadas wms ativas.
-       var l = $scope.activeWMSLayers.indexOf($scope.activeWMSLayers.find(x => x.id === node.id));
-       $scope.activeWMSLayers.splice(l, 1);
+           for (var i = 0; i < layers.length; i++) {
+              if (item.name != layers[i]) {
+                  newLayers.push(layers[i])
+                  //layerSource.wmsSource.updateParams({'LAYERS': layers.join(), 'TILED': true});
+              }
+           }
 
-    }
+           layerSource.wmsSource.updateParams({'LAYERS': newLayers.join(), 'TILED': true});
 
+            // Remove a camada da lista de camadas wms ativas.
+           var l = $scope.activeWMSLayers.indexOf($scope.activeWMSLayers.filter(x => x.id === node.id));
+           for (var i = 0; i < l.length; i++) {
+            $scope.activeWMSLayers.splice(l[i], 1);
+           }
+
+
+        }
     /**
        * Function that makes request to geo server to bring the features
        * @param url
