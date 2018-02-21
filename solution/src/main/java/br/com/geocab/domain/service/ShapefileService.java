@@ -165,7 +165,7 @@ public class ShapefileService
 	{
 		try
 		{
-			final String pathFile = pathShapefilesImport + String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis());
+			final String pathFile = pathShapefilesImport + String.valueOf("geoitaipu_" + Calendar.getInstance().getTimeInMillis());
 			// Lê os arquivos
 			final List<File> files = new ArrayList<File>();
 			
@@ -379,14 +379,14 @@ public class ShapefileService
 		
 		final List<Layer> layers = groupByLayers(markers);
 		
-		final String fileExport = String.valueOf("geocab_" + Calendar.getInstance().getTimeInMillis() );
+		final String fileExport = String.valueOf("geoitaipu_" + Calendar.getInstance().getTimeInMillis() );
 		 
 		for (final Layer layer : layers)
 		{
 			try
 			{				
 				layer.setAttributes(this.attributeRepository.listAttributeByLayer(layer.getId()));
-				
+			
 				layer.setName( layer.getTitle() );
 				
 				final SimpleFeatureType type = createType(layer); 
@@ -396,7 +396,7 @@ public class ShapefileService
 				for (int i = 0; i < layer.getMarkers().size(); i++)
 	            {	
 					final Marker marker = markerRepository.findOne(layer.getMarkers().get(i).getId());
-					
+				
 					marker.setMarkerAttribute(this.markerAttributeRepository.listAttributeByMarker(marker.getId()));
 					
 					final CoordinateReferenceSystem EPSG3857 = CRS.decode("EPSG:3857");
@@ -549,6 +549,7 @@ public class ShapefileService
 	{		
 		final String propertyDescriptor = property.getDescriptor().getName().getLocalPart();
 		final Object featureAttribute = feature.getAttribute(propertyDescriptor);
+		
 		if (featureAttribute == null)
 		{
 			return new MarkerAttribute(null, "", marker, attribute);
@@ -613,6 +614,10 @@ public class ShapefileService
 				LOG.info(e.getMessage());
 				throw new RuntimeException(e);
 			}
+		}
+		else if (markerAttribute.getAttribute().getType() == AttributeType.MULTIPLE_CHOICE)
+		{
+			feature.setAttribute( attribute, markerAttribute.getSelectedAttribute().getDescription() );
 		}
 		else
 		{

@@ -62,7 +62,6 @@
 
                             <ng-form name="ngSideMarker" default-button="buttonUpdate">
 
-
                                 <!--<label style="padding-top: 10px">{{ markerAttribute.attribute.name }}</label>-->
 
                                 <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'" style="margin-top: 10px">{{ markerAttribute.attribute.name }}</label>
@@ -89,6 +88,19 @@
                                 ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
                                 ng-required="markerAttribute.attribute.required"
                                 >
+                                
+					            <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'" class="column">
+					            	<div ng-repeat="option in markerAttribute.attribute.options">
+						                <label class="radio-label" ng-click="markerAttribute.selectedAttribute = option" >
+							            	<input id="role-adminstrator" type="radio" ng-value="option" 
+							            			ng-checked="markerAttribute.selectedAttribute.id == option.id"
+							            			 />
+							            	{{ option.description }} 
+						                </label>
+						                </br>
+					            	</div>
+					            	
+					            </div>
 
                                 <input
                                 name="date1"

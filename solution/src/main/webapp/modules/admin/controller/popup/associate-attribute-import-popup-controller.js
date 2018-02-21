@@ -21,28 +21,6 @@ function AssociateAttributeImportPopUpController($scope, $log, $timeout, $inject
 
 	$scope.attributesByLayer = layerAttributes;
 
-	/*layerGroupService.listAttributesByLayer($scope.layer.layerId, {
-		callback: function (result) {
-
-
-			angular.forEach(result, function(attribute){
-
-				if(attribute.type != 'PHOTO_ALBUM') {
-					attribute.option = attribute.name + ' (' + attribute.type + ')';
-					$scope.attributesByLayer.push(attribute);
-				}
-
-			});
-
-			//$scope.layer.attributes = result;
-
-			$scope.$apply();
-		},
-		errorHandler: function (message, exception) {
-			$scope.message = {type: "error", text: message};
-			$scope.$apply();
-		}
-	});*/
 
 	/*$scope.setOption = function(index, attribute){
 
@@ -60,8 +38,11 @@ function AssociateAttributeImportPopUpController($scope, $log, $timeout, $inject
 	};*/
 
 	$scope.setMarkerAttribute = function(index, markerAttribute) {
-
-		if(markerAttribute.option != null && $scope.attributesByLayer[index].type != markerAttribute.option.match(/\((.*)\)/)[1]) {
+		
+		var attributeTypeImport = markerAttribute.option.match(/\((.*)\)/)[1];
+		var attributeTypeLayer = $scope.attributesByLayer[index].type;
+		
+		if(markerAttribute.option != null && attributeTypeLayer != "MULTIPLE_CHOICE" && attributeTypeLayer != attributeTypeImport) {
 			$scope.attributesByLayer[index].option = '';
 		}
 

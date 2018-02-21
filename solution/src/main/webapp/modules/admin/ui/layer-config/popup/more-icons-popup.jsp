@@ -13,9 +13,7 @@
 	border:1px solid red;
 	
 }
-	
 </style>
-
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
@@ -23,40 +21,25 @@
         <h3 ng-if="currentState == DETAIL_STATE" class="modal-title">Ícones</h3>
     </div>
     <div class="modal-body" ng-init="initialize();" style="overflow: visible">
-        <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div>     
-	            
-           		<div style="text-align: center;">
-            		 <div style="display: inline-block;" ng-if="currentState == UPDATE_STATE"> 
-	            		<div  ng-repeat="icon in layerIcons" style="float: left; text-align: center; margin: 2px; width: 30px; height: 30px;" ng-style="currentEntity.iconTemporary == 'static/icons/' + icon ? {'border':'2px solid red'} : ''" >
-		            		<label for="{{ icon }}">
-		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="25" height="25" class="preview" title=""  > <br>
+        <div ng-include="'assets/libs/eits-directives/alert/alert.html'"></div> 
+      			<div class="input-group">
+				  <span class="input-group-addon" id="basic-addon1"><i class="icon-search icon-large"></i></span>
+				  <input type="text" class="form-control" ng-model="iconFilter" placeholder="Filtre por nome" aria-describedby="basic-addon1">
+				</div>    
+           		<div style="text-align: center; margin-top:20px; overflow: auto; max-height: 410px; overflow-x: hidden;">
+            		 <div style="display: inline-block;" > 
+	            		<div  ng-repeat="icon in layerIcons | filter: iconFilter"  
+							  class="col-md-1 icon-container"
+            				  ng-style="currentEntity.iconTemporary == 'static/icons/' + icon ? {'border-color': 'red'} : {'border-color':'#FFFFFF'}">
+	            				
+	            			<div class="clearfix visible-xs-block"></div>
+		            		<label for="{{ icon }}" >
+		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="50" height="50" class="preview" title=""  > <br>
+		            			<label ng-bind="getIconName( icon )" class="dynamic-text"></label>
 		            			<input id="{{ icon }}" type="radio" value="static/icons/{{ icon }}" ng-checked="currentEntity.icon == 'static/icons/{{ icon }}'" name="layerIcon" style="display: none" ng-model="currentEntity.iconTemporary"> 
 		            		</label>
 	            		</div>
             		</div>
-            		<div style="display: inline-block;" ng-if="currentState == DETAIL_STATE"> 
-	            		<div  ng-repeat="icon in layerIcons" style="float: left; text-align: center; margin: 2px; width: 30px; height: 30px;" ng-style="currentEntity.iconTemporary == 'static/icons/' + icon ? {'border':'2px solid red'} : ''" >
-		            
-		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="25" height="25" class="preview" title=""  > <br>
-		            			
-	            		</div>
-            		</div>
-            		<div style="display: inline-block;" ng-if="currentState == INSERT_STATE"> 
-	            		<div  ng-repeat="icon in layerIcons" style="float: left; text-align: center; margin: 2px; width: 30px; height: 30px;" ng-style="currentEntity.iconTemporary == 'static/icons/' + icon ? {'border':'2px solid red'} : ''" >
-		            		<label for="{{ icon }}">
-		            			<img src="<c:url value="/static/icons/{{ icon }}"/>" width="25" height="25" class="preview" title=""  > <br>
-		            			<input id="{{ icon }}" type="radio" value="static/icons/{{ icon }}" ng-checked="currentEntity.icon == 'static/icons/{{ icon }}'" name="layerIcon" style="display: none" ng-model="currentEntity.iconTemporary"> 
-		            		</label>
-	            		</div>
-            		</div>
-            		<pagination style="text-align: center;"
-			                   total-items="currentPage.total" rotate="false"
-			                   items-per-page="currentPage.size"
-			                   max-size="currentPage.totalPages"
-			                   ng-change="changeToPage(data.filter, currentPage.pageable.pageNumber)"
-			                   ng-model="currentPage.pageable.pageNumber" boundary-links="true"
-			                   previous-text="‹" next-text="›" first-text="«" last-text="»">
-			       </pagination>
 		       </div>
 
     </div>

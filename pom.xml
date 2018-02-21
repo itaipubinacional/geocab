@@ -74,13 +74,13 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<!-- Database -->
-                <mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/desenvolvimento</mvn.jdbc.jdbcUrl>
-                <mvn.jdbc.username>postgres</mvn.jdbc.username>
-                <mvn.jdbc.password>postgres</mvn.jdbc.password>
+				<!-- Database -->	
+                <mvn.jdbc.jdbcUrl>jdbc:postgresql://localhost:5432/geocab</mvn.jdbc.jdbcUrl>
+                <mvn.jdbc.username>geocab</mvn.jdbc.username>
+                <mvn.jdbc.password>geocab</mvn.jdbc.password>
                 
                 <!-- Hibernate -->
-				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
+				<mvn.hibernate.hbm2ddl>update</mvn.hibernate.hbm2ddl>
 				<mvn.hibernate.showSql>true</mvn.hibernate.showSql>
 				<mvn.hibernate.formatSql>false</mvn.hibernate.formatSql>
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
@@ -109,13 +109,14 @@
 				<!-- Social -->
 				<!-- Facebook -->
 
-				<mvn.social.facebook.app.id>xxx</mvn.social.facebook.app.id>
-				<mvn.social.facebook.app.secret>xxx</mvn.social.facebook.app.secret>
+				<mvn.social.facebook.app.id>303469610010652</mvn.social.facebook.app.id>
+				<mvn.social.facebook.app.secret>1e6313d26c77e3708e4bea47c476ec62</mvn.social.facebook.app.secret>
+
 
 				<!-- Google plus -->
 
-				<mvn.social.google.app.id>xxx</mvn.social.google.app.id>
-				<mvn.social.google.app.secret>xxx</mvn.social.google.app.secret>
+				<mvn.social.google.app.id>856589923551-997fukn75b05miqvnucb7034l5o3qgqp.apps.googleusercontent.com</mvn.social.google.app.id>
+				<mvn.social.google.app.secret>gfxTEdpAY9ofTBV0Q5xePxgS</mvn.social.google.app.secret>
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
@@ -128,16 +129,29 @@
 				
 			</properties>
 		</profile>
+<<<<<<< HEAD
 		<profile>
 			<id>prd</id>
+=======
+		
+		
+			<profile>
+			<id>sandbox</id>
+>>>>>>> e152ecb7e1efbc7b6b5c655cef54b25e08216cf3
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
 				<!-- Database -->
+<<<<<<< HEAD
 				<mvn.jdbc.jdbcUrl>jdbc:postgresql://colosrv04/geocab</mvn.jdbc.jdbcUrl>
 				<mvn.jdbc.username>geocab_pool</mvn.jdbc.username>
 				<mvn.jdbc.password>geocab_pool</mvn.jdbc.password>
+=======
+				<mvn.jdbc.jdbcUrl>jdbc:postgresql://devdb.prognus.com.br:5434/geocab</mvn.jdbc.jdbcUrl>
+				<mvn.jdbc.username>geoitaipu</mvn.jdbc.username>
+				<mvn.jdbc.password>geoitaipu</mvn.jdbc.password>
+>>>>>>> e152ecb7e1efbc7b6b5c655cef54b25e08216cf3
 
 				<!-- Hibernate -->
 				<mvn.hibernate.hbm2ddl>validate</mvn.hibernate.hbm2ddl>
@@ -146,8 +160,8 @@
 				<mvn.hibernate.default_schema>geocab</mvn.hibernate.default_schema>
 				<mvn.hibernate.envers.default_schema>geocab_auditoria</mvn.hibernate.envers.default_schema>
 
-				<!-- Mail -->
-				<mvn.mail.host>chi05</mvn.mail.host>
+				<!-- Mail server -->
+				<mvn.mail.host>expressodev.prognus.com.br</mvn.mail.host>
 				<mvn.mail.port>25</mvn.mail.port>
 				<mvn.mail.username>no-reply</mvn.mail.username>
 				<mvn.mail.protocol>smtp</mvn.mail.protocol>
@@ -156,6 +170,7 @@
 				<mvn.mail.tls>false</mvn.mail.tls>
 				<mvn.mail.ssl>false</mvn.mail.ssl>
 				<mvn.mail.debug>true</mvn.mail.debug>
+<<<<<<< HEAD
 				<mvn.mail.support>geocab@itaipu.gov.br</mvn.mail.support>
 
 				<!-- ModeShape -->
@@ -165,27 +180,47 @@
 
 				<!-- shapeFiles import -->
 				<mvn.path.shapefiles>/sistemas/geocab/files/shapefile/</mvn.path.shapefiles>
+=======
+				<mvn.mail.support>no-reply-prognus@mailinator.com</mvn.mail.support>
+				
+				<!-- ModeShape -->
+				<mvn.jcr.indexes>/tmp/geocab-sandbox/indexes</mvn.jcr.indexes>
+				<mvn.jcr.files>/tmp/geocab-sandbox/files</mvn.jcr.files>
+				<mvn.jcr.caches>/tmp/geocab-sandbox/caches</mvn.jcr.caches>
+				
+				<!-- shapeFiles import -->
+				<mvn.path.shapefiles>/tmp/geocab-sandbox/files/shapefile/</mvn.path.shapefiles>
+>>>>>>> e152ecb7e1efbc7b6b5c655cef54b25e08216cf3
 
 				<!-- Social -->
 				<!-- Facebook -->
 				<mvn.social.facebook.app.id>303469610010652</mvn.social.facebook.app.id>
 				<mvn.social.facebook.app.secret>1e6313d26c77e3708e4bea47c476ec62</mvn.social.facebook.app.secret>
 
+<<<<<<< HEAD
+=======
+			
+>>>>>>> e152ecb7e1efbc7b6b5c655cef54b25e08216cf3
 				<!-- Google plus -->
 				<mvn.social.google.app.id>856589923551-997fukn75b05miqvnucb7034l5o3qgqp.apps.googleusercontent.com</mvn.social.google.app.id>
 				<mvn.social.google.app.secret>gfxTEdpAY9ofTBV0Q5xePxgS</mvn.social.google.app.secret>
 
 				<!-- geotools version -->
 				<geotools.version>13.2</geotools.version>
-
+				
 				<!-- jcaptcha version -->
 				<jcaptcha.version>1.0</jcaptcha.version>
-
-				<!-- jcaptcha version -->
-				<mvn.geocab.url>http://localhost:8080/geocab</mvn.geocab.url>
-
+				
+				<mvn.geocab.url>http://geocab.sbox.me</mvn.geocab.url>
+				
 			</properties>
 		</profile>
+<<<<<<< HEAD
+=======
+		
+		
+		
+>>>>>>> e152ecb7e1efbc7b6b5c655cef54b25e08216cf3
 	</profiles>
 
 	<!-- Modules -->

@@ -80,7 +80,7 @@ public class LayerField extends AbstractEntity implements Serializable
 	 * 
 	 */
 
-	@Column(nullable=false, name="pesquisa_id")
+	@Column(name="pesquisa_id")
 	private Long customSearchId;
 	
 	/*-------------------------------------------------------------------

@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -142,10 +145,8 @@ public class Layer extends AbstractEntity implements Serializable, ITreeNode
 	@Transient
 	private List<Marker> markers = new ArrayList<Marker>();
 
-	@JsonIgnore
-//	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade =
-//	{ CascadeType.ALL })
 	@Transient
+//	@OneToMany(mappedBy = "layer", fetch = FetchType.EAGER, cascade ={ CascadeType.ALL } , orphanRemoval = true)
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 
 	/*-------------------------------------------------------------------

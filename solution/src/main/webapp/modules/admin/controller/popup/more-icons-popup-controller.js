@@ -50,7 +50,10 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
      *
      */
     $scope.CONFIRM_STATE = "grupo-camadas.confirm";
-
+    /**
+     * 
+     */
+    $scope.iconFilter = "";
     /**
      *
      */
@@ -90,46 +93,10 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
 		
 		layerGroupService.listLayersIcons({
             callback: function (result) {
-            
-            	$scope.totalLayers = [];
+            	result = result.sort();
             	
-            	angular.forEach(result, function(layer, index){
-            		var allowSave = true;
-            		switch(layer){
-	            		case 'default_yellow.png':
-	            			allowSave = false;
-	            			break;
-	            		case 'default_white.png':
-	            			allowSave = false;
-	            			break;
-	            		case 'default_red.png':
-	            			allowSave = false;
-	            			break;
-	            		case 'default_pink.png':
-	            			allowSave = false;
-	            			break;
-	            		case 'default_green.png':
-	            			allowSave = false;
-	            			break;
-	            		case 'default_blue.png':
-	            			allowSave = false;
-	            			break;
-            		}
-            		
-            		if(allowSave)
-            			$scope.totalLayers.push(layer);
-            	});
-            	
-            	$scope.currentPage = {};
-            	$scope.currentPage.total = $scope.totalLayers.length;
-            	$scope.currentPage.size = 125;
-            	$scope.currentPage.totalPages = Math.floor($scope.currentPage.total / $scope.currentPage.size);
-            	$scope.currentPage.pageable = {};
-            	$scope.currentPage.pageable.pageNumber = 1;
-            	
-            	$scope.layerIcons = $scope.totalLayers.slice(0, $scope.currentPage.size);
+            	$scope.layerIcons = result;
                 $scope.$apply();
-                $scope.imagePreview();
             },
             errorHandler: function (message, exception) {
                 $scope.msg = {type: "danger", text: message, dismiss: true};
@@ -151,33 +118,9 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
 		var offset = page * $scope.currentPage.size;
 		$scope.layerIcons = $scope.totalLayers.slice( offset, offset + $scope.currentPage.size );
 		$scope.$apply();
-		$scope.imagePreview();
 	}
 
-	$scope.imagePreview = function(){	
-		/* CONFIG */
-			
-			$scope.xOffset = 10;
-			$scope.yOffset = 30;
-			
-		/* END CONFIG */
-		$("img.preview").hover(function(e){
-			$("body").append("<p id='preview' style='position: fixed; z-index: 10000000'><img style='width: 70px; height: 70px' src='"+ $(this).attr("src") +"' alt='Image preview' /></p>");								 
-			$("#preview")
-				.css("top",($(this).position().top + $scope.xOffset) + "px")
-				.css("left",(e.pageX - $scope.yOffset) + "px")
-				.fadeIn("fast");						
-	    },
-		function(){
-			this.title = '';	
-			$("#preview").remove();
-	    });	
-		$("img.preview").mousemove(function(e){
-			$("#preview")
-				.css("top",($(this).position().top + $scope.xOffset) + "px")
-				.css("left",(e.pageX - $scope.yOffset) + "px");
-		});			
-	};
+
 	
 	/**
 	 * 
@@ -204,6 +147,11 @@ function MorePopupController($scope, $injector,$modalInstance, $state, currentEn
         $scope.currentEntity.nome = '';
         $scope.currentState = $scope.NORMAL_STATE;
     };
+    
+    $scope.getIconName = function( icon )
+    {
+    	return icon.split(".")[0];
+    }
 
     /**
 	 *

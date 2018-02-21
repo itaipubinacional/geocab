@@ -44,6 +44,7 @@ import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.entity.configuration.account.UserRole;
+import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
 import br.com.geocab.domain.entity.marker.MarkerStatus;
@@ -396,7 +397,6 @@ public class MarkerService extends AbstractMarkerService
 	@Transactional(readOnly = true)
 	public Marker findMarkerById(Long id)
 	{
-		
 		Marker marker = this.markerRepository.findOne(id);	
 		
 		marker.setMarkerAttribute(this.markerAttributeRepository.listAttributeByMarker(marker.getId()));
@@ -527,7 +527,18 @@ public class MarkerService extends AbstractMarkerService
 	 */
 	public List<MarkerAttribute> listAttributeByMarker(Long id)
 	{
-		return this.markerAttributeRepository.listAttributeByMarker(id);
+		final List<MarkerAttribute> markerAttributes = this.markerAttributeRepository.listAttributeByMarker(id);
+		
+		for (MarkerAttribute markerAttribute : markerAttributes)
+		{
+			if ( markerAttribute.getAttribute().getType().equals(AttributeType.MULTIPLE_CHOICE))
+			{
+				markerAttribute.setSelectedAttribute( markerAttributeRepository.findOne(markerAttribute.getId()).getSelectedAttribute());
+				markerAttribute.getAttribute().setOptions( attributeOptionRepository.listByAttributeId(markerAttribute.getAttribute().getId()) );
+			}
+		}
+		
+		return markerAttributes;
 	}
 	
 	/**

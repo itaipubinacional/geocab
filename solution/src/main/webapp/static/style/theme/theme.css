@@ -10,6 +10,8 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
   overflow: hidden;
 }
 
+
+
 .overflow-hidden {
     overflow: hidden;
 }
@@ -27,6 +29,16 @@ input.ngInvalid,textarea.ngInvalid,select.ngInvalid {
 .xx-dialog .modal-dialog {
     width :40%;
     min-width: 750px;
+}
+
+.add-attribute-dialog .modal-dialog {
+    width :80%;
+    min-width: 900px;
+}
+
+
+.more-icons .modal-dialog {
+	width: 80%;
 }
 
 .grupo-camada-dialog .modal-body{
@@ -716,7 +728,7 @@ input:-moz-placeholder {
 }
 
 .ngRow.odd.selected, .ngRow.even.selected {
-    background-color: #0077bf;
+    background-color: #62b3e3;
     color: white;
 }
 
@@ -1308,5 +1320,14 @@ div.thumbnail.active{border: 2px solid #428bca;}
 	z-index: 1;
 	position: relative;
 	box-shadow: 2px 1px 7px 2px #999, -6px 0 5px -2px #999;
+}
+
+.icon-container {
+	float: left; 
+	text-align: center; 
+	max-width: 100px; 
+	width: 100px;
+	border: 2px solid #FFF;
+	margin: 3px;
 }
 

@@ -58,6 +58,7 @@ function AddAttributePopUpController($scope, $injector,$modalInstance, $state, a
 	$scope.initialize = function() 
 	{
 		$scope.currentEntity = new Attribute();
+		$scope.currentEntity.options = [];
 	};
 
 	/*-------------------------------------------------------------------
@@ -126,7 +127,26 @@ function AddAttributePopUpController($scope, $injector,$modalInstance, $state, a
 
         $modalInstance.close($scope.currentEntity);
     }
-
+    
+    /**
+     * Adiciona uma nova opção vazia.
+     */
+    $scope.addOption = function() 
+    {
+    	$scope.currentEntity.options.push( {
+    		description : null,
+    		attribute: $scope.currentEntity
+    	});
+    }
+    
+    /**
+     * 
+     */
+    $scope.removeOption = function( option ) 
+    { 
+    	$scope.currentEntity.options.splice($scope.currentEntity.options.indexOf( option ), 1);
+    }
+    
 	/**
 	 * 
 	 */

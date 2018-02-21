@@ -184,12 +184,6 @@ uri="http://www.springframework.org/security/tags"%>
                       <div style=" overflow: auto;">
                         <div ng-repeat="markerAttribute in attributesByMarker track by $index" style="position: relative;margin-bottom:15px">
 
-                          <!--<button ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" class="btn btn-default"
-                                  onclick="angular.element('#upload-input').click();"
-                                  style="float: left;"
-                                  title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
-                          </button>-->
-
                           <label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == '' || markerAttribute.value == '0'">{{ markerAttribute.attribute.name }}</label>
 
                           <input
@@ -198,7 +192,14 @@ uri="http://www.springframework.org/security/tags"%>
                               class="form-control" ng-model="markerAttribute.value"
                               required ng-disabled="true"
                               >
-
+                              
+				            <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
+				            	<label>{{markerAttribute.attribute.name}}</label>
+				                <label class="radio-label" ng-repeat="option in markerAttribute.attribute.options">
+					            	<input id="role-adminstrator" ng-disabled="true" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id" />
+					            	{{ option.description }}
+				                </label>
+				            </div>
                           <input
                               name="date1"
                               ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
@@ -345,7 +346,15 @@ uri="http://www.springframework.org/security/tags"%>
                     <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'" style="margin-top: 10px">{{ markerAttribute.attribute.name }}</label>
 
                     <label ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" style="height: 34px;line-height: 34px; margin-bottom: 15px;">{{ markerAttribute.attribute.name }}</label>
-
+		            
+		            <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
+		                <label class="radio-label" ng-repeat="option in markerAttribute.attribute.options" 
+		                	ng-click="markerAttribute.selectedAttribute = option">
+			            	<input id="role-adminstrator" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id" />
+			            	{{ option.description }}
+		                </label>
+		            </div>
+		            
                     <input
                         type="number"
                         name="number1"
@@ -576,7 +585,6 @@ uri="http://www.springframework.org/security/tags"%>
           <form name="sidebarMarker" method="post"
                 default-button="buttonInsert" novalidate>
 
-            <!--  <div class="sidebar-coloredbar"></div>-->
               <span ng-click="clearFcMarker('true')"
                     style="z-index: 10000"
                     class="icon itaipu-icon-close sidebar-close"
@@ -671,7 +679,13 @@ uri="http://www.springframework.org/security/tags"%>
                            ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
                            ng-required="attribute.required"
                         >
-
+                        
+		            <div  ng-if="attribute.type == 'MULTIPLE_CHOICE'">
+		                <label class="radio-label" ng-repeat="option in attribute.options">
+			            	<input id="role-adminstrator" type="radio" ng-value="option" ng-model="attribute.selectAttribute" />
+			            	{{ option.description }}
+		                </label>
+		            </div>
                     <input
                         name="date1" ng-if="attribute.type == 'DATE'"
                         class="form-control datepicker" ng-model="attribute.value"
@@ -1172,7 +1186,8 @@ uri="http://www.springframework.org/security/tags"%>
                       <span ng-show="form.title.$error.required && (form.$submitted || form.title.$dirty) "
                             class="tooltip-validation" style="top:5px"><spring:message code="admin.layer-config.Title-required"/></span>
                   </div>
-
+                  
+      
                   <div ng-if="shapeFile.layerType != 'new' && shapeFile.form.layer" style="margin-bottom: 10px">
                     <button ng-disabled="!shapeFile.form.layer.layerId" ng-click="associateAttribute()" title="<spring:message code='admin.layer-config.Associate-attributes' />"
                             class="btn btn-primary" style="margin-bottom: 5px">

@@ -118,12 +118,14 @@ public class ExceptionHandlerAspect
 				case "23503": // foreign_key_violation 
 				{
 					key = message.substring(message.indexOf('"') + 1, message.indexOf('.') - 1);
-					throw new DataIntegrityViolationException("Não é possível realizar a operação pois este registro é referenciado em " + key + ".");//FIXME Localize
+					String translatedKey = messageSource.getMessage(key, null, key, LocaleContextHolder.getLocale());
+					
+					throw new DataIntegrityViolationException(messageSource.getMessage("foreign-key-violation.message", new Object[] { translatedKey } , LocaleContextHolder.getLocale()));
 				}
 				case "23505": // unique_violation
 				{
 					key = message.substring(message.indexOf('(') + 1, message.indexOf(')'));
-					throw new DataIntegrityViolationException("O campo "+key+" informado já existe. Altere e tente novamente."); //FIXME Localize
+					throw new DataIntegrityViolationException(messageSource.getMessage("unique-violation.message", new Object[] { key } , LocaleContextHolder.getLocale())); 
 				}
 				case "23502": // not_null_violation
 				{
@@ -133,7 +135,6 @@ public class ExceptionHandlerAspect
 				default:
 				{
 					throw new RuntimeException("Do-not-possible-execute-request");
-					//throw new DataIntegrityViolationException("Não foi possível realizar a operação pois ocorreu um problema de integridade (Código " + cause.getSQLState() + "). Verifique e tente novamente."); //FIXME Localize
 				}
 			}
 		}

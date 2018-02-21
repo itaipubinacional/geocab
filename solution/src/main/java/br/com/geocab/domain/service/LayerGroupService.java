@@ -41,6 +41,7 @@ import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.datasource.DataSource;
 import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.AttributeOption;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.layer.ExternalLayer;
 import br.com.geocab.domain.entity.layer.Layer;
@@ -52,10 +53,12 @@ import br.com.geocab.domain.repository.IFileRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupLayerRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
 import br.com.geocab.domain.repository.attribute.IAttributeRepository;
+import br.com.geocab.domain.repository.layergroup.IAttributeOptionRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerGroupRepository;
 import br.com.geocab.domain.repository.layergroup.ILayerRepository;
 import br.com.geocab.domain.repository.tool.IToolRepository;
 import br.com.geocab.infrastructure.geoserver.GeoserverConnection;
+
 
 /**
  * 
@@ -115,6 +118,12 @@ public class LayerGroupService
 	 */
 	@Autowired
 	private IToolRepository toolRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private IAttributeOptionRepository attributeOptionRepository;
 		
 	/**
 	 * 
@@ -210,7 +219,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Mï¿½todo que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
+	 * M?todo que seta todos os grupos publicados filhos em seus respectivos grupos publicados pai
 	 */
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	private void populateChildrenInLayerGroupPublished()
@@ -219,7 +228,7 @@ public class LayerGroupService
 		
 		for (LayerGroup layerGroupPublished : layersGroupPublished)
 		{
-			//Pega o grupo de camadas pois a query anterior (layerGroupRepository.listAllLayersGroupPublished()) foi alterada e nï¿½o pega todos os atributos da camada
+			//Pega o grupo de camadas pois a query anterior (layerGroupRepository.listAllLayersGroupPublished()) foi alterada e n?o pega todos os atributos da camada
 			layerGroupPublished = this.layerGroupRepository.findOne(layerGroupPublished.getId());
 			
 			layerGroupPublished.setLayersGroup(this.layerGroupRepository.listLayersGroupPublishedChildren(layerGroupPublished.getId()));
@@ -230,7 +239,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Mï¿½todo recursivo que remove os grupos de camadas publicados filhos
+	 * M?todo recursivo que remove os grupos de camadas publicados filhos
 	 * @param gruposCamadasPublicados
 	 * @param grupoCamadaPublicadosSuperior
 	 */
@@ -266,7 +275,7 @@ public class LayerGroupService
 		// verifica se foi possui o grupo publicado
 		final LayerGroup layerGroupPublishedExistent = this.layerGroupRepository.findByDraftId(layerGroupOriginalId);
 		
-		// efetua a cï¿½pia do grupo de camadas original
+		// efetua a c?pia do grupo de camadas original
 		LayerGroup layerGroupPublished = new LayerGroup();
 		BeanUtils.copyProperties(layerGroupOriginal, layerGroupPublished);
 		
@@ -277,7 +286,7 @@ public class LayerGroupService
 		layerGroupPublished.setLayersGroup(new ArrayList<LayerGroup>());
 		layerGroupPublished.setLayers(new ArrayList<Layer>());
 		
-		// se jï¿½ possui o grupo criado apenas altera o existente sentido cria o grupo publicado
+		// se j? possui o grupo criado apenas altera o existente sentido cria o grupo publicado
 		if (layerGroupPublishedExistent != null)
 		{
 			layerGroupPublished.setId(layerGroupPublishedExistent.getId());
@@ -289,19 +298,19 @@ public class LayerGroupService
 			layerGroupPublished = this.layerGroupRepository.save(layerGroupPublished);
 		}
 		
-		// criaï¿½ï¿½o atualizaï¿½ï¿½o de camadas para camadas publicadas
+		// cria??o atualiza??o de camadas para camadas publicadas
 		if ( layerGroupOriginal.getLayers() != null )
 		{
 			for ( Layer layerOriginal : layerGroupOriginal.getLayers() )
 			{
 				//final Camada camadaPublicadaExistente = this.camadaRepository.findByRascunhoId(camadaOriginal.getId());
 				
-				// criaï¿½ï¿½o da camada publicada que iria conter a ordem publicada e os grupos
+				// cria??o da camada publicada que iria conter a ordem publicada e os grupos
 				Layer layerPublished = new Layer();
 //				BeanUtils.copyProperties(camadaOriginal, camadaPublicada);
 				
 				
-				// criaï¿½ï¿½o/update na camada publicada
+				// cria??o/update na camada publicada
 				layerPublished.setName(layerOriginal.getName());
 				layerPublished.setTitle(layerOriginal.getTitle());
 				layerPublished.setIcon(layerOriginal.getIcon());
@@ -312,7 +321,7 @@ public class LayerGroupService
 				layerPublished.setLayerGroup(layerGroupPublished);
 				layerPublished.setPublished(true);
 				
-				// se jï¿½ possui a camada publicada apenas altera a existente sentido cria a camada publicada
+				// se j? possui a camada publicada apenas altera a existente sentido cria a camada publicada
 				if (layerOriginal.getPublishedLayer() != null)
 				{
 					layerPublished.setId(layerOriginal.getPublishedLayer().getId());
@@ -353,6 +362,11 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public void publishLayerGroup(List<LayerGroup> layersGroup)
 	{
+		for (LayerGroup layerGroup : layersGroup) {
+			for (Layer layer : layerGroup.getLayers()) {
+				layer = this.layerRepository.findOne(layer.getId());
+			}
+		}
 		this.saveAllLayersGroup(layersGroup); // save layersGroup
 		
 		final List<LayerGroup> layerGroupOriginals = this.listLayersGroupUpper();//list parent groups
@@ -433,10 +447,11 @@ public class LayerGroupService
 			{
 				for(int j = 0; j < layerGroup.getLayers().size(); j++)
 				{
-					layerGroup.getLayers().get(j).setOrderLayer(j);
-					layerGroup.getLayers().get(j).setLayerGroup(layerGroup);
+					Layer layerToUpdate = layerGroup.getLayers().get(j);
+					layerToUpdate.setOrderLayer(j);
+					layerToUpdate.setLayerGroup(layerGroup);
 					
-					this.layerRepository.save( layerGroup.getLayers().get(j) );
+					this.layerRepository.save( layerToUpdate );
 				}
 				if (layerGroup.getLayersGroup() != null) prioritizeLayers(layerGroup.getLayersGroup());
 			}			
@@ -444,7 +459,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Mï¿½todo para remover um {@link GrupoCamadas}
+	 * M?todo para remover um {@link GrupoCamadas}
 	 * 
 	 * @param id
 	 */
@@ -455,7 +470,7 @@ public class LayerGroupService
 		
 		LayerGroup layerGroupPublished = this.layerGroupRepository.findByDraftId(id);
 		
-		// verifica se existe o grupo jï¿½ publicado
+		// verifica se existe o grupo j? publicado
 		if (layerGroupPublished != null)
 		{
 			// seta null no campo rascunho do grupo de camada publicado para permitir excluir o grupo original
@@ -503,7 +518,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Lista os Grupos de camadas nï¿½o publicados
+	 * Lista os Grupos de camadas n?o publicados
 	 * 
 	 * @param id
 	 * @return
@@ -529,7 +544,7 @@ public class LayerGroupService
 	
 		List<LayerGroup> layersGroup = this.layerGroupRepository.listLayersGroupByLayerGroupId( id, published);
 		
-		//Se o grupo de camadas estï¿½ vazio (se nï¿½o tem outros grupos de camadas internamente) pega as camadas desse grupo de camadas
+		//Se o grupo de camadas est? vazio (se n?o tem outros grupos de camadas internamente) pega as camadas desse grupo de camadas
 		if( layersGroup.isEmpty() )
 		{
 			
@@ -548,7 +563,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Mï¿½todo que retorna a estrutura completa dos grupos de camadas publicados
+	 * M?todo que retorna a estrutura completa dos grupos de camadas publicados
 	 * @param filter
 	 * @param idExcluso
 	 * @param pageable
@@ -581,7 +596,7 @@ public class LayerGroupService
 				layer = this.setIcon(layer);
 			}
 		}
-		//Se o usuï¿½rio for administrador, ele poderï¿½ visualizar todas os grupos de acesso.
+		//Se o usu?rio for administrador, ele poder? visualizar todas os grupos de acesso.
 	
 		return this.layersGroupUpperByRole(layersGroupUpperPublished);
 		
@@ -800,7 +815,7 @@ public class LayerGroupService
 	
 
 	/**
-	 * Nï¿½o ï¿½ necessï¿½ria a sincronizaï¿½ï¿½o com hasChildren 
+	 * N?o ? necess?ria a sincroniza??o com hasChildren 
 	 * @param filter
 	 * @param pageable
 	 * @return
@@ -813,7 +828,7 @@ public class LayerGroupService
 	
 	/**
 	 * 
-	 * @return camadas filtradas pelos grupos de acesso do usuï¿½rio
+	 * @return camadas filtradas pelos grupos de acesso do usu?rio
 	 */
 	@Transactional(readOnly=true)
 	public List<Layer> listAllInternalLayerGroups()
@@ -982,7 +997,7 @@ public class LayerGroupService
 
 	
 	/**
-	 * Mï¿½todo responsï¿½vel para listar as camadas
+	 * M?todo respons?vel para listar as camadas
 	 *
 	 * @param filter
 	 * @param idExcluso
@@ -1066,22 +1081,33 @@ public class LayerGroupService
 	@PreAuthorize("hasRole('"+UserRole.ADMINISTRATOR_VALUE+"')")
 	public Layer insertLayer( Layer layer )
 	{
-		
 		layer.setLayerGroup(this.layerGroupRepository.findOne(layer.getLayerGroup().getId()));
 		layer.setPublished(false);
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
-		//Valida se os atributos sï¿½o vï¿½lidos
+		//Valida se os atributos s?o v?lidos
 		layer.validate();
 		
-		this.layerRepository.save( layer );
+		List<Attribute> attributes = layer.getAttributes();
+		layer = this.layerRepository.save( layer );
+
+		//Salvando na mao os atributos 
+		for (Attribute attribute : attributes) 
+		{
+			attribute.setLayer(layer);
+			List<AttributeOption> attributeOptions = attribute.getOptions();
+			attribute = this.attributeRepository.save(attribute);
+			for (AttributeOption attributeOption : attributeOptions) {
+				attributeOption.setAttribute(attribute);
+				this.attributeOptionRepository.save(attributeOption);
+			}
+		}
 		
-		List<Attribute> attributies = layer.getAttributes();
-		layer.setAttributes(this.attributeRepository.save(attributies));
+		layer.setAttributes(attributes);
 
 		return layer;
 	}
 	/**
-	 * mï¿½todo para atualizar uma {@link Camada}
+	 * m?todo para atualizar uma {@link Camada}
 	 * 
 	 * @param camada
 	 * @return camada
@@ -1091,37 +1117,103 @@ public class LayerGroupService
 	{
 		layer.setLayerGroup(layer.getLayerGroup());
 						
-		List<Attribute> attributesToDelete = attributeRepository.listAttributeByLayer(layer.getId());
-		
-		attributesToDelete.removeAll(layer.getAttributes());
-		
-		for (Attribute attribute : attributesToDelete)
-		{
-			this.attributeRepository.delete(attribute);	
-		}
-		
-		/* Na atualizaï¿½ï¿½o nï¿½o foi permitido modificar a fonte de dados, camada e tï¿½tulo, dessa forma, 
-		Os valores originais sï¿½o mantidos. */
+		/* Na atualização não foi permitido modificar a fonte de dados, camada e título, dessa forma, 
+		Os valores originais são mantidos. */
 		Layer layerDatabase = this.findLayerById(layer.getId());
 		layer.setDataSource(layerDatabase.getDataSource());
 		layer.setName(layerDatabase.getName());
 		layer.setEnabled(layer.getEnabled() == null ? false : layer.getEnabled());
 		
-		for (Attribute attribute : layer.getAttributes())
-		{
-			this.attributeRepository.save(attribute);
-		}
-		
 		if(layer.getPublishedLayer() != null)
 		{
 			layer.setPublishedLayer(layerRepository.findById(layer.getPublishedLayer().getId()));	
 		}
-		return this.layerRepository.save( layer );	
 		
+		//Handling attributes
+		//Salvamos os attributos que veio com o layer a ser atualizado e logo apos pegamos os que estão salvos no banco
+		//Devemos comparar e verificar quais atributos estao salvos e nao voltaram para apagarmos e adicionarmos os novos,
+		//Devemos fazer o mesmo com os options do attribute caso o attribute seja do tipo de multiple choice
+		List<Attribute> attributesToUpdate = layer.getAttributes();
+		List<Attribute> currentSavedAttributes = this.attributeRepository.listAttributeByLayer( layer.getId() );
+		for (Attribute attribute : currentSavedAttributes) 
+		{
+			if ( attribute.getType().equals(AttributeType.MULTIPLE_CHOICE ) )
+			{
+				attribute.setOptions( this.attributeOptionRepository.listByAttributeId( attribute.getId() ) );
+			}
+		}
+
+		//Vamos verificar quais attributos temos que apagar, ou seja, que está no currentAttributes mas não veio no attributesToUpdate
+		
+		for ( Attribute currentAttribute : currentSavedAttributes ) 
+		{
+			boolean found = false;
+			for ( Attribute attributeToUpdate : attributesToUpdate ) 
+			{
+				if ( currentAttribute.getId() == attributeToUpdate.getId() ) found = true;
+			}
+			
+			if ( !found )
+			{
+				//Iremos apagar os attributos e as opções 
+				if ( currentAttribute.getType().equals(AttributeType.MULTIPLE_CHOICE) )
+				{
+					this.attributeOptionRepository.delete( currentAttribute.getOptions() );
+					this.attributeOptionRepository.flush();
+				}
+				this.attributeRepository.delete( currentAttribute );
+				this.attributeRepository.flush();
+			}
+		}
+		
+		//Agora que já apagamos todos os attributos, devemos inserir/atualizar os que estão vindo com o layer
+		for ( Attribute attributeToUpdate : attributesToUpdate ) 
+		{
+			List<AttributeOption> attributesOptionToUpdate = attributeToUpdate.getOptions();
+			
+			attributeToUpdate = this.attributeRepository.save( attributeToUpdate );
+			
+			for ( Attribute currentAttribute : currentSavedAttributes ) 
+			{
+				if ( attributeToUpdate.getId() == currentAttribute.getId() )
+				{
+					if ( attributeToUpdate.getType().equals(AttributeType.MULTIPLE_CHOICE) )
+					{
+						//Devemos verificar os options do attributo
+						for (AttributeOption currentAttributeOption : currentAttribute.getOptions() ) 
+						{
+							boolean attributeOptionFound = false;
+							for (AttributeOption attributeOption : attributesOptionToUpdate) 
+							{
+								attributeOption.setAttribute(attributeToUpdate);
+								if ( attributeOption.getId() == currentAttributeOption.getId() ) attributeOptionFound = true;
+							}
+							
+							if ( !attributeOptionFound ) 
+							{
+								this.attributeOptionRepository.delete(currentAttributeOption);
+								this.attributeOptionRepository.flush();
+							}
+						}
+						//Apagamos todos os removidos, agora devemos inserir/alterar os do front
+						this.attributeOptionRepository.save(attributesOptionToUpdate );
+					}
+				}
+			}
+			
+			
+		}
+		
+		
+		layer = this.layerRepository.save( layer );
+		
+		return layer;
+		
+
 	}
 	
 	/**
-	 * mï¿½todo para remover uma {@link Camada}
+	 * m?todo para remover uma {@link Camada}
 	 * 
 	 * @param id
 	 */
@@ -1136,7 +1228,15 @@ public class LayerGroupService
 		
 		try
 		{	
-			this.attributeRepository.delete(attributeRepository.listAttributeByLayerMarker(id));
+			List<Attribute> attributesToRemove = attributeRepository.listAttributeByLayerMarker(id);
+			
+			for (Attribute attribute : attributesToRemove) 
+			{
+				this.attributeOptionRepository.delete(this.attributeOptionRepository.listByAttributeId(attribute.getId()));
+				this.attributeRepository.delete(attribute);
+				this.attributeRepository.flush();
+			}
+			
 			this.layerRepository.delete( id );			
 		}
 		catch (ConstraintViolationException e)
@@ -1147,7 +1247,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * mï¿½todo para encontrar uma {@link Camada} pelo id
+	 * m?todo para encontrar uma {@link Camada} pelo id
 	 * 
 	 * @param id
 	 * @return camada
@@ -1158,7 +1258,15 @@ public class LayerGroupService
 	{		
 		final Layer layer = this.layerRepository.findById(id);
 		
-		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));	
+		layer.setAttributes(this.attributeRepository.listAttributeByLayerMarker(id));
+		
+		for ( Attribute attribute : layer.getAttributes() ) 
+		{
+			if ( attribute.getType().equals(AttributeType.MULTIPLE_CHOICE) )
+			{
+				attribute.setOptions( this.attributeOptionRepository.listByAttributeId(attribute.getId() ) );
+			}
+		}
 				
 		// traz a legenda da camada do GeoServer
 		if( layer.getDataSource().getUrl() != null ) {
@@ -1169,7 +1277,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Mï¿½todo para listar as configuraï¿½ï¿½es de camadas paginadas com opï¿½ï¿½o do filtro
+	 * M?todo para listar as configura??es de camadas paginadas com op??o do filtro
 	 *
 	 * @param filter
 	 * @param pageable
@@ -1194,7 +1302,7 @@ public class LayerGroupService
 	
 	
 	/**
-	 * Mï¿½todo que busca a legenda de uma camada no geo server
+	 * M?todo que busca a legenda de uma camada no geo server
 	 * @param camada
 	 * @return
 	 */
@@ -1320,14 +1428,23 @@ public class LayerGroupService
 		}
 		
 	}
+	
 	/**
-	 * 
 	 * @param layerId
 	 * @return
 	 */
 	public List<Attribute> listAttributesByLayer(Long layerId){
+		final List<Attribute> attributes =  this.attributeRepository.listAttributeByLayer(layerId);
 		
-		return this.attributeRepository.listAttributeByLayer(layerId);
+		for ( Attribute attribute : attributes ) 
+		{
+			if ( attribute.getType().equals(AttributeType.MULTIPLE_CHOICE) )
+			{
+				attribute.setOptions( this.attributeOptionRepository.listByAttributeId(attribute.getId() ) );
+			}
+		}
+		
+		return attributes;
 	}
 	
 	/**
@@ -1376,7 +1493,7 @@ public class LayerGroupService
 	}
 	
 	/**
-	 * Verifica se os grupos de acesso de uma pï¿½gina de grupos de acessos tem filhos
+	 * Verifica se os grupos de acesso de uma p?gina de grupos de acessos tem filhos
 	 * @param listByFilter
 	 * @return
 	 */
